@@ -10,6 +10,9 @@ public interface IMarketplaceRefundEventRepository : IRepository<MarketplaceRefu
 {
     MarketplaceRefundEvent Add(MarketplaceRefundEvent marketplaceRefundEvent);
     Task<ICollection<MarketplaceRefundEvent>> GetByMarketplaceRefundIdAsync(string marketplaceRefundId, CancellationToken cancellationToken);
+
+    Task<ICollection<MarketplaceRefundEvent>> GetByMarketplaceRefundIdsAsync(ICollection<string> marketplaceRefundIds,
+        CancellationToken cancellationToken);
 }
 
 public class MarketplaceRefundEventRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -25,8 +28,26 @@ public class MarketplaceRefundEventRepository(BookingDbContext dbContext, TimePr
         string marketplaceRefundId,
         CancellationToken cancellationToken) =>
         await DbContext.MarketplaceRefundEvent
+            .AsNoTrackingWithIdentityResolution()
             .Where(item => item.MarketplaceRefundId == marketplaceRefundId)
             .OrderBy(item => item.OccurredAt)
             .ThenBy(item => item.CreatedAt)
             .ToListAsync(cancellationToken);
+
+    public async Task<ICollection<MarketplaceRefundEvent>> GetByMarketplaceRefundIdsAsync(
+        ICollection<string> marketplaceRefundIds,
+        CancellationToken cancellationToken)
+    {
+        if (marketplaceRefundIds.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.MarketplaceRefundEvent
+            .AsNoTrackingWithIdentityResolution()
+            .Where(item => marketplaceRefundIds.Contains(item.MarketplaceRefundId))
+            .OrderBy(item => item.OccurredAt)
+            .ThenBy(item => item.CreatedAt)
+            .ToListAsync(cancellationToken);
+    }
 }

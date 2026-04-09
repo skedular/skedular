@@ -89,56 +89,35 @@ public class MarketplaceRefundReadService(
         }
 
         var refunds = await repositoryFactory.MarketplaceRefundRepository.GetByOrganizationIdAsync(organization.Id, statuses, cancellationToken);
-        var results = new List<MarketplaceRefundDetails>(refunds.Count);
-        foreach (var refund in refunds)
+        if (refunds.Count == 0)
         {
-            results.Add(await MapWithAvailabilityAsync(refund, cancellationToken));
+            return [];
         }
 
-        return results;
+        var refundIds = refunds.Select(item => item.Id).ToList();
+        var refundEvents = await repositoryFactory.MarketplaceRefundEventRepository.GetByMarketplaceRefundIdsAsync(refundIds, cancellationToken);
+        var refundEventsByRefundId = refundEvents
+            .GroupBy(item => item.MarketplaceRefundId)
+            .ToDictionary(item => item.Key, item => (ICollection<MarketplaceRefundEvent>)item.ToList());
+        var actorsById = await GetActorsByIdAsync(refunds, refundEvents, cancellationToken);
+        var availabilityTasks = refunds.ToDictionary(
+            item => item.Id,
+            item => xeroRefundService.GetProcessingAvailabilityAsync(item, cancellationToken));
+        await Task.WhenAll(availabilityTasks.Values);
+
+        return refunds.Select(refund => MapToDetails(
+            refund,
+            refundEventsByRefundId.TryGetValue(refund.Id, out var events) ? events : [],
+            actorsById,
+            availabilityTasks[refund.Id].Result)).ToList();
     }
 
     private async Task<MarketplaceRefundDetails> MapWithAvailabilityAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
     {
-        var result = mapper.MapTo(refund);
         var refundEvents = await repositoryFactory.MarketplaceRefundEventRepository.GetByMarketplaceRefundIdAsync(refund.Id, cancellationToken);
-        var actorIds = refundEvents
-            .Select(item => item.ActorCustomerId)
-            .Where(item => !string.IsNullOrWhiteSpace(item))
-            .Distinct()
-            .Cast<string>()
-            .ToList();
-        if (!string.IsNullOrWhiteSpace(refund.RequestedByCustomerId) && !actorIds.Contains(refund.RequestedByCustomerId))
-        {
-            actorIds.Add(refund.RequestedByCustomerId);
-        }
-
-        var actorsById = actorIds.Count == 0
-            ? new Dictionary<string, string>()
-            : (await repositoryFactory.CustomerRepository.GetByIdsAsync(actorIds, true, cancellationToken))
-            .ToDictionary(item => item.Id, item => item.ToDisplayableName().Trim());
-
-        foreach (var refundEvent in refundEvents)
-        {
-            refundEvent.MarketplaceRefund = refund;
-        }
-
-        result.Events = refundEvents.Select(item =>
-        {
-            var mappedEvent = mapper.MapTo(item);
-            mappedEvent.ActorName = item.ActorCustomerId is not null && actorsById.TryGetValue(item.ActorCustomerId, out var actorName)
-                ? actorName
-                : null;
-            return mappedEvent;
-        }).ToList();
-        result.RequestedByCustomerName = refund.RequestedByCustomerId is not null &&
-                                         actorsById.TryGetValue(refund.RequestedByCustomerId, out var requestedByCustomerName)
-            ? requestedByCustomerName
-            : null;
         var availability = await xeroRefundService.GetProcessingAvailabilityAsync(refund, cancellationToken);
-        result.CanProcessInXero = availability.CanProcessInXero;
-        result.XeroProcessingBlockedReason = availability.BlockedReason;
-        return result;
+        var actorsById = await GetActorsByIdAsync([refund], refundEvents, cancellationToken);
+        return MapToDetails(refund, refundEvents, actorsById, availability);
     }
 
     private async Task<MarketplaceRefundDetails> MapWithAccessControlAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
@@ -158,5 +137,56 @@ public class MarketplaceRefundReadService(
         result.CanProcessInXero = false;
         result.XeroProcessingBlockedReason = null;
         return result;
+    }
+
+    private MarketplaceRefundDetails MapToDetails(
+        MarketplaceRefund refund,
+        ICollection<MarketplaceRefundEvent> refundEvents,
+        IReadOnlyDictionary<string, string> actorsById,
+        XeroRefundProcessingAvailability availability)
+    {
+        var result = mapper.MapTo(refund);
+        foreach (var refundEvent in refundEvents)
+        {
+            refundEvent.MarketplaceRefund = refund;
+        }
+
+        result.Events = refundEvents.Select(item =>
+        {
+            var mappedEvent = mapper.MapTo(item);
+            mappedEvent.ActorName = item.ActorCustomerId is not null && actorsById.TryGetValue(item.ActorCustomerId, out var actorName)
+                ? actorName
+                : null;
+            return mappedEvent;
+        }).ToList();
+        result.RequestedByCustomerName = refund.RequestedByCustomerId is not null &&
+                                         actorsById.TryGetValue(refund.RequestedByCustomerId, out var requestedByCustomerName)
+            ? requestedByCustomerName
+            : null;
+        result.CanProcessInXero = availability.CanProcessInXero;
+        result.XeroProcessingBlockedReason = availability.BlockedReason;
+        return result;
+    }
+
+    private async Task<IReadOnlyDictionary<string, string>> GetActorsByIdAsync(
+        ICollection<MarketplaceRefund> refunds,
+        ICollection<MarketplaceRefundEvent> refundEvents,
+        CancellationToken cancellationToken)
+    {
+        var actorIds = refundEvents
+            .Select(item => item.ActorCustomerId)
+            .Concat(refunds.Select(item => item.RequestedByCustomerId))
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Distinct()
+            .Cast<string>()
+            .ToList();
+
+        if (actorIds.Count == 0)
+        {
+            return new Dictionary<string, string>();
+        }
+
+        return (await repositoryFactory.CustomerRepository.GetByIdsAsync(actorIds, true, cancellationToken))
+            .ToDictionary(item => item.Id, item => item.ToDisplayableName().Trim());
     }
 }
