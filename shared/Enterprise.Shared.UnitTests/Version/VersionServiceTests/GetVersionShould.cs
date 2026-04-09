@@ -8,7 +8,7 @@ public class GetVersionShould
     [Fact]
     public void Return_non_null_version_for_known_assembly()
     {
-        var sut = new VersionService<VersionServiceTests.GetVersionShould>();
+        var sut = new VersionService<GetVersionShould>();
 
         var version = sut.GetVersion();
 

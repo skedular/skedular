@@ -1,5 +1,4 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.SqlServer;
 using Enterprise.Shared.UnitTests.Database.TestSupport;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,14 +26,14 @@ public class DbContextBaseShould
     [Fact]
     public void Apply_interceptor_when_not_pooled()
     {
-        using var ctx = BuildContext(isPooled: false);
+        using var ctx = BuildContext(false);
         ctx.ShouldNotBeNull();
     }
 
     [Fact]
     public void Skip_interceptor_when_pooled()
     {
-        using var ctx = BuildContext(isPooled: true);
+        using var ctx = BuildContext(true);
         ctx.ShouldNotBeNull();
     }
 }

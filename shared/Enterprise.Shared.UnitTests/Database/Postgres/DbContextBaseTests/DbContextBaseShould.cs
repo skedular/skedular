@@ -1,5 +1,4 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.UnitTests.Database.TestSupport;
 using Microsoft.EntityFrameworkCore;
 

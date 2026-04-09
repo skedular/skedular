@@ -20,12 +20,7 @@ public class ProcessAfterRequestAsyncShould
         MarketplaceRefundAutomationService sut,
         CancellationToken cancellationToken)
     {
-        var refund = new MarketplaceRefund
-        {
-            Id = "refund-1",
-            Status = MarketplaceRefundStatusConstants.Requested,
-            RefundAmount = 50m
-        };
+        var refund = new MarketplaceRefund { Id = "refund-1", Status = MarketplaceRefundStatusConstants.Requested, RefundAmount = 50m };
         var completedRefund = new MarketplaceRefund
         {
             Id = refund.Id,
@@ -44,11 +39,13 @@ public class ProcessAfterRequestAsyncShould
 
         result.ShouldBe(completedRefund);
         refund.Status.ShouldBe(MarketplaceRefundStatusConstants.PendingAccounting);
-        A.CallTo(() => marketplaceRefundEventService.Add(refund, MarketplaceRefundEventTypeConstants.PendingAccounting, "customer-1", A<DateTimeOffset?>._))
+        A.CallTo(() => marketplaceRefundEventService.Add(refund, MarketplaceRefundEventTypeConstants.PendingAccounting, "customer-1",
+                A<DateTimeOffset?>._))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceRefundEventService.Add(refund, MarketplaceRefundEventTypeConstants.SentToXero, "customer-1", A<DateTimeOffset?>._))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => marketplaceRefundEventService.Add(completedRefund, MarketplaceRefundEventTypeConstants.Completed, "customer-1", A<DateTimeOffset?>._))
+        A.CallTo(() => marketplaceRefundEventService.Add(completedRefund, MarketplaceRefundEventTypeConstants.Completed, "customer-1",
+                A<DateTimeOffset?>._))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
     }
@@ -64,12 +61,7 @@ public class ProcessAfterRequestAsyncShould
         MarketplaceRefundAutomationService sut,
         CancellationToken cancellationToken)
     {
-        var refund = new MarketplaceRefund
-        {
-            Id = "refund-1",
-            Status = MarketplaceRefundStatusConstants.Requested,
-            RefundAmount = 50m
-        };
+        var refund = new MarketplaceRefund { Id = "refund-1", Status = MarketplaceRefundStatusConstants.Requested, RefundAmount = 50m };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -82,7 +74,8 @@ public class ProcessAfterRequestAsyncShould
         result.ShouldBe(refund);
         refund.Status.ShouldBe(MarketplaceRefundStatusConstants.ManualRequired);
         refund.LastError.ShouldBe("Invoice correlation is missing.");
-        A.CallTo(() => marketplaceRefundEventService.Add(refund, MarketplaceRefundEventTypeConstants.ManualRequired, "customer-1", A<DateTimeOffset?>._))
+        A.CallTo(() => marketplaceRefundEventService.Add(refund, MarketplaceRefundEventTypeConstants.ManualRequired, "customer-1",
+                A<DateTimeOffset?>._))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => xeroRefundService.ProcessAsync(A<MarketplaceRefund>._, cancellationToken)).MustNotHaveHappened();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();

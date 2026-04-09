@@ -1,7 +1,4 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.UnitTests.Database.TestSupport;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Enterprise.Shared.UnitTests.Database.EntityBaseTests2;
 
@@ -11,12 +8,7 @@ public class ReplicatedEntityBaseShould
     [Fact]
     public void Have_event_raised_at_property()
     {
-        var entity = new ReplicatedSpecEntity
-        {
-            Id = "1",
-            CreatedAt = DateTimeOffset.UtcNow,
-            EventRaisedAt = DateTimeOffset.UtcNow
-        };
+        var entity = new ReplicatedSpecEntity { Id = "1", CreatedAt = DateTimeOffset.UtcNow, EventRaisedAt = DateTimeOffset.UtcNow };
 
         entity.EventRaisedAt.ShouldNotBeNull();
     }

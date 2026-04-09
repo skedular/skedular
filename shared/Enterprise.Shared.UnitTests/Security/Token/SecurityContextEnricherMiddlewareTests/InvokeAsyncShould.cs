@@ -1,5 +1,4 @@
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Http;
 using Enterprise.Shared.Security.Token;
 using Microsoft.AspNetCore.Http;
 
@@ -17,7 +16,11 @@ public class InvokeAsyncShould
         var tokenService = A.Fake<ITokenService>();
 
         var sut = new SecurityContextEnricherMiddleware(
-            _ => { nextCalled = true; return Task.CompletedTask; },
+            _ =>
+            {
+                nextCalled = true;
+                return Task.CompletedTask;
+            },
             [tokenService]);
 
         await sut.InvokeAsync(httpContext, context);
@@ -38,7 +41,11 @@ public class InvokeAsyncShould
         A.CallTo(() => tokenService.VerifyTokenAsync(token, A<CancellationToken>._)).Returns(Task.CompletedTask);
 
         var sut = new SecurityContextEnricherMiddleware(
-            _ => { nextCalled = true; return Task.CompletedTask; },
+            _ =>
+            {
+                nextCalled = true;
+                return Task.CompletedTask;
+            },
             [tokenService]);
 
         await sut.InvokeAsync(httpContext, context);

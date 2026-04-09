@@ -5,7 +5,8 @@ This file applies to `booking/shared/Booking.Infrastructure`.
 ## Purpose
 
 - `Booking.Infrastructure` is the database migration runner for the booking domain.
-- It runs EF Core migrations against the booking database on startup via a background job (`InfrastructureMigrationJob`).
+- It runs EF Core migrations against the booking database on startup via a background job (
+  `InfrastructureMigrationJob`).
 - It is a short-lived Aspire process: it starts, applies pending migrations, and exits.
 
 ## Agent Rule

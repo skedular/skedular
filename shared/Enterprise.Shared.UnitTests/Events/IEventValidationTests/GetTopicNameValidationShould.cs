@@ -25,15 +25,13 @@ file sealed class CorrelationEvent : IEvent
 public class GetTopicNameValidationShould
 {
     [Fact]
-    public void Throw_on_invalid_characters_in_topic_name()
-    {
+    public void Throw_on_invalid_characters_in_topic_name() =>
         // Event whose TopicName has spaces (invalid Kafka topic chars)
         Should.Throw<ArgumentException>(() =>
         {
             IEvent e = new ValidEvent();
             e.GetTopicName("invalid environment name with spaces");
         });
-    }
 
     [Fact]
     public void Return_retry_topic_count()

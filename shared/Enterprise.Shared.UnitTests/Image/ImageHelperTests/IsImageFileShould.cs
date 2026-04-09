@@ -1,4 +1,7 @@
 using Enterprise.Shared.Image;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Enterprise.Shared.UnitTests.Image.ImageHelperTests;
 
@@ -60,10 +63,11 @@ public class IsImageFileShould
     private static byte[] CreateMinimalPng()
     {
         var ms = new MemoryStream();
-        using (var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(1, 1))
+        using (var image = new Image<Rgba32>(1, 1))
         {
-            image.Save(ms, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
+            image.Save(ms, new PngEncoder());
         }
+
         return ms.ToArray();
     }
 }

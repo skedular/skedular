@@ -33,8 +33,15 @@ public class AddFileStorageShould
         provider.GetRequiredService<ICdnService>().ShouldBeOfType<LocalCdnService>();
         provider.GetRequiredService<IPrivateFileService>().ShouldBeOfType<LocalPrivateFileService>();
 
-        if (Directory.Exists(tempCdn)) Directory.Delete(tempCdn);
-        if (Directory.Exists(tempPrivate)) Directory.Delete(tempPrivate);
+        if (Directory.Exists(tempCdn))
+        {
+            Directory.Delete(tempCdn);
+        }
+
+        if (Directory.Exists(tempPrivate))
+        {
+            Directory.Delete(tempPrivate);
+        }
     }
 
     [Theory]
@@ -42,10 +49,7 @@ public class AddFileStorageShould
     public void Throw_when_public_cdn_endpoint_is_empty(ServiceCollection services)
     {
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                [$"{FileStorageConfiguration.Key}:UseLocal"] = "true"
-            })
+            .AddInMemoryCollection(new Dictionary<string, string?> { [$"{FileStorageConfiguration.Key}:UseLocal"] = "true" })
             .Build();
 
         Should.Throw<ArgumentException>(() =>
@@ -57,10 +61,7 @@ public class AddFileStorageShould
     public void Throw_when_private_endpoint_is_empty(ServiceCollection services)
     {
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                [$"{FileStorageConfiguration.Key}:UseLocal"] = "true"
-            })
+            .AddInMemoryCollection(new Dictionary<string, string?> { [$"{FileStorageConfiguration.Key}:UseLocal"] = "true" })
             .Build();
 
         Should.Throw<ArgumentException>(() =>

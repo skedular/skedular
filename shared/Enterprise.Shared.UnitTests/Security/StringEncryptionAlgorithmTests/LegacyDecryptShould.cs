@@ -1,5 +1,8 @@
+using System.Security.Cryptography;
+using System.Text;
 using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Configurations;
+using SimpleBase;
 
 namespace Enterprise.Shared.UnitTests.Security.StringEncryptionAlgorithmTests;
 
@@ -9,7 +12,7 @@ public class LegacyDecryptShould
     private static EncryptionKeyConfiguration ValidKey => new()
     {
         Key = "12345678901234567890123456789012", // 32 bytes
-        Iv = "1234567890123456"  // 16 bytes
+        Iv = "1234567890123456" // 16 bytes
     };
 
     [Fact]
@@ -22,20 +25,21 @@ public class LegacyDecryptShould
         // First encrypt using v2 to get the key/iv shapes, then manually create a legacy token.
         // Build a legacy token the same way the old code would have produced it.
         var plainText = "hello legacy";
-        var key = System.Text.Encoding.UTF8.GetBytes(ValidKey.Key);
-        var iv = System.Text.Encoding.UTF8.GetBytes(ValidKey.Iv);
-        using var aes = System.Security.Cryptography.Aes.Create();
+        var key = Encoding.UTF8.GetBytes(ValidKey.Key);
+        var iv = Encoding.UTF8.GetBytes(ValidKey.Iv);
+        using var aes = Aes.Create();
         aes.Key = key;
         aes.IV = iv;
         var encryptor = aes.CreateEncryptor();
-        using var ms = new System.IO.MemoryStream();
-        using (var cs = new System.Security.Cryptography.CryptoStream(ms, encryptor, System.Security.Cryptography.CryptoStreamMode.Write))
+        using var ms = new MemoryStream();
+        using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
         {
-            var bytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            var bytes = Encoding.UTF8.GetBytes(plainText);
             cs.Write(bytes, 0, bytes.Length);
         }
+
         var cipherBytes = ms.ToArray();
-        var legacyCipherText = SimpleBase.Base58.Bitcoin.Encode(cipherBytes);
+        var legacyCipherText = Base58.Bitcoin.Encode(cipherBytes);
 
         // Should not start with "v2:" so it will use DecryptLegacy
         legacyCipherText.ShouldNotStartWith("v2:");

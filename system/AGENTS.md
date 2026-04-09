@@ -38,7 +38,8 @@ system/
 
 - Tests drive the system through real API clients.
 - Do not instantiate internal domain services directly in system tests.
-- Assert outcomes through API responses, persisted state read via API queries, or Kafka/Temporal observable side effects.
+- Assert outcomes through API responses, persisted state read via API queries, or Kafka/Temporal observable side
+  effects.
 
 ## Agent Rule
 

@@ -90,7 +90,8 @@ public class SelectForUpdateCommandInterceptorTests
     [AutoFakeItEasyData]
     public void Handle_query_with_comma_separated_tables(SelectForUpdateCommandInterceptor sut)
     {
-        var command = new SqlCommand($"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT * FROM [dbo].[Widgets],[dbo].[Items]");
+        var command = new SqlCommand(
+            $"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT * FROM [dbo].[Widgets],[dbo].[Items]");
 
         sut.ReaderExecuting(command, null!, default);
 
@@ -101,7 +102,8 @@ public class SelectForUpdateCommandInterceptorTests
     [AutoFakeItEasyData]
     public void Handle_query_with_join(SelectForUpdateCommandInterceptor sut)
     {
-        var command = new SqlCommand($"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT * FROM [dbo].[Widgets] JOIN [dbo].[Items] ON [Widgets].[Id]=[Items].[WidgetId]");
+        var command = new SqlCommand(
+            $"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT * FROM [dbo].[Widgets] JOIN [dbo].[Items] ON [Widgets].[Id]=[Items].[WidgetId]");
 
         sut.ReaderExecuting(command, null!, default);
 

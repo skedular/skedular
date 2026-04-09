@@ -6,12 +6,12 @@ namespace Enterprise.Shared.UnitTests.Context.ContextTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class UserSsoContextShould
 {
-    private static Enterprise.Shared.Context.Context BuildSut()
+    private static Shared.Context.Context BuildSut()
     {
         var httpContext = new DefaultHttpContext();
         var accessor = A.Fake<IHttpContextAccessor>();
         A.CallTo(() => accessor.HttpContext).Returns(httpContext);
-        return new Enterprise.Shared.Context.Context(accessor);
+        return new Shared.Context.Context(accessor);
     }
 
     [Theory]

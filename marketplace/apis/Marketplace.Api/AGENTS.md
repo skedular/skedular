@@ -11,6 +11,7 @@ This file applies to `marketplace/apis/Marketplace.Api`.
 ## Agent Rule
 
 - Read the parent `marketplace/apis/AGENTS.md` for API-layer rules.
-- Keep `Program.cs` / `Extensions.cs` focused on host wiring; move business logic to `marketplace/shared/Marketplace.Shared`.
+- Keep `Program.cs` / `Extensions.cs` focused on host wiring; move business logic to
+  `marketplace/shared/Marketplace.Shared`.
 - Do not add application-layer business logic directly to controllers; delegate to shared services.
 - Run `scripts/generate-graphql.sh` after any schema type or field change.

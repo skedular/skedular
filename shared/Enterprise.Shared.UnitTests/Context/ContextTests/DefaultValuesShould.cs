@@ -1,4 +1,3 @@
-using Enterprise.Shared.Context;
 using Microsoft.AspNetCore.Http;
 
 namespace Enterprise.Shared.UnitTests.Context.ContextTests;
@@ -11,7 +10,7 @@ public class DefaultValuesShould
     {
         var accessor = A.Fake<IHttpContextAccessor>();
         A.CallTo(() => accessor.HttpContext).Returns(null);
-        var sut = new Enterprise.Shared.Context.Context(accessor);
+        var sut = new Shared.Context.Context(accessor);
 
         sut.GetCorrelationId().ShouldBe(string.Empty);
     }
@@ -22,7 +21,7 @@ public class DefaultValuesShould
         var httpContext = new DefaultHttpContext();
         var accessor = A.Fake<IHttpContextAccessor>();
         A.CallTo(() => accessor.HttpContext).Returns(httpContext);
-        var sut = new Enterprise.Shared.Context.Context(accessor);
+        var sut = new Shared.Context.Context(accessor);
 
         sut.GetDesignation().ShouldBe(string.Empty);
         sut.GetTitle().ShouldBe(string.Empty);

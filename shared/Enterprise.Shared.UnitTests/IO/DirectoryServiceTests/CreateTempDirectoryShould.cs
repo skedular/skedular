@@ -43,7 +43,7 @@ public class CreateTempDirectoryShould
         {
             if (Directory.Exists(tempRoot))
             {
-                Directory.Delete(tempRoot, recursive: true);
+                Directory.Delete(tempRoot, true);
             }
         }
     }

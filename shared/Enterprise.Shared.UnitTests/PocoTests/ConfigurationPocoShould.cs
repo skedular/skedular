@@ -157,8 +157,11 @@ public class ConfigurationPocoShould
         var config = new IdentityProvidersConfiguration
         {
             Cognito = new Cognito { JwksUri = new Uri("https://cognito.example.com"), Issuer = "iss", Audiences = "aud" },
-            Google = new Enterprise.Shared.Security.Configurations.Google { ApplicationId = "appId", Issuer = "google" },
-            WorkOS = new Enterprise.Shared.Security.Configurations.WorkOS { JwksUri = new Uri("https://workos.example.com"), Issuer = "workos", ApiKey = "key" }
+            Google = new Shared.Security.Configurations.Google { ApplicationId = "appId", Issuer = "google" },
+            WorkOS = new Shared.Security.Configurations.WorkOS
+            {
+                JwksUri = new Uri("https://workos.example.com"), Issuer = "workos", ApiKey = "key"
+            }
         };
 
         config.Cognito.JwksUri.ShouldBe(new Uri("https://cognito.example.com"));
@@ -207,7 +210,7 @@ public class ConfigurationPocoShould
         var nodeEmpty = new Node();
         nodeEmpty.Id.ShouldBe(string.Empty);
 
-        var version = new Enterprise.Shared.GraphQL.Types.Version { Major = 1, Minor = 2, Build = 3, Revision = 4 };
+        var version = new GraphQL.Types.Version { Major = 1, Minor = 2, Build = 3, Revision = 4 };
         version.Major.ShouldBe(1);
     }
 

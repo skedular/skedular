@@ -1,4 +1,3 @@
-using Enterprise.Shared.Context;
 using Microsoft.AspNetCore.Http;
 
 namespace Enterprise.Shared.UnitTests.Context.ContextTests;
@@ -6,12 +5,12 @@ namespace Enterprise.Shared.UnitTests.Context.ContextTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class SetGetStringValuesShould
 {
-    private static Enterprise.Shared.Context.Context BuildSut(out DefaultHttpContext httpContext)
+    private static Shared.Context.Context BuildSut(out DefaultHttpContext httpContext)
     {
         httpContext = new DefaultHttpContext();
         var accessor = A.Fake<IHttpContextAccessor>();
         A.CallTo(() => accessor.HttpContext).Returns(httpContext);
-        return new Enterprise.Shared.Context.Context(accessor);
+        return new Shared.Context.Context(accessor);
     }
 
     [Theory]

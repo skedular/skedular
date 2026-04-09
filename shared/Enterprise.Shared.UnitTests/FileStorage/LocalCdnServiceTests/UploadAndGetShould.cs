@@ -21,11 +21,7 @@ public class UploadAndGetShould
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration
-            {
-                LocalCdnPath = tempDir,
-                PublicCdnFileEndpoint = "cdn"
-            };
+            var fileStorageConfig = new FileStorageConfiguration { LocalCdnPath = tempDir, PublicCdnFileEndpoint = "cdn" };
             var sut = new LocalCdnService(config, fileStorageConfig);
             var content = "hello cdn"u8.ToArray();
             using var stream = new MemoryStream(content);
@@ -40,7 +36,7 @@ public class UploadAndGetShould
         }
         finally
         {
-            Directory.Delete(tempDir, recursive: true);
+            Directory.Delete(tempDir, true);
         }
     }
 
@@ -52,11 +48,7 @@ public class UploadAndGetShould
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration
-            {
-                LocalCdnPath = tempDir,
-                PublicCdnFileEndpoint = "cdn"
-            };
+            var fileStorageConfig = new FileStorageConfiguration { LocalCdnPath = tempDir, PublicCdnFileEndpoint = "cdn" };
             var sut = new LocalCdnService(config, fileStorageConfig);
             using var stream = new MemoryStream("data"u8.ToArray());
 
@@ -66,7 +58,7 @@ public class UploadAndGetShould
         }
         finally
         {
-            Directory.Delete(tempDir, recursive: true);
+            Directory.Delete(tempDir, true);
         }
     }
 
@@ -89,7 +81,7 @@ public class UploadAndGetShould
         }
         finally
         {
-            Directory.Delete(tempDir, recursive: true);
+            Directory.Delete(tempDir, true);
         }
     }
 
@@ -113,7 +105,7 @@ public class UploadAndGetShould
         }
         finally
         {
-            Directory.Delete(tempDir, recursive: true);
+            Directory.Delete(tempDir, true);
         }
     }
 }

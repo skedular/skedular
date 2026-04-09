@@ -17,7 +17,7 @@ public class StartActivityFromContextProvideShould
         A.CallTo(() => activityAccessor.GetActivitySource(TelemetryKeys.ProducerActivitySourceName))
             .Returns(activitySource);
 
-        starter.StartActivityFromContext("some-topic", KafkaOperationType.Provide, default, null);
+        starter.StartActivityFromContext("some-topic", KafkaOperationType.Provide, default);
 
         A.CallTo(() => activityAccessor.GetActivitySource(TelemetryKeys.ProducerActivitySourceName))
             .MustHaveHappenedOnceExactly();
@@ -42,7 +42,7 @@ public class StartActivityFromContextProvideShould
             .Invokes((string _, ActivityKind _, ActivityContext _, IEnumerable<KeyValuePair<string, object?>> tags) =>
                 capturedTags = tags);
 
-        starter.StartActivityFromContext("topic", KafkaOperationType.Consume, default, partition: 3);
+        starter.StartActivityFromContext("topic", KafkaOperationType.Consume, default, 3);
 
         capturedTags.ShouldNotBeNull();
         capturedTags!.ShouldContain(kv => kv.Key == SemanticConventions.MessagingKafkaPartition && kv.Value!.ToString() == "3");

@@ -1,7 +1,7 @@
-using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Context;
-using GrpcConstants = Enterprise.Shared.Grpc.Constants;
+using Enterprise.Shared.Grpc;
 using Microsoft.AspNetCore.Http;
+using GrpcConstants = Enterprise.Shared.Grpc.Constants;
 
 namespace Enterprise.Shared.UnitTests.Grpc.GrpcAuthenticatorTests;
 

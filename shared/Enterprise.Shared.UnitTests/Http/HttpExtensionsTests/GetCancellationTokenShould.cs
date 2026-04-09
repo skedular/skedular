@@ -18,10 +18,7 @@ public class GetCancellationTokenShould
     public void Return_request_aborted_token_from_http_context()
     {
         using var cts = new CancellationTokenSource();
-        var httpContext = new DefaultHttpContext
-        {
-            RequestAborted = cts.Token
-        };
+        var httpContext = new DefaultHttpContext { RequestAborted = cts.Token };
 
         var result = httpContext.GetCancellationToken();
 

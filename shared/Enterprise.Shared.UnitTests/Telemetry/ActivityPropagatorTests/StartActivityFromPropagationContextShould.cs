@@ -23,10 +23,10 @@ public class StartActivityFromPropagationContextShould
         sut.StartActivityFromPropagationContext(location, activitySource, activityName);
 
         A.CallTo(() => activitySource.StartActivity(
-            activityName,
-            ActivityKind.Internal,
-            context.ActivityContext,
-            A<IEnumerable<KeyValuePair<string, object?>>>._))
+                activityName,
+                ActivityKind.Internal,
+                context.ActivityContext,
+                A<IEnumerable<KeyValuePair<string, object?>>>._))
             .MustHaveHappenedOnceExactly();
     }
 }

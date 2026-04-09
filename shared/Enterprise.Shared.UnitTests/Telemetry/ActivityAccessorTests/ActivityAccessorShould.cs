@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Enterprise.Shared.Telemetry;
 using Microsoft.Extensions.Logging;
 
