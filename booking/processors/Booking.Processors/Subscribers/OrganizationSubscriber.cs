@@ -1,5 +1,4 @@
-﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Processors.Mappers;
 using Booking.Shared.Models;
@@ -9,7 +8,7 @@ using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Kafka.Consume;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
-using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;
 
 namespace Booking.Processors.Subscribers;
 

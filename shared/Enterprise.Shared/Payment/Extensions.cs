@@ -10,6 +10,14 @@ public static class Extensions
 {
     extension(IServiceCollection services)
     {
+        /// <summary>
+        ///     Registers Stripe SDK service interfaces as singletons and sets the global
+        ///     <c>Stripe.StripeConfiguration.ApiKey</c> from the <c>Stripe:SecretKey</c> config value.
+        ///     Reads configuration from the <c>Stripe</c> section.
+        ///     Inject the narrowest Stripe interface needed in domain code rather than the concrete
+        ///     service class so the Stripe boundary can be mocked in tests.
+        /// </summary>
+        /// <param name="configuration">Application configuration (reads the <c>Stripe</c> section).</param>
         public IServiceCollection AddStripe(IConfiguration configuration)
         {
             var stripeConfiguration = configuration.GetSection(StripeConfiguration.Key).Get<StripeConfiguration>();

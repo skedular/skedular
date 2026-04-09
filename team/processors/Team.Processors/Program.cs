@@ -1,5 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Location.V1;
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
@@ -9,8 +8,8 @@ using Enterprise.Shared.Temporal;
 using Team.Processors.Subscribers;
 using Team.Shared;
 using Team.Shared.Database;
-using OrganizationEvent = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
-using OrganizationKey = Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key;
+using OrganizationEvent = Api.Shared.Clients.Events.Skedular.Organization.V1.Event;
+using OrganizationKey = Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 
 namespace Team.Processors;
 
@@ -31,8 +30,8 @@ public class Program
             .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb", true)
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
-                Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.Customer.V1.Key,
+                Api.Shared.Clients.Events.Skedular.Customer.V1.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 LocationSubscriber,
                 Key,

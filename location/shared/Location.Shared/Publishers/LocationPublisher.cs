@@ -1,12 +1,11 @@
-using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Location.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Models;
 using Location.Shared.Mappers;
-using Event = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.Location.V1.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Type;
 
 namespace Location.Shared.Publishers;
 

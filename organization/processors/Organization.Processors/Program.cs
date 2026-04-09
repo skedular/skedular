@@ -1,5 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Accounting;
@@ -31,12 +30,12 @@ public class Program
             .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb", true)
             .AddKafkaReliableEventConsumers<
                 OrganizationInternalSubscriber,
-                Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key,
+                Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 BookingSubscriber,
-                Api.Shared.Clients.Events.Skedular.Booking.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.Booking.V1.Key,
+                Api.Shared.Clients.Events.Skedular.Booking.V1.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Key,

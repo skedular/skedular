@@ -6,13 +6,11 @@ public static class HttpExtensions
 {
     extension(HttpContext? httpContext)
     {
-        public CancellationToken GetCancellationToken() =>
-            httpContext?.RequestAborted ?? CancellationToken.None;
+        public CancellationToken GetCancellationToken() => httpContext?.RequestAborted ?? CancellationToken.None;
     }
 
     extension(IHttpContextAccessor httpContextAccessor)
     {
-        public CancellationToken GetCancellationToken() =>
-            httpContextAccessor.HttpContext.GetCancellationToken();
+        public CancellationToken GetCancellationToken() => httpContextAccessor.HttpContext.GetCancellationToken();
     }
 }

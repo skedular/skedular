@@ -108,7 +108,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             OrganizationId = organizationId,
             ExternalInvoiceId = existingTemplateId,
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
-            RepeatingScheduleSource = Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
+            RepeatingScheduleSource = Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
             RepeatingScheduleUnit = nameof(Schedule.UnitEnum.MONTHLY),
             RepeatingSchedulePeriod = 3
         };
@@ -121,7 +121,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             BillingMode = XeroBillingModeConstants.RepeatingInvoices
         };
         var desiredSchedule = new XeroRepeatingInvoiceScheduleDefinition(
-            Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
+            Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
             Schedule.UnitEnum.MONTHLY,
             1,
             100m);
@@ -258,7 +258,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             BillingMode = XeroBillingModeConstants.RepeatingInvoices
         };
         var desiredSchedule = new XeroRepeatingInvoiceScheduleDefinition(
-            Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
+            Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
             Schedule.UnitEnum.MONTHLY,
             1,
             100m);
@@ -386,7 +386,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             OrganizationId = organizationId,
             ExternalInvoiceId = existingTemplateId,
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
-            RepeatingScheduleSource = Models.XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
+            RepeatingScheduleSource = Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
             RepeatingScheduleUnit = nameof(Schedule.UnitEnum.MONTHLY),
             RepeatingSchedulePeriod = 1
         };

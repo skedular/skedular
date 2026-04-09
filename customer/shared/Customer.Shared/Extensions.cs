@@ -4,7 +4,7 @@ using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services;
 using Customer.Shared.Services.Cache;
-using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

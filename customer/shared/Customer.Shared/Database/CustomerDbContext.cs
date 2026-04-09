@@ -1,8 +1,8 @@
 ﻿using Customer.Shared.Database.Entities;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.Postgres;
-using Enterprise.Shared.Outbox.Database;
-using Enterprise.Shared.Outbox.Database.Entities;
+using Enterprise.Shared.Outbox.Kafka;
+using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 

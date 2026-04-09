@@ -1,6 +1,6 @@
 ﻿using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
-using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Outbox.Temporal;
 using Location.Shared.Configurations;
 using Location.Shared.Mappers;
 using Location.Shared.Publishers;

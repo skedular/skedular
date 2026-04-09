@@ -1,12 +1,11 @@
-﻿using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
 using IMapper = Booking.Processors.Mappers.IMapper;
 using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
-using Type = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Type;
 
 namespace Booking.Processors.Subscribers;
 

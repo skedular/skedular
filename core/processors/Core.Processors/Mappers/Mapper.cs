@@ -1,14 +1,14 @@
 using Api.Shared.Services.Models;
 using Core.Shared.Database.Entities;
-using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Customer = Core.Shared.Models.Customer;
-using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
+using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType;
 using Identity = Core.Shared.Database.Entities.Identity;
 using Organization = Core.Shared.Models.Organization;
 using OrganizationMember = Core.Shared.Database.Entities.OrganizationMember;
-using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
-using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 
 namespace Core.Processors.Mappers;
 
@@ -18,7 +18,7 @@ public interface IMapper
     Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
-    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
+    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
     OrganizationMember MapToEntity(
@@ -93,7 +93,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
+    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src)
     {
         var organizationAfterState = src.Data.Organization;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();

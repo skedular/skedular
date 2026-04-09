@@ -1,6 +1,14 @@
-using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Booking.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Booking.V1;
 using Enterprise.Shared.Kafka;
+using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Event;
+using Location_V1_Value_Event = Api.Shared.Clients.Events.Skedular.Location.V1.Event;
+using Marketplace_V1_Value_Event = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Event;
+using Organization_V1_Value_Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Event;
+using OrganizationInternal_V1_Value_Event = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Event;
+using OrganizationMember_V1_Value_Event = Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Event;
+using Team_V1_Value_Event = Api.Shared.Clients.Events.Skedular.Team.V1.Event;
+using V1_Value_Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
+using Value_Event = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Event;
 
 namespace Infrastructure.Shared.Services;
 
@@ -19,36 +27,36 @@ public class MigrationService(IKafkaHelper kafkaHelper) : IMigrationService
         await kafkaHelper.RegisterKeyProtobufSchemaAsync<Key>();
         await kafkaHelper.RegisterValueProtobufSchemaAsync<Event>();
 
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event>();
-        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key>();
-        await kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Value_Event>();
+        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key>();
+        await kafkaHelper.RegisterValueProtobufSchemaAsync<Value_Event>();
 
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>();
-        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key>();
-        await kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<V1_Value_Event>();
+        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Key>();
+        await kafkaHelper.RegisterValueProtobufSchemaAsync<V1_Value_Event>();
 
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>();
-        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Location.V1.Key.Key>();
-        await kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Location_V1_Value_Event>();
+        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Location.V1.Key>();
+        await kafkaHelper.RegisterValueProtobufSchemaAsync<Location_V1_Value_Event>();
 
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event>();
-        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key.Key>();
-        await kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Marketplace_V1_Value_Event>();
+        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key>();
+        await kafkaHelper.RegisterValueProtobufSchemaAsync<Marketplace_V1_Value_Event>();
 
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event>();
-        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key>();
-        await kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Organization_V1_Value_Event>();
+        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Organization.V1.Key>();
+        await kafkaHelper.RegisterValueProtobufSchemaAsync<Organization_V1_Value_Event>();
 
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Event>();
-        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Key.Key>();
-        await kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<OrganizationMember_V1_Value_Event>();
+        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Key>();
+        await kafkaHelper.RegisterValueProtobufSchemaAsync<OrganizationMember_V1_Value_Event>();
 
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event>();
-        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key>();
-        await kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<OrganizationInternal_V1_Value_Event>();
+        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key>();
+        await kafkaHelper.RegisterValueProtobufSchemaAsync<OrganizationInternal_V1_Value_Event>();
 
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event>();
-        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Team.V1.Key.Key>();
-        await kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Team_V1_Value_Event>();
+        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Team.V1.Key>();
+        await kafkaHelper.RegisterValueProtobufSchemaAsync<Team_V1_Value_Event>();
     }
 }

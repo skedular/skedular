@@ -3,7 +3,7 @@ package organization;
 
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Organization.V1.Value";
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Organization.V1";
 
 enum Type {
   Type_OrganizationUpserted        = 0;

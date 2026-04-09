@@ -1,10 +1,10 @@
-using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Booking.V1;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Sanitization;
 using Organization.Shared.Services;
 using Organization.Shared.Workflows;
-using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Booking.V1.Type;
 
 namespace Organization.Processors.Subscribers;
 

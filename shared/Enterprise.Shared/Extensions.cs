@@ -8,6 +8,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Email;
 using Enterprise.Shared.GraphQL;
+using Enterprise.Shared.Helpers;
 using Enterprise.Shared.Image;
 using Enterprise.Shared.IO;
 using Enterprise.Shared.Logging;
@@ -53,6 +54,64 @@ public static class Extensions
         }
     }
 
+    private static void ApplyCoreMiddleware(WebApplication app)
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler(appBuilder =>
+            {
+                appBuilder.Run(async context =>
+                {
+                    context.Response.StatusCode = 500;
+                    await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
+                });
+            });
+        }
+
+        app.UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapOpenApi();
+            app.UseOpenApi();
+            app.UseSwaggerUi();
+
+            // redirect root to health
+            app.UseRewriter(new RewriteOptions().AddRedirect("^$", HealthCheck.Constants.ReadinessPath));
+        }
+
+        app.UseRouting();
+
+        // UseAuthentication must appear between UseRouting and UseEndpoints
+        app.UseAuthentication();
+
+        // UseAuthorization must appear between UseRouting and UseEndpoints
+        app.UseAuthorization();
+
+        // Health checks must go before any middleware
+        app.UseHealthChecks(
+            HealthCheck.Constants.LivenessPath,
+            new HealthCheckOptions
+            {
+                Predicate = registration =>
+                    registration.Tags.Contains(HealthCheck.Constants.LivenessTag) || registration.Name.Contains("self")
+            });
+
+        app.UseHealthChecks(
+            HealthCheck.Constants.ReadinessPath,
+            new HealthCheckOptions
+            {
+                Predicate = registration =>
+                    registration.Tags.Contains(HealthCheck.Constants.ReadinessTag) || registration.Name.Contains("services")
+            });
+
+        app.UseMiddleware<ContextEnricherMiddleware>();
+    }
+
     extension(decimal? value)
     {
         public double ToNullDouble() => value is null ? double.MinValue : Convert.ToDouble(value);
@@ -91,7 +150,18 @@ public static class Extensions
 
     extension(WebApplicationBuilder builder)
     {
-        public WebApplicationBuilder AddDefaultServices<TProgram>(bool enableHttpResilience = false)
+        /// <summary>
+        ///     Minimum foundation required by all Enterprise.Shared-based applications.
+        ///     Registers: configuration loading, <see cref="Configurations.ApplicationConfiguration" />,
+        ///     OpenTelemetry, service discovery, HTTP resilience (optional), authentication/authorization,
+        ///     CORS, ProblemDetails, HttpContextAccessor, essential singletons
+        ///     (<see cref="Security.IStringEncryptionAlgorithm" />, <see cref="IVersionService" />,
+        ///     <see cref="IImageHelper" />, <see cref="Context.Context" />,
+        ///     <see cref="IRandomHelper" />, <see cref="IO.IDirectoryService" />,
+        ///     <see cref="Email.IEmailService" />, <see cref="TimeProvider" />),
+        ///     and the "self" liveness health check.
+        /// </summary>
+        public WebApplicationBuilder AddCoreServices<TProgram>(bool enableHttpResilience = false)
             where TProgram : class
         {
             var services = builder.Services;
@@ -107,6 +177,66 @@ public static class Extensions
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
             ArgumentNullException.ThrowIfNull(applicationConfiguration);
             services.AddSingleton(applicationConfiguration);
+
+            services.ConfigureOpenTelemetry(configuration, appName);
+
+            services
+                .AddServiceDiscovery()
+                .ConfigureHttpClientDefaults(httpClientBuilder =>
+                {
+                    if (enableHttpResilience)
+                    {
+                        httpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = Timeout.InfiniteTimeSpan);
+                        httpClientBuilder.AddStandardResilienceHandler(options => options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(30));
+                    }
+                    else
+                    {
+                        httpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = TimeSpan.FromSeconds(30));
+                    }
+
+                    // Turn on service discovery by default
+                    httpClientBuilder.AddServiceDiscovery();
+                });
+
+            services.AddAuthentication();
+            services.AddAuthorization();
+
+            services
+                .AddCors()
+                .AddProblemDetails()
+                .AddHttpContextAccessor()
+                .AddSingleton<IStringEncryptionAlgorithm, StringEncryptionAlgorithm>()
+                .AddSingleton<IVersionService, VersionService<TProgram>>()
+                .AddSingleton<IImageHelper, ImageHelper>()
+                .AddSingleton<IContext, Context.Context>()
+                .AddSingleton<IRandomHelper, RandomHelper>()
+                .AddSingleton<IDirectoryService, DirectoryService>()
+                .AddSingleton<IPortFinder, PortFinder>()
+                .AddSingleton<IEmailService, EmailService>();
+
+            services.TryAddSingleton(TimeProvider.System);
+
+            services
+                .AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy(), [HealthCheck.Constants.LivenessTag]);
+
+            return builder;
+        }
+
+        /// <summary>
+        ///     Registers identity token provider services based on configuration presence.
+        ///     Conditionally wires up: WorkOS (<see cref="Security.Token.IWorkOSTokenService" />),
+        ///     Cognito (<see cref="Security.Token.ICognitoTokenService" />),
+        ///     Google (<see cref="Security.Token.IGoogleTokenService" />),
+        ///     Azure Entra (<see cref="Azure.Graph.IGraphServiceClientFactory" />,
+        ///     <see cref="Security.Token.IAzureEntraTokenService" />), and cookie encryption
+        ///     (<see cref="Security.ICookieEncryptionService" />).
+        ///     Each provider is registered only when its corresponding configuration section exists.
+        /// </summary>
+        public WebApplicationBuilder AddIdentityTokenProviders()
+        {
+            var services = builder.Services;
+            var configuration = builder.Configuration;
 
             var identityProvidersConfiguration = configuration.GetSection(IdentityProvidersConfiguration.Key).Get<IdentityProvidersConfiguration>();
             if (identityProvidersConfiguration is not null)
@@ -142,34 +272,6 @@ public static class Extensions
                     .AddSingleton<IAzureEntraTokenService, AzureEntraTokenService>();
             }
 
-            services.ConfigureOpenTelemetry(configuration, appName);
-
-            if (builder.Environment.IsDevelopment())
-            {
-                services.AddSwaggerDocument();
-            }
-
-            services
-                .AddServiceDiscovery()
-                .ConfigureHttpClientDefaults(httpClientBuilder =>
-                {
-                    if (enableHttpResilience)
-                    {
-                        httpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = Timeout.InfiniteTimeSpan);
-                        httpClientBuilder.AddStandardResilienceHandler(options => options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(30));
-                    }
-                    else
-                    {
-                        httpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = TimeSpan.FromSeconds(30));
-                    }
-
-                    // Turn on service discovery by default
-                    httpClientBuilder.AddServiceDiscovery();
-                });
-
-            services.AddAuthentication();
-            services.AddAuthorization();
-
             var cookieConfiguration = configuration.GetSection(CookieConfiguration.Key).Get<CookieConfiguration>();
             if (cookieConfiguration is not null)
             {
@@ -177,6 +279,18 @@ public static class Extensions
                     .AddSingleton(cookieConfiguration)
                     .AddSingleton<ICookieEncryptionService, CookieEncryptionService>();
             }
+
+            return builder;
+        }
+
+        /// <summary>
+        ///     Registers StackExchange.Redis-backed <see cref="Microsoft.Extensions.Caching.Hybrid.HybridCache" />
+        ///     with GeoJSON-aware JSON serializer options keyed to <c>IHybridCacheSerializer&lt;&gt;</c>.
+        ///     Redis must be registered separately via <see cref="Cache.Extensions.AddRedis" />.
+        /// </summary>
+        public WebApplicationBuilder AddHybridCaching()
+        {
+            var services = builder.Services;
 
             services.AddHybridCache(options =>
             {
@@ -189,22 +303,24 @@ public static class Extensions
                     typeof(IHybridCacheSerializer<>),
                     new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.IgnoreCycles, Converters = { new GeoJsonConverterFactory() } });
 
-            services
-                .AddCors()
-                .AddProblemDetails()
-                .AddHttpContextAccessor()
-                .AddSingleton<IStringEncryptionAlgorithm, StringEncryptionAlgorithm>()
-                .AddSingleton<IVersionService, VersionService<TProgram>>()
-                .AddSingleton<IImageHelper, ImageHelper>()
-                .AddSingleton<IContext, Context.Context>()
-                .AddSingleton<IRandomHelper, RandomHelper>()
-                .AddSingleton<IDirectoryService, DirectoryService>()
-                .AddSingleton<IEmailService, EmailService>()
-                .TryAddSingleton(TimeProvider.System);
+            return builder;
+        }
 
-            services
-                .AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy(), [HealthCheck.Constants.LivenessTag]);
+        /// <summary>
+        ///     Registers MVC controllers with opinionated JSON options (camelCase, indented),
+        ///     the <typeparamref name="TProgram" /> assembly part, and standard API validation error handling
+        ///     (validation failures → 422, parse failures → 400).
+        ///     Also registers EndpointsApiExplorer and SwaggerGen. In development mode, an NSwag document is added.
+        /// </summary>
+        public WebApplicationBuilder AddApiControllers<TProgram>()
+            where TProgram : class
+        {
+            var services = builder.Services;
+
+            if (builder.Environment.IsDevelopment())
+            {
+                services.AddSwaggerDocument();
+            }
 
             services
                 .AddControllers()
@@ -256,6 +372,21 @@ public static class Extensions
                 .AddEndpointsApiExplorer()
                 .AddSwaggerGen();
 
+            return builder;
+        }
+
+        /// <summary>
+        ///     Configures Serilog as the application's log provider, clears default providers,
+        ///     and sets up the Serilog host integration. Reads Serilog settings from appsettings.
+        ///     See <see cref="Logging.SerilogExtensions.UseSerilogCustom" /> for details on enrichers,
+        ///     sinks, and health-check log filtering.
+        /// </summary>
+        public WebApplicationBuilder AddSerilogLogging<TProgram>()
+            where TProgram : class
+        {
+            var services = builder.Services;
+            var appName = GetAppName<TProgram>(builder.Environment);
+
             services
                 .AddLogging(loggingBuilder =>
                 {
@@ -266,76 +397,72 @@ public static class Extensions
 
             return builder;
         }
+
+        /// <summary>
+        ///     Skedular opinionated bundle: calls <see cref="AddCoreServices{TProgram}" />,
+        ///     <see cref="AddIdentityTokenProviders" />, <see cref="AddHybridCaching" />,
+        ///     <see cref="AddApiControllers{TProgram}" />, and <see cref="AddSerilogLogging{TProgram}" />
+        ///     in the expected order.
+        ///     <para>
+        ///         External consumers of Enterprise.Shared should compose only the modules they need
+        ///         rather than calling this method, so that unused infrastructure (e.g. HybridCache when
+        ///         Redis is not available, or MVC controllers for a minimal-API service) is not registered.
+        ///     </para>
+        /// </summary>
+        public WebApplicationBuilder AddDefaultServices<TProgram>(bool enableHttpResilience = false)
+            where TProgram : class =>
+            builder
+                .AddCoreServices<TProgram>(enableHttpResilience)
+                .AddIdentityTokenProviders()
+                .AddHybridCaching()
+                .AddApiControllers<TProgram>()
+                .AddSerilogLogging<TProgram>();
     }
 
     extension(WebApplication app)
     {
+        /// <summary>
+        ///     Configures the core ASP.NET Core middleware pipeline without mapping GraphQL endpoints.
+        ///     Applies: exception handling, CORS, routing, authentication, authorization,
+        ///     health check endpoints (liveness + readiness), <see cref="ContextEnricherMiddleware" />,
+        ///     and <c>MapControllers()</c>. In development mode also enables Swagger/OpenAPI UI.
+        ///     <para>
+        ///         Use this method for apps that do not use GraphQL or that map GraphQL endpoints explicitly.
+        ///         Skedular internal apps should use <see cref="UseWebApplicationDefaults{TProgram}" /> which
+        ///         also maps GraphQL, unless they intentionally opt out.
+        ///     </para>
+        /// </summary>
+        public WebApplication UseApplicationCore<TProgram>() where TProgram : class
+        {
+            var appName = GetAppName<TProgram>(app.Environment);
+            ApplyCoreMiddleware(app);
+            app.MapControllers();
+            var logger = app.Services.GetRequiredService<ILogger<TProgram>>();
+            logger.LogInformation("EnvironmentName = {EnvironmentName}", app.Environment.EnvironmentName);
+            logger.LogInformation("AppName = {appName}", appName);
+            return app;
+        }
+
+        /// <summary>
+        ///     Skedular opinionated bundle: applies the full middleware pipeline including GraphQL endpoint
+        ///     mapping. Internally calls <see cref="UseApplicationCore{TProgram}" />'s shared setup and also
+        ///     maps GraphQL endpoints via <see cref="GraphQL.GraphqlExtensions.MapGraphqlEndpoints" />.
+        ///     <para>
+        ///         GraphQL endpoint mapping is a no-op when the <c>GraphQL</c> configuration section is absent,
+        ///         so this is safe to call from non-GraphQL hosts (processors, jobs).
+        ///         External consumers who do not use GraphQL should prefer <see cref="UseApplicationCore{TProgram}" />
+        ///         to avoid the unnecessary GraphQL routing pass.
+        ///     </para>
+        /// </summary>
         public WebApplication UseWebApplicationDefaults<TProgram>() where TProgram : class
         {
             var appName = GetAppName<TProgram>(app.Environment);
-
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler(appBuilder =>
-                {
-                    appBuilder.Run(async context =>
-                    {
-                        context.Response.StatusCode = 500;
-                        await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
-                    });
-                });
-            }
-
-            app.UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
-
-            if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi();
-                app.UseOpenApi();
-                app.UseSwaggerUi();
-
-                // redirect root to health
-                app.UseRewriter(new RewriteOptions().AddRedirect("^$", HealthCheck.Constants.ReadinessPath));
-            }
-
-            app.UseRouting();
-
-            // UseAuthentication must appear between UseRouting and UseEndpoints
-            app.UseAuthentication();
-
-            // UseAuthorization must appear between UseRouting and UseEndpoints
-            app.UseAuthorization();
-
-            // Health checks must go before any middleware
-            app.UseHealthChecks(
-                HealthCheck.Constants.LivenessPath,
-                new HealthCheckOptions
-                {
-                    Predicate = registration =>
-                        registration.Tags.Contains(HealthCheck.Constants.LivenessTag) || registration.Name.Contains("self")
-                });
-
-            app.UseHealthChecks(
-                HealthCheck.Constants.ReadinessPath,
-                new HealthCheckOptions
-                {
-                    Predicate = registration =>
-                        registration.Tags.Contains(HealthCheck.Constants.ReadinessTag) || registration.Name.Contains("services")
-                });
-
-            app.UseMiddleware<ContextEnricherMiddleware>();
+            ApplyCoreMiddleware(app);
             app.MapGraphqlEndpoints(app.Configuration);
             app.MapControllers();
-
             var logger = app.Services.GetRequiredService<ILogger<TProgram>>();
-
             logger.LogInformation("EnvironmentName = {EnvironmentName}", app.Environment.EnvironmentName);
             logger.LogInformation("AppName = {appName}", appName);
-
             return app;
         }
     }

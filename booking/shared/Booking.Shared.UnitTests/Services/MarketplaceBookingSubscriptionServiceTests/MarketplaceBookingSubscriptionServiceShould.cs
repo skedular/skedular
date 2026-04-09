@@ -23,10 +23,10 @@ public class MarketplaceBookingSubscriptionServiceShould
         CancellationToken cancellationToken)
     {
         var customer = new Customer { Id = "customer-1" };
-        var subscription = new Models.MarketplaceBookingSubscription
+        var subscription = new Shared.Models.MarketplaceBookingSubscription
         {
-            InvolvedCustomers = [new Models.Customer { Id = "customer-1" }],
-            MarketplaceBooking = new Models.MarketplaceBooking
+            InvolvedCustomers = [new Shared.Models.Customer { Id = "customer-1" }],
+            MarketplaceBooking = new Shared.Models.MarketplaceBooking
             {
                 ProductVersion = new ProductVersion { Id = "product-version-1" },
                 ProductPricing = ProductPricing.Empty("pricing-1"),
@@ -120,7 +120,7 @@ public class MarketplaceBookingSubscriptionServiceShould
             now.AddDays(3),
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(120, 100)]);
-        var deletedSubscription = new Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+        var deletedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -179,7 +179,7 @@ public class MarketplaceBookingSubscriptionServiceShould
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(120, 100)]);
         existingSubscription.AutoRenew = true;
-        var updatedSubscription = new Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+        var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -239,7 +239,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         {
             PurchaseCadence = ProductPricingCadence.Monthly
         };
-        var updatedSubscription = new Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+        var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -278,7 +278,7 @@ public class MarketplaceBookingSubscriptionServiceShould
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(30, 100)]);
         existingSubscription.AutoRenew = true;
-        var updatedSubscription = new Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+        var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -320,7 +320,7 @@ public class MarketplaceBookingSubscriptionServiceShould
             ProductPricingCancellationPolicyType.NoCancellation,
             []);
         existingSubscription.AutoRenew = true;
-        var updatedSubscription = new Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+        var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);

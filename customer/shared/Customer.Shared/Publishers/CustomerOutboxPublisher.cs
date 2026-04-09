@@ -1,13 +1,12 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Customer.Shared.Mappers;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Models;
-using Enterprise.Shared.Outbox.Publishers;
-using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
+using Enterprise.Shared.Outbox.Kafka;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Type;
 
 namespace Customer.Shared.Publishers;
 

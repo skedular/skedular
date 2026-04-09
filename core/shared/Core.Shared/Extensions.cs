@@ -2,7 +2,7 @@ using Core.Shared.Mappers;
 using Core.Shared.Repositories;
 using Core.Shared.Services;
 using Core.Shared.Services.Cache;
-using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

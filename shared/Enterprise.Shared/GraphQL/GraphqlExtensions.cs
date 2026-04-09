@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Trace;
 
 namespace Enterprise.Shared.GraphQL;
 
@@ -43,6 +44,11 @@ public static class GraphqlExtensions
             configure(builder);
 
             builder.InitializeOnStartup();
+
+            if (!graphqlConfig.DisableTelemetry)
+            {
+                services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddHotChocolateInstrumentation());
+            }
 
             return services;
         }

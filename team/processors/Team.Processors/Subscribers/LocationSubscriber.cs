@@ -1,11 +1,11 @@
-using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Location.V1;
 using Enterprise.Shared.Kafka.Consume;
 using Team.Processors.Mappers;
 using Team.Shared.Database.Entities;
 using Team.Shared.Repositories;
-using Event = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Location.V1.Event;
 using Location = Team.Shared.Database.Entities.Location;
-using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Type;
 
 namespace Team.Processors.Subscribers;
 

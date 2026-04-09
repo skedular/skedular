@@ -634,7 +634,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => marketplaceBookingService.DeleteAsync(A<Database.Entities.Booking>._, null, false, false,
                 environment.CancellationTokenSource.Token))
             .ReturnsLazily((Database.Entities.Booking booking, Customer? _, bool _, bool _, CancellationToken _) =>
-                Task.FromResult(new Models.Booking { Id = booking.Id }));
+                Task.FromResult(new Shared.Models.Booking { Id = booking.Id }));
 
         await environment.RunAsync(() =>
             sut.ReleaseMarketplaceBookingSubscriptionResourcesAsync(
@@ -715,10 +715,10 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
             Category = BookingCategoryConstants.WorkingFromCoworkingSpace,
             Schedules = []
         };
-        var generatedBooking = new Models.Booking
+        var generatedBooking = new Shared.Models.Booking
         {
             Id = "booking-new",
-            InvolvedCustomers = [new Models.Customer { Id = customer.Id }],
+            InvolvedCustomers = [new Shared.Models.Customer { Id = customer.Id }],
             InvolvedOrganizations = [],
             InvolvedTeams = [],
             Schedules = []
@@ -777,19 +777,19 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 new DateTimeOffset(2026, 3, 17, 17, 0, 0, TimeSpan.Zero),
                 [new Resource { Id = "res-7" }]));
         A.CallTo(() => mapper.MapTo(A<RecurringBooking>._, new DateOnly(2026, 3, 17))).Returns(generatedBooking);
-        A.CallTo(() => mapper.MapTo(A<MarketplaceBooking>._)).Returns(new Models.MarketplaceBooking
+        A.CallTo(() => mapper.MapTo(A<MarketplaceBooking>._)).Returns(new Shared.Models.MarketplaceBooking
         {
-            ProductPricing = subscription.MarketplaceBooking.ProductPricing, ProductVersion = new Models.ProductVersion { Id = "pv-1" }
+            ProductPricing = subscription.MarketplaceBooking.ProductPricing, ProductVersion = new Shared.Models.ProductVersion { Id = "pv-1" }
         });
         A.CallTo(() => randomHelper.Generate()).ReturnsNextFromSequence("mb-template", "rb-current", "booking-new", "mb-new");
         A.CallTo(() => marketplaceBookingService.AddAsync(
-                A<Models.Booking>._,
+                A<Shared.Models.Booking>._,
                 A<Customer>._,
                 A<ICollection<Organization>>._,
                 A<ICollection<Team>>._,
                 A<RecurringBooking>._,
                 environment.CancellationTokenSource.Token))
-            .Returns(new Models.Booking { Id = "booking-new" });
+            .Returns(new Shared.Models.Booking { Id = "booking-new" });
 
         await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(

@@ -1,8 +1,8 @@
 using System.Text.Json;
 using Customer.Shared.Workflows;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Outbox;
-using Enterprise.Shared.Outbox.Publishers;
+using Enterprise.Shared.Outbox.Temporal;
+using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;

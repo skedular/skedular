@@ -1,29 +1,29 @@
-﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Location.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Location.Shared.Models;
-using CdnFile = Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnFile;
-using CdnImageFile = Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnImageFile;
+using CdnFile = Api.Shared.Clients.Events.Skedular.Location.V1.CdnFile;
+using CdnImageFile = Api.Shared.Clients.Events.Skedular.Location.V1.CdnImageFile;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using LocationType = Api.Shared.Services.Models.LocationType;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
-using Resource = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource;
+using Resource = Api.Shared.Clients.Events.Skedular.Location.V1.Resource;
 using WeekOpeningHours = Api.Shared.Services.Models.WeekOpeningHours;
 
 namespace Location.Shared.Mappers;
 
 public interface IMapper
 {
-    Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location MapTo(Models.Location src);
+    Api.Shared.Clients.Events.Skedular.Location.V1.Location MapTo(Models.Location src);
 }
 
 public class Mapper : IMapper
 {
-    public Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location MapTo(Models.Location src)
+    public Api.Shared.Clients.Events.Skedular.Location.V1.Location MapTo(Models.Location src)
     {
-        var location = new Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location
+        var location = new Api.Shared.Clients.Events.Skedular.Location.V1.Location
         {
             Id = src.Id,
             DeletedAt = src.DeletedAt?.ToTimestamp(),
@@ -32,8 +32,8 @@ public class Mapper : IMapper
             Timezone = src.Timezone.ToSafeString(),
             Type = src.Type switch
             {
-                LocationType.Private => Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType.Private,
-                LocationType.Marketplace => Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType.Marketplace,
+                LocationType.Private => Api.Shared.Clients.Events.Skedular.Location.V1.LocationType.Private,
+                LocationType.Marketplace => Api.Shared.Clients.Events.Skedular.Location.V1.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
             OrganizationId = src.Organization.Id,
@@ -66,13 +66,13 @@ public class Mapper : IMapper
         return location;
     }
 
-    private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours MapTo(OpeningHours? src)
+    private static Api.Shared.Clients.Events.Skedular.Location.V1.OpeningHours MapTo(OpeningHours? src)
     {
         if (src is null)
         {
-            return new Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours
+            return new Api.Shared.Clients.Events.Skedular.Location.V1.OpeningHours
             {
-                WeekOpeningHours = new Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours
+                WeekOpeningHours = new Api.Shared.Clients.Events.Skedular.Location.V1.WeekOpeningHours
                 {
                     Monday = MapToDefault(),
                     Tuesday = MapToDefault(),
@@ -85,7 +85,7 @@ public class Mapper : IMapper
             };
         }
 
-        var openingHours = new Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours { WeekOpeningHours = MapTo(src.WeekOpeningHours) };
+        var openingHours = new Api.Shared.Clients.Events.Skedular.Location.V1.OpeningHours { WeekOpeningHours = MapTo(src.WeekOpeningHours) };
         openingHours.ClosedDates.AddRange(src.ClosedDates.Select(item => item.ToTimestamp()));
         openingHours.DatesWithVariedOpeningHours.AddRange(src.DatesWithVariedOpeningHours.ToList().Select(item => new VariedDateOpeningHours
         {
@@ -95,7 +95,7 @@ public class Mapper : IMapper
         return openingHours;
     }
 
-    private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours MapTo(WeekOpeningHours src) =>
+    private static Api.Shared.Clients.Events.Skedular.Location.V1.WeekOpeningHours MapTo(WeekOpeningHours src) =>
         new()
         {
             Monday = MapTo(src.Monday),
@@ -107,7 +107,7 @@ public class Mapper : IMapper
             Sunday = MapTo(src.Sunday)
         };
 
-    private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails MapTo(OpeningHoursDetails src) =>
+    private static Api.Shared.Clients.Events.Skedular.Location.V1.OpeningHoursDetails MapTo(OpeningHoursDetails src) =>
         new()
         {
             Closed = src.Closed,
@@ -116,7 +116,7 @@ public class Mapper : IMapper
             Until = src.Until is null ? string.Empty : $"{src.Until.Value.Hour}:{src.Until.Value.Minute}"
         };
 
-    private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails MapToDefault() =>
+    private static Api.Shared.Clients.Events.Skedular.Location.V1.OpeningHoursDetails MapToDefault() =>
         new() { Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty };
 
     private static PhysicalAddress? MapTo(LocationPhysicalAddress? src) =>
@@ -149,9 +149,9 @@ public class Mapper : IMapper
     private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
         src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
 
-    private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.ListingMetadata MapTo(ListingMetadata src)
+    private static Api.Shared.Clients.Events.Skedular.Location.V1.ListingMetadata MapTo(ListingMetadata src)
     {
-        var listingMetadata = new Api.Shared.Clients.Events.Skedular.Location.V1.Value.ListingMetadata
+        var listingMetadata = new Api.Shared.Clients.Events.Skedular.Location.V1.ListingMetadata
         {
             About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
         };

@@ -1,11 +1,17 @@
+using System.Data;
+using System.Data.Common;
+using System.Diagnostics;
 using System.Reflection;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.SqlServer.Interceptors;
+using Enterprise.Shared.Telemetry.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using OpenTelemetry.Trace;
 
 namespace Enterprise.Shared.Database.SqlServer;
 
@@ -41,7 +47,7 @@ public static class Extensions
         where TDbContext : DbContext
     {
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var validatedConnectionString = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName);
+        var validatedConnectionString = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName, configuration);
 
         return services.AddDbContextPool<TDbContext>(options =>
         {
@@ -94,7 +100,7 @@ public static class Extensions
         where TDbContext : DbContext
     {
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var validatedConnectionString = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName);
+        var validatedConnectionString = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName, configuration);
 
         return services.AddDbContext<TDbContext>(options =>
         {
@@ -146,7 +152,7 @@ public static class Extensions
         where TDbContext : DbContext
     {
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var validatedConnectionString = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName);
+        var validatedConnectionString = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName, configuration);
 
         return services.AddPooledDbContextFactory<TDbContext>(options =>
         {
@@ -199,7 +205,7 @@ public static class Extensions
         where TDbContext : DbContext
     {
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var validatedConnectionString = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName);
+        var validatedConnectionString = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName, configuration);
 
         return services.AddDbContextFactory<TDbContext>(options =>
         {
@@ -226,7 +232,8 @@ public static class Extensions
         bool isPooled,
         bool isPostgisEnabled,
         string connectionString,
-        string? healthCheckName)
+        string? healthCheckName,
+        IConfiguration configuration)
     {
         services
             .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled, IsPostgisEnabled = isPostgisEnabled })
@@ -236,7 +243,45 @@ public static class Extensions
         var validatedConnectionString = connectionString.BuildConnectionString();
 
         services.AddDatabaseHealthCheck(validatedConnectionString, healthCheckName);
+        services.AddSqlServerTelemetry(configuration);
 
         return validatedConnectionString;
     }
+
+    private static void AddSqlServerTelemetry(this IServiceCollection services, IConfiguration configuration)
+    {
+        if (services.Any(item => item.ServiceType == typeof(SqlServerTelemetryRegistrationMarker)))
+        {
+            return;
+        }
+
+        services.TryAddSingleton<SqlServerTelemetryRegistrationMarker>();
+        var openTelemetryConfiguration = configuration.GetSection(OpenTelemetryConfiguration.Key).Get<OpenTelemetryConfiguration>();
+
+        services.AddOpenTelemetry()
+            .WithTracing(tracing =>
+            {
+                tracing.AddSqlClientInstrumentation();
+
+                if (openTelemetryConfiguration?.EntityFrameworkEnabled == true)
+                {
+                    tracing.AddEntityFrameworkCoreInstrumentation(options =>
+                    {
+                        options.EnrichWithIDbCommand = delegate(Activity activity, IDbCommand command)
+                        {
+                            activity.DisplayName = $"{command.CommandType} main";
+                            activity.SetTag("db.type", command.CommandType);
+                            activity.SetTag("db.text", command.CommandText);
+                            activity.SetTag(
+                                "db.parameters",
+                                string.Join(",",
+                                    command.Parameters.OfType<DbParameter>()
+                                        .Select(parameter => $"{parameter.ParameterName}={parameter.Value}")));
+                        };
+                    });
+                }
+            });
+    }
+
+    private sealed class SqlServerTelemetryRegistrationMarker;
 }

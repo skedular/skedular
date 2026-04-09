@@ -2,27 +2,27 @@ using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Location.Shared.Models;
-using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductType;
+using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductType;
 using Customer = Location.Shared.Models.Customer;
-using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
-using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
+using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Identity = Location.Shared.Database.Entities.Identity;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Location.Shared.Models.Organization;
 using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Location.Shared.Database.Entities.OrganizationSsoSetting;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
-using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
 using ProductVersion = Location.Shared.Database.Entities.ProductVersion;
-using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 
 namespace Location.Processors.Mappers;
 
 public interface IMapper
 {
     Customer MapTo(Event src);
-    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
+    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src);
     Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
@@ -49,7 +49,7 @@ public interface IMapper
         OrganizationSsoSetting dest,
         Shared.Database.Entities.Organization organization);
 
-    Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src);
+    Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Event src);
 
     Shared.Database.Entities.Product MergeToEntity(
         Product src,
@@ -89,7 +89,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
+    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src)
     {
         var organizationAfterState = src.Data.Organization;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -258,7 +258,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src)
+    public Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Event src)
     {
         var productAfterState = src.Data.Product;
         var deletedAt = productAfterState.DeletedAt?.ToDateTimeOffset();
@@ -305,7 +305,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    private static Shared.Models.ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion src, Product product) =>
+    private static Shared.Models.ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductVersion src, Product product) =>
         new()
         {
             Id = src.Id,

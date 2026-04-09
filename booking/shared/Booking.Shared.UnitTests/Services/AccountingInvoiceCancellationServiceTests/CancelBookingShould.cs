@@ -56,7 +56,7 @@ public class CancelBookingShould
             Provider = AccountingProviderConstants.Xero,
             LocalEntityType = AccountingEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = marketplaceBookingId,
-            ExternalInvoiceMode = Models.AccountingInvoiceExportModeConstants.StandardInvoice,
+            ExternalInvoiceMode = Booking.Shared.Models.AccountingInvoiceExportModeConstants.StandardInvoice,
             ExternalStatus = AccountingStatusConstants.Sent
         };
 
@@ -71,7 +71,7 @@ public class CancelBookingShould
         await sut.CancelBookingAsync(booking, cancellationToken);
 
         accountingInvoiceLink.ExternalStatus.ShouldBe(AccountingStatusConstants.Cancelled);
-        accountingInvoiceLink.ExportConfigurationState.ShouldBe(Models.AccountingInvoiceExportConfigurationStateConstants.Cancelled);
+        accountingInvoiceLink.ExportConfigurationState.ShouldBe(Booking.Shared.Models.AccountingInvoiceExportConfigurationStateConstants.Cancelled);
         A.CallTo(() => accountingInvoiceLinkRepository.Update(accountingInvoiceLink)).MustHaveHappenedOnceExactly();
     }
 
@@ -138,7 +138,7 @@ public class CancelBookingShould
                 link.ExternalInvoiceNumber == invoiceNumber &&
                 link.ExternalInvoiceUrl == invoiceUrl &&
                 link.ExternalStatus == AccountingStatusConstants.Cancelled &&
-                link.ExportConfigurationState == Models.AccountingInvoiceExportConfigurationStateConstants.Cancelled)))
+                link.ExportConfigurationState == Booking.Shared.Models.AccountingInvoiceExportConfigurationStateConstants.Cancelled)))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -187,7 +187,7 @@ public class CancelBookingShould
             LocalEntityType = AccountingEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = marketplaceBookingId,
             ExternalInvoiceId = externalInvoiceId,
-            ExternalInvoiceMode = Models.AccountingInvoiceExportModeConstants.StandardInvoice,
+            ExternalInvoiceMode = Booking.Shared.Models.AccountingInvoiceExportModeConstants.StandardInvoice,
             ExternalStatus = AccountingStatusConstants.Sent
         };
         var xeroConnection = new XeroConnection
@@ -224,7 +224,7 @@ public class CancelBookingShould
         await sut.CancelBookingAsync(booking, cancellationToken);
 
         accountingInvoiceLink.ExternalStatus.ShouldBe(AccountingStatusConstants.Cancelled);
-        accountingInvoiceLink.ExportConfigurationState.ShouldBe(Models.AccountingInvoiceExportConfigurationStateConstants.Cancelled);
+        accountingInvoiceLink.ExportConfigurationState.ShouldBe(Booking.Shared.Models.AccountingInvoiceExportConfigurationStateConstants.Cancelled);
         sut.CancelLiveStandardInvoiceCalls.ShouldBe(1);
         sut.CancelledStandardInvoiceIdempotencyKeys.ShouldContain($"{accountingInvoiceLink.Id}:cancel-standard");
     }
@@ -273,7 +273,7 @@ public class CancelBookingShould
             LocalEntityType = AccountingEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = marketplaceBookingId,
             ExternalInvoiceId = Guid.NewGuid().ToString(),
-            ExternalInvoiceMode = Models.AccountingInvoiceExportModeConstants.StandardInvoice,
+            ExternalInvoiceMode = Booking.Shared.Models.AccountingInvoiceExportModeConstants.StandardInvoice,
             ExternalStatus = AccountingStatusConstants.PendingExport
         };
         var accountingInvoiceInstance = new AccountingInvoiceInstance
@@ -363,9 +363,9 @@ public class CancelBookingShould
             Provider = AccountingProviderConstants.Xero,
             LocalEntityType = AccountingEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = marketplaceBookingId,
-            ExternalInvoiceMode = Models.AccountingInvoiceExportModeConstants.StandardInvoice,
+            ExternalInvoiceMode = Booking.Shared.Models.AccountingInvoiceExportModeConstants.StandardInvoice,
             ExternalStatus = AccountingStatusConstants.Paid,
-            ExportConfigurationState = Models.AccountingInvoiceExportConfigurationStateConstants.Active,
+            ExportConfigurationState = Booking.Shared.Models.AccountingInvoiceExportConfigurationStateConstants.Active,
             ExportConfigurationMessage = "Existing configuration"
         };
 
@@ -380,7 +380,7 @@ public class CancelBookingShould
         await sut.CancelBookingAsync(booking, cancellationToken);
 
         accountingInvoiceLink.ExternalStatus.ShouldBe(AccountingStatusConstants.Paid);
-        accountingInvoiceLink.ExportConfigurationState.ShouldBe(Models.AccountingInvoiceExportConfigurationStateConstants.Active);
+        accountingInvoiceLink.ExportConfigurationState.ShouldBe(Booking.Shared.Models.AccountingInvoiceExportConfigurationStateConstants.Active);
         accountingInvoiceLink.ExportConfigurationMessage.ShouldBe("Existing configuration");
         A.CallTo(() => accountingInvoiceLinkRepository.Update(accountingInvoiceLink)).MustHaveHappenedOnceExactly();
     }

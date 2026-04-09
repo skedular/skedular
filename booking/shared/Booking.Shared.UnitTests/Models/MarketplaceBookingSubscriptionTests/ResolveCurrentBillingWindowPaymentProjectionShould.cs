@@ -1,7 +1,7 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 
-namespace Booking.Shared.UnitTests.ModelTests.MarketplaceBookingSubscriptionTests;
+namespace Booking.Shared.UnitTests.Models.MarketplaceBookingSubscriptionTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class ResolveCurrentBillingWindowPaymentProjectionShould

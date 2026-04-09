@@ -24,14 +24,9 @@ public class Program
         var serviceProvider = host.Services;
 
         await Parser.Default
-            .ParseArguments<ProtobufEventMetadataGenerateOptions, McpToolGenerateServiceOptions>(args)
+            .ParseArguments<McpToolGenerateServiceOptions>(args)
             .MapResult(
-                async (ProtobufEventMetadataGenerateOptions options) =>
-                {
-                    var handler = serviceProvider.GetRequiredService<IProtobufEventMetadataGenerateService>();
-                    await handler.HandleAsync(options, cancellationToken);
-                },
-                async (McpToolGenerateServiceOptions options) =>
+                async options =>
                 {
                     var handler = serviceProvider.GetRequiredService<IMcpToolGenerateService>();
                     await handler.HandleAsync(options, cancellationToken);
@@ -53,7 +48,6 @@ public class Program
                     builder.SetMinimumLevel(LogLevel.Information);
 
                     builder.Services
-                        .AddSingleton<IProtobufEventMetadataGenerateService, ProtobufEventMetadataGenerateService>()
                         .AddSingleton<IMcpToolGenerateService, McpToolGenerateService>();
                 });
             }).Build();

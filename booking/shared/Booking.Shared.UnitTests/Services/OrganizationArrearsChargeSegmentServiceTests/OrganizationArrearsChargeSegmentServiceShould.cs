@@ -243,7 +243,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
         result.Select(item => item.Amount).Sum().ShouldBe(1450m);
     }
 
-    private static Models.Booking CreateBooking(
+    private static Shared.Models.Booking CreateBooking(
         ProductPricingCadence purchaseCadence,
         ProductPricingCadence bookingCadence,
         decimal price,

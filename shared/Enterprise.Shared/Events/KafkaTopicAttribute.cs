@@ -1,4 +1,4 @@
-﻿namespace Enterprise.Shared.Events;
+namespace Enterprise.Shared.Events;
 
 public class KafkaTopicAttribute(
     int topicPartitionCount,

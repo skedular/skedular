@@ -1,5 +1,4 @@
-﻿using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
 using Enterprise.Shared.Kafka.Consume;
 using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
@@ -8,7 +7,7 @@ using Location.Shared.Workflows;
 using IMapper = Location.Processors.Mappers.IMapper;
 using Product = Location.Shared.Models.Product;
 using ProductVersion = Location.Shared.Database.Entities.ProductVersion;
-using Type = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Type;
 
 namespace Location.Processors.Subscribers;
 

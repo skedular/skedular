@@ -1,5 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Processors.Mappers;
 using Booking.Processors.Subscribers;
@@ -12,8 +11,8 @@ using Enterprise.Shared.Kafka.Consume;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationBillingCycleModel = Api.Shared.Services.Models.OrganizationBillingCycle;
 using OrganizationTypeModel = Api.Shared.Services.Models.OrganizationType;
-using ValueMetadata = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata;
-using ValueType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
+using ValueMetadata = Api.Shared.Clients.Events.Skedular.Organization.V1.Metadata;
+using ValueType = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;
 
 namespace Booking.Processors.UnitTests.Subscribers.OrganizationSubscriberTests;
 

@@ -1,24 +1,24 @@
-using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Team.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
-using CdnFile = Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnFile;
-using CdnImageFile = Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile;
-using OrganizationMember = Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember;
-using TeamMember = Api.Shared.Clients.Events.Skedular.Team.V1.Value.TeamMember;
+using CdnFile = Api.Shared.Clients.Events.Skedular.Team.V1.CdnFile;
+using CdnImageFile = Api.Shared.Clients.Events.Skedular.Team.V1.CdnImageFile;
+using OrganizationMember = Api.Shared.Clients.Events.Skedular.Team.V1.OrganizationMember;
+using TeamMember = Api.Shared.Clients.Events.Skedular.Team.V1.TeamMember;
 
 namespace Team.Shared.Mappers;
 
 public interface IMapper
 {
-    Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team MapTo(Models.Team src);
+    Api.Shared.Clients.Events.Skedular.Team.V1.Team MapTo(Models.Team src);
 }
 
 public class Mapper : IMapper
 {
-    public Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team MapTo(Models.Team src)
+    public Api.Shared.Clients.Events.Skedular.Team.V1.Team MapTo(Models.Team src)
     {
-        var team = new Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team
+        var team = new Api.Shared.Clients.Events.Skedular.Team.V1.Team
         {
             Id = src.Id,
             DeletedAt = src.DeletedAt?.ToTimestamp(),

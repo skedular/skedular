@@ -1,4 +1,4 @@
-using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Outbox.Temporal;
 using Temporalio.Client;
 
 namespace MsTeams.Shared.Services;

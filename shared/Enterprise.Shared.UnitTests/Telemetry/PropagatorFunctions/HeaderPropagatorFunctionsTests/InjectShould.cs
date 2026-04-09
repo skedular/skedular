@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Confluent.Kafka;
-using Enterprise.Shared.Telemetry.PropagatorFunctions;
+using Enterprise.Shared.Kafka.Telemetry;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagatorFunctions.HeaderPropagatorFunctionsTests;
 

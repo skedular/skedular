@@ -1,13 +1,12 @@
-using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Team.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Models;
-using Enterprise.Shared.Outbox.Publishers;
+using Enterprise.Shared.Outbox.Kafka;
 using Team.Shared.Mappers;
-using Event = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.Team.V1.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Type;
 
 namespace Team.Shared.Publishers;
 

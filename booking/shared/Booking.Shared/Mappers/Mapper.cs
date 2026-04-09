@@ -4,14 +4,14 @@ using Enterprise.Shared;
 using Enterprise.Shared.Time;
 using Google.Protobuf.WellKnownTypes;
 using Stripe;
-using BookingSchedule = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule;
+using BookingSchedule = Api.Shared.Clients.Events.Skedular.Booking.V1.BookingSchedule;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
-using Resource = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource;
+using Resource = Api.Shared.Clients.Events.Skedular.Booking.V1.Resource;
 using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
 using StripeProduct = Booking.Shared.Database.Entities.StripeProduct;
 using Team = Booking.Shared.Database.Entities.Team;
@@ -20,7 +20,7 @@ namespace Booking.Shared.Mappers;
 
 public interface IMapper
 {
-    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking MapTo(Models.Booking src);
+    Api.Shared.Clients.Events.Skedular.Booking.V1.Booking MapTo(Models.Booking src);
     ProductCreateOptions MapTo(ProductPricing pricing, ProductVersion productVersion);
     PriceCreateOptions MapTo(ProductPricing pricing, StripeProduct stripeProduct);
     CustomerCreateOptions MapToCustomerCreateOption(Organization src);
@@ -106,9 +106,9 @@ public interface IMapper
 
 public class Mapper(TimeProvider timeProvider) : IMapper
 {
-    public Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking MapTo(Models.Booking src)
+    public Api.Shared.Clients.Events.Skedular.Booking.V1.Booking MapTo(Models.Booking src)
     {
-        var booking = new Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking
+        var booking = new Api.Shared.Clients.Events.Skedular.Booking.V1.Booking
         {
             Id = src.Id,
             DeletedAt = src.DeletedAt?.ToTimestamp(),
@@ -117,23 +117,22 @@ public class Mapper(TimeProvider timeProvider) : IMapper
             Notes = src.Notes.ToSafeString(),
             Category = src.Category switch
             {
-                BookingCategory.WorkingFromHome => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory.WorkingFromHome,
-                BookingCategory.WorkingFromOffice => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory.WorkingFromOffice,
-                BookingCategory.WorkingFromCoworkingSpace =>
-                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory.WorkingFromCoworkingSpace,
-                BookingCategory.SickLeave => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory.SickLeave,
-                BookingCategory.AnnualLeave => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory.AnnualLeave,
-                BookingCategory.WellbeingLeave => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory.WellbeingLeave,
-                BookingCategory.ClientOffice => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory.ClientOffice,
-                BookingCategory.Vacation => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory.Vacation,
-                BookingCategory.TravelingForWork => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory.TravelingForWork,
-                BookingCategory.NonWorkingDay => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory.NonWorkingDay,
+                BookingCategory.WorkingFromHome => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.WorkingFromHome,
+                BookingCategory.WorkingFromOffice => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.WorkingFromOffice,
+                BookingCategory.WorkingFromCoworkingSpace => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.WorkingFromCoworkingSpace,
+                BookingCategory.SickLeave => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.SickLeave,
+                BookingCategory.AnnualLeave => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.AnnualLeave,
+                BookingCategory.WellbeingLeave => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.WellbeingLeave,
+                BookingCategory.ClientOffice => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.ClientOffice,
+                BookingCategory.Vacation => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.Vacation,
+                BookingCategory.TravelingForWork => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.TravelingForWork,
+                BookingCategory.NonWorkingDay => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Channel = src.Channel switch
             {
-                BookingChannel.Private => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private,
-                BookingChannel.Marketplace => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Marketplace,
+                BookingChannel.Private => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingChannel.Private,
+                BookingChannel.Marketplace => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingChannel.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             }
         };

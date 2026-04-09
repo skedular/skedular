@@ -1,5 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Enterprise.Shared.Kafka.Consume;
 using Location.Processors.Mappers;
 using Location.Shared.Models;
@@ -7,7 +6,7 @@ using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Organization = Location.Shared.Database.Entities.Organization;
 using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
-using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;
 
 namespace Location.Processors.Subscribers;
 

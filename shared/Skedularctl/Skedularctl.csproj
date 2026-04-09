@@ -39,7 +39,5 @@
 
     <ItemGroup>
         <EmbeddedResource Include="appsettings.json"/>
-        <EmbeddedResource Include="Events/Resources/EventMetadata.liquid"/>
-        <EmbeddedResource Include="Events/Resources/EventWithoutMetadata.liquid"/>
     </ItemGroup>
 </Project>

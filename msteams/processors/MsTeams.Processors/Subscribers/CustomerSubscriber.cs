@@ -1,11 +1,11 @@
-﻿using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Enterprise.Shared.Kafka.Consume;
 using MsTeams.Processors.Mappers;
 using MsTeams.Shared.Repositories;
 using MsTeams.Shared.Services.Cache;
 using Customer = MsTeams.Shared.Models.Customer;
-using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Type;
 
 namespace MsTeams.Processors.Subscribers;
 

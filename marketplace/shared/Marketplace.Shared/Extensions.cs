@@ -1,4 +1,4 @@
-using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Outbox.Temporal;
 using Marketplace.Shared.Mappers;
 using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;

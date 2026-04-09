@@ -1,12 +1,18 @@
-﻿using System.Reflection;
+﻿using System.Data;
+using System.Data.Common;
+using System.Diagnostics;
+using System.Reflection;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.Postgres.Interceptors;
+using Enterprise.Shared.Telemetry.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
+using OpenTelemetry.Trace;
 
 namespace Enterprise.Shared.Database.Postgres;
 
@@ -42,7 +48,7 @@ public static class Extensions
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName);
+            var dataSource = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName, configuration);
 
             return services.AddDbContextPool<TDbContext>(options =>
             {
@@ -98,7 +104,7 @@ public static class Extensions
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName);
+            var dataSource = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName, configuration);
 
             return services.AddDbContext<TDbContext>(options =>
             {
@@ -153,7 +159,7 @@ public static class Extensions
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName);
+            var dataSource = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName, configuration);
 
             return services.AddPooledDbContextFactory<TDbContext>(options =>
             {
@@ -209,7 +215,7 @@ public static class Extensions
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName);
+            var dataSource = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName, configuration);
 
             return services.AddDbContextFactory<TDbContext>(options =>
             {
@@ -236,7 +242,8 @@ public static class Extensions
             });
         }
 
-        private NpgsqlDataSource GetDatasource(bool isPooled, bool isPostgisEnabled, string connectionString, string? healthCheckName)
+        private NpgsqlDataSource GetDatasource(bool isPooled, bool isPostgisEnabled, string connectionString, string? healthCheckName,
+            IConfiguration configuration)
         {
             services
                 .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled, IsPostgisEnabled = isPostgisEnabled })
@@ -246,8 +253,47 @@ public static class Extensions
             var dataSource = connectionString.BuildDataSource(isPostgisEnabled);
 
             services.AddDatabaseHealthCheck(dataSource, healthCheckName);
+            services.AddPostgresTelemetry(configuration);
 
             return dataSource;
         }
+
+        private void AddPostgresTelemetry(IConfiguration configuration)
+        {
+            if (services.Any(item => item.ServiceType == typeof(PostgresTelemetryRegistrationMarker)))
+            {
+                return;
+            }
+
+            services.TryAddSingleton<PostgresTelemetryRegistrationMarker>();
+            var openTelemetryConfiguration = configuration.GetSection(OpenTelemetryConfiguration.Key).Get<OpenTelemetryConfiguration>();
+
+            services.AddOpenTelemetry()
+                .WithMetrics(metrics => metrics.AddNpgsqlInstrumentation())
+                .WithTracing(tracing =>
+                {
+                    tracing.AddNpgsql();
+
+                    if (openTelemetryConfiguration?.EntityFrameworkEnabled == true)
+                    {
+                        tracing.AddEntityFrameworkCoreInstrumentation(options =>
+                        {
+                            options.EnrichWithIDbCommand = delegate(Activity activity, IDbCommand command)
+                            {
+                                activity.DisplayName = $"{command.CommandType} main";
+                                activity.SetTag("db.type", command.CommandType);
+                                activity.SetTag("db.text", command.CommandText);
+                                activity.SetTag(
+                                    "db.parameters",
+                                    string.Join(",",
+                                        command.Parameters.OfType<DbParameter>()
+                                            .Select(parameter => $"{parameter.ParameterName}={parameter.Value}")));
+                            };
+                        });
+                    }
+                });
+        }
     }
+
+    private sealed class PostgresTelemetryRegistrationMarker;
 }

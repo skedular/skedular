@@ -5,14 +5,14 @@ using Location = Slack.Shared.Models.Location;
 using Team = Slack.Shared.Models.Team;
 using Organization = Slack.Shared.Models.Organization;
 using Customer = Slack.Shared.Models.Customer;
-using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
-using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
+using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Identity = Slack.Shared.Models.Identity;
-using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType;
-using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
+using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.LocationType;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
-using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
 
 namespace Slack.Processors.Mappers;
 
@@ -32,11 +32,11 @@ public interface IMapper
         Shared.Database.Entities.Identity dest,
         Shared.Database.Entities.Customer? customer);
 
-    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
+    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Event src);
     Shared.Database.Entities.Location MergeToEntity(Location src, Shared.Database.Entities.Location dest);
-    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
+    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
-    Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
+    Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Event src);
     Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest);
 
     OrganizationMember MapToEntity(
@@ -117,7 +117,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
+    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Event src)
     {
         var locationAfterState = src.Data.Location;
         var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -146,7 +146,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
+    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src)
     {
         var organizationAfterState = src.Data.Organization;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -212,7 +212,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
+    public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Event src)
     {
         var teamAfterState = src.Data.Team;
         var deletedAt = teamAfterState.DeletedAt?.ToDateTimeOffset();

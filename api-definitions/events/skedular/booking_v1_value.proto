@@ -3,7 +3,7 @@ package booking;
 
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Booking.V1.Value";
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Booking.V1";
 
 enum Type {
   Type_BookingUpserted = 0;

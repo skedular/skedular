@@ -1,17 +1,17 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using MsTeams.Shared.Models;
-using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Customer = MsTeams.Shared.Models.Customer;
-using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
+using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType;
 using Identity = MsTeams.Shared.Database.Entities.Identity;
 using Location = MsTeams.Shared.Models.Location;
 using Organization = MsTeams.Shared.Models.Organization;
 using OrganizationMember = MsTeams.Shared.Database.Entities.OrganizationMember;
-using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
 using OrganizationSsoSetting = MsTeams.Shared.Database.Entities.OrganizationSsoSetting;
-using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 using Team = MsTeams.Shared.Models.Team;
 
 namespace MsTeams.Processors.Mappers;
@@ -22,7 +22,7 @@ public interface IMapper
     Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
-    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
+    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
     OrganizationMember MapToEntity(
@@ -36,9 +36,9 @@ public interface IMapper
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
 
-    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
+    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Event src);
     Shared.Database.Entities.Location MergeToEntity(Location src, Shared.Database.Entities.Location dest);
-    Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
+    Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Event src);
     Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest);
     OrganizationSsoSetting MapTo(Shared.Models.OrganizationSsoSetting src, Shared.Database.Entities.Organization organization);
 
@@ -101,7 +101,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
+    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src)
     {
         var organizationAfterState = src.Data.Organization;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -194,7 +194,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
+    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Event src)
     {
         var locationAfterState = src.Data.Location;
         var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -217,7 +217,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
+    public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Event src)
     {
         var teamAfterState = src.Data.Team;
         var deletedAt = teamAfterState.DeletedAt?.ToDateTimeOffset();

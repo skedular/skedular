@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key;
+using Api.Shared.Clients.Events.Skedular.BookingInternal.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
@@ -9,8 +9,8 @@ using Enterprise.Shared.Kafka.Consume;
 using Stripe;
 using Stripe.Checkout;
 using Constants = Booking.Shared.GraphQL.Constants;
-using Event = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Event;
+using Type = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Type;
 
 namespace Booking.Processors.Subscribers;
 

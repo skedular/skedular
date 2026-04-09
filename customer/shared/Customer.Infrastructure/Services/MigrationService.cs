@@ -1,5 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;

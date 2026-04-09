@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key;
+using Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1;
 using Api.Shared.Services;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
@@ -7,8 +7,8 @@ using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Stripe;
-using Event = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Event;
+using Type = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Type;
 
 namespace Organization.Processors.Subscribers;
 

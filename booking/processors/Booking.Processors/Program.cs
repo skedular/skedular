@@ -1,5 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
 using Api.Shared.Services;
 using Booking.Processors.Subscribers;
 using Booking.Shared;
@@ -31,24 +30,24 @@ public class Program
             .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb", true)
             .AddKafkaReliableEventConsumers<
                 BookingInternalSubscriber,
-                Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key,
+                Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
-                Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.Customer.V1.Key,
+                Api.Shared.Clients.Events.Skedular.Customer.V1.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 LocationSubscriber,
-                Api.Shared.Clients.Events.Skedular.Location.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.Location.V1.Key,
+                Api.Shared.Clients.Events.Skedular.Location.V1.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 OrganizationSubscriber,
-                Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.Organization.V1.Key,
+                Api.Shared.Clients.Events.Skedular.Organization.V1.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 TeamSubscriber,
-                Api.Shared.Clients.Events.Skedular.Team.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.Team.V1.Key,
+                Api.Shared.Clients.Events.Skedular.Team.V1.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 MarketplaceSubscriber,
                 Key,

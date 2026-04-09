@@ -26,9 +26,9 @@ public class MarketplaceBookingServiceShould
         var organizations = new List<Organization>();
         var teams = new List<Team>();
         var customer = new Customer();
-        var booking = new Models.Booking
+        var booking = new Shared.Models.Booking
         {
-            InvolvedCustomers = [new Models.Customer { Id = "customer-1" }],
+            InvolvedCustomers = [new Shared.Models.Customer { Id = "customer-1" }],
             MarketplaceBooking = new MarketplaceBooking { ProductVersion = new ProductVersion { Id = "product-version-1" } }
         };
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -53,9 +53,9 @@ public class MarketplaceBookingServiceShould
         var organizations = new List<Organization>();
         var teams = new List<Team>();
         var customer = new Customer();
-        var booking = new Models.Booking
+        var booking = new Shared.Models.Booking
         {
-            InvolvedCustomers = [new Models.Customer { Id = "customer-1" }],
+            InvolvedCustomers = [new Shared.Models.Customer { Id = "customer-1" }],
             MarketplaceBooking = new MarketplaceBooking { ProductVersion = new ProductVersion { Id = "product-version-1" } }
         };
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -77,7 +77,7 @@ public class MarketplaceBookingServiceShould
         CancellationToken cancellationToken)
     {
         // Arrange
-        var booking = new Models.Booking();
+        var booking = new Shared.Models.Booking();
         var organizations = new List<Organization>();
         var teams = new List<Team>();
         var lastModifiedByCustomer = new Customer();
@@ -170,7 +170,7 @@ public class MarketplaceBookingServiceShould
             false,
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(180, 100)]);
-        var deletedBooking = new Models.Booking { Id = existingBooking.Id };
+        var deletedBooking = new Shared.Models.Booking { Id = existingBooking.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -215,7 +215,7 @@ public class MarketplaceBookingServiceShould
             false,
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(45, 100)]);
-        var deletedBooking = new Models.Booking { Id = existingBooking.Id };
+        var deletedBooking = new Shared.Models.Booking { Id = existingBooking.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -259,7 +259,7 @@ public class MarketplaceBookingServiceShould
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(180, 100)]);
         existingBooking.RecurringBooking = new RecurringBooking { Id = "recurring-1" };
-        var deletedBooking = new Models.Booking { Id = existingBooking.Id };
+        var deletedBooking = new Shared.Models.Booking { Id = existingBooking.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -315,12 +315,12 @@ public class MarketplaceBookingServiceShould
                 PaymentMethod = PaymentMethodConstants.Card
             }
         };
-        var booking = new Models.Booking
+        var booking = new Shared.Models.Booking
         {
             Id = existingBooking.Id,
             From = from,
             Until = until,
-            InvolvedCustomers = [new Models.Customer { Id = "customer-1" }],
+            InvolvedCustomers = [new Shared.Models.Customer { Id = "customer-1" }],
             Resources = [],
             InvolvedOrganizations = [],
             InvolvedLocations = [],

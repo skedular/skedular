@@ -1,7 +1,7 @@
 syntax = "proto3";
 package organization;
 
-option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Organization.V1.Key";
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Organization.V1";
 
 message Key {
   string organizationId = 1;

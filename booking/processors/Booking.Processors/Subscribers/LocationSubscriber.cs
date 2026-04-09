@@ -1,5 +1,4 @@
-﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Location.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
@@ -10,7 +9,7 @@ using Enterprise.Shared.Kafka.Consume;
 using Constants = Api.Shared.Services.Constants;
 using IMapper = Booking.Processors.Mappers.IMapper;
 using Location = Booking.Shared.Database.Entities.Location;
-using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Type;
 
 namespace Booking.Processors.Subscribers;
 

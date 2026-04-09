@@ -3,9 +3,14 @@ using System.Net.Sockets;
 
 namespace Enterprise.Shared.Helpers;
 
-public static class PortFinder
+public interface IPortFinder
 {
-    public static int FindFreePort()
+    int FindFreePort();
+}
+
+public class PortFinder : IPortFinder
+{
+    public int FindFreePort()
     {
         var tcpListener = new TcpListener(IPAddress.Loopback, 0);
 

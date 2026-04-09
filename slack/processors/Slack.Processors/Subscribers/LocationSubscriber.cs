@@ -1,10 +1,9 @@
-﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Location.V1;
 using Enterprise.Shared.Kafka.Consume;
 using Slack.Shared.Repositories;
 using IMapper = Slack.Processors.Mappers.IMapper;
 using Location = Slack.Shared.Database.Entities.Location;
-using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Type;
 
 namespace Slack.Processors.Subscribers;
 

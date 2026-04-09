@@ -1,5 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
@@ -9,10 +8,10 @@ using Enterprise.Shared.Temporal;
 using Location.Processors.Subscribers;
 using Location.Shared;
 using Location.Shared.Database;
-using BookingEvent = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event;
-using BookingKey = Api.Shared.Clients.Events.Skedular.Booking.V1.Key.Key;
-using OrganizationEvent = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
-using OrganizationKey = Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key;
+using BookingEvent = Api.Shared.Clients.Events.Skedular.Booking.V1.Event;
+using BookingKey = Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
+using OrganizationEvent = Api.Shared.Clients.Events.Skedular.Organization.V1.Event;
+using OrganizationKey = Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 
 namespace Location.Processors;
 
@@ -37,8 +36,8 @@ public class Program
                 BookingEvent>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
-                Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.Customer.V1.Key,
+                Api.Shared.Clients.Events.Skedular.Customer.V1.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 MarketplaceSubscriber,
                 Key,

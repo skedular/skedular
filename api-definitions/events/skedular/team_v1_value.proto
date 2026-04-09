@@ -3,7 +3,7 @@ package team;
 
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Team.V1.Value";
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Team.V1";
 
 enum Type {
   Type_TeamUpserted = 0;

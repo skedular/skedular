@@ -1,11 +1,10 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Enterprise.Shared.Kafka.Consume;
 using Location.Processors.Mappers;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Customer = Location.Shared.Models.Customer;
-using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Type;
 
 namespace Location.Processors.Subscribers;
 

@@ -1,5 +1,4 @@
-﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Enterprise.Shared.Kafka.Consume;
 using MsTeams.Processors.Mappers;
 using MsTeams.Shared.Models;
@@ -10,7 +9,7 @@ using MsTeams.Shared.Workflows;
 using AzureTenant = MsTeams.Shared.Database.Entities.AzureTenant;
 using Organization = MsTeams.Shared.Database.Entities.Organization;
 using OrganizationMember = MsTeams.Shared.Database.Entities.OrganizationMember;
-using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;
 
 namespace MsTeams.Processors.Subscribers;
 

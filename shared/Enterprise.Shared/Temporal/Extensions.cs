@@ -1,5 +1,6 @@
+using System.Reflection;
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Outbox.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -131,5 +132,18 @@ public static class Extensions
                 .AddTemporalClient(temporalClientConnectOptions => temporalClientConnectOptions.ConfigureClient(temporalConfiguration))
                 .Configure<ITemporalClient>(_ => { });
         }
+    }
+
+    extension(Type type)
+    {
+        /// <summary>Returns the fully qualified CLR type name used as the Temporal workflow type identifier.</summary>
+        public string ToWorkflowType() => type.FullName!;
+    }
+
+    extension(MethodInfo methodInfo)
+    {
+        /// <summary>Returns the Temporal signal type string in the form "DeclaringType.MethodName".</summary>
+        public string ToWorkflowSignalType() =>
+            $"{methodInfo.DeclaringType?.FullName ?? throw new InvalidOperationException("Workflow signal methods must have a declaring type.")}.{methodInfo.Name}";
     }
 }

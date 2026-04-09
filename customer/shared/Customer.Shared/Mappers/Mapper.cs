@@ -1,30 +1,30 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Api.Shared.Services.Models;
 using Customer.Shared.Database.Entities;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
-using CustomerBillingDetails = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerBillingDetails;
+using CustomerBillingDetails = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerBillingDetails;
 using CustomerType = Api.Shared.Services.Models.CustomerType;
-using Identity = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity;
-using Location = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location;
-using OrganizationTag = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag;
+using Identity = Api.Shared.Clients.Events.Skedular.Customer.V1.Identity;
+using Location = Api.Shared.Clients.Events.Skedular.Customer.V1.Location;
+using OrganizationTag = Api.Shared.Clients.Events.Skedular.Customer.V1.OrganizationTag;
 using PaymentMethod = Stripe.PaymentMethod;
 using PersonalInformationVisibility = Api.Shared.Services.Models.PersonalInformationVisibility;
-using Resource = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Resource;
+using Resource = Api.Shared.Clients.Events.Skedular.Customer.V1.Resource;
 
 namespace Customer.Shared.Mappers;
 
 public interface IMapper
 {
-    Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer MapTo(Models.Customer src);
+    Api.Shared.Clients.Events.Skedular.Customer.V1.Customer MapTo(Models.Customer src);
     StripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Customer customer);
 }
 
 public class Mapper : IMapper
 {
-    public Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer MapTo(Models.Customer src)
+    public Api.Shared.Clients.Events.Skedular.Customer.V1.Customer MapTo(Models.Customer src)
     {
-        var customer = new Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer
+        var customer = new Api.Shared.Clients.Events.Skedular.Customer.V1.Customer
         {
             Id = src.Id,
             DeletedAt = src.DeletedAt?.ToTimestamp(),
@@ -49,14 +49,14 @@ public class Mapper : IMapper
             PreferredOrganizationId = src.DefaultOrganization is null ? string.Empty : src.DefaultOrganization.Id,
             PersonalInformationVisibility = src.PersonalInformationVisibility switch
             {
-                PersonalInformationVisibility.Visible => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility.Visible,
-                PersonalInformationVisibility.Redacted => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility.Redacted,
+                PersonalInformationVisibility.Visible => Api.Shared.Clients.Events.Skedular.Customer.V1.PersonalInformationVisibility.Visible,
+                PersonalInformationVisibility.Redacted => Api.Shared.Clients.Events.Skedular.Customer.V1.PersonalInformationVisibility.Redacted,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Type = src.Type switch
             {
-                CustomerType.Guest => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType.Guest,
-                CustomerType.Registered => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType.Registered,
+                CustomerType.Guest => Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType.Guest,
+                CustomerType.Registered => Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType.Registered,
                 _ => throw new ArgumentOutOfRangeException()
             }
         };

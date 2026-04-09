@@ -1,14 +1,8 @@
-﻿using System.Data;
-using System.Data.Common;
-using System.Diagnostics;
-using Confluent.Kafka;
-using Enterprise.Shared.Kafka.Telemetry;
-using Enterprise.Shared.Metrics;
+﻿using Enterprise.Shared.Metrics;
 using Enterprise.Shared.Telemetry.Configurations;
 using Enterprise.Shared.Telemetry.PropagatorFunctions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
 using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
 using OpenTelemetry.Metrics;
@@ -34,9 +28,7 @@ public static class OpenTelemetryExtensions
                 .AddSingleton<IOpenTelemetryInstrumentation, OpenTelemetryInstrumentation>()
                 .AddSingleton<IActivityGetter, ActivityGetter>()
                 .AddSingleton<IPropagationContextGetter, PropagationContextGetter>()
-                .AddSingleton<IKafkaActivityStarter, KafkaActivityStarter>()
                 .AddSingleton(typeof(IActivityPropagator<>), typeof(ActivityPropagator<>))
-                .AddSingleton<IPropagatorFunctionProvider<Headers>, HeaderPropagatorFunctions>()
                 .AddSingleton<IPropagatorFunctionProvider<IDictionary<string, string>>, StringDictionaryPropagatorFunctions>()
                 .AddSingleton<IPropagatorFunctionProvider<IPropagatorEntity>, PropagatorEntityFunctions>();
 
@@ -49,8 +41,7 @@ public static class OpenTelemetryExtensions
                             metrics
                                 .AddAspNetCoreInstrumentation()
                                 .AddHttpClientInstrumentation()
-                                .AddRuntimeInstrumentation()
-                                .AddNpgsqlInstrumentation();
+                                .AddRuntimeInstrumentation();
 
                             if (openTelemetryConfiguration.MetricsIngestEnabled)
                             {
@@ -81,34 +72,7 @@ public static class OpenTelemetryExtensions
                         });
 
                         tracing
-                            .AddSqlClientInstrumentation()
-                            .AddHttpClientInstrumentation()
-                            .AddNpgsql()
-                            .AddHotChocolateInstrumentation();
-
-                        if (openTelemetryConfiguration.EntityFrameworkEnabled)
-                        {
-                            tracing.AddEntityFrameworkCoreInstrumentation(options =>
-                            {
-                                options.EnrichWithIDbCommand = delegate(Activity activity, IDbCommand command)
-                                {
-                                    activity.DisplayName = $"{command.CommandType} main";
-                                    activity.SetTag("db.type", command.CommandType);
-                                    activity.SetTag("db.text", command.CommandText);
-                                    activity.SetTag(
-                                        "db.parameters",
-                                        string.Join(",",
-                                            command.Parameters.OfType<DbParameter>()
-                                                .Select(parameter => $"{parameter.ParameterName}={parameter.Value}")));
-                                };
-                            });
-                        }
-
-                        services
-                            .AddActivitySource(TelemetryKeys.IncomingActivitySourceName)
-                            .AddActivitySource(TelemetryKeys.ConsumerActivitySourceName)
-                            .AddActivitySource(TelemetryKeys.ProducerActivitySourceName)
-                            .AddActivitySource(Outbox.Telemetry.TelemetryKeys.KafkaActivitySourceName);
+                            .AddHttpClientInstrumentation();
 
                         if (openTelemetryConfiguration.ConsoleEnabled)
                         {
@@ -128,16 +92,5 @@ public static class OpenTelemetryExtensions
 
             return services;
         }
-
-        /// <summary>
-        ///     Adds an activity source using the provided name. The activity source is added to the telemetry source list
-        ///     automatically
-        /// </summary>
-        /// <param name="activitySourceName"></param>
-        /// <returns></returns>
-        private IServiceCollection AddActivitySource(string activitySourceName) =>
-            services
-                .AddSingleton<IActivitySource>(_ => new ActivitySourceFacade(activitySourceName))
-                .ConfigureOpenTelemetryTracerProvider(builder => builder.AddSource(activitySourceName));
     }
 }

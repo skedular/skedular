@@ -1,5 +1,4 @@
-﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Enterprise.Shared.Kafka.Consume;
 using Marketplace.Processors.Mappers;
 using Marketplace.Shared.Models;
@@ -7,7 +6,7 @@ using Marketplace.Shared.Repositories;
 using Marketplace.Shared.Services.Cache;
 using Organization = Marketplace.Shared.Database.Entities.Organization;
 using OrganizationMember = Marketplace.Shared.Database.Entities.OrganizationMember;
-using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;
 
 namespace Marketplace.Processors.Subscribers;
 

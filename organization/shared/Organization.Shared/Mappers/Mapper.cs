@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
@@ -10,21 +10,21 @@ using AzureTenant = Organization.Shared.Database.Entities.AzureTenant;
 using Customer = Organization.Shared.Models.Customer;
 using CustomerType = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType;
 using Identity = Organization.Shared.Models.Identity;
-using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
-using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
+using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Offering;
+using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMember;
 using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
 using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
 using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
 using OrganizationType = Api.Shared.Services.Models.OrganizationType;
 using PaymentMethod = Stripe.PaymentMethod;
 using PersonalInformationVisibility = Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility;
-using PhysicalAddress = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.PhysicalAddress;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
-using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
-using OrganizationBillingCycle = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle;
-using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
-using CdnFile = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnFile;
-using CdnImageFile = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnImageFile;
+using PhysicalAddress = Api.Shared.Clients.Events.Skedular.Organization.V1.PhysicalAddress;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
+using OrganizationBillingCycle = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationBillingCycle;
+using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Tag;
+using CdnFile = Api.Shared.Clients.Events.Skedular.Organization.V1.CdnFile;
+using CdnImageFile = Api.Shared.Clients.Events.Skedular.Organization.V1.CdnImageFile;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using OrganizationXeroConnection = Organization.Shared.Models.OrganizationXeroConnection;
 
@@ -32,7 +32,7 @@ namespace Organization.Shared.Mappers;
 
 public interface IMapper
 {
-    Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization MapTo(Models.Organization src);
+    Api.Shared.Clients.Events.Skedular.Organization.V1.Organization MapTo(Models.Organization src);
     OrganizationStripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Organization organization);
     Models.Organization MapTo(Database.Entities.Organization src);
     AzureTenantMember MapTo(User src);
@@ -50,10 +50,10 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization MapTo(Models.Organization src)
+    public Api.Shared.Clients.Events.Skedular.Organization.V1.Organization MapTo(Models.Organization src)
     {
         var organizationOffering = src.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue).OrderByDescending(item => item.End).First();
-        var organization = new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization
+        var organization = new Api.Shared.Clients.Events.Skedular.Organization.V1.Organization
         {
             Id = src.Id,
             DeletedAt = src.DeletedAt?.ToTimestamp(),
@@ -66,9 +66,9 @@ public class Mapper : IMapper
             LogoUrl = src.LogoUrl.ToSafeString(),
             Type = src.Type switch
             {
-                OrganizationType.Private => Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Private,
-                OrganizationType.Marketplace => Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Marketplace,
-                OrganizationType.Individual => Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Individual,
+                OrganizationType.Private => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType.Private,
+                OrganizationType.Marketplace => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType.Marketplace,
+                OrganizationType.Individual => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType.Individual,
                 _ => throw new ArgumentOutOfRangeException()
             },
             BillingCycle = src.BillingCycle switch
@@ -271,10 +271,10 @@ public class Mapper : IMapper
                 Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, IsAuthorized = src.IsAuthorized
             };
 
-    private static Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings? MapTo(OrganizationSsoSettings? src) =>
+    private static Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationSsoSettings? MapTo(OrganizationSsoSettings? src) =>
         src is null
             ? null
-            : new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings
+            : new Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationSsoSettings
             {
                 Id = src.Id,
                 IsActive = src.IsActive,
@@ -283,10 +283,10 @@ public class Mapper : IMapper
                 AppFederationMetadataUrl = src.AppFederationMetadataUrl.ToSafeString()
             };
 
-    private static Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>
+    private static Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>
         src is null
             ? null
-            : new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails
+            : new Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationTaxDetails
             {
                 Id = src.Id, TaxId = src.TaxId.ToSafeString(), TaxRatePercentage = Convert.ToDouble(src.TaxRatePercentage)
             };
@@ -623,9 +623,9 @@ public class Mapper : IMapper
     private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
         src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
 
-    private static Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata MapTo(ListingMetadata src)
+    private static Api.Shared.Clients.Events.Skedular.Organization.V1.ListingMetadata MapTo(ListingMetadata src)
     {
-        var listingMetadata = new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata
+        var listingMetadata = new Api.Shared.Clients.Events.Skedular.Organization.V1.ListingMetadata
         {
             About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
         };

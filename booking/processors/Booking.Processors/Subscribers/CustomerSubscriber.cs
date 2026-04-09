@@ -1,5 +1,4 @@
-﻿using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Booking.Processors.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
@@ -8,7 +7,7 @@ using Customer = Booking.Shared.Models.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using OrganizationTag = Booking.Shared.Database.Entities.OrganizationTag;
 using Resource = Booking.Shared.Database.Entities.Resource;
-using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Type;
 
 namespace Booking.Processors.Subscribers;
 

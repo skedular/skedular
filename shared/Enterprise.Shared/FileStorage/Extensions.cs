@@ -9,6 +9,15 @@ public static class Extensions
 {
     private static readonly string s_homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
+    /// <summary>
+    ///     Registers file-storage services (<see cref="ICdnService" /> and <see cref="IPrivateFileService" />).
+    ///     Uses the local filesystem backend when <c>FileStorage:UseLocal</c> is <c>true</c>;
+    ///     otherwise uses the Cloudflare backend.
+    /// </summary>
+    /// <param name="services">The service collection to configure.</param>
+    /// <param name="configuration">Application configuration (reads the <c>FileStorage</c> and <c>Cloudflare</c> sections).</param>
+    /// <param name="publicCdnFileEndpoint">Public base URL used to build CDN file URLs returned to clients.</param>
+    /// <param name="privateFileEndpoint">Base URL used to build private-file download URLs.</param>
     public static IServiceCollection AddFileStorage(
         this IServiceCollection services,
         IConfiguration configuration,

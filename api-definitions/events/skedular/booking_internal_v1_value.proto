@@ -3,7 +3,7 @@ package bookinginternal;
 
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value";
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.BookingInternal.V1";
 
 enum Type {
   Type_StripeConnectAccountWebhookEventReceived = 0;

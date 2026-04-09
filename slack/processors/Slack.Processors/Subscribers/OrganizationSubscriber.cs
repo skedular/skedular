@@ -1,5 +1,4 @@
-﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Enterprise.Shared.Kafka.Consume;
 using Slack.Processors.Mappers;
 using Slack.Shared.Models;
@@ -7,7 +6,7 @@ using Slack.Shared.Repositories;
 using Slack.Shared.Services.Cache;
 using Organization = Slack.Shared.Database.Entities.Organization;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
-using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;
 
 namespace Slack.Processors.Subscribers;
 

@@ -2,25 +2,25 @@ using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Customer = Team.Shared.Models.Customer;
-using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
-using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
+using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Identity = Team.Shared.Database.Entities.Identity;
 using Location = Team.Shared.Models.Location;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Team.Shared.Models.Organization;
 using OrganizationMember = Team.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Team.Shared.Database.Entities.OrganizationSsoSetting;
-using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
-using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 
 namespace Team.Processors.Mappers;
 
 public interface IMapper
 {
     Customer MapTo(Event src);
-    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
-    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
+    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src);
+    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Event src);
 
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
@@ -81,7 +81,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
+    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src)
     {
         var organizationAfterState = src.Data.Organization;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -149,7 +149,7 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
+    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Event src)
     {
         var location = src.Data.Location;
         var deletedAt = location.DeletedAt?.ToDateTimeOffset();

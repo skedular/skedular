@@ -1,43 +1,43 @@
-using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Team.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared;
 using Customer = Booking.Shared.Database.Entities.Customer;
-using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
-using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
+using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Location = Booking.Shared.Models.Location;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Booking.Shared.Models.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Booking.Shared.Models.OrganizationSsoSetting;
-using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
 using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
-using ProductPricingBillingMode = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingMode;
-using ProductPricingCadence = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence;
-using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
+using ProductPricingBillingMode = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingBillingMode;
+using ProductPricingCadence = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
 using Team = Booking.Shared.Models.Team;
 using TeamMember = Booking.Shared.Database.Entities.TeamMember;
-using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing;
-using PaymentMethod = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod;
-using Currency = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency;
-using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductType;
+using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricing;
+using PaymentMethod = Api.Shared.Clients.Events.Skedular.Marketplace.V1.PaymentMethod;
+using Currency = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Currency;
+using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductType;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
-using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType;
-using OrganizationBillingCycle = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
+using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.LocationType;
+using OrganizationBillingCycle = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationBillingCycle;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 
 namespace Booking.Processors.Mappers;
 
 public interface IMapper
 {
     Shared.Models.Customer MapTo(Event src);
-    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
-    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
-    Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
+    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src);
+    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Event src);
+    Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Event src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
-    Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src);
+    Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Event src);
 
     Shared.Database.Entities.Product MergeToEntity(
         Product src,
@@ -147,7 +147,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
+    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src)
     {
         var organizationAfterState = src.Data.Organization;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -236,7 +236,7 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
+    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Event src)
     {
         var locationAfterState = src.Data.Location;
         var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -285,7 +285,7 @@ public class Mapper : IMapper
         return location;
     }
 
-    public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
+    public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Event src)
     {
         var teamAfterState = src.Data.Team;
         var deletedAt = teamAfterState.DeletedAt?.ToDateTimeOffset();
@@ -341,7 +341,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src)
+    public Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Event src)
     {
         var productAfterState = src.Data.Product;
         var deletedAt = productAfterState.DeletedAt?.ToDateTimeOffset();
@@ -563,13 +563,13 @@ public class Mapper : IMapper
     public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new OrganizationTag(), organization);
 
-    private static OpeningHours MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours src) =>
+    private static OpeningHours MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.OpeningHours src) =>
         new(
             MapTo(src.WeekOpeningHours),
             src.ClosedDates.Select(item => item.ToDateTimeOffset()).ToList(),
             src.DatesWithVariedOpeningHours.ToDictionary(item => item.Date.ToDateTimeOffset(), item => MapTo(item.OpeningHoursDetails)));
 
-    private static WeekOpeningHours MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours src) =>
+    private static WeekOpeningHours MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.WeekOpeningHours src) =>
         new(
             MapTo(src.Monday),
             MapTo(src.Tuesday),
@@ -579,14 +579,14 @@ public class Mapper : IMapper
             MapTo(src.Saturday),
             MapTo(src.Sunday));
 
-    private static OpeningHoursDetails MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails src) =>
+    private static OpeningHoursDetails MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.OpeningHoursDetails src) =>
         new(
             src.Closed,
             src.OpenAllDay,
             string.IsNullOrWhiteSpace(src.From) ? null : TimeOnly.Parse(src.From),
             string.IsNullOrWhiteSpace(src.Until) ? null : TimeOnly.Parse(src.Until));
 
-    private static ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion src, Product product) =>
+    private static ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductVersion src, Product product) =>
         new()
         {
             Id = src.Id,
@@ -622,25 +622,25 @@ public class Mapper : IMapper
             MapTo(src.CancellationRefundRules).ToList());
 
     private static ProductPricingCancellationPolicyType MapTo(
-        Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType src) =>
+        Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationPolicyType src) =>
         src switch
         {
-            Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.NotSet =>
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationPolicyType.NotSet =>
                 ProductPricingCancellationPolicyType.NotSet,
-            Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.NoCancellation =>
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationPolicyType.NoCancellation =>
                 ProductPricingCancellationPolicyType.NoCancellation,
-            Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.FullRefundBeforeCutoff =>
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationPolicyType.FullRefundBeforeCutoff =>
                 ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
-            Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.TieredRefund =>
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationPolicyType.TieredRefund =>
                 ProductPricingCancellationPolicyType.TieredRefund,
             _ => throw new ArgumentOutOfRangeException()
         };
 
     private static IEnumerable<ProductPricingCancellationRefundRule> MapTo(
-        IEnumerable<Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule> src) => src.Select(MapTo);
+        IEnumerable<Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationRefundRule> src) => src.Select(MapTo);
 
     private static ProductPricingCancellationRefundRule MapTo(
-        Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule src) =>
+        Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationRefundRule src) =>
         new(src.MinutesBefore, src.RefundPercentage);
 
     private static Api.Shared.Services.Models.ProductPricingCadence MapTo(ProductPricingCadence src) =>
@@ -694,7 +694,7 @@ public class Mapper : IMapper
             _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
         };
 
-    private static ListingMetadata MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata src) =>
+    private static ListingMetadata MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.ListingMetadata src) =>
         new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
 
     private static Api.Shared.Services.Models.ProductType MapTo(ProductType src) =>

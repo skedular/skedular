@@ -1,13 +1,12 @@
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Models;
 using Marketplace.Shared.Mappers;
-using Event = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Event;
 using Product = Marketplace.Shared.Models.Product;
-using Type = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Type;
 
 namespace Marketplace.Shared.Publishers;
 

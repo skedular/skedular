@@ -9,12 +9,14 @@ using Enterprise.Shared.Kafka.Logger;
 using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Kafka.Serialization;
 using Enterprise.Shared.Kafka.Telemetry;
-using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Outbox.Kafka;
+using Enterprise.Shared.Telemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TelemetryKeys = Enterprise.Shared.Kafka.Telemetry.TelemetryKeys;
 
 namespace Enterprise.Shared.Kafka;
 
@@ -67,10 +69,22 @@ public static class Extensions
                 .AddSingleton<IKafkaClientNaming, KafkaClientNaming>()
                 .AddSingleton(typeof(IPushToTopic<>), typeof(PushToTopic<>))
                 .AddSingleton<IKafkaActivityTracer, KafkaActivityTracer>()
+                .AddSingleton<IKafkaActivityStarter, KafkaActivityStarter>()
+                .AddSingleton<IPropagatorFunctionProvider<Headers>, HeaderPropagatorFunctions>()
                 .AddSingleton(new KafkaTelemetryConfiguration { Enabled = useTelemetry });
 
             services.TryAddSingleton<IKafkaLogger, KafkaLogger>();
             services.TryAddSingleton<IHostApplicationLifetimeWrapper, HostApplicationLifetimeWrapper>();
+
+            services
+                .AddKafkaActivitySource(TelemetryKeys.IncomingActivitySourceName)
+                .AddKafkaActivitySource(TelemetryKeys.ConsumerActivitySourceName)
+                .AddKafkaActivitySource(TelemetryKeys.ProducerActivitySourceName);
+
+            if (useTelemetry)
+            {
+                services.AddKafkaTelemetry();
+            }
 
             return kafkaConfiguration;
         }
@@ -182,5 +196,33 @@ public static class Extensions
 
             return services;
         }
+
+        public IServiceCollection AddKafkaTelemetry()
+        {
+            services.AddOpenTelemetry().WithTracing(builder => builder
+                .AddSource(TelemetryKeys.IncomingActivitySourceName)
+                .AddSource(TelemetryKeys.ConsumerActivitySourceName)
+                .AddSource(TelemetryKeys.ProducerActivitySourceName));
+            return services;
+        }
+
+        internal IServiceCollection AddKafkaActivitySource(string activitySourceName)
+        {
+            if (services.Any(item =>
+                    item.ServiceType == typeof(KafkaActivitySourceRegistration) &&
+                    item.ImplementationInstance is KafkaActivitySourceRegistration registration &&
+                    string.Equals(registration.Name, activitySourceName, StringComparison.Ordinal)))
+            {
+                return services;
+            }
+
+            services.AddSingleton<IActivitySource>(_ => new ActivitySourceFacade(activitySourceName));
+            return services.AddSingleton(new KafkaActivitySourceRegistration(activitySourceName));
+        }
+    }
+
+    private sealed class KafkaActivitySourceRegistration(string name)
+    {
+        public string Name { get; } = name;
     }
 }

@@ -1,7 +1,7 @@
 syntax = "proto3";
 package location;
 
-option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Location.V1.Key";
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Location.V1";
 
 message Key {
   string locationId               = 1;

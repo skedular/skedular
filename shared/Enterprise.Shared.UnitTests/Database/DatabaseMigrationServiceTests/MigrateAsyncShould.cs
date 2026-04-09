@@ -1,5 +1,6 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.UnitTests.Database.TestSupport;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enterprise.Shared.UnitTests.Database.DatabaseMigrationServiceTests;
@@ -25,9 +26,12 @@ public class MigrateAsyncShould
 
             File.Exists(path).ShouldBeTrue();
             (await context.Database.CanConnectAsync(cancellationToken)).ShouldBeTrue();
+
+            await context.Database.CloseConnectionAsync();
         }
         finally
         {
+            SqliteConnection.ClearAllPools();
             if (File.Exists(path))
             {
                 File.Delete(path);

@@ -1,25 +1,25 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using CustomerBillingDetails = Customer.Shared.Models.CustomerBillingDetails;
-using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Event;
 using Identity = Customer.Shared.Models.Identity;
 using Location = Customer.Shared.Models.Location;
-using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType;
+using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.LocationType;
 using Organization = Customer.Shared.Models.Organization;
 using OrganizationMember = Customer.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Customer.Shared.Models.OrganizationSsoSetting;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
-using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
 using Resource = Customer.Shared.Database.Entities.Resource;
-using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 
 namespace Customer.Processors.Mappers;
 
 public interface IMapper
 {
     Organization MapTo(Event src);
-    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
+    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Event src);
     Shared.Models.Customer? MapTo(Shared.Database.Entities.Customer? src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
@@ -128,7 +128,7 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
+    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Event src)
     {
         var locationAfterState = src.Data.Location;
         var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();

@@ -1,7 +1,7 @@
 syntax = "proto3";
 package organizationinternal;
 
-option csharp_namespace = "Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key";
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1";
 
 message Key {
   string stripeConnectAccountWebhookKey = 1;

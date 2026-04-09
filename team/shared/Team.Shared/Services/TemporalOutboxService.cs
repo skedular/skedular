@@ -1,7 +1,6 @@
 using System.Text.Json;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Outbox;
-using Enterprise.Shared.Outbox.Publishers;
+using Enterprise.Shared.Outbox.Temporal;
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Team.Shared.Workflows;

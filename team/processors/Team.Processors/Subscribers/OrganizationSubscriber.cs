@@ -1,5 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Enterprise.Shared.Kafka.Consume;
 using Team.Processors.Mappers;
 using Team.Shared.Models;
@@ -7,7 +6,7 @@ using Team.Shared.Repositories;
 using Team.Shared.Services.Cache;
 using Organization = Team.Shared.Database.Entities.Organization;
 using OrganizationMember = Team.Shared.Database.Entities.OrganizationMember;
-using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;
 
 namespace Team.Processors.Subscribers;
 
