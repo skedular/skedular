@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Enterprise.Shared.Mcp.Configurations;
+using Enterprise.Shared.Ai.Configurations;
 using Microsoft.Agents.AI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -47,16 +47,11 @@ public static class Extensions
 
     extension(string? serializedSession)
     {
-        public async ValueTask<AgentSession> ToAgentSessionAsync(AIAgent agent, CancellationToken cancellationToken)
-        {
-            if (string.IsNullOrWhiteSpace(serializedSession))
-            {
-                return await agent.CreateSessionAsync(cancellationToken);
-            }
-
-            return await agent.DeserializeSessionAsync(
-                JsonSerializer.Deserialize<JsonElement>(serializedSession),
-                cancellationToken: cancellationToken);
-        }
+        public async ValueTask<AgentSession> ToAgentSessionAsync(AIAgent agent, CancellationToken cancellationToken) =>
+            string.IsNullOrWhiteSpace(serializedSession)
+                ? await agent.CreateSessionAsync(cancellationToken)
+                : await agent.DeserializeSessionAsync(
+                    JsonSerializer.Deserialize<JsonElement>(serializedSession),
+                    cancellationToken: cancellationToken);
     }
 }

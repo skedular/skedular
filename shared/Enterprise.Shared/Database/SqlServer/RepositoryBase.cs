@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enterprise.Shared.Database.SqlServer;
 
-internal static class SqlServerUpsertCommandBuilder
+public static class SqlServerUpsertCommandBuilder
 {
     public static string BuildInsertIfMissing(string fullTableName, params string[] columnNames)
     {

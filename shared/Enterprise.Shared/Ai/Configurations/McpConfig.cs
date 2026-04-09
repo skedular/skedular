@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Mcp.Configurations;
+namespace Enterprise.Shared.Ai.Configurations;
 
 public class McpConfig
 {

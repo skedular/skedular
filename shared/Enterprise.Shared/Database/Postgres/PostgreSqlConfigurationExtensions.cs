@@ -9,7 +9,7 @@ public static class PostgreSqlConfigurationExtensions
 
     extension(string connectionString)
     {
-        internal NpgsqlDataSource BuildDataSource(bool isPostgisEnabled)
+        public NpgsqlDataSource BuildDataSource(bool isPostgisEnabled)
         {
             try
             {

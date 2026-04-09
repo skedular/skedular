@@ -7,6 +7,5 @@ public static class DomainAppHostEnvironmentVariables
     public static bool IsFakeDependenciesEnabled() =>
         bool.TryParse(Environment.GetEnvironmentVariable(UseFakeDependencies), out var enabled) && enabled;
 
-    public static void SetFakeDependencies(bool enabled) =>
-        Environment.SetEnvironmentVariable(UseFakeDependencies, enabled.ToString());
+    public static void SetFakeDependencies(bool enabled) => Environment.SetEnvironmentVariable(UseFakeDependencies, enabled.ToString());
 }
