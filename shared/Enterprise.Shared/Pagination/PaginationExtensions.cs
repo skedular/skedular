@@ -27,7 +27,7 @@ public sealed record KeysetPaginationField<T>(
     };
 }
 
-internal sealed record KeysetCursorPayload(string Id, IReadOnlyDictionary<string, string?> Values);
+public sealed record KeysetCursorPayload(string Id, IReadOnlyDictionary<string, string?> Values);
 
 public static class PaginationExtensions
 {

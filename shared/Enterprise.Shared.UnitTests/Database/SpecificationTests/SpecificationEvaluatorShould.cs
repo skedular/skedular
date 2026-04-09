@@ -55,6 +55,24 @@ public class SpecificationEvaluatorShould
         result.Count.ShouldBe(3);
     }
 
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Apply_order_by_ascending(string databaseName)
+    {
+        using var seedContext = CreateContext(databaseName);
+        Seed(seedContext);
+
+        using var context = CreateContext(databaseName);
+
+        var spec = new Specification<SpecEntity>().ApplyOrderBy(item => item.CreatedAt);
+
+        var result = SpecificationEvaluator<SpecEntity>.GetQuery(context.Specs.AsQueryable(), spec).ToList();
+
+        result.Count.ShouldBe(3);
+        result[0].Id.ShouldBe("spec-1");
+        result[2].Id.ShouldBe("spec-3");
+    }
+
     private static DatabaseTestContext CreateContext(string databaseName) =>
         new(new DbContextOptionsBuilder<DatabaseTestContext>().UseInMemoryDatabase(databaseName).Options);
 

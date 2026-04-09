@@ -1,0 +1,69 @@
+using Enterprise.Shared.Image;
+
+namespace Enterprise.Shared.UnitTests.Image.ImageHelperTests;
+
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
+public class IsImageFileShould
+{
+    [Fact]
+    public async Task Return_true_for_valid_image()
+    {
+        var sut = new ImageHelper();
+
+        // Create a minimal valid PNG in memory (8 bytes header + IHDR)
+        var pngBytes = CreateMinimalPng();
+        using var stream = new MemoryStream(pngBytes);
+
+        var result = await sut.IsImageFileAsync(stream, CancellationToken.None);
+
+        result.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task Return_false_for_non_image_stream()
+    {
+        var sut = new ImageHelper();
+        using var stream = new MemoryStream("not an image"u8.ToArray());
+
+        var result = await sut.IsImageFileAsync(stream, CancellationToken.None);
+
+        result.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task Return_width_height_for_valid_image()
+    {
+        var sut = new ImageHelper();
+        var pngBytes = CreateMinimalPng();
+        using var stream = new MemoryStream(pngBytes);
+
+        var (isImage, width, height) = await sut.GetImageWidthHeightAsync(stream, CancellationToken.None);
+
+        isImage.ShouldBeTrue();
+        width.ShouldBeGreaterThan(0);
+        height.ShouldBeGreaterThan(0);
+    }
+
+    [Fact]
+    public async Task Return_false_for_non_image_on_get_dimensions()
+    {
+        var sut = new ImageHelper();
+        using var stream = new MemoryStream("not an image"u8.ToArray());
+
+        var (isImage, width, height) = await sut.GetImageWidthHeightAsync(stream, CancellationToken.None);
+
+        isImage.ShouldBeFalse();
+        width.ShouldBe(0);
+        height.ShouldBe(0);
+    }
+
+    private static byte[] CreateMinimalPng()
+    {
+        var ms = new MemoryStream();
+        using (var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(1, 1))
+        {
+            image.Save(ms, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
+        }
+        return ms.ToArray();
+    }
+}

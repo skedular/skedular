@@ -40,4 +40,71 @@ public class SelectForUpdateCommandInterceptorTests
 
         command.CommandText.ShouldBe("SELECT * FROM [dbo].[Widgets] AS [w]");
     }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void ScalarExecuting_adds_lock_hints(SelectForUpdateCommandInterceptor sut)
+    {
+        var command = new SqlCommand($"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT COUNT(*) FROM [dbo].[Widgets]");
+
+        sut.ScalarExecuting(command, null!, default);
+
+        command.CommandText.ShouldContain("WITH (UPDLOCK, ROWLOCK)");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task ReaderExecutingAsync_adds_lock_hints(SelectForUpdateCommandInterceptor sut)
+    {
+        var command = new SqlCommand($"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT * FROM [dbo].[Widgets] AS [w]");
+
+        await sut.ReaderExecutingAsync(command, null!, default);
+
+        command.CommandText.ShouldContain("WITH (UPDLOCK, ROWLOCK)");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task ScalarExecutingAsync_adds_lock_hints(SelectForUpdateCommandInterceptor sut)
+    {
+        var command = new SqlCommand($"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT COUNT(*) FROM [dbo].[Widgets]");
+
+        await sut.ScalarExecutingAsync(command, null!, default);
+
+        command.CommandText.ShouldContain("WITH (UPDLOCK, ROWLOCK)");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Handle_query_with_no_from_clause(SelectForUpdateCommandInterceptor sut)
+    {
+        var command = new SqlCommand($"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT 1");
+
+        sut.ReaderExecuting(command, null!, default);
+
+        // No FROM clause — command should be unchanged (no crash)
+        command.CommandText.ShouldContain("SELECT 1");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Handle_query_with_comma_separated_tables(SelectForUpdateCommandInterceptor sut)
+    {
+        var command = new SqlCommand($"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT * FROM [dbo].[Widgets],[dbo].[Items]");
+
+        sut.ReaderExecuting(command, null!, default);
+
+        command.CommandText.ShouldContain("WITH (UPDLOCK, ROWLOCK)");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Handle_query_with_join(SelectForUpdateCommandInterceptor sut)
+    {
+        var command = new SqlCommand($"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT * FROM [dbo].[Widgets] JOIN [dbo].[Items] ON [Widgets].[Id]=[Items].[WidgetId]");
+
+        sut.ReaderExecuting(command, null!, default);
+
+        command.CommandText.ShouldContain("WITH (UPDLOCK, ROWLOCK)");
+    }
 }
