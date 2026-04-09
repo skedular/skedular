@@ -30,7 +30,7 @@ public class UploadAndGetShould
 
             publicUri.ToString().ShouldContain(fileName);
 
-            var (exists, contentType, bytes) = await sut.GetAsync(fileName, CancellationToken.None);
+            var (exists, _, bytes) = await sut.GetAsync(fileName, CancellationToken.None);
             exists.ShouldBeTrue();
             bytes.ShouldBe(content);
         }
@@ -87,7 +87,7 @@ public class UploadAndGetShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Get_returns_octet_stream_for_unknown_extension(string baseName)
+    public async Task Get_returns_octet_stream_for_unknown_extension(string baseName, CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
@@ -96,7 +96,7 @@ public class UploadAndGetShould
             var fileStorageConfig = new FileStorageConfiguration { LocalCdnPath = tempDir, PublicCdnFileEndpoint = "cdn" };
             var sut = new LocalCdnService(config, fileStorageConfig);
             var fileName = baseName + ".unknownext123";
-            await File.WriteAllBytesAsync(Path.Combine(tempDir, fileName), "x"u8.ToArray());
+            await File.WriteAllBytesAsync(Path.Combine(tempDir, fileName), "x"u8.ToArray(), cancellationToken);
 
             var (exists, contentType, _) = await sut.GetAsync(fileName, CancellationToken.None);
 

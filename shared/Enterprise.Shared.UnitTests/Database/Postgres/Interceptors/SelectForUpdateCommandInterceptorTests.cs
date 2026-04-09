@@ -53,22 +53,22 @@ public class SelectForUpdateCommandInterceptorTests
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task ReaderExecutingAsync_adds_for_update(SelectForUpdateCommandInterceptor sut)
+    public async Task ReaderExecutingAsync_adds_for_update(SelectForUpdateCommandInterceptor sut, CancellationToken cancellationToken)
     {
         var command = new NpgsqlCommand($"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT * FROM widgets");
 
-        await sut.ReaderExecutingAsync(command, null!, default);
+        await sut.ReaderExecutingAsync(command, null!, default, cancellationToken);
 
         command.CommandText.ShouldEndWith("FOR UPDATE");
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task ScalarExecutingAsync_adds_for_update(SelectForUpdateCommandInterceptor sut)
+    public async Task ScalarExecutingAsync_adds_for_update(SelectForUpdateCommandInterceptor sut, CancellationToken cancellationToken)
     {
         var command = new NpgsqlCommand($"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT COUNT(*) FROM widgets");
 
-        await sut.ScalarExecutingAsync(command, null!, default);
+        await sut.ScalarExecutingAsync(command, null!, default, cancellationToken);
 
         command.CommandText.ShouldEndWith("FOR UPDATE");
     }

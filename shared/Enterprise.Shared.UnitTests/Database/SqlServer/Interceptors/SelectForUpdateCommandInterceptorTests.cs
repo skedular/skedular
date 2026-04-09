@@ -54,22 +54,22 @@ public class SelectForUpdateCommandInterceptorTests
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task ReaderExecutingAsync_adds_lock_hints(SelectForUpdateCommandInterceptor sut)
+    public async Task ReaderExecutingAsync_adds_lock_hints(SelectForUpdateCommandInterceptor sut, CancellationToken cancellationToken)
     {
         var command = new SqlCommand($"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT * FROM [dbo].[Widgets] AS [w]");
 
-        await sut.ReaderExecutingAsync(command, null!, default);
+        await sut.ReaderExecutingAsync(command, null!, default, cancellationToken);
 
         command.CommandText.ShouldContain("WITH (UPDLOCK, ROWLOCK)");
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task ScalarExecutingAsync_adds_lock_hints(SelectForUpdateCommandInterceptor sut)
+    public async Task ScalarExecutingAsync_adds_lock_hints(SelectForUpdateCommandInterceptor sut, CancellationToken cancellationToken)
     {
         var command = new SqlCommand($"-- {EntityFrameworkInterceptorTags.ForUpdate}{Environment.NewLine}SELECT COUNT(*) FROM [dbo].[Widgets]");
 
-        await sut.ScalarExecutingAsync(command, null!, default);
+        await sut.ScalarExecutingAsync(command, null!, default, cancellationToken);
 
         command.CommandText.ShouldContain("WITH (UPDLOCK, ROWLOCK)");
     }
