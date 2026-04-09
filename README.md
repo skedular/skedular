@@ -217,6 +217,8 @@ or
 ./scripts/start-dependencies.sh
 ```
 
+## [Codebase Overview](docs/codebase-overview.md)
+
 ## Architecture Decision Records
 
 - [View all ADRs](docs/adr-index.md)
