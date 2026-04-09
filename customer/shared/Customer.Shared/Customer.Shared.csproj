@@ -20,16 +20,20 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- Build Tools -->
         <PackageReference Include="GitVersion.MsBuild" Version="6.7.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
+        <!-- Entity Framework Core (Design / Migration) -->
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+
+        <!-- Analyzers -->
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -23,9 +23,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- Build Tools -->
         <PackageReference Include="GitVersion.MsBuild" Version="6.7.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+
+        <!-- Build Tools / Event Protobuf Serialization -->
         <PackageReference Include="Grpc.Tools" Version="2.80.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -51,6 +54,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <!-- Analyzers -->
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

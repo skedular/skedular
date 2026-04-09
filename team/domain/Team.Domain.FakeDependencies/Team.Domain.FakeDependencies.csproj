@@ -23,10 +23,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.76.0"/>
+        <!-- Build Tools -->
         <PackageReference Include="GitVersion.MsBuild" Version="6.7.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+
+        <!-- gRPC (Server) -->
+        <PackageReference Include="Grpc.AspNetCore" Version="2.76.0"/>
     </ItemGroup>
 
     <ItemGroup>

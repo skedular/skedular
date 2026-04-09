@@ -26,7 +26,7 @@ public class DbContextBaseShould
     [Fact]
     public void Apply_interceptor_when_not_pooled()
     {
-        using var ctx = BuildContext(false);
+        using var ctx = BuildContext();
         ctx.ShouldNotBeNull();
     }
 

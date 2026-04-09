@@ -23,13 +23,17 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- Build Tools -->
         <PackageReference Include="GitVersion.MsBuild" Version="6.7.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
+        <!-- GraphQL Federation -->
         <PackageReference Include="HotChocolate.Fusion" Version="15.1.13"/>
+
+        <!-- Reverse Proxy -->
         <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0"/>
     </ItemGroup>
 

@@ -18,9 +18,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- Build Tools -->
         <PackageReference Include="GitVersion.MsBuild" Version="6.7.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+
+        <!-- Build Tools / gRPC (Client) -->
         <PackageReference Include="Grpc.Tools" Version="2.80.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,13 +33,22 @@
     </ItemGroup>
 
     <ItemGroup>
+        <!-- gRPC -->
         <PackageReference Include="Grpc.Net.Client" Version="2.76.0"/>
+
+        <!-- Test Framework -->
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0"/>
+
+        <!-- GraphQL Testing (StrawberryShake) -->
         <PackageReference Include="StrawberryShake.Server" Version="15.1.13"/>
+
+        <!-- Code Coverage -->
         <PackageReference Include="coverlet.collector" Version="8.0.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+
+        <!-- Analyzers -->
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
