@@ -1,0 +1,84 @@
+name: "Copilot Setup Steps"
+
+# Run automatically when this file changes (validates the setup), and allow manual triggering.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  # This job name MUST be `copilot-setup-steps` — Copilot will not pick it up otherwise.
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── .NET ───────────────────────────────────────────────────────────────
+      # The backend services target net10.0.  Installing the SDK here lets
+      # Copilot restore packages, build projects and run unit tests natively
+      # (without having to spin up a Docker build each time).
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/NuGet.Config') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: Restore .NET local tools
+        # Restores tools declared in .config/dotnet-tools.json (jb, dotnet-ef,
+        # dotnet-gitversion, fusion, dotnet-graphql, dotnet-outdated).
+        run: dotnet tool restore
+
+      - name: Restore .NET solution dependencies
+        run: dotnet restore Skedular.slnx
+
+      # ── Node.js / pnpm ────────────────────────────────────────────────────
+      # The web monorepo (web/) uses pnpm 10 and Node 22 managed via corepack.
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Enable corepack and activate pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.33.0 --activate
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: pnpm-${{ runner.os }}-${{ hashFiles('web/pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-${{ runner.os }}-
+
+      - name: Install web dependencies
+        working-directory: web
+        run: pnpm install --frozen-lockfile
+
+      # ── Terraform ─────────────────────────────────────────────────────────
+      # Infrastructure lives under shared/, web/, and domain-specific
+      # infrastructure/ directories.  Copilot needs terraform to run
+      # `terraform fmt` (used by `make lint`) and validate infra changes.
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          # Pin to the version range required by the infrastructure modules
+          # (see shared/infrastructure/azure-redis/versions.tf: >= 1.10.0, < 2.0.0)
+          terraform_version: "~1.10"
