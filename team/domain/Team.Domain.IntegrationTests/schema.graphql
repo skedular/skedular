@@ -1,374 +1,374 @@
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 type CdnFile {
-    url: String!
-    height: Int
-    width: Int
+  url: String!
+  height: Int
+  width: Int
 }
 
 type CdnImageFile {
-    original: CdnFile
-    thumbnail: CdnFile
+  original: CdnFile
+  thumbnail: CdnFile
 }
 
 type ConnectionOfTeamEdge {
-    pageInfo: PageInfo!
-    edges: [TeamEdge!]!
-    totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [TeamEdge!]!
+  totalCount: Int!
 }
 
 type ConnectionOfTeamJoinInvitationEdge {
-    pageInfo: PageInfo!
-    edges: [TeamJoinInvitationEdge!]!
-    totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [TeamJoinInvitationEdge!]!
+  totalCount: Int!
 }
 
 type ConnectionOfTeamMemberEdge {
-    pageInfo: PageInfo!
-    edges: [TeamMemberEdge!]!
-    totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [TeamMemberEdge!]!
+  totalCount: Int!
 }
 
 type CustomerDetails {
-    id: ID!
+  id: ID!
 }
 
 type InvitationToJoinTeamPayload {
-    clientMutationId: String
-    inviteCustomerToJoinTeam: InviteCustomerToJoinTeamDetails!
+  clientMutationId: String
+  inviteCustomerToJoinTeam: InviteCustomerToJoinTeamDetails!
 }
 
 type InviteCustomerToJoinTeamDetails {
-    createdBy: CustomerDetails!
-    invitee: CustomerDetails
-    email: String
-    status: TeamInvitationStatusDetails!
-    role: TeamMemberRole!
-    team: TeamDetails!
-    id: ID!
+  createdBy: CustomerDetails!
+  invitee: CustomerDetails
+  email: String
+  status: TeamInvitationStatusDetails!
+  role: TeamMemberRole!
+  team: TeamDetails!
+  id: ID!
 }
 
 type InviteCustomersToJoinTeamPayload {
-    clientMutationId: String
-    invitesCustomersToJoinTeam: [InviteCustomerToJoinTeamDetails!]!
+  clientMutationId: String
+  invitesCustomersToJoinTeam: [InviteCustomerToJoinTeamDetails!]!
 }
 
 type LocationDetails {
-    id: ID!
+  id: ID!
 }
 
 type Mutation {
-    inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload! @cost(weight: "10")
-    acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
-    rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
-    cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
-    updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload! @cost(weight: "10")
-    addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
-    removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
-    changeTeamMemberRole(input: ChangeTeamMemberRoleInput!): TeamMemberDetailsPayload! @cost(weight: "10")
-    changeTeamMembersStatus(input: ChangeTeamMembersStatusInput!): TeamMembersDetailsPayload! @cost(weight: "10")
-    removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload! @cost(weight: "10")
-    addTeam(input: AddTeamInput!): TeamPayload! @cost(weight: "10")
-    updateTeam(input: UpdateTeamInput!): TeamPayload! @cost(weight: "10")
-    deleteTeam(input: DeleteTeamInput!): TeamPayload! @cost(weight: "10")
-    updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload! @cost(weight: "10")
+  inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload! @cost(weight: "10")
+  acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
+  rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
+  cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
+  updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload! @cost(weight: "10")
+  addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
+  removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
+  changeTeamMemberRole(input: ChangeTeamMemberRoleInput!): TeamMemberDetailsPayload! @cost(weight: "10")
+  changeTeamMembersStatus(input: ChangeTeamMembersStatusInput!): TeamMembersDetailsPayload! @cost(weight: "10")
+  removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload! @cost(weight: "10")
+  addTeam(input: AddTeamInput!): TeamPayload! @cost(weight: "10")
+  updateTeam(input: UpdateTeamInput!): TeamPayload! @cost(weight: "10")
+  deleteTeam(input: DeleteTeamInput!): TeamPayload! @cost(weight: "10")
+  updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload! @cost(weight: "10")
 }
 
 type OrganizationDetails {
-    customDomain: String
-    id: ID!
+  customDomain: String
+  id: ID!
 }
 
 type PageInfo {
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-    endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
 }
 
 type Query {
-    teamInvitationStatuses: [TeamInvitationStatusDetails!]!
-    pendingTeamInvitationsCount: Int! @cost(weight: "10")
-    myInvitationsToJoinTeams(after: String first: Int before: String last: Int where: MyInvitationsToJoinTeamsWhereInput orderBy: [JoinTeamInvitationOrderInput!]): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
-    teamMemberRoles: [TeamMemberRole!]!
-    teamVersion: Version!
-    teamCustomerRecordSynced: Boolean! @cost(weight: "10")
-    team(id: String!): TeamDetails @cost(weight: "10")
-    teamById(id: String!): TeamDetails @lookup @internal @cost(weight: "10")
-    teams(after: String first: Int before: String last: Int where: TeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
-    customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
-    myTeams(organizationId: String organizationCustomDomain: String): [TeamDetails!]! @cost(weight: "10")
+  teamInvitationStatuses: [TeamInvitationStatusDetails!]!
+  pendingTeamInvitationsCount: Int! @cost(weight: "10")
+  myInvitationsToJoinTeams(after: String first: Int before: String last: Int where: MyInvitationsToJoinTeamsWhereInput orderBy: [JoinTeamInvitationOrderInput!]): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
+  teamMemberRoles: [TeamMemberRole!]!
+  teamVersion: Version!
+  teamCustomerRecordSynced: Boolean! @cost(weight: "10")
+  team(id: String!): TeamDetails @cost(weight: "10")
+  teamById(id: String!): TeamDetails @lookup @internal @cost(weight: "10")
+  teams(after: String first: Int before: String last: Int where: TeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
+  customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
+  myTeams(organizationId: String organizationCustomDomain: String): [TeamDetails!]! @cost(weight: "10")
 }
 
 type TeamDetails {
-    organization: OrganizationDetails!
-    primaryLocation: LocationDetails
-    members(after: String first: Int before: String last: Int where: TeamMemberWhereInput orderBy: [TeamMemberOrderInput!]): ConnectionOfTeamMemberEdge! @cost(weight: "10")
-    name: String!
-    about: String
-    timezone: String
-    canModify: Boolean!
-    canDelete: Boolean!
-    canInvitePeople: Boolean!
-    featureImages: [CdnImageFile!]!
-    id: ID!
+  organization: OrganizationDetails!
+  primaryLocation: LocationDetails
+  members(after: String first: Int before: String last: Int where: TeamMemberWhereInput orderBy: [TeamMemberOrderInput!]): ConnectionOfTeamMemberEdge! @cost(weight: "10")
+  name: String!
+  about: String
+  timezone: String
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
+  featureImages: [CdnImageFile!]!
+  id: ID!
 }
 
 type TeamEdge {
-    node: TeamDetails!
-    cursor: String!
+  node: TeamDetails!
+  cursor: String!
 }
 
 type TeamInvitationStatusDetails {
-    type: InvitationStatus!
-    name: String!
+  type: InvitationStatus!
+  name: String!
 }
 
 type TeamJoinInvitationEdge {
-    node: InviteCustomerToJoinTeamDetails!
-    cursor: String!
+  node: InviteCustomerToJoinTeamDetails!
+  cursor: String!
 }
 
 type TeamMemberDetails {
-    customer: CustomerDetails!
-    role: TeamMemberRole
-    status: TeamMemberStatus!
-    organizationMember: TeamOrganizationMemberDetails
-    id: ID!
+  customer: CustomerDetails!
+  role: TeamMemberRole
+  status: TeamMemberStatus!
+  organizationMember: TeamOrganizationMemberDetails
+  id: ID!
 }
 
 type TeamMemberDetailsPayload {
-    clientMutationId: String
-    member: TeamMemberDetails
+  clientMutationId: String
+  member: TeamMemberDetails
 }
 
 type TeamMemberEdge {
-    node: TeamMemberDetails!
-    cursor: String!
+  node: TeamMemberDetails!
+  cursor: String!
 }
 
 type TeamMemberPayload {
-    clientMutationId: String
-    teamMember: TeamMemberDetails!
+  clientMutationId: String
+  teamMember: TeamMemberDetails!
 }
 
 type TeamMembersDetailsPayload {
-    clientMutationId: String
-    members: [TeamMemberDetails!]!
+  clientMutationId: String
+  members: [TeamMemberDetails!]!
 }
 
 type TeamOrganizationMemberDetails {
-    customer: CustomerDetails!
-    uniqueId: String!
+  customer: CustomerDetails!
+  uniqueId: String!
 }
 
 type TeamPayload {
-    clientMutationId: String
-    team: TeamDetails!
+  clientMutationId: String
+  team: TeamDetails!
 }
 
 type Version {
-    major: Int!
-    minor: Int!
-    build: Int!
-    revision: Int!
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
 }
 
 input AcceptInvitationToJoinTeamInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input AddTeamInput {
-    clientMutationId: String
-    id: String
-    name: String!
-    about: String
-    organizationId: String
-    organizationCustomDomain: String
-    primaryLocationId: String
-    timezone: String
-    customerIds: [String!]!
-    organizationMemberIds: [String!]!
-    featureImages: [CdnImageFileInput!]
+  clientMutationId: String
+  id: String
+  name: String!
+  about: String
+  organizationId: String
+  organizationCustomDomain: String
+  primaryLocationId: String
+  timezone: String
+  customerIds: [String!]!
+  organizationMemberIds: [String!]!
+  featureImages: [CdnImageFileInput!]
 }
 
 input AddTeamMemberInput {
-    clientMutationId: String
-    id: String!
-    customerId: String
-    organizationMemberId: String
+  clientMutationId: String
+  id: String!
+  customerId: String
+  organizationMemberId: String
 }
 
 input CancelInvitationToJoinTeamInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input CdnFileInput {
-    url: String!
-    height: Int
-    width: Int
+  url: String!
+  height: Int
+  width: Int
 }
 
 input CdnImageFileInput {
-    original: CdnFileInput
-    thumbnail: CdnFileInput
+  original: CdnFileInput
+  thumbnail: CdnFileInput
 }
 
 input ChangeTeamMemberRoleInput {
-    clientMutationId: String
-    id: String!
-    role: TeamMemberRole!
+  clientMutationId: String
+  id: String!
+  role: TeamMemberRole!
 }
 
 input ChangeTeamMembersStatusInput {
-    clientMutationId: String
-    ids: [String!]!
-    status: TeamMemberStatus!
+  clientMutationId: String
+  ids: [String!]!
+  status: TeamMemberStatus!
 }
 
 input CustomerTeamWhereInput {
-    organizationId: String
-    organizationCustomDomain: String
-    customerId: String!
-    nameContains: String
-    primaryLocationIds: [String!]
+  organizationId: String
+  organizationCustomDomain: String
+  customerId: String!
+  nameContains: String
+  primaryLocationIds: [String!]
 }
 
 input DeleteTeamInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input InviteCustomersToJoinTeamInput {
-    clientMutationId: String
-    teamId: String!
-    emails: [String!]!
+  clientMutationId: String
+  teamId: String!
+  emails: [String!]!
 }
 
 input JoinTeamInvitationOrderInput {
-    direction: OrderDirection!
-    field: JoinTeamInvitationOrderField!
+  direction: OrderDirection!
+  field: JoinTeamInvitationOrderField!
 }
 
 input MyInvitationsToJoinTeamsWhereInput {
-    organizationCustomDomain: String
-    teamId: String
-    status: InvitationStatus
+  organizationCustomDomain: String
+  teamId: String
+  status: InvitationStatus
 }
 
 input RejectInvitationToJoinTeamInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input RemoveTeamMemberInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input RemoveTeamMembersInput {
-    clientMutationId: String
-    ids: [String!]!
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input TeamMemberOrderInput {
-    direction: OrderDirection!
-    field: TeamMemberOrderField!
+  direction: OrderDirection!
+  field: TeamMemberOrderField!
 }
 
 input TeamMemberWhereInput {
-    nameContains: String
+  nameContains: String
 }
 
 input TeamOrderInput {
-    direction: OrderDirection!
-    field: TeamOrderField!
+  direction: OrderDirection!
+  field: TeamOrderField!
 }
 
 input TeamWhereInput {
-    organizationId: String
-    organizationCustomDomain: String
-    nameContains: String
-    primaryLocationIds: [String!]
+  organizationId: String
+  organizationCustomDomain: String
+  nameContains: String
+  primaryLocationIds: [String!]
 }
 
 input UpdateTeamAndTeamMembersInput {
-    clientMutationId: String
-    id: String!
-    name: String!
-    about: String
-    organizationId: String
-    organizationCustomDomain: String
-    primaryLocationId: String
-    timezone: String
-    featureImages: [CdnImageFileInput!]
-    customerIds: [String!]!
-    organizationMemberIds: [String!]!
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  organizationId: String
+  organizationCustomDomain: String
+  primaryLocationId: String
+  timezone: String
+  featureImages: [CdnImageFileInput!]
+  customerIds: [String!]!
+  organizationMemberIds: [String!]!
 }
 
 input UpdateTeamInput {
-    clientMutationId: String
-    id: String!
-    name: String!
-    about: String
-    primaryLocationId: String
-    timezone: String
-    featureImages: [CdnImageFileInput!]
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  primaryLocationId: String
+  timezone: String
+  featureImages: [CdnImageFileInput!]
 }
 
 input UpdateTeamMembersInput {
-    clientMutationId: String
-    id: String!
-    customerIds: [String!]!
-    organizationMemberIds: [String!]!
+  clientMutationId: String
+  id: String!
+  customerIds: [String!]!
+  organizationMemberIds: [String!]!
 }
 
 enum InvitationStatus {
-    PENDING
-    ACCEPTED
-    REJECTED
-    CANCELLED
-    EXPIRED
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+  EXPIRED
 }
 
 enum JoinTeamInvitationOrderField {
-    CREATED_AT
-    STATUS
+  CREATED_AT
+  STATUS
 }
 
 enum OrderDirection {
-    ASCENDING
-    DESCENDING
+  ASCENDING
+  DESCENDING
 }
 
 enum TeamMemberOrderField {
-    ROLE
-    STATUS
-    NAME
-    GIVEN_NAME
-    MIDDLE_NAME
-    FAMILY_NAME
+  ROLE
+  STATUS
+  NAME
+  GIVEN_NAME
+  MIDDLE_NAME
+  FAMILY_NAME
 }
 
 enum TeamMemberRole {
-    OWNER
-    ADMINISTRATOR
-    MEMBER
+  OWNER
+  ADMINISTRATOR
+  MEMBER
 }
 
 enum TeamMemberStatus {
-    ACTIVE
-    INACTIVE
+  ACTIVE
+  INACTIVE
 }
 
 enum TeamOrderField {
-    NAME
-    ABOUT
+  NAME
+  ABOUT
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

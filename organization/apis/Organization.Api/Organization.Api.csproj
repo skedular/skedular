@@ -40,7 +40,7 @@
 
     <ItemGroup>
         <!-- Analyzers (HotChocolate) -->
-        <PackageReference Include="HotChocolate.Types.Analyzers" Version="15.1.13">
+        <PackageReference Include="HotChocolate.Types.Analyzers" Version="15.1.14">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>

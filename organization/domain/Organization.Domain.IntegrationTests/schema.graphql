@@ -1,1354 +1,1354 @@
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 type AddOrganizationPaymentMethodIntentPayload {
-    clientMutationId: String
-    publishedKeys: String!
-    clientSecret: String!
+  clientMutationId: String
+  publishedKeys: String!
+  clientSecret: String!
 }
 
 type CancelOrganizationOfferingPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 type CdnFile {
-    url: String!
-    height: Int
-    width: Int
+  url: String!
+  height: Int
+  width: Int
 }
 
 type CdnImageFile {
-    original: CdnFile
-    thumbnail: CdnFile
+  original: CdnFile
+  thumbnail: CdnFile
 }
 
 type ConnectionOfOrganizationBankAccountEdge {
-    pageInfo: PageInfo!
-    edges: [OrganizationBankAccountEdge!]!
-    totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [OrganizationBankAccountEdge!]!
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationEdge {
-    pageInfo: PageInfo!
-    edges: [OrganizationEdge!]!
-    totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [OrganizationEdge!]!
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationJoinInvitationEdge {
-    pageInfo: PageInfo!
-    edges: [OrganizationJoinInvitationEdge!]!
-    totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [OrganizationJoinInvitationEdge!]!
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationMemberEdge {
-    pageInfo: PageInfo!
-    edges: [OrganizationMemberEdge!]!
-    totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [OrganizationMemberEdge!]!
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationStripeConnectAccountEdge {
-    pageInfo: PageInfo!
-    edges: [OrganizationStripeConnectAccountEdge!]!
-    totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [OrganizationStripeConnectAccountEdge!]!
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationTagEdge {
-    pageInfo: PageInfo!
-    edges: [OrganizationTagEdge!]!
-    totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [OrganizationTagEdge!]!
+  totalCount: Int!
 }
 
 type CustomerDetails {
-    id: ID!
+  id: ID!
 }
 
 type InvitationToJoinOrganizationPayload {
-    clientMutationId: String
-    inviteCustomerToJoinOrganization: InviteCustomerToJoinOrganizationDetails!
+  clientMutationId: String
+  inviteCustomerToJoinOrganization: InviteCustomerToJoinOrganizationDetails!
 }
 
 type InvitationsToJoinOrganizationPayload {
-    clientMutationId: String
-    invitesCustomersToJoinOrganization: [InviteCustomerToJoinOrganizationDetails!]!
+  clientMutationId: String
+  invitesCustomersToJoinOrganization: [InviteCustomerToJoinOrganizationDetails!]!
 }
 
 type InviteCustomerToJoinOrganizationDetails {
-    createdBy: CustomerDetails!
-    invitee: CustomerDetails
-    email: String
-    status: OrganizationInvitationStatusDetails!
-    role: OrganizationMemberRole!
-    organization: OrganizationDetails!
-    id: ID!
+  createdBy: CustomerDetails!
+  invitee: CustomerDetails
+  email: String
+  status: OrganizationInvitationStatusDetails!
+  role: OrganizationMemberRole!
+  organization: OrganizationDetails!
+  id: ID!
 }
 
 type ListingMetadata {
-    about: String
-    title: String
-    subTitle: String
-    includedFeatures: [String!]
+  about: String
+  title: String
+  subTitle: String
+  includedFeatures: [String!]
 }
 
 type Mutation {
-    addOrganizationBankAccount(input: AddOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
-    updateOrganizationBankAccount(input: UpdateOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
-    deleteOrganizationBankAccount(input: DeleteOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
-    deleteOrganizationBankAccounts(input: DeleteOrganizationBankAccountsInput!): OrganizationBankAccountsPayload! @cost(weight: "10")
-    setOrganizationBankAccountAsDefault(input: SetOrganizationBankAccountAsDefaultInput!): OrganizationBankAccountPayload! @cost(weight: "10")
-    addOrganizationBillingDetails(input: AddOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
-    updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
-    inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InvitationsToJoinOrganizationPayload! @cost(weight: "10")
-    acceptInvitationToJoinOrganization(input: AcceptInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
-    rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
-    cancelInvitationToJoinOrganization(input: CancelInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
-    changeOrganizationMemberRole(input: ChangeOrganizationMemberRoleInput!): OrganizationMemberDetailsPayload! @cost(weight: "10")
-    changeOrganizationMembersStatus(input: ChangeOrganizationMembersStatusInput!): OrganizationMembersDetailsPayload! @cost(weight: "10")
-    removeOrganizationMembers(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload! @cost(weight: "10")
-    completeOrganizationMemberOnboarding(input: CompleteOrganizationMemberOnboardingInput!): OrganizationMemberPayload! @cost(weight: "10")
-    updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload! @cost(weight: "10")
-    cancelOrganizationOffering(input: CancelOrganizationOfferingInput!): CancelOrganizationOfferingPayload! @cost(weight: "10")
-    addOrganization(input: AddOrganizationInput!): OrganizationPayload! @cost(weight: "10")
-    updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload! @cost(weight: "10")
-    deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload! @cost(weight: "10")
-    updateOrganizationMarketplaceListingMetadata(input: UpdateOrganizationMarketplaceListingMetadataInput!): OrganizationPayload! @cost(weight: "10")
-    updateOrganizationBillingSettings(input: UpdateOrganizationBillingSettingsInput!): OrganizationPayload! @cost(weight: "10")
-    addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
-    removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
-    addOrganizationPhysicalAddress(input: AddOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
-    updateOrganizationPhysicalAddress(input: UpdateOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
-    updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
-    removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
-    addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
-    updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
-    deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
-    deleteOrganizationStripeConnectAccounts(input: DeleteOrganizationStripeConnectAccountsInput!): OrganizationStripeConnectAccountsPayload! @cost(weight: "10")
-    setOrganizationStripeConnectAccountAsDefault(input: SetOrganizationStripeConnectAccountAsDefaultInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
-    addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
-    updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
-    deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
-    deleteCustomTags(input: DeleteCustomTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
-    addZone(input: AddZoneInput!): OrganizationTagPayload! @cost(weight: "10")
-    updateZone(input: UpdateZoneInput!): OrganizationTagPayload! @cost(weight: "10")
-    deleteZone(input: DeleteZoneInput!): OrganizationTagPayload! @cost(weight: "10")
-    deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload! @cost(weight: "10")
-    addProductTag(input: AddProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
-    updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
-    deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
-    deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
-    updateOrganizationTaxDetails(input: UpdateOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
-    removeOrganizationTaxDetails(input: RemoveOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
-    updateOrganizationXeroConnection(input: UpdateOrganizationXeroConnectionInput!): OrganizationPayload! @cost(weight: "10")
-    disconnectOrganizationXeroConnection(input: DisconnectOrganizationXeroConnectionInput!): OrganizationPayload! @cost(weight: "10")
+  addOrganizationBankAccount(input: AddOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
+  updateOrganizationBankAccount(input: UpdateOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
+  deleteOrganizationBankAccount(input: DeleteOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
+  deleteOrganizationBankAccounts(input: DeleteOrganizationBankAccountsInput!): OrganizationBankAccountsPayload! @cost(weight: "10")
+  setOrganizationBankAccountAsDefault(input: SetOrganizationBankAccountAsDefaultInput!): OrganizationBankAccountPayload! @cost(weight: "10")
+  addOrganizationBillingDetails(input: AddOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
+  inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InvitationsToJoinOrganizationPayload! @cost(weight: "10")
+  acceptInvitationToJoinOrganization(input: AcceptInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
+  rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
+  cancelInvitationToJoinOrganization(input: CancelInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
+  changeOrganizationMemberRole(input: ChangeOrganizationMemberRoleInput!): OrganizationMemberDetailsPayload! @cost(weight: "10")
+  changeOrganizationMembersStatus(input: ChangeOrganizationMembersStatusInput!): OrganizationMembersDetailsPayload! @cost(weight: "10")
+  removeOrganizationMembers(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload! @cost(weight: "10")
+  completeOrganizationMemberOnboarding(input: CompleteOrganizationMemberOnboardingInput!): OrganizationMemberPayload! @cost(weight: "10")
+  updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload! @cost(weight: "10")
+  cancelOrganizationOffering(input: CancelOrganizationOfferingInput!): CancelOrganizationOfferingPayload! @cost(weight: "10")
+  addOrganization(input: AddOrganizationInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload! @cost(weight: "10")
+  deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationMarketplaceListingMetadata(input: UpdateOrganizationMarketplaceListingMetadataInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationBillingSettings(input: UpdateOrganizationBillingSettingsInput!): OrganizationPayload! @cost(weight: "10")
+  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
+  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
+  addOrganizationPhysicalAddress(input: AddOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationPhysicalAddress(input: UpdateOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
+  removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
+  addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
+  updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
+  deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
+  deleteOrganizationStripeConnectAccounts(input: DeleteOrganizationStripeConnectAccountsInput!): OrganizationStripeConnectAccountsPayload! @cost(weight: "10")
+  setOrganizationStripeConnectAccountAsDefault(input: SetOrganizationStripeConnectAccountAsDefaultInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
+  addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
+  updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
+  deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
+  deleteCustomTags(input: DeleteCustomTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
+  addZone(input: AddZoneInput!): OrganizationTagPayload! @cost(weight: "10")
+  updateZone(input: UpdateZoneInput!): OrganizationTagPayload! @cost(weight: "10")
+  deleteZone(input: DeleteZoneInput!): OrganizationTagPayload! @cost(weight: "10")
+  deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload! @cost(weight: "10")
+  addProductTag(input: AddProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
+  updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
+  deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
+  deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
+  updateOrganizationTaxDetails(input: UpdateOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
+  removeOrganizationTaxDetails(input: RemoveOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationXeroConnection(input: UpdateOrganizationXeroConnectionInput!): OrganizationPayload! @cost(weight: "10")
+  disconnectOrganizationXeroConnection(input: DisconnectOrganizationXeroConnectionInput!): OrganizationPayload! @cost(weight: "10")
 }
 
 type MyOrganizationDetails {
-    uniqueId: String!
-    customDomain: String
-    name: String!
-    website: String
-    customerFacingTermsAndConditionsUrl: String
-    logoUrl: String
-    type: OrganizationTypeDetails!
-    contactEmail: String
-    contactPhone: String
-    isMyOnboardingDone: Boolean!
-    featureImages: [CdnImageFile!]!
-    listingMetadata: ListingMetadata!
+  uniqueId: String!
+  customDomain: String
+  name: String!
+  website: String
+  customerFacingTermsAndConditionsUrl: String
+  logoUrl: String
+  type: OrganizationTypeDetails!
+  contactEmail: String
+  contactPhone: String
+  isMyOnboardingDone: Boolean!
+  featureImages: [CdnImageFile!]!
+  listingMetadata: ListingMetadata!
 }
 
 type OrganizationActiveOfferingDetails {
-    code: String!
-    isEnterprise: Boolean!
-    name: String!
-    start: DateTime!
-    end: DateTime!
-    unitPrice: Int!
-    underPriceLines: [String!]!
-    featureSet: [String!]!
-    free: Boolean!
-    earlyBird: Boolean!
-    id: ID!
+  code: String!
+  isEnterprise: Boolean!
+  name: String!
+  start: DateTime!
+  end: DateTime!
+  unitPrice: Int!
+  underPriceLines: [String!]!
+  featureSet: [String!]!
+  free: Boolean!
+  earlyBird: Boolean!
+  id: ID!
 }
 
 type OrganizationAnalytics {
-    memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
-    dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
+  memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
+  dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
 }
 
 type OrganizationBankAccountDetails {
-    isDefault: Boolean!
-    name: String!
-    bankName: String!
-    accountHolderName: String!
-    accountNumber: String!
-    country: String!
-    countryCode: String
-    organization: OrganizationDetails!
-    id: ID!
+  isDefault: Boolean!
+  name: String!
+  bankName: String!
+  accountHolderName: String!
+  accountNumber: String!
+  country: String!
+  countryCode: String
+  organization: OrganizationDetails!
+  id: ID!
 }
 
 type OrganizationBankAccountEdge {
-    node: OrganizationBankAccountDetails!
-    cursor: String!
+  node: OrganizationBankAccountDetails!
+  cursor: String!
 }
 
 type OrganizationBankAccountPayload {
-    clientMutationId: String
-    organizationBankAccount: OrganizationBankAccountDetails!
+  clientMutationId: String
+  organizationBankAccount: OrganizationBankAccountDetails!
 }
 
 type OrganizationBankAccountsPayload {
-    clientMutationId: String
-    organizationBankAccounts: [OrganizationBankAccountDetails!]!
+  clientMutationId: String
+  organizationBankAccounts: [OrganizationBankAccountDetails!]!
 }
 
 type OrganizationBillingCycleDetails {
-    type: OrganizationBillingCycle!
-    name: String!
+  type: OrganizationBillingCycle!
+  name: String!
 }
 
 type OrganizationBillingDetails {
-    companyName: String
-    email: String!
-    osmType: String
-    osmId: String
-    placeId: String
-    longitude: Float
-    latitude: Float
-    formattedAddress: String
-    multilinesFormattedAddress: String
-    addressLine1: String!
-    addressLine2: String
-    suburb: String
-    city: String
-    province: String
-    zipcode: String!
-    country: String!
-    countryCode: String
-    id: ID!
+  companyName: String
+  email: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  multilinesFormattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
+  id: ID!
 }
 
 type OrganizationDailyBookingsTotal {
-    date: DateTime!
-    total: Int!
+  date: DateTime!
+  total: Int!
 }
 
 type OrganizationDetails {
-    members(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput orderBy: [OrganizationMemberOrderInput!]): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
-    customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
-    zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
-    productTags(after: String first: Int before: String last: Int where: ProductTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
-    analytics(from: DateTime! until: DateTime!): OrganizationAnalytics! @cost(weight: "10")
-    isSsoTokenValid: Boolean! @cost(weight: "10")
-    ssoLoginUrl(redirectUrl: String!): String! @cost(weight: "10")
-    customDomain: String
-    name: String!
-    website: String
-    customerFacingTermsAndConditionsUrl: String
-    logoUrl: String
-    type: OrganizationTypeDetails!
-    agreedToTermsOfUse: Boolean!
-    termsOfUse: OrganizationTermsOfUse
-    contactEmail: String
-    contactPhone: String
-    refundNotificationEmails: [String!]!
-    isOwnershipVerified: Boolean!
-    physicalAddress: OrganizationPhysicalAddressDetails
-    billingDetails: OrganizationBillingDetails
-    availableOfferings: [OrganizationOfferingDetails!]!
-    activeOffering: OrganizationActiveOfferingDetails!
-    canModify: Boolean!
-    canDelete: Boolean!
-    canInvitePeople: Boolean!
-    canViewAnalytics: Boolean!
-    isMyOnboardingDone: Boolean!
-    resourceTypes: [OrganizationTagDetails!]!
-    locationSpaceTypes: [OrganizationTagDetails!]!
-    amenities: [OrganizationTagDetails!]!
-    paymentMethods: [OrganizationPaymentMethod!]!
-    ssoSettings: OrganizationSsoSettingsDetails
-    taxDetails: OrganizationTaxDetails
-    xeroConnection: OrganizationXeroConnection
-    featureImages: [CdnImageFile!]!
-    listingMetadata: ListingMetadata!
-    industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
-    stripeAuthorizeExistingConnectAccountUrl: String!
-    hasAttachedPaymentMethod: Boolean!
-    marketplaceListingMetadata: ListingMetadata!
-    billingCycle: OrganizationBillingCycleDetails!
-    invoiceDueInDays: Int!
-    id: ID!
+  members(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput orderBy: [OrganizationMemberOrderInput!]): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
+  customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  productTags(after: String first: Int before: String last: Int where: ProductTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  analytics(from: DateTime! until: DateTime!): OrganizationAnalytics! @cost(weight: "10")
+  isSsoTokenValid: Boolean! @cost(weight: "10")
+  ssoLoginUrl(redirectUrl: String!): String! @cost(weight: "10")
+  customDomain: String
+  name: String!
+  website: String
+  customerFacingTermsAndConditionsUrl: String
+  logoUrl: String
+  type: OrganizationTypeDetails!
+  agreedToTermsOfUse: Boolean!
+  termsOfUse: OrganizationTermsOfUse
+  contactEmail: String
+  contactPhone: String
+  refundNotificationEmails: [String!]!
+  isOwnershipVerified: Boolean!
+  physicalAddress: OrganizationPhysicalAddressDetails
+  billingDetails: OrganizationBillingDetails
+  availableOfferings: [OrganizationOfferingDetails!]!
+  activeOffering: OrganizationActiveOfferingDetails!
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
+  canViewAnalytics: Boolean!
+  isMyOnboardingDone: Boolean!
+  resourceTypes: [OrganizationTagDetails!]!
+  locationSpaceTypes: [OrganizationTagDetails!]!
+  amenities: [OrganizationTagDetails!]!
+  paymentMethods: [OrganizationPaymentMethod!]!
+  ssoSettings: OrganizationSsoSettingsDetails
+  taxDetails: OrganizationTaxDetails
+  xeroConnection: OrganizationXeroConnection
+  featureImages: [CdnImageFile!]!
+  listingMetadata: ListingMetadata!
+  industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  stripeAuthorizeExistingConnectAccountUrl: String!
+  hasAttachedPaymentMethod: Boolean!
+  marketplaceListingMetadata: ListingMetadata!
+  billingCycle: OrganizationBillingCycleDetails!
+  invoiceDueInDays: Int!
+  id: ID!
 }
 
 type OrganizationEdge {
-    node: OrganizationDetails!
-    cursor: String!
+  node: OrganizationDetails!
+  cursor: String!
 }
 
 type OrganizationIndustryMainCategoryReferenceDetails {
-    name: String!
-    subCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
-    id: ID!
+  name: String!
+  subCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  id: ID!
 }
 
 type OrganizationIndustrySubCategoryReferenceDetails {
-    name: String!
-    mainCategoryName: String!
-    id: ID!
+  name: String!
+  mainCategoryName: String!
+  id: ID!
 }
 
 type OrganizationInvitationStatusDetails {
-    type: InvitationStatus!
-    name: String!
+  type: InvitationStatus!
+  name: String!
 }
 
 type OrganizationJoinInvitationEdge {
-    node: InviteCustomerToJoinOrganizationDetails!
-    cursor: String!
+  node: InviteCustomerToJoinOrganizationDetails!
+  cursor: String!
 }
 
 type OrganizationMemberAttendancePercentage {
-    date: DateTime!
-    percentage: Float!
+  date: DateTime!
+  percentage: Float!
 }
 
 type OrganizationMemberDetails {
-    customer: CustomerDetails!
-    role: OrganizationMemberRole
-    status: OrganizationMemberStatus!
-    isOrganizationOnboardingDone: Boolean!
-    id: ID!
+  customer: CustomerDetails!
+  role: OrganizationMemberRole
+  status: OrganizationMemberStatus!
+  isOrganizationOnboardingDone: Boolean!
+  id: ID!
 }
 
 type OrganizationMemberDetailsPayload {
-    clientMutationId: String
-    member: OrganizationMemberDetails
+  clientMutationId: String
+  member: OrganizationMemberDetails
 }
 
 type OrganizationMemberEdge {
-    node: OrganizationMemberDetails!
-    cursor: String!
+  node: OrganizationMemberDetails!
+  cursor: String!
 }
 
 type OrganizationMemberPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 type OrganizationMembersDetailsPayload {
-    clientMutationId: String
-    members: [OrganizationMemberDetails!]!
+  clientMutationId: String
+  members: [OrganizationMemberDetails!]!
 }
 
 type OrganizationOfferingDetails {
-    code: String!
-    isEnterprise: Boolean!
-    name: String!
-    unitPrice: Int!
-    underPriceLines: [String!]!
-    featureSet: [String!]!
-    free: Boolean!
-    earlyBird: Boolean!
+  code: String!
+  isEnterprise: Boolean!
+  name: String!
+  unitPrice: Int!
+  underPriceLines: [String!]!
+  featureSet: [String!]!
+  free: Boolean!
+  earlyBird: Boolean!
 }
 
 type OrganizationPayload {
-    clientMutationId: String
-    organization: OrganizationDetails!
+  clientMutationId: String
+  organization: OrganizationDetails!
 }
 
 type OrganizationPaymentMethod {
-    cardBrand: String
-    cardCountry: String
-    cardDescription: String
-    cardExpiryMonth: Int
-    cardExpiryYear: Int
-    cardFingerprint: String
-    cardFunding: String
-    cardIssuer: String
-    cardLastFourDigit: String
-    id: ID!
+  cardBrand: String
+  cardCountry: String
+  cardDescription: String
+  cardExpiryMonth: Int
+  cardExpiryYear: Int
+  cardFingerprint: String
+  cardFunding: String
+  cardIssuer: String
+  cardLastFourDigit: String
+  id: ID!
 }
 
 type OrganizationPhysicalAddressDetails {
-    osmType: String
-    osmId: String
-    placeId: String
-    longitude: Float
-    latitude: Float
-    formattedAddress: String
-    multilinesFormattedAddress: String
-    addressLine1: String!
-    addressLine2: String
-    suburb: String
-    city: String
-    province: String
-    zipcode: String!
-    country: String!
-    countryCode: String
-    organization: OrganizationDetails!
-    id: ID!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  multilinesFormattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
+  organization: OrganizationDetails!
+  id: ID!
 }
 
 type OrganizationPublicDetails {
-    customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
-    zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
-    uniqueId: String!
-    customDomain: String
-    name: String!
-    website: String
-    customerFacingTermsAndConditionsUrl: String
-    logoUrl: String
-    industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
-    contactEmail: String
-    contactPhone: String
-    physicalAddress: OrganizationPhysicalAddressDetails
-    resourceTypes: [OrganizationTagDetails!]!
-    locationSpaceTypes: [OrganizationTagDetails!]!
-    amenities: [OrganizationTagDetails!]!
-    featureImages: [CdnImageFile!]!
-    listingMetadata: ListingMetadata!
-    marketplaceListingMetadata: ListingMetadata!
+  customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  uniqueId: String!
+  customDomain: String
+  name: String!
+  website: String
+  customerFacingTermsAndConditionsUrl: String
+  logoUrl: String
+  industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  contactEmail: String
+  contactPhone: String
+  physicalAddress: OrganizationPhysicalAddressDetails
+  resourceTypes: [OrganizationTagDetails!]!
+  locationSpaceTypes: [OrganizationTagDetails!]!
+  amenities: [OrganizationTagDetails!]!
+  featureImages: [CdnImageFile!]!
+  listingMetadata: ListingMetadata!
+  marketplaceListingMetadata: ListingMetadata!
 }
 
 type OrganizationSsoSettingsDetails {
-    isActive: Boolean!
-    entityId: String!
-    loginUrl: String!
-    appFederationMetadataUrl: String!
-    id: ID!
+  isActive: Boolean!
+  entityId: String!
+  loginUrl: String!
+  appFederationMetadataUrl: String!
+  id: ID!
 }
 
 type OrganizationStripeConnectAccountDetails {
-    isDefault: Boolean!
-    name: String!
-    chargesEnabled: Boolean!
-    payoutsEnabled: Boolean!
-    type: String!
-    country: String
-    defaultCurrency: String
-    businessType: String
-    companyName: String
-    url: String
-    supportUrl: String
-    contactEmail: String
-    contactPhone: String
-    detailsSubmitted: Boolean!
-    capabilitiesTransfers: String!
-    capabilitiesCardPayments: String!
-    onboardingUrl: String!
-    isOnboardingCompleted: Boolean!
-    isAuthorized: Boolean!
-    organization: OrganizationDetails!
-    id: ID!
+  isDefault: Boolean!
+  name: String!
+  chargesEnabled: Boolean!
+  payoutsEnabled: Boolean!
+  type: String!
+  country: String
+  defaultCurrency: String
+  businessType: String
+  companyName: String
+  url: String
+  supportUrl: String
+  contactEmail: String
+  contactPhone: String
+  detailsSubmitted: Boolean!
+  capabilitiesTransfers: String!
+  capabilitiesCardPayments: String!
+  onboardingUrl: String!
+  isOnboardingCompleted: Boolean!
+  isAuthorized: Boolean!
+  organization: OrganizationDetails!
+  id: ID!
 }
 
 type OrganizationStripeConnectAccountEdge {
-    node: OrganizationStripeConnectAccountDetails!
-    cursor: String!
+  node: OrganizationStripeConnectAccountDetails!
+  cursor: String!
 }
 
 type OrganizationStripeConnectAccountPayload {
-    clientMutationId: String
-    organizationStripeConnectAccount: OrganizationStripeConnectAccountDetails!
+  clientMutationId: String
+  organizationStripeConnectAccount: OrganizationStripeConnectAccountDetails!
 }
 
 type OrganizationStripeConnectAccountsPayload {
-    clientMutationId: String
-    organizationStripeConnectAccounts: [OrganizationStripeConnectAccountDetails!]!
+  clientMutationId: String
+  organizationStripeConnectAccounts: [OrganizationStripeConnectAccountDetails!]!
 }
 
 type OrganizationTagDetails {
-    name: String!
-    description: String
-    type: OrganizationTagType!
-    color: String
-    id: ID!
+  name: String!
+  description: String
+  type: OrganizationTagType!
+  color: String
+  id: ID!
 }
 
 type OrganizationTagEdge {
-    node: OrganizationTagDetails!
-    cursor: String!
+  node: OrganizationTagDetails!
+  cursor: String!
 }
 
 type OrganizationTagPayload {
-    clientMutationId: String
-    organizationTag: OrganizationTagDetails!
+  clientMutationId: String
+  organizationTag: OrganizationTagDetails!
 }
 
 type OrganizationTagTypeDetails {
-    type: OrganizationTagType!
-    name: String!
+  type: OrganizationTagType!
+  name: String!
 }
 
 type OrganizationTagsPayload {
-    clientMutationId: String
-    organizationTags: [OrganizationTagDetails!]!
+  clientMutationId: String
+  organizationTags: [OrganizationTagDetails!]!
 }
 
 type OrganizationTaxDetails {
-    taxId: String!
-    taxRatePercentage: Decimal!
-    id: ID!
+  taxId: String!
+  taxRatePercentage: Decimal!
+  id: ID!
 }
 
 type OrganizationTermsOfUse {
-    terms: String!
-    id: ID!
+  terms: String!
+  id: ID!
 }
 
 type OrganizationTypeDetails {
-    type: OrganizationType!
-    name: String!
+  type: OrganizationType!
+  name: String!
 }
 
 type OrganizationXeroBillingModeDetails {
-    type: OrganizationXeroBillingMode!
-    name: String!
+  type: OrganizationXeroBillingMode!
+  name: String!
 }
 
 type OrganizationXeroConnection {
-    tenantId: String!
-    tenantName: String!
-    billingMode: OrganizationXeroBillingMode!
-    scopes: String
-    isActive: Boolean!
-    sendInvoicesViaXero: Boolean!
-    autoReconcilePayments: Boolean!
-    defaultSalesAccountCode: String
-    defaultReceivablesAccountCode: String
-    defaultTrackingCategory1: String
-    defaultTrackingCategory2: String
-    defaultBrandingThemeId: String
-    defaultReferencePrefix: String
-    accessTokenExpiresAt: DateTime
-    refreshTokenExpiresAt: DateTime
-    lastSuccessfulSyncAt: DateTime
-    lastError: String
-    hasAccessToken: Boolean!
-    hasRefreshToken: Boolean!
-    id: ID!
+  tenantId: String!
+  tenantName: String!
+  billingMode: OrganizationXeroBillingMode!
+  scopes: String
+  isActive: Boolean!
+  sendInvoicesViaXero: Boolean!
+  autoReconcilePayments: Boolean!
+  defaultSalesAccountCode: String
+  defaultReceivablesAccountCode: String
+  defaultTrackingCategory1: String
+  defaultTrackingCategory2: String
+  defaultBrandingThemeId: String
+  defaultReferencePrefix: String
+  accessTokenExpiresAt: DateTime
+  refreshTokenExpiresAt: DateTime
+  lastSuccessfulSyncAt: DateTime
+  lastError: String
+  hasAccessToken: Boolean!
+  hasRefreshToken: Boolean!
+  id: ID!
 }
 
 type PageInfo {
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-    endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
 }
 
 type Query {
-    isAzureTenantInstalled: Boolean! @cost(weight: "10")
-    azureTenantAdminConsentUrl: String! @cost(weight: "10")
-    azureTenantOrganization: OrganizationDetails @cost(weight: "10")
-    organizationBankAccount(id: String!): OrganizationBankAccountDetails @cost(weight: "10")
-    organizationBankAccountById(id: String!): OrganizationBankAccountDetails @lookup @internal @cost(weight: "10")
-    organizationBankAccounts(after: String first: Int before: String last: Int where: OrganizationBankAccountWhereInput! orderBy: [OrganizationBankAccountOrderInput!]): ConnectionOfOrganizationBankAccountEdge! @cost(weight: "10")
-    organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
-    pendingOrganizationInvitationsCount: Int! @cost(weight: "10")
-    myInvitationsToJoinOrganizations(after: String first: Int before: String last: Int where: MyInvitationsToJoinOrganizationsWhereInput! orderBy: [JoinOrganizationInvitationOrderInput!]): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
-    organizationMemberRoles: [OrganizationMemberRole!]!
-    organizationOffering(code: String!): OrganizationOfferingDetails!
-    organizationTypes: [OrganizationTypeDetails!]!
-    organizationBillingCycles: [OrganizationBillingCycleDetails!]!
-    organizationXeroBillingModes: [OrganizationXeroBillingModeDetails!]!
-    organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
-    activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
-    organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
-    organization(id: String customDomain: String): OrganizationDetails @cost(weight: "10")
-    organizationPublic(id: String customDomain: String): OrganizationPublicDetails @cost(weight: "10")
-    organizationById(id: String!): OrganizationDetails @lookup @internal @cost(weight: "10")
-    organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): ConnectionOfOrganizationEdge! @cost(weight: "10")
-    myOrganizations: [MyOrganizationDetails!]! @cost(weight: "10")
-    organizationVersion: Version!
-    bookingSlotSizeInMinutes: Int!
-    resourceTypes: [OrganizationTagTypeDetails!]!
-    locationSpaceTypes: [OrganizationTagTypeDetails!]!
-    emailsToShowLatestCapabilities: [String!]!
-    emailsToIgnoreObservability: [String!]!
-    organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
-    organizationStripeConnectAccountById(id: String!): OrganizationStripeConnectAccountDetails @lookup @internal @cost(weight: "10")
-    organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")
-    deskResourceType: OrganizationTagType!
-    roomResourceType: OrganizationTagType!
-    parkingResourceType: OrganizationTagType!
-    otherResourceType: OrganizationTagType!
-    customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-    customTagById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
-    zone(id: String!): OrganizationTagDetails @cost(weight: "10")
-    zoneById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
-    productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-    productTagById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
+  isAzureTenantInstalled: Boolean! @cost(weight: "10")
+  azureTenantAdminConsentUrl: String! @cost(weight: "10")
+  azureTenantOrganization: OrganizationDetails @cost(weight: "10")
+  organizationBankAccount(id: String!): OrganizationBankAccountDetails @cost(weight: "10")
+  organizationBankAccountById(id: String!): OrganizationBankAccountDetails @lookup @internal @cost(weight: "10")
+  organizationBankAccounts(after: String first: Int before: String last: Int where: OrganizationBankAccountWhereInput! orderBy: [OrganizationBankAccountOrderInput!]): ConnectionOfOrganizationBankAccountEdge! @cost(weight: "10")
+  organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
+  pendingOrganizationInvitationsCount: Int! @cost(weight: "10")
+  myInvitationsToJoinOrganizations(after: String first: Int before: String last: Int where: MyInvitationsToJoinOrganizationsWhereInput! orderBy: [JoinOrganizationInvitationOrderInput!]): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
+  organizationMemberRoles: [OrganizationMemberRole!]!
+  organizationOffering(code: String!): OrganizationOfferingDetails!
+  organizationTypes: [OrganizationTypeDetails!]!
+  organizationBillingCycles: [OrganizationBillingCycleDetails!]!
+  organizationXeroBillingModes: [OrganizationXeroBillingModeDetails!]!
+  organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
+  activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
+  organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
+  organization(id: String customDomain: String): OrganizationDetails @cost(weight: "10")
+  organizationPublic(id: String customDomain: String): OrganizationPublicDetails @cost(weight: "10")
+  organizationById(id: String!): OrganizationDetails @lookup @internal @cost(weight: "10")
+  organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): ConnectionOfOrganizationEdge! @cost(weight: "10")
+  myOrganizations: [MyOrganizationDetails!]! @cost(weight: "10")
+  organizationVersion: Version!
+  bookingSlotSizeInMinutes: Int!
+  resourceTypes: [OrganizationTagTypeDetails!]!
+  locationSpaceTypes: [OrganizationTagTypeDetails!]!
+  emailsToShowLatestCapabilities: [String!]!
+  emailsToIgnoreObservability: [String!]!
+  organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
+  organizationStripeConnectAccountById(id: String!): OrganizationStripeConnectAccountDetails @lookup @internal @cost(weight: "10")
+  organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")
+  deskResourceType: OrganizationTagType!
+  roomResourceType: OrganizationTagType!
+  parkingResourceType: OrganizationTagType!
+  otherResourceType: OrganizationTagType!
+  customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
+  customTagById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
+  zone(id: String!): OrganizationTagDetails @cost(weight: "10")
+  zoneById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
+  productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
+  productTagById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
 }
 
 type RemoveOrganizationPaymentMethodPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 type UpdateOrganizationOfferingPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 type Version {
-    major: Int!
-    minor: Int!
-    build: Int!
-    revision: Int!
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
 }
 
 input AcceptInvitationToJoinOrganizationInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input AddCustomTagInput {
-    clientMutationId: String
-    id: String
-    name: String!
-    description: String
-    color: String
-    organizationId: String
-    organizationCustomDomain: String
+  clientMutationId: String
+  id: String
+  name: String!
+  description: String
+  color: String
+  organizationId: String
+  organizationCustomDomain: String
 }
 
 input AddOrganizationBankAccountInput {
-    clientMutationId: String
-    id: String
-    organizationId: String
-    organizationCustomDomain: String
-    name: String!
-    bankName: String!
-    accountHolderName: String!
-    accountNumber: String!
-    country: String!
-    countryCode: String
+  clientMutationId: String
+  id: String
+  organizationId: String
+  organizationCustomDomain: String
+  name: String!
+  bankName: String!
+  accountHolderName: String!
+  accountNumber: String!
+  country: String!
+  countryCode: String
 }
 
 input AddOrganizationBillingDetailsInput {
-    clientMutationId: String
-    id: String
-    organizationId: String
-    organizationCustomDomain: String
-    companyName: String
-    email: String!
-    osmType: String
-    osmId: String
-    placeId: String
-    longitude: Float
-    latitude: Float
-    formattedAddress: String
-    addressLine1: String!
-    addressLine2: String
-    suburb: String
-    city: String
-    province: String
-    zipcode: String!
-    country: String!
-    countryCode: String
+  clientMutationId: String
+  id: String
+  organizationId: String
+  organizationCustomDomain: String
+  companyName: String
+  email: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
 }
 
 input AddOrganizationInput {
-    clientMutationId: String
-    id: String
-    customDomain: String
-    name: String!
-    website: String
-    customerFacingTermsAndConditionsUrl: String
-    type: OrganizationType!
-    billingCycle: OrganizationBillingCycle!
-    invoiceDueInDays: Int!
-    contactEmail: String
-    contactPhone: String
-    refundNotificationEmails: [String!]!
-    agreedToTermsOfUse: Boolean!
-    termsOfUseId: String!
-    industrySubCategoryIds: [String!]!
-    featureImages: [CdnImageFileInput!]
-    listingMetadata: ListingMetadataInput
-    marketplaceListingMetadata: ListingMetadataInput
+  clientMutationId: String
+  id: String
+  customDomain: String
+  name: String!
+  website: String
+  customerFacingTermsAndConditionsUrl: String
+  type: OrganizationType!
+  billingCycle: OrganizationBillingCycle!
+  invoiceDueInDays: Int!
+  contactEmail: String
+  contactPhone: String
+  refundNotificationEmails: [String!]!
+  agreedToTermsOfUse: Boolean!
+  termsOfUseId: String!
+  industrySubCategoryIds: [String!]!
+  featureImages: [CdnImageFileInput!]
+  listingMetadata: ListingMetadataInput
+  marketplaceListingMetadata: ListingMetadataInput
 }
 
 input AddOrganizationPaymentMethodIntentInput {
-    clientMutationId: String
-    organizationId: String
-    organizationCustomDomain: String
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
 }
 
 input AddOrganizationPhysicalAddressInput {
-    clientMutationId: String
-    id: String
-    organizationId: String
-    organizationCustomDomain: String
-    osmType: String
-    osmId: String
-    placeId: String
-    longitude: Float
-    latitude: Float
-    formattedAddress: String
-    addressLine1: String!
-    addressLine2: String
-    suburb: String
-    city: String
-    province: String
-    zipcode: String!
-    country: String!
-    countryCode: String
+  clientMutationId: String
+  id: String
+  organizationId: String
+  organizationCustomDomain: String
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
 }
 
 input AddOrganizationStripeConnectAccountInput {
-    clientMutationId: String
-    id: String
-    organizationId: String
-    organizationCustomDomain: String
-    name: String!
-    redirectUrl: String!
+  clientMutationId: String
+  id: String
+  organizationId: String
+  organizationCustomDomain: String
+  name: String!
+  redirectUrl: String!
 }
 
 input AddProductTagInput {
-    clientMutationId: String
-    id: String
-    name: String!
-    description: String
-    organizationId: String
-    organizationCustomDomain: String
-    color: String
+  clientMutationId: String
+  id: String
+  name: String!
+  description: String
+  organizationId: String
+  organizationCustomDomain: String
+  color: String
 }
 
 input AddZoneInput {
-    clientMutationId: String
-    id: String
-    name: String!
-    description: String
-    organizationId: String
-    organizationCustomDomain: String
-    color: String
+  clientMutationId: String
+  id: String
+  name: String!
+  description: String
+  organizationId: String
+  organizationCustomDomain: String
+  color: String
 }
 
 input CancelInvitationToJoinOrganizationInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input CancelOrganizationOfferingInput {
-    clientMutationId: String
-    organizationId: String
-    organizationCustomDomain: String
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
 }
 
 input CdnFileInput {
-    url: String!
-    height: Int
-    width: Int
+  url: String!
+  height: Int
+  width: Int
 }
 
 input CdnImageFileInput {
-    original: CdnFileInput
-    thumbnail: CdnFileInput
+  original: CdnFileInput
+  thumbnail: CdnFileInput
 }
 
 input ChangeOrganizationMemberRoleInput {
-    clientMutationId: String
-    id: String!
-    role: OrganizationMemberRole!
+  clientMutationId: String
+  id: String!
+  role: OrganizationMemberRole!
 }
 
 input ChangeOrganizationMembersStatusInput {
-    clientMutationId: String
-    ids: [String!]!
-    status: OrganizationMemberStatus!
+  clientMutationId: String
+  ids: [String!]!
+  status: OrganizationMemberStatus!
 }
 
 input CompleteOrganizationMemberOnboardingInput {
-    clientMutationId: String
-    organizationId: String
-    organizationCustomDomain: String
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
 }
 
 input CustomTagOrganizationTagWhereInput {
-    nameContains: String
+  nameContains: String
 }
 
 input DeleteCustomTagInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input DeleteCustomTagsInput {
-    clientMutationId: String
-    ids: [String!]!
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input DeleteOrganizationBankAccountInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input DeleteOrganizationBankAccountsInput {
-    clientMutationId: String
-    ids: [String!]!
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input DeleteOrganizationInput {
-    clientMutationId: String
-    id: String
-    customDomain: String
+  clientMutationId: String
+  id: String
+  customDomain: String
 }
 
 input DeleteOrganizationStripeConnectAccountInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input DeleteOrganizationStripeConnectAccountsInput {
-    clientMutationId: String
-    ids: [String!]!
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input DeleteProductTagInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input DeleteProductTagsInput {
-    clientMutationId: String
-    ids: [String!]!
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input DeleteZoneInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input DeleteZonesInput {
-    clientMutationId: String
-    ids: [String!]!
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input DisconnectOrganizationXeroConnectionInput {
-    clientMutationId: String
-    organizationId: String
-    organizationCustomDomain: String
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
 }
 
 input InviteCustomersToJoinOrganizationInput {
-    clientMutationId: String
-    organizationId: String
-    organizationCustomDomain: String
-    emails: [String!]!
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
+  emails: [String!]!
 }
 
 input JoinOrganizationInvitationOrderInput {
-    direction: OrderDirection!
-    field: JoinOrganizationInvitationOrderField!
+  direction: OrderDirection!
+  field: JoinOrganizationInvitationOrderField!
 }
 
 input ListingMetadataInput {
-    about: String
-    title: String
-    subTitle: String
-    includedFeatures: [String!]
+  about: String
+  title: String
+  subTitle: String
+  includedFeatures: [String!]
 }
 
 input MyInvitationsToJoinOrganizationsWhereInput {
-    organizationCustomDomain: String
-    status: InvitationStatus
+  organizationCustomDomain: String
+  status: InvitationStatus
 }
 
 input OrganizationBankAccountOrderInput {
-    direction: OrderDirection!
-    field: OrganizationBankAccountOrderField!
+  direction: OrderDirection!
+  field: OrganizationBankAccountOrderField!
 }
 
 input OrganizationBankAccountWhereInput {
-    organizationCustomDomain: String!
-    nameContains: String
-    onboardingCompleted: Boolean
+  organizationCustomDomain: String!
+  nameContains: String
+  onboardingCompleted: Boolean
 }
 
 input OrganizationMemberOrderInput {
-    direction: OrderDirection!
-    field: OrganizationMemberOrderField!
+  direction: OrderDirection!
+  field: OrganizationMemberOrderField!
 }
 
 input OrganizationMemberWhereInput {
-    nameContains: String
-    customerId: String
+  nameContains: String
+  customerId: String
 }
 
 input OrganizationOrderInput {
-    direction: OrderDirection!
-    field: OrganizationOrderField!
+  direction: OrderDirection!
+  field: OrganizationOrderField!
 }
 
 input OrganizationStripeConnectAccountOrderInput {
-    direction: OrderDirection!
-    field: OrganizationStripeConnectAccountOrderField!
+  direction: OrderDirection!
+  field: OrganizationStripeConnectAccountOrderField!
 }
 
 input OrganizationStripeConnectAccountWhereInput {
-    organizationId: String
-    organizationCustomDomain: String
-    nameContains: String
-    onboardingCompleted: Boolean
+  organizationId: String
+  organizationCustomDomain: String
+  nameContains: String
+  onboardingCompleted: Boolean
 }
 
 input OrganizationTagOrderInput {
-    direction: OrderDirection!
-    field: OrganizationTagOrderField!
+  direction: OrderDirection!
+  field: OrganizationTagOrderField!
 }
 
 input OrganizationWhereInput {
-    nameContains: String
+  nameContains: String
 }
 
 input ProductTagOrganizationTagWhereInput {
-    nameContains: String
+  nameContains: String
 }
 
 input RejectInvitationToJoinOrganizationInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input RemoveOrganizationMembersInput {
-    clientMutationId: String
-    ids: [String!]!
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input RemoveOrganizationPaymentMethodInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input RemoveOrganizationSsoSettingsInput {
-    clientMutationId: String
-    organizationId: String
-    organizationCustomDomain: String
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
 }
 
 input RemoveOrganizationTaxDetailsInput {
-    clientMutationId: String
-    organizationId: String
-    organizationCustomDomain: String
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
 }
 
 input SetOrganizationBankAccountAsDefaultInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input SetOrganizationStripeConnectAccountAsDefaultInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 input UpdateCustomTagInput {
-    clientMutationId: String
-    id: String!
-    name: String!
-    description: String
-    color: String
+  clientMutationId: String
+  id: String!
+  name: String!
+  description: String
+  color: String
 }
 
 input UpdateOrganizationBankAccountInput {
-    clientMutationId: String
-    id: String!
-    name: String!
-    bankName: String!
-    accountHolderName: String!
-    accountNumber: String!
-    country: String!
-    countryCode: String
+  clientMutationId: String
+  id: String!
+  name: String!
+  bankName: String!
+  accountHolderName: String!
+  accountNumber: String!
+  country: String!
+  countryCode: String
 }
 
 input UpdateOrganizationBillingDetailsInput {
-    clientMutationId: String
-    id: String!
-    companyName: String
-    email: String!
-    osmType: String
-    osmId: String
-    placeId: String
-    longitude: Float
-    latitude: Float
-    formattedAddress: String
-    addressLine1: String!
-    addressLine2: String
-    suburb: String
-    city: String
-    province: String
-    zipcode: String!
-    country: String!
-    countryCode: String
+  clientMutationId: String
+  id: String!
+  companyName: String
+  email: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
 }
 
 input UpdateOrganizationBillingSettingsInput {
-    clientMutationId: String
-    id: String
-    customDomain: String
-    billingCycle: OrganizationBillingCycle!
-    invoiceDueInDays: Int!
+  clientMutationId: String
+  id: String
+  customDomain: String
+  billingCycle: OrganizationBillingCycle!
+  invoiceDueInDays: Int!
 }
 
 input UpdateOrganizationInput {
-    clientMutationId: String
-    id: String
-    customDomain: String
-    name: String!
-    website: String
-    customerFacingTermsAndConditionsUrl: String
-    billingCycle: OrganizationBillingCycle!
-    invoiceDueInDays: Int!
-    contactEmail: String
-    contactPhone: String
-    refundNotificationEmails: [String!]!
-    industrySubCategoryIds: [String!]!
-    featureImages: [CdnImageFileInput!]
-    listingMetadata: ListingMetadataInput
-    marketplaceListingMetadata: ListingMetadataInput
+  clientMutationId: String
+  id: String
+  customDomain: String
+  name: String!
+  website: String
+  customerFacingTermsAndConditionsUrl: String
+  billingCycle: OrganizationBillingCycle!
+  invoiceDueInDays: Int!
+  contactEmail: String
+  contactPhone: String
+  refundNotificationEmails: [String!]!
+  industrySubCategoryIds: [String!]!
+  featureImages: [CdnImageFileInput!]
+  listingMetadata: ListingMetadataInput
+  marketplaceListingMetadata: ListingMetadataInput
 }
 
 input UpdateOrganizationMarketplaceListingMetadataInput {
-    clientMutationId: String
-    id: String
-    customDomain: String
-    marketplaceListingMetadata: ListingMetadataInput!
+  clientMutationId: String
+  id: String
+  customDomain: String
+  marketplaceListingMetadata: ListingMetadataInput!
 }
 
 input UpdateOrganizationOfferingInput {
-    clientMutationId: String
-    organizationId: String
-    organizationCustomDomain: String
-    offeringCode: String!
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
+  offeringCode: String!
 }
 
 input UpdateOrganizationPhysicalAddressInput {
-    clientMutationId: String
-    id: String!
-    osmType: String
-    osmId: String
-    placeId: String
-    longitude: Float
-    latitude: Float
-    formattedAddress: String
-    addressLine1: String!
-    addressLine2: String
-    suburb: String
-    city: String
-    province: String
-    zipcode: String!
-    country: String!
-    countryCode: String
+  clientMutationId: String
+  id: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
 }
 
 input UpdateOrganizationSsoSettingsInput {
-    clientMutationId: String
-    organizationId: String
-    organizationCustomDomain: String
-    entityId: String!
-    loginUrl: String!
-    appFederationMetadataUrl: String!
-    isActive: Boolean!
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
+  entityId: String!
+  loginUrl: String!
+  appFederationMetadataUrl: String!
+  isActive: Boolean!
 }
 
 input UpdateOrganizationStripeConnectAccountInput {
-    clientMutationId: String
-    id: String!
-    name: String!
+  clientMutationId: String
+  id: String!
+  name: String!
 }
 
 input UpdateOrganizationTaxDetailsInput {
-    clientMutationId: String
-    organizationId: String
-    organizationCustomDomain: String
-    taxId: String!
-    taxRatePercentage: Decimal!
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
+  taxId: String!
+  taxRatePercentage: Decimal!
 }
 
 input UpdateOrganizationXeroConnectionInput {
-    clientMutationId: String
-    organizationId: String
-    organizationCustomDomain: String
-    tenantId: String!
-    tenantName: String!
-    billingMode: OrganizationXeroBillingMode!
-    scopes: String
-    isActive: Boolean!
-    sendInvoicesViaXero: Boolean!
-    autoReconcilePayments: Boolean!
-    defaultSalesAccountCode: String
-    defaultReceivablesAccountCode: String
-    defaultTrackingCategory1: String
-    defaultTrackingCategory2: String
-    defaultBrandingThemeId: String
-    defaultReferencePrefix: String
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
+  tenantId: String!
+  tenantName: String!
+  billingMode: OrganizationXeroBillingMode!
+  scopes: String
+  isActive: Boolean!
+  sendInvoicesViaXero: Boolean!
+  autoReconcilePayments: Boolean!
+  defaultSalesAccountCode: String
+  defaultReceivablesAccountCode: String
+  defaultTrackingCategory1: String
+  defaultTrackingCategory2: String
+  defaultBrandingThemeId: String
+  defaultReferencePrefix: String
 }
 
 input UpdateProductTagInput {
-    clientMutationId: String
-    id: String!
-    name: String!
-    description: String
-    color: String
+  clientMutationId: String
+  id: String!
+  name: String!
+  description: String
+  color: String
 }
 
 input UpdateZoneInput {
-    clientMutationId: String
-    id: String!
-    name: String!
-    description: String
-    color: String
+  clientMutationId: String
+  id: String!
+  name: String!
+  description: String
+  color: String
 }
 
 input ZoneOrganizationTagWhereInput {
-    nameContains: String
+  nameContains: String
 }
 
 enum InvitationStatus {
-    PENDING
-    ACCEPTED
-    REJECTED
-    CANCELLED
-    EXPIRED
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+  EXPIRED
 }
 
 enum JoinOrganizationInvitationOrderField {
-    CREATED_AT
-    STATUS
+  CREATED_AT
+  STATUS
 }
 
 enum OrderDirection {
-    ASCENDING
-    DESCENDING
+  ASCENDING
+  DESCENDING
 }
 
 enum OrganizationBankAccountOrderField {
-    NAME
+  NAME
 }
 
 enum OrganizationBillingCycle {
-    WEEKLY
-    FORTNIGHTLY
-    MONTHLY
+  WEEKLY
+  FORTNIGHTLY
+  MONTHLY
 }
 
 enum OrganizationMemberOrderField {
-    ROLE
-    STATUS
-    NAME
-    GIVEN_NAME
-    MIDDLE_NAME
-    FAMILY_NAME
-    PHONE_NUMBER
+  ROLE
+  STATUS
+  NAME
+  GIVEN_NAME
+  MIDDLE_NAME
+  FAMILY_NAME
+  PHONE_NUMBER
 }
 
 enum OrganizationMemberRole {
-    OWNER
-    ADMINISTRATOR
-    MEMBER
+  OWNER
+  ADMINISTRATOR
+  MEMBER
 }
 
 enum OrganizationMemberStatus {
-    ACTIVE
-    INACTIVE
+  ACTIVE
+  INACTIVE
 }
 
 enum OrganizationOrderField {
-    NAME
+  NAME
 }
 
 enum OrganizationStripeConnectAccountOrderField {
-    NAME
+  NAME
 }
 
 enum OrganizationTagOrderField {
-    NAME
-    DESCRIPTION
-    TYPE
+  NAME
+  DESCRIPTION
+  TYPE
 }
 
 enum OrganizationTagType {
-    CUSTOM
-    ZONE
-    PRODUCT
-    RESOURCE_DESK
-    RESOURCE_ROOM
-    RESOURCE_PARKING
-    RESOURCE_OTHERS
-    LOCATION_SPACE_TYPE_CAR_PARK_SPACE
-    LOCATION_SPACE_TYPE_EVENT_SPACE
-    LOCATION_SPACE_TYPE_MEETING_SPACE
-    LOCATION_SPACE_TYPE_OFFICE_SPACE
-    LOCATION_SPACE_TYPE_RETAIL_SPACE
-    LOCATION_SPACE_TYPE_STORAGE_SPACE
-    LOCATION_SPACE_TYPE_STUDIO_SPACE
-    LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
-    LOCATION_SPACE_TYPE_SHOOT_LOCATION
-    LOCATION_SPACE_TYPE_OTHERS
-    AMENITY_HIGH_SPEED_WIFI
-    AMENITY_DEDICATED_VLAN
-    AMENITY_WIRED_ETHERNET
-    AMENITY_GUEST_NETWORK
-    AMENITY_VPN_SUPPORT
-    AMENITY_BACKUP_INTERNET
-    AMENITY_NETWORK_PRINTING
-    AMENITY_SECURE_SSID
-    AMENITY_PUBLIC_IP_OPTION
-    AMENITY_STANDARD_POWER_OUTLETS
-    AMENITY_USB_A_PORTS
-    AMENITY_USB_C_PORTS
-    AMENITY_WIRELESS_CHARGING
-    AMENITY_POWER_STRIPS
-    AMENITY_UPS_BACKED_POWER
-    AMENITY_MONITOR_DOCKING_STATION
-    AMENITY_LAPTOP_STAND_AVAILABILITY
-    AMENITY_ADJUSTABLE_DESK
-    AMENITY_STANDING_DESK
-    AMENITY_FIXED_DESK
-    AMENITY_ERGONOMIC_CHAIR
-    AMENITY_EXECUTIVE_CHAIR
-    AMENITY_DUAL_MONITOR_SETUP
-    AMENITY_PRIVACY_DESK_DIVIDER
-    AMENITY_LOCKABLE_PEDESTAL
-    AMENITY_WHITEBOARD_AT_DESK
-    AMENITY_TASK_LAMP
-    AMENITY_WHITEBOARD
-    AMENITY_GLASS_BOARD
-    AMENITY_FLIP_CHART
-    AMENITY_MARKERS_INCLUDED
-    AMENITY_PROJECTOR
-    AMENITY_LARGE_DISPLAY
-    AMENITY_HDMI_USB_C_CASTING
-    AMENITY_VIDEO_CONFERENCING_KIT
-    AMENITY_SPEAKERPHONE
-    AMENITY_ROOM_CAMERA
-    AMENITY_CONFERENCE_TABLE
-    AMENITY_BREAKOUT_AREA
-    AMENITY_ACOUSTIC_TREATMENT
-    AMENITY_SOUNDPROOF_ROOM
-    AMENITY_PHONE_BOOTH
-    AMENITY_QUIET_ZONE
-    AMENITY_FOCUS_ROOM
-    AMENITY_CONFIDENTIAL_MEETING_ROOM
-    AMENITY_NOISE_CANCELLING_PANELS
-    AMENITY_AIR_CONDITIONING
-    AMENITY_HEATING
-    AMENITY_FRESH_AIR_VENTILATION
-    AMENITY_OPERABLE_WINDOWS
-    AMENITY_NATURAL_LIGHT
-    AMENITY_BLACKOUT_BLINDS
-    AMENITY_AMBIENT_LIGHTING_CONTROLS
-    AMENITY_TEMPERATURE_CONTROLS
-    AMENITY_AIR_PURIFIER
-    AMENITY_HUMIDITY_CONTROL
-    AMENITY_COFFEE_MACHINE
-    AMENITY_TEA_STATION
-    AMENITY_FILTERED_WATER
-    AMENITY_SPARKLING_WATER
-    AMENITY_SNACK_BAR
-    AMENITY_KITCHENETTE
-    AMENITY_FULL_KITCHEN
-    AMENITY_REFRIGERATOR
-    AMENITY_MICROWAVE
-    AMENITY_DISHWASHER
-    AMENITY_CATERING_SUPPORT
-    AMENITY_WHEELCHAIR_ACCESSIBLE_ENTRANCE
-    AMENITY_ELEVATOR_ACCESS
-    AMENITY_ACCESSIBLE_RESTROOM
-    AMENITY_ACCESSIBLE_DESK_HEIGHT
-    AMENITY_BRAILLE_SIGNAGE
-    AMENITY_HEARING_LOOP
-    AMENITY_STEP_FREE_PATH
-    AMENITY_WIDE_DOORWAYS
-    AMENITY_GENDER_NEUTRAL_RESTROOM
-    AMENITY_PRAYER_ROOM
-    AMENITY_ACCESS247
-    AMENITY_BUSINESS_HOURS_ACCESS
-    AMENITY_KEYCARD_ENTRY
-    AMENITY_BIOMETRIC_ENTRY
-    AMENITY_RECEPTION_DESK
-    AMENITY_VISITOR_MANAGEMENT
-    AMENITY_CCTV
-    AMENITY_ON_SITE_SECURITY
-    AMENITY_LOCKABLE_ROOM
-    AMENITY_LOCKER_STORAGE
-    AMENITY_ALARM_SYSTEM
-    AMENITY_RESTROOMS_NEARBY
-    AMENITY_SHOWER_FACILITIES
-    AMENITY_END_OF_TRIP_FACILITIES
-    AMENITY_BIKE_STORAGE
-    AMENITY_LOADING_DOCK_ACCESS
-    AMENITY_FREIGHT_ELEVATOR
-    AMENITY_MAIL_HANDLING
-    AMENITY_PACKAGE_RECEIVING
-    AMENITY_STORAGE_ROOM
-    AMENITY_WASTE_RECYCLING_STATION
-    AMENITY_ON_SITE_PARKING
-    AMENITY_RESERVED_PARKING
-    AMENITY_EV_CHARGING
-    AMENITY_STREET_PARKING_NEARBY
-    AMENITY_PUBLIC_TRANSIT_NEARBY
-    AMENITY_TAXI_RIDESHARE_ZONE
-    AMENITY_BICYCLE_FRIENDLY_ACCESS
-    AMENITY_GYM_ACCESS
-    AMENITY_WELLNESS_ROOM
-    AMENITY_NAP_POD_ROOM
-    AMENITY_OUTDOOR_TERRACE
-    AMENITY_GARDEN_PATIO
-    AMENITY_GAME_LOUNGE_AREA
-    AMENITY_STANDING_MEETING_ZONE
-    AMENITY_MEDITATION_ROOM
-    AMENITY_CHILDCARE_NEARBY
-    AMENITY_FAMILY_ROOM
-    AMENITY_LACTATION_ROOM
-    AMENITY_PET_FRIENDLY
-    AMENITY_SERVICE_ANIMAL_READY
-    AMENITY_IT_SUPPORT_ON_SITE
-    AMENITY_FRONT_DESK_SUPPORT
-    AMENITY_COMMUNITY_MANAGER
-    AMENITY_CLEANING_SERVICE
-    AMENITY_AFTER_HOURS_SUPPORT
-    AMENITY_FACILITIES_HELPDESK
-    AMENITY_ON_DEMAND_SETUP
-    AMENITY_HOURLY_BOOKABLE
-    AMENITY_DAILY_PASS
-    AMENITY_MONTHLY_MEMBERSHIP
-    AMENITY_MINIMUM_BOOKING_DURATION
-    AMENITY_MAX_CAPACITY
-    AMENITY_CANCELLATION_FLEXIBILITY
-    AMENITY_REFUNDABLE_BOOKING
-    AMENITY_DEPOSIT_REQUIRED
-    AMENITY_LEAD_TIME_REQUIREMENT
-    AMENITY_CHECK_IN_REQUIRED
-    AMENITY_HOST_APPROVAL_REQUIRED
-    AMENITY_DESK_PHONE
-    AMENITY_KEYBOARD_MOUSE_INCLUDED
-    AMENITY_MONITOR_ARM
-    AMENITY_BOARDROOM_LAYOUT
-    AMENITY_CLASSROOM_LAYOUT
-    AMENITY_HYBRID_READY
-    AMENITY_RECORDING_ENABLED
-    AMENITY_STAGE
-    AMENITY_PA_SYSTEM
-    AMENITY_LIGHTING_RIG
-    AMENITY_MOVABLE_SEATING
-    AMENITY_EVENT_STAFF_SUPPORT
-    AMENITY_SOUND_BOOTH
-    AMENITY_GREEN_SCREEN
-    AMENITY_SPECIALIZED_TOOLS_EQUIPMENT
-    AMENITY_SAFETY_COMPLIANCE_KIT
+  CUSTOM
+  ZONE
+  PRODUCT
+  RESOURCE_DESK
+  RESOURCE_ROOM
+  RESOURCE_PARKING
+  RESOURCE_OTHERS
+  LOCATION_SPACE_TYPE_CAR_PARK_SPACE
+  LOCATION_SPACE_TYPE_EVENT_SPACE
+  LOCATION_SPACE_TYPE_MEETING_SPACE
+  LOCATION_SPACE_TYPE_OFFICE_SPACE
+  LOCATION_SPACE_TYPE_RETAIL_SPACE
+  LOCATION_SPACE_TYPE_STORAGE_SPACE
+  LOCATION_SPACE_TYPE_STUDIO_SPACE
+  LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
+  LOCATION_SPACE_TYPE_SHOOT_LOCATION
+  LOCATION_SPACE_TYPE_OTHERS
+  AMENITY_HIGH_SPEED_WIFI
+  AMENITY_DEDICATED_VLAN
+  AMENITY_WIRED_ETHERNET
+  AMENITY_GUEST_NETWORK
+  AMENITY_VPN_SUPPORT
+  AMENITY_BACKUP_INTERNET
+  AMENITY_NETWORK_PRINTING
+  AMENITY_SECURE_SSID
+  AMENITY_PUBLIC_IP_OPTION
+  AMENITY_STANDARD_POWER_OUTLETS
+  AMENITY_USB_A_PORTS
+  AMENITY_USB_C_PORTS
+  AMENITY_WIRELESS_CHARGING
+  AMENITY_POWER_STRIPS
+  AMENITY_UPS_BACKED_POWER
+  AMENITY_MONITOR_DOCKING_STATION
+  AMENITY_LAPTOP_STAND_AVAILABILITY
+  AMENITY_ADJUSTABLE_DESK
+  AMENITY_STANDING_DESK
+  AMENITY_FIXED_DESK
+  AMENITY_ERGONOMIC_CHAIR
+  AMENITY_EXECUTIVE_CHAIR
+  AMENITY_DUAL_MONITOR_SETUP
+  AMENITY_PRIVACY_DESK_DIVIDER
+  AMENITY_LOCKABLE_PEDESTAL
+  AMENITY_WHITEBOARD_AT_DESK
+  AMENITY_TASK_LAMP
+  AMENITY_WHITEBOARD
+  AMENITY_GLASS_BOARD
+  AMENITY_FLIP_CHART
+  AMENITY_MARKERS_INCLUDED
+  AMENITY_PROJECTOR
+  AMENITY_LARGE_DISPLAY
+  AMENITY_HDMI_USB_C_CASTING
+  AMENITY_VIDEO_CONFERENCING_KIT
+  AMENITY_SPEAKERPHONE
+  AMENITY_ROOM_CAMERA
+  AMENITY_CONFERENCE_TABLE
+  AMENITY_BREAKOUT_AREA
+  AMENITY_ACOUSTIC_TREATMENT
+  AMENITY_SOUNDPROOF_ROOM
+  AMENITY_PHONE_BOOTH
+  AMENITY_QUIET_ZONE
+  AMENITY_FOCUS_ROOM
+  AMENITY_CONFIDENTIAL_MEETING_ROOM
+  AMENITY_NOISE_CANCELLING_PANELS
+  AMENITY_AIR_CONDITIONING
+  AMENITY_HEATING
+  AMENITY_FRESH_AIR_VENTILATION
+  AMENITY_OPERABLE_WINDOWS
+  AMENITY_NATURAL_LIGHT
+  AMENITY_BLACKOUT_BLINDS
+  AMENITY_AMBIENT_LIGHTING_CONTROLS
+  AMENITY_TEMPERATURE_CONTROLS
+  AMENITY_AIR_PURIFIER
+  AMENITY_HUMIDITY_CONTROL
+  AMENITY_COFFEE_MACHINE
+  AMENITY_TEA_STATION
+  AMENITY_FILTERED_WATER
+  AMENITY_SPARKLING_WATER
+  AMENITY_SNACK_BAR
+  AMENITY_KITCHENETTE
+  AMENITY_FULL_KITCHEN
+  AMENITY_REFRIGERATOR
+  AMENITY_MICROWAVE
+  AMENITY_DISHWASHER
+  AMENITY_CATERING_SUPPORT
+  AMENITY_WHEELCHAIR_ACCESSIBLE_ENTRANCE
+  AMENITY_ELEVATOR_ACCESS
+  AMENITY_ACCESSIBLE_RESTROOM
+  AMENITY_ACCESSIBLE_DESK_HEIGHT
+  AMENITY_BRAILLE_SIGNAGE
+  AMENITY_HEARING_LOOP
+  AMENITY_STEP_FREE_PATH
+  AMENITY_WIDE_DOORWAYS
+  AMENITY_GENDER_NEUTRAL_RESTROOM
+  AMENITY_PRAYER_ROOM
+  AMENITY_ACCESS247
+  AMENITY_BUSINESS_HOURS_ACCESS
+  AMENITY_KEYCARD_ENTRY
+  AMENITY_BIOMETRIC_ENTRY
+  AMENITY_RECEPTION_DESK
+  AMENITY_VISITOR_MANAGEMENT
+  AMENITY_CCTV
+  AMENITY_ON_SITE_SECURITY
+  AMENITY_LOCKABLE_ROOM
+  AMENITY_LOCKER_STORAGE
+  AMENITY_ALARM_SYSTEM
+  AMENITY_RESTROOMS_NEARBY
+  AMENITY_SHOWER_FACILITIES
+  AMENITY_END_OF_TRIP_FACILITIES
+  AMENITY_BIKE_STORAGE
+  AMENITY_LOADING_DOCK_ACCESS
+  AMENITY_FREIGHT_ELEVATOR
+  AMENITY_MAIL_HANDLING
+  AMENITY_PACKAGE_RECEIVING
+  AMENITY_STORAGE_ROOM
+  AMENITY_WASTE_RECYCLING_STATION
+  AMENITY_ON_SITE_PARKING
+  AMENITY_RESERVED_PARKING
+  AMENITY_EV_CHARGING
+  AMENITY_STREET_PARKING_NEARBY
+  AMENITY_PUBLIC_TRANSIT_NEARBY
+  AMENITY_TAXI_RIDESHARE_ZONE
+  AMENITY_BICYCLE_FRIENDLY_ACCESS
+  AMENITY_GYM_ACCESS
+  AMENITY_WELLNESS_ROOM
+  AMENITY_NAP_POD_ROOM
+  AMENITY_OUTDOOR_TERRACE
+  AMENITY_GARDEN_PATIO
+  AMENITY_GAME_LOUNGE_AREA
+  AMENITY_STANDING_MEETING_ZONE
+  AMENITY_MEDITATION_ROOM
+  AMENITY_CHILDCARE_NEARBY
+  AMENITY_FAMILY_ROOM
+  AMENITY_LACTATION_ROOM
+  AMENITY_PET_FRIENDLY
+  AMENITY_SERVICE_ANIMAL_READY
+  AMENITY_IT_SUPPORT_ON_SITE
+  AMENITY_FRONT_DESK_SUPPORT
+  AMENITY_COMMUNITY_MANAGER
+  AMENITY_CLEANING_SERVICE
+  AMENITY_AFTER_HOURS_SUPPORT
+  AMENITY_FACILITIES_HELPDESK
+  AMENITY_ON_DEMAND_SETUP
+  AMENITY_HOURLY_BOOKABLE
+  AMENITY_DAILY_PASS
+  AMENITY_MONTHLY_MEMBERSHIP
+  AMENITY_MINIMUM_BOOKING_DURATION
+  AMENITY_MAX_CAPACITY
+  AMENITY_CANCELLATION_FLEXIBILITY
+  AMENITY_REFUNDABLE_BOOKING
+  AMENITY_DEPOSIT_REQUIRED
+  AMENITY_LEAD_TIME_REQUIREMENT
+  AMENITY_CHECK_IN_REQUIRED
+  AMENITY_HOST_APPROVAL_REQUIRED
+  AMENITY_DESK_PHONE
+  AMENITY_KEYBOARD_MOUSE_INCLUDED
+  AMENITY_MONITOR_ARM
+  AMENITY_BOARDROOM_LAYOUT
+  AMENITY_CLASSROOM_LAYOUT
+  AMENITY_HYBRID_READY
+  AMENITY_RECORDING_ENABLED
+  AMENITY_STAGE
+  AMENITY_PA_SYSTEM
+  AMENITY_LIGHTING_RIG
+  AMENITY_MOVABLE_SEATING
+  AMENITY_EVENT_STAFF_SUPPORT
+  AMENITY_SOUND_BOOTH
+  AMENITY_GREEN_SCREEN
+  AMENITY_SPECIALIZED_TOOLS_EQUIPMENT
+  AMENITY_SAFETY_COMPLIANCE_KIT
 }
 
 enum OrganizationType {
-    PRIVATE
-    MARKETPLACE
-    INDIVIDUAL
+  PRIVATE
+  MARKETPLACE
+  INDIVIDUAL
 }
 
 enum OrganizationXeroBillingMode {
-    DISABLED
-    ENABLED
-    REPEATING_INVOICES
+  DISABLED
+  ENABLED
+  REPEATING_INVOICES
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

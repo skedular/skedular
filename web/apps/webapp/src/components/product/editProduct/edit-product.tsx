@@ -1,21 +1,9 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
-import { DeleteIcon } from '@/components/icons';
-import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
+import { AppBarWithStackColumn } from '@/components/commons';
+import { listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import {
-  MultipleChoicesPaymentMethodTypes,
-  MultipleChoicesProductTags,
-  SingleChoiceCurrency,
-  SingleChoiceProductPricingBillingMode,
-  SingleChoiceProductPricingCadence,
-  SingleChoiceProductPricingCancellationType,
-  SingleChoiceProductType,
-} from '@/components/organization';
-import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
-import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
+import ProductEditorForm from '@/components/product/product-editor-form';
 import { PaletteModeContext } from '@/libs/providers';
-import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { editProduct_query$key } from '@/queries/__generated__/editProduct_query.graphql';
 import type {
@@ -26,11 +14,7 @@ import type {
   ProductType,
 } from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
+import { makeRequired, makeValidate } from 'mui-rff';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -768,303 +752,24 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               debounceSetCurrency(values!.currency);
               debounceSetProductTagIds(values!.productTagIds);
               debounceSetAmenityIds(values!.amenityIds);
-              const changeNestedField = (path: string, value: unknown) => {
-                (form as unknown as { change: (name: string, nextValue: unknown) => void }).change(path, value);
-              };
-              const isEventProduct = isEventType(values?.type);
 
               return (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <SectionIconTypography label="Edit Product" />
-                    <BodyIconTypography label="Edit your product details" />
-                    <Divider />
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Feature Images">
-                      <StackColumn>
-                        <Box
-                          sx={{
-                            display: 'grid',
-                            gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
-                            gap: 2,
-                          }}
-                        >
-                          {featureImages.map((image, index) => (
-                            <Box
-                              key={index}
-                              sx={{
-                                position: 'relative',
-                                borderRadius: 2,
-                                overflow: 'hidden',
-                                border: 1,
-                                borderColor: 'divider',
-                                backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                              }}
-                            >
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                              <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                                <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                                  <DeleteIcon fontSize="small" />
-                                </IconButton>
-                              </StackRow>
-                              <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                                {primaryFeatureImage?.original?.url === image.original?.url ? (
-                                  <Chip size="small" color="success" label="Cover image" />
-                                ) : (
-                                  <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                                    Make cover
-                                  </Button>
-                                )}
-                              </StackRow>
-                            </Box>
-                          ))}
-                        </Box>
-
-                        <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
-                      </StackColumn>
-                    </FormFieldLabel>
-
-                    <ListingMetadata
-                      fields={['title', 'subTitle', 'includedFeatures']}
-                      onChange={({ includedFeatures, subTitle, title }) => {
-                        debounceSetTitle(title);
-                        debounceSetSubTitle(subTitle);
-                        debounceSetIncludedFeatures(includedFeatures);
-                      }}
-                      requiredFields={requiredFields}
-                    />
-
-                    <FormFieldLabel label="Type">
-                      <SingleChoiceProductType rootDataRelay={rootData} name="type" required={requiredFields.type} />
-                    </FormFieldLabel>
-                    {isEventProduct ? (
-                      <BodyIconTypography
-                        label="Event products support explicit-time bookings only. Recurring plan cadences are not allowed, and the full matching tagged resource set will be reserved."
-                        sx={{ opacity: 0.78 }}
-                      />
-                    ) : null}
-
-                    <FormFieldLabel label="Currency">
-                      <SingleChoiceCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Product Tags">
-                      <MultipleChoicesProductTags
-                        rootDataRelay={rootData}
-                        name="productTagIds"
-                        required={requiredFields.productTagIds}
-                        organizationCustomDomain={organizationCustomDomain}
-                      />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Amenities">
-                      <MultipleChoicesAmenities rootDataRelay={rootData} name="amenityIds" required={requiredFields.amenityIds} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Pricing Options" />
-                    <StackColumn>
-                      {(values?.pricingOptions ?? []).map((pricingOption: PricingOptionForm, index: number) => (
-                        <Box
-                          key={pricingOption.id}
-                          sx={{
-                            border: 1,
-                            borderColor: 'divider',
-                            borderRadius: 2,
-                            paddingLeft: 2,
-                            paddingBottom: 2,
-                          }}
-                        >
-                          <StackColumn>
-                            <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                              {(values?.pricingOptions ?? []).length > 1 ? (
-                                <Button
-                                  color="error"
-                                  onClick={() => {
-                                    const nextPricingOptions = (values?.pricingOptions ?? []).filter((_: PricingOptionForm, itemIndex: number) => itemIndex !== index);
-                                    form.change('pricingOptions', nextPricingOptions);
-                                  }}
-                                >
-                                  Remove
-                                </Button>
-                              ) : null}
-                            </StackRow>
-
-                            <FormFieldLabel label="Cadence">
-                              <SingleChoiceProductPricingCadence rootDataRelay={rootData} name={`pricingOptions[${index}].cadence`} required />
-                            </FormFieldLabel>
-
-                            <ListingMetadata fields={['title', 'subTitle']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />
-
-                            <FormFieldLabel label="Price">
-                              <TextField name={`pricingOptions[${index}].price`} required />
-                            </FormFieldLabel>
-
-                            <FormFieldLabel label="Number of Resources to Book">
-                              <TextField
-                                name={`pricingOptions[${index}].numberOfResourcesToBook`}
-                                required
-                                disabled={isEventProduct}
-                                helperText={isEventProduct ? 'Ignored for event products. The full matching resource set will be booked.' : undefined}
-                              />
-                            </FormFieldLabel>
-
-                            <FormFieldLabel>
-                              <Switches name={`pricingOptions[${index}].isTaxInclusive`} data={{ label: 'Is price tax inclusive?', value: 'isTaxInclusive' }} />
-                            </FormFieldLabel>
-
-                            {!isEventProduct ? (
-                              <FormFieldLabel>
-                                <Switches
-                                  name={`pricingOptions[${index}].supportsSubscriptionAutoRenewal`}
-                                  data={{ label: 'Supports subscription auto renewal?', value: 'supportsSubscriptionAutoRenewal' }}
-                                />
-                              </FormFieldLabel>
-                            ) : null}
-
-                            <FormFieldLabel label="Minimum Duration (minutes)">
-                              <TextField name={`pricingOptions[${index}].minDurationMinutes`} required />
-                            </FormFieldLabel>
-
-                            <FormFieldLabel label="Maximum Duration (minutes)">
-                              <TextField name={`pricingOptions[${index}].maxDurationMinutes`} required />
-                            </FormFieldLabel>
-
-                            <FormFieldLabel label="Cancellation Policy">
-                              <SingleChoiceProductPricingCancellationType
-                                rootDataRelay={rootData}
-                                name={`pricingOptions[${index}].cancellationPolicyType`}
-                                required
-                                fieldProps={{
-                                  onChange: (event: { target: { value: string } }) => {
-                                    const nextPolicy = event.target.value;
-                                    changeNestedField(`pricingOptions[${index}].cancellationPolicyType`, nextPolicy);
-
-                                    if (nextPolicy === 'NO_CANCELLATION') {
-                                      changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, normalizeCancellationRefundRules(nextPolicy, []));
-                                    } else if (nextPolicy === 'FULL_REFUND_BEFORE_CUTOFF') {
-                                      changeNestedField(
-                                        `pricingOptions[${index}].cancellationRefundRules`,
-                                        normalizeCancellationRefundRules(nextPolicy, pricingOption.cancellationRefundRules),
-                                      );
-                                    } else if (nextPolicy === 'TIERED_REFUND') {
-                                      changeNestedField(
-                                        `pricingOptions[${index}].cancellationRefundRules`,
-                                        normalizeCancellationRefundRules(nextPolicy, pricingOption.cancellationRefundRules),
-                                      );
-                                    }
-                                  },
-                                }}
-                              />
-                            </FormFieldLabel>
-
-                            {pricingOption.cancellationPolicyType === 'FULL_REFUND_BEFORE_CUTOFF' ? (
-                              <FormFieldLabel label="Full Refund Cutoff (minutes before booking or renewal)">
-                                <TextField name={`pricingOptions[${index}].cancellationRefundRules[0].minutesBefore`} />
-                              </FormFieldLabel>
-                            ) : null}
-
-                            {pricingOption.cancellationPolicyType === 'TIERED_REFUND' ? (
-                              <StackColumn spacing={1.5}>
-                                {(pricingOption.cancellationRefundRules ?? []).map((rule, ruleIndex) => (
-                                  <Box key={`${pricingOption.id}-${ruleIndex}`} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 2 }}>
-                                    <StackColumn spacing={1.25}>
-                                      <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <BodyIconTypography label={`Refund Rule ${ruleIndex + 1}`} />
-                                        {(pricingOption.cancellationRefundRules?.length ?? 0) > 1 ? (
-                                          <Button
-                                            color="error"
-                                            onClick={() => {
-                                              changeNestedField(
-                                                `pricingOptions[${index}].cancellationRefundRules`,
-                                                pricingOption.cancellationRefundRules.filter((_, itemIndex) => itemIndex !== ruleIndex),
-                                              );
-                                            }}
-                                          >
-                                            Remove
-                                          </Button>
-                                        ) : null}
-                                      </StackRow>
-
-                                      <FormFieldLabel label="Minutes Before">
-                                        <TextField name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].minutesBefore`} />
-                                      </FormFieldLabel>
-
-                                      <FormFieldLabel label="Refund Percentage">
-                                        <TextField name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].refundPercentage`} />
-                                      </FormFieldLabel>
-                                    </StackColumn>
-                                  </Box>
-                                ))}
-
-                                <StackRow>
-                                  <Button
-                                    variant="outlined"
-                                    onClick={() =>
-                                      changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, [
-                                        ...(pricingOption.cancellationRefundRules ?? []),
-                                        createCancellationRefundRule('0'),
-                                      ])
-                                    }
-                                  >
-                                    Add Refund Rule
-                                  </Button>
-                                </StackRow>
-                              </StackColumn>
-                            ) : null}
-
-                            {typeof errors?.pricingOptions?.[index]?.cancellationRefundRules === 'string' ? (
-                              <BodyIconTypography label={errors.pricingOptions[index].cancellationRefundRules} sx={{ color: 'error.main' }} />
-                            ) : null}
-
-                            <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Card (minutes)">
-                              <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`} required />
-                            </FormFieldLabel>
-
-                            <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Bank Transfer (days)">
-                              <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransfer`} required />
-                            </FormFieldLabel>
-
-                            <FormFieldLabel label="Accepted Payment Methods">
-                              <MultipleChoicesPaymentMethodTypes rootDataRelay={rootData} name={`pricingOptions[${index}].acceptedPaymentMethods`} required />
-                            </FormFieldLabel>
-
-                            <FormFieldLabel label="Billing Mode">
-                              <SingleChoiceProductPricingBillingMode rootDataRelay={rootData as never} name={`pricingOptions[${index}].billingMode`} required />
-                            </FormFieldLabel>
-                          </StackColumn>
-                        </Box>
-                      ))}
-
-                      {typeof errors?.pricingOptions === 'string' ? <BodyIconTypography label={errors.pricingOptions} sx={{ color: 'error.main' }} /> : null}
-
-                      <StackRow>
-                        <Button
-                          variant="outlined"
-                          onClick={() => {
-                            const nextPricingOptions = [
-                              ...(values?.pricingOptions ?? []),
-                              createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer),
-                            ];
-                            form.change('pricingOptions', nextPricingOptions);
-                          }}
-                        >
-                          Add Pricing Option
-                        </Button>
-                      </StackRow>
-                    </StackColumn>
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
+                <ProductEditorForm
+                  mode="edit"
+                  onSubmit={handleSubmit}
+                  rootDataRelay={rootData}
+                  values={values as ProductDetails}
+                  errors={errors}
+                  form={form as unknown as { change: (name: string, nextValue: unknown) => void }}
+                  requiredFields={requiredFields}
+                  organizationCustomDomain={organizationCustomDomain}
+                  featureImages={featureImages}
+                  primaryFeatureImage={primaryFeatureImage}
+                  onUploadCompleted={handleFeatureImageUploadCompleted}
+                  onRemoveFeatureImage={handleRemoveFeatureImage}
+                  onSetPrimaryFeatureImage={handleSetPrimaryFeatureImage}
+                  paletteMode={paletteMode}
+                />
               );
             }}
           />

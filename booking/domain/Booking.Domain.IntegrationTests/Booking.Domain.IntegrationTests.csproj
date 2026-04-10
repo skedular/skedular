@@ -40,7 +40,7 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0"/>
 
         <!-- GraphQL Testing (StrawberryShake) -->
-        <PackageReference Include="StrawberryShake.Server" Version="15.1.13"/>
+        <PackageReference Include="StrawberryShake.Server" Version="15.1.14"/>
 
         <!-- Code Coverage -->
         <PackageReference Include="coverlet.collector" Version="8.0.1">
