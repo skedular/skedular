@@ -8,8 +8,9 @@ namespace Enterprise.Shared.UnitTests.Image.ImageHelperTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class IsImageFileShould
 {
-    [Fact]
-    public async Task Return_true_for_valid_image()
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Return_true_for_valid_image(CancellationToken cancellationToken)
     {
         var sut = new ImageHelper();
 
@@ -17,43 +18,46 @@ public class IsImageFileShould
         var pngBytes = CreateMinimalPng();
         using var stream = new MemoryStream(pngBytes);
 
-        var result = await sut.IsImageFileAsync(stream, CancellationToken.None);
+        var result = await sut.IsImageFileAsync(stream, cancellationToken);
 
         result.ShouldBeTrue();
     }
 
-    [Fact]
-    public async Task Return_false_for_non_image_stream()
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Return_false_for_non_image_stream(CancellationToken cancellationToken)
     {
         var sut = new ImageHelper();
         using var stream = new MemoryStream("not an image"u8.ToArray());
 
-        var result = await sut.IsImageFileAsync(stream, CancellationToken.None);
+        var result = await sut.IsImageFileAsync(stream, cancellationToken);
 
         result.ShouldBeFalse();
     }
 
-    [Fact]
-    public async Task Return_width_height_for_valid_image()
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Return_width_height_for_valid_image(CancellationToken cancellationToken)
     {
         var sut = new ImageHelper();
         var pngBytes = CreateMinimalPng();
         using var stream = new MemoryStream(pngBytes);
 
-        var (isImage, width, height) = await sut.GetImageWidthHeightAsync(stream, CancellationToken.None);
+        var (isImage, width, height) = await sut.GetImageWidthHeightAsync(stream, cancellationToken);
 
         isImage.ShouldBeTrue();
         width.ShouldBeGreaterThan(0);
         height.ShouldBeGreaterThan(0);
     }
 
-    [Fact]
-    public async Task Return_false_for_non_image_on_get_dimensions()
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Return_false_for_non_image_on_get_dimensions(CancellationToken cancellationToken)
     {
         var sut = new ImageHelper();
         using var stream = new MemoryStream("not an image"u8.ToArray());
 
-        var (isImage, width, height) = await sut.GetImageWidthHeightAsync(stream, CancellationToken.None);
+        var (isImage, width, height) = await sut.GetImageWidthHeightAsync(stream, cancellationToken);
 
         isImage.ShouldBeFalse();
         width.ShouldBe(0);

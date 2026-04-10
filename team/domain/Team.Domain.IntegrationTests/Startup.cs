@@ -31,7 +31,7 @@ public class Startup
 #pragma warning disable CA2012
         DomainAppHostEnvironmentVariables.SetFakeDependencies(true);
         var builder = DistributedApplicationTestingBuilder.CreateAsync<Team_Domain_AppHost>().Result;
-        var distributedApp = builder.AddDefaultServices().StartAsync(CancellationToken.None).Result;
+        var distributedApp = builder.AddDefaultServices().StartAsync(TestContext.Current.CancellationToken).Result;
 
         var kafkaConnectionString = distributedApp.GetConnectionStringAsync("kafka").Result;
         var teamDbConnectionString = distributedApp.GetConnectionStringAsync("teamdb").Result;

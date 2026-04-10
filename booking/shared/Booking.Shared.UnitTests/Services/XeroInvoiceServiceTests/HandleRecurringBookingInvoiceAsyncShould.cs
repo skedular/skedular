@@ -51,7 +51,8 @@ public class HandleRecurringBookingInvoiceAsyncShould
         string productVersionId,
         string pricingId,
         string organizationId,
-        string existingTemplateId)
+        string existingTemplateId,
+        CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
         var sut = new XeroInvoiceService(
@@ -73,7 +74,6 @@ public class HandleRecurringBookingInvoiceAsyncShould
             invoicePaymentTermsService,
             timeProvider);
 
-        var cancellationToken = TestContext.Current.CancellationToken;
         var recurringBooking = new RecurringBooking
         {
             Id = recurringBookingId,
@@ -201,7 +201,8 @@ public class HandleRecurringBookingInvoiceAsyncShould
         string recurringBookingId,
         string productVersionId,
         string pricingId,
-        string organizationId)
+        string organizationId,
+        CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
         var sut = new XeroInvoiceService(
@@ -223,7 +224,6 @@ public class HandleRecurringBookingInvoiceAsyncShould
             invoicePaymentTermsService,
             timeProvider);
 
-        var cancellationToken = TestContext.Current.CancellationToken;
         var recurringBooking = new RecurringBooking
         {
             Id = recurringBookingId,
@@ -330,7 +330,8 @@ public class HandleRecurringBookingInvoiceAsyncShould
         string productVersionId,
         string pricingId,
         string organizationId,
-        string existingTemplateId)
+        string existingTemplateId,
+        CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
         var sut = new XeroInvoiceService(
@@ -352,7 +353,6 @@ public class HandleRecurringBookingInvoiceAsyncShould
             invoicePaymentTermsService,
             timeProvider);
 
-        var cancellationToken = TestContext.Current.CancellationToken;
         var recurringBooking = new RecurringBooking
         {
             Id = recurringBookingId,

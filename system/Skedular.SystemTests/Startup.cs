@@ -42,7 +42,7 @@ public class Startup
 #pragma warning disable VSTHRD002
 #pragma warning disable CA2012
         var builder = DistributedApplicationTestingBuilder.CreateAsync<Skedular_AppHost>().Result;
-        var distributedApp = builder.AddDefaultServices().StartAsync(CancellationToken.None).Result;
+        var distributedApp = builder.AddDefaultServices().StartAsync(TestContext.Current.CancellationToken).Result;
         var kafkaConnectionString = distributedApp.GetConnectionStringAsync("kafka").Result;
 
         var bookingDbConnectionString = distributedApp.GetConnectionStringAsync("bookingdb").Result;

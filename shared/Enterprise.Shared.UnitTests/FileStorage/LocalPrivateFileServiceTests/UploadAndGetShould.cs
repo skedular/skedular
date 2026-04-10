@@ -15,7 +15,7 @@ public class UploadAndGetShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Upload_file_and_retrieve_it(string fileName)
+    public async Task Upload_file_and_retrieve_it(string fileName, CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
@@ -26,11 +26,11 @@ public class UploadAndGetShould
             var content = "private content"u8.ToArray();
             using var stream = new MemoryStream(content);
 
-            var uri = await sut.UploadAsync(stream, "text/plain", fileName, null, CancellationToken.None);
+            var uri = await sut.UploadAsync(stream, "text/plain", fileName, null, cancellationToken);
 
             uri.ToString().ShouldContain(fileName);
 
-            var (exists, contentType, bytes) = await sut.GetAsync(fileName, CancellationToken.None);
+            var (exists, contentType, bytes) = await sut.GetAsync(fileName, cancellationToken);
             exists.ShouldBeTrue();
             bytes.ShouldBe(content);
         }
@@ -42,7 +42,7 @@ public class UploadAndGetShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Upload_with_extension_appends_extension(string baseName)
+    public async Task Upload_with_extension_appends_extension(string baseName, CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
@@ -52,7 +52,7 @@ public class UploadAndGetShould
             var sut = new LocalPrivateFileService(config, fileStorageConfig);
             using var stream = new MemoryStream("data"u8.ToArray());
 
-            var uri = await sut.UploadAsync(stream, "text/plain", baseName, ".pdf", CancellationToken.None);
+            var uri = await sut.UploadAsync(stream, "text/plain", baseName, ".pdf", cancellationToken);
 
             uri.ToString().ShouldContain($"{baseName}.pdf");
         }
@@ -64,7 +64,7 @@ public class UploadAndGetShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Get_returns_false_for_missing_file(string missingFileName)
+    public async Task Get_returns_false_for_missing_file(string missingFileName, CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
@@ -73,7 +73,7 @@ public class UploadAndGetShould
             var fileStorageConfig = new FileStorageConfiguration { LocalPrivateFilePath = tempDir, PrivateFileEndpoint = "private" };
             var sut = new LocalPrivateFileService(config, fileStorageConfig);
 
-            var (exists, contentType, bytes) = await sut.GetAsync(missingFileName, CancellationToken.None);
+            var (exists, contentType, bytes) = await sut.GetAsync(missingFileName, cancellationToken);
 
             exists.ShouldBeFalse();
             contentType.ShouldBe(string.Empty);
@@ -87,7 +87,7 @@ public class UploadAndGetShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Get_returns_octet_stream_for_unknown_extension(string baseName)
+    public async Task Get_returns_octet_stream_for_unknown_extension(string baseName, CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
@@ -96,9 +96,9 @@ public class UploadAndGetShould
             var fileStorageConfig = new FileStorageConfiguration { LocalPrivateFilePath = tempDir, PrivateFileEndpoint = "private" };
             var sut = new LocalPrivateFileService(config, fileStorageConfig);
             var fileName = baseName + ".unknownext123";
-            await File.WriteAllBytesAsync(Path.Combine(tempDir, fileName), "x"u8.ToArray());
+            await File.WriteAllBytesAsync(Path.Combine(tempDir, fileName), "x"u8.ToArray(), cancellationToken);
 
-            var (exists, contentType, _) = await sut.GetAsync(fileName, CancellationToken.None);
+            var (exists, contentType, _) = await sut.GetAsync(fileName, cancellationToken);
 
             exists.ShouldBeTrue();
             contentType.ShouldBe("application/octet-stream");

@@ -15,7 +15,7 @@ public class UploadAndGetShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Upload_file_and_retrieve_it(string fileName)
+    public async Task Upload_file_and_retrieve_it(string fileName, CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
@@ -26,11 +26,11 @@ public class UploadAndGetShould
             var content = "hello cdn"u8.ToArray();
             using var stream = new MemoryStream(content);
 
-            var (publicUri, _) = await sut.UploadAsync(stream, "text/plain", fileName, null, CancellationToken.None);
+            var (publicUri, _) = await sut.UploadAsync(stream, "text/plain", fileName, null, cancellationToken);
 
             publicUri.ToString().ShouldContain(fileName);
 
-            var (exists, _, bytes) = await sut.GetAsync(fileName, CancellationToken.None);
+            var (exists, _, bytes) = await sut.GetAsync(fileName, cancellationToken);
             exists.ShouldBeTrue();
             bytes.ShouldBe(content);
         }
@@ -42,7 +42,7 @@ public class UploadAndGetShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Upload_with_extension_appends_extension(string baseName)
+    public async Task Upload_with_extension_appends_extension(string baseName, CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
@@ -52,7 +52,7 @@ public class UploadAndGetShould
             var sut = new LocalCdnService(config, fileStorageConfig);
             using var stream = new MemoryStream("data"u8.ToArray());
 
-            var (uri, _) = await sut.UploadAsync(stream, "text/plain", baseName, ".txt", CancellationToken.None);
+            var (uri, _) = await sut.UploadAsync(stream, "text/plain", baseName, ".txt", cancellationToken);
 
             uri.ToString().ShouldContain($"{baseName}.txt");
         }
@@ -64,7 +64,7 @@ public class UploadAndGetShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Get_returns_false_for_missing_file(string missingFileName)
+    public async Task Get_returns_false_for_missing_file(string missingFileName, CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
@@ -73,7 +73,7 @@ public class UploadAndGetShould
             var fileStorageConfig = new FileStorageConfiguration { LocalCdnPath = tempDir, PublicCdnFileEndpoint = "cdn" };
             var sut = new LocalCdnService(config, fileStorageConfig);
 
-            var (exists, contentType, bytes) = await sut.GetAsync(missingFileName, CancellationToken.None);
+            var (exists, contentType, bytes) = await sut.GetAsync(missingFileName, cancellationToken);
 
             exists.ShouldBeFalse();
             contentType.ShouldBe(string.Empty);
@@ -98,7 +98,7 @@ public class UploadAndGetShould
             var fileName = baseName + ".unknownext123";
             await File.WriteAllBytesAsync(Path.Combine(tempDir, fileName), "x"u8.ToArray(), cancellationToken);
 
-            var (exists, contentType, _) = await sut.GetAsync(fileName, CancellationToken.None);
+            var (exists, contentType, _) = await sut.GetAsync(fileName, cancellationToken);
 
             exists.ShouldBeTrue();
             contentType.ShouldBe("application/octet-stream");

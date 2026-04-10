@@ -38,7 +38,7 @@
         <PackageReference Include="AutoFixture.Xunit3" Version="5.0.0-preview0012"/>
 
         <!-- Mocking -->
-        <PackageReference Include="FakeItEasy" Version="9.0.1"/>
+        <PackageReference Include="FakeItEasy" Version="9.0.1" NoWarn="NU1608"/>
 
         <!-- Assertions -->
         <PackageReference Include="Shouldly" Version="4.3.0"/>

@@ -37,7 +37,8 @@ public class GenerateRecurringInvoiceAsyncShould
         string recurringBookingId,
         string productVersionId,
         string pricingId,
-        string organizationId)
+        string organizationId,
+        CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
         var sut = new BookingInvoiceService(
@@ -130,7 +131,7 @@ public class GenerateRecurringInvoiceAsyncShould
                 A<Admin_GetInput>.That.Matches(input => input.Id == organizationId)))
             .Returns(CreateResponse(organization));
 
-        var result = await sut.GenerateRecurringInvoiceAsync(recurringBookingId, CancellationToken.None);
+        var result = await sut.GenerateRecurringInvoiceAsync(recurringBookingId, cancellationToken);
 
         result.ShouldNotBeNull();
         result.ShouldBeAssignableTo<IDocument>();
