@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af53074d60fe84a31bb374fee60201c0>>
+ * @generated SignedSource<<7936fe471da7ad0d7ba066587f9ec70c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,12 +21,6 @@ export type organizationLocations_locations_availableOrganizationResources_query
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly canDelete: boolean;
-        readonly canModify: boolean;
-        readonly customTags: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly id: string;
-          readonly name: string;
-        }>;
         readonly extraMetadata: {
           readonly contactDetails: {
             readonly contactEmails: ReadonlyArray<string> | null | undefined;
@@ -104,18 +98,7 @@ v6 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v7 = [
-  (v5/*: any*/),
-  (v6/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
-];
+};
 return {
   "argumentDefinitions": [
     {
@@ -234,19 +217,19 @@ return {
                   "args": null,
                   "concreteType": "OrganizationTagDetails",
                   "kind": "LinkedField",
-                  "name": "customTags",
-                  "plural": true,
-                  "selections": (v7/*: any*/),
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "OrganizationTagDetails",
-                  "kind": "LinkedField",
                   "name": "zones",
                   "plural": true,
-                  "selections": (v7/*: any*/),
+                  "selections": [
+                    (v5/*: any*/),
+                    (v6/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "color",
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
                 },
                 {
@@ -291,13 +274,6 @@ return {
                       "storageKey": null
                     }
                   ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "canModify",
                   "storageKey": null
                 },
                 {
@@ -481,6 +457,6 @@ return {
 };
 })();
 
-(node as any).hash = "2f4609b4ca9bff10b3f06821753456fa";
+(node as any).hash = "89ebab13b3eee9b83bf19dcdcdb0e2ad";
 
 export default node;

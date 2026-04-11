@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a63155a5018b241b628df089ef6afeb2>>
+ * @generated SignedSource<<452ba5a4dcf4506b2e568f57d97649e1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,6 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationCard_query$data = {
   readonly me: {
-    readonly id: string;
     readonly preferredLocations: ReadonlyArray<{
       readonly id: string;
     }>;
@@ -24,15 +23,7 @@ export type locationCard_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"locationCard_query">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -46,7 +37,6 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -55,7 +45,13 @@ return {
           "name": "preferredLocations",
           "plural": true,
           "selections": [
-            (v0/*: any*/)
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "id",
+              "storageKey": null
+            }
           ],
           "storageKey": null
         }
@@ -66,8 +62,7 @@ return {
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "c318f4ff3a911657190684b31ba6ad31";
+(node as any).hash = "b45eeed0f54a53c440e8875500b183ef";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<becce121df1c7f900553d7fb33d93499>>
+ * @generated SignedSource<<a5f22bc0faf88a5267ea388007c66cf4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,28 +12,12 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationCard_LocationDetails$data = {
   readonly canDelete: boolean;
-  readonly canModify: boolean;
-  readonly contactedViaCall: boolean;
-  readonly contactedViaEmail: boolean;
-  readonly contactedViaSms: boolean;
-  readonly contactedViaWhatsapp: boolean;
-  readonly customTags: ReadonlyArray<{
-    readonly color: string | null | undefined;
-    readonly id: string;
-    readonly name: string;
-  }>;
-  readonly extraMetadata: {
-    readonly contactDetails: {
-      readonly contactEmails: ReadonlyArray<string> | null | undefined;
-      readonly contactPeople: ReadonlyArray<string> | null | undefined;
-      readonly contactPhones: ReadonlyArray<string> | null | undefined;
-    } | null | undefined;
-  } | null | undefined;
   readonly featureImages: ReadonlyArray<{
-    readonly thumbnail: {
-      readonly height: number | null | undefined;
+    readonly original: {
       readonly url: string;
-      readonly width: number | null | undefined;
+    } | null | undefined;
+    readonly thumbnail: {
+      readonly url: string;
     } | null | undefined;
   }>;
   readonly id: string;
@@ -42,8 +26,6 @@ export type locationCard_LocationDetails$data = {
     readonly customDomain: string | null | undefined;
   };
   readonly physicalAddress: {
-    readonly latitude: number | null | undefined;
-    readonly longitude: number | null | undefined;
     readonly multilinesFormattedAddress: string | null | undefined;
   } | null | undefined;
   readonly resources: {
@@ -78,13 +60,11 @@ v1 = {
   "storageKey": null
 },
 v2 = [
-  (v0/*: any*/),
-  (v1/*: any*/),
   {
     "alias": null,
     "args": null,
     "kind": "ScalarField",
-    "name": "color",
+    "name": "url",
     "storageKey": null
   }
 ];
@@ -101,19 +81,19 @@ return {
       "args": null,
       "concreteType": "OrganizationTagDetails",
       "kind": "LinkedField",
-      "name": "customTags",
-      "plural": true,
-      "selections": (v2/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "OrganizationTagDetails",
-      "kind": "LinkedField",
       "name": "zones",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": [
+        (v0/*: any*/),
+        (v1/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "color",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     },
     {
@@ -148,20 +128,6 @@ return {
           "kind": "ScalarField",
           "name": "multilinesFormattedAddress",
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "latitude",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "longitude",
-          "storageKey": null
         }
       ],
       "storageKey": null
@@ -179,41 +145,22 @@ return {
           "args": null,
           "concreteType": "CdnFile",
           "kind": "LinkedField",
+          "name": "original",
+          "plural": false,
+          "selections": (v2/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CdnFile",
+          "kind": "LinkedField",
           "name": "thumbnail",
           "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "url",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "height",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "width",
-              "storageKey": null
-            }
-          ],
+          "selections": (v2/*: any*/),
           "storageKey": null
         }
       ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "canModify",
       "storageKey": null
     },
     {
@@ -244,79 +191,8 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "LocationExtraMetadata",
-      "kind": "LinkedField",
-      "name": "extraMetadata",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ContactDetails",
-          "kind": "LinkedField",
-          "name": "contactDetails",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "contactPeople",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "contactEmails",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "contactPhones",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "kind": "ScalarField",
       "name": "uniqueClaimCode",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "contactedViaEmail",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "contactedViaCall",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "contactedViaSms",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "contactedViaWhatsapp",
       "storageKey": null
     }
   ],
@@ -325,6 +201,6 @@ return {
 };
 })();
 
-(node as any).hash = "8aabf7b1b8d61f7c827088ece97b1cbd";
+(node as any).hash = "f3a0fbd33db364873104d967d9792efc";
 
 export default node;

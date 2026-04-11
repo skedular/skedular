@@ -1,34 +1,29 @@
-import { CustomerAvatar } from '@/components/avatars';
 import { NewBookingButton } from '@/components/booking/addBooking';
-import { CardMediaCarousel } from '@/components/carousel';
-import { BodyIconTypography, DefaultDialogTitle, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
-import { ContactEmails } from '@/components/contactEmail';
-import { ContactPeople } from '@/components/contactPeople';
-import { ContactPhones } from '@/components/contactPhone';
-import { EllipseMenuIcon, FloorPlanIcon, LocationIcon, NotPreferredIcon, PreferredIcon, ResourceIcon } from '@/components/icons';
+import {
+  BodyIconTypography,
+  DefaultDialogTitle,
+  LeadIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  SubtitleIconTypography,
+  TwoButtonsDialogActions,
+} from '@/components/commons';
+import { EllipseMenuIcon, FloorPlanIcon, LocationIcon, ResourceIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationFloorPlansLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { coal, sandstone } from '@/libs/theme';
+import { useIntegratedPlatrform } from '@/libs/providers';
 import { getRelayErrorMessage } from '@/libs/utils';
 import type { locationCard_addCustomerPreferredLocationMutation } from '@/queries/__generated__/locationCard_addCustomerPreferredLocationMutation.graphql';
 import type { locationCard_deleteLocationMutation } from '@/queries/__generated__/locationCard_deleteLocationMutation.graphql';
 import type { locationCard_LocationDetails$key } from '@/queries/__generated__/locationCard_LocationDetails.graphql';
 import type { locationCard_query$key } from '@/queries/__generated__/locationCard_query.graphql';
 import type { locationCard_removeCustomerPreferredLocationMutation } from '@/queries/__generated__/locationCard_removeCustomerPreferredLocationMutation.graphql';
-import type { locationCard_toggleContactedViaCallMutation } from '@/queries/__generated__/locationCard_toggleContactedViaCallMutation.graphql';
-import type { locationCard_toggleContactedViaEmailMutation } from '@/queries/__generated__/locationCard_toggleContactedViaEmailMutation.graphql';
-import type { locationCard_toggleContactedViaSmsMutation } from '@/queries/__generated__/locationCard_toggleContactedViaSmsMutation.graphql';
-import type { locationCard_toggleContactedViaWhatsappMutation } from '@/queries/__generated__/locationCard_toggleContactedViaWhatsappMutation.graphql';
-import '@/styles/leaflet/leaflet.css';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -36,21 +31,16 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Link from '@mui/material/Link';
-import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
+import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-
-let L: typeof import('leaflet');
-let MapContainer: typeof import('react-leaflet').MapContainer;
-let Marker: typeof import('react-leaflet').Marker;
-let TileLayer: typeof import('react-leaflet').TileLayer;
 
 type Props = {
   rootDataRelay: locationCard_query$key;
@@ -58,19 +48,9 @@ type Props = {
   onReloadRequired: () => void;
   organizationCustomDomain: string;
   connectionIds: string[];
-  sharedWithTeammates: CustomerDetails[];
   availableResourcesCount: number;
   availablePercentage: number;
   defaultDate: Dayjs;
-};
-
-type CustomerDetails = {
-  id: string;
-  givenName?: string | null | undefined;
-  middleName?: string | null | undefined;
-  familyName?: string | null | undefined;
-  name?: string | null | undefined;
-  photoUrl?: string | null | undefined;
 };
 
 const LocationCard = ({
@@ -79,7 +59,6 @@ const LocationCard = ({
   connectionIds,
   onReloadRequired,
   organizationCustomDomain,
-  sharedWithTeammates,
   availableResourcesCount,
   availablePercentage,
   defaultDate,
@@ -88,7 +67,6 @@ const LocationCard = ({
     graphql`
       fragment locationCard_query on Query {
         me {
-          id
           preferredLocations {
             id
           }
@@ -103,11 +81,6 @@ const LocationCard = ({
       fragment locationCard_LocationDetails on LocationDetails {
         id
         name
-        customTags {
-          id
-          name
-          color
-        }
         zones {
           id
           name
@@ -118,33 +91,20 @@ const LocationCard = ({
         }
         physicalAddress {
           multilinesFormattedAddress
-          latitude
-          longitude
         }
         featureImages {
+          original {
+            url
+          }
           thumbnail {
             url
-            height
-            width
           }
         }
-        canModify
         canDelete
         organization {
           customDomain
         }
-        extraMetadata {
-          contactDetails {
-            contactPeople
-            contactEmails
-            contactPhones
-          }
-        }
         uniqueClaimCode
-        contactedViaEmail
-        contactedViaCall
-        contactedViaSms
-        contactedViaWhatsapp
       }
     `,
     locationDetailsRelay,
@@ -186,90 +146,23 @@ const LocationCard = ({
     }
   `);
 
-  const [commitToggleContactedViaEmail] = useMutation<locationCard_toggleContactedViaEmailMutation>(graphql`
-    mutation locationCard_toggleContactedViaEmailMutation($input: ToggleContactedViaEmailInput!) {
-      toggleContactedViaEmail(input: $input) {
-        location {
-          id
-          contactedViaEmail
-        }
-      }
-    }
-  `);
-
-  const [commitToggleContactedViaCall] = useMutation<locationCard_toggleContactedViaCallMutation>(graphql`
-    mutation locationCard_toggleContactedViaCallMutation($input: ToggleContactedViaCallInput!) {
-      toggleContactedViaCall(input: $input) {
-        location {
-          id
-          contactedViaCall
-        }
-      }
-    }
-  `);
-
-  const [commitToggleContactedViaSms] = useMutation<locationCard_toggleContactedViaSmsMutation>(graphql`
-    mutation locationCard_toggleContactedViaSmsMutation($input: ToggleContactedViaSmsInput!) {
-      toggleContactedViaSms(input: $input) {
-        location {
-          id
-          contactedViaSms
-        }
-      }
-    }
-  `);
-
-  const [commitToggleContactedViaWhatsapp] = useMutation<locationCard_toggleContactedViaWhatsappMutation>(graphql`
-    mutation locationCard_toggleContactedViaWhatsappMutation($input: ToggleContactedViaWhatsappInput!) {
-      toggleContactedViaWhatsapp(input: $input) {
-        location {
-          id
-          contactedViaWhatsapp
-        }
-      }
-    }
-  `);
-
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
-  const paletteMode = useContext(PaletteModeContext);
-  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
+  const themedToast = toast;
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const isPreferred = useMemo(() => rootData.me?.preferredLocations.some((item) => item.id === locationDetails.id), [locationDetails.id, rootData.me?.preferredLocations]);
-  const contactedViaEmail = useMemo(() => locationDetails.contactedViaEmail, [locationDetails.contactedViaEmail]);
-  const contactedViaCall = useMemo(() => locationDetails.contactedViaCall, [locationDetails.contactedViaCall]);
-  const contactedViaSms = useMemo(() => locationDetails.contactedViaSms, [locationDetails.contactedViaSms]);
-  const contactedViaWhatsapp = useMemo(() => locationDetails.contactedViaWhatsapp, [locationDetails.contactedViaWhatsapp]);
-  const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      // core libraries
-      const leaflet = await import('leaflet');
-      const rl = await import('react-leaflet');
-
-      L = leaflet;
-      MapContainer = rl.MapContainer;
-      Marker = rl.Marker;
-      TileLayer = rl.TileLayer;
-
-      L.Icon.Default.mergeOptions({
-        iconRetinaUrl: '/leaflet/images/marker-icon-2x.png',
-        iconUrl: '/leaflet/images/marker-icon.png',
-        shadowUrl: '/leaflet/images/marker-shadow.png',
-      });
-
-      setDynamicLoadReady(true);
-    })();
-  }, []);
 
   let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation]];
 
   if (locationDetails.canDelete) {
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocation]);
   }
+
+  moreActionsOption = moreActionsOption.concat(
+    isPreferred ? moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveAsPreferredLocation] : moreActionsMenuAllOptions[MoreActionsMenuOptionType.SetAsPreferredLocation],
+  );
 
   moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings]);
 
@@ -293,6 +186,14 @@ const LocationCard = ({
 
       case MoreActionsMenuOptionType.ViewLocationBookings:
         router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization!.customDomain!, { locationId: locationDetails.id }));
+        break;
+
+      case MoreActionsMenuOptionType.SetAsPreferredLocation:
+        handleSetAsPreferredLocationClicked();
+        break;
+
+      case MoreActionsMenuOptionType.RemoveAsPreferredLocation:
+        handleRemoveAsPreferredLocationClicked();
         break;
     }
   };
@@ -412,169 +313,147 @@ const LocationCard = ({
     });
   };
 
-  const handleContactedViaEmailChange = () => {
-    const toastId = themedToast(<NotificationContent content={`Toggling '${locationDetails.name}' contaced via Email...`} />, infoNotificationOptions);
-
-    commitToggleContactedViaEmail({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          locationId: locationDetails.id,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via Email. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' contacted via Email toggled.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via Email. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handleContactedViaCallChange = () => {
-    const toastId = themedToast(<NotificationContent content={`Toggling '${locationDetails.name}' contaced via call...`} />, infoNotificationOptions);
-
-    commitToggleContactedViaCall({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          locationId: locationDetails.id,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via call. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' contacted via call toggled.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via call. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handleContactedViaSmsChange = () => {
-    const toastId = themedToast(<NotificationContent content={`Toggling '${locationDetails.name}' contaced via SMS...`} />, infoNotificationOptions);
-
-    commitToggleContactedViaSms({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          locationId: locationDetails.id,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via SMS. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' contacted via SMS toggled.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via SMS. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handleContactedViaWhatsappChange = () => {
-    const toastId = themedToast(<NotificationContent content={`Toggling '${locationDetails.name}' contaced via Whatsapp...`} />, infoNotificationOptions);
-
-    commitToggleContactedViaWhatsapp({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          locationId: locationDetails.id,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via Whatsapp. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' contacted via Whatsapp toggled.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via Whatsapp. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
   const resourcesCount = locationDetails.resources.totalCount;
   const zones = locationDetails.zones.map(({ id, name, color }) => ({ id, name, color }));
-  const contactPeople = locationDetails.extraMetadata?.contactDetails?.contactPeople ?? [];
-  const contactEmails = locationDetails.extraMetadata?.contactDetails?.contactEmails ?? [];
-  const contactPhones = locationDetails.extraMetadata?.contactDetails?.contactPhones ?? [];
+  const primaryFeatureImage = locationDetails.featureImages[0]?.thumbnail?.url ?? locationDetails.featureImages[0]?.original?.url;
+  const safeAvailablePercentage = Number.isFinite(availablePercentage) ? Math.max(0, Math.min(100, availablePercentage)) : 0;
+  const availableTodayLabel = `${availableResourcesCount} resource${availableResourcesCount === 1 ? '' : 's'} available today`;
+  const fullAddressLabel = locationDetails.physicalAddress?.multilinesFormattedAddress?.trim() ?? 'No address configured';
+  const compactAddressLabel =
+    fullAddressLabel === 'No address configured'
+      ? fullAddressLabel
+      : fullAddressLabel
+          .split('\n')
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .join(', ');
 
-  if (!dynamicLoadReady) {
-    return null;
-  }
+  const sectionSx: SxProps<Theme> = {
+    border: 1,
+    borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+    borderRadius: 3,
+    p: 1.25,
+    backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.02)' : 'transparent'),
+  };
 
   return (
     <>
-      <Card sx={{ width: { xs: '100%', sm: 600 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
-        <CardMediaCarousel images={locationDetails.featureImages} placeholderImageUrl="/images/location_placeholder.webp" />
-        <CardHeader
-          title={
-            <StackRow>
-              <Link component={NextLink} href={editLink}>
-                <LeadIconTypography label={locationDetails.name} startElement={<LocationIcon excludeTooltip />} sx={{ flexWrap: undefined }} invertDefaultColor />
-              </Link>
-              <PushToRight />
-              {locationDetails.uniqueClaimCode && <LeadIconTypography label={locationDetails.uniqueClaimCode} invertDefaultColor />}
-              <Tooltip title="View floor plan and book resources">
-                <Button variant="outlined" size="small" startIcon={<FloorPlanIcon />} onClick={handleViewFloorPlanClick} sx={{ textTransform: 'none', mr: 1 }}>
-                  Floor Plan
-                </Button>
-              </Tooltip>
+      <Card
+        sx={{
+          width: '100%',
+          height: '100%',
+          borderRadius: 4,
+          border: 1,
+          borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+          boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 10px 28px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+          backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.92)' : theme.palette.background.paper),
+        }}
+      >
+        <CardContent sx={{ p: 2, height: '100%' }}>
+          <StackColumn spacing={2} sx={{ height: '100%' }}>
+            <StackRow sx={{ alignItems: 'center', flexWrap: 'nowrap', gap: 2, minHeight: 56 }}>
+              <Box
+                sx={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 3,
+                  border: 1,
+                  borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                  flexShrink: 0,
+                  bgcolor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.04)' : theme.palette.action.hover),
+                }}
+              >
+                {primaryFeatureImage ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={primaryFeatureImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </>
+                ) : (
+                  <LocationIcon excludeTooltip />
+                )}
+              </Box>
+
+              <StackColumn spacing={0.75} sx={{ minWidth: 0, flexGrow: 1, justifyContent: 'center' }}>
+                <Tooltip title={locationDetails.name}>
+                  <Link component={NextLink} href={editLink} underline="none" color="inherit" sx={{ display: 'block', minWidth: 0 }}>
+                    <LeadIconTypography label={locationDetails.name} noWrap sx={{ minWidth: 0 }} />
+                  </Link>
+                </Tooltip>
+              </StackColumn>
+
+              <StackRow sx={{ gap: 0.5, flexWrap: 'nowrap' }}>
+                <Tooltip title="View floor plan">
+                  <IconButton onClick={handleViewFloorPlanClick} aria-label="View floor plan">
+                    <FloorPlanIcon />
+                  </IconButton>
+                </Tooltip>
+
+                {moreActionsOption.length > 0 && (
+                  <IconButton onClick={handleMoreActionsMenuClick} aria-label="Open location actions">
+                    <EllipseMenuIcon />
+                  </IconButton>
+                )}
+              </StackRow>
+            </StackRow>
+
+            <Divider />
+            <StackColumn spacing={1.25} sx={{ flexGrow: 1 }}>
+              <Box sx={sectionSx}>
+                <StackColumn spacing={0.75}>
+                  <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
+                    <SubtitleIconTypography label="Availability" />
+                    <SmallIconTypography label={`${availableResourcesCount}/${resourcesCount || 0} open`} />
+                  </StackRow>
+                  <LinearProgress value={safeAvailablePercentage} variant="determinate" sx={{ width: '100%', height: 8, borderRadius: 999, bgcolor: 'action.hover' }} />
+                  <BodyIconTypography label={availableTodayLabel} startElement={<ResourceIcon />} />
+                  {locationDetails.uniqueClaimCode ? <SmallIconTypography label={`Claim code ${locationDetails.uniqueClaimCode}`} /> : null}
+                </StackColumn>
+              </Box>
+
+              <Box sx={sectionSx}>
+                <StackColumn spacing={0.75}>
+                  <SubtitleIconTypography label="Address" />
+                  <Tooltip title={<Box sx={{ whiteSpace: 'pre-line' }}>{fullAddressLabel}</Box>}>
+                    <Box sx={{ minWidth: 0 }}>
+                      <SmallIconTypography
+                        label={compactAddressLabel}
+                        sx={{
+                          minWidth: 0,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                      />
+                    </Box>
+                  </Tooltip>
+                </StackColumn>
+              </Box>
+
+              {zones.length > 0 && (
+                <Box sx={sectionSx}>
+                  <StackColumn spacing={0.75}>
+                    <SubtitleIconTypography label="Zones" />
+                    <Zones zones={zones} hideIcon hideNAText={false} sx={{ flexWrap: 'wrap' }} />
+                  </StackColumn>
+                </Box>
+              )}
+            </StackColumn>
+
+            <StackRow
+              sx={{
+                gap: 1,
+                flexWrap: 'wrap',
+                mt: 'auto',
+                pt: 1.5,
+                borderTop: 1,
+                borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+                justifyContent: 'flex-end',
+              }}
+            >
               {locationDetails.organization?.customDomain !== 'skedularpubliclocations' && (
                 <NewBookingButton
                   onReloadRequired={onReloadRequired}
@@ -585,127 +464,22 @@ const LocationCard = ({
                   hideIcon
                   variant="contained"
                   size="small"
-                  sx={{ textTransform: 'none' }}
-                  invertDefaultColor={paletteMode === 'dark'}
+                  invertDefaultColor
+                  sx={{
+                    textTransform: 'none',
+                    minWidth: 132,
+                    backgroundColor: 'primary.main',
+                    borderColor: 'primary.main',
+                    color: 'primary.contrastText',
+                    '&:hover': {
+                      backgroundColor: 'primary.dark',
+                      borderColor: 'primary.dark',
+                    },
+                  }}
                 />
               )}
-
-              <Box color={paletteMode === 'dark' ? coal : sandstone}>
-                {isPreferred && (
-                  <IconButton onClick={handleRemoveAsPreferredLocationClicked} color="inherit">
-                    <PreferredIcon />
-                  </IconButton>
-                )}
-                {!isPreferred && (
-                  <IconButton onClick={handleSetAsPreferredLocationClicked} color="inherit">
-                    <NotPreferredIcon />
-                  </IconButton>
-                )}
-              </Box>
             </StackRow>
-          }
-          action={
-            <>
-              {moreActionsOption.length > 0 && (
-                <Box color={paletteMode === 'dark' ? coal : sandstone} sx={{ paddingTop: 0.5 }}>
-                  <IconButton onClick={handleMoreActionsMenuClick} color="inherit">
-                    <EllipseMenuIcon />
-                  </IconButton>
-                </Box>
-              )}
-            </>
-          }
-        />
-        <CardContent sx={{ flexGrow: 1 }}>
-          <StackRow sx={{ paddingTop: 1, paddingBottom: 1, width: '100%', flexWrap: 'nowrap' }}>
-            <SmallIconTypography label={`${resourcesCount} Resources`} sx={{ flexGrow: 0, flexShrink: 0 }} startElement={<ResourceIcon />} />
-            <StackColumn sx={{ paddingLeft: 40, alignItems: 'flex-end', width: '100%' }}>
-              <SmallIconTypography label={`${availableResourcesCount} Available Today`} />
-              <LinearProgress value={availablePercentage} variant="determinate" sx={{ width: '100%' }} />
-            </StackColumn>
-          </StackRow>
-          <Divider />
-
-          {locationDetails.organization?.customDomain === 'skedularpubliclocations' && (
-            <>
-              <StackRow>
-                <BodyIconTypography label="Email" />
-                <Switch defaultChecked={contactedViaEmail} onChange={handleContactedViaEmailChange} />
-
-                <BodyIconTypography label="Call" />
-                <Switch defaultChecked={contactedViaCall} onChange={handleContactedViaCallChange} />
-
-                <BodyIconTypography label="Sms" />
-                <Switch defaultChecked={contactedViaSms} onChange={handleContactedViaSmsChange} />
-
-                <BodyIconTypography label="Whatsapp" />
-                <Switch defaultChecked={contactedViaWhatsapp} onChange={handleContactedViaWhatsappChange} />
-              </StackRow>
-            </>
-          )}
-
-          <Zones zones={zones} sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }} />
-          <Divider />
-
-          {contactPeople.length !== 0 && (
-            <>
-              <ContactPeople contactPeople={contactPeople} sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }} />
-              <Divider />
-            </>
-          )}
-
-          {contactEmails.length !== 0 && (
-            <>
-              <ContactEmails contactEmails={contactEmails} sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }} />
-              <Divider />
-            </>
-          )}
-
-          {contactPhones.length !== 0 && (
-            <>
-              <ContactPhones contactPhones={contactPhones} sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }} />
-              <Divider />
-            </>
-          )}
-
-          <StackRow sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }}>
-            <StackColumn>
-              <SmallIconTypography label="Shared with teammates" />
-              <StackRow>
-                <AvatarGroup max={5}>
-                  {sharedWithTeammates.map((item) => (
-                    <CustomerAvatar key={item?.id} name={item} photo={{ url: item?.photoUrl }} size="medium" showFullName />
-                  ))}
-                </AvatarGroup>
-              </StackRow>
-            </StackColumn>
-
-            <Divider orientation="vertical" flexItem />
-
-            <SmallIconTypography
-              label={locationDetails.physicalAddress?.multilinesFormattedAddress ? locationDetails.physicalAddress?.multilinesFormattedAddress : 'N/A'}
-              sx={{ whiteSpace: 'pre-line' }}
-            />
-
-            <Divider orientation="vertical" flexItem />
-
-            {locationDetails.physicalAddress && locationDetails.physicalAddress.latitude && locationDetails.physicalAddress.longitude && (
-              <Box sx={{ height: '25vh', width: '25vh' }}>
-                <MapContainer
-                  center={[locationDetails.physicalAddress.latitude, locationDetails.physicalAddress.longitude]}
-                  zoom={13}
-                  scrollWheelZoom
-                  style={{ height: '100%', width: '100%' }}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <Marker position={[locationDetails.physicalAddress.latitude, locationDetails.physicalAddress.longitude]} />
-                </MapContainer>
-              </Box>
-            )}
-          </StackRow>
+          </StackColumn>
         </CardContent>
       </Card>
 

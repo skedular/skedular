@@ -1,15 +1,5 @@
-import { CustomerAvatar } from '@/components/avatars';
 import { NewBookingButton } from '@/components/booking/addBooking';
-import {
-  BodyIconTypography,
-  DefaultDialogTitle,
-  GridContainer,
-  PushToRight,
-  SectionIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  TwoButtonsDialogActions,
-} from '@/components/commons';
+import { BodyIconTypography, DefaultDialogTitle, GridContainer, PushToRight, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
 import StackRow from '@/components/commons/stack-row';
 import { EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
@@ -25,7 +15,7 @@ import { RelayError, toRootError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
+import { defaultGridStyle } from '@/libs/theme';
 import { getRelayErrorMessage, startOfDay } from '@/libs/utils';
 import type { organizationLocations_addCustomerPreferredLocationMutation } from '@/queries/__generated__/organizationLocations_addCustomerPreferredLocationMutation.graphql';
 import type { organizationLocations_deleteLocationMutation } from '@/queries/__generated__/organizationLocations_deleteLocationMutation.graphql';
@@ -33,12 +23,9 @@ import type { organizationLocations_locations_availableOrganizationResources_que
 import type { organizationLocations_locations_availableOrganizationResources_refetchableFragment } from '@/queries/__generated__/organizationLocations_locations_availableOrganizationResources_refetchableFragment.graphql';
 import type { organizationLocations_removeCustomerPreferredLocationMutation } from '@/queries/__generated__/organizationLocations_removeCustomerPreferredLocationMutation.graphql';
 import type { organizationLocations_rootQuery } from '@/queries/__generated__/organizationLocations_rootQuery.graphql';
-import AvatarGroup from '@mui/material/AvatarGroup';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Switch from '@mui/material/Switch';
@@ -53,6 +40,7 @@ import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 import LocationCard from './location-card';
+import OrganizationLocationsPageShell from './organization-locations-page-shell';
 
 type Props = {
   queryReference: PreloadedQuery<organizationLocations_rootQuery, Record<string, unknown>>;
@@ -68,35 +56,16 @@ const RootQuery = graphql`
     $customTagsSortingValues: [OrganizationTagOrderInput!]
     $fromTodayDate: DateTime!
     $untilTodayDate: DateTime!
-    $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $zoneIds: [String!]
     $customTagIds: [String!]
     $locationNotContactedYet: Boolean!
   ) {
     me {
-      id
       preferredLocations {
         id
       }
     }
     organization(customDomain: $organizationCustomDomain) {
-      members(orderBy: $organizationMembersSortingValues) {
-        __id
-        totalCount
-        edges {
-          node {
-            id
-            customer {
-              id
-              name
-              givenName
-              middleName
-              familyName
-              photoUrl
-            }
-          }
-        }
-      }
       canModify
       customDomain
     }
@@ -123,22 +92,13 @@ type ZoneDetails = {
   color: string | null | undefined;
 };
 
-type CustomerDetails = {
-  id: string;
-  givenName?: string | null | undefined;
-  middleName?: string | null | undefined;
-  familyName?: string | null | undefined;
-  name?: string | null | undefined;
-  photoUrl?: string | null | undefined;
-};
-
 type RowType = {
   id: string;
   location: LocationDetails;
   resourcesCount: number;
   resourcesAvailability: ResourcesAvailabilityDetails;
   zones: ZoneDetails[];
-  teammates: ReadonlyArray<CustomerDetails>;
+  physicalAddress?: string | null | undefined;
   preferred: boolean;
 };
 
@@ -164,11 +124,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
             node {
               id
               name
-              customTags {
-                id
-                name
-                color
-              }
               zones {
                 id
                 name
@@ -182,7 +137,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
                 longitude
                 latitude
               }
-              canModify
               canDelete
               organization {
                 customDomain
@@ -293,8 +247,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
     [rootDataRefetchable.locations, filterThoseWithoutCoordites, filterThoseWithCoordites, filterThoseWithEmails, filterThoseWithPhones, phoneStartWith],
   );
   const locationDetails = useMemo(() => locations.find((item) => item.id === selectedLocationId), [selectedLocationId, locations]);
-  const organizationMembers = useMemo(() => (rootData.organization ? rootData.organization.members.edges.map((edge) => edge.node) : []), [rootData.organization]);
-
   const handleRefetch = useCallback(
     (customTagIds: string[], zoneIds: string[], locationNotContactedYet: boolean) => {
       startTransition(() => {
@@ -499,7 +451,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
         availablePercentage,
       },
       zones,
-      teammates: organizationMembers.map(({ customer }) => customer),
       physicalAddress: location.physicalAddress?.formattedAddress,
       preferred: preferredLocations.includes(location.id),
     };
@@ -542,20 +493,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
       renderCell: (params) => <Zones zones={params.value} hideIcon />,
       display: 'flex',
       minWidth: 250,
-    },
-    {
-      field: 'teammates',
-      headerName: 'Shared with teammates',
-      editable: false,
-      renderCell: (params) => (
-        <AvatarGroup max={5}>
-          {params.value.map((customer: CustomerDetails) => (
-            <CustomerAvatar key={customer?.id} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
-          ))}
-        </AvatarGroup>
-      ),
-      display: 'flex',
-      minWidth: 300,
     },
     {
       field: 'physicalAddress',
@@ -664,87 +601,102 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
     return null;
   }
 
+  const pageActions = (
+    <>
+      {rootData.organization?.canModify && <NewLocationButton rootDataRelay={rootData} organizationCustomDomain={organizationCustomDomain} />}
+      {rootData.organization?.canModify && <ClaimLocationOwnershipButton organizationCustomDomain={organizationCustomDomain} connectionIds={connectionIds} />}
+    </>
+  );
+
+  const pageToolbar = (
+    <StackColumn spacing={1.5}>
+      <GridContainer spacing={1} sx={{ alignItems: 'center' }}>
+        <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
+        <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
+        <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
+        <PushToRight />
+      </GridContainer>
+
+      {organizationCustomDomain === 'skedularpubliclocations' && (
+        <StackRow sx={{ gap: 1.5, flexWrap: 'wrap', alignItems: 'center' }}>
+          <BodyIconTypography label="Filter those without address" />
+          <Switch defaultChecked={filterThoseWithoutCoordites} onChange={handleFilterThoseWithoutCoorditesChange} />
+
+          <BodyIconTypography label="Filter those with address" />
+          <Switch defaultChecked={filterThoseWithCoordites} onChange={handleFilterThoseWithCoorditesChange} />
+
+          <BodyIconTypography label="Filter those with emails" />
+          <Switch defaultChecked={filterThoseWithEmails} onChange={handleFilterThoseWithEmailsChange} />
+
+          <BodyIconTypography label="Filter those with phones" />
+          <Switch defaultChecked={filterThoseWithPhones} onChange={handleFilterThoseWithPhonesChange} />
+
+          <BodyIconTypography label="Filter those not contacted yet" />
+          <Switch defaultChecked={locationNotContactedYet} onChange={handleLocationNotContactedYetChange} />
+
+          <BodyIconTypography label="Phone starts with" />
+          <TextField defaultValue={phoneStartWith} onChange={handlePhoneFilterChange} />
+        </StackRow>
+      )}
+    </StackColumn>
+  );
+
   return (
     <>
-      <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-        <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-          <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
-          <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
-          <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
-          <PushToRight />
-          {rootData.organization?.canModify && <NewLocationButton rootDataRelay={rootData} organizationCustomDomain={organizationCustomDomain} />}
-          {rootData.organization?.canModify && <ClaimLocationOwnershipButton organizationCustomDomain={organizationCustomDomain} connectionIds={connectionIds} />}
-        </GridContainer>
-        <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-          {organizationCustomDomain === 'skedularpubliclocations' && (
-            <StackRow>
-              <BodyIconTypography label="Filter those without address" />
-              <Switch defaultChecked={filterThoseWithoutCoordites} onChange={handleFilterThoseWithoutCoorditesChange} />
+      <OrganizationLocationsPageShell actions={pageActions} toolbar={pageToolbar} isEmpty={locations.length === 0}>
+        {viewMode === 'grid' && (
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: 'repeat(auto-fit, minmax(320px, 360px))',
+              },
+              gap: 2,
+              alignItems: 'stretch',
+              justifyContent: 'start',
+            }}
+          >
+            {locations.map((location) => {
+              const resourcesCount = location.resources.totalCount;
+              const availableResourcesCount = rootDataRefetchable.availableResources
+                ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
+                : 0;
+              const availablePercentage = resourcesCount > 0 ? (availableResourcesCount / resourcesCount) * 100 : 0;
 
-              <BodyIconTypography label="Filter those with address" />
-              <Switch defaultChecked={filterThoseWithCoordites} onChange={handleFilterThoseWithCoorditesChange} />
+              return (
+                <Box key={location.id} sx={{ height: '100%' }}>
+                  <LocationCard
+                    rootDataRelay={rootData}
+                    locationDetailsRelay={location}
+                    onReloadRequired={onReloadRequired}
+                    organizationCustomDomain={organizationCustomDomain}
+                    defaultDate={defaultDate}
+                    connectionIds={connectionIds}
+                    availableResourcesCount={availableResourcesCount}
+                    availablePercentage={availablePercentage}
+                  />
+                </Box>
+              );
+            })}
+          </Box>
+        )}
 
-              <BodyIconTypography label="Filter those with emails" />
-              <Switch defaultChecked={filterThoseWithEmails} onChange={handleFilterThoseWithEmailsChange} />
-
-              <BodyIconTypography label="Filter those with phones" />
-              <Switch defaultChecked={filterThoseWithPhones} onChange={handleFilterThoseWithPhonesChange} />
-
-              <BodyIconTypography label="Filter those not contacted yet" />
-              <Switch defaultChecked={locationNotContactedYet} onChange={handleLocationNotContactedYetChange} />
-
-              <BodyIconTypography label="Phone starts with" />
-              <TextField defaultValue={phoneStartWith} onChange={handlePhoneFilterChange} />
-            </StackRow>
-          )}
-          <SectionIconTypography label="Locations" />
-          <Divider />
-          <Box sx={{ paddingBottom: defaultPadding }} />
-
-          {viewMode === 'grid' && (
-            <GridContainer sx={{ alignItems: 'stretch' }}>
-              {locations.map((location) => {
-                const resourcesCount = location.resources.totalCount;
-                const availableResourcesCount = rootDataRefetchable.availableResources
-                  ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
-                  : 0;
-                const availablePercentage = (availableResourcesCount / resourcesCount) * 100;
-
-                return (
-                  <Grid key={location.id}>
-                    <LocationCard
-                      rootDataRelay={rootData}
-                      locationDetailsRelay={location}
-                      onReloadRequired={onReloadRequired}
-                      organizationCustomDomain={organizationCustomDomain}
-                      defaultDate={defaultDate}
-                      connectionIds={connectionIds}
-                      availableResourcesCount={availableResourcesCount}
-                      availablePercentage={availablePercentage}
-                      sharedWithTeammates={organizationMembers!.map(({ customer }) => customer)}
-                    />
-                  </Grid>
-                );
-              })}
-            </GridContainer>
-          )}
-
-          {viewMode === 'list' && (
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              ignoreDiacritics
-              disableRowSelectionOnClick
-              hideFooter
-              getRowHeight={() => 'auto'}
-              rowSpacingType="margin"
-              getRowSpacing={() => ({ top: 3, bottom: 3 })}
-              sx={defaultGridStyle}
-              localeText={{ noRowsLabel: 'No location found' }}
-            />
-          )}
-        </StackColumn>
-      </StackColumn>
+        {viewMode === 'list' && (
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            ignoreDiacritics
+            disableRowSelectionOnClick
+            hideFooter
+            getRowHeight={() => 'auto'}
+            rowSpacingType="margin"
+            getRowSpacing={() => ({ top: 3, bottom: 3 })}
+            sx={defaultGridStyle}
+            localeText={{ noRowsLabel: 'No location found' }}
+          />
+        )}
+      </OrganizationLocationsPageShell>
 
       <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
 
@@ -803,12 +755,6 @@ const OrganizationLocationsWithRelay = ({ organizationCustomDomain }: RelayProps
         ],
         fromTodayDate: today.toISOString(),
         untilTodayDate: today.add(1, 'day').toISOString(),
-        organizationMembersSortingValues: [
-          {
-            direction: 'ASCENDING',
-            field: 'NAME',
-          },
-        ],
         locationNotContactedYet: false,
       },
       {

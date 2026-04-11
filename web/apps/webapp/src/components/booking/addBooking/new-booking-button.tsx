@@ -145,10 +145,11 @@ const NewBookingButton = ({
   };
 
   const borderSx = variant === 'contained' ? { backgroundColor: 'white', borderColor: coal, borderWidth: 1, borderStyle: 'solid' } : {};
+  const buttonSx: SxProps<Theme> = sx ? [borderSx, ...(Array.isArray(sx) ? sx : [sx])] : borderSx;
 
   return (
     <>
-      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ ...sx, ...borderSx }}>
+      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={buttonSx}>
         {size === 'small' && (
           <SmallIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} invertDefaultColor={invertDefaultColor} />
         )}

@@ -138,6 +138,10 @@ Current recommendation:
      - actions
      - body
      - status area
+
+- collection cards are previews, not mini detail pages
+- do not embed heavy map previews or full-width carousels inside dense admin card grids when a compact thumb gives the user enough context
+
 3. Form and settings system
    - section cards
    - summaries
@@ -221,6 +225,14 @@ These patterns should be designed once and reused many times:
 ### Locations / Resources / Teams
 
 - list card redesign
+- align location collection cards to the product-card pattern: compact media thumb, header/action rail, status chips, preview panels, and a short CTA row
+- keep compact location cards centered on the booking decision:
+  - availability is the primary panel
+  - address comes next as compact preview text
+  - zones are optional supporting detail and should sit after address so cards stay visually aligned when zones are absent
+  - remove teammate-sharing summaries from the compact card; treat that as detail-page information
+  - prefer one concise availability summary instead of repeating counts, totals, and percentages in multiple lines
+  - use the uploaded feature image when present, with the location icon as the empty-state fallback
 - detail/edit redesign
 - shared admin editor patterns
 
@@ -253,6 +265,7 @@ Recommended stack:
 Current baseline:
 
 - the first web UI test runner is now configured in `web/apps/webapp`
+- redesign slices that simplify cards should add or update focused Vitest coverage for the compact behavior, especially when sections are intentionally removed
 - it covers both app components and the extracted `web/packages/ui` primitives
 - initial tests exist for:
   - `PageHeaderPanel`
