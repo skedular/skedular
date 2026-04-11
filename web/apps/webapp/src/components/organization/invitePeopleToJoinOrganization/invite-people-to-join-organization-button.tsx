@@ -35,12 +35,10 @@ const InvitePeopleToJoinOrganizationButton = ({ sx, color, organizationCustomDom
   return (
     <>
       <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ textTransform: 'none', ...sx }}>
-        {size === 'small' && <SmallIconTypography label={label ?? 'Add a New User'} endElement={hideIcon ? null : <InvitePeopleIcon fontSize={size ?? 'small'} />} color={color} />}
-        {size === 'medium' && (
-          <BodyIconTypography label={label ?? 'Add a New User'} endElement={hideIcon ? null : <InvitePeopleIcon fontSize={size ?? 'medium'} />} color={color} />
-        )}
+        {size === 'small' && <SmallIconTypography label={label ?? 'Add User'} endElement={hideIcon ? null : <InvitePeopleIcon fontSize={size ?? 'small'} />} color={color} />}
+        {size === 'medium' && <BodyIconTypography label={label ?? 'Add User'} endElement={hideIcon ? null : <InvitePeopleIcon fontSize={size ?? 'medium'} />} color={color} />}
         {(size === 'large' || !size) && (
-          <LeadIconTypography label={label ?? 'Add a New User'} endElement={hideIcon ? null : <InvitePeopleIcon fontSize={size ?? 'large'} />} color={color} />
+          <LeadIconTypography label={label ?? 'Add User'} endElement={hideIcon ? null : <InvitePeopleIcon fontSize={size ?? 'large'} />} color={color} />
         )}
       </Button>
       <InvitePeopleToJoinOrganizationDialog
