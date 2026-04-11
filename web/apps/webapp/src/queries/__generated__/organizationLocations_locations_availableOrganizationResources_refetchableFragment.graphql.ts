@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c31bdb53b1cf4307c37ed6ec208fba34>>
+ * @generated SignedSource<<e9f5fd8841202cb3d849909fc2f5ebf0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -218,27 +218,6 @@ return {
                 "plural": false,
                 "selections": [
                   (v6/*: any*/),
-                  (v7/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "OrganizationTagDetails",
-                    "kind": "LinkedField",
-                    "name": "zones",
-                    "plural": true,
-                    "selections": [
-                      (v6/*: any*/),
-                      (v7/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "color",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
                   {
                     "alias": null,
                     "args": null,
@@ -263,13 +242,6 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "formattedAddress",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
                         "name": "longitude",
                         "storageKey": null
                       },
@@ -288,32 +260,6 @@ return {
                         "name": "multilinesFormattedAddress",
                         "storageKey": null
                       }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "canDelete",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "OrganizationDetails",
-                    "kind": "LinkedField",
-                    "name": "organization",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "customDomain",
-                        "storageKey": null
-                      },
-                      (v6/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -353,6 +299,27 @@ return {
                     ],
                     "storageKey": null
                   },
+                  (v7/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "OrganizationTagDetails",
+                    "kind": "LinkedField",
+                    "name": "zones",
+                    "plural": true,
+                    "selections": [
+                      (v6/*: any*/),
+                      (v7/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "color",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
                   {
                     "alias": null,
                     "args": null,
@@ -381,6 +348,32 @@ return {
                         "selections": (v8/*: any*/),
                         "storageKey": null
                       }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "canDelete",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "OrganizationDetails",
+                    "kind": "LinkedField",
+                    "name": "organization",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "customDomain",
+                        "storageKey": null
+                      },
+                      (v6/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -515,16 +508,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fb5367d100cbe01fbf4cf549e9113982",
+    "cacheID": "edbf2a4d4010c8300dfe7f429beaab97",
     "id": null,
     "metadata": {},
     "name": "organizationLocations_locations_availableOrganizationResources_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationLocations_locations_availableOrganizationResources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagIds: [String!]\n  $fromTodayDate: DateTime!\n  $locationNotContactedYet: Boolean\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationCustomDomain: String\n  $untilTodayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...organizationLocations_locations_availableOrganizationResources_query_1G22uz\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  zones {\n    id\n    name\n    color\n  }\n  resources {\n    totalCount\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    id\n  }\n  featureImages {\n    original {\n      url\n    }\n    thumbnail {\n      url\n    }\n  }\n  canDelete\n  organization {\n    customDomain\n    id\n  }\n  uniqueClaimCode\n}\n\nfragment organizationLocations_locations_availableOrganizationResources_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationCustomDomain: $organizationCustomDomain, zoneIds: $zoneIds, customTagIds: $customTagIds, notContactedYet: $locationNotContactedYet}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        zones {\n          id\n          name\n          color\n        }\n        resources {\n          totalCount\n        }\n        physicalAddress {\n          formattedAddress\n          longitude\n          latitude\n          id\n        }\n        canDelete\n        organization {\n          customDomain\n          id\n        }\n        extraMetadata {\n          contactDetails {\n            contactEmails\n            contactPhones\n          }\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableResources(where: {organizationCustomDomain: $organizationCustomDomain, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds}) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query organizationLocations_locations_availableOrganizationResources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagIds: [String!]\n  $fromTodayDate: DateTime!\n  $locationNotContactedYet: Boolean\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationCustomDomain: String\n  $untilTodayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...organizationLocations_locations_availableOrganizationResources_query_1G22uz\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  zones {\n    id\n    name\n    color\n  }\n  resources {\n    totalCount\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    id\n  }\n  featureImages {\n    original {\n      url\n    }\n    thumbnail {\n      url\n    }\n  }\n  canDelete\n  organization {\n    customDomain\n    id\n  }\n  uniqueClaimCode\n}\n\nfragment organizationLocations_locations_availableOrganizationResources_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationCustomDomain: $organizationCustomDomain, zoneIds: $zoneIds, customTagIds: $customTagIds, notContactedYet: $locationNotContactedYet}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        resources {\n          totalCount\n        }\n        physicalAddress {\n          longitude\n          latitude\n          id\n        }\n        extraMetadata {\n          contactDetails {\n            contactEmails\n            contactPhones\n          }\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableResources(where: {organizationCustomDomain: $organizationCustomDomain, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds}) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "89ebab13b3eee9b83bf19dcdcdb0e2ad";
+(node as any).hash = "8cdd20424351ef080a19ebc0c28ae9c0";
 
 export default node;

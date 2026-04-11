@@ -1,43 +1,21 @@
-import { NewBookingButton } from '@/components/booking/addBooking';
-import { BodyIconTypography, DefaultDialogTitle, GridContainer, PushToRight, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
+import { BodyIconTypography, GridContainer, PushToRight, StackColumn } from '@/components/commons';
 import StackRow from '@/components/commons/stack-row';
-import { EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
-import { getOrganizationBookingsBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
-import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
 import { ClaimLocationOwnershipButton } from '@/components/location';
 import { NewLocationButton } from '@/components/location/addLocation';
-import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { CustomTagSelector } from '@/components/organization/customTagSelector';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
 import { RelayError, toRootError } from '@/components/relayError';
-import { DialogTransition } from '@/components/transitions';
-import { Zones } from '@/components/zone';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultGridStyle } from '@/libs/theme';
-import { getRelayErrorMessage, startOfDay } from '@/libs/utils';
-import type { organizationLocations_addCustomerPreferredLocationMutation } from '@/queries/__generated__/organizationLocations_addCustomerPreferredLocationMutation.graphql';
-import type { organizationLocations_deleteLocationMutation } from '@/queries/__generated__/organizationLocations_deleteLocationMutation.graphql';
+import { startOfDay } from '@/libs/utils';
 import type { organizationLocations_locations_availableOrganizationResources_query$key } from '@/queries/__generated__/organizationLocations_locations_availableOrganizationResources_query.graphql';
 import type { organizationLocations_locations_availableOrganizationResources_refetchableFragment } from '@/queries/__generated__/organizationLocations_locations_availableOrganizationResources_refetchableFragment.graphql';
-import type { organizationLocations_removeCustomerPreferredLocationMutation } from '@/queries/__generated__/organizationLocations_removeCustomerPreferredLocationMutation.graphql';
 import type { organizationLocations_rootQuery } from '@/queries/__generated__/organizationLocations_rootQuery.graphql';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import IconButton from '@mui/material/IconButton';
-import LinearProgress from '@mui/material/LinearProgress';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/system/Box';
-import type { GridColDef } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
-import { useRouter } from 'next/navigation';
-import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, startTransition, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
-import { toast } from 'react-toastify';
+import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { v7 as uuid } from 'uuid';
 import LocationCard from './location-card';
 import OrganizationLocationsPageShell from './organization-locations-page-shell';
@@ -60,11 +38,6 @@ const RootQuery = graphql`
     $customTagIds: [String!]
     $locationNotContactedYet: Boolean!
   ) {
-    me {
-      preferredLocations {
-        id
-      }
-    }
     organization(customDomain: $organizationCustomDomain) {
       canModify
       customDomain
@@ -76,31 +49,6 @@ const RootQuery = graphql`
     ...organizationLocations_locations_availableOrganizationResources_query
   }
 `;
-
-type LocationDetails = {
-  name: string;
-};
-
-type ResourcesAvailabilityDetails = {
-  resourcesCount: number;
-  availablePercentage: number;
-};
-
-type ZoneDetails = {
-  id: string;
-  name: string | null | undefined;
-  color: string | null | undefined;
-};
-
-type RowType = {
-  id: string;
-  location: LocationDetails;
-  resourcesCount: number;
-  resourcesAvailability: ResourcesAvailabilityDetails;
-  zones: ZoneDetails[];
-  physicalAddress?: string | null | undefined;
-  preferred: boolean;
-};
 
 const OrganizationLocations = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<organizationLocations_rootQuery>(RootQuery, queryReference);
@@ -123,23 +71,12 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
           edges {
             node {
               id
-              name
-              zones {
-                id
-                name
-                color
-              }
               resources {
                 totalCount
               }
               physicalAddress {
-                formattedAddress
                 longitude
                 latitude
-              }
-              canDelete
-              organization {
-                customDomain
               }
               extraMetadata {
                 contactDetails {
@@ -163,68 +100,16 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
     rootData,
   );
 
-  const [commitDeleteLocation] = useMutation<organizationLocations_deleteLocationMutation>(graphql`
-    mutation organizationLocations_deleteLocationMutation($connectionIds: [ID!]!, $input: DeleteLocationInput!) {
-      deleteLocation(input: $input) {
-        location {
-          id @deleteEdge(connections: $connectionIds)
-        }
-      }
-    }
-  `);
-
-  const [commitAddCustomerPreferredLocation] = useMutation<organizationLocations_addCustomerPreferredLocationMutation>(graphql`
-    mutation organizationLocations_addCustomerPreferredLocationMutation($input: AddCustomerPreferredLocationInput!) {
-      addCustomerPreferredLocation(input: $input) {
-        customer {
-          id
-          preferredLocations {
-            id
-          }
-        }
-      }
-    }
-  `);
-
-  const [commitRemoveCustomerPreferredLocation] = useMutation<organizationLocations_removeCustomerPreferredLocationMutation>(graphql`
-    mutation organizationLocations_removeCustomerPreferredLocationMutation($input: RemoveCustomerPreferredLocationInput!) {
-      removeCustomerPreferredLocation(input: $input) {
-        customer {
-          id
-          preferredLocations {
-            id
-          }
-        }
-      }
-    }
-  `);
-
-  const { integratedPlatrform } = useIntegratedPlatrform();
   const [customTagIds, setCustomTagIds] = useState<string[]>([]);
   const [zoneIds, setZoneIds] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
-  const router = useRouter();
-  const paletteMode = useContext(PaletteModeContext);
-  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [defaultDate] = useState(startOfDay());
   const connectionIds = useMemo(() => [rootDataRefetchable.locations.__id], [rootDataRefetchable.locations]);
-  const [selectedLocationId, setSelectedLocationId] = useState<null | string>(null);
-  const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
-  const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
-  const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
-  const [preferredLocations, setPreferredLocations] = useState(rootData.me?.preferredLocations.map(({ id }) => id) ?? []);
   const [filterThoseWithoutCoordites, setFilterThoseWithoutCoordites] = useState(organizationCustomDomain === 'skedularpubliclocations');
   const [filterThoseWithCoordites, setFilterThoseWithCoordites] = useState(false);
   const [filterThoseWithEmails, setFilterThoseWithEmails] = useState(false);
   const [filterThoseWithPhones, setFilterThoseWithPhones] = useState(false);
   const [locationNotContactedYet, setLocationNotContactedYet] = useState(false);
   const [phoneStartWith, setPhoneStartWith] = useState('');
-
-  const moreActionsOption: MoreActionsMenuItemType[] = [
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocation],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings],
-  ];
 
   const locations = useMemo(
     () =>
@@ -246,7 +131,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
         ),
     [rootDataRefetchable.locations, filterThoseWithoutCoordites, filterThoseWithCoordites, filterThoseWithEmails, filterThoseWithPhones, phoneStartWith],
   );
-  const locationDetails = useMemo(() => locations.find((item) => item.id === selectedLocationId), [selectedLocationId, locations]);
   const handleRefetch = useCallback(
     (customTagIds: string[], zoneIds: string[], locationNotContactedYet: boolean) => {
       startTransition(() => {
@@ -267,161 +151,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
 
   useEffect(() => handleRefetch(customTagIds, zoneIds, locationNotContactedYet), [handleRefetch, customTagIds, zoneIds, locationNotContactedYet]);
 
-  const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
-    setMoreActionsAnchorEl(null);
-
-    switch (id) {
-      case MoreActionsMenuOptionType.EditLocation:
-        if (!locationDetails) {
-          return;
-        }
-
-        router.push(getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization!.customDomain!, locationDetails.id));
-        break;
-
-      case MoreActionsMenuOptionType.DeleteLocation:
-        handleRemoveLocationClicked();
-        break;
-
-      case MoreActionsMenuOptionType.ViewLocationBookings:
-        if (!locationDetails) {
-          return;
-        }
-
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization!.customDomain!, { locationId: locationDetails.id }));
-        break;
-    }
-  };
-
-  const handleRemoveLocationClicked = () => {
-    setLocationRemoveConfirmationDialogOpen(true);
-  };
-
-  const handleCancelRemovingLocationClick = () => {
-    setLocationRemoveConfirmationDialogOpen(false);
-  };
-
-  const handleConfirmRemovingLocationClick = () => {
-    if (!locationDetails) {
-      return;
-    }
-
-    const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}'...`} />, infoNotificationOptions);
-
-    commitDeleteLocation({
-      variables: {
-        connectionIds: connectionIds,
-        input: {
-          clientMutationId: uuid(),
-          id: locationDetails.id,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' has been successfully removed.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handleSetAsPreferredLocationClicked = (id: string) => {
-    const locationDetails = locations.find((item) => item.id === id);
-    if (!locationDetails) {
-      return;
-    }
-
-    const toastId = themedToast(<NotificationContent content={`Setting location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
-
-    commitAddCustomerPreferredLocation({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          locationId: locationDetails.id,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' has been set as the preferred location.`} />,
-        });
-
-        setPreferredLocations(preferredLocations.concat([locationDetails.id]));
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handleRemoveAsPreferredLocationClicked = (id: string) => {
-    const locationDetails = locations.find((item) => item.id === id);
-    if (!locationDetails) {
-      return;
-    }
-
-    const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
-
-    commitRemoveCustomerPreferredLocation({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          locationId: locationDetails.id,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' has been removed as your preferred location.`} />,
-        });
-
-        setPreferredLocations(preferredLocations.filter((item) => item !== locationDetails.id));
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
   const handleCustomTagChanged = (id?: string) => {
     setCustomTagIds(id ? [id] : []);
   };
@@ -429,149 +158,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
   const handleZoneTypeChanged = (id?: string) => {
     setZoneIds(id ? [id] : []);
   };
-
-  const handlViewModeChanged = (newViewMode: 'list' | 'grid') => {
-    setViewMode(newViewMode);
-  };
-
-  const rows: RowType[] = locations.map((location) => {
-    const resourcesCount = location.resources.totalCount;
-    const availableResourcesCount = rootDataRefetchable.availableResources
-      ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
-      : 0;
-    const availablePercentage = (availableResourcesCount / resourcesCount) * 100;
-    const zones = location.zones.map(({ id, name, color }) => ({ id, name, color }));
-
-    return {
-      id: location.id,
-      location,
-      resourcesCount,
-      resourcesAvailability: {
-        resourcesCount,
-        availablePercentage,
-      },
-      zones,
-      physicalAddress: location.physicalAddress?.formattedAddress,
-      preferred: preferredLocations.includes(location.id),
-    };
-  });
-
-  const columns: GridColDef<(typeof rows)[number]>[] = [
-    {
-      field: 'location',
-      headerName: 'Location',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value.name} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'resourcesCount',
-      headerName: 'Resources Count',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value.resourcesCount} />,
-      display: 'flex',
-      minWidth: 150,
-    },
-    {
-      field: 'resourcesAvailability',
-      headerName: 'Availability',
-      editable: false,
-      renderCell: (params) => (
-        <StackColumn sx={{ alignItems: 'flex-end' }}>
-          <SmallIconTypography label={`${params.value.resourcesCount} Available Today`} />
-          <LinearProgress value={params.value.availablePercentage} variant="determinate" sx={{ width: '100%' }} />
-        </StackColumn>
-      ),
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'zones',
-      headerName: 'Zones',
-      editable: false,
-      renderCell: (params) => <Zones zones={params.value} hideIcon />,
-      display: 'flex',
-      minWidth: 250,
-    },
-    {
-      field: 'physicalAddress',
-      headerName: 'Address',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value ? params.value : 'N/A'} sx={{ whiteSpace: 'pre-line' }} />,
-      display: 'flex',
-      minWidth: 150,
-    },
-    {
-      field: 'bookNow',
-      headerName: '',
-      editable: false,
-      renderCell: (params) => {
-        if (rootData.organization?.customDomain === 'skedularpubliclocations') {
-          return null;
-        }
-
-        return (
-          <NewBookingButton
-            onReloadRequired={onReloadRequired}
-            defaultDate={defaultDate}
-            organizationCustomDomain={organizationCustomDomain}
-            defaultLocationId={params.id as string}
-            label="Book Now"
-            hideIcon
-            variant="contained"
-            size="small"
-            sx={{ textTransform: 'none' }}
-            invertDefaultColor={paletteMode === 'dark'}
-          />
-        );
-      },
-      display: 'flex',
-      minWidth: 140,
-    },
-    {
-      field: 'preferred',
-      headerName: 'Preferred?',
-      editable: false,
-      renderCell: (params) => {
-        const id = params.id as string;
-        if (params.value) {
-          return (
-            <IconButton onClick={() => handleRemoveAsPreferredLocationClicked(id)}>
-              <PreferredIcon />
-            </IconButton>
-          );
-        }
-
-        return (
-          <IconButton onClick={() => handleSetAsPreferredLocationClicked(id)}>
-            <NotPreferredIcon />
-          </IconButton>
-        );
-      },
-      display: 'flex',
-    },
-    {
-      field: 'More Actions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedLocationId(params.id as string);
-              setMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
 
   const handleFilterThoseWithoutCoorditesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterThoseWithoutCoordites(event.target.checked);
@@ -613,7 +199,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
       <GridContainer spacing={1} sx={{ alignItems: 'center' }}>
         <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
         <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
-        <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
         <PushToRight />
       </GridContainer>
 
@@ -644,76 +229,42 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
   return (
     <>
       <OrganizationLocationsPageShell actions={pageActions} toolbar={pageToolbar} isEmpty={locations.length === 0}>
-        {viewMode === 'grid' && (
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: {
-                xs: '1fr',
-                sm: 'repeat(auto-fit, minmax(320px, 360px))',
-              },
-              gap: 2,
-              alignItems: 'stretch',
-              justifyContent: 'start',
-            }}
-          >
-            {locations.map((location) => {
-              const resourcesCount = location.resources.totalCount;
-              const availableResourcesCount = rootDataRefetchable.availableResources
-                ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
-                : 0;
-              const availablePercentage = resourcesCount > 0 ? (availableResourcesCount / resourcesCount) * 100 : 0;
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: '1fr',
+              sm: 'repeat(auto-fit, minmax(320px, 360px))',
+            },
+            gap: 2,
+            alignItems: 'stretch',
+            justifyContent: 'start',
+          }}
+        >
+          {locations.map((location) => {
+            const resourcesCount = location.resources.totalCount;
+            const availableResourcesCount = rootDataRefetchable.availableResources
+              ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
+              : 0;
+            const availablePercentage = resourcesCount > 0 ? (availableResourcesCount / resourcesCount) * 100 : 0;
 
-              return (
-                <Box key={location.id} sx={{ height: '100%' }}>
-                  <LocationCard
-                    rootDataRelay={rootData}
-                    locationDetailsRelay={location}
-                    onReloadRequired={onReloadRequired}
-                    organizationCustomDomain={organizationCustomDomain}
-                    defaultDate={defaultDate}
-                    connectionIds={connectionIds}
-                    availableResourcesCount={availableResourcesCount}
-                    availablePercentage={availablePercentage}
-                  />
-                </Box>
-              );
-            })}
-          </Box>
-        )}
-
-        {viewMode === 'list' && (
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            ignoreDiacritics
-            disableRowSelectionOnClick
-            hideFooter
-            getRowHeight={() => 'auto'}
-            rowSpacingType="margin"
-            getRowSpacing={() => ({ top: 3, bottom: 3 })}
-            sx={defaultGridStyle}
-            localeText={{ noRowsLabel: 'No location found' }}
-          />
-        )}
+            return (
+              <Box key={location.id} sx={{ height: '100%' }}>
+                <LocationCard
+                  rootDataRelay={rootData}
+                  locationDetailsRelay={location}
+                  onReloadRequired={onReloadRequired}
+                  organizationCustomDomain={organizationCustomDomain}
+                  defaultDate={defaultDate}
+                  connectionIds={connectionIds}
+                  availableResourcesCount={availableResourcesCount}
+                  availablePercentage={availablePercentage}
+                />
+              </Box>
+            );
+          })}
+        </Box>
       </OrganizationLocationsPageShell>
-
-      <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
-
-      {locationDetails && (
-        <Dialog slots={{ transition: DialogTransition }} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
-          <DefaultDialogTitle title="Remove Location" />
-          <DialogContent sx={{ marginTop: 2 }}>
-            <DialogContentText>{`Are you sure you want to remove the location "${locationDetails.name}"?`}</DialogContentText>
-            <TwoButtonsDialogActions
-              onPrimaryClicked={handleConfirmRemovingLocationClick}
-              onSecondaryClicked={handleCancelRemovingLocationClick}
-              primaryLabel="Remove"
-              secondaryLabel="Cancel"
-            />
-          </DialogContent>
-        </Dialog>
-      )}
     </>
   );
 };

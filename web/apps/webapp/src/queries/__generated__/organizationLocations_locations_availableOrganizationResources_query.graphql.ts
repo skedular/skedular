@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7936fe471da7ad0d7ba066587f9ec70c>>
+ * @generated SignedSource<<e889d37d539881774f9f7cf607fc83b8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,6 @@ export type organizationLocations_locations_availableOrganizationResources_query
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly canDelete: boolean;
         readonly extraMetadata: {
           readonly contactDetails: {
             readonly contactEmails: ReadonlyArray<string> | null | undefined;
@@ -28,23 +27,13 @@ export type organizationLocations_locations_availableOrganizationResources_query
           } | null | undefined;
         } | null | undefined;
         readonly id: string;
-        readonly name: string;
-        readonly organization: {
-          readonly customDomain: string | null | undefined;
-        };
         readonly physicalAddress: {
-          readonly formattedAddress: string | null | undefined;
           readonly latitude: number | null | undefined;
           readonly longitude: number | null | undefined;
         } | null | undefined;
         readonly resources: {
           readonly totalCount: number;
         };
-        readonly zones: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly id: string;
-          readonly name: string;
-        }>;
         readonly " $fragmentSpreads": FragmentRefs<"locationCard_LocationDetails">;
       };
     }>;
@@ -83,20 +72,6 @@ v4 = {
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
   "storageKey": null
 };
 return {
@@ -210,26 +185,11 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v5/*: any*/),
-                (v6/*: any*/),
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "OrganizationTagDetails",
-                  "kind": "LinkedField",
-                  "name": "zones",
-                  "plural": true,
-                  "selections": [
-                    (v5/*: any*/),
-                    (v6/*: any*/),
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "color",
-                      "storageKey": null
-                    }
-                  ],
+                  "kind": "ScalarField",
+                  "name": "id",
                   "storageKey": null
                 },
                 {
@@ -256,13 +216,6 @@ return {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
-                      "name": "formattedAddress",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
                       "name": "longitude",
                       "storageKey": null
                     },
@@ -271,31 +224,6 @@ return {
                       "args": null,
                       "kind": "ScalarField",
                       "name": "latitude",
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "canDelete",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "OrganizationDetails",
-                  "kind": "LinkedField",
-                  "name": "organization",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "customDomain",
                       "storageKey": null
                     }
                   ],
@@ -457,6 +385,6 @@ return {
 };
 })();
 
-(node as any).hash = "89ebab13b3eee9b83bf19dcdcdb0e2ad";
+(node as any).hash = "8cdd20424351ef080a19ebc0c28ae9c0";
 
 export default node;

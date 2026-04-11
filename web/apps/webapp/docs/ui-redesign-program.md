@@ -233,6 +233,9 @@ These patterns should be designed once and reused many times:
   - remove teammate-sharing summaries from the compact card; treat that as detail-page information
   - prefer one concise availability summary instead of repeating counts, totals, and percentages in multiple lines
   - use the uploaded feature image when present, with the location icon as the empty-state fallback
+- keep the organization locations collection page card-only for now:
+  - remove list/grid toggles and list-specific table logic when the product direction favors compact booking-oriented cards
+  - if the surface stays card-only, trim the Relay selections and page-level mutations that only existed for the old list/table mode
 - detail/edit redesign
 - shared admin editor patterns
 

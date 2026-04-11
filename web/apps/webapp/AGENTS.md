@@ -70,6 +70,10 @@ scripts/
   - do not render teammate-sharing summaries on the compact card; move that detail to the full location surface instead
   - keep address presentation single-line on the card with full text available on hover
   - show a real feature image when present, but keep the fallback icon treatment when no image exists
+- For the organization locations index specifically:
+  - treat it as a card-first surface only
+  - do not preserve or reintroduce a list/grid toggle unless there is a clear product need that the compact cards cannot satisfy
+  - remove list-specific query fields, handlers, and mutations when the list mode is removed
 - Avoid embedding maps, full carousels, or other heavy detail widgets directly inside dense list cards unless the card is explicitly a media-first browsing surface.
 - The long-term target is extraction into `web/packages/*`, but do not extract unstable domain-specific widgets too
   early.
