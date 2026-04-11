@@ -14,7 +14,7 @@ import {
   StackRow,
 } from '@/components/commons';
 import { CustomTag } from '@/components/customTag';
-import { DeleteIcon, EllipseMenuIcon, ErrorIcon, NewIcon, NotPreferredIcon, PreferredIcon, TickIcon } from '@/components/icons';
+import { DeleteIcon, ErrorIcon, NewIcon, TickIcon } from '@/components/icons';
 import { getRootLink } from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -25,13 +25,13 @@ import { AddOrganizationPaymentMethodDialog } from '@/components/organization/ad
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
 import { EditOrganizationCustomTagDialog } from '@/components/organization/editOrganizationCustomTag';
 import { EditOrganizationZoneDialog } from '@/components/organization/editOrganizationZone/';
+import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
 import OrganizationAdminSectionNav, { OrganizationAdminSection } from '@/components/organization/organizationAdmin/organization-admin-section-nav';
 import { Search } from '@/components/search';
 import { Zone } from '@/components/zone';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { coal, defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald } from '@/libs/theme';
+import { coal, defaultButtonStyle, defaultGridActionPadding, defaultPadding, emerald } from '@/libs/theme';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import { EditorActionBar, PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
 import type { organizationAdmin_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_addCustomerPreferredOrganizationTagMutation.graphql';
@@ -71,8 +71,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Switch from '@mui/material/Switch';
-import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -229,20 +227,6 @@ const taxDetailsSchema = object({
       return taxRatePercentage > 0;
     }),
 });
-
-type ZoneRowType = {
-  id: string;
-  name: string;
-  description: string | null | undefined;
-  preferred: boolean;
-};
-
-type CustomTagRowType = {
-  id: string;
-  name: string;
-  description: string | null | undefined;
-  preferred: boolean;
-};
 
 const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZonesRelay, rootDataCustomTagsRelay, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = useFragment<organizationAdmin_query$key>(
@@ -889,7 +873,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const debounceSetTaxDetailsTaxRatePercentage = useDebounceCallback(setTaxDetailsTaxRatePercentage, keyboardTextFieldDebounceTimeout);
 
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
-  const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
+  const [selectedZoneIds, setSelectedZoneIds] = useState<string[]>([]);
   const [selectedZoneId, setSelectedZoneId] = useState<null | string>(null);
   const [zoneMoreActionsAnchorEl, setZoneMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const zoneMoreActionsMenuOpen = Boolean(zoneMoreActionsAnchorEl);
@@ -897,10 +881,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const [preferredZones, setPreferredZones] = useState(rootData.me?.preferredZones.map(({ id }) => id) ?? []);
   const zones = useMemo(() => (rootDataZones.organization ? rootDataZones.organization.zones.edges.map(({ node }) => node) : []), [rootDataZones.organization]);
   const zonesConnectionIds = useMemo(() => (rootDataZones.organization ? [rootDataZones.organization.zones.__id] : []), [rootDataZones.organization]);
-  const zoneMoreActionsOption: MoreActionsMenuItemType[] = [
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditZone],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteZone],
-  ];
 
   const handleRefetchZones = useCallback(
     (zoneNameSearchText: string) => {
@@ -919,7 +899,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   );
 
   const [customTagNameSearchText, setCustomTagNameSearchText] = useState<string>('');
-  const [seledctedCustomTags, setSeledctedCustomTags] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
+  const [selectedCustomTagIds, setSelectedCustomTagIds] = useState<string[]>([]);
   const [selectedCustomTagId, setSelectedCustomTagId] = useState<null | string>(null);
   const [customTagMoreActionsAnchorEl, setCustomTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const customTagMoreActionsMenuOpen = Boolean(customTagMoreActionsAnchorEl);
@@ -930,10 +910,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     [rootDataCustomTags.organization],
   );
   const customTagsConnectionIds = useMemo(() => (rootDataCustomTags.organization ? [rootDataCustomTags.organization.customTags.__id] : []), [rootDataCustomTags.organization]);
-  const customTagMoreActionsOption: MoreActionsMenuItemType[] = [
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditCustomTag],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteCustomTag],
-  ];
 
   const handleRefetchCustomTags = useCallback(
     (customTagNameSearchText: string) => {
@@ -1666,8 +1642,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     handleRefetchZones(str);
   };
 
-  const handleSelectedZonesChanged = (newRowSelectionModel: GridRowSelectionModel) => {
-    setSeledctedZones(newRowSelectionModel);
+  const handleSelectedZonesChanged = (id: string) => {
+    setSelectedZoneIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : current.concat(id)));
   };
 
   const handleZoneMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
@@ -1680,6 +1656,16 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
 
       case MoreActionsMenuOptionType.DeleteZone:
         handleRemoveZoneClick();
+        break;
+      case MoreActionsMenuOptionType.SetAsPreferredZone:
+        if (selectedZoneId) {
+          handleSetAsPreferredZoneClicked(selectedZoneId);
+        }
+        break;
+      case MoreActionsMenuOptionType.RemoveAsPreferredZone:
+        if (selectedZoneId) {
+          handleRemoveAsPreferredZoneClicked(selectedZoneId);
+        }
         break;
     }
   };
@@ -1700,10 +1686,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         connectionIds: zonesConnectionIds,
         input: {
           clientMutationId: uuid(),
-          ids: seledctedZones.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
+          ids: selectedZoneIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -1720,6 +1703,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           ...successNotificationOptions,
           render: <NotificationContent content={`Zones removed.`} />,
         });
+        setSelectedZoneIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -1774,8 +1758,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     handleRefetchCustomTags(str);
   };
 
-  const handleSelectedCustomTagsChanged = (newRowSelectionModel: GridRowSelectionModel) => {
-    setSeledctedCustomTags(newRowSelectionModel);
+  const handleSelectedCustomTagsChanged = (id: string) => {
+    setSelectedCustomTagIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : current.concat(id)));
   };
 
   const handleCustomTagMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
@@ -1788,6 +1772,16 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
 
       case MoreActionsMenuOptionType.DeleteCustomTag:
         handleRemoveCustomTagClick();
+        break;
+      case MoreActionsMenuOptionType.SetAsPreferredCustomTag:
+        if (selectedCustomTagId) {
+          handleSetAsPreferredCustomTagClicked(selectedCustomTagId);
+        }
+        break;
+      case MoreActionsMenuOptionType.RemoveAsPreferredCustomTag:
+        if (selectedCustomTagId) {
+          handleRemoveAsPreferredCustomTagClicked(selectedCustomTagId);
+        }
         break;
     }
   };
@@ -1808,10 +1802,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         connectionIds: customTagsConnectionIds,
         input: {
           clientMutationId: uuid(),
-          ids: seledctedCustomTags.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
+          ids: selectedCustomTagIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -1828,6 +1819,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           ...successNotificationOptions,
           render: <NotificationContent content={`Tags removed.`} />,
         });
+        setSelectedCustomTagIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -1845,7 +1837,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
 
     const toastId = themedToast(<NotificationContent content="Removing tag ..." />, infoNotificationOptions);
 
-    commitDeleteZones({
+    commitDeleteCustomTags({
       variables: {
         connectionIds: customTagsConnectionIds,
         input: {
@@ -2219,159 +2211,66 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     });
   };
 
+  const zoneItems = useMemo(
+    () =>
+      zones.map((zone) => ({
+        id: zone.id,
+        name: zone.name,
+        description: zone.description,
+        preferred: preferredZones.includes(zone.id),
+      })),
+    [preferredZones, zones],
+  );
+  const selectedZoneItem = useMemo(() => zoneItems.find((item) => item.id === selectedZoneId), [selectedZoneId, zoneItems]);
+  const zoneMoreActionsOption: MoreActionsMenuItemType[] = useMemo(() => {
+    const options: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditZone], moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteZone]];
+
+    if (selectedZoneItem) {
+      options.splice(
+        1,
+        0,
+        selectedZoneItem.preferred
+          ? moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveAsPreferredZone]
+          : moreActionsMenuAllOptions[MoreActionsMenuOptionType.SetAsPreferredZone],
+      );
+    }
+
+    return options;
+  }, [selectedZoneItem]);
+
+  const customTagItems = useMemo(
+    () =>
+      customTags.map((customTag) => ({
+        id: customTag.id,
+        name: customTag.name,
+        description: customTag.description,
+        preferred: preferredCustomTags.includes(customTag.id),
+      })),
+    [customTags, preferredCustomTags],
+  );
+  const selectedCustomTagItem = useMemo(() => customTagItems.find((item) => item.id === selectedCustomTagId), [customTagItems, selectedCustomTagId]);
+  const customTagMoreActionsOption: MoreActionsMenuItemType[] = useMemo(() => {
+    const options: MoreActionsMenuItemType[] = [
+      moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditCustomTag],
+      moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteCustomTag],
+    ];
+
+    if (selectedCustomTagItem) {
+      options.splice(
+        1,
+        0,
+        selectedCustomTagItem.preferred
+          ? moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveAsPreferredCustomTag]
+          : moreActionsMenuAllOptions[MoreActionsMenuOptionType.SetAsPreferredCustomTag],
+      );
+    }
+
+    return options;
+  }, [selectedCustomTagItem]);
+
   if (!rootDataOrganization.organization) {
     return null;
   }
-
-  const zoneRows: ZoneRowType[] = zones.map((zone) => ({
-    id: zone.id,
-    name: zone.name,
-    description: zone.description,
-    preferred: preferredZones.includes(zone.id),
-  }));
-
-  const zoneColumns: GridColDef<(typeof zoneRows)[number]>[] = [
-    {
-      field: 'name',
-      headerName: 'Name',
-      editable: false,
-      renderCell: (params) => {
-        const zone = zones.find((zone) => zone.id === (params.id as string));
-        if (!zone) {
-          return null;
-        }
-
-        return <Zone zone={zone} showFullName />;
-      },
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'description',
-      headerName: 'Description',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'preferred',
-      headerName: 'Preferred?',
-      editable: false,
-      renderCell: (params) => {
-        const id = params.id as string;
-        if (params.value) {
-          return (
-            <IconButton onClick={() => handleRemoveAsPreferredZoneClicked(id)}>
-              <PreferredIcon />
-            </IconButton>
-          );
-        }
-
-        return (
-          <IconButton onClick={() => handleSetAsPreferredZoneClicked(id)}>
-            <NotPreferredIcon />
-          </IconButton>
-        );
-      },
-      display: 'flex',
-    },
-    {
-      field: 'More Actions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedZoneId(params.id as string);
-              setZoneMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
-
-  const customTagRows: CustomTagRowType[] = customTags.map((customTag) => ({
-    id: customTag.id,
-    name: customTag.name,
-    description: customTag.description,
-    preferred: preferredCustomTags.includes(customTag.id),
-  }));
-
-  const customTagColumns: GridColDef<(typeof customTagRows)[number]>[] = [
-    {
-      field: 'name',
-      headerName: 'Name',
-      editable: false,
-      renderCell: (params) => {
-        const customTag = customTags.find((customTag) => customTag.id === (params.id as string));
-        if (!customTag) {
-          return null;
-        }
-
-        return <CustomTag customTag={customTag} showFullName />;
-      },
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'description',
-      headerName: 'Description',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'preferred',
-      headerName: 'Preferred?',
-      editable: false,
-      renderCell: (params) => {
-        const id = params.id as string;
-        if (params.value) {
-          return (
-            <IconButton onClick={() => handleRemoveAsPreferredCustomTagClicked(id)}>
-              <PreferredIcon />
-            </IconButton>
-          );
-        }
-
-        return (
-          <IconButton onClick={() => handleSetAsPreferredCustomTagClicked(id)}>
-            <NotPreferredIcon />
-          </IconButton>
-        );
-      },
-      display: 'flex',
-    },
-    {
-      field: 'More Actions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedCustomTagId(params.id as string);
-              setCustomTagMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
     setFeatureImages((prev) => [response, ...prev]);
@@ -2855,10 +2754,10 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     <Search size="small" placeholder="Search for zones" defaultValue={zoneNameSearchText} onChange={handleZonesSearchTextChange} />
                   </StackRow>
 
-                  {seledctedZones.ids.size > 0 && (
+                  {selectedZoneIds.length > 0 && (
                     <Box
                       sx={{
-                        backgroundColor: 'white',
+                        backgroundColor: 'background.paper',
                         padding: defaultGridActionPadding,
                         border: 1,
                         borderColor: (theme) => theme.palette.divider,
@@ -2866,7 +2765,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                       }}
                     >
                       <StackRow sx={{ alignItems: 'center' }}>
-                        <SmallIconTypography label={`${seledctedZones.ids.size} records selected`} />
+                        <SmallIconTypography label={`${selectedZoneIds.length} record${selectedZoneIds.length === 1 ? '' : 's'} selected`} />
                         <PushToRight />
                         <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveZonesClick} sx={{ textTransform: 'none' }}>
                           Remove Zone
@@ -2875,29 +2774,20 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     </Box>
                   )}
 
-                  <DataGrid
-                    checkboxSelection
-                    rowSelectionModel={seledctedZones}
-                    onRowSelectionModelChange={handleSelectedZonesChanged}
-                    rows={zoneRows}
-                    columns={zoneColumns}
-                    hideFooterPagination={zoneRows.length <= 10}
-                    initialState={{
-                      pagination: {
-                        rowCount: zoneRows.length,
-                        paginationModel: {
-                          pageSize: 10,
-                        },
-                      },
+                  <OrganizationAdminTagManagementList
+                    items={zoneItems}
+                    emptyTitle="No zones found"
+                    emptyDescription="Adjust the search or add a new zone for this organization."
+                    selectedIds={selectedZoneIds}
+                    onToggleSelected={handleSelectedZonesChanged}
+                    onOpenMoreActions={(id, target) => {
+                      setSelectedZoneId(id);
+                      setZoneMoreActionsAnchorEl(target);
                     }}
-                    pageSizeOptions={[10]}
-                    ignoreDiacritics
-                    disableRowSelectionOnClick
-                    getRowHeight={() => 'auto'}
-                    rowSpacingType="margin"
-                    getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                    sx={defaultGridStyle}
-                    localeText={{ noRowsLabel: 'No zone found' }}
+                    renderPrimary={(item) => {
+                      const zone = zones.find((entry) => entry.id === item.id);
+                      return zone ? <Zone zone={zone} showFullName /> : null;
+                    }}
                   />
                 </StackColumn>
               </SettingsSectionCard>
@@ -2916,10 +2806,10 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     <Search size="small" placeholder="Search for tags" defaultValue={customTagNameSearchText} onChange={handleCustomTagsSearchTextChange} />
                   </StackRow>
 
-                  {seledctedCustomTags.ids.size > 0 && (
+                  {selectedCustomTagIds.length > 0 && (
                     <Box
                       sx={{
-                        backgroundColor: 'white',
+                        backgroundColor: 'background.paper',
                         padding: defaultGridActionPadding,
                         border: 1,
                         borderColor: (theme) => theme.palette.divider,
@@ -2927,7 +2817,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                       }}
                     >
                       <StackRow sx={{ alignItems: 'center' }}>
-                        <SmallIconTypography label={`${seledctedCustomTags.ids.size} records selected`} />
+                        <SmallIconTypography label={`${selectedCustomTagIds.length} record${selectedCustomTagIds.length === 1 ? '' : 's'} selected`} />
                         <PushToRight />
                         <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveCustomTagsClick} sx={{ textTransform: 'none' }}>
                           Remove Tag
@@ -2936,29 +2826,20 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     </Box>
                   )}
 
-                  <DataGrid
-                    checkboxSelection
-                    rowSelectionModel={seledctedCustomTags}
-                    onRowSelectionModelChange={handleSelectedCustomTagsChanged}
-                    rows={customTagRows}
-                    columns={customTagColumns}
-                    hideFooterPagination={customTagRows.length <= 10}
-                    initialState={{
-                      pagination: {
-                        rowCount: customTagRows.length,
-                        paginationModel: {
-                          pageSize: 10,
-                        },
-                      },
+                  <OrganizationAdminTagManagementList
+                    items={customTagItems}
+                    emptyTitle="No tags found"
+                    emptyDescription="Adjust the search or add a new custom tag for this organization."
+                    selectedIds={selectedCustomTagIds}
+                    onToggleSelected={handleSelectedCustomTagsChanged}
+                    onOpenMoreActions={(id, target) => {
+                      setSelectedCustomTagId(id);
+                      setCustomTagMoreActionsAnchorEl(target);
                     }}
-                    pageSizeOptions={[10]}
-                    ignoreDiacritics
-                    disableRowSelectionOnClick
-                    getRowHeight={() => 'auto'}
-                    rowSpacingType="margin"
-                    getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                    sx={defaultGridStyle}
-                    localeText={{ noRowsLabel: 'No tag found' }}
+                    renderPrimary={(item) => {
+                      const customTag = customTags.find((entry) => entry.id === item.id);
+                      return customTag ? <CustomTag customTag={customTag} showFullName /> : null;
+                    }}
                   />
                 </StackColumn>
               </SettingsSectionCard>

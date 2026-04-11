@@ -82,6 +82,7 @@ scripts/
   - in the resources section, prefer a compact management list with drill-down details over a wide data grid; the location detail page should support dozens of resources without turning into a spreadsheet
   - resource rows should show the real zone/custom/product tag chips inline in a compact metadata strip, not only abstract counts
   - user-specific preference actions like preferred resources should not sit in the primary row chrome on admin management lists; keep them in overflow actions until there is a dedicated personal-preferences surface
+  - apply the same compact-row rule to organization-admin zones and tags; avoid bringing data grids back for small tag-like management surfaces
 - For the organization admin page specifically:
   - do not stack another fixed left rail and another sticky app bar inside the existing organization shell
   - prefer a centered content column with a compact in-page header and a route-backed sticky top section nav

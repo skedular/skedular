@@ -38,8 +38,12 @@ export enum MoreActionsMenuOptionType {
   ActivateTeamMember,
   EditZone,
   DeleteZone,
+  SetAsPreferredZone,
+  RemoveAsPreferredZone,
   EditCustomTag,
   DeleteCustomTag,
+  SetAsPreferredCustomTag,
+  RemoveAsPreferredCustomTag,
   EditProductTag,
   DeleteProductTag,
   EditResource,
@@ -195,6 +199,16 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     label: 'Remove Zone',
     icon: <DeleteIcon color="warning" />,
   },
+  [MoreActionsMenuOptionType.SetAsPreferredZone]: {
+    id: MoreActionsMenuOptionType.SetAsPreferredZone,
+    label: 'Set as preferred zone',
+    icon: <NotPreferredIcon />,
+  },
+  [MoreActionsMenuOptionType.RemoveAsPreferredZone]: {
+    id: MoreActionsMenuOptionType.RemoveAsPreferredZone,
+    label: 'Remove as preferred zone',
+    icon: <PreferredIcon />,
+  },
   [MoreActionsMenuOptionType.EditCustomTag]: {
     id: MoreActionsMenuOptionType.EditCustomTag,
     label: 'Edit Tag',
@@ -204,6 +218,16 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.DeleteCustomTag,
     label: 'Remove Tag',
     icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.SetAsPreferredCustomTag]: {
+    id: MoreActionsMenuOptionType.SetAsPreferredCustomTag,
+    label: 'Set as preferred tag',
+    icon: <NotPreferredIcon />,
+  },
+  [MoreActionsMenuOptionType.RemoveAsPreferredCustomTag]: {
+    id: MoreActionsMenuOptionType.RemoveAsPreferredCustomTag,
+    label: 'Remove as preferred tag',
+    icon: <PreferredIcon />,
   },
   [MoreActionsMenuOptionType.EditProductTag]: {
     id: MoreActionsMenuOptionType.EditProductTag,

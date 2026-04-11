@@ -261,7 +261,7 @@ These patterns should be designed once and reused many times:
   - prefer a compact resource management list that can handle dozens of desks/rooms in one page, with drill-down details and explicit bulk actions
   - resource rows should expose real zone/custom/product tag chips inline in the list, with the expanded state reserved for fuller detail instead of basic classification
   - keep user-specific preference actions like preferred resources in row overflow actions rather than persistent star chrome on admin management lists
-- for the organization admin editor:
+  - for the organization admin editor:
   - use the same page shell language as location detail and setup flows:
     - `PageHeaderPanel`
     - `SettingsSectionCard`
@@ -270,6 +270,7 @@ These patterns should be designed once and reused many times:
   - do not turn the admin surface back into one giant page just because the shared section cards exist
   - do not use right-side summary rails on route-backed setup/admin surfaces; let the active section own the page width
   - treat data grids like zones and tags as settings surfaces inside shared section cards, not as ad hoc blocks with local headers and dividers
+  - zones and custom tags should use compact management rows with overflow actions, not DataGrid-heavy spreadsheet layouts
 
 Recently completed migrations:
 

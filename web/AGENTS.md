@@ -61,6 +61,8 @@ web/
   drill-down details instead of count-heavy summaries or wide grid-first layouts.
 - Keep user-specific preference actions such as preferred resources out of the main admin row chrome; place them in
   overflow actions unless the product has a dedicated personal-preferences surface.
+- For organization-admin zones and tags, prefer compact management rows over generic data grids; these are tag-like
+  management surfaces, not spreadsheet surfaces.
 - The current testing direction is Vitest + React Testing Library from `web/apps/webapp`, with coverage allowed to
   extend into Relay-free workspace packages such as `web/packages/ui`.
 - In `web/apps/webapp`, prefer Relay colocation. Fragments and small queries should live beside the component that uses
