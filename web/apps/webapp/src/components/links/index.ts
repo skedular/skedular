@@ -157,8 +157,6 @@ export const getOrganizationTeamSetupBaseLink = (integratedPlatrform: string | u
   `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/${teamId}?section=setup`;
 export const getOrganizationTeamMembersBaseLink = (integratedPlatrform: string | undefined, id: string, teamId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/${teamId}?section=members`;
-export const getOrganizationTeamLocationBaseLink = (integratedPlatrform: string | undefined, id: string, teamId: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/${teamId}?section=location`;
 export const getOrganizationTeamManageTeamBaseLink = (integratedPlatrform: string | undefined, id: string, teamId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/${teamId}?section=manage-team`;
 export const getOrganizationBookingBaseLink = (integratedPlatrform: string | undefined, id: string, bookingId: string) =>

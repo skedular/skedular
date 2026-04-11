@@ -64,8 +64,6 @@ const teamSchema = object({
 
 const getActiveSection = (value: string | null): OrganizationTeamSection => {
   switch (value) {
-    case 'location':
-      return 'location';
     case 'members':
       return 'members';
     case 'manage-team':
@@ -832,33 +830,6 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
 
   const renderActiveSection = () => {
     switch (activeSection) {
-      case 'location':
-        return (
-          <Form
-            onSubmit={handleTeamDetailUpdateClick}
-            initialValues={teamFormInitialValues}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <SectionIconTypography label="Location Settings" />
-                  <BodyIconTypography label="Assign team to a primary location." />
-                  <Divider />
-                </StackColumn>
-
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Primary Location">
-                    <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
-                  </FormFieldLabel>
-                </StackColumn>
-
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
-                  <EditorActionBar primaryAction="Update" />
-                </StackColumn>
-              </FormStackColumn>
-            )}
-          />
-        );
       case 'members':
         return (
           <Box sx={{ p: defaultPadding }}>
@@ -986,6 +957,10 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
 
                   <FormFieldLabel label="Timezone">
                     <SingleChoinceTimezone name="timezone" required={requiredTeamDetailsFields.timezone} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Primary Location">
+                    <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
                   </FormFieldLabel>
                 </StackColumn>
 

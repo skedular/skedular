@@ -1,10 +1,4 @@
-import {
-  getOrganizationBookingsBaseLink,
-  getOrganizationTeamLocationBaseLink,
-  getOrganizationTeamManageTeamBaseLink,
-  getOrganizationTeamMembersBaseLink,
-  getOrganizationTeamSetupBaseLink,
-} from '@/components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationTeamManageTeamBaseLink, getOrganizationTeamMembersBaseLink, getOrganizationTeamSetupBaseLink } from '@/components/links';
 import { useIntegratedPlatrform } from '@/libs/providers';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -15,7 +9,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import NextLink from 'next/link';
 import { memo, useState, type MouseEvent } from 'react';
 
-export type OrganizationTeamSection = 'setup' | 'location' | 'members' | 'manage-team';
+export type OrganizationTeamSection = 'setup' | 'members' | 'manage-team';
 
 type Props = {
   activeSection: OrganizationTeamSection;
@@ -26,7 +20,6 @@ type Props = {
 
 const sectionLabels: Record<OrganizationTeamSection, string> = {
   setup: 'Team Setup',
-  location: 'Location',
   members: 'Members',
   'manage-team': 'Manage',
 };
@@ -39,7 +32,6 @@ const OrganizationTeamSectionNav = ({ activeSection, organizationCustomDomain, t
   const bookingsLink = getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain, { teamId });
   const sectionLinks: Record<OrganizationTeamSection, string> = {
     setup: getOrganizationTeamSetupBaseLink(integratedPlatrform, organizationCustomDomain, teamId),
-    location: getOrganizationTeamLocationBaseLink(integratedPlatrform, organizationCustomDomain, teamId),
     members: getOrganizationTeamMembersBaseLink(integratedPlatrform, organizationCustomDomain, teamId),
     'manage-team': getOrganizationTeamManageTeamBaseLink(integratedPlatrform, organizationCustomDomain, teamId),
   };

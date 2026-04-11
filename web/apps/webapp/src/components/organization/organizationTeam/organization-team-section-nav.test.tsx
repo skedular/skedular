@@ -38,7 +38,6 @@ vi.mock(import('@/libs/providers'), async (importOriginal) => {
 vi.mock('@/components/links', () => ({
   getOrganizationBookingsBaseLink: () => '/organizations/acme/bookings?teamId=team-1',
   getOrganizationTeamSetupBaseLink: () => '/organizations/acme/teams/team-1?section=setup',
-  getOrganizationTeamLocationBaseLink: () => '/organizations/acme/teams/team-1?section=location',
   getOrganizationTeamMembersBaseLink: () => '/organizations/acme/teams/team-1?section=members',
   getOrganizationTeamManageTeamBaseLink: () => '/organizations/acme/teams/team-1?section=manage-team',
 }));
