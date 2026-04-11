@@ -1,16 +1,13 @@
-import { GridContainer, PushToRight, SectionIconTypography, StackColumn } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import NewProductButton from '@/components/product/addProduct/new-product-button';
 import { RelayError, toRootError } from '@/components/relayError';
-import { defaultPadding, maxScreenWidth } from '@/libs/theme';
 import type { organizationProducts_rootQuery } from '@/queries/__generated__/organizationProducts_rootQuery.graphql';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/system/Box';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
+import OrganizationProductsPageShell from './organization-products-page-shell';
 import ProductCard from './product-card';
 
 type Props = {
@@ -38,7 +35,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationProducts = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
+const OrganizationProducts = ({ queryReference, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<organizationProducts_rootQuery>(RootQuery, queryReference);
   const connectionIds = useMemo(() => [rootData.products.__id], [rootData.products]);
   const products = useMemo(() => rootData.products.edges.map((edge) => edge.node), [rootData.products]);
@@ -48,31 +45,13 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationCu
   }
 
   return (
-    <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-      <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-        <PushToRight />
-        <NewProductButton organizationCustomDomain={organizationCustomDomain} />
-      </GridContainer>
-      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-        <SectionIconTypography label="Products" />
-        <Divider />
-        <Box sx={{ paddingBottom: defaultPadding }} />
-
-        <GridContainer>
-          {products.map((product) => (
-            <Grid key={product.id}>
-              <ProductCard
-                rootDataRelay={rootData}
-                productDetailsRelay={product}
-                onReloadRequired={onReloadRequired}
-                organizationCustomDomain={organizationCustomDomain}
-                connectionIds={connectionIds}
-              />
-            </Grid>
-          ))}
-        </GridContainer>
-      </StackColumn>
-    </StackColumn>
+    <OrganizationProductsPageShell actions={<NewProductButton organizationCustomDomain={organizationCustomDomain} />} isEmpty={products.length === 0}>
+      {products.map((product) => (
+        <Box key={product.id} sx={{ height: '100%' }}>
+          <ProductCard rootDataRelay={rootData} productDetailsRelay={product} organizationCustomDomain={organizationCustomDomain} connectionIds={connectionIds} />
+        </Box>
+      ))}
+    </OrganizationProductsPageShell>
   );
 };
 

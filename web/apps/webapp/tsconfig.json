@@ -25,6 +25,12 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@skedular/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@skedular/ui/*": [
+        "../../packages/ui/src/*"
       ]
     }
   },

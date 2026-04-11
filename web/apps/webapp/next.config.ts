@@ -5,6 +5,7 @@ const isVercel = process.env.VERCEL === "1";
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["mapp.skedular.app"],
+  transpilePackages: ["@skedular/ui"],
   compiler: {
     relay: {
       ...relayConfig,

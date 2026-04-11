@@ -1,7 +1,7 @@
 import { createTheme, PaletteMode, Shadows } from '@mui/material/styles';
 
-const barlowFontFamily = ['Barlow'].join(',');
-const interFontFamily = ['Inter'].join(',');
+const barlowFontFamily = ['var(--font-barlow)', 'sans-serif'].join(',');
+const interFontFamily = ['var(--font-inter)', 'sans-serif'].join(',');
 const defaultTheme = createTheme();
 const customShadows: Shadows = [...defaultTheme.shadows];
 

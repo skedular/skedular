@@ -1,10 +1,27 @@
 import type { Metadata, Viewport } from 'next';
-import { Barlow, Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 import type { PropsWithChildren } from 'react';
 import ClientRootLayout from './client-root-layout';
+import './fonts.css';
 
-const inter = Inter({ subsets: ['latin'], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] });
-const barlow = Barlow({ subsets: ['latin'], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] });
+const inter = localFont({
+  src: './fonts/InterVariable.woff2',
+  variable: '--font-inter',
+  display: 'swap',
+  adjustFontFallback: false,
+});
+
+const barlow = localFont({
+  src: [
+    { path: './fonts/Barlow-Regular.ttf', weight: '400', style: 'normal' },
+    { path: './fonts/Barlow-Medium.ttf', weight: '500', style: 'normal' },
+    { path: './fonts/Barlow-SemiBold.ttf', weight: '600', style: 'normal' },
+    { path: './fonts/Barlow-Bold.ttf', weight: '700', style: 'normal' },
+  ],
+  variable: '--font-barlow',
+  display: 'swap',
+  adjustFontFallback: false,
+});
 
 export const metadata: Metadata = {
   title: 'Skedular',
@@ -19,8 +36,8 @@ export const viewport: Viewport = {
 };
 
 const RootLayout = ({ children }: PropsWithChildren) => (
-  <html lang="en" dir="ltr" suppressHydrationWarning>
-    <body className={`${inter.className} ${barlow.className}`}>
+  <html lang="en" dir="ltr" suppressHydrationWarning className={`${inter.variable} ${barlow.variable}`}>
+    <body>
       <ClientRootLayout>{children}</ClientRootLayout>
     </body>
   </html>

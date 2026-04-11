@@ -41,6 +41,14 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "test": {
+      "dependsOn": ["^test"],
+      "outputs": []
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
     "lint-fix": {
       "dependsOn": ["^lint-fix"]
     },
@@ -59,6 +67,14 @@
     },
     "webapp#lint": {
       "dependsOn": ["^lint"]
+    },
+    "webapp#test": {
+      "dependsOn": ["^test"],
+      "outputs": []
+    },
+    "webapp#test:watch": {
+      "cache": false,
+      "persistent": true
     },
     "webapp#lint-fix": {
       "dependsOn": ["^lint-fix"]

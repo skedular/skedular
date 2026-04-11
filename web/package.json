@@ -6,7 +6,7 @@
     "node": "^22"
   },
   "packageManager": "pnpm@10.33.0",
-  "workspace": [
+  "workspaces": [
     "apps/*",
     "packages/*"
   ],
@@ -16,12 +16,16 @@
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
     "lint-fix": "turbo run lint-fix",
     "format": "turbo run format",
     "relay": "turbo run relay",
     "webapp#build": "turbo run webapp#build",
     "webapp#start": "turbo run webapp#start",
     "webapp#lint": "turbo run webapp#lint",
+    "webapp#test": "turbo run webapp#test",
+    "webapp#test:watch": "turbo run webapp#test:watch",
     "webapp#lint-fix": "turbo run webapp#lint-fix",
     "webapp#format": "turbo run webapp#format",
     "webapp#relay": "turbo run webapp#relay",

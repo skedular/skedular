@@ -46,3 +46,10 @@ web/
 - Do not hand-edit generated type files; change the source and regenerate.
 - Changes to backend GraphQL enums or fields require regenerating the Relay artifacts to keep web types in sync.
 - Keep `pnpm-lock.yaml` consistent; use `pnpm install` rather than `npm install` or `yarn`.
+- For broad UI work in `web/apps/webapp`, follow `web/apps/webapp/docs/ui-redesign-program.md`.
+- The long-term direction is a reusable web design system under `web/packages/*`, but only extract patterns that are
+  already stable across more than one domain surface.
+- The current testing direction is Vitest + React Testing Library from `web/apps/webapp`, with coverage allowed to
+  extend into Relay-free workspace packages such as `web/packages/ui`.
+- In `web/apps/webapp`, prefer Relay colocation. Fragments and small queries should live beside the component that uses
+  them instead of being abstracted into reusable fragment files by default.
