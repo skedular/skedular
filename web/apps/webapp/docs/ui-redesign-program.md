@@ -237,6 +237,13 @@ These patterns should be designed once and reused many times:
 - timeline/status pattern
 - action panels
 - list filters and batch affordances
+- home-page "My Bookings" should follow the same collection language as teams and locations:
+  - dedicated page shell
+  - bounded compact card grid
+  - no list/grid toggle once the card pattern is strong enough
+  - booking cards should surface location, time, payment state, and concise resource/tag previews instead of stacking full record detail sections
+  - when onboarding/getting-started is shown on the home page, it should sit above the filter bar and bookings collection as a temporary orientation block, not between the working controls and the cards
+  - filter controls for home bookings and full bookings pages should use the same surfaced toolbar treatment as other collection pages
 
 ### Locations / Resources / Teams
 

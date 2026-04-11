@@ -65,6 +65,10 @@ web/
   management surfaces, not spreadsheet surfaces.
 - For organization collection pages, prefer one shared page-shell language and bounded card grids instead of preserving
   older list/grid toggle patterns per domain surface.
+- Apply the same rule to the home bookings collection once it has been redesigned; do not preserve a list/table mode
+  just because it existed before.
+- Home/dashboard and booking collection filter controls should live on surfaced toolbar panels, not bare rows floating on
+  the page background.
 - The current testing direction is Vitest + React Testing Library from `web/apps/webapp`, with coverage allowed to
   extend into Relay-free workspace packages such as `web/packages/ui`.
 - In `web/apps/webapp`, prefer Relay colocation. Fragments and small queries should live beside the component that uses

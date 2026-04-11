@@ -336,9 +336,9 @@ const dateRangeToShortDateWithAdditionalDayInfo = (from: Dayjs, until: Dayjs): s
 
   if (isMidnight(utcFrom) && isMidnight(utcUntil)) {
     if (utcFrom.add(1, 'day').isSame(utcUntil)) {
-      return `${toShortDateWithAdditionalDayInfo(utcFrom)} All Day`;
+      return `${toShortDateWithAdditionalDayInfo(utcFrom)}`;
     } else {
-      return `${toShortDateWithAdditionalDayInfo(utcFrom)} - ${toShortDateWithAdditionalDayInfo(utcUntil)} All Day`;
+      return `${toShortDateWithAdditionalDayInfo(utcFrom)} - ${toShortDateWithAdditionalDayInfo(utcUntil)}`;
     }
   } else {
     if (utcFrom.isSame(utcUntil, 'day')) {
@@ -488,8 +488,8 @@ export {
   isInSameMonth,
   isInSameWeek,
   isInSameYear,
-  isStoredFullDayRange,
   isMidnight,
+  isStoredFullDayRange,
   isTodayDate,
   isTomorrowDate,
   isYesterdayDate,
@@ -512,7 +512,7 @@ export {
   toShortDateWithAdditionalDayInfo,
   toShortDateWithDayAndMonthOnly,
   toShortDateWithoutWeekDay,
-  toStoredBookingTimeRange,
   toShortTime,
   toShortWeekDay,
+  toStoredBookingTimeRange,
 };

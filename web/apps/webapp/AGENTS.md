@@ -64,6 +64,12 @@ scripts/
   - short status chip row
   - 2-3 preview panels instead of full detail dumps
   - a short CTA/action row at the bottom
+- For home-page booking collections specifically:
+  - remove list/grid toggles once the surface has moved to the compact collection-card pattern
+  - prefer a bounded card grid and a dedicated bookings page shell over a divider-heavy section with table fallback
+  - booking cards should emphasize location, time, payment state, and a compact booking-detail preview rather than behaving like mini record detail pages
+  - if onboarding/getting-started content is present, place it above the working filter/collection surface rather than burying it between the filter bar and the cards
+  - top filter bars on home and booking collection pages should sit on the same surfaced white panel language as the newer collection pages
 - For compact location cards specifically:
   - keep the card focused on booking context, not management detail dumps
   - prefer this panel order: availability, address, then zones when zones exist

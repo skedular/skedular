@@ -12,10 +12,20 @@ import { defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { endOfWeek, startOfDay, startOfWeek } from '@/libs/utils';
 import type { organizationBookings_rootQuery } from '@/queries/__generated__/organizationBookings_rootQuery.graphql';
 import { Dayjs } from 'dayjs';
+import Box from '@mui/system/Box';
+import type { SxProps, Theme } from '@mui/system';
 import { useSearchParams } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+
+const filterSurfaceSx: SxProps<Theme> = {
+  borderRadius: 4,
+  border: 1,
+  borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+  backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.88)' : theme.palette.background.paper),
+  boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : '0 1px 3px rgba(0, 0, 0, 0.24)'),
+};
 
 type Props = {
   queryReference: PreloadedQuery<organizationBookings_rootQuery, Record<string, unknown>>;
@@ -107,16 +117,20 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationCu
   }
 
   return (
-    <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-      <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-        <OrganizationUserSelector rootDataOrganizationMembersRelay={rootData} onChange={handlCustomerChanged} defaultValue={customerId} />
-        <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} defaultValue={locationId} />
-        <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} defaultValue={teamId} />
-        <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
-        <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
-        <PushToRight />
-        <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationCustomDomain={organizationCustomDomain} />
-      </GridContainer>
+    <StackColumn sx={{ maxWidth: maxScreenWidth, width: '100%' }} spacing={2}>
+      <Box sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+        <Box sx={{ ...filterSurfaceSx, px: 2, py: 1.5 }}>
+          <GridContainer spacing={1}>
+            <OrganizationUserSelector rootDataOrganizationMembersRelay={rootData} onChange={handlCustomerChanged} defaultValue={customerId} />
+            <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} defaultValue={locationId} />
+            <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} defaultValue={teamId} />
+            <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
+            <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
+            <PushToRight />
+            <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationCustomDomain={organizationCustomDomain} />
+          </GridContainer>
+        </Box>
+      </Box>
       <Bookings
         rootDataRelay={rootData}
         rootDataBookingRelay={rootData}
