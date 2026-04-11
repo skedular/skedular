@@ -8,6 +8,7 @@ import {
   SmallIconTypography,
   TwoButtonsDialogActions,
 } from '@/components/commons';
+import { Autocomplete } from '@/components/forms';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
@@ -20,7 +21,7 @@ import type { addResourceDialog_rootQuery } from '@/queries/__generated__/addRes
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
-import { Autocomplete, makeRequired, makeValidate, TextField } from 'mui-rff';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';

@@ -1,8 +1,8 @@
 import { BodyIconTypography } from '@/components/commons';
+import { Autocomplete } from '@/components/forms';
 import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import type { multipleChoicesCustomTags_query$key } from '@/queries/__generated__/multipleChoicesCustomTags_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
-import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
