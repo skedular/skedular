@@ -1022,6 +1022,7 @@ const OrganizationLocationPage = ({ rootDataRelay, onReloadRequired, organizatio
                           backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
                         }}
                       >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
                           <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
@@ -1273,7 +1274,8 @@ const OrganizationLocationPage = ({ rootDataRelay, onReloadRequired, organizatio
         <StackColumn sx={{ px: { xs: 2, sm: 3 }, pt: defaultPadding, pb: 1 }}>
           <StackColumn spacing={0.5}>
             <BodyIconTypography label="Location settings" />
-            <LeadIconTypography label={location.name} />
+            <LeadIconTypography label="Setup & operations" />
+            <BodyIconTypography label="Details, address, opening hours, floor plans, and resources" />
           </StackColumn>
         </StackColumn>
 

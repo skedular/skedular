@@ -77,7 +77,13 @@ scripts/
 - For the organization location detail page specifically:
   - do not reintroduce a nested left rail inside the broader organization shell
   - use a route-backed local top section nav for setup-style subsections
+  - collapse that section nav to a single menu-trigger button on narrower screens instead of wrapping or relying on horizontal overflow
   - keep heavy admin collections such as resources and floor plans behind section-scoped Relay queries so they are not fetched on first load
+- For the organization admin page specifically:
+  - do not stack another fixed left rail and another sticky app bar inside the existing organization shell
+  - prefer a centered content column with a compact in-page header and a route-backed sticky top section nav
+  - use the same responsive collapse pattern for the top section nav on medium and smaller widths
+  - keep shell-level back navigation in the shell breadcrumbs/app bar instead of duplicating it inside the page body
 - Avoid embedding maps, full carousels, or other heavy detail widgets directly inside dense list cards unless the card is explicitly a media-first browsing surface.
 - The long-term target is extraction into `web/packages/*`, but do not extract unstable domain-specific widgets too
   early.

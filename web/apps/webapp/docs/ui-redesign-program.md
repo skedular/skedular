@@ -238,8 +238,14 @@ These patterns should be designed once and reused many times:
   - if the surface stays card-only, trim the Relay selections and page-level mutations that only existed for the old list/table mode
 - for the organization location detail editor:
   - prefer a local top section nav over an inner fixed left submenu
+  - collapse the top section nav into a single section-menu trigger on narrower screens instead of letting pills wrap or overflow awkwardly
   - treat section changes as route-backed sub-surfaces, not one giant scrolled form
   - move infrequently used heavy data like floor plans and resources to section-scoped queries so the initial editor load stays focused on setup data
+- for the organization admin editor:
+  - remove nested page-level left rails and inner dark app bars when the organization shell already provides the primary chrome
+  - use a simple centered header plus a sticky top section nav for setup/admin subsections
+  - use the same responsive section-menu fallback on medium and smaller widths
+  - avoid duplicating back actions inside the page body when the shell already provides navigation context
 - detail/edit redesign
 - shared admin editor patterns
 

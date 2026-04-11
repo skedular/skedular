@@ -1,11 +1,13 @@
 import {
-  getOrganizationBookingsBaseLink,
-  getOrganizationLocationFloorPlansBaseLink,
-  getOrganizationLocationManageLocationBaseLink,
-  getOrganizationLocationManageResourcesBaseLink,
-  getOrganizationLocationOpeningHoursBaseLink,
-  getOrganizationLocationPhysicalAddressSetupBaseLink,
-  getOrganizationLocationSetupBaseLink,
+  getOrganizationAdminBillingAndPaymentBaseLink,
+  getOrganizationAdminCustomTagsBaseLink,
+  getOrganizationAdminManageOrganizationBaseLink,
+  getOrganizationAdminPhysicalAddressBaseLink,
+  getOrganizationAdminSetupBaseLink,
+  getOrganizationAdminSsoSettingsBaseLink,
+  getOrganizationAdminSubscriptionsBaseLink,
+  getOrganizationAdminTaxDetailsBaseLink,
+  getOrganizationAdminZonesBaseLink,
 } from '@/components/links';
 import { useIntegratedPlatrform } from '@/libs/providers';
 import Box from '@mui/material/Box';
@@ -17,37 +19,50 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import NextLink from 'next/link';
 import { memo, useState, type MouseEvent } from 'react';
 
-export type OrganizationLocationSection = 'setup' | 'physical-address-setup' | 'opening-hours' | 'floor-plans' | 'manage-resources' | 'manage-location';
+export type OrganizationAdminSection =
+  | 'setup'
+  | 'physical-address-setup'
+  | 'billing-payment-setup'
+  | 'sso-setup'
+  | 'tax-details-setup'
+  | 'zones-setup'
+  | 'tags-setup'
+  | 'subscriptions'
+  | 'manage-organization';
 
 type Props = {
-  activeSection: OrganizationLocationSection;
+  activeSection: OrganizationAdminSection;
   organizationCustomDomain: string;
-  locationId: string;
   stickyTop?: number;
 };
 
-const sectionLabels: Record<OrganizationLocationSection, string> = {
-  setup: 'Location Setup',
-  'physical-address-setup': 'Physical Address',
-  'opening-hours': 'Opening Hours',
-  'floor-plans': 'Floor Plans',
-  'manage-resources': 'Resources',
-  'manage-location': 'Manage',
+const sectionLabels: Record<OrganizationAdminSection, string> = {
+  setup: 'Setup',
+  'physical-address-setup': 'Address',
+  'billing-payment-setup': 'Billing',
+  'sso-setup': 'SSO',
+  'tax-details-setup': 'Tax',
+  'zones-setup': 'Zones',
+  'tags-setup': 'Tags',
+  subscriptions: 'Subscriptions',
+  'manage-organization': 'Manage',
 };
 
-const OrganizationLocationSectionNav = ({ activeSection, organizationCustomDomain, locationId, stickyTop = 0 }: Props) => {
+const OrganizationAdminSectionNav = ({ activeSection, organizationCustomDomain, stickyTop = 0 }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const theme = useTheme();
   const isCompactNav = useMediaQuery(theme.breakpoints.down('md'), { noSsr: true });
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const bookingsLink = getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain, { locationId });
-  const sectionLinks: Record<OrganizationLocationSection, string> = {
-    setup: getOrganizationLocationSetupBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'physical-address-setup': getOrganizationLocationPhysicalAddressSetupBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'opening-hours': getOrganizationLocationOpeningHoursBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'floor-plans': getOrganizationLocationFloorPlansBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'manage-resources': getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'manage-location': getOrganizationLocationManageLocationBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
+  const sectionLinks: Record<OrganizationAdminSection, string> = {
+    setup: getOrganizationAdminSetupBaseLink(integratedPlatrform, organizationCustomDomain),
+    'physical-address-setup': getOrganizationAdminPhysicalAddressBaseLink(integratedPlatrform, organizationCustomDomain),
+    'billing-payment-setup': getOrganizationAdminBillingAndPaymentBaseLink(integratedPlatrform, organizationCustomDomain),
+    'sso-setup': getOrganizationAdminSsoSettingsBaseLink(integratedPlatrform, organizationCustomDomain),
+    'tax-details-setup': getOrganizationAdminTaxDetailsBaseLink(integratedPlatrform, organizationCustomDomain),
+    'zones-setup': getOrganizationAdminZonesBaseLink(integratedPlatrform, organizationCustomDomain),
+    'tags-setup': getOrganizationAdminCustomTagsBaseLink(integratedPlatrform, organizationCustomDomain),
+    subscriptions: getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, organizationCustomDomain),
+    'manage-organization': getOrganizationAdminManageOrganizationBaseLink(integratedPlatrform, organizationCustomDomain),
   };
 
   const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {
@@ -63,8 +78,6 @@ const OrganizationLocationSectionNav = ({ activeSection, organizationCustomDomai
       sx={{
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
-        alignItems: { xs: 'stretch', md: 'center' },
-        gap: 1,
         px: { xs: 2, sm: 3 },
         py: 2,
         borderBottom: 1,
@@ -83,7 +96,7 @@ const OrganizationLocationSectionNav = ({ activeSection, organizationCustomDomai
             onClick={handleOpenMenu}
             aria-haspopup="menu"
             aria-expanded={menuAnchor ? 'true' : undefined}
-            aria-controls={menuAnchor ? 'organization-location-sections-menu' : undefined}
+            aria-controls={menuAnchor ? 'organization-admin-sections-menu' : undefined}
             sx={{
               justifyContent: 'space-between',
               borderRadius: 999,
@@ -94,8 +107,8 @@ const OrganizationLocationSectionNav = ({ activeSection, organizationCustomDomai
             {`Section: ${sectionLabels[activeSection]}`}
           </Button>
 
-          <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleCloseMenu} id="organization-location-sections-menu">
-            {(Object.keys(sectionLabels) as OrganizationLocationSection[]).map((section) => (
+          <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleCloseMenu} id="organization-admin-sections-menu">
+            {(Object.keys(sectionLabels) as OrganizationAdminSection[]).map((section) => (
               <MenuItem key={section} component={NextLink} href={sectionLinks[section]} selected={activeSection === section} onClick={handleCloseMenu}>
                 {sectionLabels[section]}
               </MenuItem>
@@ -116,7 +129,7 @@ const OrganizationLocationSectionNav = ({ activeSection, organizationCustomDomai
             },
           }}
         >
-          {(Object.keys(sectionLabels) as OrganizationLocationSection[]).map((section) => (
+          {(Object.keys(sectionLabels) as OrganizationAdminSection[]).map((section) => (
             <Button
               key={section}
               component={NextLink}
@@ -136,25 +149,8 @@ const OrganizationLocationSectionNav = ({ activeSection, organizationCustomDomai
           ))}
         </Box>
       )}
-
-      <Button
-        component={NextLink}
-        href={bookingsLink}
-        variant="outlined"
-        color="inherit"
-        sx={{
-          flexShrink: 0,
-          borderRadius: 999,
-          alignSelf: { xs: 'stretch', md: 'center' },
-          px: 2,
-          textTransform: 'none',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        View location bookings
-      </Button>
     </Box>
   );
 };
 
-export default memo(OrganizationLocationSectionNav);
+export default memo(OrganizationAdminSectionNav);
