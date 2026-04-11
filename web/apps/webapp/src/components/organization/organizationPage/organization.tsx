@@ -89,10 +89,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationCustomDoma
 
   return (
     <StackColumn sx={{ maxWidth: maxScreenWidth, width: '100%' }} spacing={2}>
-      <Box sx={{ display: { xs: 'none', sm: 'block' }, paddingTop: defaultPadding }}>
-        <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
-      </Box>
-      <Box sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+      <Box sx={{ paddingTop: defaultPadding, paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
         <Box sx={{ ...filterSurfaceSx, px: 2, py: 1.5 }}>
           <GridContainer spacing={1}>
             <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
@@ -105,6 +102,9 @@ const Organization = ({ queryReference, onReloadRequired, organizationCustomDoma
             )}
           </GridContainer>
         </Box>
+      </Box>
+      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+        <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
       </Box>
       <MyBookings
         rootDataRelay={rootData}
