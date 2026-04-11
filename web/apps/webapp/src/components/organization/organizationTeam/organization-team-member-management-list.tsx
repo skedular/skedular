@@ -1,7 +1,14 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
-import { defaultButtonStyle, defaultGridActionPadding, emerald, flame } from '@/libs/theme';
+import {
+  compactManagementActionButtonSx,
+  compactManagementIconButtonSx,
+  compactManagementNeutralChipSx,
+  compactManagementWarningChipSx,
+  defaultButtonStyle,
+  defaultGridActionPadding,
+} from '@/libs/theme';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -38,11 +45,6 @@ type Props = {
   onActivateSelected: (memberIds: string[]) => void;
   onRemoveSelected: (memberIds: string[]) => void;
 };
-
-const statusChipSx = (color: string) => ({
-  backgroundColor: `${color}22`,
-  color,
-});
 
 const OrganizationTeamMemberManagementList = ({
   items,
@@ -134,10 +136,10 @@ const OrganizationTeamMemberManagementList = ({
                     <Box sx={{ minWidth: 0, maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       <LeadIconTypography label={item.name} />
                     </Box>
-                    <Chip size="small" label={item.isActive ? 'Active' : 'Inactive'} sx={item.isActive ? statusChipSx(emerald) : statusChipSx(flame)} />
-                    <Chip size="small" variant="outlined" label={item.role || 'No role'} />
+                    <Chip size="small" label={item.isActive ? 'Active' : 'Inactive'} sx={item.isActive ? compactManagementNeutralChipSx : compactManagementWarningChipSx} />
                   </StackRow>
                   <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
+                    <SmallIconTypography label={`Role: ${item.role || 'Not assigned'}`} sx={{ color: 'text.secondary', fontWeight: 600 }} />
                     {item.email ? <SmallIconTypography label={item.email} /> : null}
                     {item.phoneNumber ? <SmallIconTypography label={item.phoneNumber} /> : null}
                   </StackRow>
@@ -149,11 +151,11 @@ const OrganizationTeamMemberManagementList = ({
                     onClick={(event: React.MouseEvent<HTMLElement>) => {
                       onOpenChangeRole(item.id, event.currentTarget);
                     }}
-                    sx={{ textTransform: 'none' }}
+                    sx={compactManagementActionButtonSx}
                   >
                     Change role
                   </Button>
-                  <Button variant="text" onClick={() => handleToggleExpanded(item.id)} sx={{ textTransform: 'none', minWidth: 0 }}>
+                  <Button variant="text" onClick={() => handleToggleExpanded(item.id)} sx={compactManagementActionButtonSx}>
                     {isExpanded ? 'Hide details' : 'Details'}
                   </Button>
                   <IconButton
@@ -161,6 +163,7 @@ const OrganizationTeamMemberManagementList = ({
                       onOpenMoreActions(item.id, event.currentTarget);
                     }}
                     aria-label={`More actions for ${item.name}`}
+                    sx={compactManagementIconButtonSx}
                   >
                     <EllipseMenuIcon />
                   </IconButton>

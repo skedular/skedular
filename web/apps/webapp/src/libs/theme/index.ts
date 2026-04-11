@@ -1,4 +1,8 @@
 export {
+  compactManagementActionButtonSx,
+  compactManagementIconButtonSx,
+  compactManagementNeutralChipSx,
+  compactManagementWarningChipSx,
   default as createTheme,
   defaultButtonStyle,
   defaultGridActionPadding,

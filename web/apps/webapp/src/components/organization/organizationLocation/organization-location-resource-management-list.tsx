@@ -4,7 +4,13 @@ import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
 import { ProductTags } from '@/components/productTag';
 import { ResourceType } from '@/components/resourceType';
 import { Zones } from '@/components/zone';
-import { defaultGridActionPadding, emerald, flame } from '@/libs/theme';
+import {
+  compactManagementActionButtonSx,
+  compactManagementIconButtonSx,
+  compactManagementNeutralChipSx,
+  compactManagementWarningChipSx,
+  defaultGridActionPadding,
+} from '@/libs/theme';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -153,28 +159,14 @@ const OrganizationLocationResourceManagementList = ({
                 <StackRow sx={{ gap: 0.75, ml: 'auto', alignItems: 'center', flexWrap: 'nowrap', flexShrink: 0 }}>
                   <Chip size="small" label={`Capacity ${item.capacity}`} />
                   {item.isActive ? (
-                    <Chip
-                      size="small"
-                      label="Active"
-                      sx={{
-                        backgroundColor: `${emerald}22`,
-                        color: emerald,
-                      }}
-                    />
+                    <Chip size="small" label="Active" sx={compactManagementNeutralChipSx} />
                   ) : (
-                    <Chip
-                      size="small"
-                      label="Inactive"
-                      sx={{
-                        backgroundColor: `${flame}22`,
-                        color: flame,
-                      }}
-                    />
+                    <Chip size="small" label="Inactive" sx={compactManagementWarningChipSx} />
                   )}
-                  <Button variant="text" onClick={() => onOpenResource(item.id)} sx={{ textTransform: 'none' }}>
+                  <Button variant="text" onClick={() => onOpenResource(item.id)} sx={compactManagementActionButtonSx}>
                     Open
                   </Button>
-                  <Button variant="text" onClick={() => handleToggleExpanded(item.id)} sx={{ textTransform: 'none', minWidth: 0 }}>
+                  <Button variant="text" onClick={() => handleToggleExpanded(item.id)} sx={compactManagementActionButtonSx}>
                     {isExpanded ? 'Hide details' : 'Details'}
                   </Button>
                   <IconButton
@@ -182,6 +174,7 @@ const OrganizationLocationResourceManagementList = ({
                       onOpenMoreActions(item.id, event.currentTarget);
                     }}
                     aria-label={`More actions for ${item.resourceName}`}
+                    sx={compactManagementIconButtonSx}
                   >
                     <EllipseMenuIcon />
                   </IconButton>

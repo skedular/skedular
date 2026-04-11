@@ -1,7 +1,7 @@
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
 import { CompleteOnboardStripeConnectAccountButton } from '@/components/stripeConnectAccount';
-import { defaultGridActionPadding, emerald } from '@/libs/theme';
+import { compactManagementActionButtonSx, compactManagementIconButtonSx, compactManagementNeutralChipSx, defaultGridActionPadding } from '@/libs/theme';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -112,16 +112,7 @@ const OrganizationMarketplaceStripeConnectAccountManagementList = ({ items, sele
                     <Box sx={{ minWidth: 0, maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       <LeadIconTypography label={item.name} />
                     </Box>
-                    {item.isDefault ? (
-                      <Chip
-                        size="small"
-                        label="Default"
-                        sx={{
-                          backgroundColor: `${emerald}22`,
-                          color: emerald,
-                        }}
-                      />
-                    ) : null}
+                    {item.isDefault ? <Chip size="small" label="Default" sx={compactManagementNeutralChipSx} /> : null}
                     {item.defaultCurrency ? <Chip size="small" label={item.defaultCurrency} /> : null}
                   </StackRow>
                   <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
@@ -133,10 +124,10 @@ const OrganizationMarketplaceStripeConnectAccountManagementList = ({ items, sele
 
                 <StackRow sx={{ gap: 0.75, ml: 'auto', alignItems: 'center', flexWrap: 'nowrap', flexShrink: 0 }}>
                   {item.requiresOnboarding ? <CompleteOnboardStripeConnectAccountButton onboardingUrl={item.onboardingUrl} variant="contained" size="small" /> : null}
-                  <Button variant="text" onClick={() => onOpenAccount(item.id)} sx={{ textTransform: 'none' }}>
+                  <Button variant="text" onClick={() => onOpenAccount(item.id)} sx={compactManagementActionButtonSx}>
                     Open
                   </Button>
-                  <Button variant="text" onClick={() => handleToggleExpanded(item.id)} sx={{ textTransform: 'none', minWidth: 0 }}>
+                  <Button variant="text" onClick={() => handleToggleExpanded(item.id)} sx={compactManagementActionButtonSx}>
                     {isExpanded ? 'Hide details' : 'Details'}
                   </Button>
                   <IconButton
@@ -144,6 +135,7 @@ const OrganizationMarketplaceStripeConnectAccountManagementList = ({ items, sele
                       onOpenMoreActions(item.id, event.currentTarget);
                     }}
                     aria-label={`More actions for ${item.name}`}
+                    sx={compactManagementIconButtonSx}
                   >
                     <EllipseMenuIcon />
                   </IconButton>
