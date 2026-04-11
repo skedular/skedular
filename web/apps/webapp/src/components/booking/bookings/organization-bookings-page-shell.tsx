@@ -19,9 +19,9 @@ const surfaceSx: SxProps<Theme> = {
   boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : '0 1px 3px rgba(0, 0, 0, 0.24)'),
 };
 
-const MyBookingsPageShell = ({ isEmpty, emptyMessage = 'No bookings match the current filters.', children }: Props) => (
+const OrganizationBookingsPageShell = ({ isEmpty, emptyMessage = 'No bookings match the current filters.', children }: Props) => (
   <StackColumn sx={{ width: '100%', px: defaultPadding, pb: defaultPadding }} spacing={2}>
-    <PageHeaderPanel title="My Bookings" description="Review the bookings that matter to you for the selected week." />
+    <PageHeaderPanel title="Bookings" description="Review and manage bookings across the organization for the selected week." />
 
     {isEmpty ? (
       <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
@@ -33,4 +33,4 @@ const MyBookingsPageShell = ({ isEmpty, emptyMessage = 'No bookings match the cu
   </StackColumn>
 );
 
-export default MyBookingsPageShell;
+export default OrganizationBookingsPageShell;

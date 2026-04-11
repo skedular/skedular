@@ -2,7 +2,6 @@ import { NewBookingButton } from '@/components/booking/addBooking';
 import { Bookings } from '@/components/booking/bookings';
 import { GridContainer, PushToRight, StackColumn } from '@/components/commons';
 import { WeekRangePicker } from '@/components/datePickers';
-import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
 import { LocationSelector } from '@/components/location/locationSelector';
 import { OrganizationUserSelector } from '@/components/organization/organizationUserSelector';
@@ -85,7 +84,6 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationCu
   const [customerIds, setCustomerIds] = useState<string[]>(customerId ? [customerId] : []);
   const [locationIds, setLocationIds] = useState<string[]>(locationId ? [locationId] : []);
   const [teamIds, setTeamIds] = useState<string[]>(teamId ? [teamId] : []);
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
 
   const handleWeehChanged = (date: Dayjs) => {
     setStartWeek(date);
@@ -104,10 +102,6 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationCu
     setTeamIds(id ? [id] : []);
   };
 
-  const handlViewModeChanged = (newViewMode: 'list' | 'grid') => {
-    setViewMode(newViewMode);
-  };
-
   if (!rootData.myTeams || !rootData.myLocations) {
     return null;
   }
@@ -118,14 +112,13 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationCu
 
   return (
     <StackColumn sx={{ maxWidth: maxScreenWidth, width: '100%' }} spacing={2}>
-      <Box sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+      <Box sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
         <Box sx={{ ...filterSurfaceSx, px: 2, py: 1.5 }}>
           <GridContainer spacing={1}>
             <OrganizationUserSelector rootDataOrganizationMembersRelay={rootData} onChange={handlCustomerChanged} defaultValue={customerId} />
             <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} defaultValue={locationId} />
             <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} defaultValue={teamId} />
             <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
-            <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
             <PushToRight />
             <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationCustomDomain={organizationCustomDomain} />
           </GridContainer>
@@ -134,14 +127,12 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationCu
       <Bookings
         rootDataRelay={rootData}
         rootDataBookingRelay={rootData}
-        onReloadRequired={onReloadRequired}
         organizationCustomDomain={organizationCustomDomain}
         from={startWeek}
         to={endWeek}
         locationIds={locationIds}
         teamIds={teamIds}
         customerIds={customerIds}
-        viewMode={viewMode}
       />
     </StackColumn>
   );

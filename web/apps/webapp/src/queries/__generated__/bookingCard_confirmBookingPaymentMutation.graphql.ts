@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<498e895e08d9b390811f4960052d4899>>
+ * @generated SignedSource<<ebf3c4f3f72f8be0029670b08a3199c9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,7 @@ export type bookingCard_confirmBookingPaymentMutation$data = {
     readonly booking: {
       readonly id: string;
       readonly marketplaceBooking: {
+        readonly id: string;
         readonly paymentStatus: {
           readonly name: string;
           readonly type: PaymentStatus;
@@ -58,78 +59,68 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
-  }
-],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "PaymentStatusDetails",
-  "kind": "LinkedField",
-  "name": "paymentStatus",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "name",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "bookingCard_confirmBookingPaymentMutation",
+v2 = [
+  {
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "BookingPayload",
+    "kind": "LinkedField",
+    "name": "confirmBookingPayment",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "BookingPayload",
+        "args": null,
+        "concreteType": "BookingDetails",
         "kind": "LinkedField",
-        "name": "confirmBookingPayment",
+        "name": "booking",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "BookingDetails",
+            "concreteType": "MarketplaceBookingDetails",
             "kind": "LinkedField",
-            "name": "booking",
+            "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v1/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "MarketplaceBookingDetails",
+                "concreteType": "PaymentStatusDetails",
                 "kind": "LinkedField",
-                "name": "marketplaceBooking",
+                "name": "paymentStatus",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/)
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "type",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "name",
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               }
@@ -140,6 +131,16 @@ return {
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "bookingCard_confirmBookingPaymentMutation",
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -148,56 +149,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "bookingCard_confirmBookingPaymentMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "BookingPayload",
-        "kind": "LinkedField",
-        "name": "confirmBookingPayment",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "BookingDetails",
-            "kind": "LinkedField",
-            "name": "booking",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "MarketplaceBookingDetails",
-                "kind": "LinkedField",
-                "name": "marketplaceBooking",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/),
-                  (v2/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "e92c58258f865323750a78176c021e4f",
+    "cacheID": "810067d0b2452174527163917eec0d99",
     "id": null,
     "metadata": {},
     "name": "bookingCard_confirmBookingPaymentMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_confirmBookingPaymentMutation(\n  $input: ConfirmBookingPaymentInput!\n) {\n  confirmBookingPayment(input: $input) {\n    booking {\n      id\n      marketplaceBooking {\n        paymentStatus {\n          type\n          name\n        }\n        id\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookingCard_confirmBookingPaymentMutation(\n  $input: ConfirmBookingPaymentInput!\n) {\n  confirmBookingPayment(input: $input) {\n    booking {\n      id\n      marketplaceBooking {\n        id\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "145d1f84a950e28bc6afd136123f1191";
+(node as any).hash = "c00562eb960f16421951aa13951966ab";
 
 export default node;

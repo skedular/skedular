@@ -1,7 +1,7 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
+import { CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
-import { CalendarIcon, EllipseMenuIcon, JoinIcon, LocationIcon, NotesIcon, PaymentStatusIcon, PdfIcon, TeamIcon } from '@/components/icons';
+import { CalendarIcon, EllipseMenuIcon, JoinIcon, NotesIcon, PaymentStatusIcon, PdfIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -9,7 +9,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { Resources } from '@/components/resource';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { coal, sandstone } from '@/libs/theme';
+import { coal } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, toShortDate } from '@/libs/utils';
 import type { bookingCard_addPrivateBookingMutation } from '@/queries/__generated__/bookingCard_addPrivateBookingMutation.graphql';
 import type { bookingCard_BookingDetails$key } from '@/queries/__generated__/bookingCard_BookingDetails.graphql';
@@ -19,13 +19,16 @@ import type { bookingCard_deletePrivateBookingMutation } from '@/queries/__gener
 import type { bookingCard_makeBookingPaymentNotRequiredMutation } from '@/queries/__generated__/bookingCard_makeBookingPaymentNotRequiredMutation.graphql';
 import type { bookingCard_query$key } from '@/queries/__generated__/bookingCard_query.graphql';
 import type { bookingCard_rejectBookingPaymentMutation } from '@/queries/__generated__/bookingCard_rejectBookingPaymentMutation.graphql';
+import Alert from '@mui/material/Alert';
+import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
+import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
-import Alert from '@mui/material/Alert';
+import Tooltip from '@mui/material/Tooltip';
+import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
@@ -53,6 +56,14 @@ type ZoneDetails = {
   id: string;
   name: string | null | undefined;
   color?: string | null | undefined;
+};
+
+const sectionSx: SxProps<Theme> = {
+  border: 1,
+  borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+  borderRadius: 3,
+  p: 1.25,
+  backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.02)' : 'transparent'),
 };
 
 const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDomain, connectionIds, canJoinBooking }: Props) => {
@@ -107,7 +118,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         }
         involvedLocations {
           uniqueId
-
           name
         }
         involvedTeams {
@@ -246,6 +256,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         booking {
           id
           marketplaceBooking {
+            id
             paymentStatus {
               type
               name
@@ -262,6 +273,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         booking {
           id
           marketplaceBooking {
+            id
             paymentStatus {
               type
               name
@@ -278,6 +290,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         booking {
           id
           marketplaceBooking {
+            id
             paymentStatus {
               type
               name
@@ -287,6 +300,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       }
     }
   `);
+
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
@@ -333,10 +347,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
-        if (bookingDetails) {
-          router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id));
-        }
-
+        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteBooking:
@@ -369,13 +380,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
 
     if (bookingDetails.channel.channel === 'PRIVATE') {
       commitDeletePrivateBooking({
-        variables: {
-          connectionIds,
-          input: {
-            clientMutationId: uuid(),
-            id: bookingDetails.id,
-          },
-        },
+        variables: { connectionIds, input: { clientMutationId: uuid(), id: bookingDetails.id } },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
             toast.update(toastId, {
@@ -400,13 +405,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       });
     } else {
       commitDeleteMarketplaceBooking({
-        variables: {
-          connectionIds,
-          input: {
-            clientMutationId: uuid(),
-            id: bookingDetails.id,
-          },
-        },
+        variables: { connectionIds, input: { clientMutationId: uuid(), id: bookingDetails.id } },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
             toast.update(toastId, {
@@ -474,7 +473,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
           const zones = booking.bookingResources.flatMap(({ resource }) => resource.zones);
           if (zones.length > 0) {
             const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.id, zone), new Map()).values());
-
             message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
           }
         }
@@ -499,9 +497,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
             from: bookingDetails.from,
             until: bookingDetails.until,
             notes: null,
-            channel: {
-              channel: 'PRIVATE',
-            },
+            channel: { channel: 'PRIVATE' },
             category: {
               category: bookingDetails.category.category,
               name: bookingDetails.category.name,
@@ -530,25 +526,18 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     if (bookingDetails.involvedLocations.length > 0) {
       bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
     }
-
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
     const toastId = themedToast(<NotificationContent content={`Confirming payment for booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
     commitConfirmBookingPayment({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: bookingDetails.id,
-        },
-      },
+      variables: { input: { clientMutationId: uuid(), id: bookingDetails.id } },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
             render: <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
-
           return;
         }
 
@@ -568,7 +557,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
           booking: {
             id: bookingDetails.id,
             marketplaceBooking: {
-              id: uuid(),
+              id: bookingDetails.marketplaceBooking?.id ?? uuid(),
               paymentStatus: {
                 type: 'CONFIRMED',
                 name: rootData.paymentStatuses.find((status) => status.type === 'CONFIRMED')!.name,
@@ -585,25 +574,18 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     if (bookingDetails.involvedLocations.length > 0) {
       bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
     }
-
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
     const toastId = themedToast(<NotificationContent content={`Rejecting payment for booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
     commitRejectBookingPayment({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: bookingDetails.id,
-        },
-      },
+      variables: { input: { clientMutationId: uuid(), id: bookingDetails.id } },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
             render: <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
-
           return;
         }
 
@@ -623,7 +605,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
           booking: {
             id: bookingDetails.id,
             marketplaceBooking: {
-              id: uuid(),
+              id: bookingDetails.marketplaceBooking?.id ?? uuid(),
               paymentStatus: {
                 type: 'REJECTED',
                 name: rootData.paymentStatuses.find((status) => status.type === 'REJECTED')!.name,
@@ -640,25 +622,18 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     if (bookingDetails.involvedLocations.length > 0) {
       bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
     }
-
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
     const toastId = themedToast(<NotificationContent content={`Making payment for booking '${bookingDetailsInfo}' not required...`} />, infoNotificationOptions);
 
     commitMakeBookingPaymentNotRequired({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: bookingDetails.id,
-        },
-      },
+      variables: { input: { clientMutationId: uuid(), id: bookingDetails.id } },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
             render: <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
-
           return;
         }
 
@@ -678,7 +653,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
           booking: {
             id: bookingDetails.id,
             marketplaceBooking: {
-              id: uuid(),
+              id: bookingDetails.marketplaceBooking?.id ?? uuid(),
               paymentStatus: {
                 type: 'NO_PAYMENT_REQUIRED',
                 name: rootData.paymentStatuses.find((status) => status.type === 'NO_PAYMENT_REQUIRED')!.name,
@@ -689,6 +664,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       },
     });
   };
+
   const customTags = bookingDetails.bookingResources
     .flatMap(({ resource }) => resource.customTags)
     .reduce((acc: CustomTagDetails[], customTag) => {
@@ -708,117 +684,117 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       return acc;
     }, []);
 
+  const locationName =
+    bookingDetails.involvedLocations
+      .map((location) => location.name)
+      .filter(Boolean)
+      .join(', ') || 'Booking';
+  const teamName = bookingDetails.involvedTeams[0]?.name;
+
   return (
     <>
-      <Card sx={{ width: { xs: '100%', sm: 380 } }}>
-        <CardHeader
-          title={
-            <StackRow>
-              <Link component={NextLink} href={getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id)}>
-                {bookingDetails.involvedLocations.map((item) => (
-                  <LeadIconTypography key={item.uniqueId} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
-                ))}
-              </Link>
+      <Card
+        sx={{
+          width: '100%',
+          height: '100%',
+          borderRadius: 4,
+          border: 1,
+          borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+          boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 10px 28px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+          backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.92)' : theme.palette.background.paper),
+        }}
+      >
+        <CardContent sx={{ p: 2, height: '100%' }}>
+          <StackColumn spacing={1.25} sx={{ height: '100%' }}>
+            <StackRow sx={{ alignItems: 'flex-start', flexWrap: 'nowrap', gap: 1 }}>
+              <StackColumn spacing={0.25} sx={{ minWidth: 0, flexGrow: 1 }}>
+                <Tooltip title={locationName}>
+                  <Link
+                    component={NextLink}
+                    href={getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id)}
+                    underline="none"
+                    color="inherit"
+                    sx={{ display: 'block', minWidth: 0, maxWidth: '100%' }}
+                  >
+                    <LeadIconTypography label={locationName} noWrap sx={{ minWidth: 0, maxWidth: '100%' }} />
+                  </Link>
+                </Tooltip>
+                <SmallIconTypography
+                  startElement={<CalendarIcon />}
+                  label={dateRangeToShortDateWithAdditionalDayInfo(dayjs(bookingDetails.from), dayjs(bookingDetails.until))}
+                  noWrap
+                />
+              </StackColumn>
 
-              <PushToRight />
-              {canJoinBooking && (
-                <Box color={paletteMode === 'dark' ? coal : sandstone}>
-                  <IconButton onClick={handleJoinClick} color="inherit">
-                    <JoinIcon />
-                  </IconButton>
-                </Box>
-              )}
+              {canJoinBooking ? (
+                <IconButton onClick={handleJoinClick} aria-label="Join booking" sx={{ color: paletteMode === 'dark' ? 'inherit' : coal, mt: -0.25 }}>
+                  <JoinIcon />
+                </IconButton>
+              ) : null}
+
+              {moreActionsOption.length > 0 ? (
+                <IconButton onClick={handleMoreActionsMenuClick} aria-label="Open booking actions" sx={{ color: paletteMode === 'dark' ? 'inherit' : coal, mt: -0.25, mr: -0.5 }}>
+                  <EllipseMenuIcon />
+                </IconButton>
+              ) : null}
             </StackRow>
-          }
-          action={
-            <>
-              {moreActionsOption.length > 0 && (
-                <Box color={paletteMode === 'dark' ? coal : sandstone} sx={{ paddingTop: 0.5 }}>
-                  <IconButton onClick={handleMoreActionsMenuClick} color="inherit">
-                    <EllipseMenuIcon />
-                  </IconButton>
-                </Box>
-              )}
-            </>
-          }
-        />
-        <CardContent>
-          {bookingDetails.marketplaceBooking?.isPaymentRequired && (
-            <>
-              <SmallIconTypography startElement={<PaymentStatusIcon />} label={bookingDetails.marketplaceBooking.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
-              {bookingDetails.marketplaceBooking.invoiceUrl && (
-                <Link component={NextLink} href={bookingDetails.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer">
-                  <SmallIconTypography label="Download Invoice" startElement={<PdfIcon />} />
+
+            <StackRow sx={{ gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
+              {teamName ? <Chip label={teamName} size="small" icon={<TeamIcon />} /> : null}
+              {bookingDetails.marketplaceBooking?.isPaymentRequired ? (
+                <Chip label={bookingDetails.marketplaceBooking.paymentStatus.name} size="small" icon={<PaymentStatusIcon />} />
+              ) : null}
+              {bookingDetails.marketplaceBooking?.invoiceUrl ? (
+                <Link component={NextLink} href={bookingDetails.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer" underline="none">
+                  <Chip label="Invoice PDF" size="small" icon={<PdfIcon />} clickable />
                 </Link>
-              )}
-              <Divider />
-            </>
-          )}
-          {showRefundFollowUpHint && !refund && (
-            <>
-              <Alert severity="info" sx={{ mb: 1, borderRadius: 2 }}>
-                Payment managers: marketplace cancellations can still need separate refund and accounting follow-up after the booking state changes.
-              </Alert>
-              <Divider />
-            </>
-          )}
-          {canManageRefund && refund && (
-            <>
-              <MarketplaceRefundAdminPanel entityLabel={refundEntityLabel} refund={refund} />
-              <Divider />
-            </>
-          )}
-          <SmallIconTypography
-            startElement={<CalendarIcon />}
-            label={dateRangeToShortDateWithAdditionalDayInfo(dayjs(bookingDetails.from), dayjs(bookingDetails.until))}
-            sx={{ paddingTop: 1, paddingBottom: 1 }}
-          />
-          <Divider />
-          {bookingDetails.involvedCustomers.map((item) => (
-            <SmallIconTypography
-              key={item.id}
-              label={getCustomerFullName(item)}
-              startElement={<CustomerAvatar name={item} photo={{ url: item.photoUrl }} size="small" />}
-              sx={{ paddingTop: 1, paddingBottom: 1 }}
-            />
-          ))}
-          <Divider />
-          {bookingDetails.involvedTeams.length === 0 && <SmallIconTypography startElement={<TeamIcon />} label="N/A" sx={{ paddingTop: 1, paddingBottom: 1 }} />}
-          {bookingDetails.involvedTeams.length > 0 &&
-            bookingDetails.involvedTeams.map((item) => (
-              <SmallIconTypography key={item.id} startElement={<TeamIcon />} label={item ? item.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
-            ))}
-          <Divider />
-          <Resources
-            resources={bookingDetails.bookingResources.map((item) => ({
-              id: item.resource.id,
-              name: item.resource.name,
-              color: item.resource.color,
-            }))}
-            sx={{ paddingTop: 1, paddingBottom: 1 }}
-          />
-          <Divider />
-          <CustomTags
-            customTags={customTags.map((customTag: CustomTagDetails) => ({
-              id: customTag.id,
-              name: customTag.name,
-              color: customTag.color,
-            }))}
-            sx={{ paddingTop: 1, paddingBottom: 1 }}
-          />
-          <Divider />
-          <Zones
-            zones={zones.map((zone: ZoneDetails) => ({
-              id: zone.id,
-              name: zone.name,
-              color: zone.color,
-            }))}
-            sx={{ paddingTop: 1, paddingBottom: 1 }}
-          />
-          <Divider />
-          <SmallIconTypography startElement={<NotesIcon />} label={bookingDetails.notes ? bookingDetails.notes : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+              ) : null}
+            </StackRow>
+
+            <StackRow sx={{ alignItems: 'center', gap: 1, minWidth: 0 }}>
+              <AvatarGroup max={5}>
+                {bookingDetails.involvedCustomers.map((item) => (
+                  <CustomerAvatar key={item.id} name={item} photo={{ url: item.photoUrl }} size="medium" showFullName />
+                ))}
+              </AvatarGroup>
+              <Tooltip title={bookingDetails.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ')}>
+                <Box sx={{ minWidth: 0, flexGrow: 1 }}>
+                  <SmallIconTypography label={bookingDetails.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ')} noWrap sx={{ minWidth: 0 }} />
+                </Box>
+              </Tooltip>
+            </StackRow>
+
+            {showRefundFollowUpHint && !refund ? (
+              <Box sx={sectionSx}>
+                <Alert severity="info" sx={{ borderRadius: 2 }}>
+                  Payment managers: marketplace cancellations can still need separate refund and accounting follow-up after the booking state changes.
+                </Alert>
+              </Box>
+            ) : null}
+
+            {canManageRefund && refund ? (
+              <Box sx={sectionSx}>
+                <MarketplaceRefundAdminPanel entityLabel={refundEntityLabel} refund={refund} />
+              </Box>
+            ) : null}
+
+            <Divider />
+
+            <Box sx={sectionSx}>
+              <StackColumn spacing={1}>
+                <SubtitleIconTypography label="Booking details" />
+                <Resources resources={bookingDetails.bookingResources.map((item) => ({ id: item.resource.id, name: item.resource.name, color: item.resource.color }))} hideNAText />
+                <CustomTags customTags={customTags.map((customTag) => ({ id: customTag.id, name: customTag.name, color: customTag.color }))} hideNAText />
+                <Zones zones={zones.map((zone) => ({ id: zone.id, name: zone.name, color: zone.color }))} hideNAText />
+                {bookingDetails.notes ? <CaptionIconTypography startElement={<NotesIcon />} label={bookingDetails.notes} /> : null}
+              </StackColumn>
+            </Box>
+
+            <Box sx={{ flexGrow: 1 }} />
+          </StackColumn>
         </CardContent>
       </Card>
+
       <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
     </>
   );

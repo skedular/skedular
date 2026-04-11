@@ -69,6 +69,8 @@ web/
   just because it existed before.
 - Home/dashboard and booking collection filter controls should live on surfaced toolbar panels, not bare rows floating on
   the page background.
+- Shared-view bookings collections should converge on the same compact card grid language as other collection pages;
+  reserve dense admin list/table management for dedicated admin surfaces later.
 - The current testing direction is Vitest + React Testing Library from `web/apps/webapp`, with coverage allowed to
   extend into Relay-free workspace packages such as `web/packages/ui`.
 - In `web/apps/webapp`, prefer Relay colocation. Fragments and small queries should live beside the component that uses

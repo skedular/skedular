@@ -70,6 +70,10 @@ scripts/
   - booking cards should emphasize location, time, payment state, and a compact booking-detail preview rather than behaving like mini record detail pages
   - if onboarding/getting-started content is present, place it above the working filter/collection surface rather than burying it between the filter bar and the cards
   - top filter bars on home and booking collection pages should sit on the same surfaced white panel language as the newer collection pages
+- For the organization bookings collection specifically:
+  - remove the list/grid toggle and keep the surface card-first
+  - treat this as a shared-view collection page, not the future admin spreadsheet surface
+  - keep join/payment/refund actions available, but fold them into the compact booking-card anatomy instead of preserving the older divider-heavy record card
 - For compact location cards specifically:
   - keep the card focused on booking context, not management detail dumps
   - prefer this panel order: availability, address, then zones when zones exist

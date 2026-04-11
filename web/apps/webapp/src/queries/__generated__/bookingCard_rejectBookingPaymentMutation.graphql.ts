@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<828a31b39f055cf773b6230cc991ebec>>
+ * @generated SignedSource<<f4729c741f3efd00f438c004ce976a3b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,7 @@ export type bookingCard_rejectBookingPaymentMutation$data = {
     readonly booking: {
       readonly id: string;
       readonly marketplaceBooking: {
+        readonly id: string;
         readonly paymentStatus: {
           readonly name: string;
           readonly type: PaymentStatus;
@@ -58,78 +59,68 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
-  }
-],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "PaymentStatusDetails",
-  "kind": "LinkedField",
-  "name": "paymentStatus",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "name",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "bookingCard_rejectBookingPaymentMutation",
+v2 = [
+  {
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "BookingPayload",
+    "kind": "LinkedField",
+    "name": "rejectBookingPayment",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "BookingPayload",
+        "args": null,
+        "concreteType": "BookingDetails",
         "kind": "LinkedField",
-        "name": "rejectBookingPayment",
+        "name": "booking",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "BookingDetails",
+            "concreteType": "MarketplaceBookingDetails",
             "kind": "LinkedField",
-            "name": "booking",
+            "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v1/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "MarketplaceBookingDetails",
+                "concreteType": "PaymentStatusDetails",
                 "kind": "LinkedField",
-                "name": "marketplaceBooking",
+                "name": "paymentStatus",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/)
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "type",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "name",
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               }
@@ -140,6 +131,16 @@ return {
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "bookingCard_rejectBookingPaymentMutation",
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -148,56 +149,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "bookingCard_rejectBookingPaymentMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "BookingPayload",
-        "kind": "LinkedField",
-        "name": "rejectBookingPayment",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "BookingDetails",
-            "kind": "LinkedField",
-            "name": "booking",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "MarketplaceBookingDetails",
-                "kind": "LinkedField",
-                "name": "marketplaceBooking",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/),
-                  (v2/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "1bd115d48efe797cb7d0cb462d182f61",
+    "cacheID": "09a0ac1856a1734aafcd5539aa2df124",
     "id": null,
     "metadata": {},
     "name": "bookingCard_rejectBookingPaymentMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_rejectBookingPaymentMutation(\n  $input: RejectBookingPaymentInput!\n) {\n  rejectBookingPayment(input: $input) {\n    booking {\n      id\n      marketplaceBooking {\n        paymentStatus {\n          type\n          name\n        }\n        id\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookingCard_rejectBookingPaymentMutation(\n  $input: RejectBookingPaymentInput!\n) {\n  rejectBookingPayment(input: $input) {\n    booking {\n      id\n      marketplaceBooking {\n        id\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6744ec4b190df9bd01e0a8dcfcbfdc8d";
+(node as any).hash = "d873c67baba74025da4e0d7323a4734f";
 
 export default node;

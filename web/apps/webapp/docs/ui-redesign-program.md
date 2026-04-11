@@ -244,6 +244,10 @@ These patterns should be designed once and reused many times:
   - booking cards should surface location, time, payment state, and concise resource/tag previews instead of stacking full record detail sections
   - when onboarding/getting-started is shown on the home page, it should sit above the filter bar and bookings collection as a temporary orientation block, not between the working controls and the cards
   - filter controls for home bookings and full bookings pages should use the same surfaced toolbar treatment as other collection pages
+- the main organization bookings page should follow the same rule:
+  - card-first collection shell
+  - no list/grid toggle on the shared-view bookings page
+  - compact cards keep join/payment/refund workflows, while dense admin table management should move to a separate admin-oriented surface later
 
 ### Locations / Resources / Teams
 
