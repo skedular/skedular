@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cd7898520a0f916cc491b1e305ac5eb4>>
+ * @generated SignedSource<<2ac5a7b6b60b969e4f3e64d3363ad58a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,24 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type DeleteZonesInput = {
+export type DeleteCustomTagsInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
 };
-export type organizationAdmin_deleteZonesMutation$variables = {
+export type organizationAdminTagsSection_deleteCustomTagsMutation$variables = {
   connectionIds: ReadonlyArray<string>;
-  input: DeleteZonesInput;
+  input: DeleteCustomTagsInput;
 };
-export type organizationAdmin_deleteZonesMutation$data = {
-  readonly deleteZones: {
+export type organizationAdminTagsSection_deleteCustomTagsMutation$data = {
+  readonly deleteCustomTags: {
     readonly organizationTags: ReadonlyArray<{
       readonly id: string;
     }>;
   };
 };
-export type organizationAdmin_deleteZonesMutation = {
-  response: organizationAdmin_deleteZonesMutation$data;
-  variables: organizationAdmin_deleteZonesMutation$variables;
+export type organizationAdminTagsSection_deleteCustomTagsMutation = {
+  response: organizationAdminTagsSection_deleteCustomTagsMutation$data;
+  variables: organizationAdminTagsSection_deleteCustomTagsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,14 +61,14 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_deleteZonesMutation",
+    "name": "organizationAdminTagsSection_deleteCustomTagsMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "OrganizationTagsPayload",
         "kind": "LinkedField",
-        "name": "deleteZones",
+        "name": "deleteCustomTags",
         "plural": false,
         "selections": [
           {
@@ -94,14 +94,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_deleteZonesMutation",
+    "name": "organizationAdminTagsSection_deleteCustomTagsMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "OrganizationTagsPayload",
         "kind": "LinkedField",
-        "name": "deleteZones",
+        "name": "deleteCustomTags",
         "plural": false,
         "selections": [
           {
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d39f9cc607939899d5fe98f1e7bb144c",
+    "cacheID": "a611aa67092fc5760daa2fbc84c2e102",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_deleteZonesMutation",
+    "name": "organizationAdminTagsSection_deleteCustomTagsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_deleteZonesMutation(\n  $input: DeleteZonesInput!\n) {\n  deleteZones(input: $input) {\n    organizationTags {\n      id\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminTagsSection_deleteCustomTagsMutation(\n  $input: DeleteCustomTagsInput!\n) {\n  deleteCustomTags(input: $input) {\n    organizationTags {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0b7bc8bd55161338234087123eec7cc7";
+(node as any).hash = "aa73995c927f0868a9180cda56ee53c1";
 
 export default node;

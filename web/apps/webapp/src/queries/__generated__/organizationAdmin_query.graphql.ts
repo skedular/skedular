@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ebd152d7ba6f9014a8b3579fd5b9d791>>
+ * @generated SignedSource<<a143633542716e8a355472f0b4cbebfa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,24 +11,15 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
-  readonly emailsToShowLatestCapabilities: ReadonlyArray<string>;
-  readonly me: {
-    readonly emails: ReadonlyArray<string>;
-    readonly id: string;
-    readonly preferredCustomTags: ReadonlyArray<{
-      readonly id: string;
-    }>;
-    readonly preferredZones: ReadonlyArray<{
-      readonly id: string;
-    }>;
-  };
-  readonly organizationIndustryMainCategoriesReferences: ReadonlyArray<{
-    readonly subCategories: ReadonlyArray<{
-      readonly id: string;
-      readonly name: string;
-    }>;
-  }>;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMultipleChoicesIndustries_query">;
+  readonly organization: {
+    readonly listingMetadata: {
+      readonly title: string | null | undefined;
+    };
+    readonly marketplaceListingMetadata: {
+      readonly title: string | null | undefined;
+    };
+    readonly name: string;
+  } | null | undefined;
   readonly " $fragmentType": "organizationAdmin_query";
 };
 export type organizationAdmin_query$key = {
@@ -37,102 +28,69 @@ export type organizationAdmin_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v1 = [
-  (v0/*: any*/)
+var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "title",
+    "storageKey": null
+  }
 ];
 return {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "organizationCustomDomain"
+    }
+  ],
   "kind": "Fragment",
   "metadata": null,
   "name": "organizationAdmin_query",
   "selections": [
     {
       "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "emailsToShowLatestCapabilities",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "CustomerDetails",
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "customDomain",
+          "variableName": "organizationCustomDomain"
+        }
+      ],
+      "concreteType": "OrganizationDetails",
       "kind": "LinkedField",
-      "name": "me",
+      "name": "organization",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "emails",
+          "name": "name",
           "storageKey": null
         },
         {
           "alias": null,
           "args": null,
-          "concreteType": "OrganizationTagDetails",
+          "concreteType": "ListingMetadata",
           "kind": "LinkedField",
-          "name": "preferredZones",
-          "plural": true,
-          "selections": (v1/*: any*/),
+          "name": "listingMetadata",
+          "plural": false,
+          "selections": (v0/*: any*/),
           "storageKey": null
         },
         {
           "alias": null,
           "args": null,
-          "concreteType": "OrganizationTagDetails",
+          "concreteType": "ListingMetadata",
           "kind": "LinkedField",
-          "name": "preferredCustomTags",
-          "plural": true,
-          "selections": (v1/*: any*/),
+          "name": "marketplaceListingMetadata",
+          "plural": false,
+          "selections": (v0/*: any*/),
           "storageKey": null
         }
       ],
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "OrganizationIndustryMainCategoryReferenceDetails",
-      "kind": "LinkedField",
-      "name": "organizationIndustryMainCategoriesReferences",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationIndustrySubCategoryReferenceDetails",
-          "kind": "LinkedField",
-          "name": "subCategories",
-          "plural": true,
-          "selections": [
-            (v0/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "name",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "organizationMultipleChoicesIndustries_query"
     }
   ],
   "type": "Query",
@@ -140,6 +98,6 @@ return {
 };
 })();
 
-(node as any).hash = "5d6240adce386134cf8835f40c3f4369";
+(node as any).hash = "0ec5d0fb474259763bb19965ec62bef7";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<69b681042eb3d0200af05ffce1fbdcbe>>
+ * @generated SignedSource<<4a99276ea56ecf5abd12095be9a03d48>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,17 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type AddOrganizationBillingDetailsInput = {
+export type UpdateOrganizationPhysicalAddressInput = {
   addressLine1: string;
   addressLine2?: string | null | undefined;
   city?: string | null | undefined;
   clientMutationId?: string | null | undefined;
-  companyName?: string | null | undefined;
   country: string;
   countryCode?: string | null | undefined;
-  email: string;
   formattedAddress?: string | null | undefined;
-  id?: string | null | undefined;
+  id: string;
   latitude?: number | null | undefined;
   longitude?: number | null | undefined;
-  organizationCustomDomain?: string | null | undefined;
-  organizationId?: string | null | undefined;
   osmId?: string | null | undefined;
   osmType?: string | null | undefined;
   placeId?: string | null | undefined;
@@ -31,20 +27,19 @@ export type AddOrganizationBillingDetailsInput = {
   suburb?: string | null | undefined;
   zipcode: string;
 };
-export type organizationAdmin_addOrganizationBillingDetailsMutation$variables = {
-  input: AddOrganizationBillingDetailsInput;
+export type organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation$variables = {
+  input: UpdateOrganizationPhysicalAddressInput;
 };
-export type organizationAdmin_addOrganizationBillingDetailsMutation$data = {
-  readonly addOrganizationBillingDetails: {
+export type organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation$data = {
+  readonly updateOrganizationPhysicalAddress: {
     readonly organization: {
-      readonly billingDetails: {
+      readonly id: string;
+      readonly physicalAddress: {
         readonly addressLine1: string;
         readonly addressLine2: string | null | undefined;
         readonly city: string | null | undefined;
-        readonly companyName: string | null | undefined;
         readonly country: string;
         readonly countryCode: string | null | undefined;
-        readonly email: string;
         readonly formattedAddress: string | null | undefined;
         readonly id: string;
         readonly latitude: number | null | undefined;
@@ -56,21 +51,19 @@ export type organizationAdmin_addOrganizationBillingDetailsMutation$data = {
         readonly suburb: string | null | undefined;
         readonly zipcode: string;
       } | null | undefined;
-      readonly id: string;
     };
   };
 };
-export type organizationAdmin_addOrganizationBillingDetailsMutation$rawResponse = {
-  readonly addOrganizationBillingDetails: {
+export type organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation$rawResponse = {
+  readonly updateOrganizationPhysicalAddress: {
     readonly organization: {
-      readonly billingDetails: {
+      readonly id: string;
+      readonly physicalAddress: {
         readonly addressLine1: string;
         readonly addressLine2: string | null | undefined;
         readonly city: string | null | undefined;
-        readonly companyName: string | null | undefined;
         readonly country: string;
         readonly countryCode: string | null | undefined;
-        readonly email: string;
         readonly formattedAddress: string | null | undefined;
         readonly id: string;
         readonly latitude: number | null | undefined;
@@ -82,14 +75,13 @@ export type organizationAdmin_addOrganizationBillingDetailsMutation$rawResponse 
         readonly suburb: string | null | undefined;
         readonly zipcode: string;
       } | null | undefined;
-      readonly id: string;
     };
   };
 };
-export type organizationAdmin_addOrganizationBillingDetailsMutation = {
-  rawResponse: organizationAdmin_addOrganizationBillingDetailsMutation$rawResponse;
-  response: organizationAdmin_addOrganizationBillingDetailsMutation$data;
-  variables: organizationAdmin_addOrganizationBillingDetailsMutation$variables;
+export type organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation = {
+  rawResponse: organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation$rawResponse;
+  response: organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation$data;
+  variables: organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -119,7 +111,7 @@ v2 = [
     ],
     "concreteType": "OrganizationPayload",
     "kind": "LinkedField",
-    "name": "addOrganizationBillingDetails",
+    "name": "updateOrganizationPhysicalAddress",
     "plural": false,
     "selections": [
       {
@@ -134,26 +126,12 @@ v2 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "OrganizationBillingDetails",
+            "concreteType": "OrganizationPhysicalAddressDetails",
             "kind": "LinkedField",
-            "name": "billingDetails",
+            "name": "physicalAddress",
             "plural": false,
             "selections": [
               (v1/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "companyName",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "email",
-                "storageKey": null
-              },
               {
                 "alias": null,
                 "args": null,
@@ -267,7 +245,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_addOrganizationBillingDetailsMutation",
+    "name": "organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation",
     "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -276,20 +254,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_addOrganizationBillingDetailsMutation",
+    "name": "organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation",
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "8f4819da6591908bbe8be3a8ba9c5534",
+    "cacheID": "37576dd3df59ae433700b11b2d7b1e93",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_addOrganizationBillingDetailsMutation",
+    "name": "organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_addOrganizationBillingDetailsMutation(\n  $input: AddOrganizationBillingDetailsInput!\n) {\n  addOrganizationBillingDetails(input: $input) {\n    organization {\n      id\n      billingDetails {\n        id\n        companyName\n        email\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation(\n  $input: UpdateOrganizationPhysicalAddressInput!\n) {\n  updateOrganizationPhysicalAddress(input: $input) {\n    organization {\n      id\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b9c15e8c0209be2455e6806b77194ea4";
+(node as any).hash = "8617f0e65b4e949ace46da7b3bab7093";
 
 export default node;

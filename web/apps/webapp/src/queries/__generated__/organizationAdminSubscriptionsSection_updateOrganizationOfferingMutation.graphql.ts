@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7771fd7ea61238b56957e1e194d18467>>
+ * @generated SignedSource<<a92ca5eea3462a45bb9cd594e1858cc4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,22 +9,23 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type CancelOrganizationOfferingInput = {
+export type UpdateOrganizationOfferingInput = {
   clientMutationId?: string | null | undefined;
+  offeringCode: string;
   organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
 };
-export type organizationAdmin_cancelOrganizationOfferingMutation$variables = {
-  input: CancelOrganizationOfferingInput;
+export type organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation$variables = {
+  input: UpdateOrganizationOfferingInput;
 };
-export type organizationAdmin_cancelOrganizationOfferingMutation$data = {
-  readonly cancelOrganizationOffering: {
+export type organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation$data = {
+  readonly updateOrganizationOffering: {
     readonly clientMutationId: string | null | undefined;
   };
 };
-export type organizationAdmin_cancelOrganizationOfferingMutation = {
-  response: organizationAdmin_cancelOrganizationOfferingMutation$data;
-  variables: organizationAdmin_cancelOrganizationOfferingMutation$variables;
+export type organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation = {
+  response: organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation$data;
+  variables: organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -45,9 +46,9 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "CancelOrganizationOfferingPayload",
+    "concreteType": "UpdateOrganizationOfferingPayload",
     "kind": "LinkedField",
-    "name": "cancelOrganizationOffering",
+    "name": "updateOrganizationOffering",
     "plural": false,
     "selections": [
       {
@@ -66,7 +67,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_cancelOrganizationOfferingMutation",
+    "name": "organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -75,20 +76,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_cancelOrganizationOfferingMutation",
+    "name": "organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "f66b42f8409220bb4159f2dbbe2af878",
+    "cacheID": "568b7905a977aa5adc923e89012174cc",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_cancelOrganizationOfferingMutation",
+    "name": "organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_cancelOrganizationOfferingMutation(\n  $input: CancelOrganizationOfferingInput!\n) {\n  cancelOrganizationOffering(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation(\n  $input: UpdateOrganizationOfferingInput!\n) {\n  updateOrganizationOffering(input: $input) {\n    clientMutationId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e1db40ed318dab768198ab07ef4821e8";
+(node as any).hash = "1ab377ad1fccd7a4e1284c26fb0d5ee5";
 
 export default node;

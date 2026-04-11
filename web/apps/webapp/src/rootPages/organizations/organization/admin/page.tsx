@@ -9,30 +9,25 @@ import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
 import { useRouter } from 'next/navigation';
-import { memo, useEffect, useState, useTransition } from 'react';
+import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import { v7 as uuid } from 'uuid';
 
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationAdmin_rootQuery, Record<string, unknown>>;
-  onReloadRequired: () => void;
   organizationCustomDomain: string;
 };
 
 const RootQuery = graphql`
-  query pageOrganizationAdmin_rootQuery($organizationCustomDomain: String!, $zoneNameSearchText: String, $customTagNameSearchText: String) {
+  query pageOrganizationAdmin_rootQuery($organizationCustomDomain: String!) {
     organization(customDomain: $organizationCustomDomain) {
       name
     }
     ...organizationAdmin_query
-    ...organizationAdmin_organization_query
-    ...organizationAdmin_zones_query
-    ...organizationAdmin_customTags_query
   }
 `;
 
-const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
+const RootPage = ({ queryReference, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationAdmin_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -56,14 +51,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationAdmin
-        rootDataRelay={rootData}
-        rootDataOrganizationRelay={rootData}
-        rootDataZonesRelay={rootData}
-        rootDataCustomTagsRelay={rootData}
-        onReloadRequired={onReloadRequired}
-        organizationCustomDomain={organizationCustomDomain}
-      />
+      <OrganizationAdmin rootDataRelay={rootData} organizationCustomDomain={organizationCustomDomain} />
     </RootShell>
   );
 };
@@ -72,8 +60,6 @@ const MemoRootPage = memo(RootPage);
 
 const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationAdmin_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
-  const [, startTransition] = useTransition();
   const { organizationCustomDomain } = useKnownParams();
 
   if (!organizationCustomDomain) {
@@ -89,13 +75,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
-
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReloadId(uuid());
-    });
-  };
+  }, [loadQuery, organizationCustomDomain]);
 
   if (!queryReference) {
     return <Loading />;
@@ -103,7 +83,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
+      <MemoRootPage queryReference={queryReference} organizationCustomDomain={organizationCustomDomain} />
     </ErrorBoundary>
   );
 };

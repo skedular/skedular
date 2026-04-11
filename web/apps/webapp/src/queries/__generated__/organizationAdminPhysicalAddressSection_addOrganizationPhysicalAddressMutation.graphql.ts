@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<42008f1d5335bdbeba5dce4e12a6e45d>>
+ * @generated SignedSource<<32365a27975ab8123c1a9726a620fe2e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type UpdateOrganizationPhysicalAddressInput = {
+export type AddOrganizationPhysicalAddressInput = {
   addressLine1: string;
   addressLine2?: string | null | undefined;
   city?: string | null | undefined;
@@ -17,9 +17,11 @@ export type UpdateOrganizationPhysicalAddressInput = {
   country: string;
   countryCode?: string | null | undefined;
   formattedAddress?: string | null | undefined;
-  id: string;
+  id?: string | null | undefined;
   latitude?: number | null | undefined;
   longitude?: number | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
+  organizationId?: string | null | undefined;
   osmId?: string | null | undefined;
   osmType?: string | null | undefined;
   placeId?: string | null | undefined;
@@ -27,11 +29,11 @@ export type UpdateOrganizationPhysicalAddressInput = {
   suburb?: string | null | undefined;
   zipcode: string;
 };
-export type organizationAdmin_updateOrganizationPhysicalAddressMutation$variables = {
-  input: UpdateOrganizationPhysicalAddressInput;
+export type organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation$variables = {
+  input: AddOrganizationPhysicalAddressInput;
 };
-export type organizationAdmin_updateOrganizationPhysicalAddressMutation$data = {
-  readonly updateOrganizationPhysicalAddress: {
+export type organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation$data = {
+  readonly addOrganizationPhysicalAddress: {
     readonly organization: {
       readonly id: string;
       readonly physicalAddress: {
@@ -54,8 +56,8 @@ export type organizationAdmin_updateOrganizationPhysicalAddressMutation$data = {
     };
   };
 };
-export type organizationAdmin_updateOrganizationPhysicalAddressMutation$rawResponse = {
-  readonly updateOrganizationPhysicalAddress: {
+export type organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation$rawResponse = {
+  readonly addOrganizationPhysicalAddress: {
     readonly organization: {
       readonly id: string;
       readonly physicalAddress: {
@@ -78,10 +80,10 @@ export type organizationAdmin_updateOrganizationPhysicalAddressMutation$rawRespo
     };
   };
 };
-export type organizationAdmin_updateOrganizationPhysicalAddressMutation = {
-  rawResponse: organizationAdmin_updateOrganizationPhysicalAddressMutation$rawResponse;
-  response: organizationAdmin_updateOrganizationPhysicalAddressMutation$data;
-  variables: organizationAdmin_updateOrganizationPhysicalAddressMutation$variables;
+export type organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation = {
+  rawResponse: organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation$rawResponse;
+  response: organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation$data;
+  variables: organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -111,7 +113,7 @@ v2 = [
     ],
     "concreteType": "OrganizationPayload",
     "kind": "LinkedField",
-    "name": "updateOrganizationPhysicalAddress",
+    "name": "addOrganizationPhysicalAddress",
     "plural": false,
     "selections": [
       {
@@ -245,7 +247,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_updateOrganizationPhysicalAddressMutation",
+    "name": "organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation",
     "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -254,20 +256,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_updateOrganizationPhysicalAddressMutation",
+    "name": "organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation",
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "798d01c3d8a31b35aee7a4d9d87119ff",
+    "cacheID": "2a66b31a1f978551bba347ce34ee23c8",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_updateOrganizationPhysicalAddressMutation",
+    "name": "organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationPhysicalAddressMutation(\n  $input: UpdateOrganizationPhysicalAddressInput!\n) {\n  updateOrganizationPhysicalAddress(input: $input) {\n    organization {\n      id\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation(\n  $input: AddOrganizationPhysicalAddressInput!\n) {\n  addOrganizationPhysicalAddress(input: $input) {\n    organization {\n      id\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "bbfddde45912223bde0f95df9607c3d6";
+(node as any).hash = "fe59fabb062d472e09b7dff193ee3c31";
 
 export default node;

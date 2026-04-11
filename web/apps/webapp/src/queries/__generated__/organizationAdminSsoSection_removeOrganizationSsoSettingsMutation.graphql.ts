@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<77cff4afcab19dca268e4c56dbaf5709>>
+ * @generated SignedSource<<139d435a4dea38a5eb17cca5ee6acc71>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,20 +9,16 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type UpdateOrganizationSsoSettingsInput = {
-  appFederationMetadataUrl: string;
+export type RemoveOrganizationSsoSettingsInput = {
   clientMutationId?: string | null | undefined;
-  entityId: string;
-  isActive: boolean;
-  loginUrl: string;
   organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
 };
-export type organizationAdmin_updateOrganizationSsoSettingsMutation$variables = {
-  input: UpdateOrganizationSsoSettingsInput;
+export type organizationAdminSsoSection_removeOrganizationSsoSettingsMutation$variables = {
+  input: RemoveOrganizationSsoSettingsInput;
 };
-export type organizationAdmin_updateOrganizationSsoSettingsMutation$data = {
-  readonly updateOrganizationSsoSettings: {
+export type organizationAdminSsoSection_removeOrganizationSsoSettingsMutation$data = {
+  readonly removeOrganizationSsoSettings: {
     readonly organization: {
       readonly id: string;
       readonly ssoSettings: {
@@ -35,8 +31,8 @@ export type organizationAdmin_updateOrganizationSsoSettingsMutation$data = {
     };
   };
 };
-export type organizationAdmin_updateOrganizationSsoSettingsMutation$rawResponse = {
-  readonly updateOrganizationSsoSettings: {
+export type organizationAdminSsoSection_removeOrganizationSsoSettingsMutation$rawResponse = {
+  readonly removeOrganizationSsoSettings: {
     readonly organization: {
       readonly id: string;
       readonly ssoSettings: {
@@ -49,10 +45,10 @@ export type organizationAdmin_updateOrganizationSsoSettingsMutation$rawResponse 
     };
   };
 };
-export type organizationAdmin_updateOrganizationSsoSettingsMutation = {
-  rawResponse: organizationAdmin_updateOrganizationSsoSettingsMutation$rawResponse;
-  response: organizationAdmin_updateOrganizationSsoSettingsMutation$data;
-  variables: organizationAdmin_updateOrganizationSsoSettingsMutation$variables;
+export type organizationAdminSsoSection_removeOrganizationSsoSettingsMutation = {
+  rawResponse: organizationAdminSsoSection_removeOrganizationSsoSettingsMutation$rawResponse;
+  response: organizationAdminSsoSection_removeOrganizationSsoSettingsMutation$data;
+  variables: organizationAdminSsoSection_removeOrganizationSsoSettingsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -82,7 +78,7 @@ v2 = [
     ],
     "concreteType": "OrganizationPayload",
     "kind": "LinkedField",
-    "name": "updateOrganizationSsoSettings",
+    "name": "removeOrganizationSsoSettings",
     "plural": false,
     "selections": [
       {
@@ -146,7 +142,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_updateOrganizationSsoSettingsMutation",
+    "name": "organizationAdminSsoSection_removeOrganizationSsoSettingsMutation",
     "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -155,20 +151,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_updateOrganizationSsoSettingsMutation",
+    "name": "organizationAdminSsoSection_removeOrganizationSsoSettingsMutation",
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "5b7165fe673176cb2cb86dbfdd44d547",
+    "cacheID": "6dd9b2b96ae95b474129f6c990cf680d",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_updateOrganizationSsoSettingsMutation",
+    "name": "organizationAdminSsoSection_removeOrganizationSsoSettingsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationSsoSettingsMutation(\n  $input: UpdateOrganizationSsoSettingsInput!\n) {\n  updateOrganizationSsoSettings(input: $input) {\n    organization {\n      id\n      ssoSettings {\n        id\n        isActive\n        entityId\n        loginUrl\n        appFederationMetadataUrl\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminSsoSection_removeOrganizationSsoSettingsMutation(\n  $input: RemoveOrganizationSsoSettingsInput!\n) {\n  removeOrganizationSsoSettings(input: $input) {\n    organization {\n      id\n      ssoSettings {\n        id\n        isActive\n        entityId\n        loginUrl\n        appFederationMetadataUrl\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d8eb46d644b6df200499868688c8c58d";
+(node as any).hash = "4071726415f2fb2ab784f585d179d77a";
 
 export default node;

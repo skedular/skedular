@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9378031839f92e7f6a6cbf9f651653c8>>
+ * @generated SignedSource<<b6533ab8217f58c24fa0123e7a309a87>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,26 +9,26 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type RemoveCustomerPreferredOrganizationTagInput = {
+export type AddCustomerPreferredOrganizationTagInput = {
   clientMutationId?: string | null | undefined;
   organizationTagId: string;
 };
-export type organizationAdmin_removeCustomerPreferredOrganizationTagMutation$variables = {
-  input: RemoveCustomerPreferredOrganizationTagInput;
+export type organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation$variables = {
+  input: AddCustomerPreferredOrganizationTagInput;
 };
-export type organizationAdmin_removeCustomerPreferredOrganizationTagMutation$data = {
-  readonly removeCustomerPreferredOrganizationTag: {
+export type organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation$data = {
+  readonly addCustomerPreferredOrganizationTag: {
     readonly customer: {
       readonly id: string;
-      readonly preferredZones: ReadonlyArray<{
+      readonly preferredCustomTags: ReadonlyArray<{
         readonly id: string;
       }>;
     };
   };
 };
-export type organizationAdmin_removeCustomerPreferredOrganizationTagMutation = {
-  response: organizationAdmin_removeCustomerPreferredOrganizationTagMutation$data;
-  variables: organizationAdmin_removeCustomerPreferredOrganizationTagMutation$variables;
+export type organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation = {
+  response: organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation$data;
+  variables: organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -58,7 +58,7 @@ v2 = [
     ],
     "concreteType": "CustomerPayload",
     "kind": "LinkedField",
-    "name": "removeCustomerPreferredOrganizationTag",
+    "name": "addCustomerPreferredOrganizationTag",
     "plural": false,
     "selections": [
       {
@@ -75,7 +75,7 @@ v2 = [
             "args": null,
             "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
-            "name": "preferredZones",
+            "name": "preferredCustomTags",
             "plural": true,
             "selections": [
               (v1/*: any*/)
@@ -94,7 +94,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_removeCustomerPreferredOrganizationTagMutation",
+    "name": "organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation",
     "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -103,20 +103,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_removeCustomerPreferredOrganizationTagMutation",
+    "name": "organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation",
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "fe741ada74ed12071f05197c0e017ad5",
+    "cacheID": "04360cfabb0c92577f5e5365a8ffeba4",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_removeCustomerPreferredOrganizationTagMutation",
+    "name": "organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_removeCustomerPreferredOrganizationTagMutation(\n  $input: RemoveCustomerPreferredOrganizationTagInput!\n) {\n  removeCustomerPreferredOrganizationTag(input: $input) {\n    customer {\n      id\n      preferredZones {\n        id\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation(\n  $input: AddCustomerPreferredOrganizationTagInput!\n) {\n  addCustomerPreferredOrganizationTag(input: $input) {\n    customer {\n      id\n      preferredCustomTags {\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "45a0879e2251da7d76f102e02402d12d";
+(node as any).hash = "927fb78283ec6fec1e3af022dead8eb5";
 
 export default node;

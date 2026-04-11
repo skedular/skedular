@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e1d8100171d29ee98a1cfee38ac712b>>
+ * @generated SignedSource<<14287bb1d534e7fe986f84b9fca3d33d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,17 +13,17 @@ export type RemoveOrganizationPaymentMethodInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type organizationAdmin_removeOrganizationPaymentMethodMutation$variables = {
+export type organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation$variables = {
   input: RemoveOrganizationPaymentMethodInput;
 };
-export type organizationAdmin_removeOrganizationPaymentMethodMutation$data = {
+export type organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation$data = {
   readonly removeOrganizationPaymentMethod: {
     readonly clientMutationId: string | null | undefined;
   };
 };
-export type organizationAdmin_removeOrganizationPaymentMethodMutation = {
-  response: organizationAdmin_removeOrganizationPaymentMethodMutation$data;
-  variables: organizationAdmin_removeOrganizationPaymentMethodMutation$variables;
+export type organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation = {
+  response: organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation$data;
+  variables: organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -65,7 +65,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_removeOrganizationPaymentMethodMutation",
+    "name": "organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -74,20 +74,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_removeOrganizationPaymentMethodMutation",
+    "name": "organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "292ee7180f93db97b16b7902253c2bcc",
+    "cacheID": "c5d5662afb756921052f6cf3090683c2",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_removeOrganizationPaymentMethodMutation",
+    "name": "organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_removeOrganizationPaymentMethodMutation(\n  $input: RemoveOrganizationPaymentMethodInput!\n) {\n  removeOrganizationPaymentMethod(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation(\n  $input: RemoveOrganizationPaymentMethodInput!\n) {\n  removeOrganizationPaymentMethod(input: $input) {\n    clientMutationId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ef88cdeddd124b179a851b4ca60c399c";
+(node as any).hash = "5df0316f3f00aba4fa3a4dce95ce44c0";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fc5c3ebeb7900512893b340f7fd87560>>
+ * @generated SignedSource<<423ea5922d80f420cfe4f7fe1585f3a1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,10 +14,10 @@ export type RemoveOrganizationTaxDetailsInput = {
   organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
 };
-export type organizationAdmin_removeOrganizationTaxDetailsMutation$variables = {
+export type organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation$variables = {
   input: RemoveOrganizationTaxDetailsInput;
 };
-export type organizationAdmin_removeOrganizationTaxDetailsMutation$data = {
+export type organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation$data = {
   readonly removeOrganizationTaxDetails: {
     readonly organization: {
       readonly id: string;
@@ -28,7 +28,7 @@ export type organizationAdmin_removeOrganizationTaxDetailsMutation$data = {
     };
   };
 };
-export type organizationAdmin_removeOrganizationTaxDetailsMutation$rawResponse = {
+export type organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation$rawResponse = {
   readonly removeOrganizationTaxDetails: {
     readonly organization: {
       readonly id: string;
@@ -40,10 +40,10 @@ export type organizationAdmin_removeOrganizationTaxDetailsMutation$rawResponse =
     };
   };
 };
-export type organizationAdmin_removeOrganizationTaxDetailsMutation = {
-  rawResponse: organizationAdmin_removeOrganizationTaxDetailsMutation$rawResponse;
-  response: organizationAdmin_removeOrganizationTaxDetailsMutation$data;
-  variables: organizationAdmin_removeOrganizationTaxDetailsMutation$variables;
+export type organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation = {
+  rawResponse: organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation$rawResponse;
+  response: organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation$data;
+  variables: organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -87,7 +87,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_removeOrganizationTaxDetailsMutation",
+    "name": "organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation",
     "selections": [
       {
         "alias": null,
@@ -133,7 +133,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_removeOrganizationTaxDetailsMutation",
+    "name": "organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation",
     "selections": [
       {
         "alias": null,
@@ -175,16 +175,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b743fbaa19325c7c77dd9bb30042826f",
+    "cacheID": "27cb47568d6a8dbba3f0954011377bad",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_removeOrganizationTaxDetailsMutation",
+    "name": "organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_removeOrganizationTaxDetailsMutation(\n  $input: RemoveOrganizationTaxDetailsInput!\n) {\n  removeOrganizationTaxDetails(input: $input) {\n    organization {\n      id\n      taxDetails {\n        taxId\n        taxRatePercentage\n        id\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation(\n  $input: RemoveOrganizationTaxDetailsInput!\n) {\n  removeOrganizationTaxDetails(input: $input) {\n    organization {\n      id\n      taxDetails {\n        taxId\n        taxRatePercentage\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "79f55e78de3a77303dab298eed1471cd";
+(node as any).hash = "f79f9b614dd53b8d321438b42ac2552d";
 
 export default node;

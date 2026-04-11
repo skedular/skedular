@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<91dac3dbd98ae2f876a60d33afabcb18>>
+ * @generated SignedSource<<35f57a52941bc640048e5ac8320ac5da>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,19 +14,19 @@ export type DeleteOrganizationInput = {
   customDomain?: string | null | undefined;
   id?: string | null | undefined;
 };
-export type organizationAdmin_deleteOrganizationMutation$variables = {
+export type organizationAdminManageOrganizationSection_deleteOrganizationMutation$variables = {
   input: DeleteOrganizationInput;
 };
-export type organizationAdmin_deleteOrganizationMutation$data = {
+export type organizationAdminManageOrganizationSection_deleteOrganizationMutation$data = {
   readonly deleteOrganization: {
     readonly organization: {
       readonly id: string;
     };
   };
 };
-export type organizationAdmin_deleteOrganizationMutation = {
-  response: organizationAdmin_deleteOrganizationMutation$data;
-  variables: organizationAdmin_deleteOrganizationMutation$variables;
+export type organizationAdminManageOrganizationSection_deleteOrganizationMutation = {
+  response: organizationAdminManageOrganizationSection_deleteOrganizationMutation$data;
+  variables: organizationAdminManageOrganizationSection_deleteOrganizationMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -79,7 +79,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_deleteOrganizationMutation",
+    "name": "organizationAdminManageOrganizationSection_deleteOrganizationMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -88,20 +88,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_deleteOrganizationMutation",
+    "name": "organizationAdminManageOrganizationSection_deleteOrganizationMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "3030b9cb96c6d4f034e8fe25ae357f01",
+    "cacheID": "c2090547f7aad4ce9861c3753797e062",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_deleteOrganizationMutation",
+    "name": "organizationAdminManageOrganizationSection_deleteOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_deleteOrganizationMutation(\n  $input: DeleteOrganizationInput!\n) {\n  deleteOrganization(input: $input) {\n    organization {\n      id\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminManageOrganizationSection_deleteOrganizationMutation(\n  $input: DeleteOrganizationInput!\n) {\n  deleteOrganization(input: $input) {\n    organization {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "541befc543b8d6b610d21b55fc85c78c";
+(node as any).hash = "8ca96377233b454437d23c0cc856ff22";
 
 export default node;

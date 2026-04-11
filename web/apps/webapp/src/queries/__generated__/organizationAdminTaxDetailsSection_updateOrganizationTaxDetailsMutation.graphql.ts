@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<26efd8dd15522870d427d129422a4c0b>>
+ * @generated SignedSource<<28517533fc24f4d47975a88ed4c7ef4d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,10 +16,10 @@ export type UpdateOrganizationTaxDetailsInput = {
   taxId: string;
   taxRatePercentage: any;
 };
-export type organizationAdmin_updateOrganizationTaxDetailsMutation$variables = {
+export type organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation$variables = {
   input: UpdateOrganizationTaxDetailsInput;
 };
-export type organizationAdmin_updateOrganizationTaxDetailsMutation$data = {
+export type organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation$data = {
   readonly updateOrganizationTaxDetails: {
     readonly organization: {
       readonly id: string;
@@ -30,7 +30,7 @@ export type organizationAdmin_updateOrganizationTaxDetailsMutation$data = {
     };
   };
 };
-export type organizationAdmin_updateOrganizationTaxDetailsMutation$rawResponse = {
+export type organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation$rawResponse = {
   readonly updateOrganizationTaxDetails: {
     readonly organization: {
       readonly id: string;
@@ -42,10 +42,10 @@ export type organizationAdmin_updateOrganizationTaxDetailsMutation$rawResponse =
     };
   };
 };
-export type organizationAdmin_updateOrganizationTaxDetailsMutation = {
-  rawResponse: organizationAdmin_updateOrganizationTaxDetailsMutation$rawResponse;
-  response: organizationAdmin_updateOrganizationTaxDetailsMutation$data;
-  variables: organizationAdmin_updateOrganizationTaxDetailsMutation$variables;
+export type organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation = {
+  rawResponse: organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation$rawResponse;
+  response: organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation$data;
+  variables: organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -89,7 +89,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_updateOrganizationTaxDetailsMutation",
+    "name": "organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation",
     "selections": [
       {
         "alias": null,
@@ -135,7 +135,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_updateOrganizationTaxDetailsMutation",
+    "name": "organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation",
     "selections": [
       {
         "alias": null,
@@ -177,16 +177,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ef01f072b46d17f2876576e3b30910c6",
+    "cacheID": "88114606545b20b34ca81cc49921db62",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_updateOrganizationTaxDetailsMutation",
+    "name": "organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationTaxDetailsMutation(\n  $input: UpdateOrganizationTaxDetailsInput!\n) {\n  updateOrganizationTaxDetails(input: $input) {\n    organization {\n      id\n      taxDetails {\n        taxId\n        taxRatePercentage\n        id\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation(\n  $input: UpdateOrganizationTaxDetailsInput!\n) {\n  updateOrganizationTaxDetails(input: $input) {\n    organization {\n      id\n      taxDetails {\n        taxId\n        taxRatePercentage\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c73545bd47f18d53fa4934db1763617e";
+(node as any).hash = "1ba115004f237dfff079038cf7ec5060";
 
 export default node;

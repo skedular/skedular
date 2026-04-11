@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<36ba63ec36d87d91d3d438ac1353ee66>>
+ * @generated SignedSource<<16839cd5789b2b5b3fa0ddc1801ab540>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -42,10 +42,10 @@ export type ListingMetadataInput = {
   subTitle?: string | null | undefined;
   title?: string | null | undefined;
 };
-export type organizationAdmin_updateOrganizationMutation$variables = {
+export type organizationAdminSetupSection_updateOrganizationMutation$variables = {
   input: UpdateOrganizationInput;
 };
-export type organizationAdmin_updateOrganizationMutation$data = {
+export type organizationAdminSetupSection_updateOrganizationMutation$data = {
   readonly updateOrganization: {
     readonly organization: {
       readonly billingCycle: {
@@ -91,7 +91,7 @@ export type organizationAdmin_updateOrganizationMutation$data = {
     };
   };
 };
-export type organizationAdmin_updateOrganizationMutation$rawResponse = {
+export type organizationAdminSetupSection_updateOrganizationMutation$rawResponse = {
   readonly updateOrganization: {
     readonly organization: {
       readonly billingCycle: {
@@ -137,10 +137,10 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
     };
   };
 };
-export type organizationAdmin_updateOrganizationMutation = {
-  rawResponse: organizationAdmin_updateOrganizationMutation$rawResponse;
-  response: organizationAdmin_updateOrganizationMutation$data;
-  variables: organizationAdmin_updateOrganizationMutation$variables;
+export type organizationAdminSetupSection_updateOrganizationMutation = {
+  rawResponse: organizationAdminSetupSection_updateOrganizationMutation$rawResponse;
+  response: organizationAdminSetupSection_updateOrganizationMutation$data;
+  variables: organizationAdminSetupSection_updateOrganizationMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -241,32 +241,6 @@ v7 = [
             "storageKey": null
           },
           (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationBillingCycleDetails",
-            "kind": "LinkedField",
-            "name": "billingCycle",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
-              (v2/*: any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "invoiceDueInDays",
-            "storageKey": null
-          },
           {
             "alias": null,
             "args": null,
@@ -380,6 +354,32 @@ v7 = [
               }
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationBillingCycleDetails",
+            "kind": "LinkedField",
+            "name": "billingCycle",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "invoiceDueInDays",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -393,7 +393,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_updateOrganizationMutation",
+    "name": "organizationAdminSetupSection_updateOrganizationMutation",
     "selections": (v7/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -402,20 +402,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_updateOrganizationMutation",
+    "name": "organizationAdminSetupSection_updateOrganizationMutation",
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "589795926883138b0e55c279b62b822d",
+    "cacheID": "064642bb12995df45b8ec62d3b2e670e",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_updateOrganizationMutation",
+    "name": "organizationAdminSetupSection_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      billingCycle {\n        type\n        name\n      }\n      invoiceDueInDays\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      refundNotificationEmails\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminSetupSection_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      refundNotificationEmails\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      billingCycle {\n        type\n        name\n      }\n      invoiceDueInDays\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1195f2e12aeb12614f0fa4a992367230";
+(node as any).hash = "439d41145450323480dba1fae02fedbd";
 
 export default node;
