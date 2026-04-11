@@ -6,11 +6,9 @@ import {
   ExtraLargeHeadingIconTypography,
   FormFieldLabel,
   FormStackColumn,
-  GridContainer,
   HelperText,
   LeadIconTypography,
   PushToRight,
-  SectionIconTypography,
   SmallIconTypography,
   StackColumn,
   StackRow,
@@ -35,6 +33,7 @@ import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald } from '@/libs/theme';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { EditorActionBar, PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
 import type { organizationAdmin_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_addCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_addOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdmin_addOrganizationBillingDetailsMutation.graphql';
 import type { organizationAdmin_addOrganizationPhysicalAddressMutation } from '@/queries/__generated__/organizationAdmin_addOrganizationPhysicalAddressMutation.graphql';
@@ -65,7 +64,6 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
@@ -79,7 +77,7 @@ import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -761,7 +759,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const searchParams = useSearchParams();
   const section = searchParams.get('section');
   const activeSection = useMemo(() => getActiveSection(section), [section]);
-  const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const [stickyTop, setStickyTop] = useState(0);
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
 
@@ -953,24 +950,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     },
     [startTransition, refetchCustomTags],
   );
-
-  useEffect(() => {
-    if (!section || section === 'setup') {
-      return;
-    }
-
-    const element = sectionRefs.current[section];
-    if (!element) {
-      return;
-    }
-
-    const appBarHeight = document.querySelector('.app-bar')?.clientHeight || 0;
-    const elementTop = element.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({
-      top: elementTop - appBarHeight,
-      behavior: 'smooth',
-    });
-  }, [section]);
 
   useEffect(() => {
     const updateStickyTop = () => {
@@ -2420,7 +2399,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const paymentMethodExist = organization && organization.paymentMethods.length > 0;
   const activeOffering = organization ? organization.activeOffering : null;
   const availableOfferings = organization && organization.availableOfferings ? organization.availableOfferings : [];
-
   return (
     <>
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
@@ -2429,898 +2407,722 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             width: '100%',
             maxWidth: 1120,
             mx: 'auto',
-            backgroundColor: 'background.paper',
+            backgroundColor: 'transparent',
+            gap: 2,
           }}
         >
-          <StackColumn sx={{ px: { xs: 2, sm: 3 }, pt: defaultPadding, pb: 1 }}>
+          <PageHeaderPanel
+            eyebrow="Organization admin"
+            title={organization?.name ?? 'Organization settings'}
+            description="Manage identity, billing, addresses, access, tags, subscriptions, and lifecycle controls."
+          >
             <StackColumn spacing={0.5}>
-              <BodyIconTypography label="Organization admin" />
               <LeadIconTypography label="Settings & controls" />
-              <BodyIconTypography label="Billing, address, identity, tags, and subscriptions" />
+              <BodyIconTypography
+                label={organization?.listingMetadata?.title || organization?.marketplaceListingMetadata?.title || 'Billing, address, identity, tags, and subscriptions'}
+              />
             </StackColumn>
-          </StackColumn>
+          </PageHeaderPanel>
 
           <OrganizationAdminSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} stickyTop={stickyTop} />
-          <Form
-            onSubmit={handleOrganizationDetailUpdateClick}
-            initialValues={{
-              customDomain: organizationEditableCustomDomain,
-              name: organizationName,
-              about: organizationAbout,
-              title: organizationTitle,
-              subTitle: organizationSubTitle,
-              website: organizationWebsite,
-              customerFacingTermsAndConditionsUrl: organizationCustomerFacingTermsAndConditionsUrl,
-              industrySubCategoryIds: organizationIndustrySubCategoryIds,
-              contactEmail: organizationContactEmail,
-              contactPhone: organizationContactPhone,
-              refundNotificationEmailsText: organizationRefundNotificationEmailsText,
-            }}
-            validate={validateOrganizationDetails}
-            render={({ handleSubmit, values }) => {
-              debounceSetOrganizationEditableCustomDomain(values!.customDomain);
-              debounceSetOrganizationName(values!.name);
-              debounceSetOrganizationWebsite(values!.website);
-              debounceSetOrganizationCustomerFacingTermsAndConditionsUrl(values!.customerFacingTermsAndConditionsUrl);
-              debounceSetOrganizationIndustrySubCategoryIds(values!.industrySubCategoryIds);
-              debounceSetOrganizationContactEmail(values!.contactEmail);
-              debounceSetOrganizationContactPhone(values!.contactPhone);
-              debounceSetOrganizationRefundNotificationEmailsText(values!.refundNotificationEmailsText ?? '');
+          {activeSection === 'setup' && (
+            <Form
+              onSubmit={handleOrganizationDetailUpdateClick}
+              initialValues={{
+                customDomain: organizationEditableCustomDomain,
+                name: organizationName,
+                about: organizationAbout,
+                title: organizationTitle,
+                subTitle: organizationSubTitle,
+                website: organizationWebsite,
+                customerFacingTermsAndConditionsUrl: organizationCustomerFacingTermsAndConditionsUrl,
+                industrySubCategoryIds: organizationIndustrySubCategoryIds,
+                contactEmail: organizationContactEmail,
+                contactPhone: organizationContactPhone,
+                refundNotificationEmailsText: organizationRefundNotificationEmailsText,
+              }}
+              validate={validateOrganizationDetails}
+              render={({ handleSubmit, values }) => {
+                debounceSetOrganizationEditableCustomDomain(values!.customDomain);
+                debounceSetOrganizationName(values!.name);
+                debounceSetOrganizationWebsite(values!.website);
+                debounceSetOrganizationCustomerFacingTermsAndConditionsUrl(values!.customerFacingTermsAndConditionsUrl);
+                debounceSetOrganizationIndustrySubCategoryIds(values!.industrySubCategoryIds);
+                debounceSetOrganizationContactEmail(values!.contactEmail);
+                debounceSetOrganizationContactPhone(values!.contactPhone);
+                debounceSetOrganizationRefundNotificationEmailsText(values!.refundNotificationEmailsText ?? '');
 
-              return (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                    ref={(divElement) => {
-                      sectionRefs.current['setup'] = divElement;
-                    }}
-                  >
-                    <SectionIconTypography label="Organization Setup" />
-                    <BodyIconTypography label="Edit your organization details" />
-                    <Divider />
-                  </StackColumn>
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <Box sx={{ pb: 2 }}>
+                      <StackColumn spacing={2}>
+                        <SettingsSectionCard title="Organization setup" description="Edit identity, presentation, domain, industry, and customer-facing details.">
+                          <StackColumn>
+                            <FormFieldLabel label="Feature Images">
+                              <StackColumn>
+                                <Box
+                                  sx={{
+                                    display: 'grid',
+                                    gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
+                                    gap: 2,
+                                  }}
+                                >
+                                  {featureImages.map((image, index) => (
+                                    <Box
+                                      key={index}
+                                      sx={{
+                                        position: 'relative',
+                                        borderRadius: 2,
+                                        overflow: 'hidden',
+                                        border: 1,
+                                        borderColor: 'divider',
+                                        backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                                      }}
+                                    >
+                                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                                      <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                      <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                                        <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                                          <DeleteIcon fontSize="small" />
+                                        </IconButton>
+                                      </StackRow>
+                                      <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                                        {primaryFeatureImage?.original?.url === image.original?.url ? (
+                                          <Chip size="small" color="success" label="Cover image" />
+                                        ) : (
+                                          <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                            Make cover
+                                          </Button>
+                                        )}
+                                      </StackRow>
+                                    </Box>
+                                  ))}
+                                </Box>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Feature Images">
-                      <StackColumn>
-                        <Box
-                          sx={{
-                            display: 'grid',
-                            gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
-                            gap: 2,
-                          }}
+                                <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
+                              </StackColumn>
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Name">
+                              <TextField name="name" required={requiredOrganizationDetailsFields.name} />
+                            </FormFieldLabel>
+
+                            {rootData.me.emails.some(
+                              (item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase()),
+                            ) && (
+                              <FormFieldLabel label="Custom Domain" required={requiredOrganizationDetailsFields.customDomain}>
+                                <TextField name="customDomain" required={requiredOrganizationDetailsFields.customDomain} />
+                              </FormFieldLabel>
+                            )}
+
+                            <ListingMetadata
+                              fields={['about', 'title', 'subTitle']}
+                              requiredFields={requiredOrganizationDetailsFields}
+                              onChange={({ about, title, subTitle }) => {
+                                debounceSetOrganizationAbout(about);
+                                debounceSetOrganizationTitle(title);
+                                debounceSetOrganizationSubTitle(subTitle);
+                              }}
+                            />
+
+                            <FormFieldLabel label="Website">
+                              <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Terms and Conditions">
+                              <TextField
+                                name="customerFacingTermsAndConditionsUrl"
+                                required={requiredOrganizationDetailsFields.customerFacingTermsAndConditionsUrl}
+                                helperText={<HelperText text="Provide your company's official website so members can learn more or verify your organization." />}
+                              />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Industry">
+                              <OrganizationMultipleChoicesIndustries
+                                rootDataRelay={rootData}
+                                name="industrySubCategoryIds"
+                                required={requiredOrganizationDetailsFields.industrySubCategoryIds}
+                              />
+                            </FormFieldLabel>
+                          </StackColumn>
+                        </SettingsSectionCard>
+
+                        <SettingsSectionCard title="Contact details" description="Set the operational contact points used for member communication and refund notifications.">
+                          <StackColumn>
+                            <FormFieldLabel label="Email">
+                              <TextField name="contactEmail" required={requiredOrganizationDetailsFields.contactEmail} />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Phone Number">
+                              <TextField name="contactPhone" required={requiredOrganizationDetailsFields.contactPhone} />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Refund Notification Emails">
+                              <StackColumn>
+                                <TextField name="refundNotificationEmailsText" required={requiredOrganizationDetailsFields.refundNotificationEmailsText} multiline minRows={3} />
+                                <HelperText text="Optional. One email per line, or separate multiple emails with commas. These addresses receive internal refund status updates." />
+                              </StackColumn>
+                            </FormFieldLabel>
+
+                            <EditorActionBar primaryAction="Update" />
+                          </StackColumn>
+                        </SettingsSectionCard>
+                      </StackColumn>
+                    </Box>
+                  </FormStackColumn>
+                );
+              }}
+            />
+          )}
+
+          {activeSection === 'physical-address-setup' && (
+            <Form
+              onSubmit={handlePhysicalAddressUpdateClick}
+              initialValues={{
+                addressLine1: physicalAddressAddressLine1,
+                addressLine2: physicalAddressAddressLine2,
+                suburb: physicalAddressSuburb,
+                city: physicalAddressCity,
+                province: physicalAddressProvince,
+                zipcode: physicalAddressZipcode,
+                countryCode: physicalAddressCountryCode,
+              }}
+              validate={validatePhysicalAddress}
+              render={({ handleSubmit, values, form }) => {
+                debounceSetPhysicalAddressAddressLine1(values!.addressLine1);
+                debounceSetPhysicalAddressAddressLine2(values!.addressLine2);
+                debounceSetPhysicalAddressSuburb(values!.suburb);
+                debounceSetPhysicalAddressCity(values!.city);
+                debounceSetPhysicalAddressProvince(values!.province);
+                debounceSetPhysicalAddressZipcode(values!.zipcode);
+                debounceSetPhysicalAddressCountryCode(values!.countryCode);
+
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <Box sx={{ pb: 2 }}>
+                      <SettingsSectionCard title="Physical address" description="Update the organization address used for internal records and operational context.">
+                        <StackColumn>
+                          <PhysicalAddress
+                            addressLine1Name="addressLine1"
+                            addressLine1Required={requiredPhysicalAddressFields.addressLine1}
+                            addressLine2Name="addressLine2"
+                            addressLine2Required={requiredPhysicalAddressFields.addressLine2}
+                            suburbName="suburb"
+                            suburbRequired={requiredPhysicalAddressFields.suburb}
+                            cityName="city"
+                            cityRequired={requiredPhysicalAddressFields.city}
+                            provinceName="province"
+                            provinceRequired={requiredPhysicalAddressFields.province}
+                            zipcodeName="zipcode"
+                            zipcodeRequired={requiredPhysicalAddressFields.zipcode}
+                            countryName="countryCode"
+                            countryRequired={requiredPhysicalAddressFields.countryCode}
+                            onSelect={(address) => {
+                              handlePhysicalAddressSelect(address);
+                              form.batch(() => {
+                                form.change('addressLine1', address.addressLine1 ?? '');
+                                form.change('addressLine2', address.addressLine2 ?? '');
+                                form.change('suburb', address.suburb ?? '');
+                                form.change('city', address.city ?? '');
+                                form.change('province', address.province ?? '');
+                                form.change('zipcode', address.zipcode ?? '');
+                                form.change('countryCode', address.countryCode ?? '');
+                              });
+                            }}
+                          />
+                          <EditorActionBar primaryAction="Update" />
+                        </StackColumn>
+                      </SettingsSectionCard>
+                    </Box>
+                  </FormStackColumn>
+                );
+              }}
+            />
+          )}
+
+          {activeSection === 'billing-payment-setup' && (
+            <Form
+              onSubmit={handleBillingDetailUpdateClick}
+              initialValues={{
+                companyName: billingCompanyName,
+                email: billingEmail,
+                addressLine1: billingAddressLine1,
+                addressLine2: billingAddressLine2,
+                suburb: billingSuburb,
+                city: billingCity,
+                province: billingProvince,
+                zipcode: billingZipcode,
+                countryCode: billingCountryCode,
+              }}
+              validate={validateOrganizationBilling}
+              render={({ handleSubmit, values, form }) => {
+                debounceSetBillingCompanyName(values!.companyName);
+                debounceSetBillingEmail(values!.email);
+                debounceSetBillingAddressLine1(values!.addressLine1);
+                debounceSetBillingAddressLine2(values!.addressLine2);
+                debounceSetBillingSuburb(values!.suburb);
+                debounceSetBillingCity(values!.city);
+                debounceSetBillingProvince(values!.province);
+                debounceSetBillingZipcode(values!.zipcode);
+                debounceSetBillingCountryCode(values!.countryCode);
+
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <Box sx={{ pb: 2 }}>
+                      <StackColumn spacing={2}>
+                        <SettingsSectionCard title="Billing details" description="Control invoice recipients and the legal billing address used for the organization.">
+                          <StackColumn>
+                            <FormFieldLabel label="Company name">
+                              <TextField name="companyName" required={requiredBillingFields.companyName} />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Email">
+                              <TextField name="email" required={requiredBillingFields.email} helperText="Email to send invoice to" />
+                            </FormFieldLabel>
+
+                            <PhysicalAddress
+                              addressLine1Name="addressLine1"
+                              addressLine1Required={requiredBillingFields.addressLine1}
+                              addressLine2Name="addressLine2"
+                              addressLine2Required={requiredBillingFields.addressLine2}
+                              suburbName="suburb"
+                              suburbRequired={requiredBillingFields.suburb}
+                              cityName="city"
+                              cityRequired={requiredBillingFields.city}
+                              provinceName="province"
+                              provinceRequired={requiredBillingFields.province}
+                              zipcodeName="zipcode"
+                              zipcodeRequired={requiredBillingFields.zipcode}
+                              countryName="countryCode"
+                              countryRequired={requiredBillingFields.countryCode}
+                              onSelect={(address) => {
+                                handleBillingAddressSelect(address);
+                                form.batch(() => {
+                                  form.change('addressLine1', address.addressLine1 ?? '');
+                                  form.change('addressLine2', address.addressLine2 ?? '');
+                                  form.change('suburb', address.suburb ?? '');
+                                  form.change('city', address.city ?? '');
+                                  form.change('province', address.province ?? '');
+                                  form.change('zipcode', address.zipcode ?? '');
+                                  form.change('countryCode', address.countryCode ?? '');
+                                });
+                              }}
+                            />
+
+                            <EditorActionBar primaryAction="Update" />
+                          </StackColumn>
+                        </SettingsSectionCard>
+
+                        <SettingsSectionCard
+                          title="Payment method"
+                          description={
+                            paymentMethodExist
+                              ? 'The active payment methods available for subscriptions and upgrades.'
+                              : 'Attach a payment method before upgrading or changing paid offerings.'
+                          }
+                          actions={
+                            !paymentMethodExist ? (
+                              <Button variant="text" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
+                                <LeadIconTypography label="Add Payment Method" endElement={<NewIcon fontSize="large" />} />
+                              </Button>
+                            ) : undefined
+                          }
                         >
-                          {featureImages.map((image, index) => (
-                            <Box
-                              key={index}
+                          {paymentMethodExist ? (
+                            <StackRow sx={{ gap: 2, flexWrap: 'wrap' }}>
+                              {organization.paymentMethods.map((item) => (
+                                <StackColumn key={item.id}>
+                                  <CreditCard lastFourDigits={item.cardLastFourDigit} expiryDate={`${item.cardExpiryMonth}/${item.cardExpiryYear}`} cardBrand={item.cardBrand} />
+                                  <Button variant="contained" color="warning" onClick={() => handleRemovePaymentMethodClick(item.id)}>
+                                    <BodyIconTypography label="Remove Payment Method" invertDefaultColor={paletteMode === 'dark'} startElement={<DeleteIcon />} />
+                                  </Button>
+                                </StackColumn>
+                              ))}
+                            </StackRow>
+                          ) : (
+                            <SmallIconTypography label="No payment method setup yet" />
+                          )}
+                        </SettingsSectionCard>
+                      </StackColumn>
+                    </Box>
+                  </FormStackColumn>
+                );
+              }}
+            />
+          )}
+
+          {activeSection === 'sso-setup' && (
+            <Form
+              onSubmit={handleEnableOrganizationSsoSettingsClick}
+              initialValues={{
+                entityId: ssoSettingsEntityId,
+                loginUrl: ssoSettingsLoginUrl,
+                appFederationMetadataUrl: ssoSettingsAppFederationMetadataUrl,
+              }}
+              validate={validateSsoSettings}
+              render={({ handleSubmit, values }) => {
+                debounceSetSsoSettingsEntityId(values!.entityId);
+                debounceSetSsoSettingsLoginUrl(values!.loginUrl);
+                debounceSetSsoSettingsppFederationMetadataUrl(values!.appFederationMetadataUrl);
+
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <Box sx={{ pb: 2 }}>
+                      <SettingsSectionCard title="SSO setup" description="Configure enterprise sign-in and identity federation for organization members.">
+                        <StackColumn>
+                          <FormFieldLabel label="Enable Sign sign-on">
+                            <Switch defaultChecked={ssoSettingsEnabled} onChange={handleEnableSsoChange} />
+                          </FormFieldLabel>
+
+                          {ssoSettingsEnabled && (
+                            <>
+                              <FormFieldLabel label="Entity Id">
+                                <TextField name="entityId" required={requiredSsoSettingsFields.entityId} />
+                              </FormFieldLabel>
+
+                              <FormFieldLabel label="Login Url">
+                                <TextField name="loginUrl" required={requiredSsoSettingsFields.loginUrl} />
+                              </FormFieldLabel>
+
+                              <FormFieldLabel label="App Federation Metadata Url">
+                                <TextField name="appFederationMetadataUrl" required={requiredSsoSettingsFields.appFederationMetadataUrl} />
+                              </FormFieldLabel>
+                            </>
+                          )}
+
+                          {ssoSettingsEnabled ? <EditorActionBar primaryAction="Update" /> : null}
+                        </StackColumn>
+                      </SettingsSectionCard>
+                    </Box>
+                  </FormStackColumn>
+                );
+              }}
+            />
+          )}
+
+          {activeSection === 'tax-details-setup' && (
+            <Form
+              onSubmit={handleEnableOrganizationTaxDetailsClick}
+              initialValues={{
+                taxId: taxDetailsTaxId,
+                taxRatePercentage: taxDetailsTaxRatePercentage,
+              }}
+              validate={validateTaxDetails}
+              render={({ handleSubmit, values }) => {
+                debounceSetTaxDetailsTaxId(values!.taxId);
+                debounceSetTaxDetailsTaxRatePercentage(values!.taxRatePercentage);
+
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <Box sx={{ pb: 2 }}>
+                      <SettingsSectionCard title="Tax details" description="Control how tax identity and default rates are applied to invoices and marketplace billing.">
+                        <StackColumn>
+                          <FormFieldLabel label="Is this business registered for tax (GST/VAT)?">
+                            <Switch defaultChecked={taxDetailsEnabled} onChange={handleEnableTaxDetailsChange} />
+                          </FormFieldLabel>
+
+                          {taxDetailsEnabled && (
+                            <>
+                              <FormFieldLabel label="Tax ID / VAT / GST Number">
+                                <TextField name="taxId" required={requiredTaxDetailsFields.taxId} />
+                              </FormFieldLabel>
+
+                              <FormFieldLabel label="Tax Rate (%)">
+                                <TextField name="taxRatePercentage" required={requiredTaxDetailsFields.taxRatePercentage} />
+                              </FormFieldLabel>
+                            </>
+                          )}
+
+                          {taxDetailsEnabled ? <EditorActionBar primaryAction="Update" /> : null}
+                        </StackColumn>
+                      </SettingsSectionCard>
+                    </Box>
+                  </FormStackColumn>
+                );
+              }}
+            />
+          )}
+
+          {activeSection === 'zones-setup' && (
+            <Box sx={{ pb: 2 }}>
+              <SettingsSectionCard
+                title="Zones"
+                description="Manage shared place-based tags used for organization filters and preferences."
+                actions={<AddOrganizationZoneButton organizationCustomDomain={organizationCustomDomain} connectionIds={zonesConnectionIds} />}
+              >
+                <StackColumn spacing={2}>
+                  <StackRow sx={{ justifyContent: 'flex-end' }}>
+                    <Search size="small" placeholder="Search for zones" defaultValue={zoneNameSearchText} onChange={handleZonesSearchTextChange} />
+                  </StackRow>
+
+                  {seledctedZones.ids.size > 0 && (
+                    <Box
+                      sx={{
+                        backgroundColor: 'white',
+                        padding: defaultGridActionPadding,
+                        border: 1,
+                        borderColor: (theme) => theme.palette.divider,
+                        borderRadius: 2,
+                      }}
+                    >
+                      <StackRow sx={{ alignItems: 'center' }}>
+                        <SmallIconTypography label={`${seledctedZones.ids.size} records selected`} />
+                        <PushToRight />
+                        <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveZonesClick} sx={{ textTransform: 'none' }}>
+                          Remove Zone
+                        </Button>
+                      </StackRow>
+                    </Box>
+                  )}
+
+                  <DataGrid
+                    checkboxSelection
+                    rowSelectionModel={seledctedZones}
+                    onRowSelectionModelChange={handleSelectedZonesChanged}
+                    rows={zoneRows}
+                    columns={zoneColumns}
+                    hideFooterPagination={zoneRows.length <= 10}
+                    initialState={{
+                      pagination: {
+                        rowCount: zoneRows.length,
+                        paginationModel: {
+                          pageSize: 10,
+                        },
+                      },
+                    }}
+                    pageSizeOptions={[10]}
+                    ignoreDiacritics
+                    disableRowSelectionOnClick
+                    getRowHeight={() => 'auto'}
+                    rowSpacingType="margin"
+                    getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                    sx={defaultGridStyle}
+                    localeText={{ noRowsLabel: 'No zone found' }}
+                  />
+                </StackColumn>
+              </SettingsSectionCard>
+            </Box>
+          )}
+
+          {activeSection === 'tags-setup' && (
+            <Box sx={{ pb: 2 }}>
+              <SettingsSectionCard
+                title="Tags"
+                description="Manage custom tags used to classify bookings, spaces, and member preferences."
+                actions={<AddOrganizationCustomTagButton organizationCustomDomain={organizationCustomDomain} connectionIds={customTagsConnectionIds} />}
+              >
+                <StackColumn spacing={2}>
+                  <StackRow sx={{ justifyContent: 'flex-end' }}>
+                    <Search size="small" placeholder="Search for tags" defaultValue={customTagNameSearchText} onChange={handleCustomTagsSearchTextChange} />
+                  </StackRow>
+
+                  {seledctedCustomTags.ids.size > 0 && (
+                    <Box
+                      sx={{
+                        backgroundColor: 'white',
+                        padding: defaultGridActionPadding,
+                        border: 1,
+                        borderColor: (theme) => theme.palette.divider,
+                        borderRadius: 2,
+                      }}
+                    >
+                      <StackRow sx={{ alignItems: 'center' }}>
+                        <SmallIconTypography label={`${seledctedCustomTags.ids.size} records selected`} />
+                        <PushToRight />
+                        <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveCustomTagsClick} sx={{ textTransform: 'none' }}>
+                          Remove Tag
+                        </Button>
+                      </StackRow>
+                    </Box>
+                  )}
+
+                  <DataGrid
+                    checkboxSelection
+                    rowSelectionModel={seledctedCustomTags}
+                    onRowSelectionModelChange={handleSelectedCustomTagsChanged}
+                    rows={customTagRows}
+                    columns={customTagColumns}
+                    hideFooterPagination={customTagRows.length <= 10}
+                    initialState={{
+                      pagination: {
+                        rowCount: customTagRows.length,
+                        paginationModel: {
+                          pageSize: 10,
+                        },
+                      },
+                    }}
+                    pageSizeOptions={[10]}
+                    ignoreDiacritics
+                    disableRowSelectionOnClick
+                    getRowHeight={() => 'auto'}
+                    rowSpacingType="margin"
+                    getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                    sx={defaultGridStyle}
+                    localeText={{ noRowsLabel: 'No tag found' }}
+                  />
+                </StackColumn>
+              </SettingsSectionCard>
+            </Box>
+          )}
+
+          {activeSection === 'subscriptions' && (
+            <Box sx={{ pb: 2 }}>
+              <SettingsSectionCard title="Subscriptions" description="Review the active plan and the available upgrades for the organization.">
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(auto-fit, minmax(280px, 320px))' }, gap: 2, justifyContent: 'center' }}>
+                  {activeOffering && (
+                    <Grid>
+                      <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%', backgroundColor: 'white' }}>
+                        <CardContent sx={{ marginLeft: 1 }}>
+                          <BodyIconTypography label={activeOffering.name} sx={{ color: coal }} />
+                          <StackRow spacing={0.5} sx={{ marginTop: -2 }}>
+                            <ExtraLargeHeadingIconTypography label={(activeOffering.unitPrice / 100).toFixed(0)} sx={{ paddingTop: 4, color: coal }} />
+                            <BodyIconTypography label="$" sx={{ color: coal }} />
+                          </StackRow>
+
+                          <List sx={{ padding: 0 }}>
+                            <Box sx={{ marginTop: 2, marginBottom: 4 }}>
+                              {activeOffering.underPriceLines.map((item, index) => (
+                                <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
+                                  <ListItemText>
+                                    <SmallIconTypography label={item} sx={{ color: coal }} />
+                                  </ListItemText>
+                                </ListItem>
+                              ))}
+                            </Box>
+
+                            {activeOffering.featureSet.map((item, index) => (
+                              <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
+                                <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
+                                  <TickIcon fontSize="small" sx={{ color: activeOffering.isEnterprise ? coal : emerald }} />
+                                </ListItemIcon>
+                                <ListItemText>
+                                  <SmallIconTypography label={item} sx={{ color: coal }} />
+                                </ListItemText>
+                              </ListItem>
+                            ))}
+                          </List>
+
+                          <CardActions sx={{ justifyContent: 'center' }}>
+                            {!activeOffering.free && (
+                              <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick} sx={defaultButtonStyle}>
+                                Cancel
+                              </Button>
+                            )}
+                          </CardActions>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  )}
+
+                  {availableOfferings.map((availableOffering) => (
+                    <Grid key={availableOffering.code}>
+                      <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%', backgroundColor: 'white' }}>
+                        <CardContent sx={{ marginLeft: 1 }}>
+                          <BodyIconTypography label={availableOffering.name} sx={{ color: coal }} />
+                          <StackRow spacing={0.5} sx={{ marginTop: -2 }}>
+                            {availableOffering.unitPrice > 0 && (
+                              <ExtraLargeHeadingIconTypography label={(availableOffering.unitPrice / 100).toFixed(0)} sx={{ paddingTop: 4, color: coal }} />
+                            )}
+                            {availableOffering.isEnterprise && (
+                              <ExtraLargeHeadingIconTypography
+                                label="TBC"
+                                sx={{
+                                  paddingTop: 4,
+                                  color: coal,
+                                }}
+                              />
+                            )}
+                            <BodyIconTypography label="$" sx={{ color: coal }} />
+                          </StackRow>
+
+                          <List sx={{ padding: 0 }}>
+                            <Box sx={{ marginTop: 2, marginBottom: 4 }}>
+                              {availableOffering.underPriceLines.map((item, index) => (
+                                <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
+                                  <ListItemText>
+                                    <SmallIconTypography label={item} sx={{ color: coal }} />
+                                  </ListItemText>
+                                </ListItem>
+                              ))}
+                            </Box>
+
+                            {availableOffering.featureSet.map((item, index) => (
+                              <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
+                                <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
+                                  <TickIcon fontSize="small" sx={{ color: availableOffering.isEnterprise ? coal : emerald }} />
+                                </ListItemIcon>
+                                <ListItemText>
+                                  <SmallIconTypography label={item} sx={{ color: coal }} />
+                                </ListItemText>
+                              </ListItem>
+                            ))}
+
+                            {!organization?.hasAttachedPaymentMethod && (
+                              <ListItem alignItems="flex-start" sx={{ padding: 0, paddingTop: 1 }}>
+                                <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
+                                  <ErrorIcon fontSize="large" sx={{ color: 'red' }} />
+                                </ListItemIcon>
+                                <ListItemText>
+                                  <SmallIconTypography label="You need to have payment method setup in order to upgrade to this offering." color="red" />
+                                </ListItemText>
+                              </ListItem>
+                            )}
+                          </List>
+                        </CardContent>
+
+                        <CardActions sx={{ justifyContent: 'center' }}>
+                          {!organization?.hasAttachedPaymentMethod && (
+                            <Button variant="contained" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none', color: 'white' }}>
+                              Add Payment Method
+                            </Button>
+                          )}
+
+                          {organization?.hasAttachedPaymentMethod && !availableOffering.isEnterprise && (
+                            <Button
+                              color="primary"
+                              variant="contained"
+                              onClick={() => handleUpgradeOfferingClick(availableOffering.code)}
+                              sx={{ textTransform: 'none', color: 'white' }}
+                            >
+                              Upgrade
+                            </Button>
+                          )}
+
+                          {organization?.hasAttachedPaymentMethod && availableOffering.isEnterprise && (
+                            <Button
+                              href="mailto:support@getskedular.com"
+                              variant="contained"
                               sx={{
-                                position: 'relative',
-                                borderRadius: 2,
-                                overflow: 'hidden',
-                                border: 1,
-                                borderColor: 'divider',
-                                backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                                textTransform: 'none',
+                                backgroundColor: 'black',
+                                color: 'white',
                               }}
                             >
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                              <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                                <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                                  <DeleteIcon fontSize="small" />
-                                </IconButton>
-                              </StackRow>
-                              <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                                {primaryFeatureImage?.original?.url === image.original?.url ? (
-                                  <Chip size="small" color="success" label="Cover image" />
-                                ) : (
-                                  <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                                    Make cover
-                                  </Button>
-                                )}
-                              </StackRow>
-                            </Box>
-                          ))}
-                        </Box>
+                              Contact Us
+                            </Button>
+                          )}
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Box>
+              </SettingsSectionCard>
+            </Box>
+          )}
 
-                        <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
-                      </StackColumn>
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredOrganizationDetailsFields.name} />
-                    </FormFieldLabel>
-
-                    {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-                      <FormFieldLabel label="Custom Domain" required={requiredOrganizationDetailsFields.customDomain}>
-                        <TextField name="customDomain" required={requiredOrganizationDetailsFields.customDomain} />
-                      </FormFieldLabel>
-                    )}
-
-                    <ListingMetadata
-                      fields={['about', 'title', 'subTitle']}
-                      requiredFields={requiredOrganizationDetailsFields}
-                      onChange={({ about, title, subTitle }) => {
-                        debounceSetOrganizationAbout(about);
-                        debounceSetOrganizationTitle(title);
-                        debounceSetOrganizationSubTitle(subTitle);
-                      }}
-                    />
-
-                    <FormFieldLabel label="Website">
-                      <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Terms and Conditions">
-                      <TextField
-                        name="customerFacingTermsAndConditionsUrl"
-                        required={requiredOrganizationDetailsFields.customerFacingTermsAndConditionsUrl}
-                        helperText={<HelperText text="Provide your company's official website so members can learn more or verify your organization." />}
-                      />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Industry">
-                      <OrganizationMultipleChoicesIndustries
-                        rootDataRelay={rootData}
-                        name="industrySubCategoryIds"
-                        required={requiredOrganizationDetailsFields.industrySubCategoryIds}
-                      />
-                    </FormFieldLabel>
-
-                    <SectionIconTypography label="Contact Details" />
-                    <BodyIconTypography label="Edit your organization contact details" />
-                    <Divider />
-
-                    <FormFieldLabel label="Email">
-                      <TextField name="contactEmail" required={requiredOrganizationDetailsFields.contactEmail} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Phone Number">
-                      <TextField name="contactPhone" required={requiredOrganizationDetailsFields.contactPhone} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Refund Notification Emails">
-                      <StackColumn>
-                        <TextField name="refundNotificationEmailsText" required={requiredOrganizationDetailsFields.refundNotificationEmailsText} multiline minRows={3} />
-                        <HelperText text="Optional. One email per line, or separate multiple emails with commas. These addresses receive internal refund status updates." />
-                      </StackColumn>
-                    </FormFieldLabel>
-                  </StackColumn>
-
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
-              );
-            }}
-          />
-
-          <Form
-            onSubmit={handlePhysicalAddressUpdateClick}
-            initialValues={{
-              addressLine1: physicalAddressAddressLine1,
-              addressLine2: physicalAddressAddressLine2,
-              suburb: physicalAddressSuburb,
-              city: physicalAddressCity,
-              province: physicalAddressProvince,
-              zipcode: physicalAddressZipcode,
-              countryCode: physicalAddressCountryCode,
-            }}
-            validate={validatePhysicalAddress}
-            render={({ handleSubmit, values, form }) => {
-              debounceSetPhysicalAddressAddressLine1(values!.addressLine1);
-              debounceSetPhysicalAddressAddressLine2(values!.addressLine2);
-              debounceSetPhysicalAddressSuburb(values!.suburb);
-              debounceSetPhysicalAddressCity(values!.city);
-              debounceSetPhysicalAddressProvince(values!.province);
-              debounceSetPhysicalAddressZipcode(values!.zipcode);
-              debounceSetPhysicalAddressCountryCode(values!.countryCode);
-
-              return (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                    ref={(divElement) => {
-                      sectionRefs.current['physical-address-setup'] = divElement;
-                    }}
-                  >
-                    <SectionIconTypography label="Physical Address Setup" />
-                    <BodyIconTypography label="Edit your organization physical address" />
-                    <Divider />
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <PhysicalAddress
-                      addressLine1Name="addressLine1"
-                      addressLine1Required={requiredPhysicalAddressFields.addressLine1}
-                      addressLine2Name="addressLine2"
-                      addressLine2Required={requiredPhysicalAddressFields.addressLine2}
-                      suburbName="suburb"
-                      suburbRequired={requiredPhysicalAddressFields.suburb}
-                      cityName="city"
-                      cityRequired={requiredPhysicalAddressFields.city}
-                      provinceName="province"
-                      provinceRequired={requiredPhysicalAddressFields.province}
-                      zipcodeName="zipcode"
-                      zipcodeRequired={requiredPhysicalAddressFields.zipcode}
-                      countryName="countryCode"
-                      countryRequired={requiredPhysicalAddressFields.countryCode}
-                      onSelect={(address) => {
-                        handlePhysicalAddressSelect(address);
-                        form.batch(() => {
-                          form.change('addressLine1', address.addressLine1 ?? '');
-                          form.change('addressLine2', address.addressLine2 ?? '');
-                          form.change('suburb', address.suburb ?? '');
-                          form.change('city', address.city ?? '');
-                          form.change('province', address.province ?? '');
-                          form.change('zipcode', address.zipcode ?? '');
-                          form.change('countryCode', address.countryCode ?? '');
-                        });
-                      }}
-                    />
-                  </StackColumn>
-
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
-              );
-            }}
-          />
-
-          <Form
-            onSubmit={handleBillingDetailUpdateClick}
-            initialValues={{
-              companyName: billingCompanyName,
-              email: billingEmail,
-              addressLine1: billingAddressLine1,
-              addressLine2: billingAddressLine2,
-              suburb: billingSuburb,
-              city: billingCity,
-              province: billingProvince,
-              zipcode: billingZipcode,
-              countryCode: billingCountryCode,
-            }}
-            validate={validateOrganizationBilling}
-            render={({ handleSubmit, values, form }) => {
-              debounceSetBillingCompanyName(values!.companyName);
-              debounceSetBillingEmail(values!.email);
-              debounceSetBillingAddressLine1(values!.addressLine1);
-              debounceSetBillingAddressLine2(values!.addressLine2);
-              debounceSetBillingSuburb(values!.suburb);
-              debounceSetBillingCity(values!.city);
-              debounceSetBillingProvince(values!.province);
-              debounceSetBillingZipcode(values!.zipcode);
-              debounceSetBillingCountryCode(values!.countryCode);
-
-              return (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                    ref={(divElement) => {
-                      sectionRefs.current['billing-payment-setup'] = divElement;
-                    }}
-                  >
-                    <SectionIconTypography label="Billing & Payment Setup" />
-                    <BodyIconTypography label="Edit your organization billing and payment details" />
-                    <Divider />
-                  </StackColumn>
-
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
-                    <FormFieldLabel label="Company name">
-                      <TextField name="companyName" required={requiredBillingFields.companyName} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Email">
-                      <TextField name="email" required={requiredBillingFields.email} helperText="Email to send invoice to" />
-                    </FormFieldLabel>
-
-                    <PhysicalAddress
-                      addressLine1Name="addressLine1"
-                      addressLine1Required={requiredBillingFields.addressLine1}
-                      addressLine2Name="addressLine2"
-                      addressLine2Required={requiredBillingFields.addressLine2}
-                      suburbName="suburb"
-                      suburbRequired={requiredBillingFields.suburb}
-                      cityName="city"
-                      cityRequired={requiredBillingFields.city}
-                      provinceName="province"
-                      provinceRequired={requiredBillingFields.province}
-                      zipcodeName="zipcode"
-                      zipcodeRequired={requiredBillingFields.zipcode}
-                      countryName="countryCode"
-                      countryRequired={requiredBillingFields.countryCode}
-                      onSelect={(address) => {
-                        handleBillingAddressSelect(address);
-                        form.batch(() => {
-                          form.change('addressLine1', address.addressLine1 ?? '');
-                          form.change('addressLine2', address.addressLine2 ?? '');
-                          form.change('suburb', address.suburb ?? '');
-                          form.change('city', address.city ?? '');
-                          form.change('province', address.province ?? '');
-                          form.change('zipcode', address.zipcode ?? '');
-                          form.change('countryCode', address.countryCode ?? '');
-                        });
-                      }}
-                    />
-                  </StackColumn>
-
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
-              );
-            }}
-          />
-
-          <StackColumn
-            sx={{
-              paddingLeft: defaultPadding,
-              paddingRight: defaultPadding,
-              paddingTop: defaultPadding,
-            }}
-          >
-            <GridContainer sx={{ justifyContent: 'space-between' }}>
-              <Grid>
-                <SectionIconTypography label="Payment Method" />
-                <BodyIconTypography label="Edit your payment method" />
-              </Grid>
-
-              <Grid>
-                {!paymentMethodExist && (
-                  <Button variant="text" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
-                    <LeadIconTypography label="Add Payment Method" endElement={<NewIcon fontSize="large" />} />
-                  </Button>
-                )}
-              </Grid>
-            </GridContainer>
-            <Divider />
-          </StackColumn>
-
-          {paymentMethodExist && (
-            <StackColumn
-              sx={{
-                paddingLeft: defaultPadding,
-                paddingRight: defaultPadding,
-                paddingTop: defaultPadding,
-              }}
-            >
-              <StackRow>
-                {organization.paymentMethods.map((item) => (
-                  <StackColumn key={item.id}>
-                    <CreditCard lastFourDigits={item.cardLastFourDigit} expiryDate={`${item.cardExpiryMonth}/${item.cardExpiryYear}`} cardBrand={item.cardBrand} />
-                    <Button variant="contained" color="warning" onClick={() => handleRemovePaymentMethodClick(item.id)}>
-                      <BodyIconTypography label="Remove Payment Method" invertDefaultColor={paletteMode === 'dark'} startElement={<DeleteIcon />} />
+          {activeSection === 'manage-organization' && (
+            <Box sx={{ pb: 2 }}>
+              <SettingsSectionCard title="Manage organization" description="Use destructive actions carefully. Removing an organization is not reversible.">
+                <EditorActionBar
+                  primaryAction={
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveOrganizationClicked} sx={{ textTransform: 'none' }}>
+                      Remove Organization
                     </Button>
-                  </StackColumn>
-                ))}
-              </StackRow>
-            </StackColumn>
+                  }
+                />
+              </SettingsSectionCard>
+            </Box>
           )}
-
-          {!paymentMethodExist && (
-            <StackColumn
-              sx={{
-                paddingLeft: defaultPadding,
-                paddingRight: defaultPadding,
-                paddingTop: defaultPadding,
-              }}
-            >
-              <SmallIconTypography label="No payment method setup yet" />
-            </StackColumn>
-          )}
-
-          <Form
-            onSubmit={handleEnableOrganizationSsoSettingsClick}
-            initialValues={{
-              entityId: ssoSettingsEntityId,
-              loginUrl: ssoSettingsLoginUrl,
-              appFederationMetadataUrl: ssoSettingsAppFederationMetadataUrl,
-            }}
-            validate={validateSsoSettings}
-            render={({ handleSubmit, values }) => {
-              debounceSetSsoSettingsEntityId(values!.entityId);
-              debounceSetSsoSettingsLoginUrl(values!.loginUrl);
-              debounceSetSsoSettingsppFederationMetadataUrl(values!.appFederationMetadataUrl);
-
-              return (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                    ref={(divElement) => {
-                      sectionRefs.current['sso-setup'] = divElement;
-                    }}
-                  >
-                    <SectionIconTypography label="SSO Setup" />
-                    <BodyIconTypography label="Edit your organization SSO settings" />
-                    <Divider />
-                  </StackColumn>
-
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
-                    <FormFieldLabel label="Enable Sign sign-on">
-                      <Switch defaultChecked={ssoSettingsEnabled} onChange={handleEnableSsoChange} />
-                    </FormFieldLabel>
-
-                    {ssoSettingsEnabled && (
-                      <>
-                        <FormFieldLabel label="Entity Id">
-                          <TextField name="entityId" required={requiredSsoSettingsFields.entityId} />
-                        </FormFieldLabel>
-
-                        <FormFieldLabel label="Login Url">
-                          <TextField name="loginUrl" required={requiredSsoSettingsFields.loginUrl} />
-                        </FormFieldLabel>
-
-                        <FormFieldLabel label="App Federation Metadata Url">
-                          <TextField name="appFederationMetadataUrl" required={requiredSsoSettingsFields.appFederationMetadataUrl} />
-                        </FormFieldLabel>
-                      </>
-                    )}
-                  </StackColumn>
-
-                  {ssoSettingsEnabled && (
-                    <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
-                    >
-                      <StackRow>
-                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                          Update
-                        </Button>
-                      </StackRow>
-                    </StackColumn>
-                  )}
-                </FormStackColumn>
-              );
-            }}
-          />
-
-          <Form
-            onSubmit={handleEnableOrganizationTaxDetailsClick}
-            initialValues={{
-              taxId: taxDetailsTaxId,
-              taxRatePercentage: taxDetailsTaxRatePercentage,
-            }}
-            validate={validateTaxDetails}
-            render={({ handleSubmit, values }) => {
-              debounceSetTaxDetailsTaxId(values!.taxId);
-              debounceSetTaxDetailsTaxRatePercentage(values!.taxRatePercentage);
-
-              return (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                    ref={(divElement) => {
-                      sectionRefs.current['tax-details-setup'] = divElement;
-                    }}
-                  >
-                    <SectionIconTypography label="Tax Details Setup" />
-                    <BodyIconTypography label="Edit your organization tax details" />
-                    <Divider />
-                  </StackColumn>
-
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
-                    <FormFieldLabel label="Is this business registered for tax (GST/VAT)?">
-                      <Switch defaultChecked={taxDetailsEnabled} onChange={handleEnableTaxDetailsChange} />
-                    </FormFieldLabel>
-
-                    {taxDetailsEnabled && (
-                      <>
-                        <FormFieldLabel label="Tax ID / VAT / GST Number">
-                          <TextField name="taxId" required={requiredTaxDetailsFields.taxId} />
-                        </FormFieldLabel>
-
-                        <FormFieldLabel label="Tax Rate (%)">
-                          <TextField name="taxRatePercentage" required={requiredTaxDetailsFields.taxRatePercentage} />
-                        </FormFieldLabel>
-                      </>
-                    )}
-                  </StackColumn>
-
-                  {taxDetailsEnabled && (
-                    <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
-                    >
-                      <StackRow>
-                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                          Update
-                        </Button>
-                      </StackRow>
-                    </StackColumn>
-                  )}
-                </FormStackColumn>
-              );
-            }}
-          />
-
-          <StackColumn
-            sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-            ref={(divElement) => {
-              sectionRefs.current['zones-setup'] = divElement;
-            }}
-          >
-            <GridContainer sx={{ justifyContent: 'space-between' }}>
-              <Grid>
-                <SectionIconTypography label="Zones Setup" />
-                <BodyIconTypography label="Edit your organization zones details" />
-              </Grid>
-
-              <Grid>
-                <AddOrganizationZoneButton organizationCustomDomain={organizationCustomDomain} connectionIds={zonesConnectionIds} />
-              </Grid>
-            </GridContainer>
-            <Divider />
-          </StackColumn>
-
-          <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-            <PushToRight />
-            <Search size="small" placeholder="Search for zones" defaultValue={zoneNameSearchText} onChange={handleZonesSearchTextChange} />
-          </GridContainer>
-
-          {seledctedZones.ids.size > 0 && (
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <Box
-                sx={{
-                  backgroundColor: 'white',
-                  padding: defaultGridActionPadding,
-                  border: 1,
-                  borderColor: (theme) => theme.palette.divider,
-                  borderRadius: 2,
-                  flexGrow: 1,
-                }}
-              >
-                <StackRow sx={{ alignItems: 'center' }}>
-                  <SmallIconTypography label={`${seledctedZones.ids.size} records selected`} />
-                  <PushToRight />
-                  <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveZonesClick} sx={{ textTransform: 'none' }}>
-                    Remove Zone
-                  </Button>
-                </StackRow>
-              </Box>
-            </StackRow>
-          )}
-
-          <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-            <DataGrid
-              checkboxSelection
-              rowSelectionModel={seledctedZones}
-              onRowSelectionModelChange={handleSelectedZonesChanged}
-              rows={zoneRows}
-              columns={zoneColumns}
-              hideFooterPagination={zoneRows.length <= 10}
-              initialState={{
-                pagination: {
-                  rowCount: zoneRows.length,
-                  paginationModel: {
-                    pageSize: 10,
-                  },
-                },
-              }}
-              pageSizeOptions={[10]}
-              ignoreDiacritics
-              disableRowSelectionOnClick
-              getRowHeight={() => 'auto'}
-              rowSpacingType="margin"
-              getRowSpacing={() => ({ top: 3, bottom: 3 })}
-              sx={defaultGridStyle}
-              localeText={{ noRowsLabel: 'No zone found' }}
-            />
-          </StackRow>
-
-          <StackColumn
-            sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-            ref={(divElement) => {
-              sectionRefs.current['tags-setup'] = divElement;
-            }}
-          >
-            <GridContainer sx={{ justifyContent: 'space-between' }}>
-              <Grid>
-                <SectionIconTypography label="Tags Setup" />
-                <BodyIconTypography label="Edit your organization tags details" />
-              </Grid>
-
-              <Grid>
-                <AddOrganizationCustomTagButton organizationCustomDomain={organizationCustomDomain} connectionIds={customTagsConnectionIds} />
-              </Grid>
-            </GridContainer>
-            <Divider />
-          </StackColumn>
-
-          <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-            <PushToRight />
-            <Search size="small" placeholder="Search for tags" defaultValue={customTagNameSearchText} onChange={handleCustomTagsSearchTextChange} />
-          </GridContainer>
-
-          {seledctedCustomTags.ids.size > 0 && (
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <Box
-                sx={{
-                  backgroundColor: 'white',
-                  padding: defaultGridActionPadding,
-                  border: 1,
-                  borderColor: (theme) => theme.palette.divider,
-                  borderRadius: 2,
-                  flexGrow: 1,
-                }}
-              >
-                <StackRow sx={{ alignItems: 'center' }}>
-                  <SmallIconTypography label={`${seledctedCustomTags.ids.size} records selected`} />
-                  <PushToRight />
-                  <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveCustomTagsClick} sx={{ textTransform: 'none' }}>
-                    Remove Tag
-                  </Button>
-                </StackRow>
-              </Box>
-            </StackRow>
-          )}
-
-          <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-            <DataGrid
-              checkboxSelection
-              rowSelectionModel={seledctedCustomTags}
-              onRowSelectionModelChange={handleSelectedCustomTagsChanged}
-              rows={customTagRows}
-              columns={customTagColumns}
-              hideFooterPagination={customTagRows.length <= 10}
-              initialState={{
-                pagination: {
-                  rowCount: customTagRows.length,
-                  paginationModel: {
-                    pageSize: 10,
-                  },
-                },
-              }}
-              pageSizeOptions={[10]}
-              ignoreDiacritics
-              disableRowSelectionOnClick
-              getRowHeight={() => 'auto'}
-              rowSpacingType="margin"
-              getRowSpacing={() => ({ top: 3, bottom: 3 })}
-              sx={defaultGridStyle}
-              localeText={{ noRowsLabel: 'No tag found' }}
-            />
-          </StackRow>
-
-          <StackColumn
-            sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-            ref={(divElement) => {
-              sectionRefs.current['subscriptions'] = divElement;
-            }}
-          >
-            <SectionIconTypography label="Subscriptions" />
-            <Divider />
-          </StackColumn>
-
-          <GridContainer sx={{ padding: defaultPadding, justifyContent: 'center', alignItems: 'stretch' }}>
-            {activeOffering && (
-              <Grid>
-                <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%', backgroundColor: 'white' }}>
-                  <CardContent sx={{ marginLeft: 1 }}>
-                    <BodyIconTypography label={activeOffering.name} sx={{ color: coal }} />
-                    <StackRow spacing={0.5} sx={{ marginTop: -2 }}>
-                      <ExtraLargeHeadingIconTypography label={(activeOffering.unitPrice / 100).toFixed(0)} sx={{ paddingTop: 4, color: coal }} />
-                      <BodyIconTypography label="$" sx={{ color: coal }} />
-                    </StackRow>
-
-                    <List sx={{ padding: 0 }}>
-                      <Box sx={{ marginTop: 2, marginBottom: 4 }}>
-                        {activeOffering.underPriceLines.map((item, index) => (
-                          <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
-                            <ListItemText>
-                              <SmallIconTypography label={item} sx={{ color: coal }} />
-                            </ListItemText>
-                          </ListItem>
-                        ))}
-                      </Box>
-
-                      {activeOffering.featureSet.map((item, index) => (
-                        <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
-                          <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
-                            <TickIcon fontSize="small" sx={{ color: activeOffering.isEnterprise ? coal : emerald }} />
-                          </ListItemIcon>
-                          <ListItemText>
-                            <SmallIconTypography label={item} sx={{ color: coal }} />
-                          </ListItemText>
-                        </ListItem>
-                      ))}
-                    </List>
-
-                    <CardActions sx={{ justifyContent: 'center' }}>
-                      {!activeOffering.free && (
-                        <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick} sx={defaultButtonStyle}>
-                          Cancel
-                        </Button>
-                      )}
-                    </CardActions>
-                  </CardContent>
-                </Card>
-              </Grid>
-            )}
-
-            {availableOfferings.map((availableOffering) => (
-              <Grid key={availableOffering.code}>
-                <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%', backgroundColor: 'white' }}>
-                  <CardContent sx={{ marginLeft: 1 }}>
-                    <BodyIconTypography label={availableOffering.name} sx={{ color: coal }} />
-                    <StackRow spacing={0.5} sx={{ marginTop: -2 }}>
-                      {availableOffering.unitPrice > 0 && (
-                        <ExtraLargeHeadingIconTypography label={(availableOffering.unitPrice / 100).toFixed(0)} sx={{ paddingTop: 4, color: coal }} />
-                      )}
-                      {availableOffering.isEnterprise && (
-                        <ExtraLargeHeadingIconTypography
-                          label="TBC"
-                          sx={{
-                            paddingTop: 4,
-                            color: coal,
-                          }}
-                        />
-                      )}
-                      <BodyIconTypography label="$" sx={{ color: coal }} />
-                    </StackRow>
-
-                    <List sx={{ padding: 0 }}>
-                      <Box sx={{ marginTop: 2, marginBottom: 4 }}>
-                        {availableOffering.underPriceLines.map((item, index) => (
-                          <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
-                            <ListItemText>
-                              <SmallIconTypography label={item} sx={{ color: coal }} />
-                            </ListItemText>
-                          </ListItem>
-                        ))}
-                      </Box>
-
-                      {availableOffering.featureSet.map((item, index) => (
-                        <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
-                          <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
-                            <TickIcon fontSize="small" sx={{ color: availableOffering.isEnterprise ? coal : emerald }} />
-                          </ListItemIcon>
-                          <ListItemText>
-                            <SmallIconTypography label={item} sx={{ color: coal }} />
-                          </ListItemText>
-                        </ListItem>
-                      ))}
-
-                      {!organization?.hasAttachedPaymentMethod && (
-                        <ListItem alignItems="flex-start" sx={{ padding: 0, paddingTop: 1 }}>
-                          <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
-                            <ErrorIcon fontSize="large" sx={{ color: 'red' }} />
-                          </ListItemIcon>
-                          <ListItemText>
-                            <SmallIconTypography label="You need to have payment method setup in order to upgrade to this offering." color="red" />
-                          </ListItemText>
-                        </ListItem>
-                      )}
-                    </List>
-                  </CardContent>
-
-                  <CardActions sx={{ justifyContent: 'center' }}>
-                    {!organization?.hasAttachedPaymentMethod && (
-                      <Button variant="contained" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none', color: 'white' }}>
-                        Add Payment Method
-                      </Button>
-                    )}
-
-                    {organization?.hasAttachedPaymentMethod && !availableOffering.isEnterprise && (
-                      <Button color="primary" variant="contained" onClick={() => handleUpgradeOfferingClick(availableOffering.code)} sx={{ textTransform: 'none', color: 'white' }}>
-                        Upgrade
-                      </Button>
-                    )}
-
-                    {organization?.hasAttachedPaymentMethod && availableOffering.isEnterprise && (
-                      <Button
-                        href="mailto:support@getskedular.com"
-                        variant="contained"
-                        sx={{
-                          textTransform: 'none',
-                          backgroundColor: 'black',
-                          color: 'white',
-                        }}
-                      >
-                        Contact Us
-                      </Button>
-                    )}
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </GridContainer>
-
-          <StackColumn
-            sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-            ref={(divElement) => {
-              sectionRefs.current['manage-organization'] = divElement;
-            }}
-          >
-            <SectionIconTypography label="Manage" />
-            <BodyIconTypography label="Remove your organization" />
-            <Divider />
-          </StackColumn>
-
-          <StackRow
-            sx={{
-              paddingLeft: defaultPadding,
-              paddingRight: defaultPadding,
-              paddingTop: defaultPadding,
-            }}
-          >
-            <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveOrganizationClicked} sx={{ textTransform: 'none' }}>
-              Remove Organization
-            </Button>
-          </StackRow>
         </StackColumn>
       </Box>
 

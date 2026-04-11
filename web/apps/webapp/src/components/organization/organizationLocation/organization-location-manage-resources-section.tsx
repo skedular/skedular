@@ -1,4 +1,4 @@
-import { BodyIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { PushToRight, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
 import { DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationLocationResourceBaseLink } from '@/components/links';
@@ -16,6 +16,7 @@ import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@/libs/theme';
 import { getRelayErrorMessage } from '@/libs/utils';
+import { SettingsSectionCard } from '@skedular/ui';
 import type { organizationLocationManageResourcesSectionQuery } from '@/queries/__generated__/organizationLocationManageResourcesSectionQuery.graphql';
 import type { organizationLocationManageResourcesSection_activateResourcesMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_activateResourcesMutation.graphql';
 import type { organizationLocationManageResourcesSection_addCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_addCustomerPreferredResourceMutation.graphql';
@@ -24,8 +25,6 @@ import type { organizationLocationManageResourcesSection_deleteResourcesMutation
 import type { organizationLocationManageResourcesSection_removeCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_removeCustomerPreferredResourceMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
@@ -613,103 +612,97 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
 
   return (
     <>
-      <StackColumn sx={{ padding: defaultPadding }}>
-        <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <Grid>
-            <BodyIconTypography label="Manage your location resources details" />
-          </Grid>
-
-          <Grid>
+      <Box sx={{ px: { xs: 2, sm: 3 }, pb: defaultPadding }}>
+        <SettingsSectionCard
+          title="Manage Resources"
+          description="Search, filter, and operate on the resources assigned to this location."
+          actions={
             <AddResourceButton
               onReloadRequired={onReloadRequired}
               organizationCustomDomain={organizationCustomDomain}
               locationId={locationId}
               connectionIds={resourcesConnectionIds}
             />
-          </Grid>
-        </StackRow>
-        <Divider />
-      </StackColumn>
-
-      <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, gap: 1, flexWrap: 'wrap' }}>
-        <ZoneSelector rootDataRelay={rootData} onChange={handleResourceZoneTypeChanged} />
-        <CustomTagSelector rootDataRelay={rootData} onChange={handleResourceCustomTagChanged} />
-        <PushToRight />
-        <Search size="small" placeholder="Search for resources" defaultValue={resourceNameSearchText} onChange={handleResourceNameSearchTextChange} />
-      </StackRow>
-
-      {selectedResourceIds.length > 0 && (
-        <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: 1 }}>
-          <Box
-            sx={{
-              backgroundColor: 'white',
-              padding: defaultGridActionPadding,
-              border: 1,
-              borderColor: (theme) => theme.palette.divider,
-              borderRadius: 2,
-              flexGrow: 1,
-            }}
-          >
-            <StackRow sx={{ alignItems: 'center' }}>
-              <SmallIconTypography label={`${selectedResourceIds.length} records selected`} />
+          }
+        >
+          <StackColumn spacing={2}>
+            <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
+              <ZoneSelector rootDataRelay={rootData} onChange={handleResourceZoneTypeChanged} />
+              <CustomTagSelector rootDataRelay={rootData} onChange={handleResourceCustomTagChanged} />
               <PushToRight />
-              <Button
-                size="medium"
-                variant="contained"
-                color="secondary"
-                onClick={() => handleDeactivateResourcesClick(selectedResourceIds, 'Resources deactivated.', 'Deactivating resources...')}
-              >
-                Deactivate Resource
-              </Button>
-              <Button
-                size="medium"
-                variant="contained"
-                color="secondary"
-                onClick={() => handleActivateResourcesClick(selectedResourceIds, 'Resources activated.', 'Activating resources...')}
-              >
-                Activate Resource
-              </Button>
-              <Button
-                size="medium"
-                variant="contained"
-                color="warning"
-                startIcon={<DeleteIcon />}
-                onClick={() => handleDeleteResourcesClick(selectedResourceIds, 'Resources removed.', 'Removing resources...')}
-                sx={{ textTransform: 'none' }}
-              >
-                Remove Resource
-              </Button>
+              <Search size="small" placeholder="Search for resources" defaultValue={resourceNameSearchText} onChange={handleResourceNameSearchTextChange} />
             </StackRow>
-          </Box>
-        </StackRow>
-      )}
 
-      <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: 1 }}>
-        <DataGrid
-          checkboxSelection
-          rowSelectionModel={selectedResources}
-          onRowSelectionModelChange={handleSelectedResourcesChanged}
-          rows={resourceRows}
-          columns={resourceColumns}
-          hideFooterPagination={resourceRows.length <= 10}
-          initialState={{
-            pagination: {
-              rowCount: resourceRows.length,
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
-          pageSizeOptions={[10]}
-          ignoreDiacritics
-          disableRowSelectionOnClick
-          getRowHeight={() => 'auto'}
-          rowSpacingType="margin"
-          getRowSpacing={() => ({ top: 3, bottom: 3 })}
-          sx={defaultGridStyle}
-          localeText={{ noRowsLabel: 'No resource found' }}
-        />
-      </StackRow>
+            {selectedResourceIds.length > 0 && (
+              <Box
+                sx={{
+                  backgroundColor: 'background.paper',
+                  padding: defaultGridActionPadding,
+                  border: 1,
+                  borderColor: (theme) => theme.palette.divider,
+                  borderRadius: 2,
+                }}
+              >
+                <StackRow sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+                  <SmallIconTypography label={`${selectedResourceIds.length} records selected`} />
+                  <PushToRight />
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleDeactivateResourcesClick(selectedResourceIds, 'Resources deactivated.', 'Deactivating resources...')}
+                  >
+                    Deactivate Resource
+                  </Button>
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleActivateResourcesClick(selectedResourceIds, 'Resources activated.', 'Activating resources...')}
+                  >
+                    Activate Resource
+                  </Button>
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    color="warning"
+                    startIcon={<DeleteIcon />}
+                    onClick={() => handleDeleteResourcesClick(selectedResourceIds, 'Resources removed.', 'Removing resources...')}
+                    sx={{ textTransform: 'none' }}
+                  >
+                    Remove Resource
+                  </Button>
+                </StackRow>
+              </Box>
+            )}
+
+            <DataGrid
+              checkboxSelection
+              rowSelectionModel={selectedResources}
+              onRowSelectionModelChange={handleSelectedResourcesChanged}
+              rows={resourceRows}
+              columns={resourceColumns}
+              hideFooterPagination={resourceRows.length <= 10}
+              initialState={{
+                pagination: {
+                  rowCount: resourceRows.length,
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[10]}
+              ignoreDiacritics
+              disableRowSelectionOnClick
+              getRowHeight={() => 'auto'}
+              rowSpacingType="margin"
+              getRowSpacing={() => ({ top: 3, bottom: 3 })}
+              sx={defaultGridStyle}
+              localeText={{ noRowsLabel: 'No resource found' }}
+            />
+          </StackColumn>
+        </SettingsSectionCard>
+      </Box>
 
       <MoreActionsMenu
         anchorEl={resourceMoreActionsAnchorEl}

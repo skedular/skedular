@@ -99,6 +99,17 @@ Recommended future packages:
 Do not extract domain widgets into packages too early. Booking/product/location/refund widgets should remain app-level
 until the stable primitives and patterns are proven.
 
+Current extracted primitives now include:
+
+- `PageHeaderPanel`
+- `PageSectionCard`
+- `SettingsSectionCard`
+- `StickyReviewRail`
+- `GuidedEditorProgress`
+- `EditorActionBar`
+- `SetupSplitLayout`
+- `SetupFeatureCard`
+
 ## MUI Position
 
 Use MUI as infrastructure, not as the product’s visual language.
@@ -147,6 +158,8 @@ Current recommendation:
    - summaries
    - guided editors
    - list/detail edit flows
+   - review rails
+   - reusable step progress headers
 
 ### Phase 2: Customer-Facing Surfaces
 
@@ -184,6 +197,8 @@ These patterns should be designed once and reused many times:
 - page header with summary + actions
 - card shell
 - settings section shell
+- sticky review rail
+- guided editor progress header
 - summary rail
 - mobile stacked action bar
 - list/detail layout
@@ -213,6 +228,7 @@ These patterns should be designed once and reused many times:
 - pricing option editor
 - cancellation policy editor
 - storefront preview pattern
+- migrate editor layout to reusable settings primitives instead of local one-off cards
 
 ### Bookings / Subscriptions / Refunds
 
@@ -242,12 +258,33 @@ These patterns should be designed once and reused many times:
   - treat section changes as route-backed sub-surfaces, not one giant scrolled form
   - move infrequently used heavy data like floor plans and resources to section-scoped queries so the initial editor load stays focused on setup data
 - for the organization admin editor:
+  - use the same page shell language as location detail and setup flows:
+    - `PageHeaderPanel`
+    - `SettingsSectionCard`
+    - `EditorActionBar`
+  - keep the top section nav route-backed and render one active section at a time
+  - do not turn the admin surface back into one giant page just because the shared section cards exist
+  - do not use right-side summary rails on route-backed setup/admin surfaces; let the active section own the page width
+  - treat data grids like zones and tags as settings surfaces inside shared section cards, not as ad hoc blocks with local headers and dividers
+
+Recently completed migrations:
+
+- organization locations collection page
+- organization location detail page
+- organization admin detail page
   - remove nested page-level left rails and inner dark app bars when the organization shell already provides the primary chrome
   - use a simple centered header plus a sticky top section nav for setup/admin subsections
   - use the same responsive section-menu fallback on medium and smaller widths
   - avoid duplicating back actions inside the page body when the shell already provides navigation context
 - detail/edit redesign
 - shared admin editor patterns
+- resource editing is now starting to use the same settings-card, review-rail, and action-bar primitives as product editing
+- private-location creation is now also moving onto the same settings-card and action-bar language so setup flows stop diverging from edit flows
+- marketplace-location creation now follows the same sectioned editor pattern, so location setup is converging on one reusable form language
+- location creation now also uses the shared setup shell primitives instead of the legacy wizard-side-panel components
+- setup selection and organization-create flows now use the shared setup shell too, so the legacy wizard shell is no longer the preferred path for onboarding surfaces
+- the legacy `components/wizard` setup shell has been retired from active use in favor of `SetupSplitLayout` and `SetupFeatureCard`
+- the organization location detail page now uses the shared page header, settings cards, action bars, and review rail for its setup/address/opening-hours/manage sections
 
 ### Organization / Settings
 

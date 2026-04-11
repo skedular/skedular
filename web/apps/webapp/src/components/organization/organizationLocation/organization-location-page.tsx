@@ -1,6 +1,6 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { Address, PhysicalAddress } from '@/components/address';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, GridContainer, LeadIconTypography, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, LeadIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
 import { getOrganizationLocationsBaseLink } from '@/components/links';
@@ -17,6 +17,7 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, stringCollectionToString, stringToMultiLines } from '@/libs/utils';
+import { EditorActionBar, PageHeaderPanel, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
 import type { organizationLocationPage_addLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocationPage_addLocationPhysicalAddressMutation.graphql';
 import type { organizationLocationPage_deleteLocationMutation } from '@/queries/__generated__/organizationLocationPage_deleteLocationMutation.graphql';
 import type { organizationLocationPage_query$key } from '@/queries/__generated__/organizationLocationPage_query.graphql';
@@ -26,8 +27,6 @@ import type { organizationLocationPage_updateLocationPhysicalAddressMutation } f
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
@@ -946,6 +945,29 @@ const OrganizationLocationPage = ({ rootDataRelay, onReloadRequired, organizatio
     });
   };
 
+  const renderLocationSummaryRail = () => (
+    <StickyReviewRail
+      title="Location summary"
+      description="Keep the most important setup signals visible while editing longer sections."
+      top={stickyTop + 24}
+      sx={{ pl: { xs: 0, xl: 0 }, pr: 0, pt: 0 }}
+    >
+      <SettingsSectionCard title="Overview" description="A compact snapshot of the location currently being managed.">
+        <StackColumn>
+          <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
+            <Chip size="small" label={location.type.name} />
+            <Chip size="small" label={location.timezone} />
+            <Chip size="small" label={`${location.spaceTypes.length} space types`} />
+            <Chip size="small" label={`${location.amenities.length} amenities`} />
+          </StackRow>
+          <BodyIconTypography label={location.name} />
+          {location.listingMetadata.title && <BodyIconTypography label={`Title: ${location.listingMetadata.title}`} />}
+          {location.physicalAddress?.formattedAddress && <BodyIconTypography label={location.physicalAddress.formattedAddress} />}
+        </StackColumn>
+      </SettingsSectionCard>
+    </StickyReviewRail>
+  );
+
   const renderSetupSection = () => (
     <Form
       onSubmit={handleLocationDetailUpdateClick}
@@ -993,137 +1015,135 @@ const OrganizationLocationPage = ({ rootDataRelay, onReloadRequired, organizatio
         debounceSetLocationIncludedFeatures(values!.includedFeatures);
 
         return (
-          <FormStackColumn onSubmit={handleSubmit}>
-            <StackColumn sx={{ padding: defaultPadding }}>
-              <GridContainer sx={{ justifyContent: 'space-between' }}>
-                <Grid>
-                  <SectionIconTypography label="Location Setup" />
-                  <BodyIconTypography label="Edit your location name and details" />
-                </Grid>
-              </GridContainer>
-              <Divider />
-            </StackColumn>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 3, pb: defaultPadding }}>
+            <FormStackColumn onSubmit={handleSubmit}>
+              <StackColumn spacing={3}>
+                <SettingsSectionCard title="Location Setup" description="Edit the customer-facing identity, classification, and commercial details of this location.">
+                  <StackColumn>
+                    <FormFieldLabel label="Feature Images">
+                      <StackColumn>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' }, gap: 2 }}>
+                          {featureImages.map((image, index) => (
+                            <Box
+                              key={index}
+                              sx={{
+                                position: 'relative',
+                                borderRadius: 2,
+                                overflow: 'hidden',
+                                border: 1,
+                                borderColor: 'divider',
+                                backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                              }}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                                <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                                  <DeleteIcon fontSize="small" />
+                                </IconButton>
+                              </StackRow>
+                              <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                                {primaryFeatureImage?.original?.url === image.original?.url ? (
+                                  <Chip size="small" color="success" label="Cover image" />
+                                ) : (
+                                  <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                    Make cover
+                                  </Button>
+                                )}
+                              </StackRow>
+                            </Box>
+                          ))}
+                        </Box>
+                        <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
+                      </StackColumn>
+                    </FormFieldLabel>
 
-            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingBottom: defaultPadding }}>
-              <FormFieldLabel label="Feature Images">
-                <StackColumn>
-                  <GridContainer
-                    sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' }, gap: 2 }}
-                  >
-                    {featureImages.map((image, index) => (
-                      <Grid
-                        key={index}
-                        sx={{
-                          position: 'relative',
-                          borderRadius: 2,
-                          overflow: 'hidden',
-                          border: 1,
-                          borderColor: 'divider',
-                          backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                        }}
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                          <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </StackRow>
-                        <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                          {primaryFeatureImage?.original?.url === image.original?.url ? (
-                            <Chip size="small" color="success" label="Cover image" />
-                          ) : (
-                            <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                              Make cover
-                            </Button>
-                          )}
-                        </StackRow>
-                      </Grid>
-                    ))}
-                  </GridContainer>
-                  <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
-                </StackColumn>
-              </FormFieldLabel>
+                    <FormFieldLabel label="Name">
+                      <TextField name="name" required={requiredFields.name} />
+                    </FormFieldLabel>
 
-              <FormFieldLabel label="Name">
-                <TextField name="name" required={requiredFields.name} />
-              </FormFieldLabel>
+                    <ListingMetadata
+                      fields={['title', 'subTitle', 'includedFeatures']}
+                      onChange={({ title, subTitle, includedFeatures }) => {
+                        debounceSetLocationTitle(title);
+                        debounceSetLocationSubTitle(subTitle);
+                        debounceSetLocationIncludedFeatures(includedFeatures);
+                      }}
+                      requiredFields={requiredFields}
+                    />
 
-              <ListingMetadata
-                fields={['title', 'subTitle', 'includedFeatures']}
-                onChange={({ title, subTitle, includedFeatures }) => {
-                  debounceSetLocationTitle(title);
-                  debounceSetLocationSubTitle(subTitle);
-                  debounceSetLocationIncludedFeatures(includedFeatures);
-                }}
-                requiredFields={requiredFields}
-              />
+                    <FormFieldLabel label="Timezone">
+                      <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+                    </FormFieldLabel>
 
-              <FormFieldLabel label="Timezone">
-                <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-              </FormFieldLabel>
+                    <FormFieldLabel label="Space Type">
+                      <MultipleChoicesLocationSpaceTypes rootDataRelay={rootData} name="spaceTypeIds" required={requiredFields.spaceTypeIds} />
+                    </FormFieldLabel>
 
-              <FormFieldLabel label="Space Type">
-                <MultipleChoicesLocationSpaceTypes rootDataRelay={rootData} name="spaceTypeIds" required={requiredFields.spaceTypeIds} />
-              </FormFieldLabel>
+                    <FormFieldLabel label="Amenities">
+                      <MultipleChoicesAmenities rootDataRelay={rootData} name="amenityIds" required={requiredFields.amenityIds} />
+                    </FormFieldLabel>
 
-              <FormFieldLabel label="Amenities">
-                <MultipleChoicesAmenities rootDataRelay={rootData} name="amenityIds" required={requiredFields.amenityIds} />
-              </FormFieldLabel>
+                    {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
+                      <>
+                        <FormFieldLabel label="Type">
+                          <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                        </FormFieldLabel>
+                        <FormFieldLabel label="Area From(sqm)" required={requiredFields.areaRangeFromInSqm}>
+                          <TextField name="areaRangeFromInSqm" required={requiredFields.areaRangeFromInSqm} />
+                        </FormFieldLabel>
+                        <FormFieldLabel label="Area To(sqm)" required={requiredFields.areaRangeToInSqm}>
+                          <TextField name="areaRangeToInSqm" required={requiredFields.areaRangeToInSqm} />
+                        </FormFieldLabel>
+                        <FormFieldLabel label="People Capacity From" required={requiredFields.peopleCapacityFrom}>
+                          <TextField name="peopleCapacityFrom" required={requiredFields.peopleCapacityFrom} />
+                        </FormFieldLabel>
+                        <FormFieldLabel label="People Capacity To" required={requiredFields.peopleCapacityTo}>
+                          <TextField name="peopleCapacityTo" required={requiredFields.peopleCapacityTo} />
+                        </FormFieldLabel>
+                        <FormFieldLabel label="Website" required={requiredFields.website}>
+                          <TextField name="website" required={requiredFields.website} />
+                        </FormFieldLabel>
+                        <FormFieldLabel label="Image Links" required={requiredFields.relatedImageLinks}>
+                          <TextField name="relatedImageLinks" required={requiredFields.relatedImageLinks} multiline rows={5} />
+                        </FormFieldLabel>
+                        <FormFieldLabel label="Video Links" required={requiredFields.relatedVideoLinks}>
+                          <TextField name="relatedVideoLinks" required={requiredFields.relatedVideoLinks} multiline rows={5} />
+                        </FormFieldLabel>
+                        <FormFieldLabel label="Other Links" required={requiredFields.otherLinks}>
+                          <TextField name="otherLinks" required={requiredFields.otherLinks} multiline rows={5} />
+                        </FormFieldLabel>
+                      </>
+                    )}
+                  </StackColumn>
+                </SettingsSectionCard>
 
-              {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-                <>
-                  <FormFieldLabel label="Type">
-                    <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
-                  </FormFieldLabel>
-                  <FormFieldLabel label="Area From(sqm)" required={requiredFields.areaRangeFromInSqm}>
-                    <TextField name="areaRangeFromInSqm" required={requiredFields.areaRangeFromInSqm} />
-                  </FormFieldLabel>
-                  <FormFieldLabel label="Area To(sqm)" required={requiredFields.areaRangeToInSqm}>
-                    <TextField name="areaRangeToInSqm" required={requiredFields.areaRangeToInSqm} />
-                  </FormFieldLabel>
-                  <FormFieldLabel label="People Capacity From" required={requiredFields.peopleCapacityFrom}>
-                    <TextField name="peopleCapacityFrom" required={requiredFields.peopleCapacityFrom} />
-                  </FormFieldLabel>
-                  <FormFieldLabel label="People Capacity To" required={requiredFields.peopleCapacityTo}>
-                    <TextField name="peopleCapacityTo" required={requiredFields.peopleCapacityTo} />
-                  </FormFieldLabel>
-                  <FormFieldLabel label="Website" required={requiredFields.website}>
-                    <TextField name="website" required={requiredFields.website} />
-                  </FormFieldLabel>
-                  <FormFieldLabel label="Image Links" required={requiredFields.relatedImageLinks}>
-                    <TextField name="relatedImageLinks" required={requiredFields.relatedImageLinks} multiline rows={5} />
-                  </FormFieldLabel>
-                  <FormFieldLabel label="Video Links" required={requiredFields.relatedVideoLinks}>
-                    <TextField name="relatedVideoLinks" required={requiredFields.relatedVideoLinks} multiline rows={5} />
-                  </FormFieldLabel>
-                  <FormFieldLabel label="Other Links" required={requiredFields.otherLinks}>
-                    <TextField name="otherLinks" required={requiredFields.otherLinks} multiline rows={5} />
-                  </FormFieldLabel>
-                </>
-              )}
+                <SettingsSectionCard title="Contact Details" description="Keep the public contact points for this location accurate and easy to maintain.">
+                  <StackColumn>
+                    <FormFieldLabel label="Contact People" required={requiredFields.contactPeople}>
+                      <TextField name="contactPeople" required={requiredFields.contactPeople} multiline rows={2} />
+                    </FormFieldLabel>
+                    <FormFieldLabel label="Emails">
+                      <TextField name="contactEmails" required={requiredFields.contactEmails} multiline rows={2} />
+                    </FormFieldLabel>
+                    <FormFieldLabel label="Phone Numbers">
+                      <TextField name="contactPhones" required={requiredFields.contactPhones} multiline rows={2} />
+                    </FormFieldLabel>
+                  </StackColumn>
+                </SettingsSectionCard>
 
-              <SectionIconTypography label="Contact Details" />
-              <BodyIconTypography label="Edit your location contact details" />
-              <Divider />
+                <EditorActionBar
+                  primaryAction={
+                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                      Update
+                    </Button>
+                  }
+                />
+              </StackColumn>
+            </FormStackColumn>
 
-              <FormFieldLabel label="Contact People" required={requiredFields.contactPeople}>
-                <TextField name="contactPeople" required={requiredFields.contactPeople} multiline rows={2} />
-              </FormFieldLabel>
-              <FormFieldLabel label="Emails">
-                <TextField name="contactEmails" required={requiredFields.contactEmails} multiline rows={2} />
-              </FormFieldLabel>
-              <FormFieldLabel label="Phone Numbers">
-                <TextField name="contactPhones" required={requiredFields.contactPhones} multiline rows={2} />
-              </FormFieldLabel>
-
-              <StackRow>
-                <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                  Update
-                </Button>
-              </StackRow>
-            </StackColumn>
-          </FormStackColumn>
+            {renderLocationSummaryRail()}
+          </Box>
         );
       }}
     />
@@ -1152,87 +1172,88 @@ const OrganizationLocationPage = ({ rootDataRelay, onReloadRequired, organizatio
         debounceSetPhysicalAddressCountryCode(values!.countryCode);
 
         return (
-          <FormStackColumn onSubmit={handleSubmit}>
-            <StackColumn sx={{ padding: defaultPadding }}>
-              <SectionIconTypography label="Physical Address Setup" />
-              <BodyIconTypography label="Edit your organization physical address" />
-              <Divider />
-            </StackColumn>
-            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingBottom: defaultPadding }}>
-              <PhysicalAddress
-                addressLine1Name="addressLine1"
-                addressLine1Required={requiredPhysicalAddressFields.addressLine1}
-                addressLine2Name="addressLine2"
-                addressLine2Required={requiredPhysicalAddressFields.addressLine2}
-                suburbName="suburb"
-                suburbRequired={requiredPhysicalAddressFields.suburb}
-                cityName="city"
-                cityRequired={requiredPhysicalAddressFields.city}
-                provinceName="province"
-                provinceRequired={requiredPhysicalAddressFields.province}
-                zipcodeName="zipcode"
-                zipcodeRequired={requiredPhysicalAddressFields.zipcode}
-                countryName="countryCode"
-                countryRequired={requiredPhysicalAddressFields.countryCode}
-                onSelect={(address) => {
-                  handlePhysicalAddressSelect(address);
-                  form.batch(() => {
-                    form.change('addressLine1', address.addressLine1 ?? '');
-                    form.change('addressLine2', address.addressLine2 ?? '');
-                    form.change('suburb', address.suburb ?? '');
-                    form.change('city', address.city ?? '');
-                    form.change('province', address.province ?? '');
-                    form.change('zipcode', address.zipcode ?? '');
-                    form.change('countryCode', address.countryCode ?? '');
-                  });
-                }}
-              />
-              <StackRow>
-                <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                  Update
-                </Button>
-              </StackRow>
-            </StackColumn>
-          </FormStackColumn>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 3, pb: defaultPadding }}>
+            <FormStackColumn onSubmit={handleSubmit}>
+              <SettingsSectionCard title="Physical Address" description="Use the exact address members and customers should navigate to.">
+                <StackColumn>
+                  <PhysicalAddress
+                    addressLine1Name="addressLine1"
+                    addressLine1Required={requiredPhysicalAddressFields.addressLine1}
+                    addressLine2Name="addressLine2"
+                    addressLine2Required={requiredPhysicalAddressFields.addressLine2}
+                    suburbName="suburb"
+                    suburbRequired={requiredPhysicalAddressFields.suburb}
+                    cityName="city"
+                    cityRequired={requiredPhysicalAddressFields.city}
+                    provinceName="province"
+                    provinceRequired={requiredPhysicalAddressFields.province}
+                    zipcodeName="zipcode"
+                    zipcodeRequired={requiredPhysicalAddressFields.zipcode}
+                    countryName="countryCode"
+                    countryRequired={requiredPhysicalAddressFields.countryCode}
+                    onSelect={(address) => {
+                      handlePhysicalAddressSelect(address);
+                      form.batch(() => {
+                        form.change('addressLine1', address.addressLine1 ?? '');
+                        form.change('addressLine2', address.addressLine2 ?? '');
+                        form.change('suburb', address.suburb ?? '');
+                        form.change('city', address.city ?? '');
+                        form.change('province', address.province ?? '');
+                        form.change('zipcode', address.zipcode ?? '');
+                        form.change('countryCode', address.countryCode ?? '');
+                      });
+                    }}
+                  />
+                  <EditorActionBar
+                    primaryAction={
+                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                        Update
+                      </Button>
+                    }
+                  />
+                </StackColumn>
+              </SettingsSectionCard>
+            </FormStackColumn>
+
+            {renderLocationSummaryRail()}
+          </Box>
         );
       }}
     />
   );
 
   const renderOpeningHoursSection = () => (
-    <>
-      <StackColumn sx={{ padding: defaultPadding }}>
-        <SectionIconTypography label="Opening Hours" />
-        <BodyIconTypography label="Manage your location opening hours" />
-        <Divider />
-      </StackColumn>
-      <WeekOpeningHours
-        rootDataRelay={rootData}
-        defaultValue={{
-          monday: location.openingHours.weekOpeningHours.monday,
-          tuesday: location.openingHours.weekOpeningHours.tuesday,
-          wednesday: location.openingHours.weekOpeningHours.wednesday,
-          thursday: location.openingHours.weekOpeningHours.thursday,
-          friday: location.openingHours.weekOpeningHours.friday,
-          saturday: location.openingHours.weekOpeningHours.saturday,
-          sunday: location.openingHours.weekOpeningHours.sunday,
-        }}
-        onWeekOpeningHoursDetailUpdateClick={handleLocationOpeningHoursUpdateClick}
-      />
-    </>
+    <Box sx={{ pb: defaultPadding }}>
+      <SettingsSectionCard title="Opening Hours" description="Manage the standard opening hours that bookings and availability will follow.">
+        <WeekOpeningHours
+          rootDataRelay={rootData}
+          defaultValue={{
+            monday: location.openingHours.weekOpeningHours.monday,
+            tuesday: location.openingHours.weekOpeningHours.tuesday,
+            wednesday: location.openingHours.weekOpeningHours.wednesday,
+            thursday: location.openingHours.weekOpeningHours.thursday,
+            friday: location.openingHours.weekOpeningHours.friday,
+            saturday: location.openingHours.weekOpeningHours.saturday,
+            sunday: location.openingHours.weekOpeningHours.sunday,
+          }}
+          onWeekOpeningHoursDetailUpdateClick={handleLocationOpeningHoursUpdateClick}
+        />
+      </SettingsSectionCard>
+    </Box>
   );
 
   const renderManageLocationSection = () => (
-    <StackColumn sx={{ padding: defaultPadding }}>
-      <SectionIconTypography label="Manage" />
-      <BodyIconTypography label="Remove your location" />
-      <Divider />
-      <StackRow sx={{ paddingTop: defaultPadding }}>
-        <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveLocationClicked} sx={{ textTransform: 'none' }}>
-          Remove Location
-        </Button>
-      </StackRow>
-    </StackColumn>
+    <Box sx={{ pb: defaultPadding }}>
+      <SettingsSectionCard title="Manage Location" description="Use destructive actions here only when the location should be removed permanently.">
+        <EditorActionBar
+          primaryAction={
+            <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveLocationClicked} sx={{ textTransform: 'none' }}>
+              Remove Location
+            </Button>
+          }
+        />
+      </SettingsSectionCard>
+    </Box>
   );
 
   const renderSection = () => {
@@ -1268,16 +1289,16 @@ const OrganizationLocationPage = ({ rootDataRelay, onReloadRequired, organizatio
           width: '100%',
           maxWidth: 1120,
           mx: 'auto',
-          backgroundColor: 'background.paper',
+          backgroundColor: 'transparent',
+          gap: 2,
         }}
       >
-        <StackColumn sx={{ px: { xs: 2, sm: 3 }, pt: defaultPadding, pb: 1 }}>
+        <PageHeaderPanel eyebrow="Location settings" title={location.name} description="Setup, address, opening hours, floor plans, resources, and lifecycle controls.">
           <StackColumn spacing={0.5}>
-            <BodyIconTypography label="Location settings" />
             <LeadIconTypography label="Setup & operations" />
-            <BodyIconTypography label="Details, address, opening hours, floor plans, and resources" />
+            <BodyIconTypography label={location.listingMetadata.title || location.type.name} />
           </StackColumn>
-        </StackColumn>
+        </PageHeaderPanel>
 
         <OrganizationLocationSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} locationId={locationId} stickyTop={stickyTop} />
         {renderSection()}

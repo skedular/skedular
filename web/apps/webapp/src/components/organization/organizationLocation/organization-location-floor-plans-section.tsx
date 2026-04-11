@@ -1,10 +1,9 @@
-import { BodyIconTypography, GridContainer, SectionIconTypography, StackColumn } from '@/components/commons';
 import { FloorPlanCard } from '@/components/floorPlan';
 import { NewFloorplanButton } from '@/components/floorPlan/addFloorPlan';
+import { SettingsSectionCard } from '@skedular/ui';
 import { defaultPadding } from '@/libs/theme';
 import type { organizationLocationFloorPlansSectionQuery } from '@/queries/__generated__/organizationLocationFloorPlansSectionQuery.graphql';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import { memo, useMemo } from 'react';
 import { graphql, useLazyLoadQuery } from 'react-relay';
 
@@ -49,27 +48,33 @@ const OrganizationLocationFloorPlansSection = ({ organizationCustomDomain, locat
   const floorPlansConnectionIds = useMemo(() => [rootData.floorPlans.__id], [rootData.floorPlans.__id]);
 
   return (
-    <StackColumn sx={{ padding: defaultPadding }}>
-      <GridContainer sx={{ justifyContent: 'space-between' }}>
-        <Grid>
-          <SectionIconTypography label="Manage Floor Plans" />
-          <BodyIconTypography label="Manage your location floor plans details" />
-        </Grid>
-
-        <Grid>
-          <NewFloorplanButton organizationCustomDomain={organizationCustomDomain} locationId={locationId} />
-        </Grid>
-      </GridContainer>
-      <Divider />
-
-      <GridContainer>
-        {floorPlans.map((floorPlan) => (
-          <Grid key={floorPlan.id}>
-            <FloorPlanCard floorPlanDetailsRelay={floorPlan} connectionIds={floorPlansConnectionIds} organizationCustomDomain={organizationCustomDomain} locationId={locationId} />
-          </Grid>
-        ))}
-      </GridContainer>
-    </StackColumn>
+    <Box sx={{ px: { xs: 2, sm: 3 }, pb: defaultPadding }}>
+      <SettingsSectionCard
+        title="Manage Floor Plans"
+        description="Create and maintain the floor plans that describe how this location is laid out."
+        actions={<NewFloorplanButton organizationCustomDomain={organizationCustomDomain} locationId={locationId} />}
+      >
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(auto-fit, minmax(280px, 360px))' },
+            gap: 2,
+            justifyContent: 'start',
+          }}
+        >
+          {floorPlans.map((floorPlan) => (
+            <Box key={floorPlan.id}>
+              <FloorPlanCard
+                floorPlanDetailsRelay={floorPlan}
+                connectionIds={floorPlansConnectionIds}
+                organizationCustomDomain={organizationCustomDomain}
+                locationId={locationId}
+              />
+            </Box>
+          ))}
+        </Box>
+      </SettingsSectionCard>
+    </Box>
   );
 };
 

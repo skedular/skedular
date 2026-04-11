@@ -1,19 +1,18 @@
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackRow } from '@/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, StackColumn } from '@/components/commons';
 import { AnalyticsIcon, CalendarIcon } from '@/components/icons';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationTermsOfUse } from '@/components/organization';
-import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import { getRelayErrorMessage } from '@/libs/utils';
+import { EditorActionBar, SettingsSectionCard, SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
 import type { addIndividualOrganization_addOrganizationMutation } from '@/queries/__generated__/addIndividualOrganization_addOrganizationMutation.graphql';
 import type { addIndividualOrganization_query$key } from '@/queries/__generated__/addIndividualOrganization_query.graphql';
 import GroupsIcon from '@mui/icons-material/Groups';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 import LockIcon from '@mui/icons-material/Lock';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
@@ -164,118 +163,129 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
   };
 
   return (
-    <TwoSideVerticalWizard>
-      <LeftSidePanel
-        title="Share your space, list and host easily"
-        description="Built for individual hosts and small space owners who want to list a place (think home share). Create a listing, publish availability, and accept guest bookings quickly and simply."
-      >
-        <FeatureBox
-          icon={<LocationCityIcon sx={{ color: '#5C6BC0', fontSize: 40 }} />}
-          title="Create a listing"
-          subtitle="Add photos, a description, amenities and house rules so guests know what to expect."
-        />
-        <FeatureBox
-          icon={<CalendarIcon sx={{ color: '#66BB6A', fontSize: 40 }} />}
-          title="Manage availability & bookings"
-          subtitle="Set your availability, block dates, and accept or decline guest bookings with an easy calendar."
-        />
-        <FeatureBox
-          icon={<GroupsIcon sx={{ color: '#42A5F5', fontSize: 40 }} />}
-          title="Guest communication"
-          subtitle="Message guests, share check in instructions, and coordinate stays from one place."
-        />
-        <FeatureBox
-          icon={<AnalyticsIcon sx={{ color: '#FFA726', fontSize: 40 }} />}
-          title="Booking insights"
-          subtitle="See simple stats about days booked and enquiries to help you optimise availability and pricing."
-        />
-        <FeatureBox
-          icon={<LockIcon sx={{ color: '#EF5350', fontSize: 40 }} />}
-          title="Secure hosting"
-          subtitle="Control who can book and protect your space with booking rules and verification."
-        />
-      </LeftSidePanel>
+    <SetupSplitLayout
+      asideTitle="Share your space, list and host easily"
+      asideDescription="Built for individual hosts and small space owners who want to publish a place and manage bookings simply."
+      asideChildren={
+        <>
+          <SetupFeatureCard
+            icon={<LocationCityIcon sx={{ color: '#5C6BC0', fontSize: 40 }} />}
+            title="Create a listing"
+            description="Add photos, a description, amenities and house rules so guests know what to expect."
+          />
+          <SetupFeatureCard
+            icon={<CalendarIcon sx={{ color: '#66BB6A', fontSize: 40 }} />}
+            title="Manage availability & bookings"
+            description="Set your availability, block dates, and accept or decline guest bookings with an easy calendar."
+          />
+          <SetupFeatureCard
+            icon={<GroupsIcon sx={{ color: '#42A5F5', fontSize: 40 }} />}
+            title="Guest communication"
+            description="Message guests, share check in instructions, and coordinate stays from one place."
+          />
+          <SetupFeatureCard
+            icon={<AnalyticsIcon sx={{ color: '#FFA726', fontSize: 40 }} />}
+            title="Booking insights"
+            description="See simple stats about days booked and enquiries to help you optimise availability and pricing."
+          />
+          <SetupFeatureCard
+            icon={<LockIcon sx={{ color: '#EF5350', fontSize: 40 }} />}
+            title="Secure hosting"
+            description="Control who can book and protect your space with booking rules and verification."
+          />
+        </>
+      }
+      mainTitle="Create your hosting profile"
+      mainDescription="These details represent you as the host. We’ll use them for payouts, invoices, and to connect future listings under one profile."
+    >
+      <Form
+        onSubmit={handleOrganizationAddClick}
+        initialValues={{
+          customDomain: null,
+          name: '',
+          about: null,
+          website: null,
+          customerFacingTermsAndConditionsUrl: null,
+        }}
+        validate={validateOrganizationDetails}
+        render={({ handleSubmit }) => (
+          <FormStackColumn onSubmit={handleSubmit}>
+            <StackColumn>
+              <SettingsSectionCard title="Host Identity" description="Set the core host profile details that will represent you across billing, payouts, and future listings.">
+                <StackColumn>
+                  <FormFieldLabel label="Name" required={requiredFields.name}>
+                    <TextField
+                      name="name"
+                      required={requiredFields.name}
+                      helperText={
+                        <HelperText text="Use the name of your hosting profile, such as your full name or hosting brand. This is for billing and payouts, not the title of a specific listing." />
+                      }
+                    />
+                  </FormFieldLabel>
 
-      <RightSidePanel
-        title="Create your hosting profile"
-        description="These details represent you as the host. We’ll use them for payouts, invoices, and to connect your future listings under one profile."
-      >
-        <Form
-          onSubmit={handleOrganizationAddClick}
-          initialValues={{
-            customDomain: null,
-            name: '',
-            about: null,
-            website: null,
-            customerFacingTermsAndConditionsUrl: null,
-          }}
-          validate={validateOrganizationDetails}
-          render={({ handleSubmit }) => (
-            <FormStackColumn onSubmit={handleSubmit}>
-              <Divider />
+                  {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
+                    <FormFieldLabel label="Custom Domain" required={requiredFields.customDomain}>
+                      <TextField name="customDomain" required={requiredFields.customDomain} />
+                    </FormFieldLabel>
+                  )}
 
-              <FormFieldLabel label="Name" required={requiredFields.name}>
-                <TextField
-                  name="name"
-                  required={requiredFields.name}
-                  helperText={
-                    <HelperText text="Use the name of your hosting profile (e.g. your full name or hosting brand). This is for billing and payouts, not the title of any specific space you list." />
-                  }
-                />
-              </FormFieldLabel>
+                  <ListingMetadata
+                    fields={['about']}
+                    helperTexts={{
+                      about: (
+                        <HelperText text="Introduce yourself as a host. Share your hosting style or the kinds of stays you offer. Individual listings can add detailed descriptions later." />
+                      ),
+                    }}
+                    requiredFields={requiredFields}
+                  />
+                </StackColumn>
+              </SettingsSectionCard>
 
-              {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-                <FormFieldLabel label="Custom Domain" required={requiredFields.customDomain}>
-                  <TextField name="customDomain" required={requiredFields.customDomain} />
+              <SettingsSectionCard title="Public Links" description="Add the links and terms customers should see before they book or contact you.">
+                <StackColumn>
+                  <FormFieldLabel label="Website" required={requiredFields.website}>
+                    <TextField
+                      name="website"
+                      required={requiredFields.website}
+                      helperText={
+                        <HelperText text="Link to a personal site or social profile that represents you as a host. You’ll add location-specific links for each listing separately." />
+                      }
+                    />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Terms and Conditions" required={requiredFields.customerFacingTermsAndConditionsUrl}>
+                    <TextField
+                      name="customerFacingTermsAndConditionsUrl"
+                      required={requiredFields.customerFacingTermsAndConditionsUrl}
+                      helperText={<HelperText text="Provide the URL to your customer-facing terms and conditions." />}
+                    />
+                  </FormFieldLabel>
+                </StackColumn>
+              </SettingsSectionCard>
+
+              <SettingsSectionCard title="Acceptance" description="Confirm the platform terms before the hosting profile is created.">
+                <FormFieldLabel label="" required={requiredFields.agreedToTermsOfUse}>
+                  <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
                 </FormFieldLabel>
-              )}
+              </SettingsSectionCard>
 
-              <ListingMetadata
-                fields={['about']}
-                helperTexts={{
-                  about: (
-                    <HelperText text="Introduce yourself as a host. Share your hosting style or the types of stays you offer. Individual listings can include their own detailed descriptions later." />
-                  ),
-                }}
-                requiredFields={requiredFields}
+              <EditorActionBar
+                secondaryActions={
+                  <Button variant="contained" sx={defaultButtonStyle} onClick={onCancel}>
+                    <BodyIconTypography label={cancelLabel ?? 'Cancel'} invertDefaultColor={paletteMode === 'dark'} />
+                  </Button>
+                }
+                primaryAction={
+                  <Button variant="contained" type="submit" sx={{ textTransform: 'none' }} color="primary">
+                    <BodyIconTypography label={createLabel ?? 'Create'} invertDefaultColor={paletteMode === 'dark'} />
+                  </Button>
+                }
               />
-
-              <FormFieldLabel label="Website" required={requiredFields.website}>
-                <TextField
-                  name="website"
-                  required={requiredFields.website}
-                  helperText={
-                    <HelperText text="Link to a personal site or social profile that represents you as a host. You’ll add location-specific links for each listing separately." />
-                  }
-                />
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Terms and Conditions" required={requiredFields.customerFacingTermsAndConditionsUrl}>
-                <TextField
-                  name="customerFacingTermsAndConditionsUrl"
-                  required={requiredFields.customerFacingTermsAndConditionsUrl}
-                  helperText={<HelperText text="Provide the URL to your customer-facing terms and conditions." />}
-                />
-              </FormFieldLabel>
-
-              <FormFieldLabel label="" required={requiredFields.agreedToTermsOfUse}>
-                <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
-              </FormFieldLabel>
-
-              <StackRow>
-                <Button variant="contained" sx={defaultButtonStyle} onClick={onCancel}>
-                  <BodyIconTypography label={cancelLabel ?? 'Cancel'} invertDefaultColor={paletteMode === 'dark'} />
-                </Button>
-                <PushToRight />
-                <Button variant="contained" type="submit" sx={{ textTransform: 'none' }} color="primary">
-                  <BodyIconTypography label={createLabel ?? 'Create'} invertDefaultColor={paletteMode === 'dark'} />
-                </Button>
-              </StackRow>
-            </FormStackColumn>
-          )}
-        />
-      </RightSidePanel>
-    </TwoSideVerticalWizard>
+            </StackColumn>
+          </FormStackColumn>
+        )}
+      />
+    </SetupSplitLayout>
   );
 };
 

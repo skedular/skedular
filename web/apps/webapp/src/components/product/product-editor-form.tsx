@@ -15,6 +15,7 @@ import MultipleChoicesAmenities from '@/components/organization/multiple-choices
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { createCancellationRefundRule, createPricingOption, isEventType, PricingOptionForm, ProductDetails } from '@/components/product/product-editor-shared';
+import { GuidedEditorProgress, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -128,27 +129,6 @@ const getCancellationPolicyPreview = (pricingOption: PricingOptionForm) => {
   return 'No cancellation policy selected yet.';
 };
 
-const sectionCardSx = {
-  borderRadius: 3,
-  border: 1,
-  borderColor: 'divider',
-};
-
-const SectionCard = ({ title, description, children }: { title: string; description: string; children: React.ReactNode }) => (
-  <Card variant="outlined" sx={sectionCardSx}>
-    <CardContent>
-      <StackColumn spacing={2}>
-        <StackColumn spacing={0.5}>
-          <SectionIconTypography label={title} />
-          <BodyIconTypography label={description} sx={{ opacity: 0.8 }} />
-        </StackColumn>
-        <Divider />
-        {children}
-      </StackColumn>
-    </CardContent>
-  </Card>
-);
-
 const ProductEditorForm = ({
   mode,
   onSubmit,
@@ -192,7 +172,7 @@ const ProductEditorForm = ({
 
   const renderOfferEditor = (pricingOption: PricingOptionForm, index: number) => (
     <StackColumn spacing={2}>
-      <SectionCard title="Offer Basics" description="Set the label customers will understand first, then set cadence and price.">
+      <SettingsSectionCard title="Offer Basics" description="Set the label customers will understand first, then set cadence and price.">
         <ListingMetadata fields={['title', 'subTitle']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />
 
         <FormFieldLabel label="Cadence">
@@ -202,9 +182,9 @@ const ProductEditorForm = ({
         <FormFieldLabel label="Price">
           <TextField name={`pricingOptions[${index}].price`} required />
         </FormFieldLabel>
-      </SectionCard>
+      </SettingsSectionCard>
 
-      <SectionCard title="Booking Rules" description="Define how much of the product is reserved each time this offer is purchased.">
+      <SettingsSectionCard title="Booking Rules" description="Define how much of the product is reserved each time this offer is purchased.">
         <FormFieldLabel label="Number of Resources to Book">
           <TextField
             name={`pricingOptions[${index}].numberOfResourcesToBook`}
@@ -219,9 +199,9 @@ const ProductEditorForm = ({
         <FormFieldLabel label="Maximum Duration (minutes)">
           <TextField name={`pricingOptions[${index}].maxDurationMinutes`} required />
         </FormFieldLabel>
-      </SectionCard>
+      </SettingsSectionCard>
 
-      <SectionCard title="Payments" description="Describe how this offer is paid for and which payment paths you support.">
+      <SettingsSectionCard title="Payments" description="Describe how this offer is paid for and which payment paths you support.">
         <FormFieldLabel>
           <Switches name={`pricingOptions[${index}].isTaxInclusive`} data={{ label: 'Is price tax inclusive?', value: 'isTaxInclusive' }} />
         </FormFieldLabel>
@@ -239,9 +219,9 @@ const ProductEditorForm = ({
         <FormFieldLabel label="Billing Mode">
           <SingleChoiceProductPricingBillingMode rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].billingMode`} required />
         </FormFieldLabel>
-      </SectionCard>
+      </SettingsSectionCard>
 
-      <SectionCard title="Cancellation" description="Set the customer-facing refund policy separately from the purchase price.">
+      <SettingsSectionCard title="Cancellation" description="Set the customer-facing refund policy separately from the purchase price.">
         <Card variant="outlined" sx={{ borderRadius: 2, backgroundColor: 'action.hover' }}>
           <CardContent>
             <StackColumn spacing={1}>
@@ -386,22 +366,22 @@ const ProductEditorForm = ({
             </StackRow>
           </StackColumn>
         ) : null}
-      </SectionCard>
+      </SettingsSectionCard>
 
-      <SectionCard title="Advanced" description="Keep the operational lock windows here so the commercial setup stays readable.">
+      <SettingsSectionCard title="Advanced" description="Keep the operational lock windows here so the commercial setup stays readable.">
         <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Card (minutes)">
           <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`} required />
         </FormFieldLabel>
         <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Bank Transfer (days)">
           <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransfer`} required />
         </FormFieldLabel>
-      </SectionCard>
+      </SettingsSectionCard>
     </StackColumn>
   );
 
   const renderBasics = () => (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
-      <SectionCard title="Product Media" description="Set the visual identity first. The cover image anchors the whole product.">
+      <SettingsSectionCard title="Product Media" description="Set the visual identity first. The cover image anchors the whole product.">
         <FormFieldLabel label="Feature Images">
           <StackColumn>
             <Box
@@ -446,13 +426,13 @@ const ProductEditorForm = ({
             <ImageFileUploaderWithCropper onUploadCompleted={onUploadCompleted} />
           </StackColumn>
         </FormFieldLabel>
-      </SectionCard>
+      </SettingsSectionCard>
 
-      <SectionCard title="Customer-Facing Details" description="Write the product name, subtitle, and included features the way customers will read them.">
+      <SettingsSectionCard title="Customer-Facing Details" description="Write the product name, subtitle, and included features the way customers will read them.">
         <ListingMetadata fields={['title', 'subTitle', 'includedFeatures']} requiredFields={requiredFields} />
-      </SectionCard>
+      </SettingsSectionCard>
 
-      <SectionCard title="Classification" description="Choose the product type, currency, tags, and amenities that control how this product behaves.">
+      <SettingsSectionCard title="Classification" description="Choose the product type, currency, tags, and amenities that control how this product behaves.">
         <FormFieldLabel label="Type">
           <SingleChoiceProductType rootDataRelay={rootDataRelay as never} name="type" required={requiredFields.type} />
         </FormFieldLabel>
@@ -479,13 +459,13 @@ const ProductEditorForm = ({
         <FormFieldLabel label="Amenities">
           <MultipleChoicesAmenities rootDataRelay={rootDataRelay as never} name="amenityIds" required={requiredFields.amenityIds} />
         </FormFieldLabel>
-      </SectionCard>
+      </SettingsSectionCard>
     </StackColumn>
   );
 
   const renderOffers = () => (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
-      <SectionCard
+      <SettingsSectionCard
         title="Offer Setup"
         description="Choose or create one offer at a time. This page is slower on purpose so the pricing, payments, and cancellation rules stay readable."
       >
@@ -564,7 +544,7 @@ const ProductEditorForm = ({
             )}
           </StackColumn>
         </Box>
-      </SectionCard>
+      </SettingsSectionCard>
 
       {typeof errors === 'object' && errors !== null && 'pricingOptions' in errors && typeof errors.pricingOptions === 'string' ? (
         <BodyIconTypography label={errors.pricingOptions} sx={{ color: 'error.main' }} />
@@ -606,22 +586,17 @@ const ProductEditorForm = ({
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 360px' }, gap: 3 }}>
         <StackColumn>
           <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-            <SectionIconTypography label={mode === 'add' ? 'Create Product' : 'Edit Product'} />
-            <BodyIconTypography
-              label={
+            <GuidedEditorProgress
+              title={mode === 'add' ? 'Create Product' : 'Edit Product'}
+              description={
                 mode === 'add'
                   ? 'Move through the product setup in a clearer order: basics first, then offers, then a final review.'
                   : 'Update the product in focused sections instead of editing one long block.'
               }
+              steps={steps}
+              activeStepId={activeStep}
+              onStepChange={(stepId) => setActiveStep(stepId as (typeof steps)[number]['id'])}
             />
-            <Divider />
-            <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
-              {steps.map((step) => (
-                <Button key={step.id} variant={activeStep === step.id ? 'contained' : 'outlined'} onClick={() => setActiveStep(step.id)} sx={{ textTransform: 'none' }}>
-                  {step.title}
-                </Button>
-              ))}
-            </StackRow>
           </StackColumn>
 
           {activeStep === 'basics' ? renderBasics() : null}
@@ -649,51 +624,36 @@ const ProductEditorForm = ({
           </StackColumn>
         </StackColumn>
 
-        <StackColumn
-          sx={{
-            pl: { xs: 2, xl: 0 },
-            pr: 2,
-            pt: 2,
-            position: { xl: 'sticky' },
-            top: { xl: 24 },
-            alignSelf: 'start',
-          }}
-        >
-          <Card variant="outlined">
-            <CardContent>
-              <StackColumn spacing={1.5}>
-                <SectionIconTypography label="Summary" />
-                <LeadIconTypography label={values.title?.trim() || 'Untitled product'} />
-                <SmallIconTypography label={values.subTitle?.trim() || 'Add a subtitle so people understand the offer quickly.'} />
-                <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
-                  <Chip size="small" label={prettifyEnum(values.type)} />
-                  <Chip size="small" label={values.currency || 'No currency'} />
-                  <Chip size="small" label={`${featureImages.length} image${featureImages.length === 1 ? '' : 's'}`} />
-                </StackRow>
-                <Divider />
-                <BodyIconTypography label={`Offers: ${values.pricingOptions.length}`} />
-                {values.pricingOptions.map((pricingOption, index) => (
-                  <Box key={pricingOption.id} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25 }}>
-                    <OfferSummary pricingOption={pricingOption} index={index} />
-                  </Box>
-                ))}
-              </StackColumn>
-            </CardContent>
-          </Card>
+        <StickyReviewRail title="Review rail" description="Keep the product story and validation visible while editing longer sections.">
+          <SettingsSectionCard title="Summary" description="A compact view of the product your team is shaping.">
+            <StackColumn spacing={1.5}>
+              <LeadIconTypography label={values.title?.trim() || 'Untitled product'} />
+              <SmallIconTypography label={values.subTitle?.trim() || 'Add a subtitle so people understand the offer quickly.'} />
+              <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
+                <Chip size="small" label={prettifyEnum(values.type)} />
+                <Chip size="small" label={values.currency || 'No currency'} />
+                <Chip size="small" label={`${featureImages.length} image${featureImages.length === 1 ? '' : 's'}`} />
+              </StackRow>
+              <Divider />
+              <BodyIconTypography label={`Offers: ${values.pricingOptions.length}`} />
+              {values.pricingOptions.map((pricingOption, index) => (
+                <Box key={pricingOption.id} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25 }}>
+                  <OfferSummary pricingOption={pricingOption} index={index} />
+                </Box>
+              ))}
+            </StackColumn>
+          </SettingsSectionCard>
 
-          <Card variant="outlined">
-            <CardContent>
-              <StackColumn spacing={1.25}>
-                <SectionIconTypography label="Validation" />
-                {validationItems.length === 0 ? (
-                  <SmallIconTypography label="No blocking validation issues yet." />
-                ) : (
-                  validationItems.map((item) => <SmallIconTypography key={item} label={item} />)
-                )}
-              </StackColumn>
-            </CardContent>
-          </Card>
-        </StackColumn>
+          <SettingsSectionCard title="Validation" description="Surface the most important issues without forcing the user back to the top of the form.">
+            <StackColumn spacing={1.25}>
+              {validationItems.length === 0 ? (
+                <SmallIconTypography label="No blocking validation issues yet." />
+              ) : (
+                validationItems.map((item) => <SmallIconTypography key={item} label={item} />)
+              )}
+            </StackColumn>
+          </SettingsSectionCard>
+        </StickyReviewRail>
       </Box>
     </FormStackColumn>
   );

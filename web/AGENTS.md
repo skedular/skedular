@@ -49,6 +49,14 @@ web/
 - For broad UI work in `web/apps/webapp`, follow `web/apps/webapp/docs/ui-redesign-program.md`.
 - The long-term direction is a reusable web design system under `web/packages/*`, but only extract patterns that are
   already stable across more than one domain surface.
+- The current shared UI package already contains reusable layout primitives and settings primitives; prefer extending
+  `web/packages/ui` for Relay-free section shells and review rails instead of recreating them in feature folders.
+- Generic editor action bars should follow the same rule and live in `web/packages/ui` when reused across multiple
+  admin editors.
+- Setup/onboarding split layouts and feature-callout cards should also move into `web/packages/ui` once more than one
+  create flow uses them.
+- For route-backed setup/admin pages, keep the UI focused on the active section only. Do not re-expand those surfaces
+  into one long multi-section page, and avoid right-side summary rails that compete with the section content width.
 - The current testing direction is Vitest + React Testing Library from `web/apps/webapp`, with coverage allowed to
   extend into Relay-free workspace packages such as `web/packages/ui`.
 - In `web/apps/webapp`, prefer Relay colocation. Fragments and small queries should live beside the component that uses

@@ -1,14 +1,14 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon } from '@/components/icons';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationTermsOfUse } from '@/components/organization';
-import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import { getRelayErrorMessage } from '@/libs/utils';
+import { EditorActionBar, SettingsSectionCard, SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
 import type { addMarketplaceOrganization_addOrganizationMutation } from '@/queries/__generated__/addMarketplaceOrganization_addOrganizationMutation.graphql';
 import type { addMarketplaceOrganization_query$key } from '@/queries/__generated__/addMarketplaceOrganization_query.graphql';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -20,7 +20,6 @@ import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useState } from 'react';
@@ -215,156 +214,172 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
   };
 
   return (
-    <TwoSideVerticalWizard>
-      <LeftSidePanel
-        title="Set up your co-working space"
-        description="List your space, manage availability, and connect with individuals or teams looking for flexible work environments. We'll guide you through the basics to get started."
-      >
-        <FeatureBox
-          icon={<ViewQuiltIcon sx={{ color: '#4CAF50', fontSize: 40 }} />}
-          title="Space Customization"
-          subtitle="Easily set up rooms, desks, and shared areas the way your space is structured."
-        />
-        <FeatureBox
-          icon={<TodayIcon sx={{ color: '#2196F3', fontSize: 40 }} />}
-          title="Real-Time Availability"
-          subtitle="Keep availability up to date and let users book in real time."
-        />
-        <FeatureBox
-          icon={<PublicIcon sx={{ color: '#FF9800', fontSize: 40 }} />}
-          title="Marketplace Visibility"
-          subtitle="Showcase your space to individuals and teams looking for flexible workspaces."
-        />
-        <FeatureBox icon={<ForumIcon sx={{ color: '#9C27B0', fontSize: 40 }} />} title="User Communication" subtitle="Message and manage members directly through the platform." />
-        <FeatureBox
-          icon={<BarChartIcon sx={{ color: '#3F51B5', fontSize: 40 }} />}
-          title="Booking Insights"
-          subtitle="Track utilization, revenue, and occupancy trends with smart analytics."
-        />
-        <FeatureBox
-          icon={<AdminPanelSettingsIcon sx={{ color: '#F44336', fontSize: 40 }} />}
-          title="Admin Controls"
-          subtitle="Manage access, edit listings, and approve bookings with ease."
-        />
-      </LeftSidePanel>
-
-      <RightSidePanel
-        title="Let's Get Your Space Listed"
-        description="We'll start with a few details about your organization. This helps represent your co-working space and makes onboarding seamless later on."
-      >
-        <Form
-          onSubmit={handleOrganizationAddClick}
-          initialValues={{
-            customDomain: null,
-            name: '',
-            about: null,
-            website: null,
-            customerFacingTermsAndConditionsUrl: null,
-          }}
-          validate={validateOrganizationDetails}
-          render={({ handleSubmit }) => (
-            <FormStackColumn onSubmit={handleSubmit}>
-              <Divider />
-
-              <FormFieldLabel label="Feature Images">
+    <SetupSplitLayout
+      asideTitle="Set up your co-working space"
+      asideDescription="List your space, manage availability, and connect with individuals or teams looking for flexible work environments."
+      asideChildren={
+        <>
+          <SetupFeatureCard
+            icon={<ViewQuiltIcon sx={{ color: '#4CAF50', fontSize: 40 }} />}
+            title="Space Customization"
+            description="Easily set up rooms, desks, and shared areas the way your space is structured."
+          />
+          <SetupFeatureCard
+            icon={<TodayIcon sx={{ color: '#2196F3', fontSize: 40 }} />}
+            title="Real-Time Availability"
+            description="Keep availability up to date and let users book in real time."
+          />
+          <SetupFeatureCard
+            icon={<PublicIcon sx={{ color: '#FF9800', fontSize: 40 }} />}
+            title="Marketplace Visibility"
+            description="Showcase your space to individuals and teams looking for flexible workspaces."
+          />
+          <SetupFeatureCard
+            icon={<ForumIcon sx={{ color: '#9C27B0', fontSize: 40 }} />}
+            title="User Communication"
+            description="Message and manage members directly through the platform."
+          />
+          <SetupFeatureCard
+            icon={<BarChartIcon sx={{ color: '#3F51B5', fontSize: 40 }} />}
+            title="Booking Insights"
+            description="Track utilization, revenue, and occupancy trends with smart analytics."
+          />
+          <SetupFeatureCard
+            icon={<AdminPanelSettingsIcon sx={{ color: '#F44336', fontSize: 40 }} />}
+            title="Admin Controls"
+            description="Manage access, edit listings, and approve bookings with ease."
+          />
+        </>
+      }
+      mainTitle="Let's Get Your Space Listed"
+      mainDescription="Start with the organization details that represent your co-working brand before you move into listings, availability, and operations."
+    >
+      <Form
+        onSubmit={handleOrganizationAddClick}
+        initialValues={{
+          customDomain: null,
+          name: '',
+          about: null,
+          website: null,
+          customerFacingTermsAndConditionsUrl: null,
+        }}
+        validate={validateOrganizationDetails}
+        render={({ handleSubmit }) => (
+          <FormStackColumn onSubmit={handleSubmit}>
+            <StackColumn>
+              <SettingsSectionCard title="Brand and Identity" description="Set the core organization profile details customers and operators will rely on first.">
                 <StackColumn>
-                  <Box
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
-                      gap: 2,
-                    }}
-                  >
-                    {featureImages.map((image, index) => (
+                  <FormFieldLabel label="Feature Images">
+                    <StackColumn>
                       <Box
-                        key={index}
                         sx={{
-                          position: 'relative',
-                          borderRadius: 2,
-                          overflow: 'hidden',
-                          border: 1,
-                          borderColor: 'divider',
-                          backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                          display: 'grid',
+                          gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
+                          gap: 2,
                         }}
                       >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                          <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </StackRow>
-                        <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                          {primaryFeatureImage?.original?.url === image.original?.url ? (
-                            <Chip size="small" color="success" label="Cover image" />
-                          ) : (
-                            <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                              Make cover
-                            </Button>
-                          )}
-                        </StackRow>
+                        {featureImages.map((image, index) => (
+                          <Box
+                            key={index}
+                            sx={{
+                              position: 'relative',
+                              borderRadius: 2,
+                              overflow: 'hidden',
+                              border: 1,
+                              borderColor: 'divider',
+                              backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                            }}
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                              <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </StackRow>
+                            <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                              {primaryFeatureImage?.original?.url === image.original?.url ? (
+                                <Chip size="small" color="success" label="Cover image" />
+                              ) : (
+                                <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                  Make cover
+                                </Button>
+                              )}
+                            </StackRow>
+                          </Box>
+                        ))}
                       </Box>
-                    ))}
-                  </Box>
 
-                  <ImageFileUploaderWithCropper
-                    onUploadCompleted={handleFeatureImageUploadCompleted}
-                    helperText="Upload a high-quality image that represents this location. This image will be used in dashboards and reports to visually identify the workspace."
+                      <ImageFileUploaderWithCropper
+                        onUploadCompleted={handleFeatureImageUploadCompleted}
+                        helperText="Upload a high-quality image that represents the organization. This image will be used in dashboards and admin surfaces to visually identify the workspace."
+                      />
+                    </StackColumn>
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Name" required={requiredFields.name}>
+                    <TextField
+                      name="name"
+                      required={requiredFields.name}
+                      helperText={<HelperText text="Enter the official name of your co-working space as you want it to appear to members and visitors." />}
+                    />
+                  </FormFieldLabel>
+
+                  {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
+                    <FormFieldLabel label="Custom Domain" required={requiredFields.customDomain}>
+                      <TextField name="customDomain" required={requiredFields.customDomain} />
+                    </FormFieldLabel>
+                  )}
+
+                  <ListingMetadata
+                    fields={['about']}
+                    helperTexts={{
+                      about: <HelperText text="Briefly describe your co-working space, its mission, community vibe, and what makes it unique." />,
+                    }}
+                    requiredFields={requiredFields}
                   />
                 </StackColumn>
-              </FormFieldLabel>
-              <FormFieldLabel label="Name" required={requiredFields.name}>
-                <TextField
-                  name="name"
-                  required={requiredFields.name}
-                  helperText={<HelperText text="Enter the official name of your co-working space as you want it to appear to members and visitors." />}
-                />
-              </FormFieldLabel>
+              </SettingsSectionCard>
 
-              {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-                <FormFieldLabel label="Custom Domain" required={requiredFields.customDomain}>
-                  <TextField name="customDomain" required={requiredFields.customDomain} />
+              <SettingsSectionCard title="Public Links" description="Add the website and customer-facing policy links people should see before they book or join.">
+                <StackColumn>
+                  <FormFieldLabel label="Website" required={requiredFields.website}>
+                    <TextField name="website" required={requiredFields.website} helperText={<HelperText text="Provide your co-working space’s website to share with members." />} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Terms and Conditions" required={requiredFields.customerFacingTermsAndConditionsUrl}>
+                    <TextField
+                      name="customerFacingTermsAndConditionsUrl"
+                      required={requiredFields.customerFacingTermsAndConditionsUrl}
+                      helperText={<HelperText text="Provide the URL to your customer-facing terms and conditions." />}
+                    />
+                  </FormFieldLabel>
+                </StackColumn>
+              </SettingsSectionCard>
+
+              <SettingsSectionCard title="Acceptance" description="Confirm the platform terms before the marketplace organization is created.">
+                <FormFieldLabel label="" required={requiredFields.agreedToTermsOfUse}>
+                  <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" />
                 </FormFieldLabel>
-              )}
+              </SettingsSectionCard>
 
-              <ListingMetadata
-                fields={['about']}
-                helperTexts={{
-                  about: <HelperText text="Briefly describe your co-working space, its mission, community vibe, and what makes it unique." />,
-                }}
-                requiredFields={requiredFields}
+              <EditorActionBar
+                secondaryActions={
+                  <Button variant="contained" sx={defaultButtonStyle} onClick={onCancel}>
+                    <BodyIconTypography label={cancelLabel ?? 'Cancel'} invertDefaultColor={paletteMode === 'dark'} />
+                  </Button>
+                }
+                primaryAction={
+                  <Button variant="contained" type="submit" sx={{ textTransform: 'none' }} color="primary">
+                    <BodyIconTypography label={createLabel ?? 'Create'} invertDefaultColor={paletteMode === 'dark'} />
+                  </Button>
+                }
               />
-
-              <FormFieldLabel label="Website" required={requiredFields.website}>
-                <TextField name="website" required={requiredFields.website} helperText={<HelperText text="Provide your co-working space's website to share with members." />} />
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Terms and Conditions" required={requiredFields.customerFacingTermsAndConditionsUrl}>
-                <TextField
-                  name="customerFacingTermsAndConditionsUrl"
-                  required={requiredFields.customerFacingTermsAndConditionsUrl}
-                  helperText={<HelperText text="Provide the URL to your customer-facing terms and conditions." />}
-                />
-              </FormFieldLabel>
-
-              <FormFieldLabel label="" required={requiredFields.agreedToTermsOfUse}>
-                <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" />
-              </FormFieldLabel>
-
-              <StackRow>
-                <Button variant="contained" sx={defaultButtonStyle} onClick={onCancel}>
-                  <BodyIconTypography label={cancelLabel ?? 'Cancel'} invertDefaultColor={paletteMode === 'dark'} />
-                </Button>
-                <PushToRight />
-                <Button variant="contained" type="submit" sx={{ textTransform: 'none' }} color="primary">
-                  <BodyIconTypography label={createLabel ?? 'Create'} invertDefaultColor={paletteMode === 'dark'} />
-                </Button>
-              </StackRow>
-            </FormStackColumn>
-          )}
-        />
-      </RightSidePanel>
-    </TwoSideVerticalWizard>
+            </StackColumn>
+          </FormStackColumn>
+        )}
+      />
+    </SetupSplitLayout>
   );
 };
 

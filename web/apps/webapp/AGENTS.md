@@ -84,12 +84,20 @@ scripts/
   - prefer a centered content column with a compact in-page header and a route-backed sticky top section nav
   - use the same responsive collapse pattern for the top section nav on medium and smaller widths
   - keep shell-level back navigation in the shell breadcrumbs/app bar instead of duplicating it inside the page body
+  - render one active admin section at a time from the route-backed section nav; do not stack all admin sections into one long page
+  - do not use right-side summary rails on these route-backed setup/admin sections; the section content should own the available width
 - Avoid embedding maps, full carousels, or other heavy detail widgets directly inside dense list cards unless the card is explicitly a media-first browsing surface.
 - The long-term target is extraction into `web/packages/*`, but do not extract unstable domain-specific widgets too
   early.
 - The first design-system package now exists at `web/packages/ui`.
 - Prefer placing Relay-free presentation primitives there when they are stable enough to be reused across more than one
   surface.
+- Settings-section shells and sticky review rails belong in `web/packages/ui` when they are generic and not tied to a
+  specific domain model.
+- Generic editor action bars also belong in `web/packages/ui` once they are shared across product, location, or
+  resource editing surfaces.
+- Split onboarding/setup shells and feature-callout cards belong in `web/packages/ui` when multiple add/create flows
+  use the same layout language.
 - Every significant redesign slice should consider:
   - desktop width usage
   - mobile responsiveness

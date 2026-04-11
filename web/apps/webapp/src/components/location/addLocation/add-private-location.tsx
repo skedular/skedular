@@ -1,16 +1,16 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { EditorActionBar, SettingsSectionCard, SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
 import type { addPrivateLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addPrivateLocation_addLocationMutation.graphql';
 import type { addPrivateLocation_rootQuery } from '@/queries/__generated__/addPrivateLocation_rootQuery.graphql';
 import ApartmentIcon from '@mui/icons-material/Apartment';
@@ -22,7 +22,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
@@ -231,143 +230,161 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationCust
   };
 
   return (
-    <TwoSideVerticalWizard>
-      <LeftSidePanel title="Add a New Location" description="Set up your office location to manage workspace resources, bookable areas, and team access — all in one place.">
-        <FeatureBox
-          icon={<ApartmentIcon sx={{ color: '#3949AB', fontSize: 40 }} />}
-          title="Multi-Floor Support"
-          subtitle="Define buildings and floors to organize your workspace layout clearly."
-        />
-        <FeatureBox
-          icon={<ChairAltIcon sx={{ color: '#00796B', fontSize: 40 }} />}
-          title="Desk Management"
-          subtitle="Add and manage desks to enable hot-desking or assigned seating."
-        />
-        <FeatureBox
-          icon={<MeetingRoomIcon sx={{ color: '#6A1B9A', fontSize: 40 }} />}
-          title="Meeting Rooms & Spaces"
-          subtitle="Configure bookable rooms and common areas for collaboration."
-        />
-        <FeatureBox
-          icon={<LockOpenIcon sx={{ color: '#D84315', fontSize: 40 }} />}
-          title="Capacity & Access Control"
-          subtitle="Set maximum occupancy and control who can access the space."
-        />
-        <FeatureBox
-          icon={<EventNoteIcon sx={{ color: '#1565C0', fontSize: 40 }} />}
-          title="Resource Scheduling"
-          subtitle="Enable bookings for desks, rooms, and equipment based on availability."
-        />
-        <FeatureBox icon={<VisibilityIcon sx={{ color: '#2E7D32', fontSize: 40 }} />} title="Location Visibility" subtitle="Control who can see and interact with this location." />
-      </LeftSidePanel>
-      <RightSidePanel
-        title="Set Up Your Location"
-        description="Let's get started by adding your primary workplace location. This helps organize your office layout, manage bookings, and connect your team to physical spaces from day one."
-      >
-        <Form
-          onSubmit={handleLocationAddClick}
-          initialValues={{
-            name: locationName,
-            timezone: locationTimezone,
-            type: locationType,
-          }}
-          validate={validateLocationDetails}
-          render={({ handleSubmit, values }) => {
-            debounceSetLocationName(values!.name);
-            debounceSetLocationTimezone(values!.timezone);
-            debounceSetLocationType(values!.type);
+    <SetupSplitLayout
+      asideTitle="Add a New Location"
+      asideDescription="Set up your office location to manage workspace resources, bookable areas, and team access in one place."
+      asideChildren={
+        <>
+          <SetupFeatureCard
+            icon={<ApartmentIcon sx={{ color: '#3949AB', fontSize: 40 }} />}
+            title="Multi-Floor Support"
+            description="Define buildings and floors to organize your workspace layout clearly."
+          />
+          <SetupFeatureCard
+            icon={<ChairAltIcon sx={{ color: '#00796B', fontSize: 40 }} />}
+            title="Desk Management"
+            description="Add and manage desks to enable hot-desking or assigned seating."
+          />
+          <SetupFeatureCard
+            icon={<MeetingRoomIcon sx={{ color: '#6A1B9A', fontSize: 40 }} />}
+            title="Meeting Rooms & Spaces"
+            description="Configure bookable rooms and common areas for collaboration."
+          />
+          <SetupFeatureCard
+            icon={<LockOpenIcon sx={{ color: '#D84315', fontSize: 40 }} />}
+            title="Capacity & Access Control"
+            description="Set maximum occupancy and control who can access the space."
+          />
+          <SetupFeatureCard
+            icon={<EventNoteIcon sx={{ color: '#1565C0', fontSize: 40 }} />}
+            title="Resource Scheduling"
+            description="Enable bookings for desks, rooms, and equipment based on availability."
+          />
+          <SetupFeatureCard
+            icon={<VisibilityIcon sx={{ color: '#2E7D32', fontSize: 40 }} />}
+            title="Location Visibility"
+            description="Control who can see and interact with this location."
+          />
+        </>
+      }
+      mainTitle="Set Up Your Location"
+      mainDescription="Start with the core workplace details so resources, bookings, and visibility rules have a clean foundation."
+    >
+      <Form
+        onSubmit={handleLocationAddClick}
+        initialValues={{
+          name: locationName,
+          timezone: locationTimezone,
+          type: locationType,
+        }}
+        validate={validateLocationDetails}
+        render={({ handleSubmit, values }) => {
+          debounceSetLocationName(values!.name);
+          debounceSetLocationTimezone(values!.timezone);
+          debounceSetLocationType(values!.type);
 
-            return (
-              <FormStackColumn onSubmit={handleSubmit}>
-                <Divider />
-                <FormFieldLabel label="Feature Images">
+          return (
+            <FormStackColumn onSubmit={handleSubmit}>
+              <Box sx={{ display: 'grid', gap: 3 }}>
+                <SettingsSectionCard
+                  title="Location Identity"
+                  description="Set the public name, timezone, and basic type so the workspace starts with a clear operational identity."
+                >
                   <StackColumn>
-                    <Box
-                      sx={{
-                        display: 'grid',
-                        gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
-                        gap: 2,
-                      }}
-                    >
-                      {featureImages.map((image, index) => (
-                        <Box
-                          key={index}
-                          sx={{
-                            position: 'relative',
-                            borderRadius: 2,
-                            overflow: 'hidden',
-                            border: 1,
-                            borderColor: 'divider',
-                            backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                          }}
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                            <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </StackRow>
-                          <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                            {primaryFeatureImage?.original?.url === image.original?.url ? (
-                              <Chip size="small" color="success" label="Cover image" />
-                            ) : (
-                              <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                                Make cover
-                              </Button>
-                            )}
-                          </StackRow>
-                        </Box>
-                      ))}
-                    </Box>
+                    <FormFieldLabel label="Name" required={requiredFields.name}>
+                      <TextField
+                        name="name"
+                        required={requiredFields.name}
+                        helperText={
+                          <HelperText text="Enter a unique and descriptive name for this location. This will help team members quickly identify it when booking workspaces or managing resources." />
+                        }
+                      />
+                    </FormFieldLabel>
 
-                    <ImageFileUploaderWithCropper
-                      onUploadCompleted={handleFeatureImageUploadCompleted}
-                      helperText="Upload a high-quality image that represents this location. This image will be used in dashboards and reports to visually identify the workspace."
-                    />
+                    <FormFieldLabel label="Timezone" required={requiredFields.timezone}>
+                      <SingleChoinceTimezone
+                        name="timezone"
+                        required={requiredFields.timezone}
+                        helperText="Select the time zone for this location. It ensures that bookings, events, and notifications are displayed in the correct local time for everyone using this site."
+                      />
+                    </FormFieldLabel>
+
+                    {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
+                      <FormFieldLabel label="Type" required={requiredFields.type}>
+                        <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                      </FormFieldLabel>
+                    )}
                   </StackColumn>
-                </FormFieldLabel>
+                </SettingsSectionCard>
 
-                <FormFieldLabel label="Name" required={requiredFields.name}>
-                  <TextField
-                    name="name"
-                    required={requiredFields.name}
-                    helperText={
-                      <HelperText text="Enter a unique and descriptive name for this location. This will help team members quickly identify it when booking workspaces or managing resources." />
-                    }
-                  />
-                </FormFieldLabel>
+                <SettingsSectionCard title="Feature Images" description="Choose a cover image that makes the location recognizable in admin surfaces from the start.">
+                  <FormFieldLabel label="Feature Images">
+                    <StackColumn>
+                      <Box
+                        sx={{
+                          display: 'grid',
+                          gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
+                          gap: 2,
+                        }}
+                      >
+                        {featureImages.map((image, index) => (
+                          <Box
+                            key={index}
+                            sx={{
+                              position: 'relative',
+                              borderRadius: 2,
+                              overflow: 'hidden',
+                              border: 1,
+                              borderColor: 'divider',
+                              backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                            }}
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                              <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </StackRow>
+                            <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                              {primaryFeatureImage?.original?.url === image.original?.url ? (
+                                <Chip size="small" color="success" label="Cover image" />
+                              ) : (
+                                <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                  Make cover
+                                </Button>
+                              )}
+                            </StackRow>
+                          </Box>
+                        ))}
+                      </Box>
 
-                <FormFieldLabel label="Timezone" required={requiredFields.timezone}>
-                  <SingleChoinceTimezone
-                    name="timezone"
-                    required={requiredFields.timezone}
-                    helperText="Select the time zone for this location. It ensures that bookings, events, and notifications are displayed in the correct local time for everyone using this site."
-                  />
-                </FormFieldLabel>
-
-                {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-                  <FormFieldLabel label="Type" required={requiredFields.type}>
-                    <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                      <ImageFileUploaderWithCropper
+                        onUploadCompleted={handleFeatureImageUploadCompleted}
+                        helperText="Upload a high-quality image that represents this location. This image will be used in dashboards and reports to visually identify the workspace."
+                      />
+                    </StackColumn>
                   </FormFieldLabel>
-                )}
+                </SettingsSectionCard>
 
-                <StackRow>
-                  <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>
-                    <BodyIconTypography label={cancelLabel ?? 'Cancel'} invertDefaultColor={paletteMode === 'dark'} />
-                  </Button>
-                  <PushToRight />
-
-                  <Button variant="contained" type="submit" sx={{ textTransform: 'none' }} color="primary">
-                    <BodyIconTypography label={createLabel ?? 'Add'} invertDefaultColor={paletteMode === 'dark'} />
-                  </Button>
-                </StackRow>
-              </FormStackColumn>
-            );
-          }}
-        />{' '}
-      </RightSidePanel>
-    </TwoSideVerticalWizard>
+                <EditorActionBar
+                  secondaryActions={
+                    <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>
+                      <BodyIconTypography label={cancelLabel ?? 'Cancel'} invertDefaultColor={paletteMode === 'dark'} />
+                    </Button>
+                  }
+                  primaryAction={
+                    <Button variant="contained" type="submit" sx={{ textTransform: 'none' }} color="primary">
+                      <BodyIconTypography label={createLabel ?? 'Add'} invertDefaultColor={paletteMode === 'dark'} />
+                    </Button>
+                  }
+                />
+              </Box>
+            </FormStackColumn>
+          );
+        }}
+      />
+    </SetupSplitLayout>
   );
 };
 

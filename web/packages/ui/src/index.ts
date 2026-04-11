@@ -1,2 +1,9 @@
 export { default as PageHeaderPanel } from './page-header-panel';
 export { default as PageSectionCard } from './page-section-card';
+export { default as GuidedEditorProgress } from './guided-editor-progress';
+export type { GuidedEditorStep } from './guided-editor-progress';
+export { default as EditorActionBar } from './editor-action-bar';
+export { default as SettingsSectionCard } from './settings-section-card';
+export { default as StickyReviewRail } from './sticky-review-rail';
+export { default as SetupFeatureCard } from './setup-feature-card';
+export { default as SetupSplitLayout } from './setup-split-layout';
