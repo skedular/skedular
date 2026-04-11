@@ -10,7 +10,7 @@ import {
   StackColumn,
   StackRow,
 } from '@/components/commons';
-import { BillingIcon, DeleteIcon, EllipseMenuIcon } from '@/components/icons';
+import { BillingIcon, DeleteIcon } from '@/components/icons';
 import { getOrganizationBankAccountBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -18,16 +18,17 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { SingleChoiceOrganizationBillingCycle, SingleChoiceOrganizationXeroBillingMode } from '@/components/organization';
 import { AddOrganizationProductTagButton } from '@/components/organization/addOrganizationProductTag';
 import { EditOrganizationProductTagDialog } from '@/components/organization/editOrganizationProductTag';
+import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
+import OrganizationMarketplaceBankAccountManagementList from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-bank-account-management-list';
 import OrganizationMarketplaceSetupSectionNav, {
   OrganizationMarketplaceSetupSection,
 } from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-setup-section-nav';
+import OrganizationMarketplaceStripeConnectAccountManagementList from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-stripe-connect-account-management-list';
 import { ProductTag } from '@/components/productTag';
 import { Search } from '@/components/search';
-import { CompleteOnboardStripeConnectAccountButton } from '@/components/stripeConnectAccount';
 import { ExistingStripeConnectAccountButton, NewStripeConnectAccountButton } from '@/components/stripeConnectAccount/addStripeConnectAccount';
-import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultPadding } from '@/libs/theme';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation.graphql';
@@ -55,10 +56,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
-import { EditorActionBar, PageHeaderPanel } from '@skedular/ui';
+import { EditorActionBar, PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -78,41 +76,6 @@ type Props = {
   rootDataOrganizationBankAccountsRelay: organizationMarketplaceSetup_organizationBankAccounts_query$key;
   onReloadRequired: () => void;
   organizationCustomDomain: string;
-};
-
-type ProductTagRowType = {
-  id: string;
-  name: string;
-  description: string | null | undefined;
-};
-
-type OrganizationStripeConnectAccountRowType = {
-  id: string;
-  isDefault: boolean;
-  name: string;
-  companyName: string | null | undefined;
-  country: string | null | undefined;
-  defaultCurrency: string | null | undefined;
-  businessType: string | null | undefined;
-  website: string | null | undefined;
-  supportLink: string | null | undefined;
-  contactEmail: string | null | undefined;
-  contactPhone: string | null | undefined;
-  chargesEnabled: boolean;
-  payoutsEnabled: boolean;
-  detailsSubmitted: boolean;
-  isAuthorized: boolean;
-  requiresOnboarding: boolean;
-};
-
-type OrganizationBankAccountRowType = {
-  id: string;
-  isDefault: boolean;
-  name: string;
-  bankName: string;
-  accountHolderName: string;
-  accountNumber: string;
-  country: string;
 };
 
 type OrganizationMarketplaceListingMetadataDetails = {
@@ -199,6 +162,16 @@ const getActiveSection = (value: string | null): OrganizationMarketplaceSetupSec
 const formColumnSx = {
   width: '100%',
   maxWidth: 760,
+};
+
+const getCountryName = (countryCode: string | null | undefined) => {
+  if (!countryCode) {
+    return 'N/A';
+  }
+
+  const countryData = getCountryData(countryCode as TCountryCode);
+
+  return countryData?.name ?? countryCode;
 };
 
 const OrganizationMarketplaceSetup = ({
@@ -572,7 +545,7 @@ const OrganizationMarketplaceSetup = ({
   }, [pathname, router, searchParams]);
 
   const [productTagNameSearchText, setProductTagNameSearchText] = useState<string>('');
-  const [seledctedProductTags, setSeledctedProductTags] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
+  const [selectedProductTagIds, setSelectedProductTagIds] = useState<string[]>([]);
   const [selectedProductTagId, setSelectedProductTagId] = useState<null | string>(null);
   const [productTagMoreActionsAnchorEl, setProductTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const productTagMoreActionsMenuOpen = Boolean(productTagMoreActionsAnchorEl);
@@ -604,7 +577,7 @@ const OrganizationMarketplaceSetup = ({
   );
 
   const [organizationStripeConnectAccountNameSearchText, setOrganizationStripeConnectAccountNameSearchText] = useState<string>('');
-  const [seledctedOrganizationStripeConnectAccounts, setSeledctedOrganizationStripeConnectAccounts] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
+  const [selectedOrganizationStripeConnectAccountIds, setSelectedOrganizationStripeConnectAccountIds] = useState<string[]>([]);
   const [selectedOrganizationStripeConnectAccountId, setSelectedOrganizationStripeConnectAccountId] = useState<null | string>(null);
   const [organizationStripeConnectAccountMoreActionsAnchorEl, setOrganizationStripeConnectAccountMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const organizationStripeConnectAccountMoreActionsMenuOpen = Boolean(organizationStripeConnectAccountMoreActionsAnchorEl);
@@ -644,7 +617,7 @@ const OrganizationMarketplaceSetup = ({
   );
 
   const [organizationBankAccountNameSearchText, setOrganizationBankAccountNameSearchText] = useState<string>('');
-  const [seledctedOrganizationBankAccounts, setSeledctedOrganizationBankAccounts] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
+  const [selectedOrganizationBankAccountIds, setSelectedOrganizationBankAccountIds] = useState<string[]>([]);
   const [selectedOrganizationBankAccountId, setSelectedOrganizationBankAccountId] = useState<null | string>(null);
   const [organizationBankAccountMoreActionsAnchorEl, setOrganizationBankAccountMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const organizationBankAccountMoreActionsMenuOpen = Boolean(organizationBankAccountMoreActionsAnchorEl);
@@ -702,8 +675,8 @@ const OrganizationMarketplaceSetup = ({
     handleRefetchProductTags(str);
   };
 
-  const handleSelectedProductTagsChanged = (newRowSelectionModel: GridRowSelectionModel) => {
-    setSeledctedProductTags(newRowSelectionModel);
+  const handleSelectedProductTagsChanged = (productTagId: string) => {
+    setSelectedProductTagIds((current) => (current.includes(productTagId) ? current.filter((id) => id !== productTagId) : current.concat(productTagId)));
   };
 
   const handleProductTagMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
@@ -736,10 +709,7 @@ const OrganizationMarketplaceSetup = ({
         connectionIds: productTagsConnectionIds,
         input: {
           clientMutationId: uuid(),
-          ids: seledctedProductTags.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
+          ids: selectedProductTagIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -756,6 +726,7 @@ const OrganizationMarketplaceSetup = ({
           ...successNotificationOptions,
           render: <NotificationContent content={`Product tags removed.`} />,
         });
+        setSelectedProductTagIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -813,8 +784,8 @@ const OrganizationMarketplaceSetup = ({
     handleRefetchOrganizationStripeConnectAccounts(str);
   };
 
-  const handleSelectedOrganizationStripeConnectAccountsChanged = (newRowSelectionModel: GridRowSelectionModel) => {
-    setSeledctedOrganizationStripeConnectAccounts(newRowSelectionModel);
+  const handleSelectedOrganizationStripeConnectAccountsChanged = (accountId: string) => {
+    setSelectedOrganizationStripeConnectAccountIds((current) => (current.includes(accountId) ? current.filter((id) => id !== accountId) : current.concat(accountId)));
   };
 
   const handleOrganizationStripeConnectAccountMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
@@ -908,10 +879,7 @@ const OrganizationMarketplaceSetup = ({
         connectionIds: organizationStripeConnectAccountsConnectionIds,
         input: {
           clientMutationId: uuid(),
-          ids: seledctedOrganizationStripeConnectAccounts.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
+          ids: selectedOrganizationStripeConnectAccountIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -928,6 +896,7 @@ const OrganizationMarketplaceSetup = ({
           ...successNotificationOptions,
           render: <NotificationContent content={`Stripe Connect accounts removed.`} />,
         });
+        setSelectedOrganizationStripeConnectAccountIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -1080,8 +1049,8 @@ const OrganizationMarketplaceSetup = ({
     });
   };
 
-  const handleSelectedOrganizationBankAccountsChanged = (newRowSelectionModel: GridRowSelectionModel) => {
-    setSeledctedOrganizationBankAccounts(newRowSelectionModel);
+  const handleSelectedOrganizationBankAccountsChanged = (accountId: string) => {
+    setSelectedOrganizationBankAccountIds((current) => (current.includes(accountId) ? current.filter((id) => id !== accountId) : current.concat(accountId)));
   };
 
   const handleOrganizationBankAccountMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
@@ -1162,10 +1131,7 @@ const OrganizationMarketplaceSetup = ({
         connectionIds: organizationBankAccountsConnectionIds,
         input: {
           clientMutationId: uuid(),
-          ids: seledctedOrganizationBankAccounts.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
+          ids: selectedOrganizationBankAccountIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -1182,6 +1148,7 @@ const OrganizationMarketplaceSetup = ({
           ...successNotificationOptions,
           render: <NotificationContent content={`Bank accounts removed.`} />,
         });
+        setSelectedOrganizationBankAccountIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -1233,339 +1200,45 @@ const OrganizationMarketplaceSetup = ({
     });
   };
 
-  const productTagRows: ProductTagRowType[] = productTags.map((productTag) => ({
-    id: productTag.id,
-    name: productTag.name,
-    description: productTag.description,
-  }));
+  const productTagItems = useMemo(() => productTags.map((productTag) => ({ id: productTag.id, name: productTag.name, description: productTag.description })), [productTags]);
 
-  const productTagColumns: GridColDef<(typeof productTagRows)[number]>[] = [
-    {
-      field: 'name',
-      headerName: 'Name',
-      editable: false,
-      renderCell: (params) => {
-        const productTag = productTags.find((productTag) => productTag.id === (params.id as string));
-        if (!productTag) {
-          return null;
-        }
+  const organizationStripeConnectAccountItems = useMemo(
+    () =>
+      organizationStripeConnectAccounts.map((account) => ({
+        id: account.id,
+        name: account.name,
+        companyName: account.companyName,
+        country: getCountryName(account.country),
+        defaultCurrency: account.defaultCurrency,
+        businessType: account.businessType,
+        website: account.url,
+        supportLink: account.supportUrl,
+        contactEmail: account.contactEmail,
+        contactPhone: account.contactPhone,
+        chargesEnabled: account.chargesEnabled,
+        payoutsEnabled: account.payoutsEnabled,
+        detailsSubmitted: account.detailsSubmitted,
+        isAuthorized: account.isAuthorized,
+        isDefault: account.isDefault,
+        requiresOnboarding: !account.isOnboardingCompleted,
+        onboardingUrl: account.onboardingUrl,
+      })),
+    [organizationStripeConnectAccounts],
+  );
 
-        return <ProductTag productTag={productTag} showFullName />;
-      },
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'description',
-      headerName: 'Description',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'More Actions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedProductTagId(params.id as string);
-              setProductTagMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
-
-  const organizationStripeConnectAccountRows: OrganizationStripeConnectAccountRowType[] = organizationStripeConnectAccounts.map((account) => ({
-    id: account.id,
-    isDefault: account.isDefault,
-    name: account.name,
-    companyName: account.companyName,
-    country: getCountryData(account.country as TCountryCode).name,
-    defaultCurrency: account.defaultCurrency,
-    businessType: account.businessType,
-    website: account.url,
-    supportLink: account.supportUrl,
-    contactEmail: account.contactEmail,
-    contactPhone: account.contactPhone,
-    chargesEnabled: account.chargesEnabled,
-    payoutsEnabled: account.payoutsEnabled,
-    detailsSubmitted: account.detailsSubmitted,
-    isAuthorized: account.isAuthorized,
-    requiresOnboarding: !account.isOnboardingCompleted,
-  }));
-
-  const organizationStripeConnectAccountColumns: GridColDef<(typeof organizationStripeConnectAccountRows)[number]>[] = [
-    {
-      field: 'name',
-      headerName: 'Name',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 100,
-    },
-    {
-      field: 'requiresOnboarding',
-      headerName: 'Onboarding Required',
-      editable: false,
-      renderCell: (params) => {
-        if (!params.value) {
-          return <></>;
-        }
-
-        const account = organizationStripeConnectAccounts.find((account) => account.id === (params.id as string));
-        if (!account) {
-          return <></>;
-        }
-
-        return <CompleteOnboardStripeConnectAccountButton onboardingUrl={account.onboardingUrl} variant="contained" size="small" sx={{ marginTop: 1, marginBottom: 1 }} />;
-      },
-      display: 'flex',
-      minWidth: 150,
-    },
-    {
-      field: 'isDefault',
-      headerName: 'Default',
-      editable: false,
-      renderCell: (params) => (
-        <StackRow>
-          {params.value && (
-            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label="Yes" />
-              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
-            </StackRow>
-          )}
-          {!params.value && (
-            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label="No" />
-              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
-            </StackRow>
-          )}
-        </StackRow>
-      ),
-      display: 'flex',
-    },
-    {
-      field: 'companyName',
-      headerName: 'Company Name',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 150,
-    },
-    {
-      field: 'businessType',
-      headerName: 'Business Type',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 150,
-    },
-    {
-      field: 'country',
-      headerName: 'Country',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 100,
-    },
-    {
-      field: 'defaultCurrency',
-      headerName: 'Currency',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 100,
-    },
-    {
-      field: 'website',
-      headerName: 'Website',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 100,
-    },
-    {
-      field: 'supportLink',
-      headerName: 'Support Link',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 100,
-    },
-    {
-      field: 'contactEmail',
-      headerName: 'Contact Email',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 100,
-    },
-    {
-      field: 'contactPhone',
-      headerName: 'Contact Phone',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 150,
-    },
-    {
-      field: 'chargesEnabled',
-      headerName: 'Charges?',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value ? 'Enabled' : 'Disabled'} />,
-      display: 'flex',
-      minWidth: 50,
-    },
-    {
-      field: 'payoutsEnabled',
-      headerName: 'Payouts',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value ? 'Enabled' : 'Disabled'} />,
-      display: 'flex',
-      minWidth: 50,
-    },
-    {
-      field: 'detailsSubmitted',
-      headerName: 'Details',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value ? 'Submitted' : 'N/A'} />,
-      display: 'flex',
-      minWidth: 50,
-    },
-    {
-      field: 'isAuthorized',
-      headerName: 'Authorized',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value ? 'Yes' : 'No'} />,
-      display: 'flex',
-      minWidth: 50,
-    },
-    {
-      field: 'More Actions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedOrganizationStripeConnectAccountId(params.id as string);
-              setOrganizationStripeConnectAccountMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
-
-  const organizationBankAccountRows: OrganizationBankAccountRowType[] = organizationBankAccounts.map((account) => ({
-    id: account.id,
-    isDefault: account.isDefault,
-    name: account.name,
-    accountHolderName: account.accountHolderName,
-    accountNumber: account.accountNumber,
-    bankName: account.bankName,
-    country: getCountryData(account.country as TCountryCode).name,
-  }));
-
-  const organizationBankAccountColumns: GridColDef<(typeof organizationBankAccountRows)[number]>[] = [
-    {
-      field: 'name',
-      headerName: 'Name',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 100,
-    },
-    {
-      field: 'bankName',
-      headerName: 'Bank Name',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 150,
-    },
-    {
-      field: 'accountHolderName',
-      headerName: 'Account Holder Name',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 150,
-    },
-    {
-      field: 'accountNumber',
-      headerName: 'Account Number',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 250,
-    },
-    {
-      field: 'country',
-      headerName: 'Country',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 150,
-    },
-    {
-      field: 'isDefault',
-      headerName: 'Default',
-      editable: false,
-      renderCell: (params) => (
-        <StackRow>
-          {params.value && (
-            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label="Yes" />
-              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
-            </StackRow>
-          )}
-          {!params.value && (
-            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label="No" />
-              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
-            </StackRow>
-          )}
-        </StackRow>
-      ),
-      display: 'flex',
-    },
-    {
-      field: 'More Actions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedOrganizationBankAccountId(params.id as string);
-              setOrganizationBankAccountMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
+  const organizationBankAccountItems = useMemo(
+    () =>
+      organizationBankAccounts.map((account) => ({
+        id: account.id,
+        name: account.name,
+        accountHolderName: account.accountHolderName,
+        accountNumber: account.accountNumber,
+        bankName: account.bankName,
+        country: getCountryName(account.country),
+        isDefault: account.isDefault,
+      })),
+    [organizationBankAccounts],
+  );
 
   const handleOrganizationMarketplaceListingMetadataDetailUpdateClick = ({ title, subTitle }: OrganizationMarketplaceListingMetadataDetails) => {
     const organization = rootData.organization;
@@ -1882,238 +1555,145 @@ const OrganizationMarketplaceSetup = ({
         );
       case 'stripe-connect-accounts-setup':
         return (
-          <>
-            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <GridContainer sx={{ justifyContent: 'space-between' }}>
-                <Grid>
-                  <SectionIconTypography label="Stripe Connect Accounts" />
-                  <BodyIconTypography label="Edit your organization Stripe Connect accounts details" />
-                </Grid>
+          <Box sx={{ p: defaultPadding }}>
+            <SettingsSectionCard
+              title="Stripe Connect Accounts"
+              description="Review connected payout accounts, onboarding readiness, and default payout routing for this organization."
+              actions={
+                <StackColumn spacing={1} sx={{ alignItems: { xs: 'flex-start', sm: 'flex-end' } }}>
+                  <Box sx={{ display: 'flex', justifyContent: { xs: 'flex-start', sm: 'flex-end' }, width: '100%' }}>
+                    <NewStripeConnectAccountButton organizationCustomDomain={organizationCustomDomain} label="Add New Account" />
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: { xs: 'flex-start', sm: 'flex-end' }, width: '100%' }}>
+                    <ExistingStripeConnectAccountButton rootDataRelay={rootData} label="Add Existing Account" />
+                  </Box>
+                </StackColumn>
+              }
+            >
+              <StackColumn spacing={2}>
+                <StackRow sx={{ justifyContent: 'flex-end' }}>
+                  <Search
+                    size="small"
+                    placeholder="Search for accounts"
+                    defaultValue={organizationStripeConnectAccountNameSearchText}
+                    onChange={handleOrganizationStripeConnectAccountsSearchTextChange}
+                  />
+                </StackRow>
 
-                <Grid>
-                  <NewStripeConnectAccountButton organizationCustomDomain={organizationCustomDomain} />
-                  <ExistingStripeConnectAccountButton rootDataRelay={rootData} />
-                </Grid>
-              </GridContainer>
-              <Divider />
-            </StackColumn>
-            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-              <PushToRight />
-              <Search
-                size="small"
-                placeholder="Search for accounts"
-                defaultValue={organizationStripeConnectAccountNameSearchText}
-                onChange={handleOrganizationStripeConnectAccountsSearchTextChange}
-              />
-            </GridContainer>
-            {seledctedOrganizationStripeConnectAccounts.ids.size > 0 && (
-              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                <Box
-                  sx={{
-                    backgroundColor: 'white',
-                    padding: defaultGridActionPadding,
-                    border: 1,
-                    borderColor: (theme) => theme.palette.divider,
-                    borderRadius: 2,
-                    flexGrow: 1,
+                <OrganizationMarketplaceStripeConnectAccountManagementList
+                  items={organizationStripeConnectAccountItems}
+                  selectedIds={selectedOrganizationStripeConnectAccountIds}
+                  onToggleSelected={handleSelectedOrganizationStripeConnectAccountsChanged}
+                  onOpenAccount={(accountId) => {
+                    const account = organizationStripeConnectAccounts.find((item) => item.id === accountId);
+                    if (!account) {
+                      return;
+                    }
+
+                    router.push(getOrganizationStripeConnectAccountBaseLink(integratedPlatrform, account.organization!.customDomain!, account.id));
                   }}
-                >
-                  <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedOrganizationStripeConnectAccounts.ids.size} records selected`} />
-                    <PushToRight />
-                    <Button
-                      size="medium"
-                      variant="contained"
-                      color="warning"
-                      startIcon={<DeleteIcon />}
-                      onClick={handleRemoveOrganizationStripeConnectAccountsClick}
-                      sx={{ textTransform: 'none' }}
-                    >
-                      Remove Stripe Connect Account
-                    </Button>
-                  </StackRow>
-                </Box>
-              </StackRow>
-            )}
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                checkboxSelection
-                rowSelectionModel={seledctedOrganizationStripeConnectAccounts}
-                onRowSelectionModelChange={handleSelectedOrganizationStripeConnectAccountsChanged}
-                rows={organizationStripeConnectAccountRows}
-                columns={organizationStripeConnectAccountColumns}
-                hideFooterPagination={organizationStripeConnectAccountRows.length <= 10}
-                initialState={{
-                  pagination: {
-                    rowCount: organizationStripeConnectAccountRows.length,
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[10]}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No stripe connect account found' }}
-              />
-            </StackRow>
-          </>
+                  onOpenMoreActions={(accountId, target) => {
+                    setSelectedOrganizationStripeConnectAccountId(accountId);
+                    setOrganizationStripeConnectAccountMoreActionsAnchorEl(target);
+                  }}
+                  onRemoveSelected={handleRemoveOrganizationStripeConnectAccountsClick}
+                />
+              </StackColumn>
+            </SettingsSectionCard>
+          </Box>
         );
       case 'bank-accounts-setup':
         return (
-          <>
-            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <GridContainer sx={{ justifyContent: 'space-between' }}>
-                <Grid>
-                  <SectionIconTypography label="Bank Accounts" />
-                  <BodyIconTypography label="Edit your organization Bank accounts details" />
-                </Grid>
+          <Box sx={{ p: defaultPadding }}>
+            <SettingsSectionCard
+              title="Bank Accounts"
+              description="Manage payout destinations and review the default bank account used for marketplace settlements."
+              actions={<NewBankAccountButton organizationCustomDomain={organizationCustomDomain} />}
+            >
+              <StackColumn spacing={2}>
+                <StackRow sx={{ justifyContent: 'flex-end' }}>
+                  <Search
+                    size="small"
+                    placeholder="Search for accounts"
+                    defaultValue={organizationBankAccountNameSearchText}
+                    onChange={handleOrganizationBankAccountsSearchTextChange}
+                  />
+                </StackRow>
 
-                <Grid>
-                  <NewBankAccountButton organizationCustomDomain={organizationCustomDomain} />
-                </Grid>
-              </GridContainer>
-              <Divider />
-            </StackColumn>
-            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-              <PushToRight />
-              <Search
-                size="small"
-                placeholder="Search for accounts"
-                defaultValue={organizationBankAccountNameSearchText}
-                onChange={handleOrganizationBankAccountsSearchTextChange}
-              />
-            </GridContainer>
-            {seledctedOrganizationBankAccounts.ids.size > 0 && (
-              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                <Box
-                  sx={{
-                    backgroundColor: 'white',
-                    padding: defaultGridActionPadding,
-                    border: 1,
-                    borderColor: (theme) => theme.palette.divider,
-                    borderRadius: 2,
-                    flexGrow: 1,
+                <OrganizationMarketplaceBankAccountManagementList
+                  items={organizationBankAccountItems}
+                  selectedIds={selectedOrganizationBankAccountIds}
+                  onToggleSelected={handleSelectedOrganizationBankAccountsChanged}
+                  onOpenAccount={(accountId) => {
+                    const account = organizationBankAccounts.find((item) => item.id === accountId);
+                    if (!account) {
+                      return;
+                    }
+
+                    router.push(getOrganizationBankAccountBaseLink(integratedPlatrform, account.organization!.customDomain!, account.id));
                   }}
-                >
-                  <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedOrganizationBankAccounts.ids.size} records selected`} />
-                    <PushToRight />
-                    <Button
-                      size="medium"
-                      variant="contained"
-                      color="warning"
-                      startIcon={<DeleteIcon />}
-                      onClick={handleRemoveOrganizationBankAccountsClick}
-                      sx={{ textTransform: 'none' }}
-                    >
-                      Remove Bank Account
-                    </Button>
-                  </StackRow>
-                </Box>
-              </StackRow>
-            )}
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                checkboxSelection
-                rowSelectionModel={seledctedOrganizationBankAccounts}
-                onRowSelectionModelChange={handleSelectedOrganizationBankAccountsChanged}
-                rows={organizationBankAccountRows}
-                columns={organizationBankAccountColumns}
-                hideFooterPagination={organizationBankAccountRows.length <= 10}
-                initialState={{
-                  pagination: {
-                    rowCount: organizationBankAccountRows.length,
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[10]}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No bank account found' }}
-              />
-            </StackRow>
-          </>
+                  onOpenMoreActions={(accountId, target) => {
+                    setSelectedOrganizationBankAccountId(accountId);
+                    setOrganizationBankAccountMoreActionsAnchorEl(target);
+                  }}
+                  onRemoveSelected={handleRemoveOrganizationBankAccountsClick}
+                />
+              </StackColumn>
+            </SettingsSectionCard>
+          </Box>
         );
       case 'product-tags-setup':
         return (
-          <>
-            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <GridContainer sx={{ justifyContent: 'space-between' }}>
-                <Grid>
-                  <SectionIconTypography label="Product Tags" />
-                  <BodyIconTypography label="Edit your organization product tags details" />
-                </Grid>
+          <Box sx={{ p: defaultPadding }}>
+            <SettingsSectionCard
+              title="Product Tags"
+              description="Manage the marketplace-facing tags used to classify products, resources, and customer filters."
+              actions={<AddOrganizationProductTagButton organizationCustomDomain={organizationCustomDomain} connectionIds={productTagsConnectionIds} />}
+            >
+              <StackColumn spacing={2}>
+                <StackRow sx={{ justifyContent: 'flex-end' }}>
+                  <Search size="small" placeholder="Search for product tags" defaultValue={productTagNameSearchText} onChange={handleProductTagsSearchTextChange} />
+                </StackRow>
 
-                <Grid>
-                  <AddOrganizationProductTagButton organizationCustomDomain={organizationCustomDomain} connectionIds={productTagsConnectionIds} />
-                </Grid>
-              </GridContainer>
-              <Divider />
-            </StackColumn>
-            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-              <PushToRight />
-              <Search size="small" placeholder="Search for product tags" defaultValue={productTagNameSearchText} onChange={handleProductTagsSearchTextChange} />
-            </GridContainer>
-            {seledctedProductTags.ids.size > 0 && (
-              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                <Box
-                  sx={{
-                    backgroundColor: 'white',
-                    padding: defaultGridActionPadding,
-                    border: 1,
-                    borderColor: (theme) => theme.palette.divider,
-                    borderRadius: 2,
-                    flexGrow: 1,
+                {selectedProductTagIds.length > 0 && (
+                  <Box
+                    sx={{
+                      backgroundColor: 'background.paper',
+                      padding: defaultGridActionPadding,
+                      border: 1,
+                      borderColor: (theme) => theme.palette.divider,
+                      borderRadius: 2,
+                    }}
+                  >
+                    <StackRow sx={{ alignItems: 'center' }}>
+                      <SmallIconTypography label={`${selectedProductTagIds.length} record${selectedProductTagIds.length === 1 ? '' : 's'} selected`} />
+                      <PushToRight />
+                      <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductTagsClick} sx={{ textTransform: 'none' }}>
+                        Remove Product Tag
+                      </Button>
+                    </StackRow>
+                  </Box>
+                )}
+
+                <OrganizationAdminTagManagementList
+                  items={productTagItems}
+                  emptyTitle="No product tags found"
+                  emptyDescription="Adjust the search or add a new product tag for this organization."
+                  selectedIds={selectedProductTagIds}
+                  onToggleSelected={handleSelectedProductTagsChanged}
+                  onOpenMoreActions={(id, target) => {
+                    setSelectedProductTagId(id);
+                    setProductTagMoreActionsAnchorEl(target);
                   }}
-                >
-                  <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedProductTags.ids.size} records selected`} />
-                    <PushToRight />
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductTagsClick} sx={{ textTransform: 'none' }}>
-                      Remove Product Tag
-                    </Button>
-                  </StackRow>
-                </Box>
-              </StackRow>
-            )}
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                checkboxSelection
-                rowSelectionModel={seledctedProductTags}
-                onRowSelectionModelChange={handleSelectedProductTagsChanged}
-                rows={productTagRows}
-                columns={productTagColumns}
-                hideFooterPagination={productTagRows.length <= 10}
-                initialState={{
-                  pagination: {
-                    rowCount: productTagRows.length,
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[10]}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No product tag found' }}
-              />
-            </StackRow>
-          </>
+                  renderPrimary={(item) => {
+                    const productTag = productTags.find((entry) => entry.id === item.id);
+
+                    return productTag ? <ProductTag productTag={productTag} showFullName /> : null;
+                  }}
+                />
+              </StackColumn>
+            </SettingsSectionCard>
+          </Box>
         );
       case 'marketplace-listing':
       default:

@@ -1,29 +1,18 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
-import { CustomerAvatar } from '@/components/avatars';
-import {
-  BodyIconTypography,
-  FormFieldLabel,
-  FormStackColumn,
-  GridContainer,
-  PushToRight,
-  SectionIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-} from '@/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, GridContainer, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
-import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
-import { getOrganizationBookingsBaseLink, getOrganizationTeamsBaseLink } from '@/components/links';
+import { DeleteIcon } from '@/components/icons';
+import { getOrganizationTeamsBaseLink } from '@/components/links';
 import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
+import OrganizationTeamMemberManagementList from '@/components/organization/organizationTeam/organization-team-member-management-list';
 import OrganizationTeamSectionNav, { OrganizationTeamSection } from '@/components/organization/organizationTeam/organization-team-section-nav';
 import { Search } from '@/components/search';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@/libs/theme';
+import { defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
 import type { organizationTeam_changeTeamMemberRoleMutation } from '@/queries/__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
 import type { organizationTeam_changeTeamMembersStatusMutation } from '@/queries/__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
@@ -39,11 +28,9 @@ import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
-import { EditorActionBar, PageHeaderPanel } from '@skedular/ui';
+import { EditorActionBar, PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
@@ -92,26 +79,6 @@ const getActiveSection = (value: string | null): OrganizationTeamSection => {
 const formColumnSx = {
   width: '100%',
   maxWidth: 760,
-};
-
-type CustomerDetails = {
-  id: string;
-  givenName?: string | null | undefined;
-  middleName?: string | null | undefined;
-  familyName?: string | null | undefined;
-  name?: string | null | undefined;
-  photoUrl?: string | null | undefined;
-  phoneNumber?: string | null | undefined;
-};
-
-type RowType = {
-  id: string;
-  avatar: CustomerDetails;
-  name: string;
-  email: string | null | undefined;
-  phoneNumber: string | null | undefined;
-  role: TeamMemberRole | null | undefined;
-  status: boolean;
 };
 
 const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembersRelay, organizationCustomDomain, teamId }: Props) => {
@@ -283,7 +250,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   const activeSection = getActiveSection(section);
   const [stickyTop, setStickyTop] = useState(0);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
-  const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
+  const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
   const validate = makeValidate(teamSchema);
   const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>(
     rootData.team
@@ -311,7 +278,9 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   const requiredTeamDetailsFields = makeRequired(teamSchema);
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null);
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const [changeRoleAnchorEl, setChangeRoleAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
+  const changeRoleMenuOpen = Boolean(changeRoleAnchorEl);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateTeamMember],
@@ -375,8 +344,8 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     handleRefetchTeamMembers(str);
   };
 
-  const handleSelectedMembersChanged = (newRowSelectionModel: GridRowSelectionModel) => {
-    setSeledctedMembers(newRowSelectionModel);
+  const handleSelectedMembersChanged = (memberId: string) => {
+    setSelectedMemberIds((current) => (current.includes(memberId) ? current.filter((id) => id !== memberId) : current.concat(memberId)));
   };
 
   const handleTeamDetailUpdateClick = ({ name, about, timezone, primaryLocationId }: TeamDetails) => {
@@ -446,10 +415,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       variables: {
         input: {
           clientMutationId: uuid(),
-          ids: seledctedMembers.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
+          ids: selectedMemberIds,
           status: 'INACTIVE',
         },
       },
@@ -467,7 +433,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           ...successNotificationOptions,
           render: <NotificationContent content={'Members deactivated.'} />,
         });
-        setSeledctedMembers(defaultGridRowSelectionModelValue);
+        setSelectedMemberIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -485,10 +451,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       variables: {
         input: {
           clientMutationId: uuid(),
-          ids: seledctedMembers.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
+          ids: selectedMemberIds,
           status: 'ACTIVE',
         },
       },
@@ -506,7 +469,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           ...successNotificationOptions,
           render: <NotificationContent content={'Members activated.'} />,
         });
-        setSeledctedMembers(defaultGridRowSelectionModelValue);
+        setSelectedMemberIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -525,10 +488,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         connectionIds,
         input: {
           clientMutationId: uuid(),
-          ids: seledctedMembers.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
+          ids: selectedMemberIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -543,7 +503,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           ...successNotificationOptions,
           render: <NotificationContent content={'Members removed.'} />,
         });
-        setSeledctedMembers(defaultGridRowSelectionModelValue);
+        setSelectedMemberIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -570,6 +530,20 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         handleRemoveMemberClick();
         break;
     }
+  };
+
+  const handleChangeRoleClick = (memberId: string, target: HTMLElement) => {
+    setSelectedMemberId(memberId);
+    setChangeRoleAnchorEl(target);
+  };
+
+  const handleChangeRoleMenuItemClick = (role: TeamMemberRole) => {
+    if (!selectedMemberId) {
+      return;
+    }
+
+    setChangeRoleAnchorEl(null);
+    handleRoleChanged(selectedMemberId, role);
   };
 
   const handleDeactivateMemberClick = () => {
@@ -601,7 +575,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           ...successNotificationOptions,
           render: <NotificationContent content={'Member deactivated.'} />,
         });
-        setSeledctedMembers(defaultGridRowSelectionModelValue);
+        setSelectedMemberIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -641,7 +615,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           ...successNotificationOptions,
           render: <NotificationContent content={'Member activated.'} />,
         });
-        setSeledctedMembers(defaultGridRowSelectionModelValue);
+        setSelectedMemberIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -679,7 +653,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           ...successNotificationOptions,
           render: <NotificationContent content={'Member removed.'} />,
         });
-        setSeledctedMembers(defaultGridRowSelectionModelValue);
+        setSelectedMemberIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -741,10 +715,6 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     });
   };
 
-  const handleViewBookingsClick = () => {
-    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain, { teamId }));
-  };
-
   const handleRemoveTeamClicked = () => {
     const team = rootData.team;
     if (!team) {
@@ -790,118 +760,15 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     return null;
   }
 
-  const rows: RowType[] = members.map((member) => ({
+  const memberItems = members.map((member) => ({
     id: member.id,
-    avatar: member.customer,
+    customer: member.customer,
     name: getCustomerFullName(member.customer),
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
     role: member.role,
-    status: member.status === 'ACTIVE',
+    isActive: member.status === 'ACTIVE',
   }));
-
-  const columns: GridColDef<(typeof rows)[number]>[] = [
-    {
-      field: 'avatar',
-      headerName: '',
-      editable: false,
-      renderCell: (params) => <CustomerAvatar name={params.value} photo={{ url: params.value?.photoUrl }} size="medium" showFullName />,
-      display: 'flex',
-      maxWidth: 20,
-    },
-    {
-      field: 'name',
-      headerName: 'Name',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'email',
-      headerName: 'Email',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 300,
-    },
-    {
-      field: 'phoneNumber',
-      headerName: 'Phone',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'role',
-      headerName: 'Role',
-      editable: false,
-      renderCell: (params) => (
-        <Select
-          value={params.value}
-          onChange={(event) => handleRoleChanged(params.id as string, event.target.value as string)}
-          size="small"
-          sx={{
-            borderRadius: 2,
-            width: 150,
-            margin: 0.5,
-          }}
-          renderValue={(selectedRole) => <SmallIconTypography label={selectedRole} />}
-        >
-          {rootData.teamMemberRoles.map((role) => (
-            <MenuItem key={role} value={role}>
-              <SmallIconTypography label={role} />
-            </MenuItem>
-          ))}
-        </Select>
-      ),
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      editable: false,
-      renderCell: (params) => (
-        <StackRow>
-          {params.value && (
-            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label="Active" />
-              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
-            </StackRow>
-          )}
-          {!params.value && (
-            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label="Inactive" />
-              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
-            </StackRow>
-          )}
-        </StackRow>
-      ),
-      display: 'flex',
-    },
-    {
-      field: 'More Actions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedMemberId(params.id as string);
-              setMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
     setFeatureImages((prev) => [response, ...prev]);
@@ -968,87 +835,40 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         );
       case 'members':
         return (
-          <>
-            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <GridContainer sx={{ justifyContent: 'space-between' }}>
-                <Grid>
-                  <SectionIconTypography label="Team Members" />
-                  <BodyIconTypography label="Manage your team members" />
-                </Grid>
+          <Box sx={{ p: defaultPadding }}>
+            <SettingsSectionCard
+              title="Team Members"
+              description="Manage membership, roles, and activation status for this team."
+              actions={
+                <AddOrganizationTeamMemberButton
+                  onReloadRequired={onReloadRequired}
+                  connectionIds={connectionIds}
+                  organizationCustomDomain={organizationCustomDomain}
+                  teamId={teamId}
+                />
+              }
+            >
+              <StackColumn spacing={2}>
+                <StackRow sx={{ justifyContent: 'flex-end' }}>
+                  <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
+                </StackRow>
 
-                <Grid>
-                  <AddOrganizationTeamMemberButton
-                    onReloadRequired={onReloadRequired}
-                    connectionIds={connectionIds}
-                    organizationCustomDomain={organizationCustomDomain}
-                    teamId={teamId}
-                  />
-                </Grid>
-              </GridContainer>
-              <Divider />
-            </StackColumn>
-
-            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-              <PushToRight />
-              <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-            </GridContainer>
-
-            {seledctedMembers.ids.size > 0 && (
-              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                <Box
-                  sx={{
-                    backgroundColor: 'white',
-                    padding: defaultGridActionPadding,
-                    border: 1,
-                    borderColor: (theme) => theme.palette.divider,
-                    borderRadius: 2,
-                    flexGrow: 1,
+                <OrganizationTeamMemberManagementList
+                  items={memberItems}
+                  selectedIds={selectedMemberIds}
+                  onToggleSelected={handleSelectedMembersChanged}
+                  onOpenChangeRole={handleChangeRoleClick}
+                  onOpenMoreActions={(memberId, target) => {
+                    setSelectedMemberId(memberId);
+                    setMoreActionsAnchorEl(target);
                   }}
-                >
-                  <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedMembers.ids.size} records selected`} />
-                    <PushToRight />
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateMembersClick} sx={defaultButtonStyle}>
-                      Deactivate Member
-                    </Button>
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateMembersClick} sx={defaultButtonStyle}>
-                      Activate Member
-                    </Button>
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveMembersClick} sx={{ textTransform: 'none' }}>
-                      Remove Member
-                    </Button>
-                  </StackRow>
-                </Box>
-              </StackRow>
-            )}
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                checkboxSelection
-                rowSelectionModel={seledctedMembers}
-                onRowSelectionModelChange={handleSelectedMembersChanged}
-                rows={rows}
-                columns={columns}
-                hideFooterPagination={rows.length <= 10}
-                initialState={{
-                  pagination: {
-                    rowCount: rows.length,
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[10]}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No member found' }}
-              />
-            </StackRow>
-          </>
+                  onDeactivateSelected={() => handleDeactivateMembersClick()}
+                  onActivateSelected={() => handleActivateMembersClick()}
+                  onRemoveSelected={() => handleRemoveMembersClick()}
+                />
+              </StackColumn>
+            </SettingsSectionCard>
+          </Box>
         );
       case 'manage-team':
         return (
@@ -1059,7 +879,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
               <Divider />
             </StackColumn>
 
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
               <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveTeamClicked} sx={{ textTransform: 'none' }}>
                 Remove Team
               </Button>
@@ -1107,6 +927,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                               backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
                             }}
                           >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
                               <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
@@ -1189,6 +1010,13 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       </Box>
 
       <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
+      <Menu anchorEl={changeRoleAnchorEl} open={changeRoleMenuOpen} onClose={() => setChangeRoleAnchorEl(null)}>
+        {rootData.teamMemberRoles.map((role) => (
+          <MenuItem key={role} selected={memberDetails?.role === role} onClick={() => handleChangeRoleMenuItemClick(role)}>
+            <SmallIconTypography label={role} />
+          </MenuItem>
+        ))}
+      </Menu>
     </>
   );
 };

@@ -36,7 +36,7 @@ const sectionLabels: Record<OrganizationMarketplaceSetupSection, string> = {
   'xero-setup': 'Xero',
   'stripe-connect-accounts-setup': 'Stripe',
   'bank-accounts-setup': 'Bank Accounts',
-  'product-tags-setup': 'Tags',
+  'product-tags-setup': 'Product Tags',
 };
 
 const OrganizationMarketplaceSetupSectionNav = ({ activeSection, organizationCustomDomain, stickyTop = 0 }: Props) => {
