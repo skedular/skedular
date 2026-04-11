@@ -281,6 +281,14 @@ Recently completed migrations:
   - use a simple centered header plus a sticky top section nav for setup/admin subsections
   - use the same responsive section-menu fallback on medium and smaller widths
   - avoid duplicating back actions inside the page body when the shell already provides navigation context
+- organization team detail page
+  - now follows the same centered header + sticky route-backed section nav pattern
+  - section pills collapse into a single section-menu trigger on medium and smaller widths
+  - the old fixed inner left rail and inner app bar are removed from this screen
+- organization setup-marketplace detail page
+  - now follows the same centered header + sticky route-backed section nav pattern
+  - section pills collapse into a single section-menu trigger on medium and smaller widths
+  - the old fixed inner left rail and inner app bar are removed from this screen
 - detail/edit redesign
 - shared admin editor patterns
 - resource editing is now starting to use the same settings-card, review-rail, and action-bar primitives as product editing

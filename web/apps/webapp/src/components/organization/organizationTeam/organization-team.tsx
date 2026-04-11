@@ -1,7 +1,6 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { CustomerAvatar } from '@/components/avatars';
 import {
-  AppBarWithStackColumn,
   BodyIconTypography,
   FormFieldLabel,
   FormStackColumn,
@@ -13,17 +12,18 @@ import {
   StackRow,
 } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
-import { BookingIcon, DeleteIcon, EllipseMenuIcon } from '@/components/icons';
+import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationTeamsBaseLink } from '@/components/links';
 import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
+import OrganizationTeamSectionNav, { OrganizationTeamSection } from '@/components/organization/organizationTeam/organization-team-section-nav';
 import { Search } from '@/components/search';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@/libs/theme';
 import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
 import type { organizationTeam_changeTeamMemberRoleMutation } from '@/queries/__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
 import type { organizationTeam_changeTeamMembersStatusMutation } from '@/queries/__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
@@ -43,15 +43,15 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
+import { EditorActionBar, PageHeaderPanel } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
-import OrganizationTeamLeftSideNavigationMenuContent from './organization-team-left-side-navigation-menu-content';
 
 type Props = {
   rootDataRelay: organizationTeam_query$key;
@@ -74,6 +74,25 @@ const teamSchema = object({
   timezone: string().nullable(),
   primaryLocationId: string().nullable(),
 });
+
+const getActiveSection = (value: string | null): OrganizationTeamSection => {
+  switch (value) {
+    case 'location':
+      return 'location';
+    case 'members':
+      return 'members';
+    case 'manage-team':
+      return 'manage-team';
+    case 'setup':
+    default:
+      return 'setup';
+  }
+};
+
+const formColumnSx = {
+  width: '100%',
+  maxWidth: 760,
+};
 
 type CustomerDetails = {
   id: string;
@@ -261,7 +280,8 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const searchParams = useSearchParams();
   const section = searchParams.get('section');
-  const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const activeSection = getActiveSection(section);
+  const [stickyTop, setStickyTop] = useState(0);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
   const validate = makeValidate(teamSchema);
@@ -305,22 +325,17 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   );
 
   useEffect(() => {
-    if (!section || section === 'setup') {
-      return;
-    }
+    const updateStickyTop = () => {
+      setStickyTop(document.querySelector('.app-bar')?.clientHeight ?? 0);
+    };
 
-    const element = sectionRefs.current[section];
-    if (!element) {
-      return;
-    }
+    updateStickyTop();
+    window.addEventListener('resize', updateStickyTop);
 
-    const appBarHeight = document.querySelector('.app-bar')?.clientHeight || 0;
-    const elementTop = element.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({
-      top: elementTop - appBarHeight,
-      behavior: 'smooth',
-    });
-  }, [section]);
+    return () => {
+      window.removeEventListener('resize', updateStickyTop);
+    };
+  }, []);
 
   const connectionIds = useMemo(() => (rootDataTeamMembers.team ? [rootDataTeamMembers.team.members.__id] : []), [rootDataTeamMembers.team]);
   const members = useMemo(
@@ -422,10 +437,6 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         },
       },
     });
-  };
-
-  const handleCloseClick = () => {
-    router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationCustomDomain));
   };
 
   const handleDeactivateMembersClick = () => {
@@ -919,136 +930,46 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     return null;
   }
 
-  return (
-    <>
-      <Box sx={{ display: 'flex' }}>
-        <OrganizationTeamLeftSideNavigationMenuContent organizationCustomDomain={organizationCustomDomain} teamId={teamId} hideIcons />
-        <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
-          <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Team Information">
-            <Form
-              onSubmit={handleTeamDetailUpdateClick}
-              initialValues={{
-                name: team.name,
-                about: team.about,
-                timezone: team.timezone ?? '',
-                primaryLocationId: rootData.team.primaryLocation ? rootData.team.primaryLocation.id : null,
-              }}
-              validate={validate}
-              render={({ handleSubmit }) => (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn
-                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                    ref={(divElement) => {
-                      sectionRefs.current['setup'] = divElement;
-                    }}
-                  >
-                    <GridContainer sx={{ justifyContent: 'space-between' }}>
-                      <Grid>
-                        <SectionIconTypography label="Team Setup" />
-                        <BodyIconTypography label="Edit your team name and details" />
-                      </Grid>
+  const teamFormInitialValues = {
+    name: team.name,
+    about: team.about,
+    timezone: team.timezone ?? '',
+    primaryLocationId: rootData.team.primaryLocation ? rootData.team.primaryLocation.id : null,
+  };
 
-                      <Grid>
-                        <Button variant="contained" sx={defaultButtonStyle} startIcon={<BookingIcon />} onClick={handleViewBookingsClick}>
-                          View Team Bookings
-                        </Button>
-                      </Grid>
-                    </GridContainer>
-                    <Divider />
-                  </StackColumn>
+  const renderActiveSection = () => {
+    switch (activeSection) {
+      case 'location':
+        return (
+          <Form
+            onSubmit={handleTeamDetailUpdateClick}
+            initialValues={teamFormInitialValues}
+            validate={validate}
+            render={({ handleSubmit }) => (
+              <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Location Settings" />
+                  <BodyIconTypography label="Assign team to a primary location." />
+                  <Divider />
+                </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Feature Images">
-                      <StackColumn>
-                        <Box
-                          sx={{
-                            display: 'grid',
-                            gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
-                            gap: 2,
-                          }}
-                        >
-                          {featureImages.map((image, index) => (
-                            <Box
-                              key={index}
-                              sx={{
-                                position: 'relative',
-                                borderRadius: 2,
-                                overflow: 'hidden',
-                                border: 1,
-                                borderColor: 'divider',
-                                backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                              }}
-                            >
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                              <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                                <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                                  <DeleteIcon fontSize="small" />
-                                </IconButton>
-                              </StackRow>
-                              <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                                {primaryFeatureImage?.original?.url === image.original?.url ? (
-                                  <Chip size="small" color="success" label="Cover image" />
-                                ) : (
-                                  <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                                    Make cover
-                                  </Button>
-                                )}
-                              </StackRow>
-                            </Box>
-                          ))}
-                        </Box>
-                        <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
-                      </StackColumn>
-                    </FormFieldLabel>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Primary Location">
+                    <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
+                  </FormFieldLabel>
+                </StackColumn>
 
-                    <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredTeamDetailsFields.name} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="About">
-                      <TextField name="about" required={requiredTeamDetailsFields.about} multiline rows={3} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Timezone">
-                      <SingleChoinceTimezone name="timezone" required={requiredTeamDetailsFields.timezone} />
-                    </FormFieldLabel>
-                  </StackColumn>
-
-                  <StackColumn
-                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                    ref={(divElement) => {
-                      sectionRefs.current['location'] = divElement;
-                    }}
-                  >
-                    <SectionIconTypography label="Location Settings" />
-                    <BodyIconTypography label="Assign team to locations" />
-                    <Divider />
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Primary Location">
-                      <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
-                    </FormFieldLabel>
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
-              )}
-            />
-
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
-                sectionRefs.current['members'] = divElement;
-              }}
-            >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
+                  <EditorActionBar primaryAction="Update" />
+                </StackColumn>
+              </FormStackColumn>
+            )}
+          />
+        );
+      case 'members':
+        return (
+          <>
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <GridContainer sx={{ justifyContent: 'space-between' }}>
                 <Grid>
                   <SectionIconTypography label="Team Members" />
@@ -1127,13 +1048,12 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                 localeText={{ noRowsLabel: 'No member found' }}
               />
             </StackRow>
-
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
-                sectionRefs.current['manage-team'] = divElement;
-              }}
-            >
+          </>
+        );
+      case 'manage-team':
+        return (
+          <>
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <SectionIconTypography label="Manage" />
               <BodyIconTypography label="Remove your team" />
               <Divider />
@@ -1144,8 +1064,128 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                 Remove Team
               </Button>
             </StackRow>
-          </AppBarWithStackColumn>
-        </Box>
+          </>
+        );
+      case 'setup':
+      default:
+        return (
+          <Form
+            onSubmit={handleTeamDetailUpdateClick}
+            initialValues={teamFormInitialValues}
+            validate={validate}
+            render={({ handleSubmit }) => (
+              <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <GridContainer sx={{ justifyContent: 'space-between' }}>
+                    <Grid>
+                      <SectionIconTypography label="Team Setup" />
+                      <BodyIconTypography label="Edit your team name and details" />
+                    </Grid>
+                  </GridContainer>
+                  <Divider />
+                </StackColumn>
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Feature Images">
+                    <StackColumn>
+                      <Box
+                        sx={{
+                          display: 'grid',
+                          gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
+                          gap: 2,
+                        }}
+                      >
+                        {featureImages.map((image, index) => (
+                          <Box
+                            key={index}
+                            sx={{
+                              position: 'relative',
+                              borderRadius: 2,
+                              overflow: 'hidden',
+                              border: 1,
+                              borderColor: 'divider',
+                              backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                            }}
+                          >
+                            <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                              <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </StackRow>
+                            <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                              {primaryFeatureImage?.original?.url === image.original?.url ? (
+                                <Chip size="small" color="success" label="Cover image" />
+                              ) : (
+                                <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                  Make cover
+                                </Button>
+                              )}
+                            </StackRow>
+                          </Box>
+                        ))}
+                      </Box>
+                      <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
+                    </StackColumn>
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Name">
+                    <TextField name="name" required={requiredTeamDetailsFields.name} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="About">
+                    <TextField name="about" required={requiredTeamDetailsFields.about} multiline rows={3} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Timezone">
+                    <SingleChoinceTimezone name="timezone" required={requiredTeamDetailsFields.timezone} />
+                  </FormFieldLabel>
+                </StackColumn>
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
+                  <EditorActionBar primaryAction="Update" />
+                </StackColumn>
+              </FormStackColumn>
+            )}
+          />
+        );
+    }
+  };
+
+  return (
+    <>
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+        <StackColumn
+          sx={{
+            width: '100%',
+            maxWidth: 1120,
+            mx: 'auto',
+            backgroundColor: 'transparent',
+            gap: 2,
+          }}
+        >
+          <PageHeaderPanel eyebrow="Team settings" title={team.name} description="Manage team details, location assignment, members, and lifecycle controls.">
+            <StackColumn spacing={0.5}>
+              <SmallIconTypography label="Setup & operations" />
+              <BodyIconTypography label={team.about || team.name} />
+            </StackColumn>
+          </PageHeaderPanel>
+
+          <OrganizationTeamSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} teamId={teamId} stickyTop={stickyTop} />
+
+          <Box
+            sx={{
+              borderRadius: 4,
+              border: 1,
+              borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+              boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+              overflow: 'hidden',
+            }}
+          >
+            {renderActiveSection()}
+          </Box>
+        </StackColumn>
       </Box>
 
       <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />

@@ -88,6 +88,10 @@ scripts/
   - prefer a centered content column with a compact in-page header and a route-backed sticky top section nav
   - use the same responsive collapse pattern for the top section nav on medium and smaller widths
   - keep shell-level back navigation in the shell breadcrumbs/app bar instead of duplicating it inside the page body
+- For organization team and setup-marketplace detail pages specifically:
+  - use the same centered content shell + compact header + route-backed sticky top section nav pattern as location/admin
+  - collapse section pills into a single section-menu trigger on medium and smaller widths
+  - do not reintroduce fixed inner left rails or nested page-level app bars
   - render one active admin section at a time from the route-backed section nav; do not stack all admin sections into one long page
   - do not use right-side summary rails on these route-backed setup/admin sections; the section content should own the available width
 - Avoid embedding maps, full carousels, or other heavy detail widgets directly inside dense list cards unless the card is explicitly a media-first browsing surface.

@@ -1,11 +1,11 @@
-import { AppBarWithStackColumn, BodyIconTypography, ColorPicker, FormStackColumn, FormFieldLabel, StackColumn } from '@/components/commons';
+import { BodyIconTypography, ColorPicker, FormFieldLabel, FormStackColumn, SmallIconTypography, StackColumn } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
+import ResourceEditSectionNav, { ResourceEditSection } from '@/components/resource/editResource/resource-edit-section-nav';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { PaletteModeContext } from '@/libs/providers';
-import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
+import { defaultPadding } from '@/libs/theme';
 import { getRelayErrorMessage } from '@/libs/utils';
-import { EditorActionBar, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
 import type { editResource_query$key } from '@/queries/__generated__/editResource_query.graphql';
 import type { editResource_updateLocationResourceAvailableHoursMutation } from '@/queries/__generated__/editResource_updateLocationResourceAvailableHoursMutation.graphql';
 import type { editResource_updateResourceMutation } from '@/queries/__generated__/editResource_updateResourceMutation.graphql';
@@ -14,9 +14,10 @@ import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Switch from '@mui/material/Switch';
+import { EditorActionBar, PageHeaderPanel, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { useRouter } from 'next/navigation';
-import { memo, useContext, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { memo, useContext, useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -47,6 +48,21 @@ const ResourceSchema = object({
   capacity: number().required('Capacity is required').min(1, 'Capacity must be greater than 0'),
 });
 
+const getActiveSection = (value: string | null): ResourceEditSection => {
+  switch (value) {
+    case 'opening-hours':
+      return 'opening-hours';
+    case 'setup':
+    default:
+      return 'setup';
+  }
+};
+
+const formColumnSx = {
+  width: '100%',
+  maxWidth: 760,
+};
+
 const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   const rootData = useFragment<editResource_query$key>(
     graphql`
@@ -57,6 +73,8 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
           }
         }
         location(id: $locationId) {
+          id
+          name
           openingHours {
             weekOpeningHours {
               monday {
@@ -354,12 +372,29 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   `);
 
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const activeSection = getActiveSection(searchParams.get('section'));
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateResourceDetails = makeValidate(ResourceSchema);
   const requiredFields = makeRequired(ResourceSchema);
   const [selectedColor, setSelectedColor] = useState(rootData.resource?.color);
   const [isAvailableHoursOverridden, setIsAvailableHoursOverridden] = useState(rootData.resource ? rootData.resource.isAvailableHoursOverridden : false);
+  const [stickyTop, setStickyTop] = useState(0);
+
+  useEffect(() => {
+    const updateStickyTop = () => {
+      setStickyTop(document.querySelector('.app-bar')?.clientHeight ?? 0);
+    };
+
+    updateStickyTop();
+    window.addEventListener('resize', updateStickyTop);
+
+    return () => {
+      window.removeEventListener('resize', updateStickyTop);
+    };
+  }, []);
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
@@ -573,129 +608,171 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
 
   const location = rootData.location;
   const resource = rootData.resource;
+  const locationId = pathname.split('/locations/')[1]?.split('/')[0] ?? '';
+
+  const renderActiveSection = () => {
+    switch (activeSection) {
+      case 'opening-hours':
+        return (
+          <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
+            <SettingsSectionCard title="Opening Hours" description="Override the location schedule only when this resource needs its own availability window.">
+              <FormFieldLabel label="Override available hours">
+                <Switch checked={isAvailableHoursOverridden} onChange={handleIsAvailableHoursOverriddenChange} />
+              </FormFieldLabel>
+            </SettingsSectionCard>
+
+            {isAvailableHoursOverridden && (
+              <WeekOpeningHours
+                rootDataRelay={rootData}
+                defaultValue={
+                  resource.availableHours
+                    ? {
+                        monday: resource.availableHours.weekOpeningHours.monday,
+                        tuesday: resource.availableHours.weekOpeningHours.tuesday,
+                        wednesday: resource.availableHours.weekOpeningHours.wednesday,
+                        thursday: resource.availableHours.weekOpeningHours.thursday,
+                        friday: resource.availableHours.weekOpeningHours.friday,
+                        saturday: resource.availableHours.weekOpeningHours.saturday,
+                        sunday: resource.availableHours.weekOpeningHours.sunday,
+                      }
+                    : location.openingHours.weekOpeningHours
+                }
+                onWeekOpeningHoursDetailUpdateClick={handleResourceAvailableHoursUpdateClick}
+              />
+            )}
+          </StackColumn>
+        );
+      case 'setup':
+      default:
+        return (
+          <Form
+            onSubmit={handleResourceDetailUpdateClick}
+            initialValues={{
+              name: resource.name,
+              resourceTypeId: resource.resourceType.id,
+              customTagIds: resource.customTags.map(({ id }) => id),
+              zoneIds: resource.zones.map(({ id }) => id),
+              productTagIds: resource.productTags.map(({ id }) => id),
+              capacity: resource.capacity,
+            }}
+            validate={validateResourceDetails}
+            render={({ handleSubmit }) => (
+              <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
+                  <SettingsSectionCard title="Resource Setup" description="Edit the resource identity, categorization, and operational capacity in one place.">
+                    <FormFieldLabel label="Resource Type">
+                      <SingleChoiceResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Name">
+                      <TextField name="name" required={requiredFields.name} helperText="Add your resource name" />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Tags">
+                      <MultipleChoicesCustomTags
+                        rootDataRelay={rootData}
+                        name="customTagIds"
+                        required={requiredFields.customTagIds}
+                        organizationCustomDomain={organizationCustomDomain}
+                      />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Zones">
+                      <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationCustomDomain={organizationCustomDomain} />
+                    </FormFieldLabel>
+
+                    {rootData.organization?.type.type === 'MARKETPLACE' && (
+                      <FormFieldLabel label="Product Tags">
+                        <MultipleChoicesProductTags
+                          rootDataRelay={rootData}
+                          name="productTagIds"
+                          required={requiredFields.productTagIds}
+                          organizationCustomDomain={organizationCustomDomain}
+                        />
+                      </FormFieldLabel>
+                    )}
+
+                    <FormFieldLabel label="Color">
+                      <ColorPicker onChange={handleColorChange} defaultColor={rootData.resource?.color} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Capacity">
+                      <TextField name="capacity" required={requiredFields.capacity} />
+                    </FormFieldLabel>
+                  </SettingsSectionCard>
+
+                  <Box sx={{ pb: defaultPadding }}>
+                    <EditorActionBar primaryAction="Update" />
+                  </Box>
+                </StackColumn>
+              </FormStackColumn>
+            )}
+          />
+        );
+    }
+  };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Resource Information">
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 3 }}>
-            <StackColumn>
-              <Form
-                onSubmit={handleResourceDetailUpdateClick}
-                initialValues={{
-                  name: resource.name,
-                  resourceTypeId: resource.resourceType.id,
-                  customTagIds: resource.customTags.map(({ id }) => id),
-                  zoneIds: resource.zones.map(({ id }) => id),
-                  productTagIds: resource.productTags.map(({ id }) => id),
-                  capacity: resource.capacity,
-                }}
-                validate={validateResourceDetails}
-                render={({ handleSubmit }) => (
-                  <FormStackColumn onSubmit={handleSubmit}>
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
-                      <SettingsSectionCard title="Resource Setup" description="Edit the resource identity, categorization, and operational capacity in one place.">
-                        <FormFieldLabel label="Resource Type">
-                          <SingleChoiceResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
-                        </FormFieldLabel>
+    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+      <StackColumn
+        sx={{
+          width: '100%',
+          maxWidth: 1120,
+          mx: 'auto',
+          backgroundColor: 'transparent',
+          gap: 2,
+        }}
+      >
+        <PageHeaderPanel eyebrow="Resource settings" title={resource.name} description="Edit identity, categorization, capacity, and custom availability for this resource.">
+          <StackColumn spacing={0.5}>
+            <SmallIconTypography label="Location resource" />
+            <BodyIconTypography label={resource.resourceType.name} />
+            <Button variant="text" onClick={handleCloseClick} sx={{ px: 0, justifyContent: 'flex-start', textTransform: 'none' }}>
+              Back to location
+            </Button>
+          </StackColumn>
+        </PageHeaderPanel>
 
-                        <FormFieldLabel label="Name">
-                          <TextField name="name" required={requiredFields.name} helperText="Add your resource name" />
-                        </FormFieldLabel>
+        <ResourceEditSectionNav
+          activeSection={activeSection}
+          organizationCustomDomain={organizationCustomDomain}
+          locationId={locationId}
+          resourceId={resource.id}
+          stickyTop={stickyTop}
+        />
 
-                        <FormFieldLabel label="Tags">
-                          <MultipleChoicesCustomTags
-                            rootDataRelay={rootData}
-                            name="customTagIds"
-                            required={requiredFields.customTagIds}
-                            organizationCustomDomain={organizationCustomDomain}
-                          />
-                        </FormFieldLabel>
-
-                        <FormFieldLabel label="Zones">
-                          <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationCustomDomain={organizationCustomDomain} />
-                        </FormFieldLabel>
-
-                        {rootData.organization?.type.type === 'MARKETPLACE' && (
-                          <FormFieldLabel label="Product Tags">
-                            <MultipleChoicesProductTags
-                              rootDataRelay={rootData}
-                              name="productTagIds"
-                              required={requiredFields.productTagIds}
-                              organizationCustomDomain={organizationCustomDomain}
-                            />
-                          </FormFieldLabel>
-                        )}
-
-                        <FormFieldLabel label="Color">
-                          <ColorPicker onChange={handleColorChange} defaultColor={rootData.resource?.color} />
-                        </FormFieldLabel>
-
-                        <FormFieldLabel label="Capacity">
-                          <TextField name="capacity" required={requiredFields.capacity} />
-                        </FormFieldLabel>
-                      </SettingsSectionCard>
-
-                      <EditorActionBar
-                        primaryAction={
-                          <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                            Update Resource
-                          </Button>
-                        }
-                      />
-                    </StackColumn>
-                  </FormStackColumn>
-                )}
-              />
-
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
-                <SettingsSectionCard title="Opening Hours" description="Override the location schedule only when this resource needs its own availability window.">
-                  <FormFieldLabel label="Override available hours">
-                    <Switch defaultChecked={isAvailableHoursOverridden} onChange={handleIsAvailableHoursOverriddenChange} />
-                  </FormFieldLabel>
-                </SettingsSectionCard>
-
-                {isAvailableHoursOverridden && (
-                  <WeekOpeningHours
-                    rootDataRelay={rootData}
-                    defaultValue={
-                      resource.availableHours
-                        ? {
-                            monday: resource.availableHours.weekOpeningHours.monday,
-                            tuesday: resource.availableHours.weekOpeningHours.tuesday,
-                            wednesday: resource.availableHours.weekOpeningHours.wednesday,
-                            thursday: resource.availableHours.weekOpeningHours.thursday,
-                            friday: resource.availableHours.weekOpeningHours.friday,
-                            saturday: resource.availableHours.weekOpeningHours.saturday,
-                            sunday: resource.availableHours.weekOpeningHours.sunday,
-                          }
-                        : location.openingHours.weekOpeningHours
-                    }
-                    onWeekOpeningHoursDetailUpdateClick={handleResourceAvailableHoursUpdateClick}
-                  />
-                )}
-              </StackColumn>
-            </StackColumn>
-
-            <StickyReviewRail title="Resource summary" description="Keep the most important identity and availability signals visible while editing.">
-              <SettingsSectionCard title="Overview" description="A compact snapshot of the resource being edited.">
-                <StackColumn spacing={1.5}>
-                  <BodyIconTypography label={resource.name} />
-                  <StackColumn spacing={1}>
-                    <Chip size="small" label={resource.resourceType.name} />
-                    <Chip size="small" label={`Capacity ${resource.capacity}`} />
-                    <Chip size="small" label={isAvailableHoursOverridden ? 'Custom hours' : 'Uses location hours'} />
-                  </StackColumn>
-                  <Divider />
-                  <BodyIconTypography label={`Custom tags: ${resource.customTags.length}`} />
-                  <BodyIconTypography label={`Zones: ${resource.zones.length}`} />
-                  {rootData.organization?.type.type === 'MARKETPLACE' ? <BodyIconTypography label={`Product tags: ${resource.productTags.length}`} /> : null}
-                </StackColumn>
-              </SettingsSectionCard>
-            </StickyReviewRail>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 3 }}>
+          <Box
+            sx={{
+              borderRadius: 4,
+              border: 1,
+              borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+              boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+              overflow: 'hidden',
+            }}
+          >
+            <StackColumn>{renderActiveSection()}</StackColumn>
           </Box>
-        </AppBarWithStackColumn>
-      </Box>
+
+          <StickyReviewRail title="Resource summary" description="Keep the most important identity and availability signals visible while editing.">
+            <SettingsSectionCard title="Overview" description="A compact snapshot of the resource being edited.">
+              <StackColumn spacing={1.5}>
+                <BodyIconTypography label={resource.name} />
+                <StackColumn spacing={1}>
+                  <Chip size="small" label={resource.resourceType.name} />
+                  <Chip size="small" label={`Capacity ${resource.capacity}`} />
+                  <Chip size="small" label={isAvailableHoursOverridden ? 'Custom hours' : 'Uses location hours'} />
+                </StackColumn>
+                <Divider />
+                <BodyIconTypography label={`Custom tags: ${resource.customTags.length}`} />
+                <BodyIconTypography label={`Zones: ${resource.zones.length}`} />
+                {rootData.organization?.type.type === 'MARKETPLACE' ? <BodyIconTypography label={`Product tags: ${resource.productTags.length}`} /> : null}
+              </StackColumn>
+            </SettingsSectionCard>
+          </StickyReviewRail>
+        </Box>
+      </StackColumn>
     </Box>
   );
 };

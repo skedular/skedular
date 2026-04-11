@@ -215,6 +215,10 @@ export const getOrganizationLocationManageLocationBaseLink = (integratedPlatrfor
   `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}?section=manage-location`;
 export const getOrganizationLocationResourceBaseLink = (integratedPlatrform: string | undefined, id: string, locationId: string, resourceId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}/resources/${resourceId}`;
+export const getOrganizationLocationResourceSetupBaseLink = (integratedPlatrform: string | undefined, id: string, locationId: string, resourceId: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}/resources/${resourceId}?section=setup`;
+export const getOrganizationLocationResourceOpeningHoursBaseLink = (integratedPlatrform: string | undefined, id: string, locationId: string, resourceId: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}/resources/${resourceId}?section=opening-hours`;
 export const getOrganizationAnalyticsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/analytics?section=organization`;
 export const getOrganizationLocationsAnalyticsLocationsBaseLink = (integratedPlatrform: string | undefined, id: string) =>

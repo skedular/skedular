@@ -25,15 +25,14 @@ import { AddOrganizationPaymentMethodDialog } from '@/components/organization/ad
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
 import { EditOrganizationCustomTagDialog } from '@/components/organization/editOrganizationCustomTag';
 import { EditOrganizationZoneDialog } from '@/components/organization/editOrganizationZone/';
-import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
 import OrganizationAdminSectionNav, { OrganizationAdminSection } from '@/components/organization/organizationAdmin/organization-admin-section-nav';
+import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
 import { Search } from '@/components/search';
 import { Zone } from '@/components/zone';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, defaultButtonStyle, defaultGridActionPadding, defaultPadding, emerald } from '@/libs/theme';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
-import { EditorActionBar, PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
 import type { organizationAdmin_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_addCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_addOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdmin_addOrganizationBillingDetailsMutation.graphql';
 import type { organizationAdmin_addOrganizationPhysicalAddressMutation } from '@/queries/__generated__/organizationAdmin_addOrganizationPhysicalAddressMutation.graphql';
@@ -71,6 +70,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Switch from '@mui/material/Switch';
+import { EditorActionBar, PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -926,6 +926,11 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     },
     [startTransition, refetchCustomTags],
   );
+
+  const formColumnSx = {
+    width: '100%',
+    maxWidth: 760,
+  };
 
   useEffect(() => {
     const updateStickyTop = () => {
@@ -2356,7 +2361,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     <Box sx={{ pb: 2 }}>
                       <StackColumn spacing={2}>
                         <SettingsSectionCard title="Organization setup" description="Edit identity, presentation, domain, industry, and customer-facing details.">
-                          <StackColumn>
+                          <StackColumn sx={formColumnSx}>
                             <FormFieldLabel label="Feature Images">
                               <StackColumn>
                                 <Box
@@ -2500,7 +2505,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                   <FormStackColumn onSubmit={handleSubmit}>
                     <Box sx={{ pb: 2 }}>
                       <SettingsSectionCard title="Physical address" description="Update the organization address used for internal records and operational context.">
-                        <StackColumn>
+                        <StackColumn sx={formColumnSx}>
                           <PhysicalAddress
                             addressLine1Name="addressLine1"
                             addressLine1Required={requiredPhysicalAddressFields.addressLine1}
@@ -2570,7 +2575,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     <Box sx={{ pb: 2 }}>
                       <StackColumn spacing={2}>
                         <SettingsSectionCard title="Billing details" description="Control invoice recipients and the legal billing address used for the organization.">
-                          <StackColumn>
+                          <StackColumn sx={formColumnSx}>
                             <FormFieldLabel label="Company name">
                               <TextField name="companyName" required={requiredBillingFields.companyName} />
                             </FormFieldLabel>
@@ -2668,7 +2673,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                   <FormStackColumn onSubmit={handleSubmit}>
                     <Box sx={{ pb: 2 }}>
                       <SettingsSectionCard title="SSO setup" description="Configure enterprise sign-in and identity federation for organization members.">
-                        <StackColumn>
+                        <StackColumn sx={formColumnSx}>
                           <FormFieldLabel label="Enable Sign sign-on">
                             <Switch defaultChecked={ssoSettingsEnabled} onChange={handleEnableSsoChange} />
                           </FormFieldLabel>
@@ -2715,7 +2720,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                   <FormStackColumn onSubmit={handleSubmit}>
                     <Box sx={{ pb: 2 }}>
                       <SettingsSectionCard title="Tax details" description="Control how tax identity and default rates are applied to invoices and marketplace billing.">
-                        <StackColumn>
+                        <StackColumn sx={formColumnSx}>
                           <FormFieldLabel label="Is this business registered for tax (GST/VAT)?">
                             <Switch defaultChecked={taxDetailsEnabled} onChange={handleEnableTaxDetailsChange} />
                           </FormFieldLabel>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<faf48e52f42afaa3143d3516bda6eb57>>
+ * @generated SignedSource<<f3075441a1c24a707f3fe447945af0c3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,8 @@ export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%futu
 import { FragmentRefs } from "relay-runtime";
 export type editResource_query$data = {
   readonly location: {
+    readonly id: string;
+    readonly name: string;
     readonly openingHours: {
       readonly weekOpeningHours: {
         readonly friday: {
@@ -149,7 +151,21 @@ export type editResource_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -179,7 +195,7 @@ var v0 = [
     "storageKey": null
   }
 ],
-v1 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -195,7 +211,7 @@ v1 = [
         "kind": "LinkedField",
         "name": "monday",
         "plural": false,
-        "selections": (v0/*: any*/),
+        "selections": (v2/*: any*/),
         "storageKey": null
       },
       {
@@ -205,7 +221,7 @@ v1 = [
         "kind": "LinkedField",
         "name": "tuesday",
         "plural": false,
-        "selections": (v0/*: any*/),
+        "selections": (v2/*: any*/),
         "storageKey": null
       },
       {
@@ -215,7 +231,7 @@ v1 = [
         "kind": "LinkedField",
         "name": "wednesday",
         "plural": false,
-        "selections": (v0/*: any*/),
+        "selections": (v2/*: any*/),
         "storageKey": null
       },
       {
@@ -225,7 +241,7 @@ v1 = [
         "kind": "LinkedField",
         "name": "thursday",
         "plural": false,
-        "selections": (v0/*: any*/),
+        "selections": (v2/*: any*/),
         "storageKey": null
       },
       {
@@ -235,7 +251,7 @@ v1 = [
         "kind": "LinkedField",
         "name": "friday",
         "plural": false,
-        "selections": (v0/*: any*/),
+        "selections": (v2/*: any*/),
         "storageKey": null
       },
       {
@@ -245,7 +261,7 @@ v1 = [
         "kind": "LinkedField",
         "name": "saturday",
         "plural": false,
-        "selections": (v0/*: any*/),
+        "selections": (v2/*: any*/),
         "storageKey": null
       },
       {
@@ -255,27 +271,13 @@ v1 = [
         "kind": "LinkedField",
         "name": "sunday",
         "plural": false,
-        "selections": (v0/*: any*/),
+        "selections": (v2/*: any*/),
         "storageKey": null
       }
     ],
     "storageKey": null
   }
 ],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
 v4 = {
   "alias": null,
   "args": null,
@@ -284,8 +286,8 @@ v4 = {
   "storageKey": null
 },
 v5 = [
-  (v2/*: any*/),
-  (v3/*: any*/),
+  (v0/*: any*/),
+  (v1/*: any*/),
   (v4/*: any*/)
 ];
 return {
@@ -356,6 +358,8 @@ return {
       "name": "location",
       "plural": false,
       "selections": [
+        (v0/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -363,7 +367,7 @@ return {
           "kind": "LinkedField",
           "name": "openingHours",
           "plural": false,
-          "selections": (v1/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         }
       ],
@@ -383,8 +387,8 @@ return {
       "name": "resource",
       "plural": false,
       "selections": [
-        (v2/*: any*/),
-        (v3/*: any*/),
+        (v0/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -461,7 +465,7 @@ return {
           "kind": "LinkedField",
           "name": "availableHours",
           "plural": false,
-          "selections": (v1/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         }
       ],
@@ -498,6 +502,6 @@ return {
 };
 })();
 
-(node as any).hash = "5cc896d13bb3e7a21d8539e60426d571";
+(node as any).hash = "05b917a89d01d7d82258e88f76a348e1";
 
 export default node;

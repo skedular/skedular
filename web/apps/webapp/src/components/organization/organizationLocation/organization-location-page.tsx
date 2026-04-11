@@ -17,7 +17,6 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, stringCollectionToString, stringToMultiLines } from '@/libs/utils';
-import { EditorActionBar, PageHeaderPanel, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
 import type { organizationLocationPage_addLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocationPage_addLocationPhysicalAddressMutation.graphql';
 import type { organizationLocationPage_deleteLocationMutation } from '@/queries/__generated__/organizationLocationPage_deleteLocationMutation.graphql';
 import type { organizationLocationPage_query$key } from '@/queries/__generated__/organizationLocationPage_query.graphql';
@@ -28,6 +27,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
+import { EditorActionBar, PageHeaderPanel, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -561,6 +561,11 @@ const OrganizationLocationPage = ({ rootDataRelay, onReloadRequired, organizatio
 
   const location = rootData.location;
 
+  const formColumnSx = {
+    width: '100%',
+    maxWidth: 760,
+  };
+
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
     setFeatureImages((current) => [response, ...current]);
     setPrimaryFeatureImage((current) => current ?? response);
@@ -1016,7 +1021,7 @@ const OrganizationLocationPage = ({ rootDataRelay, onReloadRequired, organizatio
 
         return (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 3, pb: defaultPadding }}>
-            <FormStackColumn onSubmit={handleSubmit}>
+            <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
               <StackColumn spacing={3}>
                 <SettingsSectionCard title="Location Setup" description="Edit the customer-facing identity, classification, and commercial details of this location.">
                   <StackColumn>
@@ -1173,7 +1178,7 @@ const OrganizationLocationPage = ({ rootDataRelay, onReloadRequired, organizatio
 
         return (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 3, pb: defaultPadding }}>
-            <FormStackColumn onSubmit={handleSubmit}>
+            <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
               <SettingsSectionCard title="Physical Address" description="Use the exact address members and customers should navigate to.">
                 <StackColumn>
                   <PhysicalAddress

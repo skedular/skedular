@@ -1,6 +1,5 @@
 import { NewBankAccountButton } from '@/components/bankAccount/addBankAccount';
 import {
-  AppBarWithStackColumn,
   BodyIconTypography,
   FormFieldLabel,
   FormStackColumn,
@@ -12,20 +11,23 @@ import {
   StackRow,
 } from '@/components/commons';
 import { BillingIcon, DeleteIcon, EllipseMenuIcon } from '@/components/icons';
-import { getOrganizationBankAccountBaseLink, getOrganizationBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
+import { getOrganizationBankAccountBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { SingleChoiceOrganizationBillingCycle, SingleChoiceOrganizationXeroBillingMode } from '@/components/organization';
 import { AddOrganizationProductTagButton } from '@/components/organization/addOrganizationProductTag';
 import { EditOrganizationProductTagDialog } from '@/components/organization/editOrganizationProductTag';
+import OrganizationMarketplaceSetupSectionNav, {
+  OrganizationMarketplaceSetupSection,
+} from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-setup-section-nav';
 import { ProductTag } from '@/components/productTag';
 import { Search } from '@/components/search';
 import { CompleteOnboardStripeConnectAccountButton } from '@/components/stripeConnectAccount';
 import { ExistingStripeConnectAccountButton, NewStripeConnectAccountButton } from '@/components/stripeConnectAccount/addStripeConnectAccount';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@/libs/theme';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation.graphql';
@@ -56,18 +58,18 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
+import { EditorActionBar, PageHeaderPanel } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { number, object, string } from 'yup';
-import OrganizationMarketplaceSetupLeftSideNavigationMenuContent from './organization-marketplace-setup-left-side-navigation-menu-content';
 
 type Props = {
   rootDataRelay: organizationMarketplaceSetup_query$key;
@@ -175,6 +177,29 @@ const organizationBillingSettingsSchema = object({
     .min(1, 'Invoice due days must be between 1 and 999.')
     .max(999, 'Invoice due days must be between 1 and 999.'),
 });
+
+const getActiveSection = (value: string | null): OrganizationMarketplaceSetupSection => {
+  switch (value) {
+    case 'billing-cycle':
+      return 'billing-cycle';
+    case 'xero-setup':
+      return 'xero-setup';
+    case 'stripe-connect-accounts-setup':
+      return 'stripe-connect-accounts-setup';
+    case 'bank-accounts-setup':
+      return 'bank-accounts-setup';
+    case 'product-tags-setup':
+      return 'product-tags-setup';
+    case 'marketplace-listing':
+    default:
+      return 'marketplace-listing';
+  }
+};
+
+const formColumnSx = {
+  width: '100%',
+  maxWidth: 760,
+};
 
 const OrganizationMarketplaceSetup = ({
   rootDataRelay,
@@ -493,10 +518,11 @@ const OrganizationMarketplaceSetup = ({
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const section = searchParams.get('section');
+  const activeSection = getActiveSection(section);
+  const [stickyTop, setStickyTop] = useState(0);
   const xeroSuggestedTenantId = searchParams.get('xeroSuggestedTenantId') ?? '';
   const xeroSuggestedTenantName = searchParams.get('xeroSuggestedTenantName') ?? '';
   const xeroMessage = searchParams.get('xeroMessage');
-  const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const validateOrganizationMarketplaceListingMetadataDetails = makeValidate(organizationMarketplaceListingMetadataSchema);
   const requiredOrganizationMarketplaceListingMetadataDetailsFields = makeRequired(organizationMarketplaceListingMetadataSchema);
@@ -658,22 +684,17 @@ const OrganizationMarketplaceSetup = ({
   );
 
   useEffect(() => {
-    if (!section || section === 'stripe-connect-accounts-setup') {
-      return;
-    }
+    const updateStickyTop = () => {
+      setStickyTop(document.querySelector('.app-bar')?.clientHeight ?? 0);
+    };
 
-    const element = sectionRefs.current[section];
-    if (!element) {
-      return;
-    }
+    updateStickyTop();
+    window.addEventListener('resize', updateStickyTop);
 
-    const appBarHeight = document.querySelector('.app-bar')?.clientHeight || 0;
-    const elementTop = element.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({
-      top: elementTop - appBarHeight,
-      behavior: 'smooth',
-    });
-  }, [section]);
+    return () => {
+      window.removeEventListener('resize', updateStickyTop);
+    };
+  }, []);
 
   const handleProductTagsSearchTextChange = (str: string) => {
     setProductTagNameSearchText(str);
@@ -1212,10 +1233,6 @@ const OrganizationMarketplaceSetup = ({
     });
   };
 
-  const handleCloseClick = () => {
-    router.push(getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain));
-  };
-
   const productTagRows: ProductTagRowType[] = productTags.map((productTag) => ({
     id: productTag.id,
     name: productTag.name,
@@ -1681,291 +1698,192 @@ const OrganizationMarketplaceSetup = ({
     [pathname, router, searchParams],
   );
 
-  return (
-    <>
-      <Box sx={{ display: 'flex' }}>
-        <OrganizationMarketplaceSetupLeftSideNavigationMenuContent organizationCustomDomain={organizationCustomDomain} hideIcons />
-        <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
-          <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Marketplace Information">
-            <Form
-              onSubmit={handleOrganizationMarketplaceListingMetadataDetailUpdateClick}
-              initialValues={{
-                title: organizationTitle,
-                subTitle: organizationSubTitle,
-              }}
-              validate={validateOrganizationMarketplaceListingMetadataDetails}
-              render={({ handleSubmit }) => {
-                return (
-                  <FormStackColumn onSubmit={handleSubmit}>
-                    <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
-                      ref={(divElement) => {
-                        sectionRefs.current['marketplace-listing'] = divElement;
-                      }}
-                    >
-                      <SectionIconTypography label="Organization Marketplace Listing Setup" />
-                      <BodyIconTypography label="Edit your organization marketplace listing details" />
-                      <Divider />
-                    </StackColumn>
+  const renderActiveSection = () => {
+    switch (activeSection) {
+      case 'billing-cycle':
+        return (
+          <Form
+            onSubmit={handleOrganizationBillingSettingsUpdateClick}
+            initialValues={{
+              billingCycle: organizationBillingCycle,
+              invoiceDueInDays: organizationInvoiceDueInDays,
+            }}
+            validate={validateOrganizationBillingSettingsDetails}
+            render={({ handleSubmit, values }) => {
+              debounceSetOrganizationBillingCycle(values!.billingCycle);
+              const nextInvoiceDueInDays = typeof values?.invoiceDueInDays === 'number' ? values.invoiceDueInDays : Number(values?.invoiceDueInDays ?? NaN);
+              if (!Number.isNaN(nextInvoiceDueInDays)) {
+                debounceSetOrganizationInvoiceDueInDays(nextInvoiceDueInDays);
+              }
 
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <ListingMetadata
-                        fields={['title', 'subTitle']}
-                        onChange={({ subTitle, title }) => {
-                          debounceSetOrganizationTitle(title);
-                          debounceSetOrganizationSubTitle(subTitle);
-                        }}
-                        requiredFields={requiredOrganizationMarketplaceListingMetadataDetailsFields}
+              return (
+                <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <SectionIconTypography label="Organization Billing Settings" />
+                    <BodyIconTypography label="Edit your organization billing cycle and default invoice payment terms." />
+                    <Divider />
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Billing Cycle">
+                      <SingleChoiceOrganizationBillingCycle rootDataRelay={rootData} name="billingCycle" required={requiredOrganizationBillingSettingsDetailsFields.billingCycle} />
+                    </FormFieldLabel>
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Invoice Due Days">
+                      <TextField
+                        name="invoiceDueInDays"
+                        type="number"
+                        required={requiredOrganizationBillingSettingsDetailsFields.invoiceDueInDays}
+                        helperText="How many days customers have to pay marketplace invoices by default."
                       />
-                    </StackColumn>
+                    </FormFieldLabel>
+                  </StackColumn>
 
-                    <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
-                    >
-                      <StackRow>
-                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                          Update
-                        </Button>
-                      </StackRow>
-                    </StackColumn>
-                  </FormStackColumn>
-                );
-              }}
-            />
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
+                    <EditorActionBar primaryAction="Update" />
+                  </StackColumn>
+                </FormStackColumn>
+              );
+            }}
+          />
+        );
+      case 'xero-setup':
+        return (
+          <Form
+            key={`xero-form-${existingXeroConnection?.id ?? 'new'}-${xeroSuggestedTenantId}-${xeroSuggestedTenantName}`}
+            onSubmit={handleUpdateOrganizationXeroConnectionClick}
+            initialValues={{
+              tenantName: existingXeroConnection?.tenantName ?? xeroSuggestedTenantName,
+              billingMode: existingXeroConnection?.billingMode ?? 'DISABLED',
+              scopes: existingXeroConnection?.scopes ?? '',
+              isActive: existingXeroConnection?.isActive ?? false,
+              defaultSalesAccountCode: existingXeroConnection?.defaultSalesAccountCode ?? '',
+              defaultReceivablesAccountCode: existingXeroConnection?.defaultReceivablesAccountCode ?? '',
+              defaultTrackingCategory1: existingXeroConnection?.defaultTrackingCategory1 ?? '',
+              defaultTrackingCategory2: existingXeroConnection?.defaultTrackingCategory2 ?? '',
+              defaultBrandingThemeId: existingXeroConnection?.defaultBrandingThemeId ?? '',
+              defaultReferencePrefix: existingXeroConnection?.defaultReferencePrefix ?? '',
+            }}
+            render={({ handleSubmit, values }) => {
+              const selectedXeroBillingMode = values?.billingMode ?? existingXeroConnection?.billingMode ?? 'DISABLED';
+              const selectedXeroBillingModeGuidance = xeroBillingModeGuidance[selectedXeroBillingMode] ?? xeroBillingModeGuidance.DISABLED;
 
-            <Form
-              onSubmit={handleOrganizationBillingSettingsUpdateClick}
-              initialValues={{
-                billingCycle: organizationBillingCycle,
-                invoiceDueInDays: organizationInvoiceDueInDays,
-              }}
-              validate={validateOrganizationBillingSettingsDetails}
-              render={({ handleSubmit, values }) => {
-                debounceSetOrganizationBillingCycle(values!.billingCycle);
-                const nextInvoiceDueInDays = typeof values?.invoiceDueInDays === 'number' ? values.invoiceDueInDays : Number(values?.invoiceDueInDays ?? NaN);
-                if (!Number.isNaN(nextInvoiceDueInDays)) {
-                  debounceSetOrganizationInvoiceDueInDays(nextInvoiceDueInDays);
-                }
-
-                return (
-                  <FormStackColumn onSubmit={handleSubmit}>
-                    <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
-                      ref={(divElement) => {
-                        sectionRefs.current['billing-cycle'] = divElement;
-                      }}
-                    >
-                      <SectionIconTypography label="Organization Billing Settings" />
-                      <BodyIconTypography label="Edit your organization billing cycle and default invoice payment terms." />
-                      <Divider />
-                    </StackColumn>
-
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <FormFieldLabel label="Billing Cycle">
-                        <SingleChoiceOrganizationBillingCycle
-                          rootDataRelay={rootData}
-                          name="billingCycle"
-                          required={requiredOrganizationBillingSettingsDetailsFields.billingCycle}
-                        />
-                      </FormFieldLabel>
-                    </StackColumn>
-
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <FormFieldLabel label="Invoice Due Days">
-                        <TextField
-                          name="invoiceDueInDays"
-                          type="number"
-                          required={requiredOrganizationBillingSettingsDetailsFields.invoiceDueInDays}
-                          helperText="How many days customers have to pay marketplace invoices by default."
-                        />
-                      </FormFieldLabel>
-                    </StackColumn>
-
-                    <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
-                    >
-                      <StackRow>
-                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                          Update
-                        </Button>
-                      </StackRow>
-                      {!organization?.billingDetails && <SmallIconTypography label="Add billing details in organization admin first, then update billing settings here." />}
-                    </StackColumn>
-                  </FormStackColumn>
-                );
-              }}
-            />
-
-            <Form
-              key={`xero-form-${existingXeroConnection?.id ?? 'new'}-${xeroSuggestedTenantId}-${xeroSuggestedTenantName}`}
-              onSubmit={handleUpdateOrganizationXeroConnectionClick}
-              initialValues={{
-                tenantName: existingXeroConnection?.tenantName ?? xeroSuggestedTenantName,
-                billingMode: existingXeroConnection?.billingMode ?? 'DISABLED',
-                scopes: existingXeroConnection?.scopes ?? '',
-                isActive: existingXeroConnection?.isActive ?? false,
-                defaultSalesAccountCode: existingXeroConnection?.defaultSalesAccountCode ?? '',
-                defaultReceivablesAccountCode: existingXeroConnection?.defaultReceivablesAccountCode ?? '',
-                defaultTrackingCategory1: existingXeroConnection?.defaultTrackingCategory1 ?? '',
-                defaultTrackingCategory2: existingXeroConnection?.defaultTrackingCategory2 ?? '',
-                defaultBrandingThemeId: existingXeroConnection?.defaultBrandingThemeId ?? '',
-                defaultReferencePrefix: existingXeroConnection?.defaultReferencePrefix ?? '',
-              }}
-              render={({ handleSubmit, values }) => {
-                const selectedXeroBillingMode = values?.billingMode ?? existingXeroConnection?.billingMode ?? 'DISABLED';
-                const selectedXeroBillingModeGuidance = xeroBillingModeGuidance[selectedXeroBillingMode] ?? xeroBillingModeGuidance.DISABLED;
-
-                return (
-                  <FormStackColumn onSubmit={handleSubmit}>
-                    <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
-                      ref={(divElement) => {
-                        sectionRefs.current['xero-setup'] = divElement;
-                      }}
-                    >
-                      <GridContainer sx={{ justifyContent: 'space-between' }}>
-                        <Grid>
-                          <SectionIconTypography label="Xero" />
-                          <BodyIconTypography label="Configure how Skedular exports supported invoices into Xero, including recurring invoice behavior." />
-                          {existingXeroConnection?.isActive ? (
-                            <StackRow spacing={0.5}>
-                              <SmallIconTypography label="Connected to" />
-                              {xeroSummaryTenantName ? <SmallIconTypography label={xeroSummaryTenantName} fontWeight={700} /> : null}
-                              <SmallIconTypography label={xeroSummarySuffix} />
-                            </StackRow>
-                          ) : (
-                            <SmallIconTypography label="Not connected. Connect Xero first, then fine-tune how Skedular exports and reconciles invoices." />
-                          )}
-                          <SmallIconTypography
-                            label={
-                              xeroMessage ??
-                              'If your Xero login can access multiple tenants, connect Xero to load the available tenants, then choose one and save it here to finish setup.'
-                            }
-                          />
-                        </Grid>
-
-                        <Grid>
-                          <StackRow>
-                            <Button component="a" href={xeroAuthorizeUrl} variant="contained" sx={defaultButtonStyle} disabled={!xeroAuthorizeUrl}>
-                              {existingXeroConnection?.hasRefreshToken ? 'Reconnect Xero' : 'Connect Xero'}
-                            </Button>
-                            <Button variant="outlined" color="warning" onClick={handleDisconnectOrganizationXeroConnectionClick} sx={defaultButtonStyle}>
-                              Disconnect
-                            </Button>
+              return (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <GridContainer sx={{ justifyContent: 'space-between' }}>
+                      <Grid>
+                        <SectionIconTypography label="Xero" />
+                        <BodyIconTypography label="Configure how Skedular exports supported invoices into Xero, including recurring invoice behavior." />
+                        {existingXeroConnection?.isActive ? (
+                          <StackRow spacing={0.5}>
+                            <SmallIconTypography label="Connected to" />
+                            {xeroSummaryTenantName ? <SmallIconTypography label={xeroSummaryTenantName} fontWeight={700} /> : null}
+                            <SmallIconTypography label={xeroSummarySuffix} />
                           </StackRow>
-                        </Grid>
-                      </GridContainer>
-                      <Divider />
-                    </StackColumn>
+                        ) : (
+                          <SmallIconTypography label="Not connected. Connect Xero first, then fine-tune how Skedular exports and reconciles invoices." />
+                        )}
+                        <SmallIconTypography
+                          label={
+                            xeroMessage ??
+                            'If your Xero login can access multiple tenants, connect Xero to load the available tenants, then choose one and save it here to finish setup.'
+                          }
+                        />
+                      </Grid>
 
-                    {xeroTenantOptions.length > 0 && !isTenantLocked && (
-                      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                        <SectionIconTypography label="Available Xero Tenants" />
-                        <BodyIconTypography label="Choose the tenant returned by Xero and save it into this setup to finish attaching the organization." />
-                        <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
-                          {xeroTenantOptions.map((tenantOption) => (
-                            <Button
-                              key={tenantOption.tenantId}
-                              variant={xeroSuggestedTenantId === tenantOption.tenantId ? 'contained' : 'outlined'}
-                              sx={defaultButtonStyle}
-                              onClick={() => handleApplySuggestedXeroTenantClick(tenantOption)}
-                            >
-                              {tenantOption.tenantName || 'Unnamed Xero tenant'}
-                            </Button>
-                          ))}
+                      <Grid>
+                        <StackRow>
+                          <Button component="a" href={xeroAuthorizeUrl} variant="contained" sx={defaultButtonStyle} disabled={!xeroAuthorizeUrl}>
+                            {existingXeroConnection?.hasRefreshToken ? 'Reconnect Xero' : 'Connect Xero'}
+                          </Button>
+                          <Button variant="outlined" color="warning" onClick={handleDisconnectOrganizationXeroConnectionClick} sx={defaultButtonStyle}>
+                            Disconnect
+                          </Button>
                         </StackRow>
-                        {hasSuggestedTenant && <SmallIconTypography label={`Selected tenant: ${xeroSuggestedTenantName || 'Unnamed Xero tenant'}`} />}
-                      </StackColumn>
+                      </Grid>
+                    </GridContainer>
+                    <Divider />
+                  </StackColumn>
+
+                  {xeroTenantOptions.length > 0 && !isTenantLocked && (
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <SectionIconTypography label="Available Xero Tenants" />
+                      <BodyIconTypography label="Choose the tenant returned by Xero and save it into this setup to finish attaching the organization." />
+                      <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
+                        {xeroTenantOptions.map((tenantOption) => (
+                          <Button
+                            key={tenantOption.tenantId}
+                            variant={xeroSuggestedTenantId === tenantOption.tenantId ? 'contained' : 'outlined'}
+                            sx={defaultButtonStyle}
+                            onClick={() => handleApplySuggestedXeroTenantClick(tenantOption)}
+                          >
+                            {tenantOption.tenantName || 'Unnamed Xero tenant'}
+                          </Button>
+                        ))}
+                      </StackRow>
+                      {hasSuggestedTenant && <SmallIconTypography label={`Selected tenant: ${xeroSuggestedTenantName || 'Unnamed Xero tenant'}`} />}
+                    </StackColumn>
+                  )}
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, ...formColumnSx }}>
+                    <FormFieldLabel label="Billing Mode">
+                      <SingleChoiceOrganizationXeroBillingMode rootDataRelay={rootData} name="billingMode" required />
+                    </FormFieldLabel>
+                    <SmallIconTypography label={selectedXeroBillingModeGuidance} />
+                    {selectedXeroBillingMode === 'REPEATING_INVOICES' && (
+                      <>
+                        <SmallIconTypography label="Recurring in-arrears bookings use the organization billing cycle for the repeating schedule." />
+                        <SmallIconTypography label="Other recurring bookings use the product purchase cadence. If Xero cannot represent that cadence, Skedular falls back to a normal Xero invoice." />
+                        <SmallIconTypography label="Supported recurring purchase cadences for repeating templates are weekly, fortnightly, monthly, two to six months, and yearly." />
+                      </>
                     )}
+                    <FormFieldLabel label="Default Sales Account Code">
+                      <TextField name="defaultSalesAccountCode" helperText="Optional sales account code used when creating Xero invoices." />
+                    </FormFieldLabel>
+                    <FormFieldLabel label="Default Receivables Account Code">
+                      <TextField name="defaultReceivablesAccountCode" helperText="Optional receivables account code for invoice posting." />
+                    </FormFieldLabel>
+                    <FormFieldLabel label="Tracking Category 1">
+                      <TextField name="defaultTrackingCategory1" helperText="Optional tracking category for org-level reporting in Xero." />
+                    </FormFieldLabel>
+                    <FormFieldLabel label="Tracking Category 2">
+                      <TextField name="defaultTrackingCategory2" helperText="Optional secondary tracking category." />
+                    </FormFieldLabel>
+                    <FormFieldLabel label="Branding Theme ID">
+                      <TextField name="defaultBrandingThemeId" helperText="Optional Xero branding theme to apply when Xero sends the invoice." />
+                    </FormFieldLabel>
+                    <FormFieldLabel label="Reference Prefix">
+                      <TextField name="defaultReferencePrefix" helperText="Prefix added to references before export, for example SKED or MKT." />
+                    </FormFieldLabel>
+                  </StackColumn>
 
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <FormFieldLabel label="Billing Mode">
-                        <SingleChoiceOrganizationXeroBillingMode rootDataRelay={rootData} name="billingMode" required />
-                      </FormFieldLabel>
-                      <SmallIconTypography label={selectedXeroBillingModeGuidance} />
-                      {selectedXeroBillingMode === 'REPEATING_INVOICES' && (
-                        <>
-                          <SmallIconTypography label="Recurring in-arrears bookings use the organization billing cycle for the repeating schedule." />
-                          <SmallIconTypography label="Other recurring bookings use the product purchase cadence. If Xero cannot represent that cadence, Skedular falls back to a normal Xero invoice." />
-                          <SmallIconTypography label="Supported recurring purchase cadences for repeating templates are weekly, fortnightly, monthly, two to six months, and yearly." />
-                        </>
-                      )}
-                      <FormFieldLabel label="Default Sales Account Code">
-                        <TextField name="defaultSalesAccountCode" helperText="Optional sales account code used when creating Xero invoices." />
-                      </FormFieldLabel>
-                      <FormFieldLabel label="Default Receivables Account Code">
-                        <TextField name="defaultReceivablesAccountCode" helperText="Optional receivables account code for invoice posting." />
-                      </FormFieldLabel>
-                      <FormFieldLabel label="Tracking Category 1">
-                        <TextField name="defaultTrackingCategory1" helperText="Optional tracking category for org-level reporting in Xero." />
-                      </FormFieldLabel>
-                      <FormFieldLabel label="Tracking Category 2">
-                        <TextField name="defaultTrackingCategory2" helperText="Optional secondary tracking category." />
-                      </FormFieldLabel>
-                      <FormFieldLabel label="Branding Theme ID">
-                        <TextField name="defaultBrandingThemeId" helperText="Optional Xero branding theme to apply when Xero sends the invoice." />
-                      </FormFieldLabel>
-                      <FormFieldLabel label="Reference Prefix">
-                        <TextField name="defaultReferencePrefix" helperText="Prefix added to references before export, for example SKED or MKT." />
-                      </FormFieldLabel>
-                    </StackColumn>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, ...formColumnSx }}>
+                    <StackRow sx={{ alignItems: 'center', gap: 2 }}>
+                      <BodyIconTypography label={existingXeroConnection?.isActive ? 'Connection active' : 'Connection inactive'} />
+                      <BodyIconTypography startElement={<BillingIcon />} label={existingXeroConnection?.hasAccessToken ? 'Access token present' : 'No access token stored yet'} />
+                      <BodyIconTypography label={existingXeroConnection?.hasRefreshToken ? 'Refresh token present' : 'No refresh token stored yet'} />
+                    </StackRow>
+                    {existingXeroConnection?.lastError && <SmallIconTypography label={`Last sync error: ${existingXeroConnection.lastError}`} />}
+                    {existingXeroConnection?.lastSuccessfulSyncAt && (
+                      <SmallIconTypography label={`Last successful sync: ${new Date(existingXeroConnection.lastSuccessfulSyncAt).toLocaleString()}`} />
+                    )}
+                  </StackColumn>
 
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <StackRow sx={{ alignItems: 'center', gap: 2 }}>
-                        <BodyIconTypography label={existingXeroConnection?.isActive ? 'Connection active' : 'Connection inactive'} />
-                        <BodyIconTypography startElement={<BillingIcon />} label={existingXeroConnection?.hasAccessToken ? 'Access token present' : 'No access token stored yet'} />
-                        <BodyIconTypography label={existingXeroConnection?.hasRefreshToken ? 'Refresh token present' : 'No refresh token stored yet'} />
-                      </StackRow>
-                      {existingXeroConnection?.lastError && <SmallIconTypography label={`Last sync error: ${existingXeroConnection.lastError}`} />}
-                      {existingXeroConnection?.lastSuccessfulSyncAt && (
-                        <SmallIconTypography label={`Last successful sync: ${new Date(existingXeroConnection.lastSuccessfulSyncAt).toLocaleString()}`} />
-                      )}
-                    </StackColumn>
-
-                    <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
-                    >
-                      <StackRow>
-                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                          Save Xero Settings
-                        </Button>
-                      </StackRow>
-                    </StackColumn>
-                  </FormStackColumn>
-                );
-              }}
-            />
-
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
-                sectionRefs.current['stripe-connect-accounts-setup'] = divElement;
-              }}
-            >
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding, ...formColumnSx }}>
+                    <EditorActionBar primaryAction="Update" />
+                  </StackColumn>
+                </FormStackColumn>
+              );
+            }}
+          />
+        );
+      case 'stripe-connect-accounts-setup':
+        return (
+          <>
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <GridContainer sx={{ justifyContent: 'space-between' }}>
                 <Grid>
                   <SectionIconTypography label="Stripe Connect Accounts" />
@@ -2043,12 +1961,12 @@ const OrganizationMarketplaceSetup = ({
                 localeText={{ noRowsLabel: 'No stripe connect account found' }}
               />
             </StackRow>
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
-                sectionRefs.current['bank-accounts-setup'] = divElement;
-              }}
-            >
+          </>
+        );
+      case 'bank-accounts-setup':
+        return (
+          <>
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <GridContainer sx={{ justifyContent: 'space-between' }}>
                 <Grid>
                   <SectionIconTypography label="Bank Accounts" />
@@ -2125,12 +2043,12 @@ const OrganizationMarketplaceSetup = ({
                 localeText={{ noRowsLabel: 'No bank account found' }}
               />
             </StackRow>
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
-                sectionRefs.current['product-tags-setup'] = divElement;
-              }}
-            >
+          </>
+        );
+      case 'product-tags-setup':
+        return (
+          <>
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <GridContainer sx={{ justifyContent: 'space-between' }}>
                 <Grid>
                   <SectionIconTypography label="Product Tags" />
@@ -2195,8 +2113,86 @@ const OrganizationMarketplaceSetup = ({
                 localeText={{ noRowsLabel: 'No product tag found' }}
               />
             </StackRow>
-          </AppBarWithStackColumn>
-        </Box>
+          </>
+        );
+      case 'marketplace-listing':
+      default:
+        return (
+          <Form
+            onSubmit={handleOrganizationMarketplaceListingMetadataDetailUpdateClick}
+            initialValues={{
+              title: organizationTitle,
+              subTitle: organizationSubTitle,
+            }}
+            validate={validateOrganizationMarketplaceListingMetadataDetails}
+            render={({ handleSubmit }) => {
+              return (
+                <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <SectionIconTypography label="Organization Marketplace Listing Setup" />
+                    <BodyIconTypography label="Edit your organization marketplace listing details" />
+                    <Divider />
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <ListingMetadata
+                      fields={['title', 'subTitle']}
+                      onChange={({ subTitle, title }) => {
+                        debounceSetOrganizationTitle(title);
+                        debounceSetOrganizationSubTitle(subTitle);
+                      }}
+                      requiredFields={requiredOrganizationMarketplaceListingMetadataDetailsFields}
+                    />
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
+                    <EditorActionBar primaryAction="Update" />
+                  </StackColumn>
+                </FormStackColumn>
+              );
+            }}
+          />
+        );
+    }
+  };
+
+  return (
+    <>
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+        <StackColumn
+          sx={{
+            width: '100%',
+            maxWidth: 1120,
+            mx: 'auto',
+            backgroundColor: 'transparent',
+            gap: 2,
+          }}
+        >
+          <PageHeaderPanel
+            eyebrow="Marketplace setup"
+            title={organization?.name ?? 'Marketplace settings'}
+            description="Manage listing details, billing cadence, Xero, payout rails, and product tags."
+          >
+            <StackColumn spacing={0.5}>
+              <SmallIconTypography label="Commerce & payouts" />
+              <BodyIconTypography label={organization?.marketplaceListingMetadata?.title || organization?.name || 'Listing, billing, Xero, Stripe, and bank accounts'} />
+            </StackColumn>
+          </PageHeaderPanel>
+
+          <OrganizationMarketplaceSetupSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} stickyTop={stickyTop} />
+          <Box
+            sx={{
+              borderRadius: 4,
+              border: 1,
+              borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+              boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+              overflow: 'hidden',
+            }}
+          >
+            {renderActiveSection()}
+          </Box>
+        </StackColumn>
       </Box>
 
       <MoreActionsMenu
