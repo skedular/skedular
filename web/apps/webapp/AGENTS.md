@@ -79,6 +79,9 @@ scripts/
   - use a route-backed local top section nav for setup-style subsections
   - collapse that section nav to a single menu-trigger button on narrower screens instead of wrapping or relying on horizontal overflow
   - keep heavy admin collections such as resources and floor plans behind section-scoped Relay queries so they are not fetched on first load
+  - in the resources section, prefer a compact management list with drill-down details over a wide data grid; the location detail page should support dozens of resources without turning into a spreadsheet
+  - resource rows should show the real zone/custom/product tag chips inline in a compact metadata strip, not only abstract counts
+  - user-specific preference actions like preferred resources should not sit in the primary row chrome on admin management lists; keep them in overflow actions until there is a dedicated personal-preferences surface
 - For the organization admin page specifically:
   - do not stack another fixed left rail and another sticky app bar inside the existing organization shell
   - prefer a centered content column with a compact in-page header and a route-backed sticky top section nav

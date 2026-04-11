@@ -257,6 +257,10 @@ These patterns should be designed once and reused many times:
   - collapse the top section nav into a single section-menu trigger on narrower screens instead of letting pills wrap or overflow awkwardly
   - treat section changes as route-backed sub-surfaces, not one giant scrolled form
   - move infrequently used heavy data like floor plans and resources to section-scoped queries so the initial editor load stays focused on setup data
+  - in the resources tab, avoid full-width grid-first management as the default
+  - prefer a compact resource management list that can handle dozens of desks/rooms in one page, with drill-down details and explicit bulk actions
+  - resource rows should expose real zone/custom/product tag chips inline in the list, with the expanded state reserved for fuller detail instead of basic classification
+  - keep user-specific preference actions like preferred resources in row overflow actions rather than persistent star chrome on admin management lists
 - for the organization admin editor:
   - use the same page shell language as location detail and setup flows:
     - `PageHeaderPanel`

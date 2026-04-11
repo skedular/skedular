@@ -1,20 +1,14 @@
-import { PushToRight, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
-import { CustomTags } from '@/components/customTag';
-import { DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
+import { PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { getOrganizationLocationResourceBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { CustomTagSelector } from '@/components/organization/customTagSelector';
+import OrganizationLocationResourceManagementList from '@/components/organization/organizationLocation/organization-location-resource-management-list';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
-import { ProductTags } from '@/components/productTag';
-import { Resource } from '@/components/resource';
 import { AddResourceButton } from '@/components/resource/addResource';
-import { ResourceType } from '@/components/resourceType';
 import { Search } from '@/components/search';
-import { Zones } from '@/components/zone';
-import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@/libs/theme';
+import { defaultPadding } from '@/libs/theme';
 import { getRelayErrorMessage } from '@/libs/utils';
 import { SettingsSectionCard } from '@skedular/ui';
 import type { organizationLocationManageResourcesSectionQuery } from '@/queries/__generated__/organizationLocationManageResourcesSectionQuery.graphql';
@@ -24,10 +18,6 @@ import type { organizationLocationManageResourcesSection_deactivateResourcesMuta
 import type { organizationLocationManageResourcesSection_deleteResourcesMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_deleteResourcesMutation.graphql';
 import type { organizationLocationManageResourcesSection_removeCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_removeCustomerPreferredResourceMutation.graphql';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useMemo, useState } from 'react';
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
@@ -70,15 +60,15 @@ type ProductTagDetails = {
   color: string | null | undefined;
 };
 
-type ResourceRowType = {
+type ResourceManagementItem = {
   id: string;
   resource: ResourceDetails;
   resourceType: ResourceTypeDetails;
   customTags: CustomTagDetails[];
   zones: ZoneDetails[];
   productTags: ProductTagDetails[];
-  status: boolean;
-  preferred: boolean;
+  isActive: boolean;
+  isPreferred: boolean;
   capacity: number;
 };
 
@@ -148,7 +138,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
   const [resourceCustomTagIds, setResourceCustomTagIds] = useState<string[]>([]);
   const [resourceZoneIds, setResourceZoneIds] = useState<string[]>([]);
   const [selectedResourceId, setSelectedResourceId] = useState<null | string>(null);
-  const [selectedResources, setSelectedResources] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
+  const [selectedResourceIds, setSelectedResourceIds] = useState<string[]>([]);
   const [resourceMoreActionsAnchorEl, setResourceMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const resourceMoreActionsMenuOpen = Boolean(resourceMoreActionsAnchorEl);
 
@@ -241,15 +231,8 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
 
   const resources = useMemo(() => (rootData.location ? rootData.location.resources.edges.map(({ node }) => node) : []), [rootData.location]);
   const resourcesConnectionIds = useMemo(() => (rootData.location ? [rootData.location.resources.__id] : []), [rootData.location]);
-  const resourceDetails = useMemo(() => resources.find((item) => item.id === selectedResourceId), [resources, selectedResourceId]);
-  const resourceMoreActionsOption: MoreActionsMenuItemType[] = [
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditResource],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateResource],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateResource],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteResource],
-  ];
 
-  const resourceRows: ResourceRowType[] = resources.map((resource) => ({
+  const resourceItems: ResourceManagementItem[] = resources.map((resource) => ({
     id: resource.id,
     resource: {
       id: resource.id,
@@ -264,16 +247,32 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
     customTags: resource.customTags.map((item) => ({ id: item.id, name: item.name, color: item.color })),
     zones: resource.zones.map((item) => ({ id: item.id, name: item.name, color: item.color })),
     productTags: resource.productTags.map((item) => ({ id: item.id, name: item.name, color: item.color })),
-    status: !resource.inactive,
-    preferred: preferredResources.includes(resource.id),
+    isActive: !resource.inactive,
+    isPreferred: preferredResources.includes(resource.id),
     capacity: resource.capacity,
   }));
+  const resourceDetails = useMemo(() => resources.find((item) => item.id === selectedResourceId), [resources, selectedResourceId]);
+  const selectedResourceItem = useMemo(() => resourceItems.find((item) => item.id === selectedResourceId), [resourceItems, selectedResourceId]);
+  const resourceMoreActionsOption: MoreActionsMenuItemType[] = useMemo(() => {
+    const options: MoreActionsMenuItemType[] = [
+      moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditResource],
+      moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateResource],
+      moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateResource],
+      moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteResource],
+    ];
 
-  const selectedResourceIds = useMemo(() => Array.from(selectedResources.ids).map((id) => id as string), [selectedResources.ids]);
+    if (selectedResourceItem) {
+      options.splice(
+        1,
+        0,
+        selectedResourceItem.isPreferred
+          ? moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveAsPreferredResource]
+          : moreActionsMenuAllOptions[MoreActionsMenuOptionType.SetAsPreferredResource],
+      );
+    }
 
-  const handleSelectedResourcesChanged = (newRowSelectionModel: GridRowSelectionModel) => {
-    setSelectedResources(newRowSelectionModel);
-  };
+    return options;
+  }, [selectedResourceItem]);
 
   const handleResourceNameSearchTextChange = (value: string) => {
     setResourceNameSearchText(value);
@@ -311,7 +310,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
           ...successNotificationOptions,
           render: <NotificationContent content={successMessage} />,
         });
-        setSelectedResources(defaultGridRowSelectionModelValue);
+        setSelectedResourceIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -346,7 +345,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
           ...successNotificationOptions,
           render: <NotificationContent content={successMessage} />,
         });
-        setSelectedResources(defaultGridRowSelectionModelValue);
+        setSelectedResourceIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -382,7 +381,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
           ...successNotificationOptions,
           render: <NotificationContent content={successMessage} />,
         });
-        setSelectedResources(defaultGridRowSelectionModelValue);
+        setSelectedResourceIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -487,6 +486,16 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
           handleDeactivateResourcesClick([resourceDetails.id], 'Resource deactivated.', 'Deactivating resource...');
         }
         break;
+      case MoreActionsMenuOptionType.SetAsPreferredResource:
+        if (resourceDetails) {
+          handleSetAsPreferredResourceClicked(resourceDetails.id);
+        }
+        break;
+      case MoreActionsMenuOptionType.RemoveAsPreferredResource:
+        if (resourceDetails) {
+          handleRemoveAsPreferredResourceClicked(resourceDetails.id);
+        }
+        break;
       case MoreActionsMenuOptionType.ActivateResource:
         if (resourceDetails) {
           handleActivateResourcesClick([resourceDetails.id], 'Resource activated.', 'Activating resource...');
@@ -500,119 +509,17 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
     }
   };
 
-  const resourceColumns: GridColDef<(typeof resourceRows)[number]>[] = [
-    {
-      field: 'resource',
-      headerName: 'Name',
-      editable: false,
-      renderCell: (params) => <Resource resource={params.value} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'resourceType',
-      headerName: 'Type',
-      editable: false,
-      renderCell: (params) => <ResourceType resourceType={params.value} />,
-      display: 'flex',
-      minWidth: 50,
-    },
-    {
-      field: 'capacity',
-      headerName: 'Capacity',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 100,
-    },
-    {
-      field: 'customTags',
-      headerName: 'Tags',
-      editable: false,
-      renderCell: (params) => <CustomTags customTags={params.value} hideIcon />,
-      display: 'flex',
-      minWidth: 250,
-    },
-    {
-      field: 'zones',
-      headerName: 'Zones',
-      editable: false,
-      renderCell: (params) => <Zones zones={params.value} hideIcon />,
-      display: 'flex',
-      minWidth: 250,
-    },
-    {
-      field: 'productTags',
-      headerName: 'Product Tags',
-      editable: false,
-      renderCell: (params) => <ProductTags productTags={params.value} hideIcon />,
-      display: 'flex',
-      minWidth: 250,
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      editable: false,
-      renderCell: (params) => (
-        <StackRow>
-          {params.value ? (
-            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label="Active" />
-              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
-            </StackRow>
-          ) : (
-            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label="Inactive" />
-              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
-            </StackRow>
-          )}
-        </StackRow>
-      ),
-      display: 'flex',
-    },
-    {
-      field: 'preferred',
-      headerName: 'Preferred?',
-      editable: false,
-      renderCell: (params) => {
-        const resourceId = params.id as string;
-        return params.value ? (
-          <IconButton onClick={() => handleRemoveAsPreferredResourceClicked(resourceId)}>
-            <PreferredIcon />
-          </IconButton>
-        ) : (
-          <IconButton onClick={() => handleSetAsPreferredResourceClicked(resourceId)}>
-            <NotPreferredIcon />
-          </IconButton>
-        );
-      },
-      display: 'flex',
-    },
-    {
-      field: 'More Actions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedResourceId(params.id as string);
-              setResourceMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
+  const handleSelectedResourceToggle = (resourceId: string) => {
+    setSelectedResourceIds((current) => (current.includes(resourceId) ? current.filter((id) => id !== resourceId) : current.concat(resourceId)));
+  };
+
+  const handleOpenResource = (resourceId: string) => {
+    router.push(getOrganizationLocationResourceBaseLink(integratedPlatrform, organizationCustomDomain, locationId, resourceId));
+  };
 
   return (
     <>
-      <Box sx={{ px: { xs: 2, sm: 3 }, pb: defaultPadding }}>
+      <Box sx={{ pb: defaultPadding }}>
         <SettingsSectionCard
           title="Manage Resources"
           description="Search, filter, and operate on the resources assigned to this location."
@@ -633,72 +540,28 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
               <Search size="small" placeholder="Search for resources" defaultValue={resourceNameSearchText} onChange={handleResourceNameSearchTextChange} />
             </StackRow>
 
-            {selectedResourceIds.length > 0 && (
-              <Box
-                sx={{
-                  backgroundColor: 'background.paper',
-                  padding: defaultGridActionPadding,
-                  border: 1,
-                  borderColor: (theme) => theme.palette.divider,
-                  borderRadius: 2,
-                }}
-              >
-                <StackRow sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
-                  <SmallIconTypography label={`${selectedResourceIds.length} records selected`} />
-                  <PushToRight />
-                  <Button
-                    size="medium"
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleDeactivateResourcesClick(selectedResourceIds, 'Resources deactivated.', 'Deactivating resources...')}
-                  >
-                    Deactivate Resource
-                  </Button>
-                  <Button
-                    size="medium"
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleActivateResourcesClick(selectedResourceIds, 'Resources activated.', 'Activating resources...')}
-                  >
-                    Activate Resource
-                  </Button>
-                  <Button
-                    size="medium"
-                    variant="contained"
-                    color="warning"
-                    startIcon={<DeleteIcon />}
-                    onClick={() => handleDeleteResourcesClick(selectedResourceIds, 'Resources removed.', 'Removing resources...')}
-                    sx={{ textTransform: 'none' }}
-                  >
-                    Remove Resource
-                  </Button>
-                </StackRow>
-              </Box>
-            )}
-
-            <DataGrid
-              checkboxSelection
-              rowSelectionModel={selectedResources}
-              onRowSelectionModelChange={handleSelectedResourcesChanged}
-              rows={resourceRows}
-              columns={resourceColumns}
-              hideFooterPagination={resourceRows.length <= 10}
-              initialState={{
-                pagination: {
-                  rowCount: resourceRows.length,
-                  paginationModel: {
-                    pageSize: 10,
-                  },
-                },
+            <OrganizationLocationResourceManagementList
+              items={resourceItems.map((resourceItem) => ({
+                id: resourceItem.id,
+                resourceName: resourceItem.resource.name ?? 'Unnamed resource',
+                resourceType: resourceItem.resourceType,
+                customTags: resourceItem.customTags,
+                zones: resourceItem.zones,
+                productTags: resourceItem.productTags,
+                isActive: resourceItem.isActive,
+                isPreferred: resourceItem.isPreferred,
+                capacity: resourceItem.capacity,
+              }))}
+              selectedIds={selectedResourceIds}
+              onToggleSelected={handleSelectedResourceToggle}
+              onOpenResource={handleOpenResource}
+              onOpenMoreActions={(resourceId, target) => {
+                setSelectedResourceId(resourceId);
+                setResourceMoreActionsAnchorEl(target);
               }}
-              pageSizeOptions={[10]}
-              ignoreDiacritics
-              disableRowSelectionOnClick
-              getRowHeight={() => 'auto'}
-              rowSpacingType="margin"
-              getRowSpacing={() => ({ top: 3, bottom: 3 })}
-              sx={defaultGridStyle}
-              localeText={{ noRowsLabel: 'No resource found' }}
+              onDeactivateSelected={(ids) => handleDeactivateResourcesClick(ids, 'Resources deactivated.', 'Deactivating resources...')}
+              onActivateSelected={(ids) => handleActivateResourcesClick(ids, 'Resources activated.', 'Activating resources...')}
+              onDeleteSelected={(ids) => handleDeleteResourcesClick(ids, 'Resources removed.', 'Removing resources...')}
             />
           </StackColumn>
         </SettingsSectionCard>

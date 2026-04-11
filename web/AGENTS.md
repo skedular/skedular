@@ -57,6 +57,10 @@ web/
   create flow uses them.
 - For route-backed setup/admin pages, keep the UI focused on the active section only. Do not re-expand those surfaces
   into one long multi-section page, and avoid right-side summary rails that compete with the section content width.
+- For the location resources tab, prefer compact management rows with real inline zone/custom/product tag chips and
+  drill-down details instead of count-heavy summaries or wide grid-first layouts.
+- Keep user-specific preference actions such as preferred resources out of the main admin row chrome; place them in
+  overflow actions unless the product has a dedicated personal-preferences surface.
 - The current testing direction is Vitest + React Testing Library from `web/apps/webapp`, with coverage allowed to
   extend into Relay-free workspace packages such as `web/packages/ui`.
 - In `web/apps/webapp`, prefer Relay colocation. Fragments and small queries should live beside the component that uses

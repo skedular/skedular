@@ -48,7 +48,7 @@ const OrganizationLocationFloorPlansSection = ({ organizationCustomDomain, locat
   const floorPlansConnectionIds = useMemo(() => [rootData.floorPlans.__id], [rootData.floorPlans.__id]);
 
   return (
-    <Box sx={{ px: { xs: 2, sm: 3 }, pb: defaultPadding }}>
+    <Box sx={{ pb: defaultPadding }}>
       <SettingsSectionCard
         title="Manage Floor Plans"
         description="Create and maintain the floor plans that describe how this location is laid out."

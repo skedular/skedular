@@ -102,8 +102,8 @@ const locationSchema = object({
 const physicalAddressSchema = object({
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
-  suburb: string(),
-  city: string(),
+  suburb: string().nullable(),
+  city: string().nullable(),
   province: string().nullable(),
   zipcode: string().required('Zipcode is required'),
   countryCode: string().required('Country is required'),

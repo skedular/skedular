@@ -46,6 +46,8 @@ export enum MoreActionsMenuOptionType {
   DeleteResource,
   ActivateResource,
   DeactivateResource,
+  SetAsPreferredResource,
+  RemoveAsPreferredResource,
   ViewUserBookings,
   ViewLocationBookings,
   ViewTeamBookings,
@@ -230,6 +232,16 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.DeactivateResource]: {
     id: MoreActionsMenuOptionType.DeactivateResource,
     label: 'Dectivate Resource',
+  },
+  [MoreActionsMenuOptionType.SetAsPreferredResource]: {
+    id: MoreActionsMenuOptionType.SetAsPreferredResource,
+    label: 'Set as preferred resource',
+    icon: <NotPreferredIcon />,
+  },
+  [MoreActionsMenuOptionType.RemoveAsPreferredResource]: {
+    id: MoreActionsMenuOptionType.RemoveAsPreferredResource,
+    label: 'Remove as preferred resource',
+    icon: <PreferredIcon />,
   },
   [MoreActionsMenuOptionType.ViewUserBookings]: {
     id: MoreActionsMenuOptionType.ViewUserBookings,
