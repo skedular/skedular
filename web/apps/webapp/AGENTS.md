@@ -74,6 +74,10 @@ scripts/
   - treat it as a card-first surface only
   - do not preserve or reintroduce a list/grid toggle unless there is a clear product need that the compact cards cannot satisfy
   - remove list-specific query fields, handlers, and mutations when the list mode is removed
+- For the organization location detail page specifically:
+  - do not reintroduce a nested left rail inside the broader organization shell
+  - use a route-backed local top section nav for setup-style subsections
+  - keep heavy admin collections such as resources and floor plans behind section-scoped Relay queries so they are not fetched on first load
 - Avoid embedding maps, full carousels, or other heavy detail widgets directly inside dense list cards unless the card is explicitly a media-first browsing surface.
 - The long-term target is extraction into `web/packages/*`, but do not extract unstable domain-specific widgets too
   early.

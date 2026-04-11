@@ -15,23 +15,11 @@ import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'reac
 import { v7 as uuid } from 'uuid';
 
 const RootQuery = graphql`
-  query pageOrganizationLocation_rootQuery(
-    $organizationCustomDomain: String!
-    $locationId: String!
-    $resourceNameSearchText: String
-    $resourceZoneIds: [String!]
-    $resourceCustomTagIds: [String!]
-    $zonesSortingValues: [OrganizationTagOrderInput!]
-    $customTagsSortingValues: [OrganizationTagOrderInput!]
-    $resourcesSortingValues: [ResourceOrderInput!]
-    $floorPlansSortingValues: [FloorPlanOrderInput!]
-  ) {
+  query pageOrganizationLocation_rootQuery($organizationCustomDomain: String!, $locationId: String!) {
     location(id: $locationId) {
       name
     }
-    ...organizationLocation_query
-    ...organizationLocation_resources_query
-    ...organizationLocation_floorPlans_query
+    ...organizationLocationPage_query
   }
 `;
 
@@ -66,14 +54,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationLocation
-        rootDataRelay={rootData}
-        rootDataResourcesRelay={rootData}
-        rootDataFloorPlansRelay={rootData}
-        onReloadRequired={onReloadRequired}
-        organizationCustomDomain={organizationCustomDomain}
-        locationId={locationId}
-      />
+      <OrganizationLocation rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} locationId={locationId} />
     </RootShell>
   );
 };
@@ -99,30 +80,6 @@ const RootPageWithRelay = () => {
       {
         organizationCustomDomain,
         locationId,
-        zonesSortingValues: [
-          {
-            direction: 'ASCENDING',
-            field: 'NAME',
-          },
-        ],
-        customTagsSortingValues: [
-          {
-            direction: 'ASCENDING',
-            field: 'NAME',
-          },
-        ],
-        resourcesSortingValues: [
-          {
-            direction: 'ASCENDING',
-            field: 'NAME',
-          },
-        ],
-        floorPlansSortingValues: [
-          {
-            direction: 'ASCENDING',
-            field: 'NAME',
-          },
-        ],
       },
       {
         fetchPolicy: 'store-and-network',

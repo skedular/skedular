@@ -1,1 +1,1 @@
-export { default as OrganizationLocation } from './organization-location';
+export { default as OrganizationLocation } from './organization-location-page';

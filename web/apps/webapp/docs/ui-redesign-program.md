@@ -236,6 +236,10 @@ These patterns should be designed once and reused many times:
 - keep the organization locations collection page card-only for now:
   - remove list/grid toggles and list-specific table logic when the product direction favors compact booking-oriented cards
   - if the surface stays card-only, trim the Relay selections and page-level mutations that only existed for the old list/table mode
+- for the organization location detail editor:
+  - prefer a local top section nav over an inner fixed left submenu
+  - treat section changes as route-backed sub-surfaces, not one giant scrolled form
+  - move infrequently used heavy data like floor plans and resources to section-scoped queries so the initial editor load stays focused on setup data
 - detail/edit redesign
 - shared admin editor patterns
 
