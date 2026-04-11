@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<208059965d13aab0baa78e0f9c0f9507>>
+ * @generated SignedSource<<c9020b67ab8f904a33e05110d32c4986>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -135,16 +135,13 @@ export type organizationLocation_query$data = {
   readonly me: {
     readonly emails: ReadonlyArray<string>;
     readonly id: string;
-    readonly preferredResources: ReadonlyArray<{
-      readonly id: string;
-    }>;
   };
   readonly organization: {
     readonly type: {
       readonly type: OrganizationType;
     };
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "multipleChoicesAmenities_query" | "multipleChoicesLocationSpaceTypes_query" | "singleChoiceLocationType_query" | "weekOpeningHours_query" | "zoneSelector_allZones_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesLocationSpaceTypes_query" | "singleChoiceLocationType_query" | "weekOpeningHours_query">;
   readonly " $fragmentType": "organizationLocation_query";
 };
 export type organizationLocation_query$key = {
@@ -275,18 +272,6 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "emails",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ResourceDetails",
-          "kind": "LinkedField",
-          "name": "preferredResources",
-          "plural": true,
-          "selections": [
-            (v0/*: any*/)
-          ],
           "storageKey": null
         }
       ],
@@ -768,16 +753,6 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "customTagSelector_allCustomTags_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "zoneSelector_allZones_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "singleChoiceLocationType_query"
     },
     {
@@ -796,6 +771,6 @@ return {
 };
 })();
 
-(node as any).hash = "4307752b7d78eb3a9b1c6c717a0211ce";
+(node as any).hash = "f5e5babf00d9a621992bb49b96abda1b";
 
 export default node;

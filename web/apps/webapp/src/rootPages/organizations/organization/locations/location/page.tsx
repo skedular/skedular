@@ -19,7 +19,7 @@ const RootQuery = graphql`
     location(id: $locationId) {
       name
     }
-    ...organizationLocationPage_query
+    ...organizationLocation_query
   }
 `;
 
