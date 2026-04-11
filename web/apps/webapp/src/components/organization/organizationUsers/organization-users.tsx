@@ -1,17 +1,15 @@
-import { CustomerAvatar } from '@/components/avatars';
-import { AppBarWithStackColumn, BodyIconTypography, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
-import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
-import { getOrganizationBaseLink, getOrganizationBookingsBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
+import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { getOrganizationBookingsBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
+import OrganizationUserManagementList from '@/components/organization/organizationUsers/organization-user-management-list';
 import { RelayError, toRootError } from '@/components/relayError';
 import { Search } from '@/components/search';
 import { TeamSelector } from '@/components/team/teamSelector';
-import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
+import { defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
 import type { organizationUsers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationMemberRoleMutation.graphql';
 import type { organizationUsers_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationUsersStatusMutation.graphql';
@@ -20,21 +18,15 @@ import type { organizationUsers_organizationUsers_refetchableFragment } from '@/
 import type { organizationUsers_removeOrganizationUsersMutation } from '@/queries/__generated__/organizationUsers_removeOrganizationUsersMutation.graphql';
 import type { organizationUsers_rootQuery } from '@/queries/__generated__/organizationUsers_rootQuery.graphql';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
+import { PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-import OrganizationUsersLeftSideNavigationMenuContent from './organization-users-left-side-navigation-menu-content';
 
 type Props = {
   queryReference: PreloadedQuery<organizationUsers_rootQuery, Record<string, unknown>>;
@@ -78,29 +70,6 @@ const RootQuery = graphql`
     ...organizationUsers_organizationMembers_query
   }
 `;
-
-type CustomerDetails = {
-  id: string;
-  givenName?: string | null | undefined;
-  middleName?: string | null | undefined;
-  familyName?: string | null | undefined;
-  name?: string | null | undefined;
-  photoUrl?: string | null | undefined;
-  phoneNumber?: string | null | undefined;
-};
-
-type RowType = {
-  id: string;
-  avatar: CustomerDetails;
-  name: string;
-  teams: string;
-  email: string | null | undefined;
-  phoneNumber: string | null | undefined;
-  role: OrganizationMemberRole | null | undefined;
-  roleName: string;
-  statusType: string;
-  statusName: string;
-};
 
 const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<organizationUsers_rootQuery>(RootQuery, queryReference);
@@ -219,10 +188,12 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
   const router = useRouter();
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
-  const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
+  const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null);
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const [changeRoleAnchorEl, setChangeRoleAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
+  const changeRoleMenuOpen = Boolean(changeRoleAnchorEl);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditOrganizationUser],
@@ -300,8 +271,8 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
     handleRefetchOrganizationUsers(str);
   };
 
-  const handleSelectedUsersChanged = (newRowSelectionModel: GridRowSelectionModel) => {
-    setSeledctedMembers(newRowSelectionModel);
+  const handleSelectedUsersChanged = (memberId: string) => {
+    setSelectedMemberIds((current) => (current.includes(memberId) ? current.filter((id) => id !== memberId) : current.concat(memberId)));
   };
 
   const handleDeactivateUsersClick = () => {
@@ -311,10 +282,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       variables: {
         input: {
           clientMutationId: uuid(),
-          ids: seledctedMembers.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
+          ids: selectedMemberIds,
           status: 'INACTIVE',
         },
       },
@@ -332,7 +300,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
           ...successNotificationOptions,
           render: <NotificationContent content={'Users deactivated.'} />,
         });
-        setSeledctedMembers(defaultGridRowSelectionModelValue);
+        setSelectedMemberIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -350,10 +318,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       variables: {
         input: {
           clientMutationId: uuid(),
-          ids: seledctedMembers.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
+          ids: selectedMemberIds,
           status: 'ACTIVE',
         },
       },
@@ -371,7 +336,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
           ...successNotificationOptions,
           render: <NotificationContent content={'Users activated.'} />,
         });
-        setSeledctedMembers(defaultGridRowSelectionModelValue);
+        setSelectedMemberIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -390,10 +355,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
         connectionIds,
         input: {
           clientMutationId: uuid(),
-          ids: seledctedMembers.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
+          ids: selectedMemberIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -410,7 +372,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
           ...successNotificationOptions,
           render: <NotificationContent content={'Users removed.'} />,
         });
-        setSeledctedMembers(defaultGridRowSelectionModelValue);
+        setSelectedMemberIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -484,7 +446,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
           ...successNotificationOptions,
           render: <NotificationContent content={'User deactivated.'} />,
         });
-        setSeledctedMembers(defaultGridRowSelectionModelValue);
+        setSelectedMemberIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -524,7 +486,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
           ...successNotificationOptions,
           render: <NotificationContent content={'User activated.'} />,
         });
-        setSeledctedMembers(defaultGridRowSelectionModelValue);
+        setSelectedMemberIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -564,7 +526,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
           ...successNotificationOptions,
           render: <NotificationContent content={'User removed.'} />,
         });
-        setSeledctedMembers(defaultGridRowSelectionModelValue);
+        setSelectedMemberIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -629,220 +591,108 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
     });
   };
 
-  const handleCloseClick = () => {
-    router.push(getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain));
+  const handleChangeRoleClick = (memberId: string, target: HTMLElement) => {
+    setSelectedMemberId(memberId);
+    setChangeRoleAnchorEl(target);
   };
 
-  const rows: RowType[] = members.map((member) => ({
+  const handleChangeRoleMenuItemClick = (role: OrganizationMemberRole) => {
+    if (!selectedMemberId) {
+      return;
+    }
+
+    setChangeRoleAnchorEl(null);
+    handleRoleChanged(selectedMemberId, role);
+  };
+
+  const memberItems = members.map((member) => ({
     id: member.id,
-    avatar: member.customer,
+    customer: member.customer,
     name: getCustomerFullName(member.customer),
-    teams: member.teams.map((team) => team.name).join(', '),
+    teams: member.teams.map((team) => team.name),
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
-    role: member.role.type,
-    roleName: member.role.name,
-    statusType: member.status.type,
+    role: member.role.name,
     statusName: member.status.name,
+    isActive: member.status.type === 'ACTIVE',
   }));
-
-  const columns: GridColDef<(typeof rows)[number]>[] = [
-    {
-      field: 'avatar',
-      headerName: '',
-      editable: false,
-      renderCell: (params) => <CustomerAvatar name={params.value} photo={{ url: params.value?.photoUrl }} size="medium" showFullName />,
-      display: 'flex',
-      maxWidth: 20,
-    },
-    {
-      field: 'name',
-      headerName: 'Name',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'teams',
-      headerName: 'Team',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 300,
-    },
-    {
-      field: 'email',
-      headerName: 'Email',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 300,
-    },
-    {
-      field: 'phoneNumber',
-      headerName: 'Phone',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'role',
-      headerName: 'Role',
-      editable: false,
-      renderCell: (params) => (
-        <Select
-          value={params.value}
-          onChange={(event) => handleRoleChanged(params.id as string, event.target.value as string)}
-          size="small"
-          sx={{
-            borderRadius: 2,
-            width: 150,
-            margin: 0.5,
-          }}
-          renderValue={() => <SmallIconTypography label={params.row.roleName} />}
-        >
-          {rootData.organizationMemberRoles.map((item) => (
-            <MenuItem key={item.type} value={item.type}>
-              <SmallIconTypography label={item.name} />
-            </MenuItem>
-          ))}
-        </Select>
-      ),
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      editable: false,
-      renderCell: (params) => (
-        <StackRow>
-          {params.row.statusType === 'ACTIVE' && (
-            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label={params.row.statusName} />
-              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
-            </StackRow>
-          )}
-          {params.row.statusType !== 'ACTIVE' && (
-            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label={params.row.statusName} />
-              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
-            </StackRow>
-          )}
-        </StackRow>
-      ),
-      display: 'flex',
-    },
-    {
-      field: 'More Actions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedMemberId(params.id as string);
-              setMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
 
   return (
     <>
-      <Box sx={{ display: 'flex' }}>
-        <OrganizationUsersLeftSideNavigationMenuContent organizationCustomDomain={organizationCustomDomain} hideIcons />
-        <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
-          <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Organization Users">
-            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <GridContainer sx={{ justifyContent: 'space-between' }}>
-                <Grid>
-                  <SectionIconTypography label="Organization Users" />
-                  <BodyIconTypography label="View users in your organization" />
-                </Grid>
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+        <StackColumn
+          sx={{
+            width: '100%',
+            maxWidth: 1120,
+            mx: 'auto',
+            backgroundColor: 'transparent',
+            gap: 2,
+          }}
+        >
+          <PageHeaderPanel
+            eyebrow="User management"
+            title="Organization Users"
+            description="Manage membership, roles, team associations, and account lifecycle controls for your organization."
+          >
+            <BodyIconTypography label="Search, filter by team, change roles, and open individual user profiles from one place." />
+          </PageHeaderPanel>
 
-                <Grid>
-                  <InvitePeopleToJoinOrganizationButton organizationCustomDomain={organizationCustomDomain} />
-                </Grid>
-              </GridContainer>
-              <Divider />
-            </StackColumn>
+          <Box
+            sx={{
+              borderRadius: 4,
+              border: 1,
+              borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+              boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+              overflow: 'hidden',
+            }}
+          >
+            <SettingsSectionCard
+              title="Users"
+              description="Browse users, refine by team, review contact details, and manage organization access."
+              actions={<InvitePeopleToJoinOrganizationButton organizationCustomDomain={organizationCustomDomain} />}
+            >
+              <StackColumn spacing={2}>
+                <StackRow sx={{ gap: 1, flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
+                  <Search size="small" placeholder="Search for users" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
+                </StackRow>
 
-            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-              <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
-              <PushToRight />
-              <Search size="small" placeholder="Search for users" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-            </GridContainer>
+                <OrganizationUserManagementList
+                  items={memberItems}
+                  selectedIds={selectedMemberIds}
+                  onToggleSelected={handleSelectedUsersChanged}
+                  onOpenProfile={(memberId) => {
+                    const member = members.find((item) => item.id === memberId);
+                    if (!member) {
+                      return;
+                    }
 
-            {seledctedMembers.ids.size > 0 && (
-              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                <Box
-                  sx={{
-                    backgroundColor: 'white',
-                    padding: defaultGridActionPadding,
-                    border: 1,
-                    borderColor: (theme) => theme.palette.divider,
-                    borderRadius: 2,
-                    flexGrow: 1,
+                    router.push(getOrganizationUserProfileBaseLink(integratedPlatrform, organizationCustomDomain, member.customer.id));
                   }}
-                >
-                  <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedMembers.ids.size} records selected`} invertDefaultColor={paletteMode === 'dark'} />
-                    <PushToRight />
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateUsersClick} sx={defaultButtonStyle}>
-                      Deactivate User
-                    </Button>
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUsersClick} sx={defaultButtonStyle}>
-                      Activate User
-                    </Button>
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveUsersClick} sx={{ textTransform: 'none' }}>
-                      Remove User
-                    </Button>
-                  </StackRow>
-                </Box>
-              </StackRow>
-            )}
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                checkboxSelection
-                rowSelectionModel={seledctedMembers}
-                onRowSelectionModelChange={handleSelectedUsersChanged}
-                rows={rows}
-                columns={columns}
-                hideFooterPagination={rows.length <= 10}
-                initialState={{
-                  pagination: {
-                    rowCount: rows.length,
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[10]}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No user found' }}
-              />
-            </StackRow>
-          </AppBarWithStackColumn>
-        </Box>
+                  onOpenChangeRole={handleChangeRoleClick}
+                  onOpenMoreActions={(memberId, target) => {
+                    setSelectedMemberId(memberId);
+                    setMoreActionsAnchorEl(target);
+                  }}
+                  onDeactivateSelected={() => handleDeactivateUsersClick()}
+                  onActivateSelected={() => handleActivateUsersClick()}
+                  onRemoveSelected={() => handleRemoveUsersClick()}
+                />
+              </StackColumn>
+            </SettingsSectionCard>
+          </Box>
+        </StackColumn>
       </Box>
 
       <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
+      <Menu anchorEl={changeRoleAnchorEl} open={changeRoleMenuOpen} onClose={() => setChangeRoleAnchorEl(null)}>
+        {rootData.organizationMemberRoles.map((item) => (
+          <MenuItem key={item.type} selected={memberDetails?.role.type === item.type} onClick={() => handleChangeRoleMenuItemClick(item.type)}>
+            <SmallIconTypography label={item.name} />
+          </MenuItem>
+        ))}
+      </Menu>
     </>
   );
 };
