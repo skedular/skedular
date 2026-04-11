@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e543ffcf9f29bbcc3cf3128f00c51a2b>>
+ * @generated SignedSource<<dcf7f123112829bffef96b138359c71e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,8 +35,14 @@ export type addOrganizationTeamMemberDialog_addTeamMemberMutation$data = {
         readonly photoUrl: string | null | undefined;
       };
       readonly id: string;
-      readonly role: TeamMemberRole | null | undefined;
-      readonly status: TeamMemberStatus;
+      readonly role: {
+        readonly name: string;
+        readonly type: TeamMemberRole;
+      };
+      readonly status: {
+        readonly name: string;
+        readonly type: TeamMemberStatus;
+      };
     };
   };
 };
@@ -75,6 +81,23 @@ v2 = {
 v3 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v3/*: any*/)
+],
+v5 = {
+  "alias": null,
+  "args": null,
   "concreteType": "TeamMemberDetails",
   "kind": "LinkedField",
   "name": "teamMember",
@@ -97,13 +120,7 @@ v3 = {
           "name": "email",
           "storageKey": null
         },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "name",
-          "storageKey": null
-        },
+        (v3/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -145,15 +162,21 @@ v3 = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
+      "concreteType": "TeamMemberStatusDetails",
+      "kind": "LinkedField",
       "name": "status",
+      "plural": false,
+      "selections": (v4/*: any*/),
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
+      "concreteType": "TeamMemberRoleDetails",
+      "kind": "LinkedField",
       "name": "role",
+      "plural": false,
+      "selections": (v4/*: any*/),
       "storageKey": null
     }
   ],
@@ -174,7 +197,7 @@ return {
         "name": "addTeamMember",
         "plural": false,
         "selections": [
-          (v3/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
@@ -196,7 +219,7 @@ return {
         "name": "addTeamMember",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -224,16 +247,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3219600dd65c60c2ef8fafbea2fa8b00",
+    "cacheID": "42e5dd3f16db5f018aa4153f5b07c163",
     "id": null,
     "metadata": {},
     "name": "addOrganizationTeamMemberDialog_addTeamMemberMutation",
     "operationKind": "mutation",
-    "text": "mutation addOrganizationTeamMemberDialog_addTeamMemberMutation(\n  $input: AddTeamMemberInput!\n) {\n  addTeamMember(input: $input) {\n    teamMember {\n      id\n      customer {\n        id\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
+    "text": "mutation addOrganizationTeamMemberDialog_addTeamMemberMutation(\n  $input: AddTeamMemberInput!\n) {\n  addTeamMember(input: $input) {\n    teamMember {\n      id\n      customer {\n        id\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status {\n        type\n        name\n      }\n      role {\n        type\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ebaf985ce29c458951c07015351de78c";
+(node as any).hash = "ac54d72689cbcc2657667e6ec59a6566";
 
 export default node;

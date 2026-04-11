@@ -52,6 +52,15 @@ public static class OrganizationMemberRoleExtensions
                 OrganizationMemberRole.Member => OrganizationMemberRoleConstants.Member,
                 _ => throw new ArgumentOutOfRangeException()
             };
+
+        public string ToOrganizationMemberRoleName() =>
+            src switch
+            {
+                OrganizationMemberRole.Owner => "Owner",
+                OrganizationMemberRole.Administrator => "Administrator",
+                OrganizationMemberRole.Member => "Member",
+                _ => throw new ArgumentOutOfRangeException()
+            };
     }
 
     extension(OrganizationMemberRole? src)

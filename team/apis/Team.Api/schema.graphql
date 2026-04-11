@@ -93,7 +93,8 @@ type Query {
   teamInvitationStatuses: [TeamInvitationStatusDetails!]!
   pendingTeamInvitationsCount: Int! @cost(weight: "10")
   myInvitationsToJoinTeams(after: String first: Int before: String last: Int where: MyInvitationsToJoinTeamsWhereInput orderBy: [JoinTeamInvitationOrderInput!]): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
-  teamMemberRoles: [TeamMemberRole!]!
+  teamMemberRoles: [TeamMemberRoleDetails!]!
+  teamMemberStatuses: [TeamMemberStatusDetails!]!
   teamVersion: Version!
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")
   team(id: String!): TeamDetails @cost(weight: "10")
@@ -134,8 +135,8 @@ type TeamJoinInvitationEdge {
 
 type TeamMemberDetails {
   customer: CustomerDetails!
-  role: TeamMemberRole
-  status: TeamMemberStatus!
+  role: TeamMemberRoleDetails!
+  status: TeamMemberStatusDetails!
   organizationMember: TeamOrganizationMemberDetails
   id: ID!
 }
@@ -153,6 +154,16 @@ type TeamMemberEdge {
 type TeamMemberPayload {
   clientMutationId: String
   teamMember: TeamMemberDetails!
+}
+
+type TeamMemberRoleDetails {
+  type: TeamMemberRole!
+  name: String!
+}
+
+type TeamMemberStatusDetails {
+  type: TeamMemberStatus!
+  name: String!
 }
 
 type TeamMembersDetailsPayload {

@@ -32,6 +32,7 @@ export type OrganizationTeamMemberManagementListItem = {
   email: string | null | undefined;
   phoneNumber: string | null | undefined;
   role: string | null | undefined;
+  statusName: string;
   isActive: boolean;
 };
 
@@ -136,7 +137,7 @@ const OrganizationTeamMemberManagementList = ({
                     <Box sx={{ minWidth: 0, maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       <LeadIconTypography label={item.name} />
                     </Box>
-                    <Chip size="small" label={item.isActive ? 'Active' : 'Inactive'} sx={item.isActive ? compactManagementNeutralChipSx : compactManagementWarningChipSx} />
+                    <Chip size="small" label={item.statusName} sx={item.isActive ? compactManagementNeutralChipSx : compactManagementWarningChipSx} />
                   </StackRow>
                   <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
                     <SmallIconTypography label={`Role: ${item.role || 'Not assigned'}`} sx={{ color: 'text.secondary', fontWeight: 600 }} />
@@ -195,7 +196,7 @@ const OrganizationTeamMemberManagementList = ({
                   <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider', p: 1.25, backgroundColor: 'background.default' }}>
                     <BodyIconTypography label="Status" />
                     <StackColumn spacing={0.75} sx={{ pt: 1 }}>
-                      <SmallIconTypography label={item.isActive ? 'Active' : 'Inactive'} />
+                      <SmallIconTypography label={item.statusName} />
                     </StackColumn>
                   </Box>
                 </Box>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e1a2c12d81df60218901d9ffdac7828b>>
+ * @generated SignedSource<<2f4be5d721981ff5d533eb930c1892f4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,8 +33,14 @@ export type organizationTeam_changeTeamMembersStatusMutation$data = {
         readonly photoUrl: string | null | undefined;
       };
       readonly id: string;
-      readonly role: TeamMemberRole | null | undefined;
-      readonly status: TeamMemberStatus;
+      readonly role: {
+        readonly name: string;
+        readonly type: TeamMemberRole;
+      };
+      readonly status: {
+        readonly name: string;
+        readonly type: TeamMemberStatus;
+      };
     }>;
   };
 };
@@ -58,7 +64,24 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v2/*: any*/)
+],
+v4 = [
   {
     "alias": null,
     "args": [
@@ -98,13 +121,7 @@ v2 = [
                 "name": "email",
                 "storageKey": null
               },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
-              },
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -146,15 +163,21 @@ v2 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
+            "concreteType": "TeamMemberStatusDetails",
+            "kind": "LinkedField",
             "name": "status",
+            "plural": false,
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
+            "concreteType": "TeamMemberRoleDetails",
+            "kind": "LinkedField",
             "name": "role",
+            "plural": false,
+            "selections": (v3/*: any*/),
             "storageKey": null
           }
         ],
@@ -170,7 +193,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationTeam_changeTeamMembersStatusMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v4/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -179,19 +202,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationTeam_changeTeamMembersStatusMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "9704a7f4f4b14f9fdde728d3cc1b7f9f",
+    "cacheID": "cd4878450456ee310197d3bdb52b3dee",
     "id": null,
     "metadata": {},
     "name": "organizationTeam_changeTeamMembersStatusMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationTeam_changeTeamMembersStatusMutation(\n  $input: ChangeTeamMembersStatusInput!\n) {\n  changeTeamMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        id\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
+    "text": "mutation organizationTeam_changeTeamMembersStatusMutation(\n  $input: ChangeTeamMembersStatusInput!\n) {\n  changeTeamMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        id\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status {\n        type\n        name\n      }\n      role {\n        type\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "22b646377db959a5bb4bcfa8969d7d1d";
+(node as any).hash = "b0a4dcdb6a662843849f446784b7a9fa";
 
 export default node;

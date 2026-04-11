@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<216ee05a07ea7227bcc0c615a8a937f6>>
+ * @generated SignedSource<<b8e1ff168ac6e5ee1e1a3713f7833ab1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -76,7 +76,24 @@ v2 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v3/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -172,13 +189,7 @@ return {
                             "name": "email",
                             "storageKey": null
                           },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "name",
-                            "storageKey": null
-                          },
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -220,15 +231,21 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "kind": "ScalarField",
+                        "concreteType": "TeamMemberStatusDetails",
+                        "kind": "LinkedField",
                         "name": "status",
+                        "plural": false,
+                        "selections": (v4/*: any*/),
                         "storageKey": null
                       },
                       {
                         "alias": null,
                         "args": null,
-                        "kind": "ScalarField",
+                        "concreteType": "TeamMemberRoleDetails",
+                        "kind": "LinkedField",
                         "name": "role",
+                        "plural": false,
+                        "selections": (v4/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -309,16 +326,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8b26395efe96b1c22361eba0ddf0ed1e",
+    "cacheID": "fd457d7c6863c57079809b68444f01be",
     "id": null,
     "metadata": {},
     "name": "organizationTeam_teamMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationTeam_teamMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $peopleNameSearchText: String\n  $teamId: String!\n) {\n  ...organizationTeam_teamMembers_query_1G22uz\n}\n\nfragment organizationTeam_teamMembers_query_1G22uz on Query {\n  team(id: $teamId) {\n    members(first: $count, after: $cursor, where: {nameContains: $peopleNameSearchText}) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            email\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n            phoneNumber\n          }\n          status\n          role\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query organizationTeam_teamMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $peopleNameSearchText: String\n  $teamId: String!\n) {\n  ...organizationTeam_teamMembers_query_1G22uz\n}\n\nfragment organizationTeam_teamMembers_query_1G22uz on Query {\n  team(id: $teamId) {\n    members(first: $count, after: $cursor, where: {nameContains: $peopleNameSearchText}) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            email\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n            phoneNumber\n          }\n          status {\n            type\n            name\n          }\n          role {\n            type\n            name\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4158682489ac855b64f6c9eeb0e6639d";
+(node as any).hash = "8caa57744fecbf27bd58eb32e1639166";
 
 export default node;

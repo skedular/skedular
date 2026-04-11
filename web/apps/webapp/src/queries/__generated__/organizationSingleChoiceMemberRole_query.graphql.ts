@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cb509d24800e3d779184f24fdc2f3153>>
+ * @generated SignedSource<<388e09097a448ac6f57412765ae854b7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,10 @@ import { ReaderFragment } from 'relay-runtime';
 export type OrganizationMemberRole = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationSingleChoiceMemberRole_query$data = {
-  readonly organizationMemberRoles: ReadonlyArray<OrganizationMemberRole>;
+  readonly organizationMemberRoles: ReadonlyArray<{
+    readonly name: string;
+    readonly type: OrganizationMemberRole;
+  }>;
   readonly " $fragmentType": "organizationSingleChoiceMemberRole_query";
 };
 export type organizationSingleChoiceMemberRole_query$key = {
@@ -29,8 +32,26 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
+      "concreteType": "OrganizationMemberRoleDetails",
+      "kind": "LinkedField",
       "name": "organizationMemberRoles",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "type",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
@@ -38,6 +59,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "78245e0aae18afda39e6a7c20f88bb00";
+(node as any).hash = "c206dac27e239b1d890fe339e84c3665";
 
 export default node;

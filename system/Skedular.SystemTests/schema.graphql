@@ -959,8 +959,8 @@ type OrganizationMemberDetails {
   customer: CustomerDetails!
   id: ID!
   isOrganizationOnboardingDone: Boolean!
-  role: OrganizationMemberRole
-  status: OrganizationMemberStatus!
+  role: OrganizationMemberRoleDetails!
+  status: OrganizationMemberStatusDetails!
 }
 
 type OrganizationMemberDetailsPayload {
@@ -975,6 +975,16 @@ type OrganizationMemberEdge {
 
 type OrganizationMemberPayload {
   clientMutationId: String
+}
+
+type OrganizationMemberRoleDetails {
+  name: String!
+  type: OrganizationMemberRole!
+}
+
+type OrganizationMemberStatusDetails {
+  name: String!
+  type: OrganizationMemberStatus!
 }
 
 type OrganizationMembersDetailsPayload {
@@ -1350,7 +1360,8 @@ type Query {
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
   organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
-  organizationMemberRoles: [OrganizationMemberRole!]!
+  organizationMemberRoles: [OrganizationMemberRoleDetails!]!
+  organizationMemberStatuses: [OrganizationMemberStatusDetails!]!
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationPublic(customDomain: String id: String): OrganizationPublicDetails @cost(weight: "10")
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
@@ -1387,7 +1398,8 @@ type Query {
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")
   teamInvitationStatuses: [TeamInvitationStatusDetails!]!
-  teamMemberRoles: [TeamMemberRole!]!
+  teamMemberRoles: [TeamMemberRoleDetails!]!
+  teamMemberStatuses: [TeamMemberStatusDetails!]!
   teams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: TeamWhereInput): ConnectionOfTeamEdge! @cost(weight: "10")
   teamVersion: Version!
   zone(id: String!): OrganizationTagDetails @cost(weight: "10")
@@ -1527,8 +1539,8 @@ type TeamMemberDetails {
   customer: CustomerDetails!
   id: ID!
   organizationMember: TeamOrganizationMemberDetails
-  role: TeamMemberRole
-  status: TeamMemberStatus!
+  role: TeamMemberRoleDetails!
+  status: TeamMemberStatusDetails!
 }
 
 type TeamMemberDetailsPayload {
@@ -1544,6 +1556,16 @@ type TeamMemberEdge {
 type TeamMemberPayload {
   clientMutationId: String
   teamMember: TeamMemberDetails!
+}
+
+type TeamMemberRoleDetails {
+  name: String!
+  type: TeamMemberRole!
+}
+
+type TeamMemberStatusDetails {
+  name: String!
+  type: TeamMemberStatus!
 }
 
 type TeamMembersDetailsPayload {

@@ -1,6 +1,5 @@
 import { BodyIconTypography } from '@/components/commons';
 import { Autocomplete } from '@/components/forms';
-import { convertStringToLowercaseExceptFirstLetter } from '@/libs/utils';
 import type { organizationSingleChoiceMemberRole_query$key } from '@/queries/__generated__/organizationSingleChoiceMemberRole_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { memo, useMemo } from 'react';
@@ -12,18 +11,26 @@ type Props = {
   required?: boolean;
 };
 
+type MemberRoleDetails = {
+  type: string;
+  name: string;
+};
+
 const OrganizationSingleChoiceMemberRole = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment organizationSingleChoiceMemberRole_query on Query {
-        organizationMemberRoles
+        organizationMemberRoles {
+          type
+          name
+        }
       }
     `,
     rootDataRelay,
   );
 
-  const items = useMemo<string[]>(() => rootData.organizationMemberRoles.map((role) => role), [rootData.organizationMemberRoles]);
-  const filter = createFilterOptions<string>();
+  const items = useMemo<MemberRoleDetails[]>(() => rootData.organizationMemberRoles.map((item) => item), [rootData.organizationMemberRoles]);
+  const filter = createFilterOptions<MemberRoleDetails>();
 
   return (
     <Autocomplete
@@ -31,18 +38,18 @@ const OrganizationSingleChoiceMemberRole = ({ rootDataRelay, name, required }: P
       multiple={false}
       required={required}
       options={items}
-      getOptionValue={(option) => option as string}
-      getOptionLabel={(option: string | string) => convertStringToLowercaseExceptFirstLetter(option as string)}
+      getOptionValue={(option) => (option as MemberRoleDetails).type}
+      getOptionLabel={(option: string | MemberRoleDetails) => (option as MemberRoleDetails).name}
       renderOption={(props, option) => {
-        const castedOption = option as string;
+        const castedOption = option as MemberRoleDetails;
 
         return (
-          <li {...props} key={castedOption}>
-            <BodyIconTypography label={convertStringToLowercaseExceptFirstLetter(castedOption)} />
+          <li {...props} key={castedOption.type}>
+            <BodyIconTypography label={castedOption.name} />
           </li>
         );
       }}
-      filterOptions={(options, params) => filter(options as string[], params)}
+      filterOptions={(options, params) => filter(options as MemberRoleDetails[], params)}
       selectOnFocus
       clearOnBlur
       handleHomeEndKeys

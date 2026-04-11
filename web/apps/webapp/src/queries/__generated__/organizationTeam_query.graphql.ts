@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f4d3226eb5f720955656786aa2ad88ea>>
+ * @generated SignedSource<<0b43c369cef717c0ab4c32295caea851>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,7 +34,10 @@ export type organizationTeam_query$data = {
     } | null | undefined;
     readonly timezone: string | null | undefined;
   } | null | undefined;
-  readonly teamMemberRoles: ReadonlyArray<TeamMemberRole>;
+  readonly teamMemberRoles: ReadonlyArray<{
+    readonly name: string;
+    readonly type: TeamMemberRole;
+  }>;
   readonly " $fragmentSpreads": FragmentRefs<"singleChoiceLocation_locations_query">;
   readonly " $fragmentType": "organizationTeam_query";
 };
@@ -172,8 +175,20 @@ return {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
+      "concreteType": "TeamMemberRoleDetails",
+      "kind": "LinkedField",
       "name": "teamMemberRoles",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "type",
+          "storageKey": null
+        },
+        (v1/*: any*/)
+      ],
       "storageKey": null
     },
     {
@@ -187,6 +202,6 @@ return {
 };
 })();
 
-(node as any).hash = "02bac4a9a5ed5794776ada546c88ea8e";
+(node as any).hash = "4105f45f3d79567bcde690bfb2da62e5";
 
 export default node;

@@ -527,8 +527,8 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            Role = src.Role,
-            Status = src.Status,
+            Role = new OrganizationMemberRoleDetails { Type = src.Role, Name = src.Role.ToOrganizationMemberRoleName() },
+            Status = new OrganizationMemberStatusDetails { Type = src.Status, Name = src.Status.ToOrganizationMemberStatusName() },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             CustomerId = src.Customer.Id
         };

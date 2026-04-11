@@ -107,7 +107,10 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
             name
           }
         }
-        teamMemberRoles
+        teamMemberRoles {
+          type
+          name
+        }
         ...singleChoiceLocation_locations_query
       }
     `,
@@ -136,8 +139,14 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                   photoUrl
                   phoneNumber
                 }
-                status
-                role
+                status {
+                  type
+                  name
+                }
+                role {
+                  type
+                  name
+                }
               }
             }
           }
@@ -191,8 +200,14 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
             photoUrl
             phoneNumber
           }
-          status
-          role
+          status {
+            type
+            name
+          }
+          role {
+            type
+            name
+          }
         }
       }
     }
@@ -223,8 +238,14 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
             photoUrl
             phoneNumber
           }
-          status
-          role
+          status {
+            type
+            name
+          }
+          role {
+            type
+            name
+          }
         }
       }
     }
@@ -321,6 +342,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         : [],
     [rootDataTeamMembers.team],
   );
+  const teamMemberRoleNameByType = useMemo(() => new Map(rootData.teamMemberRoles.map((item) => [item.type, item.name])), [rootData.teamMemberRoles]);
 
   const handleRefetchTeamMembers = useCallback(
     (peopleNameSearchText: string) => {
@@ -708,7 +730,10 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
             id: member.id,
             customer: member.customer,
             status: member.status,
-            role,
+            role: {
+              type: role,
+              name: teamMemberRoleNameByType.get(role) ?? role,
+            },
           },
         },
       },
@@ -766,8 +791,9 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     name: getCustomerFullName(member.customer),
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
-    role: member.role,
-    isActive: member.status === 'ACTIVE',
+    role: member.role.name,
+    statusName: member.status.name,
+    isActive: member.status.type === 'ACTIVE',
   }));
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
@@ -1011,9 +1037,9 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
 
       <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
       <Menu anchorEl={changeRoleAnchorEl} open={changeRoleMenuOpen} onClose={() => setChangeRoleAnchorEl(null)}>
-        {rootData.teamMemberRoles.map((role) => (
-          <MenuItem key={role} selected={memberDetails?.role === role} onClick={() => handleChangeRoleMenuItemClick(role)}>
-            <SmallIconTypography label={role} />
+        {rootData.teamMemberRoles.map((item) => (
+          <MenuItem key={item.type} selected={memberDetails?.role.type === item.type} onClick={() => handleChangeRoleMenuItemClick(item.type)}>
+            <SmallIconTypography label={item.name} />
           </MenuItem>
         ))}
       </Menu>

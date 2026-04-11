@@ -316,8 +316,8 @@ type OrganizationMemberAttendancePercentage {
 
 type OrganizationMemberDetails {
   customer: CustomerDetails!
-  role: OrganizationMemberRole
-  status: OrganizationMemberStatus!
+  role: OrganizationMemberRoleDetails!
+  status: OrganizationMemberStatusDetails!
   isOrganizationOnboardingDone: Boolean!
   id: ID!
 }
@@ -334,6 +334,16 @@ type OrganizationMemberEdge {
 
 type OrganizationMemberPayload {
   clientMutationId: String
+}
+
+type OrganizationMemberRoleDetails {
+  type: OrganizationMemberRole!
+  name: String!
+}
+
+type OrganizationMemberStatusDetails {
+  type: OrganizationMemberStatus!
+  name: String!
 }
 
 type OrganizationMembersDetailsPayload {
@@ -547,7 +557,8 @@ type Query {
   organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
   pendingOrganizationInvitationsCount: Int! @cost(weight: "10")
   myInvitationsToJoinOrganizations(after: String first: Int before: String last: Int where: MyInvitationsToJoinOrganizationsWhereInput! orderBy: [JoinOrganizationInvitationOrderInput!]): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
-  organizationMemberRoles: [OrganizationMemberRole!]!
+  organizationMemberRoles: [OrganizationMemberRoleDetails!]!
+  organizationMemberStatuses: [OrganizationMemberStatusDetails!]!
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationTypes: [OrganizationTypeDetails!]!
   organizationBillingCycles: [OrganizationBillingCycleDetails!]!

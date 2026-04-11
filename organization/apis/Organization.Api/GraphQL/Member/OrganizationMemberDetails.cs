@@ -1,4 +1,3 @@
-using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
@@ -8,8 +7,8 @@ namespace Organization.Api.GraphQL.Member;
 [GraphQLName("OrganizationMemberDetails")]
 public class OrganizationMemberDetails : Node
 {
-    [GraphQLName("role")] public OrganizationMemberRole? Role { get; set; }
-    [GraphQLName("status")] public OrganizationMemberStatus Status { get; set; }
+    [GraphQLName("role")] public OrganizationMemberRoleDetails Role { get; set; } = new();
+    [GraphQLName("status")] public OrganizationMemberStatusDetails Status { get; set; } = new();
 
     [GraphQLName("isOrganizationOnboardingDone")]
     public bool IsOrganizationOnboardingDone { get; set; }

@@ -38,6 +38,15 @@ public static class TeamMemberRoleExtensions
                 TeamMemberRole.Member => TeamMemberRoleConstants.Member,
                 _ => throw new ArgumentOutOfRangeException()
             };
+
+        public string ToTeamMemberRoleName() =>
+            src switch
+            {
+                TeamMemberRole.Owner => "Owner",
+                TeamMemberRole.Administrator => "Administrator",
+                TeamMemberRole.Member => "Member",
+                _ => throw new ArgumentOutOfRangeException()
+            };
     }
 
     extension(TeamMemberRole? src)

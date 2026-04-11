@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f5cbde0ef8bcfdcdb54c689b51491e8>>
+ * @generated SignedSource<<31acbc2ba465d7798ccdd079e8dd22b7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type OrganizationMemberRole = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
 export type OrganizationMemberStatus = "ACTIVE" | "INACTIVE" | "%future added value";
 export type PersonalInformationVisibility = "REDACTED" | "VISIBLE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
@@ -75,8 +74,10 @@ export type organizationUser_query$data = {
       readonly edges: ReadonlyArray<{
         readonly node: {
           readonly id: string;
-          readonly role: OrganizationMemberRole | null | undefined;
-          readonly status: OrganizationMemberStatus;
+          readonly status: {
+            readonly name: string;
+            readonly type: OrganizationMemberStatus;
+          };
         };
       }>;
       readonly totalCount: number;
@@ -136,38 +137,39 @@ v6 = {
   "name": "familyName",
   "storageKey": null
 },
-v7 = {
+v7 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v3/*: any*/)
+],
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "PersonalInformationVisibilityDetails",
   "kind": "LinkedField",
   "name": "personalInformationVisibility",
   "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    },
-    (v3/*: any*/)
-  ],
+  "selections": (v7/*: any*/),
   "storageKey": null
 },
-v8 = {
+v9 = {
   "kind": "Variable",
   "name": "customerId",
   "variableName": "customerId"
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v10 = {
+v11 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -284,7 +286,7 @@ return {
           "name": "phoneNumber",
           "storageKey": null
         },
-        (v7/*: any*/)
+        (v8/*: any*/)
       ],
       "storageKey": null
     },
@@ -298,7 +300,7 @@ return {
         },
         {
           "fields": [
-            (v8/*: any*/),
+            (v9/*: any*/),
             {
               "kind": "Variable",
               "name": "organizationCustomDomain",
@@ -314,7 +316,7 @@ return {
       "name": "__organizationUser_customerTeams_connection",
       "plural": false,
       "selections": [
-        (v9/*: any*/),
+        (v10/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -396,7 +398,7 @@ return {
                                     (v6/*: any*/),
                                     (v3/*: any*/),
                                     (v2/*: any*/),
-                                    (v7/*: any*/)
+                                    (v8/*: any*/)
                                   ],
                                   "storageKey": null
                                 }
@@ -462,7 +464,7 @@ return {
           ],
           "storageKey": null
         },
-        (v10/*: any*/)
+        (v11/*: any*/)
       ],
       "storageKey": null
     },
@@ -485,7 +487,7 @@ return {
           "args": [
             {
               "fields": [
-                (v8/*: any*/)
+                (v9/*: any*/)
               ],
               "kind": "ObjectValue",
               "name": "where"
@@ -496,7 +498,7 @@ return {
           "name": "members",
           "plural": false,
           "selections": [
-            (v9/*: any*/),
+            (v10/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -517,15 +519,11 @@ return {
                     {
                       "alias": null,
                       "args": null,
-                      "kind": "ScalarField",
+                      "concreteType": "OrganizationMemberStatusDetails",
+                      "kind": "LinkedField",
                       "name": "status",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "role",
+                      "plural": false,
+                      "selections": (v7/*: any*/),
                       "storageKey": null
                     }
                   ],
@@ -534,7 +532,7 @@ return {
               ],
               "storageKey": null
             },
-            (v10/*: any*/)
+            (v11/*: any*/)
           ],
           "storageKey": null
         }
@@ -557,6 +555,6 @@ return {
 };
 })();
 
-(node as any).hash = "fe93c8330a115c0a3fbc8ed38fec3d33";
+(node as any).hash = "2c955f7d3c26c8bde3e2e3330bd5cad3";
 
 export default node;

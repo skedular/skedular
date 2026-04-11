@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<247f4458cd09667b41fd196196b01d26>>
+ * @generated SignedSource<<5b7c9cbadc220daad13629d68678aa80>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,8 +29,14 @@ export type organizationTeam_teamMembers_query$data = {
             readonly photoUrl: string | null | undefined;
           };
           readonly id: string;
-          readonly role: TeamMemberRole | null | undefined;
-          readonly status: TeamMemberStatus;
+          readonly role: {
+            readonly name: string;
+            readonly type: TeamMemberRole;
+          };
+          readonly status: {
+            readonly name: string;
+            readonly type: TeamMemberStatus;
+          };
         };
       }>;
       readonly totalCount: number;
@@ -56,7 +62,24 @@ v1 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v2/*: any*/)
+];
 return {
   "argumentDefinitions": [
     {
@@ -177,13 +200,7 @@ return {
                           "name": "email",
                           "storageKey": null
                         },
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "name",
-                          "storageKey": null
-                        },
+                        (v2/*: any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -225,15 +242,21 @@ return {
                     {
                       "alias": null,
                       "args": null,
-                      "kind": "ScalarField",
+                      "concreteType": "TeamMemberStatusDetails",
+                      "kind": "LinkedField",
                       "name": "status",
+                      "plural": false,
+                      "selections": (v3/*: any*/),
                       "storageKey": null
                     },
                     {
                       "alias": null,
                       "args": null,
-                      "kind": "ScalarField",
+                      "concreteType": "TeamMemberRoleDetails",
+                      "kind": "LinkedField",
                       "name": "role",
+                      "plural": false,
+                      "selections": (v3/*: any*/),
                       "storageKey": null
                     },
                     {
@@ -305,6 +328,6 @@ return {
 };
 })();
 
-(node as any).hash = "4158682489ac855b64f6c9eeb0e6639d";
+(node as any).hash = "8caa57744fecbf27bd58eb32e1639166";
 
 export default node;

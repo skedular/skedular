@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9ec507d738c13ebf5d7670138f389558>>
+ * @generated SignedSource<<f9160f398fad05b8b3b4a8f9cb82f7b2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,8 +33,14 @@ export type organizationUsers_changeOrganizationUsersStatusMutation$data = {
         readonly photoUrl: string | null | undefined;
       };
       readonly id: string;
-      readonly role: OrganizationMemberRole | null | undefined;
-      readonly status: OrganizationMemberStatus;
+      readonly role: {
+        readonly name: string;
+        readonly type: OrganizationMemberRole;
+      };
+      readonly status: {
+        readonly name: string;
+        readonly type: OrganizationMemberStatus;
+      };
     }>;
   };
 };
@@ -58,7 +64,24 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v2/*: any*/)
+],
+v4 = [
   {
     "alias": null,
     "args": [
@@ -98,13 +121,7 @@ v2 = [
                 "name": "email",
                 "storageKey": null
               },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
-              },
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -146,15 +163,21 @@ v2 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
+            "concreteType": "OrganizationMemberStatusDetails",
+            "kind": "LinkedField",
             "name": "status",
+            "plural": false,
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
+            "concreteType": "OrganizationMemberRoleDetails",
+            "kind": "LinkedField",
             "name": "role",
+            "plural": false,
+            "selections": (v3/*: any*/),
             "storageKey": null
           }
         ],
@@ -170,7 +193,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationUsers_changeOrganizationUsersStatusMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v4/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -179,19 +202,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationUsers_changeOrganizationUsersStatusMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "ea1126a8b5b6d324a8c5d94bf7b68501",
+    "cacheID": "4b670289d997e1e6a36ba4e68be878cf",
     "id": null,
     "metadata": {},
     "name": "organizationUsers_changeOrganizationUsersStatusMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationUsers_changeOrganizationUsersStatusMutation(\n  $input: ChangeOrganizationMembersStatusInput!\n) {\n  changeOrganizationMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        id\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
+    "text": "mutation organizationUsers_changeOrganizationUsersStatusMutation(\n  $input: ChangeOrganizationMembersStatusInput!\n) {\n  changeOrganizationMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        id\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status {\n        type\n        name\n      }\n      role {\n        type\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "87c1e580b7abfc0f8976c52e66e61375";
+(node as any).hash = "6f51f7d525698ee17cbb150a1c2e0fef";
 
 export default node;

@@ -34,5 +34,13 @@ public static class OrganizationMemberStatusExtensions
                 OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             };
+
+        public string ToOrganizationMemberStatusName() =>
+            src switch
+            {
+                OrganizationMemberStatus.Active => "Active",
+                OrganizationMemberStatus.Inactive => "Inactive",
+                _ => throw new ArgumentOutOfRangeException()
+            };
     }
 }

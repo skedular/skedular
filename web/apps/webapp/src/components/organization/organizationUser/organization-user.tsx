@@ -137,8 +137,10 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
             edges {
               node {
                 id
-                status
-                role
+                status {
+                  type
+                  name
+                }
               }
             }
           }
@@ -177,22 +179,10 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
       changeOrganizationMembersStatus(input: $input) {
         members {
           id
-          customer {
-            id
-            email
+          status {
+            type
             name
-            givenName
-            middleName
-            familyName
-            photoUrl
-            phoneNumber
-            personalInformationVisibility {
-              type
-              name
-            }
           }
-          status
-          role
         }
       }
     }
@@ -600,21 +590,24 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
           </StackColumn>
 
           {member && (
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              {member.status === 'ACTIVE' && (
-                <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateUserClick} sx={defaultButtonStyle}>
-                  Deactivate User
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <SmallIconTypography label={`Current status: ${member.status.name}`} />
+              <StackRow sx={{ paddingTop: 1 }}>
+                {member.status.type === 'ACTIVE' && (
+                  <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateUserClick} sx={defaultButtonStyle}>
+                    Deactivate User
+                  </Button>
+                )}
+                {member.status.type === 'INACTIVE' && (
+                  <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUserClick} sx={defaultButtonStyle}>
+                    Activate User
+                  </Button>
+                )}
+                <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveUserClick} sx={{ textTransform: 'none' }}>
+                  Remove User
                 </Button>
-              )}
-              {member.status === 'INACTIVE' && (
-                <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUserClick} sx={defaultButtonStyle}>
-                  Activate User
-                </Button>
-              )}
-              <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveUserClick} sx={{ textTransform: 'none' }}>
-                Remove User
-              </Button>
-            </StackRow>
+              </StackRow>
+            </StackColumn>
           )}
         </AppBarWithStackColumn>
       </Box>

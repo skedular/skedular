@@ -70,7 +70,10 @@ const RootQuery = graphql`
         }
       }
     }
-    organizationMemberRoles
+    organizationMemberRoles {
+      type
+      name
+    }
     ...teamSelector_allTeams_query
     ...organizationUsers_organizationMembers_query
   }
@@ -94,7 +97,9 @@ type RowType = {
   email: string | null | undefined;
   phoneNumber: string | null | undefined;
   role: OrganizationMemberRole | null | undefined;
-  status: boolean;
+  roleName: string;
+  statusType: string;
+  statusName: string;
 };
 
 const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) => {
@@ -124,8 +129,14 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
                   photoUrl
                   phoneNumber
                 }
-                status
-                role
+                status {
+                  type
+                  name
+                }
+                role {
+                  type
+                  name
+                }
               }
             }
           }
@@ -150,8 +161,14 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
             photoUrl
             phoneNumber
           }
-          status
-          role
+          status {
+            type
+            name
+          }
+          role {
+            type
+            name
+          }
         }
       }
     }
@@ -182,8 +199,14 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
             photoUrl
             phoneNumber
           }
-          status
-          role
+          status {
+            type
+            name
+          }
+          role {
+            type
+            name
+          }
         }
       }
     }
@@ -249,6 +272,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       return member.teams.some((team) => teamIds.includes(team.id));
     });
   }, [rootData.teams, rootDataOrganizationUsers.organization, teamIds]);
+  const organizationMemberRoleNameByType = useMemo(() => new Map(rootData.organizationMemberRoles.map((item) => [item.type, item.name])), [rootData.organizationMemberRoles]);
 
   const handleRefetchOrganizationUsers = useCallback(
     (peopleNameSearchText: string) => {
@@ -595,7 +619,10 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
             id: member.id,
             customer: member.customer,
             status: member.status,
-            role,
+            role: {
+              type: role,
+              name: organizationMemberRoleNameByType.get(role) ?? role,
+            },
           },
         },
       },
@@ -613,8 +640,10 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
     teams: member.teams.map((team) => team.name).join(', '),
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
-    role: member.role,
-    status: member.status === 'ACTIVE',
+    role: member.role.type,
+    roleName: member.role.name,
+    statusType: member.status.type,
+    statusName: member.status.name,
   }));
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
@@ -672,11 +701,11 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
             width: 150,
             margin: 0.5,
           }}
-          renderValue={(selectedRole) => <SmallIconTypography label={selectedRole} />}
+          renderValue={() => <SmallIconTypography label={params.row.roleName} />}
         >
-          {rootData.organizationMemberRoles.map((role) => (
-            <MenuItem key={role} value={role}>
-              <SmallIconTypography label={role} />
+          {rootData.organizationMemberRoles.map((item) => (
+            <MenuItem key={item.type} value={item.type}>
+              <SmallIconTypography label={item.name} />
             </MenuItem>
           ))}
         </Select>
@@ -690,15 +719,15 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       editable: false,
       renderCell: (params) => (
         <StackRow>
-          {params.value && (
+          {params.row.statusType === 'ACTIVE' && (
             <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label="Active" />
+              <SmallIconTypography label={params.row.statusName} />
               <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
             </StackRow>
           )}
-          {!params.value && (
+          {params.row.statusType !== 'ACTIVE' && (
             <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label="Inactive" />
+              <SmallIconTypography label={params.row.statusName} />
               <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
             </StackRow>
           )}

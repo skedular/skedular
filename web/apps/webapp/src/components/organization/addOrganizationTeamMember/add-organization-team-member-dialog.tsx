@@ -99,8 +99,14 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
             photoUrl
             phoneNumber
           }
-          status
-          role
+          status {
+            type
+            name
+          }
+          role {
+            type
+            name
+          }
         }
       }
     }

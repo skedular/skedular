@@ -149,8 +149,8 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            Role = src.Role,
-            Status = src.Status,
+            Role = new TeamMemberRoleDetails { Type = src.Role, Name = src.Role.ToTeamMemberRoleName() },
+            Status = new TeamMemberStatusDetails { Type = src.Status, Name = src.Status.ToTeamMemberStatusName() },
             CustomerId = src.Customer.Id,
             OrganizationMember = MapTo(src.OrganizationMember)
         };

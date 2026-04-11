@@ -34,5 +34,13 @@ public static class TeamMemberStatusExtensions
                 TeamMemberStatus.Inactive => TeamMemberStatusConstants.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             };
+
+        public string ToTeamMemberStatusName() =>
+            src switch
+            {
+                TeamMemberStatus.Active => "Active",
+                TeamMemberStatus.Inactive => "Inactive",
+                _ => throw new ArgumentOutOfRangeException()
+            };
     }
 }
