@@ -258,6 +258,13 @@ These patterns should be designed once and reused many times:
   - address comes next as compact preview text
   - zones are optional supporting detail and should sit after address so cards stay visually aligned when zones are absent
   - remove teammate-sharing summaries from the compact card; treat that as detail-page information
+- the no-organization marketplace landing page should use the same location-card design in both the left-column results
+  and the map-selected popup:
+  - compact fixed-height media block
+  - real feature image when present
+  - small centered fallback icon when absent
+  - single-line name/address preview with full text available on hover
+  - capacity, floor area, and similar facts should live in a compact details panel inside the card rather than as free-floating chips
   - prefer one concise availability summary instead of repeating counts, totals, and percentages in multiple lines
   - use the uploaded feature image when present, with the location icon as the empty-state fallback
 - keep the organization locations collection page card-only for now:

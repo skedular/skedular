@@ -80,6 +80,12 @@ scripts/
   - do not render teammate-sharing summaries on the compact card; move that detail to the full location surface instead
   - keep address presentation single-line on the card with full text available on hover
   - show a real feature image when present, but keep the fallback icon treatment when no image exists
+- For marketplace landing/location cards specifically:
+  - the left-column location cards and the map-selected popup card should share the same card anatomy
+  - keep the feature image as a compact fixed-height media block instead of a tall stretched hero or carousel
+  - when no image exists, use a small centered location icon inside the media area instead of a stretched placeholder
+  - keep name and address compact and single-line where possible, with full text available on hover
+  - treat capacity, floor area, and similar facts as a small internal details section, not floating chips, so the map popup and list card stay visually identical
 - For the organization locations index specifically:
   - treat it as a card-first surface only
   - do not preserve or reintroduce a list/grid toggle unless there is a clear product need that the compact cards cannot satisfy

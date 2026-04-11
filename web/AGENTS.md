@@ -71,6 +71,9 @@ web/
   the page background.
 - Shared-view bookings collections should converge on the same compact card grid language as other collection pages;
   reserve dense admin list/table management for dedicated admin surfaces later.
+- Marketplace landing/location discovery should use the same compact card anatomy for both the left-side results list
+  and the map-selected popup card, with a fixed-height media block and a centered fallback icon when no feature image
+  exists.
 - The current testing direction is Vitest + React Testing Library from `web/apps/webapp`, with coverage allowed to
   extend into Relay-free workspace packages such as `web/packages/ui`.
 - In `web/apps/webapp`, prefer Relay colocation. Fragments and small queries should live beside the component that uses
