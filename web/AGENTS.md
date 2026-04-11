@@ -63,6 +63,8 @@ web/
   overflow actions unless the product has a dedicated personal-preferences surface.
 - For organization-admin zones and tags, prefer compact management rows over generic data grids; these are tag-like
   management surfaces, not spreadsheet surfaces.
+- For organization collection pages, prefer one shared page-shell language and bounded card grids instead of preserving
+  older list/grid toggle patterns per domain surface.
 - The current testing direction is Vitest + React Testing Library from `web/apps/webapp`, with coverage allowed to
   extend into Relay-free workspace packages such as `web/packages/ui`.
 - In `web/apps/webapp`, prefer Relay colocation. Fragments and small queries should live beside the component that uses

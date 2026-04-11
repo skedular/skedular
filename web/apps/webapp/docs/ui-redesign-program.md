@@ -275,6 +275,7 @@ These patterns should be designed once and reused many times:
 Recently completed migrations:
 
 - organization locations collection page
+- organization teams collection page
 - organization location detail page
 - organization admin detail page
   - remove nested page-level left rails and inner dark app bars when the organization shell already provides the primary chrome

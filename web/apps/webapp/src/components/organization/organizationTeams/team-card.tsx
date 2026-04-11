@@ -1,25 +1,26 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { CardMediaCarousel } from '@/components/carousel';
-import { DefaultDialogTitle, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
+import { DefaultDialogTitle, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography, TwoButtonsDialogActions } from '@/components/commons';
 import { EllipseMenuIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationTeamSetupBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { coal, sandstone } from '@/libs/theme';
+import { coal } from '@/libs/theme';
 import { getRelayErrorMessage } from '@/libs/utils';
 import type { teamCard_deleteTeamMutation } from '@/queries/__generated__/teamCard_deleteTeamMutation.graphql';
 import type { teamCard_TeamDetails$key } from '@/queries/__generated__/teamCard_TeamDetails.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
+import Tooltip from '@mui/material/Tooltip';
+import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -110,6 +111,16 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
   moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewTeamBookings]);
 
   const editLink = getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization!.customDomain!, teamDetails.id);
+  const bookingsLink = getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization!.customDomain!, { teamId: teamDetails.id });
+  const memberCount = teammates.length;
+  const primaryFeatureImage = teamDetails.featureImages[0]?.thumbnail?.url;
+  const sectionSx: SxProps<Theme> = {
+    border: 1,
+    borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+    borderRadius: 3,
+    p: 1.25,
+    backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.02)' : 'transparent'),
+  };
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -128,7 +139,7 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
         break;
 
       case MoreActionsMenuOptionType.ViewTeamBookings:
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization!.customDomain!, { teamId: teamDetails.id }));
+        router.push(bookingsLink);
         break;
     }
   };
@@ -178,38 +189,86 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
 
   return (
     <>
-      <Card sx={{ width: { xs: '100%', sm: 400 } }}>
-        <CardMediaCarousel images={teamDetails.featureImages} showPlaceholderWhenEmpty={false} />
-        <CardHeader
-          title={
-            <StackRow>
-              <Link component={NextLink} href={editLink}>
-                <LeadIconTypography startElement={<TeamIcon excludeTooltip />} label={teamDetails.name} sx={{ flexWrap: undefined }} invertDefaultColor />
-              </Link>
-            </StackRow>
-          }
-          action={
-            <>
+      <Card
+        sx={{
+          width: '100%',
+          height: '100%',
+          borderRadius: 4,
+          border: 1,
+          borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+          boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 10px 28px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+          backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.92)' : theme.palette.background.paper),
+        }}
+      >
+        <CardContent sx={{ p: 2, height: '100%' }}>
+          <StackColumn spacing={2} sx={{ height: '100%' }}>
+            <StackRow sx={{ alignItems: 'center', flexWrap: 'nowrap', gap: 2, minHeight: 56 }}>
+              <Box
+                sx={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 3,
+                  border: 1,
+                  borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                  flexShrink: 0,
+                  bgcolor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.04)' : theme.palette.action.hover),
+                }}
+              >
+                {primaryFeatureImage ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={primaryFeatureImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </>
+                ) : (
+                  <TeamIcon excludeTooltip />
+                )}
+              </Box>
+
+              <StackColumn spacing={0.75} sx={{ minWidth: 0, flexGrow: 1, justifyContent: 'center' }}>
+                <Tooltip title={teamDetails.name}>
+                  <Link component={NextLink} href={editLink} underline="none" color="inherit" sx={{ display: 'block', minWidth: 0 }}>
+                    <LeadIconTypography label={teamDetails.name} noWrap sx={{ minWidth: 0 }} />
+                  </Link>
+                </Tooltip>
+              </StackColumn>
+
               {moreActionsOption.length > 0 && (
-                <Box color={paletteMode === 'dark' ? coal : sandstone} sx={{ paddingTop: 0.5 }}>
-                  <IconButton onClick={handleMoreActionsMenuClick} color="inherit">
-                    <EllipseMenuIcon />
-                  </IconButton>
-                </Box>
+                <IconButton onClick={handleMoreActionsMenuClick} aria-label="Open team actions" sx={{ color: paletteMode === 'dark' ? 'inherit' : coal }}>
+                  <EllipseMenuIcon />
+                </IconButton>
               )}
-            </>
-          }
-        />
-        <CardContent>
-          <StackColumn sx={{ paddingTop: 1, paddingBottom: 1 }}>
-            <SmallIconTypography label="Members of this team" />
-            <StackRow>
-              <AvatarGroup max={5}>
-                {teammates.map((item) => (
-                  <CustomerAvatar key={item.id} name={item} photo={{ url: item.photoUrl }} size="medium" showFullName />
-                ))}
-              </AvatarGroup>
             </StackRow>
+
+            <Divider />
+
+            <StackColumn spacing={1.25} sx={{ flexGrow: 1 }}>
+              <Box sx={sectionSx}>
+                <StackColumn spacing={0.75}>
+                  <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
+                    <SubtitleIconTypography label="Members" />
+                    <SmallIconTypography label={`${memberCount} member${memberCount === 1 ? '' : 's'}`} />
+                  </StackRow>
+                  <AvatarGroup max={5}>
+                    {teammates.map((item) => (
+                      <CustomerAvatar key={item.id} name={item} photo={{ url: item.photoUrl }} size="medium" showFullName />
+                    ))}
+                  </AvatarGroup>
+                </StackColumn>
+              </Box>
+            </StackColumn>
+
+            <Box
+              sx={{
+                mt: 'auto',
+                pt: 1.5,
+                borderTop: 1,
+                borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+              }}
+            />
           </StackColumn>
         </CardContent>
       </Card>

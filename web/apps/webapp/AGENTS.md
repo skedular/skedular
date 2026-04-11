@@ -83,6 +83,7 @@ scripts/
   - resource rows should show the real zone/custom/product tag chips inline in a compact metadata strip, not only abstract counts
   - user-specific preference actions like preferred resources should not sit in the primary row chrome on admin management lists; keep them in overflow actions until there is a dedicated personal-preferences surface
   - apply the same compact-row rule to organization-admin zones and tags; avoid bringing data grids back for small tag-like management surfaces
+  - collection pages should converge on the same shell language where possible; the organization teams collection should follow the organization locations pattern instead of keeping its own list/grid toggle and old card layout
 - For the organization admin page specifically:
   - do not stack another fixed left rail and another sticky app bar inside the existing organization shell
   - prefer a centered content column with a compact in-page header and a route-backed sticky top section nav

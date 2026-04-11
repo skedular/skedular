@@ -1,38 +1,16 @@
-import { CustomerAvatar } from '@/components/avatars';
-import { DefaultDialogTitle, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
-import { EllipseMenuIcon } from '@/components/icons';
-import { getOrganizationBookingsBaseLink, getOrganizationTeamSetupBaseLink } from '@/components/links';
-import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
 import { LocationSelector } from '@/components/location/locationSelector';
-import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { NewTeamButton } from '@/components/team/addTeam';
-import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
-import type { organizationTeams_deleteTeamMutation } from '@/queries/__generated__/organizationTeams_deleteTeamMutation.graphql';
 import type { organizationTeams_rootQuery } from '@/queries/__generated__/organizationTeams_rootQuery.graphql';
 import type { organizationTeams_teams_query$key } from '@/queries/__generated__/organizationTeams_teams_query.graphql';
 import type { organizationTeams_teams_refetchableFragment } from '@/queries/__generated__/organizationTeams_teams_refetchableFragment.graphql';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
 import Box from '@mui/system/Box';
-import type { GridColDef } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
-import { useRouter } from 'next/navigation';
-import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, startTransition, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
-import { toast } from 'react-toastify';
+import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { v7 as uuid } from 'uuid';
+import OrganizationTeamsPageShell from './organization-teams-page-shell';
 import TeamCard from './team-card';
 
 type Props = {
@@ -55,25 +33,6 @@ const RootQuery = graphql`
     ...organizationTeams_teams_query
   }
 `;
-
-type TeamDetails = {
-  name: string;
-};
-
-type CustomerDetails = {
-  id: string;
-  givenName?: string | null | undefined;
-  middleName?: string | null | undefined;
-  familyName?: string | null | undefined;
-  name?: string | null | undefined;
-  photoUrl?: string | null | undefined;
-};
-
-type RowType = {
-  id: string;
-  team: TeamDetails;
-  teammates: ReadonlyArray<CustomerDetails>;
-};
 
 const Teams = ({ queryReference, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<organizationTeams_rootQuery>(RootQuery, queryReference);
@@ -121,36 +80,9 @@ const Teams = ({ queryReference, organizationCustomDomain }: Props) => {
     rootData,
   );
 
-  const [commitDeleteTeam] = useMutation<organizationTeams_deleteTeamMutation>(graphql`
-    mutation organizationTeams_deleteTeamMutation($connectionIds: [ID!]!, $input: DeleteTeamInput!) {
-      deleteTeam(input: $input) {
-        team {
-          id @deleteEdge(connections: $connectionIds)
-        }
-      }
-    }
-  `);
-
-  const { integratedPlatrform } = useIntegratedPlatrform();
   const [locationIds, setLocationIds] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
-  const router = useRouter();
-  const paletteMode = useContext(PaletteModeContext);
-  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const connectionIds = useMemo(() => [rootDataRefetchable.teams.__id], [rootDataRefetchable.teams]);
-  const [selectedTeamId, setSelectedTeamId] = useState<null | string>(null);
-  const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
-  const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
-  const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
-
-  const moreActionsOption: MoreActionsMenuItemType[] = [
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewTeamBookings],
-  ];
-
   const teams = useMemo(() => rootDataRefetchable.teams.edges.map((edge) => edge.node), [rootDataRefetchable.teams]);
-  const teamDetails = useMemo(() => teams.find((item) => item.id === selectedTeamId), [selectedTeamId, teams]);
 
   const handleRefetch = useCallback(
     (primaryLocationIds: string[]) => {
@@ -170,212 +102,45 @@ const Teams = ({ queryReference, organizationCustomDomain }: Props) => {
 
   useEffect(() => handleRefetch(locationIds), [handleRefetch, locationIds]);
 
-  const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
-    setMoreActionsAnchorEl(null);
-
-    switch (id) {
-      case MoreActionsMenuOptionType.EditTeam:
-        if (!teamDetails) {
-          return;
-        }
-
-        router.push(getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization!.customDomain!, teamDetails.id));
-        break;
-
-      case MoreActionsMenuOptionType.DeleteTeam:
-        handleRemoveTeamClicked();
-        break;
-
-      case MoreActionsMenuOptionType.ViewTeamBookings:
-        if (!teamDetails) {
-          return;
-        }
-
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization!.customDomain!, { teamId: teamDetails.id }));
-        break;
-    }
-  };
-
-  const handleRemoveTeamClicked = () => {
-    setTeamRemoveConfirmationDialogOpen(true);
-  };
-
-  const handleCancelRemovingTeamClick = () => {
-    setTeamRemoveConfirmationDialogOpen(false);
-  };
-
-  const handleConfirmRemovingTeamClick = () => {
-    if (!teamDetails) {
-      return;
-    }
-
-    const toastId = themedToast(<NotificationContent content={`Removing team '${teamDetails.name}'...`} />, infoNotificationOptions);
-
-    commitDeleteTeam({
-      variables: {
-        connectionIds: connectionIds,
-        input: {
-          clientMutationId: uuid(),
-          id: teamDetails.id,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove team '${teamDetails.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Team '${teamDetails.name}' has been successfully removed.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove team '${teamDetails.name}'. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handlLocationChanged = (id?: string) => {
+  const handleLocationChanged = (id?: string) => {
     setLocationIds(id ? [id] : []);
   };
-
-  const handlViewModeChanged = (newViewMode: 'list' | 'grid') => {
-    setViewMode(newViewMode);
-  };
-
-  const rows: RowType[] = teams.map((team) => {
-    return {
-      id: team.id,
-      team,
-      teammates: team.members.edges
-        .map(({ node }) => node)
-        .filter(({ organizationMember }) => !!organizationMember)
-        .map(({ organizationMember }) => organizationMember!.customer),
-    };
-  });
-
-  const columns: GridColDef<(typeof rows)[number]>[] = [
-    {
-      field: 'team',
-      headerName: 'Team',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value.name} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'teammates',
-      headerName: 'Members of this team',
-      editable: false,
-      renderCell: (params) => (
-        <AvatarGroup max={5}>
-          {params.value.map((customer: CustomerDetails) => (
-            <CustomerAvatar key={customer?.id} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
-          ))}
-        </AvatarGroup>
-      ),
-      display: 'flex',
-      minWidth: 300,
-    },
-    {
-      field: 'More Actions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedTeamId(params.id as string);
-              setMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
 
   if (!rootDataRefetchable.teams) {
     return null;
   }
 
+  const pageActions = <NewTeamButton organizationCustomDomain={organizationCustomDomain} />;
+  const pageToolbar = <LocationSelector rootDataRelay={rootData} onChange={handleLocationChanged} />;
+
   return (
-    <>
-      <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-        <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-          <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
-          <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
-          <PushToRight />
-          <NewTeamButton organizationCustomDomain={organizationCustomDomain} />
-        </GridContainer>
-        <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-          <SectionIconTypography label="Teams" />
-          <Divider />
-          <Box sx={{ paddingBottom: defaultPadding }} />
-
-          {viewMode === 'grid' && (
-            <GridContainer>
-              {teams.map((team) => (
-                <Grid key={team.id}>
-                  <TeamCard
-                    teamDetailsRelay={team}
-                    connectionIds={connectionIds}
-                    teammates={team.members.edges
-                      .map(({ node }) => node)
-                      .filter(({ organizationMember }) => !!organizationMember)!
-                      .map(({ organizationMember }) => organizationMember!.customer)}
-                  />
-                </Grid>
-              ))}
-            </GridContainer>
-          )}
-
-          {viewMode === 'list' && (
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              ignoreDiacritics
-              disableRowSelectionOnClick
-              hideFooter
-              getRowHeight={() => 'auto'}
-              rowSpacingType="margin"
-              getRowSpacing={() => ({ top: 3, bottom: 3 })}
-              sx={defaultGridStyle}
-              localeText={{ noRowsLabel: 'No team found' }}
+    <OrganizationTeamsPageShell actions={pageActions} toolbar={pageToolbar} isEmpty={teams.length === 0}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: '1fr',
+            sm: 'repeat(auto-fit, minmax(320px, 360px))',
+          },
+          gap: 2,
+          alignItems: 'stretch',
+          justifyContent: 'start',
+        }}
+      >
+        {teams.map((team) => (
+          <Box key={team.id} sx={{ height: '100%' }}>
+            <TeamCard
+              teamDetailsRelay={team}
+              connectionIds={connectionIds}
+              teammates={team.members.edges
+                .map(({ node }) => node)
+                .filter(({ organizationMember }) => !!organizationMember)!
+                .map(({ organizationMember }) => organizationMember!.customer)}
             />
-          )}
-        </StackColumn>
-      </StackColumn>
-
-      <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
-
-      {teamDetails && (
-        <Dialog slots={{ transition: DialogTransition }} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
-          <DefaultDialogTitle title="Remove Team" />
-          <DialogContent sx={{ marginTop: 2 }}>
-            <DialogContentText>{`Are you sure you want to remove the team "${teamDetails.name}"?`}</DialogContentText>
-            <TwoButtonsDialogActions
-              onPrimaryClicked={handleConfirmRemovingTeamClick}
-              onSecondaryClicked={handleCancelRemovingTeamClick}
-              primaryLabel="Remove"
-              secondaryLabel="Cancel"
-            />
-          </DialogContent>
-        </Dialog>
-      )}
-    </>
+          </Box>
+        ))}
+      </Box>
+    </OrganizationTeamsPageShell>
   );
 };
 
