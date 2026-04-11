@@ -3,7 +3,7 @@ import { AreaIcon, CloseIcon, FavouriteIcon, LocationIcon, NotFavouriteIcon, Per
 import { getMarketplaceLocationLink, getSignInLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { coal, emerald, sandstone } from '@/libs/theme';
+import { emerald } from '@/libs/theme';
 import { getRelayErrorMessage } from '@/libs/utils';
 import type { marketplaceLocationCard_addCustomerFavouriteLocationMutation } from '@/queries/__generated__/marketplaceLocationCard_addCustomerFavouriteLocationMutation.graphql';
 import type { marketplaceLocationCard_LocationDetails$key } from '@/queries/__generated__/marketplaceLocationCard_LocationDetails.graphql';
@@ -38,6 +38,8 @@ const cardSx: SxProps<Theme> = {
   width: '100%',
   height: '100%',
   textDecoration: 'none',
+  color: 'text.primary',
+  textAlign: 'left',
   display: 'flex',
   flexDirection: 'column',
   borderRadius: 4,
@@ -51,6 +53,9 @@ const cardSx: SxProps<Theme> = {
     transform: 'translateY(-1px)',
     borderColor: emerald,
     boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 16px 36px rgba(15, 23, 42, 0.12)' : '0 6px 18px rgba(0, 0, 0, 0.36)'),
+  },
+  '&:visited': {
+    color: 'text.primary',
   },
 };
 
@@ -67,6 +72,42 @@ const detailsPanelSx: SxProps<Theme> = {
   px: 1.25,
   py: 1,
   backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.03)' : theme.palette.action.hover),
+};
+
+const headerIconButtonSx: SxProps<Theme> = {
+  width: 32,
+  height: 32,
+  border: 1,
+  borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+  backgroundColor: (theme) => theme.palette.background.paper,
+  color: 'text.primary',
+  '&:hover': {
+    backgroundColor: 'action.hover',
+  },
+};
+
+const imageOverlayIconButtonSx: SxProps<Theme> = {
+  width: 32,
+  height: 32,
+  backgroundColor: 'rgba(255,255,255,0.88)',
+  color: 'text.primary',
+  boxShadow: '0 8px 20px rgba(15, 23, 42, 0.16)',
+  '&:hover': {
+    backgroundColor: 'rgba(255,255,255,0.98)',
+  },
+};
+
+const closeOverlayIconButtonSx: SxProps<Theme> = {
+  ...imageOverlayIconButtonSx,
+  backgroundColor: 'rgba(255,255,255,0.92)',
+  color: 'rgba(15, 23, 42, 0.92)',
+  '& .MuiSvgIcon-root': {
+    color: 'rgba(15, 23, 42, 0.92)',
+    opacity: 1,
+  },
+  '&:hover': {
+    backgroundColor: '#ffffff',
+  },
 };
 
 const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose }: Props) => {
@@ -155,6 +196,7 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
     [locationDetails.physicalAddress?.multilinesFormattedAddress],
   );
   const canShare = typeof navigator !== 'undefined' && typeof navigator.canShare === 'function' && navigator.canShare({ url: shareUrl });
+  const isPopupCard = Boolean(onClose);
 
   const capacity = useMemo(() => {
     if (!locationDetails.extraMetadata?.peopleCapacity) {
@@ -300,10 +342,11 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
       <Card
         sx={{
           ...cardSx,
-          ...(onClose
+          ...(isPopupCard
             ? {
                 width: 320,
                 maxWidth: 'calc(100vw - 32px)',
+                height: 'auto',
               }
             : null),
         }}
@@ -356,75 +399,76 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
             }}
           />
 
-          <StackRow
-            sx={{
-              position: 'absolute',
-              top: 12,
-              right: 12,
-              gap: 0.75,
-            }}
-          >
-            <Box color={paletteMode === 'dark' ? coal : sandstone}>
-              {isFavoured ? (
-                <Tooltip title="Remove as Favourite">
-                  <IconButton
-                    onClick={handleRemoveAsFavouriteLocationClicked}
-                    color="inherit"
-                    sx={{ backgroundColor: 'rgba(255,255,255,0.82)', '&:hover': { backgroundColor: 'rgba(255,255,255,0.96)' } }}
-                  >
-                    <FavouriteIcon fontSize="medium" />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Set as Favourite">
-                  <IconButton
-                    onClick={handleSetAsFavouriteLocationClicked}
-                    color="inherit"
-                    sx={{ backgroundColor: 'rgba(255,255,255,0.82)', '&:hover': { backgroundColor: 'rgba(255,255,255,0.96)' } }}
-                  >
-                    <NotFavouriteIcon fontSize="medium" />
-                  </IconButton>
-                </Tooltip>
-              )}
-            </Box>
-
-            {canShare ? (
-              <Tooltip title="Share">
-                <IconButton
-                  onClick={handleShareClick}
-                  sx={{ color: paletteMode === 'dark' ? coal : sandstone, backgroundColor: 'rgba(255,255,255,0.82)', '&:hover': { backgroundColor: 'rgba(255,255,255,0.96)' } }}
-                >
-                  <ShareIcon fontSize="medium" />
-                </IconButton>
-              </Tooltip>
-            ) : null}
-
-            {onClose ? (
+          {onClose ? (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 12,
+                right: 12,
+              }}
+            >
               <Tooltip title="Close">
-                <IconButton
-                  onClick={handleCloseClick}
-                  sx={{ color: paletteMode === 'dark' ? coal : sandstone, backgroundColor: 'rgba(255,255,255,0.82)', '&:hover': { backgroundColor: 'rgba(255,255,255,0.96)' } }}
-                >
-                  <CloseIcon fontSize="medium" />
+                <IconButton onClick={handleCloseClick} size="small" sx={closeOverlayIconButtonSx}>
+                  <CloseIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
-            ) : null}
-          </StackRow>
+            </Box>
+          ) : null}
         </Box>
 
-        <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 1.25, p: 2 }}>
-          <StackColumn spacing={0.75}>
-            <Box title={locationDetails.name}>
-              <LeadIconTypography
-                label={locationDetails.name}
-                noWrap
-                sx={{
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              />
-            </Box>
+        <CardContent
+          sx={{
+            flexGrow: isPopupCard ? 0 : 1,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: isPopupCard ? 0.75 : 1.25,
+            p: 2,
+          }}
+        >
+          <StackColumn spacing={isPopupCard ? 0.5 : 0.75}>
+            <StackRow sx={{ alignItems: 'flex-start', justifyContent: 'space-between', gap: 1 }}>
+              <Box title={locationDetails.name} sx={{ minWidth: 0, flex: 1 }}>
+                <LeadIconTypography
+                  label={locationDetails.name}
+                  noWrap
+                  sx={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                />
+              </Box>
+
+              <StackRow sx={{ flexShrink: 0, gap: 0.75 }}>
+                <Tooltip title={isFavoured ? 'Remove as Favourite' : 'Set as Favourite'}>
+                  <IconButton
+                    onClick={isFavoured ? handleRemoveAsFavouriteLocationClicked : handleSetAsFavouriteLocationClicked}
+                    size="small"
+                    sx={{
+                      ...headerIconButtonSx,
+                      ...(isFavoured
+                        ? {
+                            color: emerald,
+                            borderColor: 'rgba(16, 185, 129, 0.28)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                          }
+                        : null),
+                    }}
+                  >
+                    {isFavoured ? <FavouriteIcon fontSize="small" /> : <NotFavouriteIcon fontSize="small" />}
+                  </IconButton>
+                </Tooltip>
+
+                {canShare ? (
+                  <Tooltip title="Share">
+                    <IconButton onClick={handleShareClick} size="small" sx={headerIconButtonSx}>
+                      <ShareIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                ) : null}
+              </StackRow>
+            </StackRow>
+
             {addressLabel ? (
               <Box title={addressLabel}>
                 <SmallIconTypography
@@ -441,7 +485,7 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
           </StackColumn>
 
           {capacity || areaSize ? (
-            <Box sx={{ mt: 'auto' }}>
+            <Box sx={{ mt: isPopupCard ? 0 : 'auto' }}>
               <Box sx={detailsPanelSx}>
                 <StackColumn spacing={0.75}>
                   {capacity ? <BodyIconTypography label={capacity} startElement={<PersonIcon fontSize="small" />} /> : null}

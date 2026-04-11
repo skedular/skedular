@@ -3,13 +3,13 @@ import { defaultPadding } from '@/libs/theme';
 import type { marketplaceLocations_locations_query$key } from '@/queries/__generated__/marketplaceLocations_locations_query.graphql';
 import type { marketplaceLocations_locations_refetchableFragment, OrganizationTagType } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
 import type { marketplaceLocations_query$key } from '@/queries/__generated__/marketplaceLocations_query.graphql';
+import '@/styles/leaflet/leaflet.css';
 import { useMediaQuery, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Pagination from '@mui/material/Pagination';
 import type { Theme } from '@mui/material/styles';
 import type { LatLngBounds, LatLngTuple } from 'leaflet';
-import '@/styles/leaflet/leaflet.css';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { IPinfoWrapper } from 'node-ipinfo';
 import { memo, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -131,12 +131,6 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
       setSelectedLocationId(null);
     }
   }, [selectedLocationId, selectedLocation]);
-
-  useEffect(() => {
-    if (!isMobileOrTablet && selectedLocationId) {
-      setSelectedLocationId(null);
-    }
-  }, [isMobileOrTablet, selectedLocationId]);
 
   useEffect(() => {
     (async () => {
@@ -337,24 +331,38 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
               <Marker
                 key={item.id}
                 position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}
-                eventHandlers={
-                  isMobileOrTablet
-                    ? {
-                        click: () => {
-                          setSelectedLocationId(item.id);
-                        },
-                      }
-                    : undefined
-                }
-              >
-                {!isMobileOrTablet && (
-                  <Popup>
-                    <MarketplaceLocationCard key={item.id} rootDataRelay={rootData} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
-                  </Popup>
-                )}
-              </Marker>
+                eventHandlers={{
+                  click: () => {
+                    setSelectedLocationId(item.id);
+                  },
+                }}
+              />
             ))}
         </MarkerClusterGroup>
+
+        {!isMobileOrTablet && selectedLocation?.physicalAddress?.latitude && selectedLocation?.physicalAddress?.longitude ? (
+          <Popup
+            key={selectedLocation.id}
+            position={[selectedLocation.physicalAddress.latitude, selectedLocation.physicalAddress.longitude]}
+            closeButton={false}
+            className="marketplace-location-popup"
+            eventHandlers={{
+              remove: () => {
+                setSelectedLocationId((current) => (current === selectedLocation.id ? null : current));
+              },
+              popupclose: () => {
+                setSelectedLocationId((current) => (current === selectedLocation.id ? null : current));
+              },
+            }}
+          >
+            <MarketplaceLocationCard
+              rootDataRelay={rootData}
+              locationDetailsRelay={selectedLocation}
+              onReloadRequired={onReloadRequired}
+              onClose={() => setSelectedLocationId(null)}
+            />
+          </Popup>
+        ) : null}
 
         <MapInitBoundsTracker />
         <MapCenterTracker />

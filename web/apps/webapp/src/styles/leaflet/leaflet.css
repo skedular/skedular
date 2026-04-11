@@ -559,6 +559,39 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-container a.leaflet-popup-close-button:focus {
   color: #585858;
 }
+
+.marketplace-location-popup {
+  margin-bottom: 0;
+  text-align: left;
+}
+
+.marketplace-location-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  color: inherit;
+}
+
+.marketplace-location-popup .leaflet-popup-content {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  text-align: left;
+}
+
+.marketplace-location-popup .leaflet-popup-content p {
+  margin: 0;
+}
+
+.marketplace-location-popup .leaflet-popup-tip-container {
+  display: none;
+}
+
+.marketplace-location-popup a {
+  color: inherit;
+}
 .leaflet-popup-scrolled {
   overflow: auto;
 }
