@@ -31,7 +31,11 @@ public interface IPrivateBookingService
         bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken);
 
-    Task<Models.Booking> DeleteAsync(Database.Entities.Booking existingBooking, Customer? deletedByCustomer, CancellationToken cancellationToken);
+    Task<Models.Booking> DeleteAsync(
+        Database.Entities.Booking existingBooking,
+        Customer? deletedByCustomer,
+        bool preserveRecurringSeries,
+        CancellationToken cancellationToken);
 }
 
 public class PrivateBookingService(
@@ -43,7 +47,8 @@ public class PrivateBookingService(
     ICachedBookingService cachedBookingService,
     IResourceService resourceService,
     IPrivateBookingPreferenceService privateBookingPreferenceService,
-    IGraphQlTopicEventSender graphQlTopicEventSender) : IPrivateBookingService
+    IGraphQlTopicEventSender graphQlTopicEventSender,
+    ITemporalOutboxService temporalOutboxService) : IPrivateBookingService
 {
     public async Task<Models.Booking> AddAsync(
         Models.Booking booking,
@@ -251,6 +256,7 @@ public class PrivateBookingService(
     public async Task<Models.Booking> DeleteAsync(
         Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
+        bool preserveRecurringSeries,
         CancellationToken cancellationToken)
     {
         if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Private)
@@ -259,6 +265,21 @@ public class PrivateBookingService(
         }
 
         var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        if (preserveRecurringSeries && existingBooking.RecurringBooking is not null && !existingBooking.RecurringBooking.IsDeleted())
+        {
+            var skippedDate = new DateTimeOffset(existingBooking.From.UtcDateTime.Date, TimeSpan.Zero);
+            if (existingBooking.RecurringBooking.SkippedDates.All(item => item.UtcDateTime.Date != skippedDate.UtcDateTime.Date))
+            {
+                existingBooking.RecurringBooking.SkippedDates.Add(skippedDate);
+            }
+
+            existingBooking.RecurringBooking.LastModifiedByCustomer = deletedByCustomer;
+            repositoryFactory.RecurringBookingRepository.Update(existingBooking.RecurringBooking);
+            temporalOutboxService.SignalWorkflowBookPrivateRecurringResourcesUpdated(
+                existingBooking.RecurringBooking.Id,
+                repositoryFactory.UnitOfWork);
+        }
 
         bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
 

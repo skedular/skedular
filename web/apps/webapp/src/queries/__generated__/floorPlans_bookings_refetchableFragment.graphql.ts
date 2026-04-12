@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bb08cf095dc30ff28f724abb293f75f9>>
+ * @generated SignedSource<<0df6c32235ad1e456ea52ff5e7f37e9d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -119,6 +119,9 @@ v5 = [
   (v4/*: any*/)
 ],
 v6 = [
+  (v2/*: any*/)
+],
+v7 = [
   {
     "alias": null,
     "args": null,
@@ -345,9 +348,7 @@ return {
                     "kind": "LinkedField",
                     "name": "involvedOrganizations",
                     "plural": true,
-                    "selections": [
-                      (v2/*: any*/)
-                    ],
+                    "selections": (v6/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -405,7 +406,7 @@ return {
                         "kind": "LinkedField",
                         "name": "paymentStatus",
                         "plural": false,
-                        "selections": (v6/*: any*/),
+                        "selections": (v7/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -431,7 +432,7 @@ return {
                             "kind": "LinkedField",
                             "name": "currency",
                             "plural": false,
-                            "selections": (v6/*: any*/),
+                            "selections": (v7/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -441,7 +442,7 @@ return {
                             "kind": "LinkedField",
                             "name": "status",
                             "plural": false,
-                            "selections": (v6/*: any*/),
+                            "selections": (v7/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -530,6 +531,54 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "concreteType": "RecurringBookingDetails",
+                    "kind": "LinkedField",
+                    "name": "recurringBooking",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "startDate",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "endDate",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "BookingFrequencyDetails",
+                        "kind": "LinkedField",
+                        "name": "frequency",
+                        "plural": false,
+                        "selections": [
+                          (v3/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "MarketplaceBookingDetails",
+                        "kind": "LinkedField",
+                        "name": "marketplaceBooking",
+                        "plural": false,
+                        "selections": (v6/*: any*/),
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "kind": "ScalarField",
                     "name": "__typename",
                     "storageKey": null
@@ -601,12 +650,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c602e5f62906fc95f0da315546d0ed55",
+    "cacheID": "13a6b6ba369b5cfdc9eddebafb2e43e7",
     "id": null,
     "metadata": {},
     "name": "floorPlans_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query floorPlans_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $locationId: String!\n) {\n  ...floorPlans_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  category {\n    category\n    name\n  }\n  channel {\n    channel\n    name\n  }\n  involvedCustomers {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedOrganizations {\n    id\n  }\n  involvedLocations {\n    uniqueId\n    name\n  }\n  involvedTeams {\n    id\n    name\n  }\n  bookingResources {\n    resource {\n      id\n      name\n      color\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n  marketplaceBooking {\n    id\n    isPaymentRequired\n    paymentStatus {\n      type\n      name\n    }\n    invoiceUrl\n    refund {\n      id\n      currency {\n        type\n        name\n      }\n      status {\n        type\n        name\n      }\n      requestedAt\n      lastProcessedAt\n      refundAmount\n      refundPercentage\n      currencyToDisplay\n      reason\n      lastError\n      externalRefundNumber\n      requestedByCustomerName\n      canProcessInXero\n      xeroProcessingBlockedReason\n    }\n  }\n}\n\nfragment floorPlans_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {locationIds: [$locationId], fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}) {\n    totalCount\n    edges {\n      node {\n        id\n        involvedCustomers {\n          id\n        }\n        bookingResources {\n          resource {\n            id\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query floorPlans_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $locationId: String!\n) {\n  ...floorPlans_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  category {\n    category\n    name\n  }\n  channel {\n    channel\n    name\n  }\n  involvedCustomers {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedOrganizations {\n    id\n  }\n  involvedLocations {\n    uniqueId\n    name\n  }\n  involvedTeams {\n    id\n    name\n  }\n  bookingResources {\n    resource {\n      id\n      name\n      color\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n  marketplaceBooking {\n    id\n    isPaymentRequired\n    paymentStatus {\n      type\n      name\n    }\n    invoiceUrl\n    refund {\n      id\n      currency {\n        type\n        name\n      }\n      status {\n        type\n        name\n      }\n      requestedAt\n      lastProcessedAt\n      refundAmount\n      refundPercentage\n      currencyToDisplay\n      reason\n      lastError\n      externalRefundNumber\n      requestedByCustomerName\n      canProcessInXero\n      xeroProcessingBlockedReason\n    }\n  }\n  recurringBooking {\n    id\n    startDate\n    endDate\n    frequency {\n      name\n    }\n    marketplaceBooking {\n      id\n    }\n  }\n}\n\nfragment floorPlans_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {locationIds: [$locationId], fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}) {\n    totalCount\n    edges {\n      node {\n        id\n        involvedCustomers {\n          id\n        }\n        bookingResources {\n          resource {\n            id\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

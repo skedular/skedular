@@ -4,6 +4,7 @@ import MyBookingCard from './my-booking-card';
 
 const pushMock = vi.fn();
 const useFragmentMock = vi.fn();
+let lastMenuOptions: Array<{ id: string; label: string }> = [];
 
 const bookingFragmentData = {
   id: 'booking-1',
@@ -29,6 +30,13 @@ const bookingFragmentData = {
     isPaymentRequired: true,
     paymentStatus: { type: 'PAID', name: 'Paid' },
     invoiceUrl: 'https://example.com/invoice.pdf',
+  },
+  recurringBooking: {
+    id: 'recurring-booking-1',
+    startDate: '2026-04-01T09:00:00.000Z',
+    endDate: '2026-06-30T11:00:00.000Z',
+    frequency: { name: 'Weekly' },
+    marketplaceBooking: null,
   },
 };
 
@@ -58,14 +66,19 @@ vi.mock('@/components/links', () => ({
 }));
 
 vi.mock('@/components/moreActionsMenu', () => ({
-  MoreActionsMenu: () => null,
+  MoreActionsMenu: ({ options }: { options: Array<{ id: string; label: string }> }) => {
+    lastMenuOptions = options;
+    return null;
+  },
   moreActionsMenuAllOptions: {
     EditBooking: [{ id: 'EditBooking', label: 'Edit Booking' }],
     DeleteBooking: [{ id: 'DeleteBooking', label: 'Delete Booking' }],
+    DeleteRecurringBooking: [{ id: 'DeleteRecurringBooking', label: 'Remove recurring series' }],
   },
   MoreActionsMenuOptionType: {
     EditBooking: 'EditBooking',
     DeleteBooking: 'DeleteBooking',
+    DeleteRecurringBooking: 'DeleteRecurringBooking',
   },
 }));
 
@@ -100,6 +113,7 @@ describe('MyBookingCard', () => {
   beforeEach(() => {
     useFragmentMock.mockReset();
     pushMock.mockReset();
+    lastMenuOptions = [];
     useFragmentMock.mockImplementation(() => bookingFragmentData);
   });
 
@@ -116,19 +130,36 @@ describe('MyBookingCard', () => {
             photoUrl: null,
           },
         ]}
+        recurringMarketplaceSubscriptionIds={{}}
       />,
     );
 
     expect(screen.getByText('Level 2 Hot Desk')).toBeInTheDocument();
     expect(screen.getByText('Operations')).toBeInTheDocument();
     expect(screen.getByText('Paid')).toBeInTheDocument();
+    expect(screen.getByText('Recurring')).toBeInTheDocument();
     expect(screen.getByText('Booking details')).toBeInTheDocument();
     expect(screen.getByText('Desk A1')).toBeInTheDocument();
     expect(screen.getByText('Monitor')).toBeInTheDocument();
     expect(screen.getByText('North Wing')).toBeInTheDocument();
     expect(screen.getByText('Bring laptop')).toBeInTheDocument();
     expect(screen.getByText('View Invoice')).toBeInTheDocument();
+    expect(screen.queryByText('Weekly recurring booking')).not.toBeInTheDocument();
+    expect(screen.queryByText('Recurring booking')).not.toBeInTheDocument();
     expect(screen.queryByText('Open booking')).not.toBeInTheDocument();
     expect(screen.queryByText('Marketplace booking')).not.toBeInTheDocument();
+  });
+
+  it('offers occurrence and series deletion for private recurring bookings', () => {
+    useFragmentMock.mockImplementation(() => ({
+      ...bookingFragmentData,
+      channel: { channel: 'PRIVATE' },
+      marketplaceBooking: null,
+    }));
+
+    render(<MyBookingCard bookingDetailsRelay={{} as never} organizationCustomDomain="acme" connectionIds={[]} otherTeammates={[]} recurringMarketplaceSubscriptionIds={{}} />);
+
+    expect(lastMenuOptions.map((item) => item.label)).toContain('Remove this occurrence');
+    expect(lastMenuOptions.map((item) => item.label)).toContain('Remove recurring series');
   });
 });

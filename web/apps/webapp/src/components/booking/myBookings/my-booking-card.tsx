@@ -1,4 +1,5 @@
 import { CustomerAvatar } from '@/components/avatars';
+import RecurringBookingDeleteConfirmationDialog from '@/components/booking/recurring-booking-delete-confirmation-dialog';
 import { CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
 import { CalendarIcon, EllipseMenuIcon, NotesIcon, PaymentStatusIcon, PdfIcon, TeamIcon } from '@/components/icons';
@@ -12,7 +13,9 @@ import { coal } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, toShortDate } from '@/libs/utils';
 import type { myBookingCard_BookingDetails$key } from '@/queries/__generated__/myBookingCard_BookingDetails.graphql';
 import type { myBookingCard_deleteMarketplaceBookingMutation } from '@/queries/__generated__/myBookingCard_deleteMarketplaceBookingMutation.graphql';
+import type { myBookingCard_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/myBookingCard_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { myBookingCard_deletePrivateBookingMutation } from '@/queries/__generated__/myBookingCard_deletePrivateBookingMutation.graphql';
+import type { myBookingCard_deletePrivateRecurringBookingMutation } from '@/queries/__generated__/myBookingCard_deletePrivateRecurringBookingMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -36,6 +39,7 @@ type Props = {
   organizationCustomDomain: string;
   connectionIds: string[];
   otherTeammates: CustomerDetails[];
+  recurringMarketplaceSubscriptionIds?: Record<string, string>;
 };
 
 type CustomTagDetails = {
@@ -49,6 +53,8 @@ type ZoneDetails = {
   name: string | null | undefined;
   color?: string | null | undefined;
 };
+
+type PendingRecurringDeleteAction = 'occurrence' | 'series' | null;
 
 type CustomerDetails = {
   id: string;
@@ -70,7 +76,7 @@ const sectionSx: SxProps<Theme> = {
   backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.02)' : 'transparent'),
 };
 
-const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTeammates, connectionIds }: Props) => {
+const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTeammates, connectionIds, recurringMarketplaceSubscriptionIds = {} }: Props) => {
   const bookingDetails = useFragment(
     graphql`
       fragment myBookingCard_BookingDetails on BookingDetails {
@@ -122,6 +128,17 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
           }
           invoiceUrl
         }
+        recurringBooking {
+          id
+          startDate
+          endDate
+          frequency {
+            name
+          }
+          marketplaceBooking {
+            id
+          }
+        }
       }
     `,
     bookingDetailsRelay,
@@ -147,18 +164,78 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
     }
   `);
 
+  const [commitDeletePrivateRecurringBooking] = useMutation<myBookingCard_deletePrivateRecurringBookingMutation>(graphql`
+    mutation myBookingCard_deletePrivateRecurringBookingMutation($input: DeletePrivateRecurringBookingInput!) {
+      deletePrivateRecurringBooking(input: $input) {
+        recurringBooking {
+          id
+        }
+      }
+    }
+  `);
+
+  const [commitDeleteMarketplaceBookingSubscription] = useMutation<myBookingCard_deleteMarketplaceBookingSubscriptionMutation>(graphql`
+    mutation myBookingCard_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
+      deleteMarketplaceBookingSubscription(input: $input) {
+        marketplaceBookingSubscription {
+          id
+          cancelAtPeriodEnd
+          nextRenewalAt
+          status {
+            type
+            name
+          }
+        }
+      }
+    }
+  `);
+
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const [pendingRecurringDeleteAction, setPendingRecurringDeleteAction] = useState<PendingRecurringDeleteAction>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const shortDateFormatFrom = toShortDate(bookingDetails.from);
+  const recurringBooking = bookingDetails.recurringBooking;
+  const isMarketplaceRecurringBooking = !!recurringBooking?.marketplaceBooking;
+  const canDeleteRecurringOccurrence = !!recurringBooking && !isMarketplaceRecurringBooking && bookingDetails.channel.channel === 'PRIVATE';
+  const recurringSeriesLabel = recurringBooking ? `${recurringBooking.frequency.name} recurring booking` : null;
+  const recurringSeriesDateLabel = recurringBooking
+    ? recurringBooking.endDate
+      ? `${toShortDate(recurringBooking.startDate)} - ${toShortDate(recurringBooking.endDate)}`
+      : `Starts ${toShortDate(recurringBooking.startDate)}`
+    : null;
+  const recurringSeriesActionLabel = recurringBooking ? 'Remove recurring series' : null;
+  const recurringOccurrenceActionLabel = canDeleteRecurringOccurrence ? 'Remove this occurrence' : null;
+  const recurringDeleteConfirmationMessage = recurringBooking
+    ? `This booking is part of a recurring series. ${isMarketplaceRecurringBooking ? 'Removing it here will cancel the whole recurring series' : 'Removing it here will remove the whole recurring series'}, not just this booking. Continue?`
+    : null;
+  const recurringOccurrenceDeleteConfirmationMessage = canDeleteRecurringOccurrence
+    ? 'This removes only this booking occurrence. The rest of the recurring series will stay active. Continue?'
+    : null;
+  const recurringDeleteDialogTitle = pendingRecurringDeleteAction === 'occurrence' ? 'Remove Booking Occurrence' : 'Remove Recurring Series';
+  const recurringDeleteDialogDescription = pendingRecurringDeleteAction === 'occurrence' ? recurringOccurrenceDeleteConfirmationMessage : recurringDeleteConfirmationMessage;
+  const recurringDeleteDialogPrimaryLabel = pendingRecurringDeleteAction === 'occurrence' ? 'Remove occurrence' : isMarketplaceRecurringBooking ? 'Cancel series' : 'Remove series';
 
-  const moreActionsOption: MoreActionsMenuItemType[] = [
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditBooking],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteBooking],
-  ];
+  const moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditBooking]];
+
+  if (recurringOccurrenceActionLabel) {
+    moreActionsOption.push({
+      ...moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteBooking],
+      label: recurringOccurrenceActionLabel,
+    });
+  } else if (!recurringBooking) {
+    moreActionsOption.push(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteBooking]);
+  }
+
+  if (recurringBooking && recurringSeriesActionLabel) {
+    moreActionsOption.push({
+      ...moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteRecurringBooking],
+      label: recurringSeriesActionLabel,
+    });
+  }
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -175,10 +252,41 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
       case MoreActionsMenuOptionType.DeleteBooking:
         handleRemoveBookingClick();
         break;
+
+      case MoreActionsMenuOptionType.DeleteRecurringBooking:
+        handleRemoveRecurringBookingClick();
+        break;
     }
   };
 
   const handleRemoveBookingClick = () => {
+    if (recurringOccurrenceDeleteConfirmationMessage) {
+      setPendingRecurringDeleteAction('occurrence');
+      return;
+    }
+
+    removeBooking();
+  };
+
+  const handleCancelRecurringDeleteClick = () => {
+    setPendingRecurringDeleteAction(null);
+  };
+
+  const handleConfirmRecurringDeleteClick = () => {
+    const action = pendingRecurringDeleteAction;
+    setPendingRecurringDeleteAction(null);
+
+    if (action === 'occurrence') {
+      removeBooking();
+      return;
+    }
+
+    if (action === 'series') {
+      removeRecurringBooking();
+    }
+  };
+
+  const removeBooking = () => {
     let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
     if (bookingDetails.involvedLocations.length > 0) {
       bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
@@ -209,7 +317,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
 
           toast.update(toastId, {
             ...successNotificationOptions,
-            render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.`} />,
+            render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.${canDeleteRecurringOccurrence ? ' The recurring series stays active.' : ''}`} />,
           });
         },
         onError: (error) => {
@@ -240,7 +348,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
 
           toast.update(toastId, {
             ...successNotificationOptions,
-            render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.`} />,
+            render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.${canDeleteRecurringOccurrence ? ' The recurring series stays active.' : ''}`} />,
           });
         },
         onError: (error) => {
@@ -251,6 +359,103 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
         },
       });
     }
+  };
+
+  const handleRemoveRecurringBookingClick = () => {
+    if (!recurringBooking || !recurringSeriesLabel || !recurringDeleteConfirmationMessage) {
+      return;
+    }
+
+    setPendingRecurringDeleteAction('series');
+  };
+
+  const removeRecurringBooking = () => {
+    if (!recurringBooking || !recurringSeriesLabel) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`${isMarketplaceRecurringBooking ? 'Cancelling' : 'Removing'} ${recurringSeriesLabel.toLowerCase()}...`} />,
+      infoNotificationOptions,
+    );
+
+    if (isMarketplaceRecurringBooking) {
+      const subscriptionId = recurringMarketplaceSubscriptionIds[recurringBooking.id];
+
+      if (!subscriptionId) {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content="Could not resolve the recurring series for this booking." />,
+        });
+
+        return;
+      }
+
+      commitDeleteMarketplaceBookingSubscription({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
+            id: subscriptionId,
+            cancellationMode: 'IMMEDIATE',
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to cancel ${recurringSeriesLabel.toLowerCase()}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`${recurringSeriesLabel} removed. This affects the whole recurring series, not only this booking.`} />,
+          });
+          router.refresh();
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to cancel ${recurringSeriesLabel.toLowerCase()}. Error: ${getRelayErrorMessage(error)}.`} />,
+          });
+        },
+      });
+
+      return;
+    }
+
+    commitDeletePrivateRecurringBooking({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: recurringBooking.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove ${recurringSeriesLabel.toLowerCase()}. Error: ${getRelayErrorMessage(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`${recurringSeriesLabel} removed. This removes the whole series, not only this booking.`} />,
+        });
+        router.refresh();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove ${recurringSeriesLabel.toLowerCase()}. Error: ${getRelayErrorMessage(error)}.`} />,
+        });
+      },
+    });
   };
 
   const customTags = bookingDetails.bookingResources
@@ -325,6 +530,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
 
             <StackRow sx={{ gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
               {teamName ? <Chip label={teamName} size="small" icon={<TeamIcon />} /> : null}
+              {recurringSeriesLabel ? (
+                <Tooltip title={`${recurringSeriesLabel}. ${recurringSeriesDateLabel ?? ''}`.trim()}>
+                  <Chip label="Recurring" size="small" variant="outlined" />
+                </Tooltip>
+              ) : null}
               {bookingDetails.marketplaceBooking?.isPaymentRequired ? (
                 <Chip
                   label={bookingDetails.marketplaceBooking.paymentStatus.name}
@@ -384,6 +594,17 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
       </Card>
 
       <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
+
+      {recurringDeleteDialogDescription ? (
+        <RecurringBookingDeleteConfirmationDialog
+          open={pendingRecurringDeleteAction !== null}
+          title={recurringDeleteDialogTitle}
+          description={recurringDeleteDialogDescription}
+          confirmLabel={recurringDeleteDialogPrimaryLabel}
+          onConfirm={handleConfirmRecurringDeleteClick}
+          onCancel={handleCancelRecurringDeleteClick}
+        />
+      ) : null}
     </>
   );
 };

@@ -54,7 +54,7 @@ public class PrivateRecurringBookingIntegrations(
 
         foreach (var existingBooking in reconciliationPlan.BookingsToRemove)
         {
-            await privateBookingService.DeleteAsync(existingBooking, null, cancellationToken);
+            await privateBookingService.DeleteAsync(existingBooking, null, false, cancellationToken);
         }
 
         // Refresh all non-customized existing instances that remain in the series.
@@ -129,7 +129,7 @@ public class PrivateRecurringBookingIntegrations(
 
         foreach (var existingBooking in existingBookings)
         {
-            await privateBookingService.DeleteAsync(existingBooking, recurringBooking.DeletedByCustomer, cancellationToken);
+            await privateBookingService.DeleteAsync(existingBooking, recurringBooking.DeletedByCustomer, false, cancellationToken);
         }
     }
 }

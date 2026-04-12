@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<afe3c900177fd5a57ae6896351a67caf>>
+ * @generated SignedSource<<0cd18b1e531a23a911d0debe68f1e0fb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,23 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type MarketplaceBookingSubscriptionCancellationMode = "AT_PERIOD_END" | "IMMEDIATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type myBookings_query$data = {
+  readonly marketplaceBookingSubscriptionCancellationModes: ReadonlyArray<{
+    readonly name: string;
+    readonly type: MarketplaceBookingSubscriptionCancellationMode;
+  }>;
+  readonly marketplaceBookingSubscriptions: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly recurringBookings: ReadonlyArray<{
+          readonly id: string;
+        }>;
+      };
+    }>;
+  };
   readonly me: {
     readonly id: string;
   };
@@ -21,8 +36,24 @@ export type myBookings_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"myBookings_query">;
 };
 
-const node: ReaderFragment = {
-  "argumentDefinitions": [],
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = [
+  (v0/*: any*/)
+];
+return {
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "organizationCustomDomain"
+    }
+  ],
   "kind": "Fragment",
   "metadata": null,
   "name": "myBookings_query",
@@ -34,12 +65,95 @@ const node: ReaderFragment = {
       "kind": "LinkedField",
       "name": "me",
       "plural": false,
+      "selections": (v1/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "MarketplaceBookingSubscriptionCancellationModeDetails",
+      "kind": "LinkedField",
+      "name": "marketplaceBookingSubscriptionCancellationModes",
+      "plural": true,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "id",
+          "name": "type",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "first",
+          "value": 100
+        },
+        {
+          "fields": [
+            {
+              "kind": "Literal",
+              "name": "includeMineOnly",
+              "value": true
+            },
+            {
+              "kind": "Variable",
+              "name": "organizationCustomDomain",
+              "variableName": "organizationCustomDomain"
+            }
+          ],
+          "kind": "ObjectValue",
+          "name": "where"
+        }
+      ],
+      "concreteType": "ConnectionOfMarketplaceBookingSubscriptionEdge",
+      "kind": "LinkedField",
+      "name": "marketplaceBookingSubscriptions",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "MarketplaceBookingSubscriptionEdge",
+          "kind": "LinkedField",
+          "name": "edges",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "MarketplaceBookingSubscriptionDetails",
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "RecurringBookingDetails",
+                  "kind": "LinkedField",
+                  "name": "recurringBookings",
+                  "plural": true,
+                  "selections": (v1/*: any*/),
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -49,7 +163,8 @@ const node: ReaderFragment = {
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "c664223bbd164fa6e688b2b30710dc2f";
+(node as any).hash = "c3fb63a7aab89a0d0797a57e55d92143";
 
 export default node;

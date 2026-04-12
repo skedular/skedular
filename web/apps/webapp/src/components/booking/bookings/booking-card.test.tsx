@@ -4,6 +4,7 @@ import BookingCard from './booking-card';
 
 const pushMock = vi.fn();
 const useFragmentMock = vi.fn();
+let lastMenuOptions: Array<{ id: string; label: string }> = [];
 
 const queryFragmentData = {
   me: {
@@ -56,6 +57,13 @@ const bookingFragmentData = {
     invoiceUrl: 'https://example.com/invoice.pdf',
     refund: null,
   },
+  recurringBooking: {
+    id: 'recurring-booking-1',
+    startDate: '2026-04-01T09:00:00.000Z',
+    endDate: '2026-06-30T11:00:00.000Z',
+    frequency: { name: 'Weekly' },
+    marketplaceBooking: null,
+  },
 };
 
 vi.mock('next/navigation', () => ({
@@ -84,10 +92,14 @@ vi.mock('@/components/links', () => ({
 }));
 
 vi.mock('@/components/moreActionsMenu', () => ({
-  MoreActionsMenu: () => null,
+  MoreActionsMenu: ({ options }: { options: Array<{ id: string; label: string }> }) => {
+    lastMenuOptions = options;
+    return null;
+  },
   moreActionsMenuAllOptions: {
     EditBooking: [{ id: 'EditBooking', label: 'Edit Booking' }],
     DeleteBooking: [{ id: 'DeleteBooking', label: 'Delete Booking' }],
+    DeleteRecurringBooking: [{ id: 'DeleteRecurringBooking', label: 'Remove recurring series' }],
     ConfirmBookingPayment: [{ id: 'ConfirmBookingPayment', label: 'Confirm Booking Payment' }],
     RejectBookingPayment: [{ id: 'RejectBookingPayment', label: 'Reject Booking Payment' }],
     MakeBookingPaymentNotRequired: [{ id: 'MakeBookingPaymentNotRequired', label: 'Make Booking Payment Not Required' }],
@@ -95,6 +107,7 @@ vi.mock('@/components/moreActionsMenu', () => ({
   MoreActionsMenuOptionType: {
     EditBooking: 'EditBooking',
     DeleteBooking: 'DeleteBooking',
+    DeleteRecurringBooking: 'DeleteRecurringBooking',
     ConfirmBookingPayment: 'ConfirmBookingPayment',
     RejectBookingPayment: 'RejectBookingPayment',
     MakeBookingPaymentNotRequired: 'MakeBookingPaymentNotRequired',
@@ -137,6 +150,7 @@ describe('BookingCard', () => {
   beforeEach(() => {
     useFragmentMock.mockReset();
     pushMock.mockReset();
+    lastMenuOptions = [];
     useFragmentMock.mockImplementation((query: string) => {
       if (query.includes('fragment bookingCard_query')) {
         return queryFragmentData;
@@ -147,11 +161,21 @@ describe('BookingCard', () => {
   });
 
   it('renders the compact organization booking card layout', () => {
-    render(<BookingCard rootDataRelay={{} as never} bookingDetailsRelay={{} as never} organizationCustomDomain="acme" connectionIds={[]} canJoinBooking />);
+    render(
+      <BookingCard
+        rootDataRelay={{} as never}
+        bookingDetailsRelay={{} as never}
+        organizationCustomDomain="acme"
+        connectionIds={[]}
+        canJoinBooking
+        recurringMarketplaceSubscriptionIds={{}}
+      />,
+    );
 
     expect(screen.getByText('HQ Level 3')).toBeInTheDocument();
     expect(screen.getByText('Operations')).toBeInTheDocument();
     expect(screen.getByText('Confirmed')).toBeInTheDocument();
+    expect(screen.getByText('Recurring')).toBeInTheDocument();
     expect(screen.queryByText('People')).not.toBeInTheDocument();
     expect(screen.getByText('Booking details')).toBeInTheDocument();
     expect(screen.getByText('Sam Carter, Alex Ng')).toBeInTheDocument();
@@ -160,6 +184,36 @@ describe('BookingCard', () => {
     expect(screen.getByText('North Wing')).toBeInTheDocument();
     expect(screen.getByText('Needs projector access')).toBeInTheDocument();
     expect(screen.getByText('View Invoice')).toBeInTheDocument();
+    expect(screen.queryByText('Weekly recurring booking')).not.toBeInTheDocument();
+    expect(screen.queryByText('Recurring booking')).not.toBeInTheDocument();
     expect(screen.queryByText('Open booking')).not.toBeInTheDocument();
+  });
+
+  it('offers occurrence and series deletion for private recurring bookings', () => {
+    useFragmentMock.mockImplementation((query: string) => {
+      if (query.includes('fragment bookingCard_query')) {
+        return queryFragmentData;
+      }
+
+      return {
+        ...bookingFragmentData,
+        channel: { channel: 'PRIVATE', name: 'Private' },
+        marketplaceBooking: null,
+      };
+    });
+
+    render(
+      <BookingCard
+        rootDataRelay={{} as never}
+        bookingDetailsRelay={{} as never}
+        organizationCustomDomain="acme"
+        connectionIds={[]}
+        canJoinBooking
+        recurringMarketplaceSubscriptionIds={{}}
+      />,
+    );
+
+    expect(lastMenuOptions.map((item) => item.label)).toContain('Remove this occurrence');
+    expect(lastMenuOptions.map((item) => item.label)).toContain('Remove recurring series');
   });
 });

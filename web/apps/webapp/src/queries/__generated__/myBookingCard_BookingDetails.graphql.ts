@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b1eea1dbb139a869136cb13b078b2db1>>
+ * @generated SignedSource<<a21c4f4bd557b133c566d436cee1ef4d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -60,6 +60,17 @@ export type myBookingCard_BookingDetails$data = {
     };
   } | null | undefined;
   readonly notes: string | null | undefined;
+  readonly recurringBooking: {
+    readonly endDate: any | null | undefined;
+    readonly frequency: {
+      readonly name: string;
+    };
+    readonly id: string;
+    readonly marketplaceBooking: {
+      readonly id: string;
+    } | null | undefined;
+    readonly startDate: any;
+  } | null | undefined;
   readonly until: any;
   readonly " $fragmentType": "myBookingCard_BookingDetails";
 };
@@ -302,6 +313,56 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "RecurringBookingDetails",
+      "kind": "LinkedField",
+      "name": "recurringBooking",
+      "plural": false,
+      "selections": [
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "startDate",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "endDate",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "BookingFrequencyDetails",
+          "kind": "LinkedField",
+          "name": "frequency",
+          "plural": false,
+          "selections": [
+            (v1/*: any*/)
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "MarketplaceBookingDetails",
+          "kind": "LinkedField",
+          "name": "marketplaceBooking",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/)
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "BookingDetails",
@@ -309,6 +370,6 @@ return {
 };
 })();
 
-(node as any).hash = "12d1db9ad081e1c66ed771198893e785";
+(node as any).hash = "4fab7f20b5a32242b9e546e5fa584272";
 
 export default node;

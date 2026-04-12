@@ -48,6 +48,20 @@ const RootQuery = graphql`
     organization(customDomain: $organizationCustomDomain) {
       canModify
     }
+    marketplaceBookingSubscriptionCancellationModes {
+      type
+      name
+    }
+    marketplaceBookingSubscriptions(first: 100, where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain }) {
+      edges {
+        node {
+          id
+          recurringBookings {
+            id
+          }
+        }
+      }
+    }
     ...locationSelector_allLocations_query
     ...teamSelector_allTeams_query
     ...gettingStarted_query
@@ -104,10 +118,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationCustomDoma
             </GridContainer>
           </Box>
         </Box>
-
-        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
-        </Box>
+        <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
 
         <MyBookings
           rootDataRelay={rootData}

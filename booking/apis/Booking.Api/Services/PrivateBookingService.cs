@@ -127,7 +127,7 @@ public class PrivateBookingService(
             }
         }
 
-        return await sharedPrivateBookingService.DeleteAsync(existingBooking, customer, cancellationToken);
+        return await sharedPrivateBookingService.DeleteAsync(existingBooking, customer, true, cancellationToken);
     }
 
     private async Task<Shared.Models.Booking> UpdateInternalAsync(

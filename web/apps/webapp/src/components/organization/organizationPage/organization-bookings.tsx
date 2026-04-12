@@ -52,6 +52,20 @@ const RootQuery = graphql`
       id
       name
     }
+    marketplaceBookingSubscriptionCancellationModes {
+      type
+      name
+    }
+    marketplaceBookingSubscriptions(first: 100, where: { organizationCustomDomain: $organizationCustomDomain }) {
+      edges {
+        node {
+          id
+          recurringBookings {
+            id
+          }
+        }
+      }
+    }
     myLocations(organizationCustomDomain: $organizationCustomDomain) {
       id
       name
