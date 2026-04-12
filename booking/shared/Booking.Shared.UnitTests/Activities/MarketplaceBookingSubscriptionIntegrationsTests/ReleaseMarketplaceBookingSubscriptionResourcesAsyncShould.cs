@@ -4,6 +4,7 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Time;
 using Temporalio.Testing;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
@@ -77,7 +78,7 @@ public class ReleaseMarketplaceBookingSubscriptionResourcesAsyncShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Release_Only_Bookings_From_Now_Forward_When_Subscription_Is_Deleted(
+    public async Task Release_Only_Bookings_From_Today_Forward_When_Subscription_Is_Deleted(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
         [Frozen] IBookingRepository bookingRepository,
@@ -93,6 +94,7 @@ public class ReleaseMarketplaceBookingSubscriptionResourcesAsyncShould
         var environment = new ActivityEnvironment();
         var deletedByCustomer = new Customer { Id = "customer-1" };
         var now = new DateTimeOffset(2026, 4, 5, 8, 37, 0, TimeSpan.Zero);
+        var from = now.StartOfDay();
         var recurringBooking = new RecurringBookingEntity
         {
             Id = recurringBookingId,
@@ -124,7 +126,7 @@ public class ReleaseMarketplaceBookingSubscriptionResourcesAsyncShould
 
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync(
                 recurringBookingId,
-                now,
+                from,
                 null,
                 environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();

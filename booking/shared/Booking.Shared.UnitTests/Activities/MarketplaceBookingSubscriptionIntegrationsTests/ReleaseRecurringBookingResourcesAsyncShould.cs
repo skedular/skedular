@@ -4,6 +4,7 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Time;
 using Temporalio.Testing;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
@@ -30,6 +31,7 @@ public class ReleaseRecurringBookingResourcesAsyncShould
     {
         var environment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 4, 5, 8, 37, 0, TimeSpan.Zero);
+        var from = now.StartOfDay();
         var recurringBooking = new RecurringBookingEntity
         {
             Id = recurringBookingId,
@@ -64,7 +66,7 @@ public class ReleaseRecurringBookingResourcesAsyncShould
         A.CallTo(() => marketplaceBookingRepository.Update(recurringBooking.MarketplaceBooking)).MustHaveHappenedOnceExactly();
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync(
                 recurringBookingId,
-                now,
+                from,
                 null,
                 environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
@@ -88,6 +90,7 @@ public class ReleaseRecurringBookingResourcesAsyncShould
     {
         var environment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 4, 5, 8, 37, 0, TimeSpan.Zero);
+        var from = now.StartOfDay();
         var recurringBooking = new RecurringBookingEntity
         {
             Id = recurringBookingId,
@@ -123,7 +126,7 @@ public class ReleaseRecurringBookingResourcesAsyncShould
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync(
                 recurringBookingId,
-                now,
+                from,
                 null,
                 environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();

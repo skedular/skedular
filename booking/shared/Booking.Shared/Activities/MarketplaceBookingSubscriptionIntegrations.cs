@@ -97,13 +97,14 @@ public class MarketplaceBookingSubscriptionIntegrations(
             return;
         }
 
-        var from = timeProvider.GetUtcNow();
+        var now = timeProvider.GetUtcNow();
+        var from = now.StartOfDay();
         // Immediate cancellation already marks the subscription as cancelled in the API service,
         // but the daily adjustment loop may still be finishing work from a previously loaded
         // active snapshot. Re-stamp the terminal state here, in the same path that releases
         // resources and cancels Xero invoices, so the final persisted subscription state matches
         // the cleanup that just happened.
-        subscription.CancelledAt ??= from;
+        subscription.CancelledAt ??= now;
         subscription.Status = MarketplaceBookingSubscriptionStatus.Cancelled.ToMarketplaceBookingSubscriptionStatus();
         subscription.AutoRenew = false;
         subscription.CancelAtPeriodEnd = false;
@@ -152,7 +153,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
         await accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, cancellationToken);
         MarkRecurringBookingPaymentAsTerminal(recurringBooking);
 
-        var from = timeProvider.GetUtcNow();
+        var from = timeProvider.GetUtcNow().StartOfDay();
         var existingBookings = await repositoryFactory.BookingRepository.GetByRecurringBookingIdAsync(
             recurringBooking.Id,
             from,
