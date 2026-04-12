@@ -276,7 +276,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
     bookingDetails.involvedLocations
       .map((location) => location.name)
       .filter(Boolean)
-      .join(', ') || 'Booking';
+      .join(', ') || 'Location pending';
   const teamName = bookingDetails.involvedTeams[0]?.name;
 
   return (
