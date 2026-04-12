@@ -22,19 +22,21 @@ const surfaceSx: SxProps<Theme> = {
 };
 
 const OrganizationTeamsPageShell = ({ actions, toolbar, isEmpty, emptyMessage = 'No teams yet', children }: Props) => (
-  <StackColumn sx={{ width: '100%', padding: defaultPadding }} spacing={2}>
-    <PageHeaderPanel title="Teams" description="Manage groups, members, and the primary location context for each team." actions={actions} />
+  <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', pb: defaultPadding }}>
+    <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: defaultPadding }} spacing={2}>
+      <PageHeaderPanel title="Teams" description="Manage groups, members, and the primary location context for each team." actions={actions} />
 
-    {toolbar ? <Box sx={{ ...surfaceSx, px: 2, py: 1.5 }}>{toolbar}</Box> : null}
+      {toolbar ? <Box sx={{ ...surfaceSx, px: 2, py: 1.5 }}>{toolbar}</Box> : null}
 
-    {isEmpty ? (
-      <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
-        <SubtitleIconTypography label={emptyMessage} />
-      </Box>
-    ) : (
-      children
-    )}
-  </StackColumn>
+      {isEmpty ? (
+        <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
+          <SubtitleIconTypography label={emptyMessage} />
+        </Box>
+      ) : (
+        children
+      )}
+    </StackColumn>
+  </Box>
 );
 
 export default OrganizationTeamsPageShell;

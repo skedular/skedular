@@ -1,10 +1,10 @@
+import type { myBookings_bookings_query$key } from '@/queries/__generated__/myBookings_bookings_query.graphql';
+import type { myBookings_bookings_refetchableFragment } from '@/queries/__generated__/myBookings_bookings_refetchableFragment.graphql';
+import type { myBookings_query$key } from '@/queries/__generated__/myBookings_query.graphql';
 import Box from '@mui/system/Box';
 import dayjs, { Dayjs } from 'dayjs';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
-import type { myBookings_bookings_query$key } from '@/queries/__generated__/myBookings_bookings_query.graphql';
-import type { myBookings_bookings_refetchableFragment } from '@/queries/__generated__/myBookings_bookings_refetchableFragment.graphql';
-import type { myBookings_query$key } from '@/queries/__generated__/myBookings_query.graphql';
 import MyBookingCard from './my-booking-card';
 import MyBookingsPageShell from './my-bookings-page-shell';
 

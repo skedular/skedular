@@ -238,7 +238,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
             },
             gap: 2,
             alignItems: 'stretch',
-            justifyContent: 'start',
+            justifyContent: 'center',
           }}
         >
           {locations.map((location) => {

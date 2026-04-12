@@ -10,7 +10,7 @@ import { LocationSelector } from '@/components/location/locationSelector';
 import { RelayError, toRootError } from '@/components/relayError';
 import { TeamSelector } from '@/components/team/teamSelector';
 import { useIntegratedPlatrform } from '@/libs/providers';
-import { defaultPadding, maxScreenWidth } from '@/libs/theme';
+import { defaultPadding } from '@/libs/theme';
 import { endOfWeek, startOfDay, startOfWeek } from '@/libs/utils';
 import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
 import type { SxProps, Theme } from '@mui/system';
@@ -88,34 +88,38 @@ const Organization = ({ queryReference, onReloadRequired, organizationCustomDoma
   }
 
   return (
-    <StackColumn sx={{ maxWidth: maxScreenWidth, width: '100%' }} spacing={2}>
-      <Box sx={{ paddingTop: defaultPadding, paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-        <Box sx={{ ...filterSurfaceSx, px: 2, py: 1.5 }}>
-          <GridContainer spacing={1}>
-            <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
-            <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
-            <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
-            <PushToRight />
-            <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationCustomDomain={organizationCustomDomain} />
-            {rootData.organization?.canModify && (
-              <ClaimLocationOwnershipButton organizationCustomDomain={organizationCustomDomain} onClaimClicked={handleClaimLocationOwnershipClicked} />
-            )}
-          </GridContainer>
+    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+      <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto' }} spacing={2}>
+        <Box sx={{ paddingTop: defaultPadding }}>
+          <Box sx={{ ...filterSurfaceSx, px: 2, py: 1.5 }}>
+            <GridContainer spacing={1}>
+              <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
+              <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
+              <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
+              <PushToRight />
+              <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationCustomDomain={organizationCustomDomain} />
+              {rootData.organization?.canModify && (
+                <ClaimLocationOwnershipButton organizationCustomDomain={organizationCustomDomain} onClaimClicked={handleClaimLocationOwnershipClicked} />
+              )}
+            </GridContainer>
+          </Box>
         </Box>
-      </Box>
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
-      </Box>
-      <MyBookings
-        rootDataRelay={rootData}
-        rootDataBookingRelay={rootData}
-        organizationCustomDomain={organizationCustomDomain}
-        from={startWeek}
-        to={endWeek}
-        locationIds={locationIds}
-        teamIds={teamIds}
-      />
-    </StackColumn>
+
+        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+          <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
+        </Box>
+
+        <MyBookings
+          rootDataRelay={rootData}
+          rootDataBookingRelay={rootData}
+          organizationCustomDomain={organizationCustomDomain}
+          from={startWeek}
+          to={endWeek}
+          locationIds={locationIds}
+          teamIds={teamIds}
+        />
+      </StackColumn>
+    </Box>
   );
 };
 

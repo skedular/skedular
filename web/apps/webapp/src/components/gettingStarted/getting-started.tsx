@@ -1,4 +1,4 @@
-import { GridContainer, LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
+import { LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
 import { CancelIcon, InviteMemberIcon, LocationIcon, ResourceIcon, TeamIcon } from '@/components/icons';
 import {
   getOrganizationLocationAddPrivateLink,
@@ -15,7 +15,6 @@ import { getRelayErrorMessage } from '@/libs/utils';
 import type { gettingStarted_completeOrganizationMemberOnboardingMutation } from '@/queries/__generated__/gettingStarted_completeOrganizationMemberOnboardingMutation.graphql';
 import type { gettingStarted_query$key } from '@/queries/__generated__/gettingStarted_query.graphql';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
@@ -114,86 +113,88 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
 
   return (
     <>
-      <Box sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+      <Box
+        sx={{
+          border: 2,
+          borderRadius: 4,
+          borderColor: 'gray',
+          borderStyle: 'dashed',
+          padding: defaultPadding,
+          position: 'relative',
+        }}
+      >
+        <Box sx={{ position: 'absolute', top: 1, right: 1 }}>
+          <IconButton onClick={handleDismissButtonClicked} color="inherit">
+            <CancelIcon fontSize="large" />
+          </IconButton>
+        </Box>
+
+        <SectionIconTypography label="Getting started" />
+
         <Box
           sx={{
-            border: 2,
-            borderRadius: 4,
-            borderColor: 'gray',
-            borderStyle: 'dashed',
-            padding: defaultPadding,
-            position: 'relative', // Ensure the parent container is relative, this is to make sure the CancelIcon can be placed to the top right corner of the box
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: '1fr',
+              sm: 'repeat(2, minmax(0, 1fr))',
+              xl: 'repeat(4, minmax(0, 1fr))',
+            },
+            gap: 2,
+            alignItems: 'start',
+            paddingTop: 2,
           }}
         >
-          <Box sx={{ position: 'absolute', top: 1, right: 1 }}>
-            <IconButton onClick={handleDismissButtonClicked} color="inherit">
-              <CancelIcon fontSize="large" />
-            </IconButton>
-          </Box>
+          <StackColumn spacing={1} sx={{ minWidth: 0 }}>
+            <SmallIconTypography label="Let's start by setting up the organization's first location." />
+            <Link component={NextLink} href={getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationCustomDomain)} sx={{ display: 'block' }}>
+              <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
+                <LeadIconTypography
+                  label="Create Location"
+                  stackMode="column"
+                  startElement={<LocationIcon fontSize="large" excludeTooltip sx={{ color: emerald }} />}
+                  sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
+                />
+              </Paper>
+            </Link>
+          </StackColumn>
 
-          <SectionIconTypography label="Getting started" />
+          <StackColumn spacing={1} sx={{ minWidth: 0 }}>
+            <SmallIconTypography label="Create teams that regularly work or meet together." />
+            <Link component={NextLink} href={getOrganizationTeamAddLink(integratedPlatrform, organizationCustomDomain)} sx={{ display: 'block' }}>
+              <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
+                <LeadIconTypography
+                  label="Create Team"
+                  stackMode="column"
+                  startElement={<TeamIcon fontSize="large" excludeTooltip sx={{ color: emerald }} />}
+                  sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
+                />
+              </Paper>
+            </Link>
+          </StackColumn>
 
-          <GridContainer spacing={1} sx={{ alignItems: 'center', paddingTop: 2, justifyContent: 'space-between' }}>
-            <Grid>
-              <StackColumn sx={{ width: 250 }}>
-                <SmallIconTypography label="Let's start by setting up the organization's first location." />
-                <Link component={NextLink} href={getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationCustomDomain)}>
-                  <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
-                    <LeadIconTypography
-                      label="Create Location"
-                      stackMode="column"
-                      startElement={<LocationIcon fontSize="large" excludeTooltip sx={{ color: emerald }} />}
-                      sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
-                    />
-                  </Paper>
-                </Link>
-              </StackColumn>
-            </Grid>
+          <StackColumn spacing={1} sx={{ minWidth: 0 }}>
+            <SmallIconTypography label="Add resources for your locations and teams." />
+            <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleAddResourcesClicked}>
+              <LeadIconTypography
+                label="Add Resources"
+                stackMode="column"
+                startElement={<ResourceIcon fontSize="large" excludeTooltip sx={{ color: emerald }} />}
+                sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
+              />
+            </Paper>
+          </StackColumn>
 
-            <Grid>
-              <StackColumn sx={{ width: 250 }}>
-                <SmallIconTypography label="Create teams that regularly work or meet together." />
-                <Link component={NextLink} href={getOrganizationTeamAddLink(integratedPlatrform, organizationCustomDomain)}>
-                  <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
-                    <LeadIconTypography
-                      label="Create Team"
-                      stackMode="column"
-                      startElement={<TeamIcon fontSize="large" excludeTooltip sx={{ color: emerald }} />}
-                      sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
-                    />
-                  </Paper>
-                </Link>
-              </StackColumn>
-            </Grid>
-
-            <Grid>
-              <StackColumn sx={{ width: 250 }}>
-                <SmallIconTypography label="Add resources for your locations and teams." />
-                <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleAddResourcesClicked}>
-                  <LeadIconTypography
-                    label="Add Resources"
-                    stackMode="column"
-                    startElement={<ResourceIcon fontSize="large" excludeTooltip sx={{ color: emerald }} />}
-                    sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
-                  />
-                </Paper>
-              </StackColumn>
-            </Grid>
-
-            <Grid>
-              <StackColumn sx={{ width: 250 }}>
-                <SmallIconTypography label="Invite your team members to your organization and start booking!" />
-                <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleInviteTeammatesClicked}>
-                  <LeadIconTypography
-                    label="Invite Teammates"
-                    stackMode="column"
-                    startElement={<InviteMemberIcon fontSize="large" sx={{ color: emerald }} />}
-                    sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
-                  />
-                </Paper>
-              </StackColumn>
-            </Grid>
-          </GridContainer>
+          <StackColumn spacing={1} sx={{ minWidth: 0 }}>
+            <SmallIconTypography label="Invite your team members to your organization and start booking!" />
+            <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleInviteTeammatesClicked}>
+              <LeadIconTypography
+                label="Invite Teammates"
+                stackMode="column"
+                startElement={<InviteMemberIcon fontSize="large" sx={{ color: emerald }} />}
+                sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
+              />
+            </Paper>
+          </StackColumn>
         </Box>
       </Box>
 
