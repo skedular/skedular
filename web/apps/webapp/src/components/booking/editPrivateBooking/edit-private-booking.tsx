@@ -1,12 +1,12 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceBookingCategory } from '@/components/booking';
-import { AppBarWithStackColumn, BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, StackColumn, StackRow } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
 import { Autocomplete } from '@/components/forms';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext } from '@/libs/providers';
-import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
+import { defaultPadding } from '@/libs/theme';
 import {
   getCustomerFullName,
   getOpeningHoursFromDateTime,
@@ -25,11 +25,10 @@ import type { editPrivateBooking_organizationMembers_refetchableFragment } from 
 import type { editPrivateBooking_query$key } from '@/queries/__generated__/editPrivateBooking_query.graphql';
 import type { BookingCategory, editPrivateBooking_updatePrivateBookingMutation } from '@/queries/__generated__/editPrivateBooking_updatePrivateBookingMutation.graphql';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
+import { EditorActionBar, PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
 import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { useRouter } from 'next/navigation';
@@ -502,10 +501,6 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
     handleRefetchAvailableResources(dateRangeValidation, locationId);
   }, [dateRangeValidation, handleRefetchAvailableResources, locationId]);
 
-  const handleCloseClick = () => {
-    router.back();
-  };
-
   const handleBookingDetailUpdateClick = ({ date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, category }: BookingDetails) => {
     if (!booking) {
       return;
@@ -649,33 +644,31 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
     return null;
   }
 
-  return (
-    <Box sx={{ display: 'flex' }}>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Booking Information">
-          <Form
-            onSubmit={handleBookingDetailUpdateClick}
-            initialValues={{
-              member: customerId,
-              date: from,
-              allDay,
-              notes: booking.notes,
-              team: teamId,
-              location: locationId,
-              resources: booking.bookingResources ? booking.bookingResources.map(({ resource }) => resource.id) : [],
-              category: booking.category.category,
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => {
-              return (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <SectionIconTypography label="Edit Booking" />
-                    <BodyIconTypography label="Edit your booking details" />
-                    <Divider />
-                  </StackColumn>
+  const pageTitle = booking.involvedCustomers.length > 0 ? `Edit Booking — ${getCustomerFullName(booking.involvedCustomers[0])}` : 'Edit Booking';
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+  return (
+    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+      <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', backgroundColor: 'transparent', gap: 2 }}>
+        <PageHeaderPanel eyebrow="Private Booking" title={pageTitle} description="Update the date, time, member, location, and resources for this booking." />
+
+        <Form
+          onSubmit={handleBookingDetailUpdateClick}
+          initialValues={{
+            member: customerId,
+            date: from,
+            allDay,
+            notes: booking.notes,
+            team: teamId,
+            location: locationId,
+            resources: booking.bookingResources ? booking.bookingResources.map(({ resource }) => resource.id) : [],
+            category: booking.category.category,
+          }}
+          validate={validate}
+          render={({ handleSubmit }) => (
+            <FormStackColumn onSubmit={handleSubmit}>
+              <StackColumn spacing={3}>
+                <SettingsSectionCard title="Booking Details" description="Edit the member, date, time, category, team, location and resources for this booking.">
+                  <StackColumn>
                     <FormFieldLabel label="User">
                       <Autocomplete
                         name="member"
@@ -839,20 +832,16 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
                       {resources.length === 0 && locationId && <BodyIconTypography label="There are currently no available resources in the chosen location." />}
                     </FormFieldLabel>
                   </StackColumn>
+                </SettingsSectionCard>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
-              );
-            }}
-          />
-        </AppBarWithStackColumn>
-      </Box>
+                <Box sx={{ px: defaultPadding, pb: defaultPadding }}>
+                  <EditorActionBar primaryAction="Update Booking" />
+                </Box>
+              </StackColumn>
+            </FormStackColumn>
+          )}
+        />
+      </StackColumn>
     </Box>
   );
 };
