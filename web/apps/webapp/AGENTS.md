@@ -204,6 +204,11 @@ scripts/
 - Apply that rule to titles, labels, helper text, validation messages, dialog copy, status text, notifications, and
   empty states, but do not rename code-level identifiers, route segments, query names, or generated artefacts for
   localisation alone.
+- For private booking editors:
+  - keep one-off booking editing and recurring-series editing on separate pages
+  - recurring private bookings should expose both `Edit this occurrence` and `Edit recurring booking` from booking cards
+  - do not let the recurring-series editor convert a recurring booking into a one-time booking, or vice versa
+  - use the one-off editor for generated-instance overrides and the recurring editor for series-wide changes
 - Use `pnpm` for package management, not `npm` or `yarn`.
 - Check `web/AGENTS.md` and `api-definitions/graphql/AGENTS.md` for upstream generation context.
 - Keep Relay fragments colocated with the component that renders them whenever practical.

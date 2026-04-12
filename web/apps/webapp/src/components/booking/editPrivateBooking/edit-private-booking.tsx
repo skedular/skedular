@@ -33,7 +33,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
-import { Form } from 'react-final-form';
+import { Form, FormSpy } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
@@ -123,6 +123,8 @@ const bookingSchema = object({
   resources: array().nullable(),
   category: string().required('Category is required'),
 });
+
+const toAllDayBoolean = (value: unknown): boolean => value === true || value === 'allDay' || (Array.isArray(value) && value.includes('allDay'));
 
 const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay, rootDataAvailableResourcesRelay }: Props) => {
   const rootData = useFragment<editPrivateBooking_query$key>(
@@ -508,7 +510,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
 
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
-    const dateRange = getDateRange(allDay, start, { timeFrom, timeUntil });
+    const dateRange = getDateRange(toAllDayBoolean(allDay), start, { timeFrom, timeUntil });
     if (!dateRange.valid) {
       return;
     }
@@ -666,6 +668,16 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
           validate={validate}
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
+              <FormSpy
+                subscription={{ values: true }}
+                onChange={({ values }) => {
+                  const normalizedAllDay = toAllDayBoolean(values?.allDay);
+
+                  if (normalizedAllDay !== allDay) {
+                    setAllDay(normalizedAllDay);
+                  }
+                }}
+              />
               <StackColumn spacing={3}>
                 <SettingsSectionCard title="Booking Details" description="Edit the member, date, time, category, team, location and resources for this booking.">
                   <StackColumn>
@@ -719,20 +731,11 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
                               }}
                             />
                           </Box>
-                          <Switches
-                            name="allDay"
-                            required={requiredFields.allDay}
-                            data={{ label: 'All Day', value: 'allDay' }}
-                            fieldProps={{
-                              onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-                                setAllDay(event.target.checked);
-                              },
-                            }}
-                          />
+                          <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
                         </StackRow>
 
                         <Box sx={{ width: 'fit-content' }}>
-                          <TimeRangePicker minutesStep={rootData.bookingSlotSizeInMinutes} disabled={allDay} defaultValue={timeRange} onChange={setTimeRange} />
+                          <TimeRangePicker minutesStep={rootData.bookingSlotSizeInMinutes} disabled={allDay} value={timeRange} onChange={setTimeRange} />
                         </Box>
                       </StackColumn>
                     </FormFieldLabel>

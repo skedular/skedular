@@ -97,15 +97,17 @@ vi.mock('@/components/moreActionsMenu', () => ({
     return null;
   },
   moreActionsMenuAllOptions: {
-    EditBooking: [{ id: 'EditBooking', label: 'Edit Booking' }],
-    DeleteBooking: [{ id: 'DeleteBooking', label: 'Delete Booking' }],
-    DeleteRecurringBooking: [{ id: 'DeleteRecurringBooking', label: 'Remove recurring series' }],
-    ConfirmBookingPayment: [{ id: 'ConfirmBookingPayment', label: 'Confirm Booking Payment' }],
-    RejectBookingPayment: [{ id: 'RejectBookingPayment', label: 'Reject Booking Payment' }],
-    MakeBookingPaymentNotRequired: [{ id: 'MakeBookingPaymentNotRequired', label: 'Make Booking Payment Not Required' }],
+    EditBooking: { id: 'EditBooking', label: 'Edit Booking' },
+    EditRecurringBooking: { id: 'EditRecurringBooking', label: 'Edit recurring booking' },
+    DeleteBooking: { id: 'DeleteBooking', label: 'Delete Booking' },
+    DeleteRecurringBooking: { id: 'DeleteRecurringBooking', label: 'Remove recurring series' },
+    ConfirmBookingPayment: { id: 'ConfirmBookingPayment', label: 'Confirm Booking Payment' },
+    RejectBookingPayment: { id: 'RejectBookingPayment', label: 'Reject Booking Payment' },
+    MakeBookingPaymentNotRequired: { id: 'MakeBookingPaymentNotRequired', label: 'Make Booking Payment Not Required' },
   },
   MoreActionsMenuOptionType: {
     EditBooking: 'EditBooking',
+    EditRecurringBooking: 'EditRecurringBooking',
     DeleteBooking: 'DeleteBooking',
     DeleteRecurringBooking: 'DeleteRecurringBooking',
     ConfirmBookingPayment: 'ConfirmBookingPayment',
@@ -189,7 +191,7 @@ describe('BookingCard', () => {
     expect(screen.queryByText('Open booking')).not.toBeInTheDocument();
   });
 
-  it('offers occurrence and series deletion for private recurring bookings', () => {
+  it('offers occurrence and series edit and delete actions for private recurring bookings', () => {
     useFragmentMock.mockImplementation((query: string) => {
       if (query.includes('fragment bookingCard_query')) {
         return queryFragmentData;
@@ -213,6 +215,8 @@ describe('BookingCard', () => {
       />,
     );
 
+    expect(lastMenuOptions.map((item) => item.label)).toContain('Edit this occurrence');
+    expect(lastMenuOptions.map((item) => item.label)).toContain('Edit recurring booking');
     expect(lastMenuOptions.map((item) => item.label)).toContain('Remove this occurrence');
     expect(lastMenuOptions.map((item) => item.label)).toContain('Remove recurring series');
   });

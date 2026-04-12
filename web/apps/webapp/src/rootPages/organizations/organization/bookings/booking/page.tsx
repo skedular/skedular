@@ -1,5 +1,6 @@
 import { EditMarketplaceBooking } from '@/components/booking/editMarketplaceBooking';
 import { EditPrivateBooking } from '@/components/booking/editPrivateBooking';
+import { EditPrivateRecurringBooking } from '@/components/booking/editPrivateRecurringBooking';
 import { PayMarketplaceBooking } from '@/components/booking/payMarketplaceBooking';
 import { BodyIconTypography, StackColumn } from '@/components/commons';
 import { Loading } from '@/components/loading';
@@ -12,7 +13,7 @@ import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
 import dayjs from 'dayjs';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -37,6 +38,9 @@ const RootQuery = graphql`
       channel {
         channel
       }
+      recurringBooking {
+        id
+      }
       marketplaceBooking {
         isPaymentRequired
         paymentStatus {
@@ -45,9 +49,13 @@ const RootQuery = graphql`
       }
     }
     ...editPrivateBooking_query
+    ...editPrivateRecurringBooking_query
     ...editPrivateBooking_organizationMembers_query
     ...editPrivateBooking_customerTeams_query
     ...editPrivateBooking_availableResources_query
+    ...editPrivateRecurringBooking_organizationMembers_query
+    ...editPrivateRecurringBooking_customerTeams_query
+    ...editPrivateRecurringBooking_availableResources_query
     ...editMarketplaceBooking_query
     ...editMarketplaceBooking_booking_query
     ...editMarketplaceBooking_organizationMembers_query
@@ -65,6 +73,7 @@ type Props = {
 const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationBooking_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const shouldPay = useMemo(() => {
     if (!rootData.booking?.marketplaceBooking) {
       return false;
@@ -81,6 +90,9 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
   if (!rootData.booking) {
     return null;
   }
+
+  const editMode = searchParams.get('editMode');
+  const showRecurringPrivateBookingEditor = rootData.booking.channel.channel === 'PRIVATE' && !!rootData.booking.recurringBooking && editMode === 'recurring';
 
   const date = dayjs(rootData.booking.from);
 
@@ -112,15 +124,24 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
           onReloadRequired={onReloadRequired}
         />
       )}
-      {rootData.booking.channel.channel === 'PRIVATE' && (
-        <EditPrivateBooking
-          rootDataRelay={rootData}
-          rootDataTeamsRelay={rootData}
-          rootDataOrganizationMembersRelay={rootData}
-          rootDataAvailableResourcesRelay={rootData}
-          onReloadRequired={onReloadRequired}
-        />
-      )}
+      {rootData.booking.channel.channel === 'PRIVATE' &&
+        (showRecurringPrivateBookingEditor ? (
+          <EditPrivateRecurringBooking
+            rootDataRelay={rootData}
+            rootDataTeamsRelay={rootData}
+            rootDataOrganizationMembersRelay={rootData}
+            rootDataAvailableResourcesRelay={rootData}
+            onReloadRequired={onReloadRequired}
+          />
+        ) : (
+          <EditPrivateBooking
+            rootDataRelay={rootData}
+            rootDataTeamsRelay={rootData}
+            rootDataOrganizationMembersRelay={rootData}
+            rootDataAvailableResourcesRelay={rootData}
+            onReloadRequired={onReloadRequired}
+          />
+        ))}
     </RootShell>
   );
 };

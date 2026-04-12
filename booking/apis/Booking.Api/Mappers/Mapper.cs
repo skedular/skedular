@@ -167,6 +167,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 EndDate = src.EndDate,
                 OccurrenceCount = src.OccurrenceCount,
                 SkippedDates = src.SkippedDates,
+                RequestedResources = src.RequestedResources.Select(MapToResourceDetails).ToList(),
                 InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
                 InvolvedOrganizationIds = src.InvolvedOrganizations.Select(item => (item.Id, item.CustomDomain.ToSafeString())),
                 InvolvedTeamIds = src.InvolvedTeams.Select(item => item.Id),

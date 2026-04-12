@@ -22,6 +22,7 @@ public class RecurringBookingDetails : Node
     [GraphQLName("endDate")] public DateTimeOffset? EndDate { get; set; }
     [GraphQLName("occurrenceCount")] public int? OccurrenceCount { get; set; }
     [GraphQLName("skippedDates")] public IEnumerable<DateTimeOffset> SkippedDates { get; set; } = [];
+    [GraphQLName("requestedResources")] public IEnumerable<ResourceDetails> RequestedResources { get; set; } = [];
 
     [GraphQLName("involvedCustomerIds")] public IEnumerable<string> InvolvedCustomerIds { get; set; } = [];
 

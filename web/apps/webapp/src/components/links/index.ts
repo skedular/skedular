@@ -170,8 +170,10 @@ export const getOrganizationTeamMembersBaseLink = (integratedPlatrform: string |
   `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/${teamId}?section=members`;
 export const getOrganizationTeamManageTeamBaseLink = (integratedPlatrform: string | undefined, id: string, teamId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/${teamId}?section=manage-team`;
-export const getOrganizationBookingBaseLink = (integratedPlatrform: string | undefined, id: string, bookingId: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/bookings/${bookingId}`;
+export const getOrganizationBookingBaseLink = (integratedPlatrform: string | undefined, id: string, bookingId: string, options?: { editMode?: 'occurrence' | 'recurring' }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/bookings/${bookingId}`, {
+    editMode: options?.editMode,
+  });
 
 export const getOrganizationLocationAddPrivateLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) => {
   let params = '';

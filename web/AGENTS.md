@@ -84,3 +84,7 @@ web/
   extend into Relay-free workspace packages such as `web/packages/ui`.
 - In `web/apps/webapp`, prefer Relay colocation. Fragments and small queries should live beside the component that uses
   them instead of being abstracted into reusable fragment files by default.
+- For private booking editing UX, keep recurring-series editing separate from occurrence editing:
+  - recurring bookings should offer both `Edit this occurrence` and `Edit recurring booking` where relevant
+  - the recurring-series editor must stay locked to recurring mode instead of allowing conversion back to one-time
+  - the one-off editor remains the place for instance-only overrides

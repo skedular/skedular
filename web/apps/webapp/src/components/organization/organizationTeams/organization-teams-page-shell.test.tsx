@@ -11,10 +11,10 @@ describe('OrganizationTeamsPageShell', () => {
     );
 
     expect(screen.getByText('Teams')).toBeInTheDocument();
-    expect(screen.getByText('Manage groups, members, and the primary location context for each team.')).toBeInTheDocument();
+    expect(screen.getByText('Create teams, manage members, and choose the main location for each team.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Add Team' })).toBeInTheDocument();
     expect(screen.getByText('Filters')).toBeInTheDocument();
-    expect(screen.getByText('No teams yet')).toBeInTheDocument();
+    expect(screen.getByText('Create your first team to get started.')).toBeInTheDocument();
   });
 
   it('renders the provided content when teams exist', () => {
@@ -27,6 +27,6 @@ describe('OrganizationTeamsPageShell', () => {
 
     expect(screen.getByText('Ops')).toBeInTheDocument();
     expect(screen.getByText('Sales')).toBeInTheDocument();
-    expect(screen.queryByText('No teams yet')).not.toBeInTheDocument();
+    expect(screen.queryByText('Create your first team to get started.')).not.toBeInTheDocument();
   });
 });

@@ -410,6 +410,7 @@ type RecurringBookingDetails {
   endDate: DateTime
   occurrenceCount: Int
   skippedDates: [DateTime!]!
+  requestedResources: [ResourceDetails!]!
   marketplaceBooking: MarketplaceBookingDetails
   id: ID!
 }

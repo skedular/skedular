@@ -330,21 +330,38 @@ const toShortDateWithAdditionalDayInfo = (date: Dayjs): string => {
   return dateValue;
 };
 
-const dateRangeToShortDateWithAdditionalDayInfo = (from: Dayjs, until: Dayjs): string => {
+type DateRangeWithAdditionalDayInfo = {
+  primaryLine: string;
+  secondaryLine: string;
+};
+
+const dateRangeToShortDateWithAdditionalDayInfo = (from: Dayjs, until: Dayjs): DateRangeWithAdditionalDayInfo => {
   const utcFrom = from.utc();
   const utcUntil = until.utc();
 
   if (isMidnight(utcFrom) && isMidnight(utcUntil)) {
     if (utcFrom.add(1, 'day').isSame(utcUntil)) {
-      return `${toShortDateWithAdditionalDayInfo(utcFrom)}`;
+      return {
+        primaryLine: toShortDateWithAdditionalDayInfo(utcFrom),
+        secondaryLine: '',
+      };
     } else {
-      return `${toShortDateWithAdditionalDayInfo(utcFrom)} - ${toShortDateWithAdditionalDayInfo(utcUntil)}`;
+      return {
+        primaryLine: toShortDateWithAdditionalDayInfo(utcFrom),
+        secondaryLine: toShortDateWithAdditionalDayInfo(utcUntil),
+      };
     }
   } else {
     if (utcFrom.isSame(utcUntil, 'day')) {
-      return `${toShortDateWithAdditionalDayInfo(utcFrom)} ${utcFrom.format('hh:mm a')} - ${utcUntil.format('hh:mm a')}`;
+      return {
+        primaryLine: `${toShortDateWithAdditionalDayInfo(utcFrom)}`,
+        secondaryLine: `${utcFrom.format('hh:mm a')} - ${utcUntil.format('hh:mm a')}`,
+      };
     } else {
-      return `${toShortDateWithAdditionalDayInfo(utcFrom)} ${utcFrom.format('hh:mm a')} - ${toShortDateWithAdditionalDayInfo(utcUntil)} ${utcUntil.format('hh:mm a')}`;
+      return {
+        primaryLine: `${toShortDateWithAdditionalDayInfo(utcFrom)} ${utcFrom.format('hh:mm a')}`,
+        secondaryLine: `${toShortDateWithAdditionalDayInfo(utcUntil)} ${utcUntil.format('hh:mm a')}`,
+      };
     }
   }
 };

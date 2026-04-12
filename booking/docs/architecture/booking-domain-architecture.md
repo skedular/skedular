@@ -162,6 +162,16 @@ It is not the main owner of orchestration logic.
 - Xero export policy and accounting-link state
 - refund eligibility, refund amount calculation, and refund state initiation
 
+Private recurring edit note:
+
+- recurring private series edits should continue to flow through the recurring-booking service contract rather than the
+  one-off booking update contract
+- one-off edits to generated recurring instances are treated as occurrence overrides, not as conversion of the parent
+  recurring series into a one-off booking
+- UI/editor behaviour should mirror that split:
+    - `Edit recurring booking` changes the series definition
+    - `Edit this occurrence` changes only the selected generated booking instance
+
 ### Temporal Workflows
 
 `booking/shared/Booking.Shared/Workflows` owns long-running orchestration:

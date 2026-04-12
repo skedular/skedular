@@ -49,6 +49,11 @@ This file is the entry point for AI agents working anywhere under `booking/`.
 - Stripe still remains the card-payment path, even when the invoice itself is exported and reconciled through Xero.
 - Do not push provider-specific Xero fields into core booking entities when the accounting side-table model already
   exists.
+- For private-booking editing, keep one-off and recurring edit paths separate:
+    - one-off bookings stay one-off
+    - recurring bookings stay recurring
+    - series edits should go through the recurring-booking contract, not the one-off booking update contract
+    - occurrence-level edits stay on the one-off booking editor because they represent overrides to a generated instance
 
 ## Source Map
 

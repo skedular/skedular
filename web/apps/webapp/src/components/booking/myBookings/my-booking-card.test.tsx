@@ -71,12 +71,14 @@ vi.mock('@/components/moreActionsMenu', () => ({
     return null;
   },
   moreActionsMenuAllOptions: {
-    EditBooking: [{ id: 'EditBooking', label: 'Edit Booking' }],
-    DeleteBooking: [{ id: 'DeleteBooking', label: 'Delete Booking' }],
-    DeleteRecurringBooking: [{ id: 'DeleteRecurringBooking', label: 'Remove recurring series' }],
+    EditBooking: { id: 'EditBooking', label: 'Edit Booking' },
+    EditRecurringBooking: { id: 'EditRecurringBooking', label: 'Edit recurring booking' },
+    DeleteBooking: { id: 'DeleteBooking', label: 'Delete Booking' },
+    DeleteRecurringBooking: { id: 'DeleteRecurringBooking', label: 'Remove recurring series' },
   },
   MoreActionsMenuOptionType: {
     EditBooking: 'EditBooking',
+    EditRecurringBooking: 'EditRecurringBooking',
     DeleteBooking: 'DeleteBooking',
     DeleteRecurringBooking: 'DeleteRecurringBooking',
   },
@@ -150,7 +152,7 @@ describe('MyBookingCard', () => {
     expect(screen.queryByText('Marketplace booking')).not.toBeInTheDocument();
   });
 
-  it('offers occurrence and series deletion for private recurring bookings', () => {
+  it('offers occurrence and series edit and delete actions for private recurring bookings', () => {
     useFragmentMock.mockImplementation(() => ({
       ...bookingFragmentData,
       channel: { channel: 'PRIVATE' },
@@ -159,6 +161,8 @@ describe('MyBookingCard', () => {
 
     render(<MyBookingCard bookingDetailsRelay={{} as never} organizationCustomDomain="acme" connectionIds={[]} otherTeammates={[]} recurringMarketplaceSubscriptionIds={{}} />);
 
+    expect(lastMenuOptions.map((item) => item.label)).toContain('Edit this occurrence');
+    expect(lastMenuOptions.map((item) => item.label)).toContain('Edit recurring booking');
     expect(lastMenuOptions.map((item) => item.label)).toContain('Remove this occurrence');
     expect(lastMenuOptions.map((item) => item.label)).toContain('Remove recurring series');
   });

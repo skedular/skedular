@@ -201,12 +201,14 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
   const recurringBooking = bookingDetails.recurringBooking;
   const isMarketplaceRecurringBooking = !!recurringBooking?.marketplaceBooking;
   const canDeleteRecurringOccurrence = !!recurringBooking && !isMarketplaceRecurringBooking && bookingDetails.channel.channel === 'PRIVATE';
+  const canEditRecurringSeries = canDeleteRecurringOccurrence;
   const recurringSeriesLabel = recurringBooking ? `${recurringBooking.frequency.name} recurring booking` : null;
   const recurringSeriesDateLabel = recurringBooking
     ? recurringBooking.endDate
       ? `${toShortDate(recurringBooking.startDate)} - ${toShortDate(recurringBooking.endDate)}`
       : `Starts ${toShortDate(recurringBooking.startDate)}`
     : null;
+  const bookingDateRange = dateRangeToShortDateWithAdditionalDayInfo(dayjs(bookingDetails.from), dayjs(bookingDetails.until));
   const recurringSeriesActionLabel = recurringBooking ? 'Remove recurring series' : null;
   const recurringOccurrenceActionLabel = canDeleteRecurringOccurrence ? 'Remove this occurrence' : null;
   const recurringDeleteConfirmationMessage = recurringBooking
@@ -220,7 +222,18 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
   const recurringDeleteDialogPrimaryLabel =
     pendingRecurringDeleteAction === 'occurrence' ? 'Remove this booking' : isMarketplaceRecurringBooking ? 'Cancel series' : 'Remove series';
 
-  const moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditBooking]];
+  const moreActionsOption: MoreActionsMenuItemType[] = [
+    canEditRecurringSeries
+      ? {
+          ...moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditBooking],
+          label: 'Edit this occurrence',
+        }
+      : moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditBooking],
+  ];
+
+  if (canEditRecurringSeries) {
+    moreActionsOption.push(moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditRecurringBooking]);
+  }
 
   if (recurringOccurrenceActionLabel) {
     moreActionsOption.push({
@@ -248,6 +261,10 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
         router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id));
+        break;
+
+      case MoreActionsMenuOptionType.EditRecurringBooking:
+        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id, { editMode: 'recurring' }));
         break;
 
       case MoreActionsMenuOptionType.DeleteBooking:
@@ -521,11 +538,10 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
                     <LeadIconTypography label={locationName} noWrap sx={{ minWidth: 0, maxWidth: '100%' }} />
                   </Link>
                 </Tooltip>
-                <SmallIconTypography
-                  startElement={<CalendarIcon />}
-                  label={dateRangeToShortDateWithAdditionalDayInfo(dayjs(bookingDetails.from), dayjs(bookingDetails.until))}
-                  noWrap
-                />
+                <StackColumn spacing={0.1} sx={{ minWidth: 0 }}>
+                  <SmallIconTypography startElement={<CalendarIcon />} label={bookingDateRange.primaryLine} noWrap />
+                  {bookingDateRange.secondaryLine ? <SmallIconTypography label={bookingDateRange.secondaryLine} noWrap sx={{ pl: 3.5 }} /> : null}
+                </StackColumn>
               </StackColumn>
 
               {moreActionsOption.length > 0 ? (

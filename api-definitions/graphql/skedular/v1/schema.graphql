@@ -1425,6 +1425,7 @@ type RecurringBookingDetails {
   lastModifiedByCustomer: CustomerDetails
   marketplaceBooking: MarketplaceBookingDetails
   occurrenceCount: Int
+  requestedResources: [ResourceDetails!]!
   skippedDates: [DateTime!]!
   startDate: DateTime!
   until: DateTime!
