@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c1f8bb34488a34e440416faab3b24b1a>>
+ * @generated SignedSource<<508f0eb37c3086b0da21c9677402f374>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -190,12 +190,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a8341d06faea18373e74b7000487956a",
+    "cacheID": "c8418745810cb0a5a1ba844a39b9cf69",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationAnalytics_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationAnalytics_rootQuery(\n  $organizationCustomDomain: String!\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationAnalytics_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationAnalytics_query on Query {\n  ...locationSelector_allLocations_query\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationAnalytics_rootQuery(\n  $organizationCustomDomain: String!\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationAnalytics_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationAnalytics_query on Query {\n  ...locationSelector_allLocations_query\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();

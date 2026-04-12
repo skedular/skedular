@@ -1,10 +1,7 @@
-import { SectionIconTypography } from '@/components/commons';
+import { AnalyticsInsightCard } from '@/components/analytics';
 import { RelayError, toRootError } from '@/components/relayError';
 import { startOfDay } from '@/libs/utils';
 import type { organizationMemberAttendancyInsightRoot_rootQuery } from '@/queries/__generated__/organizationMemberAttendancyInsightRoot_rootQuery.graphql';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Skeleton from '@mui/material/Skeleton';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -69,18 +66,9 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationCustomDo
 
   if (!queryReference) {
     return (
-      <Card sx={{ maxWidth: 500, height: '100%' }}>
-        <CardHeader
-          title={
-            <>
-              <SectionIconTypography label="Member Attendancy Insights" invertDefaultColor />
-            </>
-          }
-        />
-        <CardContent>
-          <Skeleton variant="rounded" width={470} height={350} />
-        </CardContent>
-      </Card>
+      <AnalyticsInsightCard title="Member Attendancy Insights">
+        <Skeleton variant="rounded" width="100%" height={350} />
+      </AnalyticsInsightCard>
     );
   }
 

@@ -1,10 +1,6 @@
-import { AnalyticsDaterangeSelector } from '@/components/analytics';
-import { SectionIconTypography } from '@/components/commons';
+import { AnalyticsDaterangeSelector, AnalyticsInsightCard } from '@/components/analytics';
 import { toDayAndMonthDate, toFixed } from '@/libs/utils';
 import type { organizationMemberAttendancyInsight_organizationAnalytics_query$key } from '@/queries/__generated__/organizationMemberAttendancyInsight_organizationAnalytics_query.graphql';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import { axisClasses } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { Dayjs } from 'dayjs';
@@ -77,7 +73,7 @@ const OrganizationMemberAttendancyInsight = ({ rootDataOrganizationAnalyticsRela
         valueFormatter: (value: number) => `${value} %`,
       },
     ],
-    width: 500,
+    width: 440,
     height: 300,
     sx: {
       [`.${axisClasses.left} .${axisClasses.label}`]: {
@@ -89,13 +85,10 @@ const OrganizationMemberAttendancyInsight = ({ rootDataOrganizationAnalyticsRela
   const valueFormatter = (value: number | null) => `${value}%`;
 
   return (
-    <Card sx={{ maxWidth: 500, height: '100%' }}>
-      <CardHeader title={<SectionIconTypography label="Member Attendancy Insights" invertDefaultColor />} />
-      <CardContent>
-        <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
-        <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'percentage', valueFormatter }]} {...chartSettings} />
-      </CardContent>
-    </Card>
+    <AnalyticsInsightCard title="Member Attendancy Insights">
+      <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
+      <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'percentage', valueFormatter }]} {...chartSettings} />
+    </AnalyticsInsightCard>
   );
 };
 

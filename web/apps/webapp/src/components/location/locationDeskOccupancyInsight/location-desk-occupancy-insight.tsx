@@ -1,11 +1,7 @@
-import { AnalyticsDaterangeSelector } from '@/components/analytics';
-import { SectionIconTypography } from '@/components/commons';
+import { AnalyticsDaterangeSelector, AnalyticsInsightCard } from '@/components/analytics';
 import { toDayAndMonthDate, toFixed } from '@/libs/utils';
 import type { locationDeskOccupancyInsight_locationAnalytics_query$key } from '@/queries/__generated__/locationDeskOccupancyInsight_locationAnalytics_query.graphql';
 import type { locationDeskOccupancyInsight_query$key } from '@/queries/__generated__/locationDeskOccupancyInsight_query.graphql';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import { axisClasses } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { Dayjs } from 'dayjs';
@@ -91,7 +87,7 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalytics
         valueFormatter: (value: number) => `${value}%`,
       },
     ],
-    width: 500,
+    width: 440,
     height: 300,
     sx: {
       [`.${axisClasses.left} .${axisClasses.label}`]: {
@@ -101,13 +97,10 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalytics
   };
 
   return (
-    <Card sx={{ maxWidth: 500, height: '100%' }}>
-      <CardHeader title={<SectionIconTypography label="Desk Occupancy Insights" invertDefaultColor />} />
-      <CardContent>
-        <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
-        <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'percentage' }]} {...chartSettings} />
-      </CardContent>
-    </Card>
+    <AnalyticsInsightCard title="Desk Occupancy Insights">
+      <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
+      <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'percentage' }]} {...chartSettings} />
+    </AnalyticsInsightCard>
   );
 };
 

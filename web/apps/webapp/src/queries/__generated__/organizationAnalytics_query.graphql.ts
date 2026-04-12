@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<16db5951d12d6d2db92d148dcd644c59>>
+ * @generated SignedSource<<c53b5b596562700385e2d32ff0dda666>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type organizationAnalytics_query$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
+        readonly name: string;
       };
     }>;
     readonly totalCount: number;
@@ -102,6 +103,13 @@ const node: ReaderFragment = {
                   "kind": "ScalarField",
                   "name": "id",
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "name",
+                  "storageKey": null
                 }
               ],
               "storageKey": null
@@ -129,6 +137,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "fc30c362243c96310cd2584fc7e3d035";
+(node as any).hash = "b3e6cc8c796f186d6766c52bffe3f476";
 
 export default node;
