@@ -258,6 +258,7 @@ public class OrganizationService(
         await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
             organization.OrganizationMembers.Select(item => item.CustomerId).ToList(),
             cancellationToken);
+        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync([customer.Id], cancellationToken);
 
         return deletedOrganization;
     }
@@ -329,12 +330,9 @@ public class OrganizationService(
         }
 
         var organization = await repositoryFactory.OrganizationRepository.GetByXeroTenantIdUntrackedAsync(tenantId, cancellationToken);
-        if (organization is null)
-        {
-            return null;
-        }
-
-        return mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
+        return organization is null
+            ? null
+            : mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
     }
 
     public async Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken)
@@ -346,9 +344,9 @@ public class OrganizationService(
         }
 
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var myOrganizations = await cachedOrganizationService.GetMyOrganizationsByCustomerIdAsync(customerId, cancellationToken);
 
-        return mapper.MapTo(
-            await cachedOrganizationService.GetMyOrganizationsByCustomerIdAsync(customerId, cancellationToken)).ToList();
+        return mapper.MapTo(myOrganizations).ToList();
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
@@ -493,7 +491,7 @@ public class OrganizationService(
         // Do not allow a changing organization type, the organization type is immutable
         organization.Type = existingOrganization.Type.ToOrganizationType();
 
-        // Preserve ownership verification status, it has its own service to handle it
+        // Preserve ownership verification status. It has its own service to handle it
         var isOwnershipVerified = existingOrganization.IsOwnershipVerified;
 
         existingOrganization = mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities);
@@ -511,6 +509,11 @@ public class OrganizationService(
         await transaction.CommitAsync(cancellationToken);
 
         await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
+
+        if (customer is not null)
+        {
+            await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync([customer.Id], cancellationToken);
+        }
 
         return organization;
     }

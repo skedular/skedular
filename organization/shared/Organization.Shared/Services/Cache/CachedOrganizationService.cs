@@ -43,7 +43,7 @@ public class CachedOrganizationService(
             if (!string.IsNullOrWhiteSpace(customDomain))
             {
                 return await hybridCache.GetOrCreateAsync(
-                    CreateKeyByUniqueAlphanumericName(customDomain),
+                    CreateKeyByUniqueCustomDomain(customDomain),
                     async ct =>
                         await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(null, customDomain, ct) ??
                         throw new OrganizationNotFound(),
@@ -76,7 +76,7 @@ public class CachedOrganizationService(
         if (!string.IsNullOrWhiteSpace(customDomain))
         {
             await hybridCache.SetAsync(
-                CreateKeyByUniqueAlphanumericName(customDomain),
+                CreateKeyByUniqueCustomDomain(customDomain),
                 await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                     null,
                     customDomain,
@@ -96,7 +96,7 @@ public class CachedOrganizationService(
         return await hybridCache.GetOrCreateAsync(
             CreateKeyByCustomerIdOrganizations(customerId),
             async ct => await repositoryFactory.OrganizationRepository.GetMinimalOrganizationByCustomerIdUntrackedAsync(customerId, ct),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
     }
 
@@ -117,13 +117,13 @@ public class CachedOrganizationService(
 
         if (!string.IsNullOrWhiteSpace(customDomain))
         {
-            await hybridCache.RemoveAsync(CreateKeyByUniqueAlphanumericName(customDomain), cancellationToken);
+            await hybridCache.RemoveAsync(CreateKeyByUniqueCustomDomain(customDomain), cancellationToken);
         }
     }
 
     private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-id:{id}";
 
-    private string CreateKeyByUniqueAlphanumericName(string customDomain) =>
+    private string CreateKeyByUniqueCustomDomain(string customDomain) =>
         $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-customDomain:{customDomain}";
 
     private string CreateKeyByCustomerIdOrganizations(string customerId) =>

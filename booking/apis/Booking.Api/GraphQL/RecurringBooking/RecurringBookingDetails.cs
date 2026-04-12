@@ -26,7 +26,7 @@ public class RecurringBookingDetails : Node
     [GraphQLName("involvedCustomerIds")] public IEnumerable<string> InvolvedCustomerIds { get; set; } = [];
 
     [GraphQLName("involvedOrganizationIds")]
-    public IEnumerable<(string Id, string UniqueAlphanumericName)> InvolvedOrganizationIds { get; set; } = [];
+    public IEnumerable<(string Id, string CustomDomain)> InvolvedOrganizationIds { get; set; } = [];
 
     [GraphQLName("involvedTeamIds")] public IEnumerable<string> InvolvedTeamIds { get; set; } = [];
     [GraphQLName("createdByCustomerId")] public string? CreatedByCustomerId { get; set; }
@@ -64,7 +64,7 @@ public static partial class RecurringBookingDetailsType
         string.IsNullOrWhiteSpace(item.DeletedByCustomerId) ? null : new CustomerDetails(item.DeletedByCustomerId);
 
     public static IEnumerable<OrganizationDetails> GetInvolvedOrganizations([Parent] RecurringBookingDetails item) =>
-        item.InvolvedOrganizationIds.Select(tuple => new OrganizationDetails(tuple.Id, tuple.UniqueAlphanumericName));
+        item.InvolvedOrganizationIds.Select(tuple => new OrganizationDetails(tuple.Id, tuple.CustomDomain));
 
     public static IEnumerable<TeamDetails> GetInvolvedTeams([Parent] RecurringBookingDetails item) =>
         item.InvolvedTeamIds.Select(id => new TeamDetails(id));

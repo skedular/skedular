@@ -40,7 +40,7 @@ public class CachedOrganizationService(
             if (!string.IsNullOrWhiteSpace(customDomain))
             {
                 return await hybridCache.GetOrCreateAsync(
-                    CreateKeyByUniqueAlphanumericName(customDomain),
+                    CreateKeyByUniqueCustomDomain(customDomain),
                     async ct =>
                         await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainUntrackedAsync(
                             null,
@@ -79,7 +79,7 @@ public class CachedOrganizationService(
         if (!string.IsNullOrWhiteSpace(customDomain))
         {
             await hybridCache.SetAsync(
-                CreateKeyByUniqueAlphanumericName(customDomain),
+                CreateKeyByUniqueCustomDomain(customDomain),
                 await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainUntrackedAsync(
                     null,
                     customDomain,
@@ -101,12 +101,12 @@ public class CachedOrganizationService(
 
         if (!string.IsNullOrWhiteSpace(customDomain))
         {
-            await hybridCache.RemoveAsync(CreateKeyByUniqueAlphanumericName(customDomain), cancellationToken);
+            await hybridCache.RemoveAsync(CreateKeyByUniqueCustomDomain(customDomain), cancellationToken);
         }
     }
 
     private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-id:{id}";
 
-    private string CreateKeyByUniqueAlphanumericName(string customDomain) =>
+    private string CreateKeyByUniqueCustomDomain(string customDomain) =>
         $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-customDomain:{customDomain}";
 }

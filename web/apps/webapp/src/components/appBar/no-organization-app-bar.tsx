@@ -253,59 +253,61 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
           <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, paddingRight: 2 }} />
           <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-          <IconButton
-            onClick={handleThemeMenuOpenClick}
-            sx={{
-              ml: 1,
-              border: 1,
-              borderColor: (theme) => theme.palette.divider,
-              borderRadius: 3,
-              width: 40,
-              height: 40,
-              color: (theme) => theme.palette.text.primary,
-              '&:hover': {
-                backgroundColor: (theme) => theme.palette.action.hover,
-              },
-            }}
-          >
-            {selectedThemeIcon}
-          </IconButton>
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+            <IconButton
+              onClick={handleThemeMenuOpenClick}
+              sx={{
+                ml: 1,
+                border: 1,
+                borderColor: (theme) => theme.palette.divider,
+                borderRadius: 3,
+                width: 40,
+                height: 40,
+                color: (theme) => theme.palette.text.primary,
+                '&:hover': {
+                  backgroundColor: (theme) => theme.palette.action.hover,
+                },
+              }}
+            >
+              {selectedThemeIcon}
+            </IconButton>
 
-          <Menu
-            anchorEl={themeMenuAnchorEl}
-            open={Boolean(themeMenuAnchorEl)}
-            onClose={handleThemeMenuCloseClick}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            sx={{ mt: 1 }}
-          >
-            <MenuItem selected={selectedThemeMode === 'light'} onClick={() => handleThemeModeSelected('light')}>
-              <BodyIconTypography startElement={<LightModeIcon fontSize="small" />} label="Light" spacing={2} />
-            </MenuItem>
-            <MenuItem selected={selectedThemeMode === 'dark'} onClick={() => handleThemeModeSelected('dark')}>
-              <BodyIconTypography startElement={<DarkModeIcon fontSize="small" />} label="Dark" spacing={2} />
-            </MenuItem>
-            <MenuItem selected={selectedThemeMode === 'system'} onClick={() => handleThemeModeSelected('system')}>
-              <BodyIconTypography startElement={<SystemModeIcon fontSize="small" />} label="System" spacing={2} />
-            </MenuItem>
-          </Menu>
+            <Menu
+              anchorEl={themeMenuAnchorEl}
+              open={Boolean(themeMenuAnchorEl)}
+              onClose={handleThemeMenuCloseClick}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              sx={{ mt: 1 }}
+            >
+              <MenuItem selected={selectedThemeMode === 'light'} onClick={() => handleThemeModeSelected('light')}>
+                <BodyIconTypography startElement={<LightModeIcon fontSize="small" />} label="Light" spacing={2} />
+              </MenuItem>
+              <MenuItem selected={selectedThemeMode === 'dark'} onClick={() => handleThemeModeSelected('dark')}>
+                <BodyIconTypography startElement={<DarkModeIcon fontSize="small" />} label="Dark" spacing={2} />
+              </MenuItem>
+              <MenuItem selected={selectedThemeMode === 'system'} onClick={() => handleThemeModeSelected('system')}>
+                <BodyIconTypography startElement={<SystemModeIcon fontSize="small" />} label="System" spacing={2} />
+              </MenuItem>
+            </Menu>
 
-          <IconButton color="inherit">
-            <Link component={NextLink} href={notificationsLink}>
-              {pendingInvitationsCount === 0 && <NotificationsIcon excludeTooltip />}
-              {pendingInvitationsCount > 0 && (
-                <Badge badgeContent={pendingInvitationsCount} color="primary">
-                  <NotificationsIcon excludeTooltip />
-                </Badge>
-              )}
-            </Link>
-          </IconButton>
+            <IconButton color="inherit">
+              <Link component={NextLink} href={notificationsLink}>
+                {pendingInvitationsCount === 0 && <NotificationsIcon excludeTooltip />}
+                {pendingInvitationsCount > 0 && (
+                  <Badge badgeContent={pendingInvitationsCount} color="primary">
+                    <NotificationsIcon excludeTooltip />
+                  </Badge>
+                )}
+              </Link>
+            </IconButton>
+          </Box>
 
           <IconButton onClick={handleProfileMenuOpenClick}>
             <CustomerAvatar
@@ -362,6 +364,49 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
               </Link>
             </MenuItem>
             <Divider />
+
+            {/* Notifications & theme — shown in profile menu on mobile only */}
+            <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+              <MenuItem component={NextLink} href={notificationsLink} onClick={handleProfileMenuCloseClick}>
+                {pendingInvitationsCount > 0 ? (
+                  <Badge badgeContent={pendingInvitationsCount} color="primary">
+                    <SmallIconTypography startElement={<NotificationsIcon excludeTooltip />} label="Notifications" />
+                  </Badge>
+                ) : (
+                  <SmallIconTypography startElement={<NotificationsIcon excludeTooltip />} label="Notifications" />
+                )}
+              </MenuItem>
+
+              <MenuItem
+                selected={selectedThemeMode === 'light'}
+                onClick={() => {
+                  handleThemeModeSelected('light');
+                  handleProfileMenuCloseClick();
+                }}
+              >
+                <SmallIconTypography startElement={<LightModeIcon fontSize="small" />} label="Light mode" />
+              </MenuItem>
+              <MenuItem
+                selected={selectedThemeMode === 'dark'}
+                onClick={() => {
+                  handleThemeModeSelected('dark');
+                  handleProfileMenuCloseClick();
+                }}
+              >
+                <SmallIconTypography startElement={<DarkModeIcon fontSize="small" />} label="Dark mode" />
+              </MenuItem>
+              <MenuItem
+                selected={selectedThemeMode === 'system'}
+                onClick={() => {
+                  handleThemeModeSelected('system');
+                  handleProfileMenuCloseClick();
+                }}
+              >
+                <SmallIconTypography startElement={<SystemModeIcon fontSize="small" />} label="System theme" />
+              </MenuItem>
+
+              <Divider />
+            </Box>
 
             <MenuItem onClick={handleSubmitFeedbackClicked}>
               <SmallIconTypography startElement={<FeedbackIcon />} label="Send us feedback" />
