@@ -181,6 +181,10 @@ Current recommendation:
 13. Refund operations
 14. Notifications
 15. Analytics and insights
+16. Private booking add/edit flows
+   - replace modal-first booking creation with dedicated pages
+   - support one-time and recurring private bookings in the same guided editor
+   - surface recurring-series context on booking detail pages instead of treating recurring instances as isolated bookings
 
 ### Phase 5: Setup / Onboarding
 
@@ -209,6 +213,7 @@ These patterns should be designed once and reused many times:
 - destructive confirmation flow
 - status badge/timeline pattern
 - guided editor pattern
+- page-backed booking editor pattern
 
 ## Feature Backlog By Surface
 

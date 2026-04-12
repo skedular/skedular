@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<acc30927c4644f497d08be8b54f0a068>>
+ * @generated SignedSource<<ff2a8a31d52552782540caa413793548>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,7 @@ export type LocationOrderInput = {
   direction: OrderDirection;
   field: LocationOrderField;
 };
-export type newBookingButton_rootQuery$variables = {
+export type addPrivateBookingPage_rootQuery$variables = {
   customerExists: boolean;
   customerId: string;
   dateFromToGetAvailableResources: any;
@@ -38,12 +38,12 @@ export type newBookingButton_rootQuery$variables = {
   peopleNameSearchText?: string | null | undefined;
   teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
-export type newBookingButton_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"newBookingDialog_availableResources_query" | "newBookingDialog_customerTeams_query" | "newBookingDialog_organizationMembers_query" | "newBookingDialog_query">;
+export type addPrivateBookingPage_rootQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"addPrivateBookingPage_availableResources_query" | "addPrivateBookingPage_customerTeams_query" | "addPrivateBookingPage_organizationMembers_query" | "addPrivateBookingPage_query">;
 };
-export type newBookingButton_rootQuery = {
-  response: newBookingButton_rootQuery$data;
-  variables: newBookingButton_rootQuery$variables;
+export type addPrivateBookingPage_rootQuery = {
+  response: addPrivateBookingPage_rootQuery$data;
+  variables: addPrivateBookingPage_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -113,33 +113,14 @@ v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "totalCount",
-  "storageKey": null
-},
-v13 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v14 = [
+v13 = [
   (v10/*: any*/),
-  (v13/*: any*/)
+  (v12/*: any*/)
 ],
-v15 = {
-  "kind": "ClientExtension",
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "__id",
-      "storageKey": null
-    }
-  ]
-},
-v16 = [
+v14 = [
   {
     "kind": "Variable",
     "name": "orderBy",
@@ -157,9 +138,9 @@ v16 = [
     "name": "where"
   }
 ],
-v17 = [
+v15 = [
   (v10/*: any*/),
-  (v13/*: any*/),
+  (v12/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -184,27 +165,27 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "newBookingButton_rootQuery",
+    "name": "addPrivateBookingPage_rootQuery",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "newBookingDialog_query"
+        "name": "addPrivateBookingPage_query"
       },
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "newBookingDialog_organizationMembers_query"
+        "name": "addPrivateBookingPage_organizationMembers_query"
       },
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "newBookingDialog_customerTeams_query"
+        "name": "addPrivateBookingPage_customerTeams_query"
       },
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "newBookingDialog_availableResources_query"
+        "name": "addPrivateBookingPage_availableResources_query"
       }
     ],
     "type": "Query",
@@ -225,7 +206,7 @@ return {
       (v5/*: any*/)
     ],
     "kind": "Operation",
-    "name": "newBookingButton_rootQuery",
+    "name": "addPrivateBookingPage_rootQuery",
     "selections": [
       {
         "alias": null,
@@ -260,7 +241,6 @@ return {
         "name": "locations",
         "plural": false,
         "selections": [
-          (v12/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -276,13 +256,12 @@ return {
                 "kind": "LinkedField",
                 "name": "node",
                 "plural": false,
-                "selections": (v14/*: any*/),
+                "selections": (v13/*: any*/),
                 "storageKey": null
               }
             ],
             "storageKey": null
-          },
-          (v15/*: any*/)
+          }
         ],
         "storageKey": null
       },
@@ -308,7 +287,7 @@ return {
             "name": "category",
             "storageKey": null
           },
-          (v13/*: any*/)
+          (v12/*: any*/)
         ],
         "storageKey": null
       },
@@ -328,13 +307,12 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v16/*: any*/),
+            "args": (v14/*: any*/),
             "concreteType": "ConnectionOfOrganizationMemberEdge",
             "kind": "LinkedField",
             "name": "members",
             "plural": false,
             "selections": [
-              (v12/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -361,7 +339,7 @@ return {
                         "plural": false,
                         "selections": [
                           (v10/*: any*/),
-                          (v13/*: any*/),
+                          (v12/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -437,20 +415,19 @@ return {
                   }
                 ],
                 "storageKey": null
-              },
-              (v15/*: any*/)
+              }
             ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v16/*: any*/),
+            "args": (v14/*: any*/),
             "filters": [
               "where",
               "orderBy"
             ],
             "handle": "connection",
-            "key": "bookingDetailsSelectorQuery_members",
+            "key": "addPrivateBookingPage_members",
             "kind": "LinkedHandle",
             "name": "members"
           },
@@ -489,7 +466,6 @@ return {
             "name": "customerTeams",
             "plural": false,
             "selections": [
-              (v12/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -505,13 +481,12 @@ return {
                     "kind": "LinkedField",
                     "name": "node",
                     "plural": false,
-                    "selections": (v14/*: any*/),
+                    "selections": (v13/*: any*/),
                     "storageKey": null
                   }
                 ],
                 "storageKey": null
-              },
-              (v15/*: any*/)
+              }
             ],
             "storageKey": null
           }
@@ -557,7 +532,7 @@ return {
             "plural": false,
             "selections": [
               (v10/*: any*/),
-              (v13/*: any*/),
+              (v12/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -565,7 +540,7 @@ return {
                 "kind": "LinkedField",
                 "name": "customTags",
                 "plural": true,
-                "selections": (v17/*: any*/),
+                "selections": (v15/*: any*/),
                 "storageKey": null
               },
               {
@@ -575,7 +550,7 @@ return {
                 "kind": "LinkedField",
                 "name": "zones",
                 "plural": true,
-                "selections": (v17/*: any*/),
+                "selections": (v15/*: any*/),
                 "storageKey": null
               }
             ],
@@ -587,16 +562,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "46e854af1dcb1e11527b869531a42a0e",
+    "cacheID": "44bbc886c0c44999cf23affd4c56df32",
     "id": null,
     "metadata": {},
-    "name": "newBookingButton_rootQuery",
+    "name": "addPrivateBookingPage_rootQuery",
     "operationKind": "query",
-    "text": "query newBookingButton_rootQuery(\n  $organizationCustomDomain: String!\n  $peopleNameSearchText: String\n  $locationId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $customerId: String!\n  $customerExists: Boolean!\n  $teamsSortingValues: [TeamOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...newBookingDialog_query\n  ...newBookingDialog_organizationMembers_query\n  ...newBookingDialog_customerTeams_query\n  ...newBookingDialog_availableResources_query\n}\n\nfragment newBookingDialog_availableResources_query on Query {\n  availableResources(where: {organizationCustomDomain: $organizationCustomDomain, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment newBookingDialog_customerTeams_query on Query {\n  customerTeams(where: {organizationCustomDomain: $organizationCustomDomain, customerId: $customerId}, orderBy: $teamsSortingValues) @include(if: $customerExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment newBookingDialog_organizationMembers_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(where: {nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment newBookingDialog_query on Query {\n  me {\n    id\n  }\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  bookingSlotSizeInMinutes\n  ...singleChoiceBookingCategory_query\n}\n\nfragment singleChoiceBookingCategory_query on Query {\n  bookingCategories {\n    category\n    name\n  }\n}\n"
+    "text": "query addPrivateBookingPage_rootQuery(\n  $organizationCustomDomain: String!\n  $peopleNameSearchText: String\n  $locationId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $customerId: String!\n  $customerExists: Boolean!\n  $teamsSortingValues: [TeamOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...addPrivateBookingPage_query\n  ...addPrivateBookingPage_organizationMembers_query\n  ...addPrivateBookingPage_customerTeams_query\n  ...addPrivateBookingPage_availableResources_query\n}\n\nfragment addPrivateBookingPage_availableResources_query on Query {\n  availableResources(where: {organizationCustomDomain: $organizationCustomDomain, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment addPrivateBookingPage_customerTeams_query on Query {\n  customerTeams(where: {organizationCustomDomain: $organizationCustomDomain, customerId: $customerId}, orderBy: $teamsSortingValues) @include(if: $customerExists) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment addPrivateBookingPage_organizationMembers_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(where: {nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment addPrivateBookingPage_query on Query {\n  me {\n    id\n  }\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  bookingSlotSizeInMinutes\n  ...singleChoiceBookingCategory_query\n}\n\nfragment singleChoiceBookingCategory_query on Query {\n  bookingCategories {\n    category\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0f3128068ecc738f7bedbb4bcf838143";
+(node as any).hash = "057a3ec6c1dcaad31862decfa1910558";
 
 export default node;

@@ -140,6 +140,17 @@ export const getOrganizationBookingsBaseLink = (integratedPlatrform: string | un
 
   return params ? `${getOrganizationBaseLink(integratedPlatrform, id)}/bookings?${params}` : `${getOrganizationBaseLink(integratedPlatrform, id)}/bookings`;
 };
+export const getOrganizationBookingAddLink = (
+  integratedPlatrform: string | undefined,
+  id: string,
+  options?: { locationId?: string; date?: string; resourceIds?: string[]; redirectUrl?: string },
+) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/bookings/add`, {
+    locationId: options?.locationId,
+    date: options?.date,
+    resourceIds: options?.resourceIds,
+    redirectUrl: options?.redirectUrl,
+  });
 export const getOrganizationSubscriptionsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/subscriptions`;
 export const getOrganizationUsersBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/users`;
 export const getOrganizationUserProfileBaseLink = (integratedPlatrform: string | undefined, id: string, customerId: string) =>

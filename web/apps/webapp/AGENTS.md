@@ -79,6 +79,8 @@ scripts/
   - remove the list/grid toggle and keep the surface card-first
   - treat this as a shared-view collection page, not the future admin spreadsheet surface
   - keep join/payment/refund actions available, but fold them into the compact booking-card anatomy instead of preserving the older divider-heavy record card
+  - private booking create/edit flows should use dedicated pages, not modal dialogs
+  - the create flow should support one-time and recurring private bookings in the same editor, with recurrence shown as a first-class schedule choice instead of a separate hidden workflow
 - For the operator subscriptions collection specifically:
   - keep it card-first and bounded like the other redesigned collection pages instead of rendering one full-width record strip per subscription
   - keep refund, cancellation, invoice, and payment-confirmation actions inside compact subscription cards
