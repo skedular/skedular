@@ -71,6 +71,7 @@ web/
   the page background.
 - Shared-view bookings collections should converge on the same compact card grid language as other collection pages;
   reserve dense admin list/table management for dedicated admin surfaces later.
+- The operator subscriptions page should follow the same bounded card-first collection language instead of full-width record strips; refund, cancellation, invoice, and payment actions belong inside compact subscription cards.
 - Marketplace landing/location discovery should use the same compact card anatomy for both the left-side results list
   and the map-selected popup card, with a fixed-height media block and a centered fallback icon when no feature image
   exists.

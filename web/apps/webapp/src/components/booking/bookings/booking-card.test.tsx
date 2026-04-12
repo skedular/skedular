@@ -159,6 +159,7 @@ describe('BookingCard', () => {
     expect(screen.getByText('Monitor')).toBeInTheDocument();
     expect(screen.getByText('North Wing')).toBeInTheDocument();
     expect(screen.getByText('Needs projector access')).toBeInTheDocument();
+    expect(screen.getByText('View Invoice')).toBeInTheDocument();
     expect(screen.queryByText('Open booking')).not.toBeInTheDocument();
   });
 });

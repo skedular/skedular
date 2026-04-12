@@ -68,12 +68,21 @@ scripts/
   - remove list/grid toggles once the surface has moved to the compact collection-card pattern
   - prefer a bounded card grid and a dedicated bookings page shell over a divider-heavy section with table fallback
   - booking cards should emphasize location, time, payment state, and a compact booking-detail preview rather than behaving like mini record detail pages
+  - payment-status chips on booking and subscription cards should stay consistent across operator and customer-facing surfaces:
+    - confirmed/paid uses `success` + `filled`
+    - pending uses `warning` + `filled`
+    - other states use `default` + `outlined`
+  - invoice actions should read as user actions such as `View Invoice`, not file-format jargon
   - if onboarding/getting-started content is present, place it above the working filter/collection surface rather than burying it between the filter bar and the cards
   - top filter bars on home and booking collection pages should sit on the same surfaced white panel language as the newer collection pages
 - For the organization bookings collection specifically:
   - remove the list/grid toggle and keep the surface card-first
   - treat this as a shared-view collection page, not the future admin spreadsheet surface
   - keep join/payment/refund actions available, but fold them into the compact booking-card anatomy instead of preserving the older divider-heavy record card
+- For the operator subscriptions collection specifically:
+  - keep it card-first and bounded like the other redesigned collection pages instead of rendering one full-width record strip per subscription
+  - keep refund, cancellation, invoice, and payment-confirmation actions inside compact subscription cards
+  - recurring billing periods should render as small internal panels within the card, not as page-width rows
 - For compact location cards specifically:
   - keep the card focused on booking context, not management detail dumps
   - prefer this panel order: availability, address, then zones when zones exist

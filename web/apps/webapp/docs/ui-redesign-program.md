@@ -248,6 +248,11 @@ These patterns should be designed once and reused many times:
   - card-first collection shell
   - no list/grid toggle on the shared-view bookings page
   - compact cards keep join/payment/refund workflows, while dense admin table management should move to a separate admin-oriented surface later
+- the operator subscriptions page should also move to the same collection language:
+  - bounded compact card grid
+  - status/payment/renewal summary at the top of each card
+  - refund, cancellation, invoice, and recurring-period actions kept inside the card
+  - avoid one full-width record block per subscription on large screens
 
 ### Locations / Resources / Teams
 

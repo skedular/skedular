@@ -19,7 +19,6 @@ import type { bookingCard_deletePrivateBookingMutation } from '@/queries/__gener
 import type { bookingCard_makeBookingPaymentNotRequiredMutation } from '@/queries/__generated__/bookingCard_makeBookingPaymentNotRequiredMutation.graphql';
 import type { bookingCard_query$key } from '@/queries/__generated__/bookingCard_query.graphql';
 import type { bookingCard_rejectBookingPaymentMutation } from '@/queries/__generated__/bookingCard_rejectBookingPaymentMutation.graphql';
-import Alert from '@mui/material/Alert';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -57,6 +56,9 @@ type ZoneDetails = {
   name: string | null | undefined;
   color?: string | null | undefined;
 };
+
+const isConfirmedPaymentStatus = (paymentStatusType: string) => paymentStatusType === 'CONFIRMED' || paymentStatusType === 'PAID';
+const isPendingPaymentStatus = (paymentStatusType: string) => paymentStatusType === 'PENDING';
 
 const sectionSx: SxProps<Theme> = {
   border: 1,
@@ -308,11 +310,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const shortDateFormatFrom = toShortDate(bookingDetails.from);
-  const showRefundFollowUpHint =
-    rootData.organizationBookingPermissions.canModifyPaymentMethod &&
-    bookingDetails.channel.channel === 'MARKETPLACE' &&
-    !!bookingDetails.marketplaceBooking &&
-    bookingDetails.marketplaceBooking.paymentStatus.type === 'CONFIRMED';
   const refund = bookingDetails.marketplaceBooking?.refund;
   const primaryCustomer = bookingDetails.involvedCustomers[0];
   const refundEntityLabel = `booking ${primaryCustomer ? getCustomerFullName(primaryCustomer) : 'customer'} on ${shortDateFormatFrom}`;
@@ -742,11 +739,27 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
             <StackRow sx={{ gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
               {teamName ? <Chip label={teamName} size="small" icon={<TeamIcon />} /> : null}
               {bookingDetails.marketplaceBooking?.isPaymentRequired ? (
-                <Chip label={bookingDetails.marketplaceBooking.paymentStatus.name} size="small" icon={<PaymentStatusIcon />} />
+                <Chip
+                  label={bookingDetails.marketplaceBooking.paymentStatus.name}
+                  size="small"
+                  icon={<PaymentStatusIcon />}
+                  color={
+                    isConfirmedPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type)
+                      ? 'success'
+                      : isPendingPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type)
+                        ? 'warning'
+                        : 'default'
+                  }
+                  variant={
+                    isConfirmedPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type) || isPendingPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type)
+                      ? 'filled'
+                      : 'outlined'
+                  }
+                />
               ) : null}
               {bookingDetails.marketplaceBooking?.invoiceUrl ? (
                 <Link component={NextLink} href={bookingDetails.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer" underline="none">
-                  <Chip label="Invoice PDF" size="small" icon={<PdfIcon />} clickable />
+                  <Chip label="View Invoice" size="small" icon={<PdfIcon />} clickable />
                 </Link>
               ) : null}
             </StackRow>
@@ -763,14 +776,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
                 </Box>
               </Tooltip>
             </StackRow>
-
-            {showRefundFollowUpHint && !refund ? (
-              <Box sx={sectionSx}>
-                <Alert severity="info" sx={{ borderRadius: 2 }}>
-                  Payment managers: marketplace cancellations can still need separate refund and accounting follow-up after the booking state changes.
-                </Alert>
-              </Box>
-            ) : null}
 
             {canManageRefund && refund ? (
               <Box sx={sectionSx}>

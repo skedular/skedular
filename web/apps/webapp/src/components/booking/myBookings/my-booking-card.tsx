@@ -59,6 +59,9 @@ type CustomerDetails = {
   photoUrl?: string | null | undefined;
 };
 
+const isConfirmedPaymentStatus = (paymentStatusType: string) => paymentStatusType === 'CONFIRMED' || paymentStatusType === 'PAID';
+const isPendingPaymentStatus = (paymentStatusType: string) => paymentStatusType === 'PENDING';
+
 const sectionSx: SxProps<Theme> = {
   border: 1,
   borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
@@ -323,11 +326,27 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
             <StackRow sx={{ gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
               {teamName ? <Chip label={teamName} size="small" icon={<TeamIcon />} /> : null}
               {bookingDetails.marketplaceBooking?.isPaymentRequired ? (
-                <Chip label={bookingDetails.marketplaceBooking.paymentStatus.name} size="small" icon={<PaymentStatusIcon />} />
+                <Chip
+                  label={bookingDetails.marketplaceBooking.paymentStatus.name}
+                  size="small"
+                  icon={<PaymentStatusIcon />}
+                  color={
+                    isConfirmedPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type)
+                      ? 'success'
+                      : isPendingPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type)
+                        ? 'warning'
+                        : 'default'
+                  }
+                  variant={
+                    isConfirmedPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type) || isPendingPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type)
+                      ? 'filled'
+                      : 'outlined'
+                  }
+                />
               ) : null}
               {bookingDetails.marketplaceBooking?.invoiceUrl ? (
                 <Link component={NextLink} href={bookingDetails.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer" underline="none">
-                  <Chip label="Invoice PDF" size="small" icon={<PdfIcon />} clickable />
+                  <Chip label="View Invoice" size="small" icon={<PdfIcon />} clickable />
                 </Link>
               ) : null}
             </StackRow>

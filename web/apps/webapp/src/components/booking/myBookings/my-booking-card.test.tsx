@@ -127,6 +127,7 @@ describe('MyBookingCard', () => {
     expect(screen.getByText('Monitor')).toBeInTheDocument();
     expect(screen.getByText('North Wing')).toBeInTheDocument();
     expect(screen.getByText('Bring laptop')).toBeInTheDocument();
+    expect(screen.getByText('View Invoice')).toBeInTheDocument();
     expect(screen.queryByText('Open booking')).not.toBeInTheDocument();
     expect(screen.queryByText('Marketplace booking')).not.toBeInTheDocument();
   });

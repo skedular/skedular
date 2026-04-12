@@ -291,7 +291,9 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
                 const latestRecurringBooking = [...subscription.recurringBookings].sort(
                   (left, right) => new Date(right.startDate).getTime() - new Date(left.startDate).getTime(),
                 )[0];
-                const isConfirmed = subscription.marketplaceBooking.paymentStatus.type === 'CONFIRMED';
+                const paymentStatusType = subscription.marketplaceBooking.paymentStatus.type;
+                const isConfirmed = paymentStatusType === 'CONFIRMED';
+                const isPending = paymentStatusType === 'PENDING';
                 const lifecycleDisplay = toMarketplaceBookingSubscriptionLifecycleDisplay({
                   autoRenew: subscription.autoRenew,
                   cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
@@ -331,8 +333,8 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
                           size="small"
                           icon={<PaymentStatusIcon />}
                           label={subscription.marketplaceBooking.paymentStatus.name}
-                          color={isConfirmed ? 'success' : 'default'}
-                          variant={isConfirmed ? 'filled' : 'outlined'}
+                          color={isConfirmed ? 'success' : isPending ? 'warning' : 'default'}
+                          variant={isConfirmed || isPending ? 'filled' : 'outlined'}
                         />
                       </StackRow>
 

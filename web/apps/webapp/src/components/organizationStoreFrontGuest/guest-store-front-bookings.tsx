@@ -211,7 +211,9 @@ const BookingsSection = ({
           const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, booking.id);
           const locationLabel = booking.involvedLocations[0]?.name ?? 'Location to be confirmed';
           const resourcesLabel = booking.bookingResources.map((item) => item.resource.name).join(', ') || 'Assigned later';
-          const isConfirmed = booking.marketplaceBooking?.paymentStatus.type === 'CONFIRMED';
+          const paymentStatusType = booking.marketplaceBooking?.paymentStatus.type;
+          const isConfirmed = paymentStatusType === 'CONFIRMED';
+          const isPending = paymentStatusType === 'PENDING';
 
           return (
             <Link
@@ -247,8 +249,8 @@ const BookingsSection = ({
                     size="small"
                     icon={<PaymentStatusIcon />}
                     label={booking.marketplaceBooking?.paymentStatus.name ?? 'Pending'}
-                    color={isConfirmed ? 'success' : 'default'}
-                    variant={isConfirmed ? 'filled' : 'outlined'}
+                    color={isConfirmed ? 'success' : isPending ? 'warning' : 'default'}
+                    variant={isConfirmed || isPending ? 'filled' : 'outlined'}
                   />
                 </StackRow>
 

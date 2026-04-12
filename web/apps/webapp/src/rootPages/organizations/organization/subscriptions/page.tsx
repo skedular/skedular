@@ -1,7 +1,6 @@
 import {
   BodyIconTypography,
   DefaultDialogTitle,
-  LeadIconTypography,
   PushToRight,
   SmallIconTypography,
   StackColumn,
@@ -23,6 +22,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
+import { defaultPadding } from '@/libs/theme';
 import { getRelayErrorMessage } from '@/libs/utils';
 import type { pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation.graphql';
@@ -38,6 +38,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Grid from '@mui/material/Grid';
+import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
@@ -45,6 +46,27 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
+import { PageHeaderPanel } from '@skedular/ui';
+
+const surfaceSx: SxProps<Theme> = {
+  borderRadius: 4,
+  border: 1,
+  borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+  backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.88)' : theme.palette.background.paper),
+  boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : '0 1px 3px rgba(0, 0, 0, 0.24)'),
+};
+
+const subscriptionCardSx: SxProps<Theme> = {
+  ...surfaceSx,
+  height: '100%',
+};
+
+const innerPanelSx: SxProps<Theme> = {
+  borderRadius: 3,
+  px: 1.5,
+  py: 1.25,
+  backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.03)' : theme.palette.action.hover),
+};
 
 const RootQuery = graphql`
   query pageOrganizationSubscriptions_rootQuery($organizationCustomDomain: String!) {
@@ -465,24 +487,24 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <Box sx={{ p: 2 }}>
-        <StackColumn spacing={1}>
-          <LeadIconTypography label="Marketplace subscriptions" />
-          <BodyIconTypography label="Review customer subscriptions, confirm recurring payments, and stop future billing now or at period end. Issued invoices stay on record." />
-        </StackColumn>
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
+        <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pb: defaultPadding }} spacing={2}>
+          <PageHeaderPanel
+            title="Marketplace subscriptions"
+            description="Review customer subscriptions, confirm recurring payments, manage refunds, and stop future billing now or at period end."
+          />
 
-        {!rootData.organizationBookingPermissions.canModifyPaymentMethod && (
-          <Card sx={{ mt: 2 }}>
-            <CardContent>
+          {!rootData.organizationBookingPermissions.canModifyPaymentMethod ? (
+            <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
               <SmallIconTypography label="You do not have permission to confirm subscription payments for this organization." />
-            </CardContent>
-          </Card>
-        )}
-
-        {rootData.organizationBookingPermissions.canModifyPaymentMethod && (
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            {subscriptions.length > 0 ? (
-              subscriptions.map((subscription) => {
+            </Box>
+          ) : subscriptions.length === 0 ? (
+            <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
+              <SmallIconTypography label="No subscriptions found for this organization." sx={{ opacity: 0.78 }} />
+            </Box>
+          ) : (
+            <Grid container spacing={2}>
+              {subscriptions.map((subscription) => {
                 const sortedRecurringBookings = [...subscription.recurringBookings].sort((left, right) => new Date(left.startDate).getTime() - new Date(right.startDate).getTime());
                 const lifecycleDisplay = toMarketplaceBookingSubscriptionLifecycleDisplay({
                   autoRenew: subscription.autoRenew,
@@ -490,150 +512,147 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                   isCancelled: subscription.status.type === 'CANCELLED',
                   fallbackActiveLabel: subscription.status.name,
                 });
+                const productTitle = subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription';
+                const customerLabel = subscription.involvedCustomers.length > 0 ? getCustomerDisplayName(subscription.involvedCustomers[0]) : 'Customer unavailable';
 
                 return (
-                  <Grid key={subscription.id} size={{ xs: 12 }}>
-                    <Card>
-                      <CardContent>
-                        <StackRow sx={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: 1 }}>
-                          <StackColumn spacing={0.4}>
-                            <SubtitleIconTypography label={subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription'} />
-                            <SmallIconTypography
-                              label={subscription.involvedCustomers.length > 0 ? `Customer: ${getCustomerDisplayName(subscription.involvedCustomers[0])}` : 'Customer unavailable'}
-                              sx={{ opacity: 0.82 }}
-                            />
-                            <SmallIconTypography
-                              label={`Started ${new Date(subscription.startedAt).toLocaleDateString()}${subscription.nextRenewalAt ? ` • Next renewal ${new Date(subscription.nextRenewalAt).toLocaleDateString()}` : ''}`}
-                              sx={{ opacity: 0.72 }}
-                            />
-                          </StackColumn>
-                          <PushToRight />
-                          <Chip label={lifecycleDisplay.statusLabel} color={lifecycleDisplay.statusColor} variant="outlined" />
-                        </StackRow>
+                  <Grid key={subscription.id} size={{ xs: 12, lg: 6 }}>
+                    <Card sx={subscriptionCardSx}>
+                      <CardContent sx={{ p: 2, height: '100%' }}>
+                        <StackColumn spacing={2} sx={{ height: '100%' }}>
+                          <StackRow sx={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: 1 }}>
+                            <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
+                              <SubtitleIconTypography label={productTitle} />
+                              <SmallIconTypography label={customerLabel} sx={{ opacity: 0.82 }} />
+                              <SmallIconTypography
+                                label={`Started ${new Date(subscription.startedAt).toLocaleDateString()}${subscription.nextRenewalAt ? ` • Next renewal ${new Date(subscription.nextRenewalAt).toLocaleDateString()}` : ''}`}
+                                sx={{ opacity: 0.72 }}
+                              />
+                            </StackColumn>
+                            <PushToRight />
+                            <Chip label={lifecycleDisplay.statusLabel} color={lifecycleDisplay.statusColor} variant="outlined" />
+                          </StackRow>
 
-                        {subscription.status.type === 'ACTIVE' ? (
-                          <SubscriptionCancellationSection
-                            cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
-                            hasConfirmedPayment={subscription.marketplaceBooking.paymentStatus.type === 'CONFIRMED'}
-                            isInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
-                            immediateCancellationMode={immediateCancellationMode}
-                            atPeriodEndCancellationMode={subscription.autoRenew ? atPeriodEndCancellationMode : null}
-                            onImmediateCancellationClick={() =>
-                              immediateCancellationMode
-                                ? handleRequestImmediateCancellationClick(
-                                    subscription.id,
-                                    subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription',
-                                    immediateCancellationMode,
-                                  )
-                                : undefined
-                            }
-                            onAtPeriodEndCancellationClick={() =>
-                              atPeriodEndCancellationMode
-                                ? handleDeleteMarketplaceBookingSubscriptionClick(
-                                    subscription.id,
-                                    subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription',
-                                    atPeriodEndCancellationMode.type,
-                                    atPeriodEndCancellationMode.name,
-                                  )
-                                : undefined
-                            }
-                          />
-                        ) : null}
+                          <Box sx={innerPanelSx}>
+                            <StackColumn spacing={0.75}>
+                              <BodyIconTypography label={`Renewal: ${lifecycleDisplay.renewalLabel}`} />
+                              <SmallIconTypography
+                                label={`Current payment: ${subscription.marketplaceBooking.paymentStatus.name} • Method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
+                                sx={{ opacity: 0.78 }}
+                              />
+                            </StackColumn>
+                          </Box>
 
-                        <StackColumn spacing={1} sx={{ mt: 2 }}>
-                          {subscription.refund ? (
-                            <MarketplaceRefundAdminPanel
-                              entityLabel={`${subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription'} for ${
-                                subscription.involvedCustomers.length > 0 ? getCustomerDisplayName(subscription.involvedCustomers[0]) : 'customer'
-                              }`}
-                              refund={subscription.refund}
-                            />
+                          {subscription.status.type === 'ACTIVE' ? (
+                            <Box sx={innerPanelSx}>
+                              <SubscriptionCancellationSection
+                                cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
+                                hasConfirmedPayment={subscription.marketplaceBooking.paymentStatus.type === 'CONFIRMED'}
+                                isInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
+                                immediateCancellationMode={immediateCancellationMode}
+                                atPeriodEndCancellationMode={subscription.autoRenew ? atPeriodEndCancellationMode : null}
+                                onImmediateCancellationClick={() =>
+                                  immediateCancellationMode ? handleRequestImmediateCancellationClick(subscription.id, productTitle, immediateCancellationMode) : undefined
+                                }
+                                onAtPeriodEndCancellationClick={() =>
+                                  atPeriodEndCancellationMode
+                                    ? handleDeleteMarketplaceBookingSubscriptionClick(
+                                        subscription.id,
+                                        productTitle,
+                                        atPeriodEndCancellationMode.type,
+                                        atPeriodEndCancellationMode.name,
+                                      )
+                                    : undefined
+                                }
+                              />
+                            </Box>
                           ) : null}
-                          <SmallIconTypography label={`Renewal: ${lifecycleDisplay.renewalLabel}`} sx={{ opacity: 0.72 }} />
-                          {sortedRecurringBookings.length > 0 ? (
-                            sortedRecurringBookings.map((recurringBooking) => {
-                              const cycleLabel = `${new Date(recurringBooking.startDate).toLocaleDateString()} - ${
-                                recurringBooking.endDate ? new Date(recurringBooking.endDate).toLocaleDateString() : 'Open ended'
-                              }`;
-                              const cycleMarketplaceBooking = recurringBooking.marketplaceBooking;
 
-                              return (
-                                <Box
-                                  key={recurringBooking.id}
-                                  sx={{
-                                    border: 1,
-                                    borderColor: (theme) => theme.palette.divider,
-                                    borderRadius: 2,
-                                    p: 1.5,
-                                  }}
-                                >
-                                  <StackRow sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
-                                    <StackColumn spacing={0.3}>
-                                      <BodyIconTypography label={cycleLabel} />
-                                      <SmallIconTypography
-                                        label={`Payment: ${cycleMarketplaceBooking?.paymentStatus.name ?? 'Not set'} • Method: ${cycleMarketplaceBooking?.paymentMethod.name ?? 'Not set'} • Quantity: ${cycleMarketplaceBooking?.quantity ?? subscription.marketplaceBooking.quantity}`}
-                                        sx={{ opacity: 0.78 }}
-                                      />
-                                    </StackColumn>
-                                    <PushToRight />
-                                    {cycleMarketplaceBooking?.invoiceUrl ? (
-                                      <Button variant="text" size="small" href={cycleMarketplaceBooking.invoiceUrl} target="_blank" rel="noreferrer" sx={{ textTransform: 'none' }}>
-                                        Download invoice
-                                      </Button>
-                                    ) : null}
-                                    {cycleMarketplaceBooking?.paymentStatus.type === 'PENDING' && (
-                                      <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
-                                        <Button
-                                          variant="contained"
-                                          size="small"
-                                          sx={{ textTransform: 'none', color: 'white' }}
-                                          onClick={() => handleConfirmRecurringBookingPaymentClick(recurringBooking.id, cycleLabel)}
-                                        >
-                                          Confirm Payment
-                                        </Button>
-                                        <Button
-                                          variant="outlined"
-                                          color="error"
-                                          size="small"
-                                          sx={{ textTransform: 'none' }}
-                                          onClick={() => handleRejectRecurringBookingPaymentClick(recurringBooking.id, cycleLabel)}
-                                        >
-                                          Reject Payment
-                                        </Button>
-                                        <Button
-                                          variant="text"
-                                          size="small"
-                                          sx={{ textTransform: 'none' }}
-                                          onClick={() => handleMakeRecurringBookingPaymentNotRequiredClick(recurringBooking.id, cycleLabel)}
-                                        >
-                                          Payment Not Required
-                                        </Button>
+                          {subscription.refund ? <MarketplaceRefundAdminPanel entityLabel={`${productTitle} for ${customerLabel}`} refund={subscription.refund} /> : null}
+
+                          <StackColumn spacing={1}>
+                            <BodyIconTypography label="Billing periods" />
+                            {sortedRecurringBookings.length > 0 ? (
+                              sortedRecurringBookings.map((recurringBooking) => {
+                                const cycleLabel = `${new Date(recurringBooking.startDate).toLocaleDateString()} - ${
+                                  recurringBooking.endDate ? new Date(recurringBooking.endDate).toLocaleDateString() : 'Open ended'
+                                }`;
+                                const cycleMarketplaceBooking = recurringBooking.marketplaceBooking;
+
+                                return (
+                                  <Box key={recurringBooking.id} sx={innerPanelSx}>
+                                    <StackColumn spacing={1}>
+                                      <StackColumn spacing={0.35}>
+                                        <BodyIconTypography label={cycleLabel} />
+                                        <SmallIconTypography
+                                          label={`Payment: ${cycleMarketplaceBooking?.paymentStatus.name ?? 'Not set'} • Method: ${cycleMarketplaceBooking?.paymentMethod.name ?? 'Not set'} • Quantity: ${cycleMarketplaceBooking?.quantity ?? subscription.marketplaceBooking.quantity}`}
+                                          sx={{ opacity: 0.78 }}
+                                        />
+                                      </StackColumn>
+
+                                      <StackRow sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+                                        {cycleMarketplaceBooking?.invoiceUrl ? (
+                                          <Button
+                                            variant="text"
+                                            size="small"
+                                            href={cycleMarketplaceBooking.invoiceUrl}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            sx={{ textTransform: 'none' }}
+                                          >
+                                            Download Invoice
+                                          </Button>
+                                        ) : null}
+
+                                        {cycleMarketplaceBooking?.paymentStatus.type === 'PENDING' ? (
+                                          <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
+                                            <Button
+                                              variant="contained"
+                                              size="small"
+                                              sx={{ textTransform: 'none', color: 'white' }}
+                                              onClick={() => handleConfirmRecurringBookingPaymentClick(recurringBooking.id, cycleLabel)}
+                                            >
+                                              Confirm Payment
+                                            </Button>
+                                            <Button
+                                              variant="outlined"
+                                              color="error"
+                                              size="small"
+                                              sx={{ textTransform: 'none' }}
+                                              onClick={() => handleRejectRecurringBookingPaymentClick(recurringBooking.id, cycleLabel)}
+                                            >
+                                              Reject Payment
+                                            </Button>
+                                            <Button
+                                              variant="text"
+                                              size="small"
+                                              sx={{ textTransform: 'none' }}
+                                              onClick={() => handleMakeRecurringBookingPaymentNotRequiredClick(recurringBooking.id, cycleLabel)}
+                                            >
+                                              Payment Not Required
+                                            </Button>
+                                          </StackRow>
+                                        ) : null}
                                       </StackRow>
-                                    )}
-                                  </StackRow>
-                                </Box>
-                              );
-                            })
-                          ) : (
-                            <SmallIconTypography label="No recurring periods generated yet." sx={{ opacity: 0.72 }} />
-                          )}
+                                    </StackColumn>
+                                  </Box>
+                                );
+                              })
+                            ) : (
+                              <Box sx={innerPanelSx}>
+                                <SmallIconTypography label="No recurring periods generated yet." sx={{ opacity: 0.72 }} />
+                              </Box>
+                            )}
+                          </StackColumn>
                         </StackColumn>
                       </CardContent>
                     </Card>
                   </Grid>
                 );
-              })
-            ) : (
-              <Grid size={{ xs: 12 }}>
-                <Card>
-                  <CardContent>
-                    <SmallIconTypography label="No subscriptions found for this organization." sx={{ opacity: 0.78 }} />
-                  </CardContent>
-                </Card>
-              </Grid>
-            )}
-          </Grid>
-        )}
+              })}
+            </Grid>
+          )}
+        </StackColumn>
       </Box>
 
       <Dialog open={!!pendingCancellationConfirmation} onClose={handleCancelImmediateCancellationClick}>
