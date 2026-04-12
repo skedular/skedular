@@ -39,7 +39,7 @@ const OrganizationProductsPageShell = ({ actions, isEmpty, children }: Props) =>
             },
             gap: 2,
             alignItems: 'stretch',
-            justifyContent: 'center',
+            justifyContent: 'start',
           }}
         >
           {children}

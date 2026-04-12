@@ -227,45 +227,43 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
   );
 
   return (
-    <>
-      <OrganizationLocationsPageShell actions={pageActions} toolbar={pageToolbar} isEmpty={locations.length === 0}>
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: {
-              xs: '1fr',
-              sm: 'repeat(auto-fit, minmax(320px, 360px))',
-            },
-            gap: 2,
-            alignItems: 'stretch',
-            justifyContent: 'center',
-          }}
-        >
-          {locations.map((location) => {
-            const resourcesCount = location.resources.totalCount;
-            const availableResourcesCount = rootDataRefetchable.availableResources
-              ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
-              : 0;
-            const availablePercentage = resourcesCount > 0 ? (availableResourcesCount / resourcesCount) * 100 : 0;
+    <OrganizationLocationsPageShell actions={pageActions} toolbar={pageToolbar} isEmpty={locations.length === 0}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: '1fr',
+            sm: 'repeat(auto-fit, minmax(320px, 360px))',
+          },
+          gap: 2,
+          alignItems: 'stretch',
+          justifyContent: 'start',
+        }}
+      >
+        {locations.map((location) => {
+          const resourcesCount = location.resources.totalCount;
+          const availableResourcesCount = rootDataRefetchable.availableResources
+            ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
+            : 0;
+          const availablePercentage = resourcesCount > 0 ? (availableResourcesCount / resourcesCount) * 100 : 0;
 
-            return (
-              <Box key={location.id} sx={{ height: '100%' }}>
-                <LocationCard
-                  rootDataRelay={rootData}
-                  locationDetailsRelay={location}
-                  onReloadRequired={onReloadRequired}
-                  organizationCustomDomain={organizationCustomDomain}
-                  defaultDate={defaultDate}
-                  connectionIds={connectionIds}
-                  availableResourcesCount={availableResourcesCount}
-                  availablePercentage={availablePercentage}
-                />
-              </Box>
-            );
-          })}
-        </Box>
-      </OrganizationLocationsPageShell>
-    </>
+          return (
+            <Box key={location.id} sx={{ height: '100%' }}>
+              <LocationCard
+                rootDataRelay={rootData}
+                locationDetailsRelay={location}
+                onReloadRequired={onReloadRequired}
+                organizationCustomDomain={organizationCustomDomain}
+                defaultDate={defaultDate}
+                connectionIds={connectionIds}
+                availableResourcesCount={availableResourcesCount}
+                availablePercentage={availablePercentage}
+              />
+            </Box>
+          );
+        })}
+      </Box>
+    </OrganizationLocationsPageShell>
   );
 };
 
