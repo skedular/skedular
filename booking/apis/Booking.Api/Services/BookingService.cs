@@ -108,7 +108,10 @@ public class BookingService(
                 scopedOrganization.Locations.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id).ToList(),
                 scopedOrganization.Teams.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id).ToList());
 
-            searchCriteria = searchCriteria with { OrganizationId = null, OrganizationCustomDomain = null };
+            searchCriteria = searchCriteria with
+            {
+                OrganizationId = scopedOrganization.Id, OrganizationCustomDomain = scopedOrganization.CustomDomain
+            };
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.LocationIds.Count != 0)
@@ -176,11 +179,7 @@ public class BookingService(
             searchCriteria.LocationIds.Count == 0 &&
             searchCriteria.TeamIds.Count == 0)
         {
-            if (organizationIds is null)
-            {
-                organizationIds = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
-            }
-
+            organizationIds ??= await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
             locationIds ??= await GetCustomerLocationIdsAsync(customerId, cancellationToken);
             teamIds ??= await GetCustomerTeamIdsAsync(customerId, cancellationToken);
 
