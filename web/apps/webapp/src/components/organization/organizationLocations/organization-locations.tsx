@@ -248,18 +248,17 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
           const availablePercentage = resourcesCount > 0 ? (availableResourcesCount / resourcesCount) * 100 : 0;
 
           return (
-            <Box key={location.id} sx={{ height: '100%' }}>
-              <LocationCard
-                rootDataRelay={rootData}
-                locationDetailsRelay={location}
-                onReloadRequired={onReloadRequired}
-                organizationCustomDomain={organizationCustomDomain}
-                defaultDate={defaultDate}
-                connectionIds={connectionIds}
-                availableResourcesCount={availableResourcesCount}
-                availablePercentage={availablePercentage}
-              />
-            </Box>
+            <LocationCard
+              key={location.id}
+              rootDataRelay={rootData}
+              locationDetailsRelay={location}
+              onReloadRequired={onReloadRequired}
+              organizationCustomDomain={organizationCustomDomain}
+              defaultDate={defaultDate}
+              connectionIds={connectionIds}
+              availableResourcesCount={availableResourcesCount}
+              availablePercentage={availablePercentage}
+            />
           );
         })}
       </Box>

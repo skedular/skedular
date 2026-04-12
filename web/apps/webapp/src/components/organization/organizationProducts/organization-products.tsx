@@ -2,7 +2,6 @@ import { Loading } from '@/components/loading';
 import NewProductButton from '@/components/product/addProduct/new-product-button';
 import { RelayError, toRootError } from '@/components/relayError';
 import type { organizationProducts_rootQuery } from '@/queries/__generated__/organizationProducts_rootQuery.graphql';
-import Box from '@mui/system/Box';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -47,9 +46,7 @@ const OrganizationProducts = ({ queryReference, organizationCustomDomain }: Prop
   return (
     <OrganizationProductsPageShell actions={<NewProductButton organizationCustomDomain={organizationCustomDomain} />} isEmpty={products.length === 0}>
       {products.map((product) => (
-        <Box key={product.id} sx={{ height: '100%' }}>
-          <ProductCard rootDataRelay={rootData} productDetailsRelay={product} organizationCustomDomain={organizationCustomDomain} connectionIds={connectionIds} />
-        </Box>
+        <ProductCard key={product.id} rootDataRelay={rootData} productDetailsRelay={product} organizationCustomDomain={organizationCustomDomain} connectionIds={connectionIds} />
       ))}
     </OrganizationProductsPageShell>
   );

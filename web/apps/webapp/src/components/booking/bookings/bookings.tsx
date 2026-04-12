@@ -156,16 +156,15 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
                 });
 
           return (
-            <Box key={booking.id} sx={{ height: '100%' }}>
-              <BookingCard
-                rootDataRelay={rootData}
-                bookingDetailsRelay={booking}
-                organizationCustomDomain={organizationCustomDomain}
-                connectionIds={connectionIds}
-                canJoinBooking={canJoinBooking}
-                recurringMarketplaceSubscriptionIds={recurringMarketplaceSubscriptionIds}
-              />
-            </Box>
+            <BookingCard
+              key={booking.id}
+              rootDataRelay={rootData}
+              bookingDetailsRelay={booking}
+              organizationCustomDomain={organizationCustomDomain}
+              connectionIds={connectionIds}
+              canJoinBooking={canJoinBooking}
+              recurringMarketplaceSubscriptionIds={recurringMarketplaceSubscriptionIds}
+            />
           );
         })}
       </Box>

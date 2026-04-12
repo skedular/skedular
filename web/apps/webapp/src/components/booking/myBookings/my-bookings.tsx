@@ -222,15 +222,14 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
           }, []);
 
           return (
-            <Box key={myBooking.id} sx={{ height: '100%' }}>
-              <MyBookingCard
-                bookingDetailsRelay={myBooking}
-                organizationCustomDomain={organizationCustomDomain}
-                connectionIds={connectionIds}
-                otherTeammates={otherTeammates}
-                recurringMarketplaceSubscriptionIds={recurringMarketplaceSubscriptionIds}
-              />
-            </Box>
+            <MyBookingCard
+              key={myBooking.id}
+              bookingDetailsRelay={myBooking}
+              organizationCustomDomain={organizationCustomDomain}
+              connectionIds={connectionIds}
+              otherTeammates={otherTeammates}
+              recurringMarketplaceSubscriptionIds={recurringMarketplaceSubscriptionIds}
+            />
           );
         })}
       </Box>

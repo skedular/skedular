@@ -128,16 +128,15 @@ const Teams = ({ queryReference, organizationCustomDomain }: Props) => {
         }}
       >
         {teams.map((team) => (
-          <Box key={team.id} sx={{ height: '100%' }}>
-            <TeamCard
-              teamDetailsRelay={team}
-              connectionIds={connectionIds}
-              teammates={team.members.edges
-                .map(({ node }) => node)
-                .filter(({ organizationMember }) => !!organizationMember)!
-                .map(({ organizationMember }) => organizationMember!.customer)}
-            />
-          </Box>
+          <TeamCard
+            key={team.id}
+            teamDetailsRelay={team}
+            connectionIds={connectionIds}
+            teammates={team.members.edges
+              .map(({ node }) => node)
+              .filter(({ organizationMember }) => !!organizationMember)!
+              .map(({ organizationMember }) => organizationMember!.customer)}
+          />
         ))}
       </Box>
     </OrganizationTeamsPageShell>
