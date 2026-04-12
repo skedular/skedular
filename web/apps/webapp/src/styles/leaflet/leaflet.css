@@ -566,19 +566,22 @@ svg.leaflet-image-layer.leaflet-interactive path {
 }
 
 .marketplace-location-popup .leaflet-popup-content-wrapper {
-  padding: 0;
-  background: transparent;
-  box-shadow: none;
-  border-radius: 0;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  border: 0 !important;
   color: inherit;
+  overflow: visible;
 }
 
 .marketplace-location-popup .leaflet-popup-content {
-  margin: 0;
+  margin: 0 !important;
   color: inherit;
   font: inherit;
   line-height: inherit;
   text-align: left;
+  overflow: visible;
 }
 
 .marketplace-location-popup .leaflet-popup-content p {
@@ -586,6 +589,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
 }
 
 .marketplace-location-popup .leaflet-popup-tip-container {
+  display: none;
+}
+
+.marketplace-location-popup .leaflet-popup-close-button {
   display: none;
 }
 

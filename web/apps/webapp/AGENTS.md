@@ -86,6 +86,7 @@ scripts/
   - when no image exists, use a small centered location icon inside the media area instead of a stretched placeholder
   - keep name and address compact and single-line where possible, with full text available on hover
   - treat capacity, floor area, and similar facts as a small internal details section, not floating chips, so the map popup and list card stay visually identical
+  - the map popup should not add its own extra panel chrome around the card; keep the close action on the card itself so the popup reads as the same card surface
 - For the organization locations index specifically:
   - treat it as a card-first surface only
   - do not preserve or reintroduce a list/grid toggle unless there is a clear product need that the compact cards cannot satisfy

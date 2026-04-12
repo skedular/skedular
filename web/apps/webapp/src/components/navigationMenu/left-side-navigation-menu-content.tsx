@@ -15,13 +15,13 @@ import {
 } from '@/components/icons';
 import {
   getOrganizationAdminSetupBaseLink,
-  getOrganizationAdminSubscriptionsBaseLink,
   getOrganizationAnalyticsBaseLink,
   getOrganizationBaseLink,
   getOrganizationBookingsBaseLink,
   getOrganizationLocationsBaseLink,
   getOrganizationMarketplaceSetupBaseLink,
   getOrganizationProductsBaseLink,
+  getOrganizationSubscriptionsBaseLink,
   getOrganizationTeamsBaseLink,
   getOrganizationUsersBaseLink,
 } from '@/components/links';
@@ -142,7 +142,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationMarketplaceSetupBaseLink = getOrganizationMarketplaceSetupBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationProductsBaseLink = getOrganizationProductsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationSubscriptionsBaseLink = getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationSubscriptionsBaseLink = getOrganizationSubscriptionsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, rootData.organization.customDomain!);
 
   return (
