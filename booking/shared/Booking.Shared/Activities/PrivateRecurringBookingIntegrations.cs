@@ -86,7 +86,11 @@ public class PrivateRecurringBookingIntegrations(
                 cancellationToken);
         }
 
-        foreach (var booking in reconciliationPlan.MissingBookingDays.Select(missingBookingDay => mapper.MapTo(recurringBooking, missingBookingDay)))
+        var bookingsToAdd = reconciliationPlan.MissingBookingDays
+            .Select(missingBookingDay => mapper.MapTo(recurringBooking, missingBookingDay))
+            .ToList();
+
+        foreach (var booking in bookingsToAdd)
         {
             booking.Id = randomHelper.Generate();
 

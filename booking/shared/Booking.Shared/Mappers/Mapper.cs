@@ -335,8 +335,7 @@ public class Mapper(TimeProvider timeProvider) : IMapper
 
     public Models.Booking MapTo(Database.Entities.RecurringBooking src, DateOnly date)
     {
-        var from = date.ToDateTimeOffset(src.From.TimeOfDay);
-        var until = date.ToDateTimeOffset(src.Until.TimeOfDay);
+        var (from, until) = ResolveRecurringBookingWindow(src, date);
 
         return new Models.Booking
         {
@@ -363,8 +362,9 @@ public class Mapper(TimeProvider timeProvider) : IMapper
         MarketplaceBooking? marketplaceBooking,
         DateOnly? date)
     {
-        var from = date?.ToDateTimeOffset(src.From.TimeOfDay) ?? booking.From;
-        var until = date?.ToDateTimeOffset(src.Until.TimeOfDay) ?? booking.Until;
+        var (from, until) = date is null
+            ? (booking.From, booking.Until)
+            : ResolveRecurringBookingWindow(src, date.Value);
 
         return new Models.Booking
         {
@@ -602,6 +602,15 @@ public class Mapper(TimeProvider timeProvider) : IMapper
                 StripeCheckoutSession = MapTo(src.StripeCheckoutSession),
                 PaymentExpiry = src.PaymentExpiry
             };
+
+    private static (DateTimeOffset From, DateTimeOffset Until) ResolveRecurringBookingWindow(
+        Database.Entities.RecurringBooking src,
+        DateOnly bookingDay)
+    {
+        var from = bookingDay.ToDateTimeOffset(src.From.TimeOfDay);
+        var until = from.Add(src.Until - src.From);
+        return (from, until);
+    }
 
     private static Models.ProductVersion MapTo(ProductVersion src) =>
         new()
