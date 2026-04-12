@@ -3,20 +3,16 @@ import { MyBookings } from '@/components/booking/myBookings';
 import { GridContainer, PushToRight, StackColumn } from '@/components/commons';
 import { WeekRangePicker } from '@/components/datePickers';
 import { GettingStarted } from '@/components/gettingStarted';
-import { getOrganizationLocationsBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
-import { ClaimLocationOwnershipButton } from '@/components/location';
 import { LocationSelector } from '@/components/location/locationSelector';
 import { RelayError, toRootError } from '@/components/relayError';
 import { TeamSelector } from '@/components/team/teamSelector';
-import { useIntegratedPlatrform } from '@/libs/providers';
 import { defaultPadding } from '@/libs/theme';
 import { endOfWeek, startOfDay, startOfWeek } from '@/libs/utils';
 import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';
-import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -72,13 +68,11 @@ const RootQuery = graphql`
 
 const Organization = ({ queryReference, onReloadRequired, organizationCustomDomain, defaultStartWeek }: Props) => {
   const rootData = usePreloadedQuery<organization_rootQuery>(RootQuery, queryReference);
-  const { integratedPlatrform } = useIntegratedPlatrform();
   const [today] = useState(startOfDay());
   const [startWeek, setStartWeek] = useState(defaultStartWeek);
   const [endWeek, setEndWeek] = useState(endOfWeek(defaultStartWeek).add(-1, 'milliseconds'));
   const [locationIds, setLocationIds] = useState<string[]>([]);
   const [teamIds, setTeamIds] = useState<string[]>([]);
-  const router = useRouter();
 
   const handleWeehChanged = (date: Dayjs) => {
     setStartWeek(date);
@@ -91,10 +85,6 @@ const Organization = ({ queryReference, onReloadRequired, organizationCustomDoma
 
   const handlTeamChanged = (id?: string) => {
     setTeamIds(id ? [id] : []);
-  };
-
-  const handleClaimLocationOwnershipClicked = () => {
-    router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain));
   };
 
   if (!organizationCustomDomain) {
@@ -112,9 +102,6 @@ const Organization = ({ queryReference, onReloadRequired, organizationCustomDoma
               <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
               <PushToRight />
               <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationCustomDomain={organizationCustomDomain} />
-              {rootData.organization?.canModify && (
-                <ClaimLocationOwnershipButton organizationCustomDomain={organizationCustomDomain} onClaimClicked={handleClaimLocationOwnershipClicked} />
-              )}
             </GridContainer>
           </Box>
         </Box>

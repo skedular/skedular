@@ -1,7 +1,6 @@
 import { BodyIconTypography, GridContainer, PushToRight, StackColumn } from '@/components/commons';
 import StackRow from '@/components/commons/stack-row';
 import { Loading } from '@/components/loading';
-import { ClaimLocationOwnershipButton } from '@/components/location';
 import { NewLocationButton } from '@/components/location/addLocation';
 import { CustomTagSelector } from '@/components/organization/customTagSelector';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
@@ -187,12 +186,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
     return null;
   }
 
-  const pageActions = (
-    <>
-      {rootData.organization?.canModify && <NewLocationButton rootDataRelay={rootData} organizationCustomDomain={organizationCustomDomain} />}
-      {rootData.organization?.canModify && <ClaimLocationOwnershipButton organizationCustomDomain={organizationCustomDomain} connectionIds={connectionIds} />}
-    </>
-  );
+  const pageActions = <>{rootData.organization?.canModify && <NewLocationButton rootDataRelay={rootData} organizationCustomDomain={organizationCustomDomain} />}</>;
 
   const pageToolbar = (
     <StackColumn spacing={1.5}>

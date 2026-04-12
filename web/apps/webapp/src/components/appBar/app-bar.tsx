@@ -4,6 +4,7 @@ import { NewFeedbackDialog } from '@/components/feedback';
 import {
   AddIcon,
   BillingAndPaymentIcon,
+  ClaimOwnership,
   FeedbackIcon,
   HamburgerMenuIcon,
   NotificationsIcon,
@@ -12,7 +13,16 @@ import {
   SignOutIcon,
   SystemModeIcon,
 } from '@/components/icons';
-import { getBillingAndPaymentLink, getNotificationsLink, getOrganizationBaseLink, getOrganizationSetupLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
+import { ClaimLocationOwnershipDialog } from '@/components/location';
+import {
+  getBillingAndPaymentLink,
+  getNotificationsLink,
+  getOrganizationBaseLink,
+  getOrganizationLocationsBaseLink,
+  getOrganizationSetupLink,
+  getSettingsLink,
+  getSignOutReturnToLink,
+} from '@/components/links';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { PaletteModeContext, SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@/libs/utils';
@@ -87,6 +97,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const [themeMenuAnchorEl, setThemeMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
+  const [claimLocationOwnershipDialogOpen, setClaimLocationOwnershipDialogOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(() => {
@@ -127,6 +138,23 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const handleSubmitFeedbackClicked = () => {
     setProfileOpenAnchorEl(null);
     setSubmitFeedbackDialogOpen(true);
+  };
+
+  const handleClaimLocationOwnershipClicked = () => {
+    setProfileOpenAnchorEl(null);
+    setClaimLocationOwnershipDialogOpen(true);
+  };
+
+  const handleClaimLocationOwnershipCompleted = () => {
+    setClaimLocationOwnershipDialogOpen(false);
+
+    if (organizationCustomDomain) {
+      router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain));
+    }
+  };
+
+  const handleClaimLocationOwnershipCancelled = () => {
+    setClaimLocationOwnershipDialogOpen(false);
   };
 
   const handleSubmitFeedbackSendClick = () => {
@@ -378,6 +406,12 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
               </MenuItem>
             )}
 
+            {organizationCustomDomain && (
+              <MenuItem onClick={handleClaimLocationOwnershipClicked}>
+                <SmallIconTypography startElement={<ClaimOwnership />} label="Claim Location" />
+              </MenuItem>
+            )}
+
             <Divider />
 
             <MenuItem onClick={handleSubmitFeedbackClicked}>
@@ -401,6 +435,16 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
         onSendClicked={handleSubmitFeedbackSendClick}
         onCancel={handleSubmitFeedbackCancelClick}
       />
+
+      {organizationCustomDomain && (
+        <ClaimLocationOwnershipDialog
+          connectionIds={[]}
+          isDialogOpen={claimLocationOwnershipDialogOpen}
+          onClaimClicked={handleClaimLocationOwnershipCompleted}
+          onCancel={handleClaimLocationOwnershipCancelled}
+          organizationCustomDomain={organizationCustomDomain}
+        />
+      )}
     </>
   );
 };

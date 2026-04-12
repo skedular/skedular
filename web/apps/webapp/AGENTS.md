@@ -102,6 +102,7 @@ scripts/
   - treat it as a card-first surface only
   - do not preserve or reintroduce a list/grid toggle unless there is a clear product need that the compact cards cannot satisfy
   - remove list-specific query fields, handlers, and mutations when the list mode is removed
+  - keep secondary location-management actions such as `Claim Location` out of the page toolbar; place them in the authenticated profile menu instead of repeating them across organization pages
 - For the organization location detail page specifically:
   - do not reintroduce a nested left rail inside the broader organization shell
   - use a route-backed local top section nav for setup-style subsections

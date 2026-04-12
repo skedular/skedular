@@ -68,6 +68,8 @@ web/
   management surfaces, not spreadsheet surfaces.
 - For organization collection pages, prefer one shared page-shell language and bounded card grids instead of preserving
   older list/grid toggle patterns per domain surface.
+- Keep low-frequency secondary actions such as `Claim Location` in the authenticated profile menu rather than repeating
+  them in page-level toolbars across organization surfaces.
 - Apply the same rule to the home bookings collection once it has been redesigned; do not preserve a list/table mode
   just because it existed before.
 - Home/dashboard and booking collection filter controls should live on surfaced toolbar panels, not bare rows floating on
