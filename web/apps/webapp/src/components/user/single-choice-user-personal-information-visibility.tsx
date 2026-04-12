@@ -56,7 +56,7 @@ const SingleChoiceUserPersonalInformationVisibility = ({ rootDataRelay, name, re
       selectOnFocus
       clearOnBlur
       handleHomeEndKeys
-      helperText={<HelperText text="Choose whether your information is visible to others or shown in a redacted form" />}
+      helperText={<HelperText text="Choose whether other people can see your details or only a limited version of them." />}
     />
   );
 };

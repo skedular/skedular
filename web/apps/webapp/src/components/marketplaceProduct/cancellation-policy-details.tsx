@@ -38,25 +38,25 @@ const getCancellationPolicyLines = (
 
   switch (cancellationPolicyType) {
     case 'NO_CANCELLATION':
-      return ['This pricing option cannot be cancelled online after purchase.'];
+      return ['This purchase cannot be cancelled after checkout.'];
     case 'FULL_REFUND_BEFORE_CUTOFF': {
       const rule = rules[0];
       return rule
         ? [
             `100% refund until ${formatMinutesBeforeLabel(rule.minutesBefore)} before ${eventLabel}.`,
-            `After that, this ${eventLabel.includes('renewal') ? 'plan' : 'booking'} is non-refundable.`,
+            `After that, there is no refund for this ${eventLabel.includes('renewal') ? 'plan' : 'booking'}.`,
           ]
-        : ['Cancellation details will be shown before checkout.'];
+        : ['You will see the cancellation details before checkout.'];
     }
     case 'TIERED_REFUND':
       return rules.length > 0
         ? [
             ...rules.map((rule) => `${rule.refundPercentage}% refund until ${formatMinutesBeforeLabel(rule.minutesBefore)} before ${eventLabel}.`),
-            'After the last cutoff, refunds are no longer available.',
+            'After the final cutoff, refunds are no longer available.',
           ]
-        : ['Cancellation details will be shown before checkout.'];
+        : ['You will see the cancellation details before checkout.'];
     default:
-      return ['Cancellation details will be shown before checkout.'];
+      return ['You will see the cancellation details before checkout.'];
   }
 };
 

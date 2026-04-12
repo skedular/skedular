@@ -146,7 +146,7 @@ const MySettings = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update user profile details. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't update your profile details. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -154,13 +154,13 @@ const MySettings = ({ queryReference }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`User profile details updated.`} />,
+          render: <NotificationContent content={`Your profile details have been updated.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update user profile details. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't update your profile details. ${error.message}`} />,
         });
       },
       optimisticResponse: {

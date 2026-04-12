@@ -31,10 +31,7 @@ const RootPage = () => {
         <Card sx={{ borderRadius: 4, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
           <CardContent sx={{ p: { xs: 3, md: 4 } }}>
             <LeadIconTypography label="Sign in to see your subscriptions" />
-            <BodyIconTypography
-              label="You’ll need an account to review active plans, current subscription cycles, and recurring periods from this storefront."
-              sx={{ mt: 1, opacity: 0.82 }}
-            />
+            <BodyIconTypography label="Sign in to view your active subscriptions, upcoming renewals, and past billing periods." sx={{ mt: 1, opacity: 0.82 }} />
             <Button component={Link} href={getSignInLink()} variant="contained" sx={{ mt: 2, textTransform: 'none' }}>
               Sign in
             </Button>

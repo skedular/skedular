@@ -19,7 +19,7 @@ public interface IBookingService
     Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string bookingId, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int )> GetPaginatedBookingsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
         ICollection<BookingOrder> orderByFields,
@@ -88,7 +88,7 @@ public class BookingService(
 
         if (requestedOtherCustomersBookings && scopedOrganization is null)
         {
-            throw new InvalidOperationException("You can only look for others' bookings if organization is included in your search");
+            throw new InvalidOperationException("To view other people's bookings, narrow your search to a specific organisation first.");
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) &&

@@ -153,44 +153,46 @@ Current recommendation:
 - collection cards are previews, not mini detail pages
 - do not embed heavy map previews or full-width carousels inside dense admin card grids when a compact thumb gives the user enough context
 
-3. Form and settings system
-   - section cards
-   - summaries
-   - guided editors
-   - list/detail edit flows
-   - review rails
-   - reusable step progress headers
+1. Form and settings system
+
+- section cards
+- summaries
+- guided editors
+- list/detail edit flows
+- review rails
+- reusable step progress headers
 
 ### Phase 2: Customer-Facing Surfaces
 
-4. Marketplace product, location, booking, and subscription pages
-5. Checkout and payment flows
-6. Customer refund and booking-state surfaces
+1. Marketplace product, location, booking, and subscription pages
+1. Checkout and payment flows
+1. Customer refund and booking-state surfaces
 
 ### Phase 3: Admin/Productivity Surfaces
 
-7. Product add/edit
-8. Location add/edit
-9. Resource add/edit
-10. Organization settings/admin
+1. Product add/edit
+1. Location add/edit
+1. Resource add/edit
+1. Organisation settings/admin
 
 ### Phase 4: Operations
 
-11. Booking management
-12. Subscription management
-13. Refund operations
-14. Notifications
-15. Analytics and insights
-16. Private booking add/edit flows
-   - replace modal-first booking creation with dedicated pages
-   - support one-time and recurring private bookings in the same guided editor
-   - surface recurring-series context on booking detail pages instead of treating recurring instances as isolated bookings
+1. Booking management
+1. Subscription management
+1. Refund operations
+1. Notifications
+1. Analytics and insights
+1. Private booking add/edit flows
+
+- replace modal-first booking creation with dedicated pages
+- support one-time and recurring private bookings in the same guided editor
+- surface recurring-series context on booking detail pages instead of treating recurring instances as isolated bookings
 
 ### Phase 5: Setup / Onboarding
 
-16. Add organization flows
-17. Marketplace setup
-18. Getting started and installation flows
+1. Add organisation flows
+1. Marketplace setup
+1. Getting started and installation flows
 
 ## Pattern Backlog
 

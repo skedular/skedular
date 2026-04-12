@@ -4,7 +4,7 @@ This file is the entry point for AI agents working in `web/`.
 
 ## Structure
 
-```
+```text
 web/
   apps/
     webapp/        # Main Next.js customer-facing and operator web app
@@ -34,17 +34,20 @@ web/
 ## Where To Read Next
 
 - For the main app:
-    - `web/apps/webapp/AGENTS.md`
+  - `web/apps/webapp/AGENTS.md`
 - For OpenAPI type generation:
-    - `api-definitions/openapi/AGENTS.md`
+  - `api-definitions/openapi/AGENTS.md`
 - For GraphQL schema changes:
-    - `api-definitions/graphql/AGENTS.md`
+  - `api-definitions/graphql/AGENTS.md`
 
 ## Agent Rule
 
 - Do not import `@mui/material/Typography` directly in feature components; use the Skedular wrappers in `@/components/commons`.
 - Do not hand-edit generated type files; change the source and regenerate.
 - Changes to backend GraphQL enums or fields require regenerating the Relay artifacts to keep web types in sync.
+- For user-visible copy in the web surfaces, use British spelling and grammar rather than American English.
+- Apply that rule to labels, helper text, empty states, toasts, dialogs, errors, validation messages, and other UI copy,
+  but do not rename technical identifiers such as props, GraphQL fields, generated types, routes, or query names.
 - Keep `pnpm-lock.yaml` consistent; use `pnpm install` rather than `npm install` or `yarn`.
 - For broad UI work in `web/apps/webapp`, follow `web/apps/webapp/docs/ui-redesign-program.md`.
 - The long-term direction is a reusable web design system under `web/packages/*`, but only extract patterns that are

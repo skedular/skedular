@@ -88,12 +88,12 @@ type ResourceDetails = {
 
 const ResourceSchema = object({
   location: string().required(),
-  resourceTypeId: string().required('Resource type is required'),
-  name: string().required('Resource name is required'),
+  resourceTypeId: string().required('Please choose a resource type.'),
+  name: string().required('Please enter a resource name.'),
   customTagIds: array().nullable(),
   zoneIds: array().nullable(),
   productTagIds: array().nullable(),
-  capacity: number().required('Capacity is required').min(1, 'Capacity must be greater than 0'),
+  capacity: number().required('Please enter a capacity.').min(1, 'Capacity must be at least 1.'),
 });
 
 const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
@@ -148,7 +148,7 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
 
   const handleAddClick = ({ location: locationId, resourceTypeId, name, customTagIds, zoneIds, productTagIds, capacity: capacityStr }: ResourceDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding resource '${name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Adding ${name}...`} />, infoNotificationOptions);
     const capacity = parseInt(capacityStr.toString(), 10);
 
     commitAddResource({
@@ -173,7 +173,7 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add resource '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't add ${name}. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -181,7 +181,7 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Resource ${name} added.`} />,
+          render: <NotificationContent content={`${name} has been added.`} />,
         });
 
         onAddClicked(locationId);
@@ -189,7 +189,7 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add resource '${name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't add ${name}. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -233,8 +233,8 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
           validate={validate}
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
-              <LeadIconTypography label="Add resource to this location" />
-              <SmallIconTypography label="Enter the name of the resource to add to this location." />
+              <LeadIconTypography label="Add a resource" />
+              <SmallIconTypography label="Create a new resource for this location." />
 
               {!locationId && (
                 <FormFieldLabel label="Location">
@@ -267,7 +267,7 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
               </FormFieldLabel>
 
               <FormFieldLabel label="Name">
-                <TextField name="name" required={requiredFields.name} helperText="Add your resource name" />
+                <TextField name="name" required={requiredFields.name} helperText="Enter a clear name, such as Desk A1 or Meeting Room 2." />
               </FormFieldLabel>
 
               <FormFieldLabel label="Tags">

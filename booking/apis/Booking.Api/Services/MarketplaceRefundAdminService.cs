@@ -53,7 +53,7 @@ public class MarketplaceRefundAdminService(
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var refund = await repositoryFactory.MarketplaceRefundRepository.GetByIdAsync(id, cancellationToken)
-                     ?? throw new InvalidOperationException($"Marketplace refund {id} was not found.");
+                     ?? throw new InvalidOperationException($"We couldn't find refund {id}.");
         var sentToXeroAt = timeProvider.GetUtcNow();
 
         if (!await organizationAuthorizationService.CanModifyPaymentMethodAsync(refund.OrganizationId, customerId, cancellationToken))
@@ -63,7 +63,7 @@ public class MarketplaceRefundAdminService(
 
         if (!await marketplaceRefundService.HasConfirmedPaymentAsync(refund, cancellationToken))
         {
-            throw new InvalidOperationException("Refund processing requires a confirmed payment.");
+            throw new InvalidOperationException("This refund can only be processed after payment has been confirmed.");
         }
 
         marketplaceRefundEventService.Add(
@@ -90,7 +90,7 @@ public class MarketplaceRefundAdminService(
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var refund = await repositoryFactory.MarketplaceRefundRepository.GetByIdAsync(id, cancellationToken)
-                     ?? throw new InvalidOperationException($"Marketplace refund {id} was not found.");
+                     ?? throw new InvalidOperationException($"We couldn't find refund {id}.");
 
         if (!await organizationAuthorizationService.CanModifyPaymentMethodAsync(refund.OrganizationId, customerId, cancellationToken))
         {
@@ -124,13 +124,13 @@ public class MarketplaceRefundAdminService(
 
         if (!refund.RefundAmount.HasValue)
         {
-            throw new InvalidOperationException("Refund amount cannot be approved because the refund request has no calculated refund amount.");
+            throw new InvalidOperationException("This refund can't be approved yet because the refund amount has not been calculated.");
         }
 
         if (refundAmount <= 0 || refundAmount > refund.RefundAmount.Value)
         {
             throw new InvalidOperationException(
-                "Approved refund amount must be greater than zero and must not exceed the policy-calculated refund amount.");
+                "The approved refund amount must be more than zero and can't be higher than the calculated refund amount.");
         }
 
         refund.RefundAmount = refundAmount.Value;
@@ -160,12 +160,12 @@ public class MarketplaceRefundAdminService(
     {
         if (currentStatus == MarketplaceRefundStatusConstants.Completed && nextStatus != MarketplaceRefundStatusConstants.Completed)
         {
-            throw new InvalidOperationException("Completed refunds cannot transition to another status.");
+            throw new InvalidOperationException("A completed refund can't be moved to a different status.");
         }
 
         if (currentStatus == MarketplaceRefundStatusConstants.ManualCompleted && nextStatus != MarketplaceRefundStatusConstants.ManualCompleted)
         {
-            throw new InvalidOperationException("Manually completed refunds cannot transition to another status.");
+            throw new InvalidOperationException("A manually completed refund can't be moved to a different status.");
         }
 
         if (currentStatus == MarketplaceRefundStatusConstants.Requested)
@@ -200,7 +200,7 @@ public class MarketplaceRefundAdminService(
 
         if (currentStatus != nextStatus)
         {
-            throw new InvalidOperationException($"Refund status cannot transition from {currentStatus} to {nextStatus}.");
+            throw new InvalidOperationException($"This refund can't be moved from {currentStatus} to {nextStatus}.");
         }
     }
 

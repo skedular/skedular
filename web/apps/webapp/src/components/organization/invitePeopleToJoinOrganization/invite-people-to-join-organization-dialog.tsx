@@ -113,8 +113,8 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
           validate={validate}
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
-              <LeadIconTypography label="Invite members to join this organization" />
-              <SmallIconTypography label="Enter email addresses of people to invite them to this organization." />
+              <LeadIconTypography label="Invite people to join this organisation" />
+              <SmallIconTypography label="Enter the email addresses of the people you want to invite to this organisation." />
 
               <FormFieldLabel label="Emails">
                 <TextField name="emails" required={requiredFields.emails} helperText="member1@example.com,member2@example.com" />

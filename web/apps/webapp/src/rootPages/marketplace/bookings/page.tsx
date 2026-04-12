@@ -31,10 +31,7 @@ const RootPage = () => {
         <Card sx={{ borderRadius: 4, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
           <CardContent sx={{ p: { xs: 3, md: 4 } }}>
             <LeadIconTypography label="Sign in to see your bookings" />
-            <BodyIconTypography
-              label="You’ll need an account to review upcoming bookings, reopen payment details, and check invoices from this storefront."
-              sx={{ mt: 1, opacity: 0.82 }}
-            />
+            <BodyIconTypography label="Sign in to view your bookings, payment details, and invoices." sx={{ mt: 1, opacity: 0.82 }} />
             <Button component={Link} href={getSignInLink()} variant="contained" sx={{ mt: 2, textTransform: 'none' }}>
               Sign in
             </Button>

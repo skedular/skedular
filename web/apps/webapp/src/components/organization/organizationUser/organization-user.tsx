@@ -251,7 +251,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating user profile details'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content="Updating user profile details..." />, infoNotificationOptions);
 
     commitUpdateCustomerDetails({
       variables: {
@@ -273,7 +273,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update user profile details. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't update this user's profile details. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -281,13 +281,13 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`User profile details updated.`} />,
+          render: <NotificationContent content="This user's profile details have been updated." />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update user profile details. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't update this user's profile details. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -331,7 +331,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate user. Error: ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't deactivate this user. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -339,13 +339,13 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'User deactivated.'} />,
+          render: <NotificationContent content={'This user has been deactivated.'} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to deactivate user. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't deactivate this user. ${error.message}`} />,
         });
       },
     });
@@ -370,7 +370,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate user. Error: ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't activate this user. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -378,13 +378,13 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'User activated.'} />,
+          render: <NotificationContent content={'This user has been activated.'} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to activate user. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't activate this user. ${error.message}`} />,
         });
       },
     });
@@ -409,7 +409,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove user. Error: ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't remove this user. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -417,7 +417,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'User removed.'} />,
+          render: <NotificationContent content={'This user has been removed.'} />,
         });
 
         router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationCustomDomain));
@@ -425,7 +425,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove user. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't remove this user. ${error.message}`} />,
         });
       },
     });
@@ -559,7 +559,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
             }}
           >
             <SectionIconTypography label="User Teams" />
-            <BodyIconTypography label="Teams in your organization this user is a part of" />
+            <BodyIconTypography label="Teams in this organisation that include this user" />
             <Divider />
           </StackColumn>
 
@@ -585,7 +585,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
             }}
           >
             <SectionIconTypography label="Manage This User" />
-            <BodyIconTypography label="Change the status of this user or remove them from your organization" />
+            <BodyIconTypography label="Change this user's status or remove them from this organisation" />
             <Divider />
           </StackColumn>
 

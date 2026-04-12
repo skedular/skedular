@@ -27,7 +27,7 @@ type FeedbackDetails = {
 };
 
 const zoneSchema = object({
-  feedback: string().required('Feedback is required'),
+  feedback: string().required('Please enter your feedback.'),
 });
 
 const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCancel }: Props) => {
@@ -76,7 +76,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to submit feedback. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't send your feedback. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -84,7 +84,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Feedback submitted.`} />,
+          render: <NotificationContent content="Your feedback has been sent." />,
         });
 
         onSendClicked();
@@ -92,7 +92,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to submit feedback. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't send your feedback. ${error.message}`} />,
         });
       },
     });
@@ -115,14 +115,14 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
                   <span>
                     Hi
                     <span style={{ fontWeight: 'bold' }}>{' ' + getCustomerShortName(rootData.me)}</span>
-                    {`, what feedback would you like to share with us?`}
+                    {`, what would you like to share with us?`}
                   </span>
                 }
               />
 
               <TextField label="Feedback" name="feedback" required={requiredFields.feedback} multiline rows={10} />
               <BodyIconTypography label="A note from the team:" sx={{ fontStyle: 'italic' }} />
-              <BodyIconTypography label="We value your feedback, whether it's big or small. Sometimes, it's the smallest details that distinguish a great product from a mediocre one. If you notice something missing or something that bothers you, please let us know, and we'll address it promptly!" />
+              <BodyIconTypography label="We value every bit of feedback, whether it is about a major issue or a small detail. If something feels unclear, missing, or frustrating, please tell us so we can improve it." />
               <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Send" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}

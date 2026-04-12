@@ -438,7 +438,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                 sx={{ backgroundColor: paletteMode === 'dark' ? coal : emerald, paddingTop: 1, paddingBottom: 1, width: 210 }}
                 color={paletteMode === 'dark' ? sandstone : coal}
               />
-              <SmallIconTypography label="Add teammates to your organization" invertDefaultColor />
+              <SmallIconTypography label="Add teammates to your organisation" invertDefaultColor />
             </StackColumn>
           </Box>
         </>

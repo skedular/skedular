@@ -73,7 +73,7 @@ public class RecurringBookingService(
 
         if (requestedOtherCustomersBookings && scopedOrganization is null)
         {
-            throw new InvalidOperationException("You can only look for others' bookings if organization is included in your search");
+            throw new InvalidOperationException("To view other people's recurring bookings, narrow your search to a specific organisation first.");
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) &&

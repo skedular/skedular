@@ -61,6 +61,10 @@ This file applies to the whole repository.
 - If a change touches `api-definitions/`, assume regeneration is required unless you can prove otherwise.
 - If a generated file changed unexpectedly, look for the matching source definition and generator script instead of
   patching the generated file by hand.
+- For user-facing or operator-facing English copy, use British spelling and grammar rather than American English.
+- Apply that localisation to UI text, validation messages, alerts, notifications, emails, and exception messages that
+  surface to users or operators, but do not rename code identifiers, API fields, schema names, routes, or other
+  technical contracts just for localisation.
 - Do not hand-edit exported GraphQL schema files such as per-API `schema.graphql` or
   `api-definitions/graphql/skedular/v1/schema.graphql`.
 - If a backend GraphQL change affects those outputs, run `scripts/generate-graphql.sh` so the API schemas, composed

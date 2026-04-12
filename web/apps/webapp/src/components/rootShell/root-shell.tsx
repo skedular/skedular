@@ -192,7 +192,7 @@ const RootShell = ({
             (rootData.organization?.type.type === 'MARKETPLACE' || rootData.organization?.type.type === 'INDIVIDUAL') && (
               <Card sx={{ textAlign: 'left', backgroundColor: paletteMode === 'dark' ? emerald : coal }}>
                 <CardContent>
-                  <LeadIconTypography label="We need to verify ownership for your organization. We'll get back to you within 24 hours." invertDefaultColor />
+                  <LeadIconTypography label="We need to verify ownership for your organisation. We will get back to you within 24 hours." invertDefaultColor />
                 </CardContent>
               </Card>
             )}

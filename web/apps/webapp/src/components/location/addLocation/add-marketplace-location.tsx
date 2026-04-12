@@ -11,7 +11,6 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, stringToMultiLines } from '@/libs/utils';
-import { EditorActionBar, SettingsSectionCard, SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
 import type { addMarketplaceLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addMarketplaceLocation_addLocationMutation.graphql';
 import type { addMarketplaceLocation_rootQuery } from '@/queries/__generated__/addMarketplaceLocation_rootQuery.graphql';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -23,6 +22,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
+import { EditorActionBar, SettingsSectionCard, SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -378,7 +378,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't add location '${name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -386,7 +386,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Location ${name} added.`} />,
+          render: <NotificationContent content={`Location '${name}' has been added.`} />,
         });
 
         onAdded(id);
@@ -395,7 +395,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't add location '${name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {

@@ -21,8 +21,8 @@ import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/m
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { getRelayErrorMessage } from '@/libs/utils';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { guestStoreFrontSubscriptions_rootQuery } from '@/queries/__generated__/guestStoreFrontSubscriptions_rootQuery.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -399,7 +399,7 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
           ) : (
             <Card sx={{ mt: 2, borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
               <CardContent sx={{ p: 2.5 }}>
-                <BodyIconTypography label="No subscriptions to show yet." sx={{ opacity: 0.8 }} />
+                <BodyIconTypography label="You don't have any subscriptions yet." sx={{ opacity: 0.8 }} />
               </CardContent>
             </Card>
           )}
@@ -407,16 +407,16 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
       </Container>
 
       <Dialog open={!!pendingCancellationConfirmation} onClose={handleCancelImmediateCancellationClick}>
-        <DefaultDialogTitle title="Cancel Subscription Immediately" />
+        <DefaultDialogTitle title="Cancel Subscription Now" />
         <DialogContent sx={{ mt: 2 }}>
           <DialogContentText>
-            {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing stops immediately. Issued invoices stay on record.`}
+            {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing will stop right away. Previous invoices will still stay on record.`}
           </DialogContentText>
           <TwoButtonsDialogActions
             onPrimaryClicked={handleConfirmImmediateCancellationClick}
             onSecondaryClicked={handleCancelImmediateCancellationClick}
-            primaryLabel={pendingCancellationConfirmation?.mode.name ?? 'Immediate'}
-            secondaryLabel="Keep Subscription"
+            primaryLabel={pendingCancellationConfirmation?.mode.name ?? 'Cancel now'}
+            secondaryLabel="Keep subscription"
           />
         </DialogContent>
       </Dialog>

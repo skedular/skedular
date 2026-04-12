@@ -1,210 +1,211 @@
 namespace Api.Shared.Services;
 
-public class CustomerNotFound() : Exception("Customer not found");
+public class CustomerNotFound() : Exception("We couldn't find that customer.");
 
-public class OrganizationNotFound() : Exception("Organization not found");
+public class OrganizationNotFound() : Exception("We couldn't find that organisation.");
 
-public class OrganizationBillingDetailsNotFound() : Exception("Organization billing details not found");
+public class OrganizationBillingDetailsNotFound() : Exception("We couldn't find the billing details for this organisation.");
 
-public class CustomerBillingDetailsNotFound() : Exception("Customer billing details not found");
+public class CustomerBillingDetailsNotFound() : Exception("We couldn't find the billing details for this customer.");
 
-public class OrganizationSsoIsNotYetSetup() : Exception("Organization SSO is not yet setup");
+public class OrganizationSsoIsNotYetSetup() : Exception("Single sign-on has not been set up for this organisation yet.");
 
-public class OrganizationMemberNotFound() : Exception("Organization member not found");
+public class OrganizationMemberNotFound() : Exception("We couldn't find that organisation member.");
 
-public class OrganizationJoinInvitationNotFound() : Exception("Organization join invitation not found");
+public class OrganizationJoinInvitationNotFound() : Exception("We couldn't find that organisation invitation.");
 
-public class LocationNotFound() : Exception("Location not found");
+public class LocationNotFound() : Exception("We couldn't find that location.");
 
-public class LocationUniqueClaimCodeNotFound() : Exception("Location unique claim code not found");
+public class LocationUniqueClaimCodeNotFound() : Exception("We couldn't find that location claim code.");
 
-public class FloorPlanNotFound() : Exception("Floor plan not found");
+public class FloorPlanNotFound() : Exception("We couldn't find that floor plan.");
 
-public class TeamNotFound() : Exception("Team not found");
+public class TeamNotFound() : Exception("We couldn't find that team.");
 
-public class TeamMemberNotFound() : Exception("Team member ot found");
+public class TeamMemberNotFound() : Exception("We couldn't find that team member.");
 
-public class TeamJoinInvitationNotFound() : Exception("Team join invitation not found");
+public class TeamJoinInvitationNotFound() : Exception("We couldn't find that team invitation.");
 
-public class ResourceNotFound() : Exception("Resource not found");
+public class ResourceNotFound() : Exception("We couldn't find that resource.");
 
-public class ResourceWithSameNameExist() : Exception("Resource with same name exist");
+public class ResourceWithSameNameExist() : Exception("A resource with this name already exists.");
 
-public class ResourceTypeRequired() : Exception("Resource type required");
+public class ResourceTypeRequired() : Exception("Please choose a resource type.");
 
-public class OnlySingleResourceTypeAllowed() : Exception("Only single resource type allowed");
+public class OnlySingleResourceTypeAllowed() : Exception("Please choose only one resource type.");
 
-public class OrganizationTermsOfUseAgreementMissing() : Exception("Organization terms of use agreement missing");
+public class OrganizationTermsOfUseAgreementMissing() : Exception("You need to accept the organisation's terms before continuing.");
 
-public class PaymentMethodRequired() : Exception("Payment method required");
+public class PaymentMethodRequired() : Exception("Please choose a payment method.");
 
-public class BookingNotFound() : Exception("Booking not found");
+public class BookingNotFound() : Exception("We couldn't find that booking.");
 
-public class RecurringBookingNotFound() : Exception("Recurring booking not found");
+public class RecurringBookingNotFound() : Exception("We couldn't find that recurring booking.");
 
 public class NoMoreInteractionAllowed()
-    : Exception("You have exceeded your free tier limit, please upgrade to 'Pay as you go' tier to have full access to all features.");
+    : Exception("You've reached the limit of the free plan. Upgrade to Pay as you go to keep using all features.");
 
-public class ResourceNotAvailable() : Exception("Resource not available");
+public class ResourceNotAvailable() : Exception("That resource is no longer available for the selected time.");
 
-public class NoResourceAvailable() : Exception("No resource available");
+public class NoResourceAvailable() : Exception("No resources are available for the selected time.");
 
-public class ProductMissingProductTag() : Exception("Product missing product tag");
+public class ProductMissingProductTag() : Exception("Please add at least one product tag.");
 
-public class SlackWorkspaceNotFound() : Exception("Slack workspace not found");
+public class SlackWorkspaceNotFound() : Exception("We couldn't find that Slack workspace.");
 
-public class SlackWorkspaceMemberTypeNotSupported() : Exception("Slack workspace member type not supported");
+public class SlackWorkspaceMemberTypeNotSupported() : Exception("This Slack member type isn't supported.");
 
-public class OrganizationTagNotFound() : Exception("Organization tag not found");
+public class OrganizationTagNotFound() : Exception("We couldn't find that organisation tag.");
 
-public class CustomTagWithSameNameExist() : Exception("Tag with same name exist");
+public class CustomTagWithSameNameExist() : Exception("A tag with this name already exists.");
 
-public class ZoneWithSameNameExist() : Exception("Zone with same name exist");
+public class ZoneWithSameNameExist() : Exception("A zone with this name already exists.");
 
-public class OrganizationTagWithSameNameExist() : Exception("Organization tag with same name exist");
+public class OrganizationTagWithSameNameExist() : Exception("An organisation tag with this name already exists.");
 
 public class TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization()
-    : Exception("Team Primary location organization does not match team organization");
+    : Exception("The team's main location must belong to the same organisation as the team.");
 
-public class ProductNotFound() : Exception("Product not found");
+public class ProductNotFound() : Exception("We couldn't find that product.");
 
-public class ProductPricingNotFound() : Exception("Product pricing not found");
+public class ProductPricingNotFound() : Exception("We couldn't find that pricing option.");
 
-public class ProductVersionNotFound() : Exception("Product version not found");
+public class ProductVersionNotFound() : Exception("We couldn't find that product version.");
 
-public class OrganizationStripeConnectAccountNotFound() : Exception("Organization Stripe Connect Account not found");
+public class OrganizationStripeConnectAccountNotFound() : Exception("We couldn't find that Stripe Connect account.");
 
-public class OrganizationStripeConnectAccountRefreshCodeNotFound() : Exception("Organization Stripe Connect Account refresh code not found");
+public class OrganizationStripeConnectAccountRefreshCodeNotFound()
+    : Exception("We couldn't find the Stripe Connect refresh code for this organisation.");
 
-public class OrganizationStripeCustomerRelationshipIsNotSetYet() : Exception("Organization Stripe customer relationship is not set yet");
+public class OrganizationStripeCustomerRelationshipIsNotSetYet() : Exception("This organisation's Stripe customer account has not been set up yet.");
 
-public class InvalidSsoConfiguration() : Exception("Invalid SSO configuration");
+public class InvalidSsoConfiguration() : Exception("The single sign-on setup is incomplete or invalid.");
 
-public class OrganizationPaymentMethodNotFound() : Exception("Organization payment method not found");
+public class OrganizationPaymentMethodNotFound() : Exception("We couldn't find that organisation payment method.");
 
-public class ResourceAndFloorPlanLocationMismatch() : Exception("Resource and floor plan must belong to the same location");
+public class ResourceAndFloorPlanLocationMismatch() : Exception("The resource and floor plan must belong to the same location.");
 
-public class ResourceIsPlacedOnDifferentFloorPlan() : Exception("Resource is placed on different floor plan");
+public class ResourceIsPlacedOnDifferentFloorPlan() : Exception("This resource is assigned to a different floor plan.");
 
-public class StripeCustomerNotFound() : Exception("Stripe Customer not found");
+public class StripeCustomerNotFound() : Exception("We couldn't find that Stripe customer.");
 
-public class OrganizationBankAccountNotFound() : Exception("Organization Bank Account not found");
+public class OrganizationBankAccountNotFound() : Exception("We couldn't find that bank account.");
 
-public class BookingPaymentMethodNotAccepted() : Exception("Booking payment method not accepted");
+public class BookingPaymentMethodNotAccepted() : Exception("This payment method isn't accepted for this booking.");
 
-public class MarketplaceBookingCheckoutReturnUrlInvalid() : Exception("Marketplace booking checkout return url is invalid");
+public class MarketplaceBookingCheckoutReturnUrlInvalid() : Exception("The checkout return link is invalid.");
 
-public class BookingIsNotMarketplaceType() : Exception("Booking is not marketplace type");
+public class BookingIsNotMarketplaceType() : Exception("This booking is not a marketplace booking.");
 
-public class BookingMustStartAndEndWithinSameDay() : Exception("Booking must start and end within the same day");
+public class BookingMustStartAndEndWithinSameDay() : Exception("The booking must start and end on the same day.");
 
 public class MarketplaceBookingCadenceRequiresRecurringFlow()
-    : Exception("This marketplace booking cadence must be booked through the recurring marketplace flow");
+    : Exception("This booking schedule must be set up as a recurring booking.");
 
 public class MarketplaceBookingSubscriptionAutoRenewalNotSupported()
-    : Exception("The selected product pricing does not support subscription auto renewal");
+    : Exception("This pricing option does not support auto-renewal.");
 
 public class ProductPricingBillingModeRequired()
-    : Exception("A billing mode must be selected for the product pricing option");
+    : Exception("Please choose a billing option for this pricing plan.");
 
-public class OrganizationPhysicalAddressNotFound() : Exception("Organization physical address not found");
+public class OrganizationPhysicalAddressNotFound() : Exception("We couldn't find this organisation's address.");
 
-public class LocationPhysicalAddressNotFound() : Exception("Location physical address not found");
+public class LocationPhysicalAddressNotFound() : Exception("We couldn't find this location's address.");
 
 public class MoreResourcesHaveBeenSelectedThanAreAllowedForThisBooking()
-    : Exception("More resources have been selected than are allowed for this booking");
+    : Exception("Too many resources were selected for this booking.");
 
-public class BookingIsNotPrivate() : Exception("Booking is not private");
+public class BookingIsNotPrivate() : Exception("This booking is not a private booking.");
 
-public class BookingIsNotMarketplace() : Exception("Booking is not marketplace");
+public class BookingIsNotMarketplace() : Exception("This booking is not a marketplace booking.");
 
-public class RecurringBookingIsNotPrivate() : Exception("Recurring booking is not private");
+public class RecurringBookingIsNotPrivate() : Exception("This recurring booking is not a private booking.");
 
-public class RecurringBookingIsNotMarketplace() : Exception("Recurring booking is not marketplace");
+public class RecurringBookingIsNotMarketplace() : Exception("This recurring booking is not a marketplace booking.");
 
-public class MarketplaceBookingSubscriptionNotFound() : Exception("Marketplace booking subscription not found");
+public class MarketplaceBookingSubscriptionNotFound() : Exception("We couldn't find that subscription.");
 
-public class MarketplaceBookingSubscriptionCannotBeUpdated() : Exception("Marketplace booking subscription cannot be updated");
+public class MarketplaceBookingSubscriptionCannotBeUpdated() : Exception("This subscription can't be updated.");
 
-public class ProductOrganizationDidNotMatch() : Exception("Product organization did not match");
+public class ProductOrganizationDidNotMatch() : Exception("This product does not belong to this organisation.");
 
-public class ProductPricingCancellationPolicyInvalid() : Exception("Product pricing cancellation policy is invalid");
+public class ProductPricingCancellationPolicyInvalid() : Exception("The cancellation policy for this pricing option is incomplete or invalid.");
 
-public class MarketplaceBookingCancellationNotAllowed() : Exception("This marketplace booking can no longer be cancelled");
+public class MarketplaceBookingCancellationNotAllowed() : Exception("This booking has passed its cancellation deadline.");
 
 public class MarketplaceBookingSubscriptionCancellationNotAllowed()
-    : Exception("This marketplace booking subscription can no longer be cancelled");
+    : Exception("This subscription has passed its cancellation deadline.");
 
 public class MarketplaceEventResourceSelectionRequiresEventProduct()
-    : Exception("Event resource selection can only be used for event products.");
+    : Exception("You can only choose event resources for event products.");
 
 public class MarketplaceEventProductRecurringBookingNotSupported()
-    : Exception("Event products do not support recurring or subscription booking materialization.");
+    : Exception("Events can only be booked once. Recurring bookings and subscriptions aren't available for this event.");
 
 public class ProductPricingEventRequiresExplicitTimeBooking()
-    : Exception("Event products only support explicit-time booking pricing options.");
+    : Exception("Event products must use pricing with a specific start and end time.");
 
 public class ProductPricingEventAutoRenewalNotSupported()
-    : Exception("Event products cannot enable subscription auto renewal.");
+    : Exception("Event products can't use auto-renewal.");
 
 public class ProductPricingAcceptedPaymentMethodsRequired()
-    : Exception("At least one accepted booking payment method must be selected");
+    : Exception("Please choose at least one accepted payment method.");
 
 public class ProductPricingMinDurationMustBePositive()
-    : Exception("MinDurationMinutes must be greater than 0");
+    : Exception("Minimum booking length must be at least 1 minute.");
 
 public class ProductPricingMaxDurationMustBePositive()
-    : Exception("MaxDurationMinutes must be greater than 0");
+    : Exception("Maximum booking length must be at least 1 minute.");
 
 public class ProductPricingMinDurationIncrementInvalid(string durationStepLabel)
-    : Exception($"MinDurationMinutes must be in {durationStepLabel} increments");
+    : Exception($"Minimum booking length must increase in {durationStepLabel} steps.");
 
 public class ProductPricingMaxDurationIncrementInvalid(string durationStepLabel)
-    : Exception($"MaxDurationMinutes must be in {durationStepLabel} increments");
+    : Exception($"Maximum booking length must increase in {durationStepLabel} steps.");
 
 public class ProductPricingMaxDurationMustNotBeLessThanMinDuration()
-    : Exception("MaxDurationMinutes must be greater or equal than productVersion.MinDurationMinutes");
+    : Exception("Maximum booking length can't be shorter than the minimum booking length.");
 
 public class OrganizationXeroConnectionUnauthorizedException()
-    : UnauthorizedAccessException("You do not have permission to modify this organization's Xero connection.");
+    : UnauthorizedAccessException("You don't have permission to change this organisation's Xero connection.");
 
-public class InvalidXeroAuthorizeStateException() : InvalidOperationException("Invalid Xero state.");
+public class InvalidXeroAuthorizeStateException() : InvalidOperationException("The Xero sign-in session is invalid. Please try connecting again.");
 
-public class EmptyXeroTokenResponseException() : InvalidOperationException("Xero token response was empty.");
+public class EmptyXeroTokenResponseException() : InvalidOperationException("Xero did not return a sign-in token. Please try again.");
 
-public class XeroTenantReconnectRequiredException() : InvalidOperationException("Disconnect Xero before changing the connected tenant.");
+public class XeroTenantReconnectRequiredException() : InvalidOperationException("Disconnect Xero before choosing a different tenant.");
 
-public class XeroActivationRequiresConnectionException() : InvalidOperationException("Connect Xero first before activating Xero-managed billing.");
+public class XeroActivationRequiresConnectionException() : InvalidOperationException("Connect Xero before turning on Xero-managed billing.");
 
 public class XeroActivationRequiresTenantSelectionException()
-    : InvalidOperationException("Select a Xero tenant before activating Xero-managed billing.");
+    : InvalidOperationException("Choose a Xero tenant before turning on Xero-managed billing.");
 
 public class UnsupportedXeroBillingModeException(string billingMode)
-    : ArgumentOutOfRangeException(nameof(billingMode), billingMode, "Unsupported Xero billing mode.");
+    : ArgumentOutOfRangeException(nameof(billingMode), billingMode, "This Xero billing mode isn't supported.");
 
 public class UnavailableXeroTenantSelectionException()
-    : InvalidOperationException("Selected Xero tenant is not available for the current Xero connection.");
+    : InvalidOperationException("The selected Xero tenant isn't available for the current connection.");
 
 public class XeroTokenRefreshFailedException(string message) : InvalidOperationException(message);
 
-public class NoXeroOrganizationTenantConnectionsException() : InvalidOperationException("No Xero organization tenant connections were returned.");
+public class NoXeroOrganizationTenantConnectionsException() : InvalidOperationException("No Xero tenants were returned for this connection.");
 
-public class MissingXeroRefreshTokenException() : InvalidOperationException("Xero refresh token is missing. Reconnect required.");
+public class MissingXeroRefreshTokenException() : InvalidOperationException("The Xero connection has expired. Please reconnect.");
 
-public class XeroContactExportFailedException() : InvalidOperationException("Xero contact export did not return a contact.");
+public class XeroContactExportFailedException() : InvalidOperationException("Xero did not return a contact for this export.");
 
-public class XeroInvoiceExportFailedException() : InvalidOperationException("Xero invoice export did not return an invoice.");
+public class XeroInvoiceExportFailedException() : InvalidOperationException("Xero did not return an invoice for this export.");
 
 public class MixedXeroInvoiceTaxInclusivityException()
     : InvalidOperationException("Xero invoice export does not support mixing tax-inclusive and tax-exclusive line pricing on the same invoice.");
 
 public class AzureTenantOnboardingFailedException(string error, string? errorDescription)
-    : InvalidOperationException($"Azure tenant onboarding went wrong with error {error} and message {errorDescription}.");
+    : InvalidOperationException($"We couldn't finish setting up the Azure tenant. Error: {error}. {errorDescription}");
 
 public class OrganizationLookupRequiresIdOrCustomDomainException()
-    : InvalidOperationException("Either id or customDomain must be provided.");
+    : InvalidOperationException("Please provide either an ID or a custom domain.");
 
 public class OrganizationLookupRequiresIdsOrCustomDomainsException()
-    : InvalidOperationException("Either ids or customDomains must be provided.");
+    : InvalidOperationException("Please provide either IDs or custom domains.");
 
-public class InvoiceDueInDaysMustBeBetween1And999() : ArgumentException("Invoice due in days must be between 1 and 999.");
+public class InvoiceDueInDaysMustBeBetween1And999() : ArgumentException("Invoice due days must be between 1 and 999.");

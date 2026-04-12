@@ -1,7 +1,6 @@
 import { BodyIconTypography, StackRow } from '@/components/commons';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
-import { SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import BusinessIcon from '@mui/icons-material/Business';
 import CoffeeIcon from '@mui/icons-material/Coffee';
@@ -13,6 +12,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Button from '@mui/material/Button';
+import { SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useContext } from 'react';
 import type { UserType } from './user-type-card';
@@ -80,7 +80,7 @@ const SetupFlow = ({ userTypesToShow, onUserTypeClick, showBackButton }: Props) 
       {(!userTypesToShow || userTypesToShow.some((item) => item === 'private')) && (
         <UserTypeCard
           icon={<BusinessIcon sx={{ color: '#74d77eff', fontSize: 40 }} />}
-          title="Enterprise Organization"
+          title="Enterprise organisation"
           subtitle="I represent a company that needs to manage multiple workspaces and resources"
           onClick={() => onUserTypeClick('private')}
         />
@@ -108,7 +108,7 @@ const SetupFlow = ({ userTypesToShow, onUserTypeClick, showBackButton }: Props) 
         <UserTypeCard
           icon={<PersonIcon sx={{ color: '#03A9F4', fontSize: 40 }} />}
           title="Individual User"
-          subtitle="I'm looking for workspace solutions or want to join an organization"
+          subtitle="I'm looking for workspace solutions or want to join an organisation"
           onClick={() => onUserTypeClick('individual-user')}
         />
       )}

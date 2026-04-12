@@ -1,6 +1,6 @@
 import { listingMetadataSchemaShape } from '@/components/listingMetadata';
-import { array, boolean, object, string } from 'yup';
 import { v7 as uuid } from 'uuid';
+import { array, boolean, object, string } from 'yup';
 
 export type ProductDetails = {
   title: string | null;
@@ -39,12 +39,12 @@ export type CancellationRefundRuleForm = {
 
 export const cancellationRefundRuleSchema = object({
   minutesBefore: string()
-    .required('Minutes before is required.')
-    .test('is-number', 'Minutes before must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
-    .test('is-not-negative', 'Minutes before must be greater than or equal to 0.', (value) => Number(value) >= 0),
+    .required('Please enter how long before the booking this rule applies.')
+    .test('is-number', 'Enter a valid number of minutes.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+    .test('is-not-negative', 'Minutes before must be 0 or more.', (value) => Number(value) >= 0),
   refundPercentage: string()
-    .required('Refund percentage is required.')
-    .test('is-number', 'Refund percentage must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+    .required('Please enter the refund percentage.')
+    .test('is-number', 'Enter a valid refund percentage.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
     .test('is-range', 'Refund percentage must be between 0 and 100.', (value) => Number(value) >= 0 && Number(value) <= 100),
 });
 
@@ -137,28 +137,28 @@ export const getDurationStepDetails = (cadence: string, bookingSlotSizeInMinutes
 export const productSchema = (bookingSlotSizeInMinutes: number) =>
   object({
     ...listingMetadataSchemaShape,
-    type: string().required('Product type is required.'),
-    currency: string().required('Currency is required.'),
+    type: string().required('Please choose a product type.'),
+    currency: string().required('Please choose a currency.'),
     mustBookAllLocationResources: boolean(),
-    productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
+    productTagIds: array().min(1, 'Choose at least one product tag.').required('Please choose at least one product tag.'),
     amenityIds: array().nullable(),
     pricingOptions: array()
       .of(
         object({
           ...listingMetadataSchemaShape,
-          cadence: string().required('Pricing cadence is required.'),
+          cadence: string().required('Please choose how often this pricing applies.'),
           price: string()
-            .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number.')
-            .required('Price is required.')
-            .test('is-greater-than-zero', 'Price must be greater than zero.', (value) => Number(value) > 0),
+            .matches(/^\d+(\.\d{1,2})?$/, 'Enter a valid price.')
+            .required('Please enter a price.')
+            .test('is-greater-than-zero', 'Price must be more than zero.', (value) => Number(value) > 0),
           numberOfResourcesToBook: string()
-            .required('Number of resources to book is required.')
-            .test('is-number', 'Number of resources to book must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
-            .test('min', 'Number of resources to book must be greater than 0.', (value) => Number(value) > 0),
+            .required('Please enter how many resources can be booked.')
+            .test('is-number', 'Enter a valid number of resources.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+            .test('min', 'The number of resources must be at least 1.', (value) => Number(value) > 0),
           minDurationMinutes: string()
-            .required('Minimum duration in minutes is required.')
-            .test('is-number', 'Minimum duration in minutes must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
-            .test('is-greater-than-zero', 'Minimum duration in minutes must be greater than 0.', (value) => Number(value) > 0)
+            .required('Please enter the minimum booking length.')
+            .test('is-number', 'Enter a valid minimum booking length.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+            .test('is-greater-than-zero', 'Minimum booking length must be more than zero.', (value) => Number(value) > 0)
             .test('is-not-greater-than-a-day', 'Minimum duration cannot be longer than one day.', (value) => Number(value) <= 60 * 24)
             .test('is-valid-duration-step', function (value) {
               const { cadence } = this.parent;
@@ -169,12 +169,12 @@ export const productSchema = (bookingSlotSizeInMinutes: number) =>
               }
 
               if (minDurationMinutes % durationStepMinutes !== 0) {
-                return this.createError({ message: `Minimum duration in minutes must be in ${durationStepLabel} increments.` });
+                return this.createError({ message: `Minimum booking length must use ${durationStepLabel} steps.` });
               }
 
               return true;
             })
-            .test('is-less-than-maxDurationMinutes', 'Minimum duration in minutes must be less or equal than maximum duration in minutes.', function (value) {
+            .test('is-less-than-maxDurationMinutes', 'Minimum booking length cannot be longer than the maximum booking length.', function (value) {
               const { maxDurationMinutes: maxDurationMinutesStr } = this.parent;
               const maxDurationMinutes = Number(maxDurationMinutesStr);
               if (isNaN(maxDurationMinutes)) {
@@ -189,9 +189,9 @@ export const productSchema = (bookingSlotSizeInMinutes: number) =>
               return minDurationMinutes <= maxDurationMinutes;
             }),
           maxDurationMinutes: string()
-            .required('Maximum duration in minutes is required.')
-            .test('is-number', 'Maximum duration in minutes must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
-            .test('is-greater-than-zero', 'Maximum duration in minutes must be greater than 0.', (value) => Number(value) > 0)
+            .required('Please enter the maximum booking length.')
+            .test('is-number', 'Enter a valid maximum booking length.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+            .test('is-greater-than-zero', 'Maximum booking length must be more than zero.', (value) => Number(value) > 0)
             .test('is-not-greater-than-a-day', 'Maximum duration cannot be longer than one day.', (value) => Number(value) <= 60 * 24)
             .test('is-valid-duration-step', function (value) {
               const { cadence } = this.parent;
@@ -202,12 +202,12 @@ export const productSchema = (bookingSlotSizeInMinutes: number) =>
               }
 
               if (maxDurationMinutes % durationStepMinutes !== 0) {
-                return this.createError({ message: `Maximum duration in minutes must be in ${durationStepLabel} increments.` });
+                return this.createError({ message: `Maximum booking length must use ${durationStepLabel} steps.` });
               }
 
               return true;
             })
-            .test('is-less-than-minDurationMinutes', 'Maximum duration in minutes must be greater or equal than minimum duration in minutes.', function (value) {
+            .test('is-less-than-minDurationMinutes', 'Maximum booking length cannot be shorter than the minimum booking length.', function (value) {
               const { minDurationMinutes: minDurationMinutesStr } = this.parent;
               const minDurationMinutes = Number(minDurationMinutesStr);
               if (isNaN(minDurationMinutes)) {
@@ -222,14 +222,14 @@ export const productSchema = (bookingSlotSizeInMinutes: number) =>
               return maxDurationMinutes >= minDurationMinutes;
             }),
           cancellationPolicyType: string()
-            .required('Cancellation policy is required.')
-            .test('is-not-not-set', 'Cancellation policy is required.', (value) => value !== 'NOT_SET'),
+            .required('Please choose a cancellation policy.')
+            .test('is-not-not-set', 'Please choose a cancellation policy.', (value) => value !== 'NOT_SET'),
           cancellationRefundRules: array()
             .when('cancellationPolicyType', ([cancellationPolicyType], schema) =>
               cancellationPolicyType === 'NO_CANCELLATION' ? schema.of(object()) : schema.of(cancellationRefundRuleSchema),
             )
             .required()
-            .test('matches-cancellation-policy', 'Cancellation refund rules do not match the selected cancellation policy.', function (value) {
+            .test('matches-cancellation-policy', 'The refund rules do not match the selected cancellation policy.', function (value) {
               const { cancellationPolicyType } = this.parent as PricingOptionForm;
               const rules = value ?? [];
 
@@ -250,23 +250,23 @@ export const productSchema = (bookingSlotSizeInMinutes: number) =>
           isTaxInclusive: boolean().required(),
           supportsSubscriptionAutoRenewal: boolean().required(),
           maxAllowedResourcesLockTimePaidViaCard: string()
-            .required('Max allowed resources lock time paid via card is required.')
-            .test('is-number', 'Max allowed resources lock time must be a valid number.', (value) => !isNaN(Number(value)))
-            .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', (value) => Number(value) > 0),
+            .required('Please enter the hold time for card payments.')
+            .test('is-number', 'Enter a valid hold time.', (value) => !isNaN(Number(value)))
+            .test('is-greater-than-zero', 'Hold time must be more than zero.', (value) => Number(value) > 0),
           maxAllowedResourcesLockTimePaidViaBankTransfer: string()
-            .required('Max allowed resources lock time paid via bank transfer is required.')
-            .test('is-number', 'Max allowed resources lock time must be a valid number.', (value) => !isNaN(Number(value)))
-            .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', (value) => Number(value) > 0),
+            .required('Please enter the hold time for bank transfers.')
+            .test('is-number', 'Enter a valid hold time.', (value) => !isNaN(Number(value)))
+            .test('is-greater-than-zero', 'Hold time must be more than zero.', (value) => Number(value) > 0),
           billingMode: string()
-            .required('Billing mode is required.')
-            .test('is-not-not-set', 'Billing mode is required.', (value) => value !== 'NOT_SET'),
-          acceptedPaymentMethods: array().min(1, 'At least one accepted booking payment method must be selected.').required('Booking payment methods are required.'),
+            .required('Please choose a billing mode.')
+            .test('is-not-not-set', 'Please choose a billing mode.', (value) => value !== 'NOT_SET'),
+          acceptedPaymentMethods: array().min(1, 'Choose at least one accepted payment method.').required('Please choose at least one accepted payment method.'),
         }),
       )
-      .min(1, 'At least one pricing option is required.')
+      .min(1, 'Add at least one pricing option.')
       .test(
         'is-unique-cadence-numberOfResourcesToBook-and-billingMode',
-        'Cadence, number of resources to book, and billing mode combination must be unique for each pricing option.',
+        'Each pricing option must use a different combination of frequency, quantity, and billing mode.',
         (value) => {
           if (!value || value.length === 0) {
             return true;
@@ -285,7 +285,7 @@ export const productSchema = (bookingSlotSizeInMinutes: number) =>
           return true;
         },
       )
-      .test('events-cannot-enable-subscriptions', 'Event products cannot enable subscription auto renewal.', function (value) {
+      .test('events-cannot-enable-subscriptions', 'Event products cannot use subscription auto-renewal.', function (value) {
         const { type } = this.parent as ProductDetails;
         const pricingOptions = value as PricingOptionForm[] | undefined;
         if (!isEventType(type) || !pricingOptions) {

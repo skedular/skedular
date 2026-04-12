@@ -76,7 +76,7 @@ const AddOrganizationProductTagDialog = ({ organizationCustomDomain, connectionI
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add product tag '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't add the product tag '${name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -84,7 +84,7 @@ const AddOrganizationProductTagDialog = ({ organizationCustomDomain, connectionI
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Product tag ${name} added.`} />,
+          render: <NotificationContent content={`The product tag '${name}' has been added.`} />,
         });
 
         onAddClicked();
@@ -92,7 +92,7 @@ const AddOrganizationProductTagDialog = ({ organizationCustomDomain, connectionI
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add product tag '${name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't add the product tag '${name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {

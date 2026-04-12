@@ -175,7 +175,7 @@ const Notifications = ({ queryReference }: Props) => {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Rejecting invitation to join organization '${invitation.organization?.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Rejecting the invitation to join organisation '${invitation.organization?.name}'...`} />, infoNotificationOptions);
 
     commitRejectInvitationToJoinOrganization({
       variables: {
@@ -188,9 +188,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent content={`Failed to reject invitation to join organization '${invitation.organization?.name}'. Error: ${getRelayErrorMessage(errors)}.`} />
-            ),
+            render: <NotificationContent content={`We couldn't reject the invitation to join organisation '${invitation.organization?.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -198,13 +196,13 @@ const Notifications = ({ queryReference }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation to join organization '${invitation.organization?.name} rejected.`} />,
+          render: <NotificationContent content={`The invitation to join organisation '${invitation.organization?.name}' has been rejected.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to reject invitation to join organization '${invitation.organization?.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't reject the invitation to join organisation '${invitation.organization?.name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -227,7 +225,7 @@ const Notifications = ({ queryReference }: Props) => {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Accpeting invitation to join organization '${invitation.organization?.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Accepting the invitation to join organisation '${invitation.organization?.name}'...`} />, infoNotificationOptions);
 
     commitAcceptInvitationToJoinOrganization({
       variables: {
@@ -240,7 +238,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to accept invitation to join organization '${invitation.organization?.name}'. Error: ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't accept the invitation to join organisation '${invitation.organization?.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -248,13 +246,13 @@ const Notifications = ({ queryReference }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation to join organization '${invitation.organization?.name} accepted.`} />,
+          render: <NotificationContent content={`The invitation to join organisation '${invitation.organization?.name}' has been accepted.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to accept invitation to join organization '${invitation.organization?.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't accept the invitation to join organisation '${invitation.organization?.name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -290,7 +288,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject invitation to join team '${invitation.team?.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't reject the invitation to join team '${invitation.team?.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -298,13 +296,13 @@ const Notifications = ({ queryReference }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation to join team '${invitation.team?.name} rejected.`} />,
+          render: <NotificationContent content={`The invitation to join team '${invitation.team?.name}' has been rejected.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to reject invitation to join team '${invitation.team?.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't reject the invitation to join team '${invitation.team?.name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -327,7 +325,7 @@ const Notifications = ({ queryReference }: Props) => {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Accpeting invitation to join team '${invitation.team?.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Accepting the invitation to join team '${invitation.team?.name}'...`} />, infoNotificationOptions);
 
     commitAcceptInvitationToJoinTeam({
       variables: {
@@ -340,7 +338,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to accept invitation to join team '${invitation.team?.name}'. Error: ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't accept the invitation to join team '${invitation.team?.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -348,13 +346,13 @@ const Notifications = ({ queryReference }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation to join team '${invitation.team?.name} accepted.`} />,
+          render: <NotificationContent content={`The invitation to join team '${invitation.team?.name}' has been accepted.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to accept invitation to join team '${invitation.team?.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't accept the invitation to join team '${invitation.team?.name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -388,7 +386,7 @@ const Notifications = ({ queryReference }: Props) => {
           return null;
         }
 
-        return <SmallIconTypography label={`"${getCustomerFullName(invitation.createdBy)}" has invited you to join organization "${invitation.organization.name}"`} />;
+        return <SmallIconTypography label={`"${getCustomerFullName(invitation.createdBy)}" has invited you to join organisation "${invitation.organization.name}"`} />;
       },
       display: 'flex',
       minWidth: 500,
@@ -494,7 +492,7 @@ const Notifications = ({ queryReference }: Props) => {
                 rowSpacingType="margin"
                 getRowSpacing={() => ({ top: 3, bottom: 3 })}
                 sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No organization invitation found' }}
+                localeText={{ noRowsLabel: 'No organisation invitations found' }}
               />
             </StackRow>
           )}
@@ -510,7 +508,7 @@ const Notifications = ({ queryReference }: Props) => {
                 rowSpacingType="margin"
                 getRowSpacing={() => ({ top: 3, bottom: 3 })}
                 sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No team invitation found' }}
+                localeText={{ noRowsLabel: 'No team invitations found' }}
               />
             </StackRow>
           )}

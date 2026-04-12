@@ -411,7 +411,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
     }
 
     const oldName = resource.name;
-    const toastId = themedToast(<NotificationContent content={`Updating zone '${oldName}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Saving changes to '${oldName}'...`} />, infoNotificationOptions);
     const capacity = parseInt(capacityStr.toString(), 10);
 
     commitUpdateResource({
@@ -434,7 +434,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update Resource '${oldName}'. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't update '${oldName}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -442,7 +442,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Resource ${name} updated.`} />,
+          render: <NotificationContent content={`${name} has been updated.`} />,
         });
 
         router.back();
@@ -450,7 +450,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update Resource '${oldName}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't update '${oldName}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -484,7 +484,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating resource '${resource.name}' available hours...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Updating hours for '${resource.name}'...`} />, infoNotificationOptions);
 
     commitUpdateLocationResourceAvailableHours({
       variables: {
@@ -499,7 +499,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update resource '${resource?.name}' available hours . Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't update the hours for '${resource?.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -507,13 +507,13 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Resource ${resource.name} available hours updated.`} />,
+          render: <NotificationContent content={`Hours for '${resource.name}' have been updated.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update resource '${resource?.name}' available hours. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't update the hours for '${resource?.name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -549,7 +549,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating resource '${resource.name}' available hours...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Updating hours for '${resource.name}'...`} />, infoNotificationOptions);
 
     commitUpdateLocationResourceAvailableHours({
       variables: {
@@ -564,7 +564,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update resource '${resource?.name}' available hours . Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't update the hours for '${resource?.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -572,13 +572,13 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Resource ${resource.name} available hours updated.`} />,
+          render: <NotificationContent content={`Hours for '${resource.name}' have been updated.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update resource '${resource?.name}' available hours. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't update the hours for '${resource?.name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -615,8 +615,8 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       case 'opening-hours':
         return (
           <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
-            <SettingsSectionCard title="Opening Hours" description="Override the location schedule only when this resource needs its own availability window.">
-              <FormFieldLabel label="Override available hours">
+            <SettingsSectionCard title="Opening hours" description="Only change these hours if this resource should be available at different times from the location.">
+              <FormFieldLabel label="Use custom hours for this resource">
                 <Switch checked={isAvailableHoursOverridden} onChange={handleIsAvailableHoursOverriddenChange} />
               </FormFieldLabel>
             </SettingsSectionCard>
@@ -659,13 +659,13 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
-                  <SettingsSectionCard title="Resource Setup" description="Edit the resource identity, categorization, and operational capacity in one place.">
+                  <SettingsSectionCard title="Resource details" description="Update the name, type, tags, and capacity for this resource.">
                     <FormFieldLabel label="Resource Type">
                       <SingleChoiceResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredFields.name} helperText="Add your resource name" />
+                      <TextField name="name" required={requiredFields.name} helperText="Enter a clear name, such as Desk A1 or Meeting Room 2." />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Tags">
@@ -725,7 +725,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       >
         <PageHeaderPanel eyebrow="Resource settings" title={resource.name} description="Edit identity, categorization, capacity, and custom availability for this resource.">
           <StackColumn spacing={0.5}>
-            <SmallIconTypography label="Location resource" />
+            <SmallIconTypography label="Resource in this location" />
             <BodyIconTypography label={resource.resourceType.name} />
             <Button variant="text" onClick={handleCloseClick} sx={{ px: 0, justifyContent: 'flex-start', textTransform: 'none' }}>
               Back to location
@@ -755,8 +755,8 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             <StackColumn>{renderActiveSection()}</StackColumn>
           </Box>
 
-          <StickyReviewRail title="Resource summary" description="Keep the most important identity and availability signals visible while editing.">
-            <SettingsSectionCard title="Overview" description="A compact snapshot of the resource being edited.">
+          <StickyReviewRail title="Resource summary" description="See the most important details while you make changes.">
+            <SettingsSectionCard title="Overview" description="A quick summary of this resource.">
               <StackColumn spacing={1.5}>
                 <BodyIconTypography label={resource.name} />
                 <StackColumn spacing={1}>

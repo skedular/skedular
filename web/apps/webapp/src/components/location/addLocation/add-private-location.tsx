@@ -10,7 +10,6 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
-import { EditorActionBar, SettingsSectionCard, SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
 import type { addPrivateLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addPrivateLocation_addLocationMutation.graphql';
 import type { addPrivateLocation_rootQuery } from '@/queries/__generated__/addPrivateLocation_rootQuery.graphql';
 import ApartmentIcon from '@mui/icons-material/Apartment';
@@ -23,6 +22,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
+import { EditorActionBar, SettingsSectionCard, SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -163,7 +163,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationCust
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't add location '${name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -171,7 +171,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationCust
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Location ${name} added.`} />,
+          render: <NotificationContent content={`Location '${name}' has been added.`} />,
         });
 
         onAdded(id);
@@ -180,7 +180,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationCust
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't add location '${name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {

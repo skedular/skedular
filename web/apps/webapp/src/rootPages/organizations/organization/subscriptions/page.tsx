@@ -10,7 +10,6 @@ import {
 } from '@/components/commons';
 import { getOrganizationBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
-import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import {
   SupportedMarketplaceBookingSubscriptionCancellationMode,
   SupportedMarketplaceBookingSubscriptionCancellationModeDetails,
@@ -18,14 +17,15 @@ import {
 } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-cancellation-mode';
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
+import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import { defaultPadding } from '@/libs/theme';
 import { getRelayErrorMessage } from '@/libs/utils';
-import type { pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation.graphql';
+import type { pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation.graphql';
 import type { pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptions_rootQuery } from '@/queries/__generated__/pageOrganizationSubscriptions_rootQuery.graphql';
@@ -40,13 +40,13 @@ import DialogContentText from '@mui/material/DialogContentText';
 import Grid from '@mui/material/Grid';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
+import { PageHeaderPanel } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-import { PageHeaderPanel } from '@skedular/ui';
 
 const surfaceSx: SxProps<Theme> = {
   borderRadius: 4,
@@ -287,12 +287,8 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     subscriptionId: string,
     productTitle: string,
     cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode,
-    cancellationModeName: string,
   ) => {
-    const toastId = toast(
-      <NotificationContent content={`${cancellationModeType === 'AT_PERIOD_END' ? 'Scheduling' : 'Applying'} '${cancellationModeName.toLowerCase()}' for ${productTitle}...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = toast(<NotificationContent content={`${cancellationModeType === 'AT_PERIOD_END' ? 'Updating' : 'Cancelling'} ${productTitle}...`} />, infoNotificationOptions);
 
     commitDeleteMarketplaceBookingSubscription({
       variables: {
@@ -306,7 +302,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update ${productTitle}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't update ${productTitle}. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -318,8 +314,8 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
             <NotificationContent
               content={
                 cancellationModeType === 'AT_PERIOD_END'
-                  ? `${productTitle} will end at the end of the current period. Future billing stops, but issued invoices stay on record.`
-                  : `${productTitle} cancelled. Future billing stops, but issued invoices stay on record.`
+                  ? `${productTitle} will end at the close of the current billing period. No new charges will be created after that.`
+                  : `${productTitle} has been cancelled. No new charges will be created, and past invoices will stay on record.`
               }
             />
           ),
@@ -330,7 +326,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update ${productTitle}. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't update ${productTitle}. ${error.message}`} />,
         });
       },
     });
@@ -358,7 +354,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       pendingCancellationConfirmation.subscriptionId,
       pendingCancellationConfirmation.productTitle,
       pendingCancellationConfirmation.mode.type,
-      pendingCancellationConfirmation.mode.name,
     );
     setPendingCancellationConfirmation(null);
   };
@@ -377,7 +372,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to confirm payment for ${cycleLabel}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't confirm payment for ${cycleLabel}. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -385,7 +380,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Payment confirmed for ${cycleLabel}.`} />,
+          render: <NotificationContent content={`Payment has been confirmed for ${cycleLabel}.`} />,
         });
 
         onReloadRequired();
@@ -393,7 +388,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to confirm payment for ${cycleLabel}. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't confirm payment for ${cycleLabel}. ${error.message}`} />,
         });
       },
     });
@@ -413,7 +408,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject payment for ${cycleLabel}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't reject payment for ${cycleLabel}. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -421,7 +416,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Payment rejected for ${cycleLabel}.`} />,
+          render: <NotificationContent content={`Payment has been rejected for ${cycleLabel}.`} />,
         });
 
         onReloadRequired();
@@ -429,14 +424,14 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to reject payment for ${cycleLabel}. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't reject payment for ${cycleLabel}. ${error.message}`} />,
         });
       },
     });
   };
 
   const handleMakeRecurringBookingPaymentNotRequiredClick = (recurringBookingId: string, cycleLabel: string) => {
-    const toastId = toast(<NotificationContent content={`Marking payment as not required for ${cycleLabel}...`} />, infoNotificationOptions);
+    const toastId = toast(<NotificationContent content={`Updating payment settings for ${cycleLabel}...`} />, infoNotificationOptions);
 
     commitMakeRecurringBookingPaymentNotRequired({
       variables: {
@@ -449,7 +444,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to mark payment as not required for ${cycleLabel}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't update payment settings for ${cycleLabel}. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -457,7 +452,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Payment marked as not required for ${cycleLabel}.`} />,
+          render: <NotificationContent content={`Payment is no longer required for ${cycleLabel}.`} />,
         });
 
         onReloadRequired();
@@ -465,7 +460,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to mark payment as not required for ${cycleLabel}. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't update payment settings for ${cycleLabel}. ${error.message}`} />,
         });
       },
     });
@@ -491,16 +486,16 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
         <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pb: defaultPadding }} spacing={2}>
           <PageHeaderPanel
             title="Marketplace subscriptions"
-            description="Review customer subscriptions, confirm recurring payments, manage refunds, and stop future billing now or at period end."
+            description="Review customer subscriptions, update recurring payments, manage refunds, and stop future billing now or at the end of the current period."
           />
 
           {!rootData.organizationBookingPermissions.canModifyPaymentMethod ? (
             <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
-              <SmallIconTypography label="You do not have permission to confirm subscription payments for this organization." />
+              <SmallIconTypography label="You do not have permission to manage subscription payments for this organisation." />
             </Box>
           ) : subscriptions.length === 0 ? (
             <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
-              <SmallIconTypography label="No subscriptions found for this organization." sx={{ opacity: 0.78 }} />
+              <SmallIconTypography label="This organisation does not have any subscriptions yet." sx={{ opacity: 0.78 }} />
             </Box>
           ) : (
             <Grid container spacing={2}>
@@ -537,7 +532,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                             <StackColumn spacing={0.75}>
                               <BodyIconTypography label={`Renewal: ${lifecycleDisplay.renewalLabel}`} />
                               <SmallIconTypography
-                                label={`Current payment: ${subscription.marketplaceBooking.paymentStatus.name} • Method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
+                                label={`Current payment: ${subscription.marketplaceBooking.paymentStatus.name} • Payment method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
                                 sx={{ opacity: 0.78 }}
                               />
                             </StackColumn>
@@ -556,12 +551,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                                 }
                                 onAtPeriodEndCancellationClick={() =>
                                   atPeriodEndCancellationMode
-                                    ? handleDeleteMarketplaceBookingSubscriptionClick(
-                                        subscription.id,
-                                        productTitle,
-                                        atPeriodEndCancellationMode.type,
-                                        atPeriodEndCancellationMode.name,
-                                      )
+                                    ? handleDeleteMarketplaceBookingSubscriptionClick(subscription.id, productTitle, atPeriodEndCancellationMode.type)
                                     : undefined
                                 }
                               />
@@ -585,7 +575,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                                       <StackColumn spacing={0.35}>
                                         <BodyIconTypography label={cycleLabel} />
                                         <SmallIconTypography
-                                          label={`Payment: ${cycleMarketplaceBooking?.paymentStatus.name ?? 'Not set'} • Method: ${cycleMarketplaceBooking?.paymentMethod.name ?? 'Not set'} • Quantity: ${cycleMarketplaceBooking?.quantity ?? subscription.marketplaceBooking.quantity}`}
+                                          label={`Payment: ${cycleMarketplaceBooking?.paymentStatus.name ?? 'Not set'} • Payment method: ${cycleMarketplaceBooking?.paymentMethod.name ?? 'Not set'} • Quantity: ${cycleMarketplaceBooking?.quantity ?? subscription.marketplaceBooking.quantity}`}
                                           sx={{ opacity: 0.78 }}
                                         />
                                       </StackColumn>
@@ -600,7 +590,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                                             rel="noreferrer"
                                             sx={{ textTransform: 'none' }}
                                           >
-                                            Download Invoice
+                                            Download invoice
                                           </Button>
                                         ) : null}
 
@@ -640,7 +630,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                               })
                             ) : (
                               <Box sx={innerPanelSx}>
-                                <SmallIconTypography label="No recurring periods generated yet." sx={{ opacity: 0.72 }} />
+                                <SmallIconTypography label="No billing periods have been created for this subscription yet." sx={{ opacity: 0.72 }} />
                               </Box>
                             )}
                           </StackColumn>
@@ -656,16 +646,16 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       </Box>
 
       <Dialog open={!!pendingCancellationConfirmation} onClose={handleCancelImmediateCancellationClick}>
-        <DefaultDialogTitle title="Cancel Subscription Immediately" />
+        <DefaultDialogTitle title="Cancel subscription now" />
         <DialogContent sx={{ mt: 2 }}>
           <DialogContentText>
-            {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing stops immediately. Issued invoices stay on record.`}
+            {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing will stop immediately. Previous invoices will stay on record.`}
           </DialogContentText>
           <TwoButtonsDialogActions
             onPrimaryClicked={handleConfirmImmediateCancellationClick}
             onSecondaryClicked={handleCancelImmediateCancellationClick}
-            primaryLabel={pendingCancellationConfirmation?.mode.name ?? 'Immediate'}
-            secondaryLabel="Keep Subscription"
+            primaryLabel={pendingCancellationConfirmation?.mode.name ?? 'Cancel now'}
+            secondaryLabel="Keep subscription"
           />
         </DialogContent>
       </Dialog>

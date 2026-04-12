@@ -10,7 +10,6 @@ import { Search } from '@/components/search';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultPadding } from '@/libs/theme';
 import { getRelayErrorMessage } from '@/libs/utils';
-import { SettingsSectionCard } from '@skedular/ui';
 import type { organizationLocationManageResourcesSectionQuery } from '@/queries/__generated__/organizationLocationManageResourcesSectionQuery.graphql';
 import type { organizationLocationManageResourcesSection_activateResourcesMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_activateResourcesMutation.graphql';
 import type { organizationLocationManageResourcesSection_addCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_addCustomerPreferredResourceMutation.graphql';
@@ -18,6 +17,7 @@ import type { organizationLocationManageResourcesSection_deactivateResourcesMuta
 import type { organizationLocationManageResourcesSection_deleteResourcesMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_deleteResourcesMutation.graphql';
 import type { organizationLocationManageResourcesSection_removeCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_removeCustomerPreferredResourceMutation.graphql';
 import Box from '@mui/material/Box';
+import { SettingsSectionCard } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useMemo, useState } from 'react';
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
@@ -300,7 +300,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate resources. Error: ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't deactivate those resources. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -315,7 +315,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to deactivate resources. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't deactivate those resources. ${error.message}`} />,
         });
       },
     });
@@ -335,7 +335,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate resources. Error: ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't activate those resources. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -350,7 +350,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to activate resources. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't activate those resources. ${error.message}`} />,
         });
       },
     });
@@ -371,7 +371,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove resources. Error: ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't remove those resources. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -386,7 +386,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove resources. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't remove those resources. ${error.message}`} />,
         });
       },
     });
@@ -410,7 +410,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set resource '${selectedResource.name}' as your preferred resource. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't make '${selectedResource.name}' your preferred resource. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -418,14 +418,14 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Resource '${selectedResource.name}' has been set as the preferred resource.`} />,
+          render: <NotificationContent content={`'${selectedResource.name}' is now your preferred resource.`} />,
         });
         setPreferredResources((current) => current.concat(selectedResource.id));
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to set resource '${selectedResource.name}' as your preferred resource. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't make '${selectedResource.name}' your preferred resource. ${error.message}`} />,
         });
       },
     });
@@ -449,9 +449,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent content={`Failed to remove the resource '${selectedResource.name}' as your preferred resource. Error: ${getRelayErrorMessage(errors)}.`} />
-            ),
+            render: <NotificationContent content={`We couldn't remove '${selectedResource.name}' from your preferred resources. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -459,14 +457,14 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Resource '${selectedResource.name}' has been removed as your preferred resource.`} />,
+          render: <NotificationContent content={`'${selectedResource.name}' is no longer one of your preferred resources.`} />,
         });
         setPreferredResources((current) => current.filter((item) => item !== selectedResource.id));
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the resource '${selectedResource.name}' as your preferred resource. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't remove '${selectedResource.name}' from your preferred resources. ${error.message}`} />,
         });
       },
     });

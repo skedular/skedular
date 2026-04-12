@@ -11,6 +11,13 @@ This file covers `shared/Api.Shared.Services`.
 - When the model is consumed by multiple domains, add unit tests here so the shared contract is locked down before the
   domain-specific behavior changes.
 
+## Copy Localisation Rule
+
+- When this layer owns exception messages, display names, or other text that is surfaced to users or operators, write
+  it in British spelling and grammar rather than American English.
+- Keep that localisation limited to surfaced copy. Do not rename shared model types, enum members, namespaces, method
+  names, or other technical contracts solely to make them British English.
+
 ## Xero Billing Mode Rule
 
 - `OrganizationXeroBillingMode` is the shared contract for org-facing Xero billing settings.

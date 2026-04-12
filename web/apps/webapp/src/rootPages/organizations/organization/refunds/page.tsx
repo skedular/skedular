@@ -92,7 +92,7 @@ const RootPage = ({ queryReference }: Props) => {
       </Button>
       <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
         <Breadcrumbs>
-          <BodyIconTypography label="Refund operations" />
+          <BodyIconTypography label="Refunds" />
           <BodyIconTypography label={rootData.organization?.name} />
         </Breadcrumbs>
       </Box>
@@ -102,7 +102,7 @@ const RootPage = ({ queryReference }: Props) => {
   if (!rootData.organizationBookingPermissions?.canModifyPaymentMethod) {
     return (
       <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-        <Alert severity="warning">You do not have permission to manage refunds for this organization.</Alert>
+        <Alert severity="warning">You do not have permission to manage refunds for this organisation.</Alert>
       </RootShell>
     );
   }
@@ -111,9 +111,9 @@ const RootPage = ({ queryReference }: Props) => {
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       <StackColumn spacing={2}>
         <StackColumn spacing={0.5}>
-          <CaptionIconTypography label="Refund operations" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.68 }} />
+          <CaptionIconTypography label="Refunds" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.68 }} />
           <SubtitleIconTypography label={`${rootData.marketplaceRefunds.length} refund${rootData.marketplaceRefunds.length === 1 ? '' : 's'}`} />
-          <BodyIconTypography label="Use this view to review refund state, blocked Xero follow-up, manual actions, and audit history across bookings and subscriptions." />
+          <BodyIconTypography label="Review refund progress, manual follow-up, and status history for bookings and subscriptions." />
         </StackColumn>
         {rootData.marketplaceRefunds.map((refund) => {
           const entityLabel = refund.localEntityType === 'MarketplaceBookingSubscription' ? 'subscription' : 'booking';
@@ -125,7 +125,7 @@ const RootPage = ({ queryReference }: Props) => {
                   <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: 2, flexWrap: 'wrap' }}>
                     <StackColumn spacing={0.5}>
                       <SubtitleIconTypography label={`${entityLabel === 'subscription' ? 'Subscription' : 'Booking'} refund`} />
-                      <SmallIconTypography label={`Entity id: ${refund.localEntityId}`} sx={{ opacity: 0.72 }} />
+                      <SmallIconTypography label={`Reference: ${refund.localEntityId}`} sx={{ opacity: 0.72 }} />
                       {refund.requestedByCustomerName ? <SmallIconTypography label={`Requested by ${refund.requestedByCustomerName}`} sx={{ opacity: 0.72 }} /> : null}
                     </StackColumn>
                     <Chip

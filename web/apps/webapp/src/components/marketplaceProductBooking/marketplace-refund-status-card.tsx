@@ -68,24 +68,24 @@ const MarketplaceRefundStatusCard = ({ entityLabel, isCancelled, isCancelAtPerio
 
         case 'PENDING_ACCOUNTING':
           return {
-            title: 'Refund is being processed',
+            title: 'Refund in progress',
             body: amountLabel
-              ? `A refund of ${amountLabel} is pending accounting processing and provider confirmation.`
-              : 'This refund is pending accounting processing and provider confirmation.',
+              ? `We're submitting a refund of ${amountLabel}. It may take a little time for your provider to confirm it.`
+              : 'We are submitting your refund now. It may take a little time for your provider to confirm it.',
             severity: 'info' as const,
           };
 
         case 'FAILED':
           return {
-            title: 'Refund needs attention',
-            body: refund.lastError || 'Refund processing failed and needs follow-up from the team before it can complete.',
+            title: 'Refund update needed',
+            body: refund.lastError || 'We could not finish this refund automatically. Our team needs to review it before it can continue.',
             severity: 'warning' as const,
           };
 
         case 'MANUAL_REQUIRED':
           return {
-            title: 'Refund requires manual follow-up',
-            body: refund.lastError || 'This refund needs manual follow-up from the team before it can complete.',
+            title: 'Refund under review',
+            body: refund.lastError || 'This refund is being reviewed by our team before it can be completed.',
             severity: 'warning' as const,
           };
 
@@ -99,7 +99,7 @@ const MarketplaceRefundStatusCard = ({ entityLabel, isCancelled, isCancelAtPerio
         default:
           return {
             title: 'Refund requested',
-            body: amountLabel ? `A refund of ${amountLabel} has been requested and is waiting for review.` : 'A refund has been requested and is waiting for review.',
+            body: amountLabel ? `A refund of ${amountLabel} has been requested and is waiting for review.` : 'Your refund request has been received and is waiting for review.',
             severity: 'info' as const,
           };
       }
@@ -107,8 +107,8 @@ const MarketplaceRefundStatusCard = ({ entityLabel, isCancelled, isCancelAtPerio
 
     if (entityLabel === 'subscription' && isCancelAtPeriodEnd) {
       return {
-        title: 'Current period stays active',
-        body: 'This subscription is set to stop at the end of the current period. That change usually does not create a refund because the current period remains active.',
+        title: 'Subscription stays active for now',
+        body: 'This subscription will end at the close of the current billing period. Because the current period stays active, a refund usually does not apply.',
         severity: 'info' as const,
       };
     }
@@ -123,23 +123,23 @@ const MarketplaceRefundStatusCard = ({ entityLabel, isCancelled, isCancelAtPerio
 
     if (isCancelled && isPaidOrRecorded) {
       return {
-        title: 'Refund review follows cancellation',
-        body: `This ${entityLabel} has been cancelled. Any refund is reviewed separately against the cancellation policy and the related invoice/accounting records before it is completed.`,
+        title: 'Refund review starts after cancellation',
+        body: `This ${entityLabel} has been cancelled. If a refund is available, we'll review it separately based on the cancellation policy and payment records.`,
         severity: 'info' as const,
       };
     }
 
     if (entityLabel === 'subscription') {
       return {
-        title: 'Refunds are separate from renewal changes',
-        body: 'Ending at period end usually keeps the current period active without a refund. Immediate cancellation may still require refund review for already billed value.',
+        title: 'Billing changes and refunds are handled separately',
+        body: 'Ending a subscription at period end usually keeps the current period active without a refund. Cancelling now may still require a separate refund review.',
         severity: 'info' as const,
       };
     }
 
     return {
-      title: 'Eligible refunds are reviewed separately',
-      body: 'If this booking is cancelled inside the allowed window, any eligible refund is processed after the cancellation is accepted rather than as part of the same update.',
+      title: 'Refunds are reviewed after cancellation',
+      body: 'If this booking is cancelled within the allowed window, any eligible refund will be reviewed after the cancellation is confirmed.',
       severity: 'info' as const,
     };
   })();
@@ -153,7 +153,7 @@ const MarketplaceRefundStatusCard = ({ entityLabel, isCancelled, isCancelAtPerio
         {refund?.requestedByCustomerName ? <BodyIconTypography label={`Requested by ${refund.requestedByCustomerName}`} sx={{ mt: 0.75, opacity: 0.68 }} /> : null}
         {refund?.reason ? <BodyIconTypography label={`Note: ${refund.reason}`} sx={{ mt: 0.75, opacity: 0.68 }} /> : null}
         <Alert severity={content.severity} sx={{ mt: 2, borderRadius: 2 }}>
-          Refund processing and accounting updates may complete after the cancellation state appears on this page.
+          Refund and accounting updates can take a little longer to appear than the cancellation status shown on this page.
         </Alert>
         {refund ? <MarketplaceRefundTimeline refund={refund} /> : null}
       </CardContent>

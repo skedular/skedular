@@ -155,7 +155,7 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove tags. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't remove those tags. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -163,14 +163,14 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content="Tags removed." />,
+          render: <NotificationContent content="Those tags have been removed." />,
         });
         setSelectedCustomTagIds([]);
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove tags. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't remove those tags. ${error.message}`} />,
         });
       },
     });
@@ -195,7 +195,7 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove tag. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't remove that tag. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -203,7 +203,7 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content="Tag removed." />,
+          render: <NotificationContent content="That tag has been removed." />,
         });
 
         setSelectedCustomTagId(null);
@@ -211,7 +211,7 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove tag. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't remove that tag. ${error.message}`} />,
         });
       },
     });
@@ -236,7 +236,7 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set tag '${organizationTagDetails.name}' as your preferred tag. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't make '${organizationTagDetails.name}' your preferred tag. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -244,13 +244,13 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Tag '${organizationTagDetails.name}' has been set as the preferred tag.`} />,
+          render: <NotificationContent content={`'${organizationTagDetails.name}' is now your preferred tag.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to set tag '${organizationTagDetails.name}' as your preferred tag. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't make '${organizationTagDetails.name}' your preferred tag. ${error.message}`} />,
         });
       },
     });
@@ -275,7 +275,7 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the tag '${organizationTagDetails.name}' as your preferred tag. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't remove '${organizationTagDetails.name}' from your preferred tags. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -283,13 +283,13 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Tag '${organizationTagDetails.name}' has been removed as your preferred tag.`} />,
+          render: <NotificationContent content={`'${organizationTagDetails.name}' is no longer one of your preferred tags.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the tag '${organizationTagDetails.name}' as your preferred tag. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't remove '${organizationTagDetails.name}' from your preferred tags. ${error.message}`} />,
         });
       },
     });

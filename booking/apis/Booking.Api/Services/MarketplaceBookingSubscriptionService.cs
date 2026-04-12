@@ -107,7 +107,7 @@ public class MarketplaceBookingSubscriptionService(
 
         if (requestedOtherCustomersSubscriptions && scopedOrganization is null)
         {
-            throw new InvalidOperationException("You can only look for others' subscriptions if organization is included in your search");
+            throw new InvalidOperationException("To view other people's subscriptions, narrow your search to a specific organisation first.");
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) &&

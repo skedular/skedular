@@ -16,7 +16,7 @@ This file covers `web/apps/webapp/`.
 
 ## Directory Structure
 
-```
+```text
 src/
   app/           # Next.js App Router pages and layouts
   clients/       # HTTP API clients (generated — do not hand-edit)
@@ -199,6 +199,10 @@ scripts/
 - Do not import `@mui/material/Typography` in feature components; use `@/components/commons` wrappers.
 - Do not hand-edit files in `src/queries/__generated__/` or generated `src/clients/` files.
 - After any backend GraphQL schema change, regenerate Relay artifacts (`make generate` or `scripts/generate.sh`).
+- For all customer-facing and operator-facing UI copy, use British spelling and grammar rather than American English.
+- Apply that rule to titles, labels, helper text, validation messages, dialog copy, status text, notifications, and
+  empty states, but do not rename code-level identifiers, route segments, query names, or generated artefacts for
+  localisation alone.
 - Use `pnpm` for package management, not `npm` or `yarn`.
 - Check `web/AGENTS.md` and `api-definitions/graphql/AGENTS.md` for upstream generation context.
 - Keep Relay fragments colocated with the component that renders them whenever practical.

@@ -167,7 +167,7 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove team '${teamDetails.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't remove team '${teamDetails.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -175,13 +175,13 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Team '${teamDetails.name}' has been successfully removed.`} />,
+          render: <NotificationContent content={`Team '${teamDetails.name}' has been removed.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove team '${teamDetails.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't remove team '${teamDetails.name}'. ${error.message}`} />,
         });
       },
     });

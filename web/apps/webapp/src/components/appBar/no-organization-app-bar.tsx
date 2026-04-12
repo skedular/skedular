@@ -182,10 +182,10 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
                   return (
                     <>
                       <BodyIconTypography
-                        label="Please select an organization"
+                        label="Please select an organisation"
                         sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
                       />
-                      <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
+                      <OrganizationIcon tip="Please select an organisation" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
                     </>
                   );
                 }
@@ -195,10 +195,10 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
                   return (
                     <>
                       <BodyIconTypography
-                        label="Please select an organization"
+                        label="Please select an organisation"
                         sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
                       />
-                      <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
+                      <OrganizationIcon tip="Please select an organisation" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
                     </>
                   );
                 }
@@ -226,7 +226,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
                     <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
                     <StackColumn spacing={-0.5}>
                       <LeadIconTypography label={organization.name} />
-                      <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
+                      <CaptionIconTypography label="Organisation" sx={{ display: { xs: 'none', sm: 'block' } }} />
                     </StackColumn>
                   </StackRow>
                 </MenuItem>
@@ -235,7 +235,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
               {rootData.myOrganizations.length !== 0 && <Divider />}
 
               <MenuItem value={createOrganizationId}>
-                <LeadIconTypography label="Create Organization" startElement={<AddIcon />} />
+                <LeadIconTypography label="Create organisation" startElement={<AddIcon />} />
               </MenuItem>
             </Select>
           )}

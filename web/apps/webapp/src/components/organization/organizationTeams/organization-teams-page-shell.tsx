@@ -21,10 +21,10 @@ const surfaceSx: SxProps<Theme> = {
   boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : '0 1px 3px rgba(0, 0, 0, 0.24)'),
 };
 
-const OrganizationTeamsPageShell = ({ actions, toolbar, isEmpty, emptyMessage = 'No teams yet', children }: Props) => (
+const OrganizationTeamsPageShell = ({ actions, toolbar, isEmpty, emptyMessage = 'Create your first team to get started.', children }: Props) => (
   <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', pb: defaultPadding }}>
     <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: defaultPadding }} spacing={2}>
-      <PageHeaderPanel title="Teams" description="Manage groups, members, and the primary location context for each team." actions={actions} />
+      <PageHeaderPanel title="Teams" description="Create teams, manage members, and choose the main location for each team." actions={actions} />
 
       {toolbar ? <Box sx={{ ...surfaceSx, px: 2, py: 1.5 }}>{toolbar}</Box> : null}
 

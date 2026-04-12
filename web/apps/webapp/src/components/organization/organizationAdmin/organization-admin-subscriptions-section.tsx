@@ -1,10 +1,10 @@
 import { BodyIconTypography, CreditCard, ExtraLargeHeadingIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon, ErrorIcon, NewIcon, TickIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
-import { defaultButtonStyle, coal, emerald } from '@/libs/theme';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { PaletteModeContext } from '@/libs/providers';
+import { coal, defaultButtonStyle, emerald } from '@/libs/theme';
 import { getRelayErrorMessage } from '@/libs/utils';
 import type { organizationAdminSubscriptionsSectionQuery } from '@/queries/__generated__/organizationAdminSubscriptionsSectionQuery.graphql';
 import type { organizationAdminSubscriptionsSection_cancelOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdminSubscriptionsSection_cancelOrganizationOfferingMutation.graphql';
@@ -132,7 +132,7 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove payment method. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't remove that payment method. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -140,14 +140,14 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content="Payment method removed." />,
+          render: <NotificationContent content="The payment method has been removed." />,
         });
         onReloadRequired();
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove payment method. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't remove that payment method. ${error.message}`} />,
         });
       },
     });
@@ -155,7 +155,7 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
 
   const handleCancelActiveOfferingClick = () => {
     const name = organization.name;
-    const toastId = themedToast(<NotificationContent content={`Cancelling organization '${name}' active offering...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Cancelling the active plan for organisation '${name}'...`} />, infoNotificationOptions);
 
     commitCancelOrganizationOffering({
       variables: {
@@ -168,7 +168,7 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to cancel organization '${name}' active offering. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't cancel the active plan for organisation '${name}'. ${getRelayErrorMessage(errors)}`} />,
           });
           onReloadRequired();
           return;
@@ -176,14 +176,14 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization '${name}' active offering cancelled.`} />,
+          render: <NotificationContent content={`The active plan for organisation '${name}' has been cancelled.`} />,
         });
         onReloadRequired();
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to cancel organization '${name}' active offering. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't cancel the active plan for organisation '${name}'. ${error.message}`} />,
         });
         onReloadRequired();
       },
@@ -192,7 +192,7 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
 
   const handleUpgradeOfferingClick = (code: string) => {
     const name = organization.name;
-    const toastId = themedToast(<NotificationContent content={`Updating organization '${name} active offering'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Updating the active plan for organisation '${name}'...`} />, infoNotificationOptions);
 
     commitUpdateOrganizationOffering({
       variables: {
@@ -206,7 +206,7 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization ${name} active offering. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't update the active plan for organisation '${name}'. ${getRelayErrorMessage(errors)}`} />,
           });
           onReloadRequired();
           return;
@@ -214,14 +214,14 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${name} active offering updated.`} />,
+          render: <NotificationContent content={`The active plan for organisation '${name}' has been updated.`} />,
         });
         onReloadRequired();
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update organization ${name} active offering. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't update the active plan for organisation '${name}'. ${error.message}`} />,
         });
         onReloadRequired();
       },
@@ -231,7 +231,7 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
   return (
     <>
       <Box sx={{ pb: 2 }}>
-        <SettingsSectionCard title="Subscriptions" description="Review the active plan and the available upgrades for the organization.">
+        <SettingsSectionCard title="Subscriptions" description="Review the active plan and the available upgrades for the organisation.">
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(auto-fit, minmax(280px, 320px))' }, gap: 2, justifyContent: 'center' }}>
             {activeOffering && (
               <Grid>

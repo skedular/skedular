@@ -891,21 +891,21 @@ const MarketplaceProductSubscriptionDetails = ({
       </Container>
 
       <Dialog open={!!pendingCancellationConfirmation} onClose={handleCancelImmediateCancellationClick}>
-        <DefaultDialogTitle title="Cancel Subscription Immediately" />
+        <DefaultDialogTitle title="Cancel Subscription Now" />
         <DialogContent sx={{ mt: 2 }}>
           <DialogContentText>
-            {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing stops immediately. Issued invoices stay on record.`}
+            {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing will stop right away. Previous invoices will still stay on record.`}
           </DialogContentText>
           <DialogContentText sx={{ mt: 1.5 }}>
             {hasConfirmedCurrentCyclePayment
-              ? 'If the current period has already been billed, any refund is still reviewed separately against the cancellation policy and accounting status.'
-              : 'If payment for the current period was never confirmed, this cancellation stops future billing without creating a refund.'}
+              ? 'If the current period has already been billed, any refund will still be reviewed separately using the cancellation policy and payment status.'
+              : 'If payment for the current period was never confirmed, this will stop future billing without creating a refund.'}
           </DialogContentText>
           <TwoButtonsDialogActions
             onPrimaryClicked={handleConfirmImmediateCancellationClick}
             onSecondaryClicked={handleCancelImmediateCancellationClick}
-            primaryLabel={pendingCancellationConfirmation?.name ?? 'Immediate'}
-            secondaryLabel="Keep Subscription"
+            primaryLabel={pendingCancellationConfirmation?.name ?? 'Cancel now'}
+            secondaryLabel="Keep subscription"
           />
         </DialogContent>
       </Dialog>

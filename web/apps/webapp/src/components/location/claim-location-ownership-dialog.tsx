@@ -70,7 +70,7 @@ const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClic
 
   const handleAddClick = ({ uniqueClaimCode }: LocationClaimOwnershipDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Claiming ownership of location specified by claim code '${uniqueClaimCode}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Claiming this location with claim code '${uniqueClaimCode}'...`} />, infoNotificationOptions);
 
     commitClaimLocationOwnership({
       variables: {
@@ -86,7 +86,7 @@ const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClic
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to claim ownership of location specified by claim code '${uniqueClaimCode}'. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't claim this location with claim code '${uniqueClaimCode}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -94,7 +94,7 @@ const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClic
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Successfully claimed ownership of location '${response.claimLocationOwnership.location.name}'.`} />,
+          render: <NotificationContent content={`You now manage location '${response.claimLocationOwnership.location.name}'.`} />,
         });
 
         onClaimClicked();
@@ -102,7 +102,7 @@ const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClic
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to claim ownership of location specified by claim code '${uniqueClaimCode}. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't claim this location with claim code '${uniqueClaimCode}'. ${error.message}`} />,
         });
       },
     });

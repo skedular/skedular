@@ -73,7 +73,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
             themedToast(
-              <NotificationContent content={`Failed to claim location with unique code ${locationUniqueClaimCode}. Error: ${getRelayErrorMessage(errors)}.`} />,
+              <NotificationContent content={`We couldn't claim the location with code ${locationUniqueClaimCode}. ${getRelayErrorMessage(errors)}`} />,
               errorNotificationOptions,
             );
           }
@@ -82,7 +82,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
           onReloadRequired();
         },
         onError: (error) => {
-          themedToast(<NotificationContent content={`Failed to claim location with unique code ${locationUniqueClaimCode}. Error: ${error.message}.`} />, errorNotificationOptions);
+          themedToast(<NotificationContent content={`We couldn't claim the location with code ${locationUniqueClaimCode}. ${error.message}`} />, errorNotificationOptions);
 
           if (rootData.me.isOnboardingDone) {
             router.push(
@@ -102,7 +102,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
             },
             onCompleted: (_, errors) => {
               if (errors && errors.length > 0) {
-                themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
+                themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
               }
 
               router.push(
@@ -113,7 +113,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
               onReloadRequired();
             },
             onError: (error) => {
-              themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${error.message}.`} />, errorNotificationOptions);
+              themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${error.message}`} />, errorNotificationOptions);
 
               router.push(
                 getOrganizationLocationAddPrivateLink(integratedPlatrform, customDomain, {
@@ -154,7 +154,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
+            themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           }
 
           router.push(
@@ -165,7 +165,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
           onReloadRequired();
         },
         onError: (error) => {
-          themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${error.message}.`} />, errorNotificationOptions);
+          themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${error.message}`} />, errorNotificationOptions);
 
           router.push(
             getOrganizationLocationAddPrivateLink(integratedPlatrform, customDomain, {
@@ -197,8 +197,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
         onAdded={handleAdded}
         onCancel={handleCancelled}
         onReloadRequired={onReloadRequired}
-        cancelLabel="Back"
-        createLabel="Create"
+        cancelLabel="Go back"
+        createLabel="Create organisation"
       />
     </NoOrganizationRootShell>
   );

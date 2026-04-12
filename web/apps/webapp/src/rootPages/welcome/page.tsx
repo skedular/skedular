@@ -80,14 +80,14 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
             },
             onCompleted: (_, errors) => {
               if (errors && errors.length > 0) {
-                themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
+                themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
               }
 
               router.push(getRootLink(integratedPlatrform));
               onReloadRequired();
             },
             onError: (error) => {
-              themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${error.message}.`} />, errorNotificationOptions);
+              themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${error.message}`} />, errorNotificationOptions);
 
               router.push(getRootLink(integratedPlatrform));
               onReloadRequired();

@@ -79,7 +79,7 @@ const OrganizationUserManagementList = ({
         }}
       >
         <LeadIconTypography label="No users found" />
-        <SmallIconTypography label="Adjust the filters or invite a new person to the organization." />
+        <SmallIconTypography label="Adjust the filters or invite a new person to the organisation." />
       </Box>
     );
   }

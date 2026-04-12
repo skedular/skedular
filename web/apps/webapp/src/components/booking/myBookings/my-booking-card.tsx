@@ -210,14 +210,15 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
   const recurringSeriesActionLabel = recurringBooking ? 'Remove recurring series' : null;
   const recurringOccurrenceActionLabel = canDeleteRecurringOccurrence ? 'Remove this occurrence' : null;
   const recurringDeleteConfirmationMessage = recurringBooking
-    ? `This booking is part of a recurring series. ${isMarketplaceRecurringBooking ? 'Removing it here will cancel the whole recurring series' : 'Removing it here will remove the whole recurring series'}, not just this booking. Continue?`
+    ? `This booking is part of a recurring series. ${isMarketplaceRecurringBooking ? 'If you continue, the full recurring series will be cancelled' : 'If you continue, the full recurring series will be removed'}, not just this booking.`
     : null;
   const recurringOccurrenceDeleteConfirmationMessage = canDeleteRecurringOccurrence
-    ? 'This removes only this booking occurrence. The rest of the recurring series will stay active. Continue?'
+    ? 'Only this booking will be removed. The rest of the recurring series will stay active.'
     : null;
-  const recurringDeleteDialogTitle = pendingRecurringDeleteAction === 'occurrence' ? 'Remove Booking Occurrence' : 'Remove Recurring Series';
+  const recurringDeleteDialogTitle = pendingRecurringDeleteAction === 'occurrence' ? 'Remove This Booking' : 'Remove Recurring Series';
   const recurringDeleteDialogDescription = pendingRecurringDeleteAction === 'occurrence' ? recurringOccurrenceDeleteConfirmationMessage : recurringDeleteConfirmationMessage;
-  const recurringDeleteDialogPrimaryLabel = pendingRecurringDeleteAction === 'occurrence' ? 'Remove occurrence' : isMarketplaceRecurringBooking ? 'Cancel series' : 'Remove series';
+  const recurringDeleteDialogPrimaryLabel =
+    pendingRecurringDeleteAction === 'occurrence' ? 'Remove this booking' : isMarketplaceRecurringBooking ? 'Cancel series' : 'Remove series';
 
   const moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditBooking]];
 
@@ -294,7 +295,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
 
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
-    const toastId = themedToast(<NotificationContent content={`Removing booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Removing booking ${bookingDetailsInfo}...`} />, infoNotificationOptions);
 
     if (bookingDetails.channel.channel === 'PRIVATE') {
       commitDeletePrivateBooking({
@@ -309,7 +310,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
+              render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />,
             });
 
             return;
@@ -317,13 +318,17 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
 
           toast.update(toastId, {
             ...successNotificationOptions,
-            render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.${canDeleteRecurringOccurrence ? ' The recurring series stays active.' : ''}`} />,
+            render: (
+              <NotificationContent
+                content={`Booking ${bookingDetailsInfo} has been removed.${canDeleteRecurringOccurrence ? ' The rest of the recurring series will stay active.' : ''}`}
+              />
+            ),
           });
         },
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />,
+            render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />,
           });
         },
       });
@@ -340,7 +345,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
+              render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />,
             });
 
             return;
@@ -348,13 +353,17 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
 
           toast.update(toastId, {
             ...successNotificationOptions,
-            render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.${canDeleteRecurringOccurrence ? ' The recurring series stays active.' : ''}`} />,
+            render: (
+              <NotificationContent
+                content={`Booking ${bookingDetailsInfo} has been removed.${canDeleteRecurringOccurrence ? ' The rest of the recurring series will stay active.' : ''}`}
+              />
+            ),
           });
         },
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />,
+            render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />,
           });
         },
       });
@@ -385,7 +394,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
       if (!subscriptionId) {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content="Could not resolve the recurring series for this booking." />,
+          render: <NotificationContent content="We couldn't find the recurring series for this booking." />,
         });
 
         return;
@@ -403,7 +412,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to cancel ${recurringSeriesLabel.toLowerCase()}. Error: ${getRelayErrorMessage(errors)}.`} />,
+              render: <NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(errors)}`} />,
             });
 
             return;
@@ -411,14 +420,14 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
 
           toast.update(toastId, {
             ...successNotificationOptions,
-            render: <NotificationContent content={`${recurringSeriesLabel} removed. This affects the whole recurring series, not only this booking.`} />,
+            render: <NotificationContent content={`${recurringSeriesLabel} has been cancelled. This applies to the full recurring series, not just this booking.`} />,
           });
           router.refresh();
         },
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to cancel ${recurringSeriesLabel.toLowerCase()}. Error: ${getRelayErrorMessage(error)}.`} />,
+            render: <NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(error)}`} />,
           });
         },
       });
@@ -437,7 +446,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove ${recurringSeriesLabel.toLowerCase()}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't remove this recurring series. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -445,14 +454,14 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`${recurringSeriesLabel} removed. This removes the whole series, not only this booking.`} />,
+          render: <NotificationContent content={`${recurringSeriesLabel} has been removed. This applies to the full series, not just this booking.`} />,
         });
         router.refresh();
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove ${recurringSeriesLabel.toLowerCase()}. Error: ${getRelayErrorMessage(error)}.`} />,
+          render: <NotificationContent content={`We couldn't remove this recurring series. ${getRelayErrorMessage(error)}`} />,
         });
       },
     });

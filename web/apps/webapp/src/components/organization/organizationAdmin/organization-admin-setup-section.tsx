@@ -262,7 +262,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't update organisation '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -270,13 +270,13 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${name} details updated.`} />,
+          render: <NotificationContent content={`The details for organisation '${name}' have been updated.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update organization '${organization.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't update organisation '${organization.name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {

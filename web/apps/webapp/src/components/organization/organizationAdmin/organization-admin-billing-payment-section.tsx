@@ -1,14 +1,12 @@
 import { Address, PhysicalAddress } from '@/components/address';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, StackColumn, StackRow } from '@/components/commons';
-import { CreditCard } from '@/components/commons';
+import { BodyIconTypography, CreditCard, FormFieldLabel, FormStackColumn, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon, NewIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { BillingDetails, billingSchema } from '@/components/organization/organizationAdmin/organization-admin-shared';
 import { PaletteModeContext } from '@/libs/providers';
-import { keyboardTextFieldDebounceTimeout } from '@/libs/utils';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { organizationAdminBillingPaymentSectionQuery } from '@/queries/__generated__/organizationAdminBillingPaymentSectionQuery.graphql';
 import type { organizationAdminBillingPaymentSection_addOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdminBillingPaymentSection_addOrganizationBillingDetailsMutation.graphql';
 import type { organizationAdminBillingPaymentSection_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdminBillingPaymentSection_removeOrganizationPaymentMethodMutation.graphql';
@@ -236,7 +234,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to update organization '${organization.name}' billing. Error: ${getRelayErrorMessage(errors)}.`} />,
+              render: <NotificationContent content={`We couldn't update billing for organisation '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
             });
 
             return;
@@ -244,13 +242,13 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
 
           toast.update(toastId, {
             ...successNotificationOptions,
-            render: <NotificationContent content={`Organization '${organization.name}' billing updated.`} />,
+            render: <NotificationContent content={`Billing for organisation '${organization.name}' has been updated.`} />,
           });
         },
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization.name}' billing. Error: ${error.message}.`} />,
+            render: <NotificationContent content={`We couldn't update billing for organisation '${organization.name}'. ${error.message}`} />,
           });
         },
         optimisticResponse: {
@@ -285,7 +283,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
     }
 
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding organization '${organization.name}' billing...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Adding billing for organisation '${organization.name}'...`} />, infoNotificationOptions);
 
     commitAddOrganizationBillingDetails({
       variables: {
@@ -315,7 +313,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add organization '${organization.name}' billing. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't add billing for organisation '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -323,13 +321,13 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization '${organization.name}' billing added.`} />,
+          render: <NotificationContent content={`Billing for organisation '${organization.name}' has been added.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add organization '${organization.name}' billing. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't add billing for organisation '${organization.name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -384,7 +382,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove payment method. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`We couldn't remove that payment method. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -392,14 +390,14 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content="Payment method removed." />,
+          render: <NotificationContent content="The payment method has been removed." />,
         });
         onRefetchRequired();
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove payment method. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`We couldn't remove that payment method. ${error.message}`} />,
         });
       },
     });
