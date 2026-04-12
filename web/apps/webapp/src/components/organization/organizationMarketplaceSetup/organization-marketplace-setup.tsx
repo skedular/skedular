@@ -100,7 +100,6 @@ type OrganizationXeroConnectionDetails = {
   scopes?: string | null;
   isActive: boolean;
   defaultSalesAccountCode?: string | null;
-  defaultReceivablesAccountCode?: string | null;
   defaultTrackingCategory1?: string | null;
   defaultTrackingCategory2?: string | null;
   defaultBrandingThemeId?: string | null;
@@ -975,7 +974,7 @@ const OrganizationMarketplaceSetup = ({
           sendInvoicesViaXero: true,
           autoReconcilePayments: true,
           defaultSalesAccountCode: values.defaultSalesAccountCode ?? null,
-          defaultReceivablesAccountCode: values.defaultReceivablesAccountCode ?? null,
+          defaultReceivablesAccountCode: organization.xeroConnection?.defaultReceivablesAccountCode ?? null,
           defaultTrackingCategory1: values.defaultTrackingCategory1 ?? null,
           defaultTrackingCategory2: values.defaultTrackingCategory2 ?? null,
           defaultBrandingThemeId: values.defaultBrandingThemeId ?? null,
@@ -1433,7 +1432,6 @@ const OrganizationMarketplaceSetup = ({
               scopes: existingXeroConnection?.scopes ?? '',
               isActive: existingXeroConnection?.isActive ?? false,
               defaultSalesAccountCode: existingXeroConnection?.defaultSalesAccountCode ?? '',
-              defaultReceivablesAccountCode: existingXeroConnection?.defaultReceivablesAccountCode ?? '',
               defaultTrackingCategory1: existingXeroConnection?.defaultTrackingCategory1 ?? '',
               defaultTrackingCategory2: existingXeroConnection?.defaultTrackingCategory2 ?? '',
               defaultBrandingThemeId: existingXeroConnection?.defaultBrandingThemeId ?? '',
@@ -1515,9 +1513,6 @@ const OrganizationMarketplaceSetup = ({
                     )}
                     <FormFieldLabel label="Default Sales Account Code">
                       <TextField name="defaultSalesAccountCode" helperText="Optional sales account code used when creating Xero invoices." />
-                    </FormFieldLabel>
-                    <FormFieldLabel label="Default Receivables Account Code">
-                      <TextField name="defaultReceivablesAccountCode" helperText="Optional receivables account code for invoice posting." />
                     </FormFieldLabel>
                     <FormFieldLabel label="Tracking Category 1">
                       <TextField name="defaultTrackingCategory1" helperText="Optional tracking category for org-level reporting in Xero." />
