@@ -804,8 +804,14 @@ public class MarketplaceBookingService(
         var marketplaceBooking = existingBooking.MarketplaceBooking;
         ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
+        if (marketplaceBooking.ProductPricing.CancellationPolicyType == ProductPricingCancellationPolicyType.NoCancellation ||
+            existingBooking.From < timeProvider.GetUtcNow().StartOfDay())
+        {
+            throw new MarketplaceBookingCancellationNotAllowed();
+        }
+
         var quote = marketplaceRefundPolicyService.GetQuote(marketplaceBooking.ProductPricing, existingBooking.From, timeProvider.GetUtcNow());
-        if (!quote.CanCancel)
+        if (quote is { CanCancel: false, IsRefundable: true })
         {
             throw new MarketplaceBookingCancellationNotAllowed();
         }

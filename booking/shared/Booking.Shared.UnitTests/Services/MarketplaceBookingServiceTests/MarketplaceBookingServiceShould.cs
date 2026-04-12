@@ -5,6 +5,7 @@ using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore.Storage;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
@@ -127,7 +128,7 @@ public class MarketplaceBookingServiceShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task DeleteAsync_Throws_MarketplaceBookingCancellationNotAllowed_When_User_Delete_Is_After_Cancellation_Deadline(
+    public async Task DeleteAsync_Throws_MarketplaceBookingCancellationNotAllowed_When_User_Delete_Is_For_A_Past_Booking(
         [Frozen] TimeProvider timeProvider,
         MarketplaceBookingService sut,
         CancellationToken cancellationToken)
@@ -136,7 +137,7 @@ public class MarketplaceBookingServiceShould
         var deletedByCustomer = new Customer();
         var now = new DateTimeOffset(2026, 3, 18, 8, 30, 0, TimeSpan.Zero);
         var existingBooking = CreateMarketplaceBooking(
-            now.AddMinutes(30),
+            now.StartOfDay().AddMinutes(-30),
             false,
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(45, 100)]);
@@ -145,6 +146,48 @@ public class MarketplaceBookingServiceShould
         // Act & Assert
         await Should.ThrowAsync<MarketplaceBookingCancellationNotAllowed>(() =>
             sut.DeleteAsync(existingBooking, deletedByCustomer, false, true, cancellationToken));
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task DeleteAsync_Allows_User_Delete_For_Todays_Booking_After_Refund_Cutoff(
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IBookingRepository bookingRepository,
+        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen] IMarketplaceRefundService marketplaceRefundService,
+        [Frozen] IMapper mapper,
+        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen] IDbContextTransaction transaction,
+        MarketplaceBookingService sut,
+        CancellationToken cancellationToken)
+    {
+        var deletedByCustomer = new Customer();
+        var now = new DateTimeOffset(2026, 3, 18, 8, 30, 0, TimeSpan.Zero);
+        var existingBooking = CreateMarketplaceBooking(
+            now.AddMinutes(30),
+            false,
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            [new ProductPricingCancellationRefundRule(45, 100)]);
+        var deletedBooking = new Shared.Models.Booking { Id = existingBooking.Id };
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
+        A.CallTo(() => bookingRepository.Update(existingBooking)).Returns(existingBooking);
+        A.CallTo(() => bookingRepository.Remove(existingBooking)).Returns(existingBooking);
+        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(deletedBooking);
+        A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken))
+            .Returns(Task.FromResult<MarketplaceRefund?>(null));
+
+        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, false, true, cancellationToken);
+
+        result.ShouldBe(deletedBooking);
+        A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken))
+            .MustHaveHappenedOnceExactly();
+        A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken)).MustHaveHappenedOnceExactly();
     }
 
     [Theory]
