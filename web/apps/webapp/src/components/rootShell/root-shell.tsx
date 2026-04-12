@@ -1,18 +1,15 @@
 import { AppBar } from '@/components/appBar';
-import { LeadIconTypography, PushToRight, SmallHeadingIconTypography, StackRow } from '@/components/commons';
-import { SignOutIcon, SsoSigninIcon } from '@/components/icons';
+import { BodyIconTypography, CaptionIconTypography, PushToRight, SmallHeadingIconTypography, StackRow } from '@/components/commons';
+import { InfoIcon, SignOutIcon } from '@/components/icons';
 import { getInstallMsTeamsLink, getOrganizationSsoSignInBaseLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
 import { RelayError, toRootError } from '@/components/relayError';
-import { InMsTeamsContext, PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { coal, emerald } from '@/libs/theme';
+import { InMsTeamsContext, useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { usePathname, useRouter } from 'next/navigation';
@@ -21,6 +18,7 @@ import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
+import StackColumn from '../commons/stack-column';
 
 type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;
@@ -82,7 +80,6 @@ const RootShell = ({
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const { integratedPlatrform } = useIntegratedPlatrform();
-  const paletteMode = useContext(PaletteModeContext);
   const inMsTeams = useContext(InMsTeamsContext);
   const router = useRouter();
   const pathName = usePathname();
@@ -167,34 +164,65 @@ const RootShell = ({
             breadcrumbs={breadcrumbs}
           />
           {rootData.me.isOnboardingDone && !rootData.organization?.isSsoTokenValid && (
-            <Card sx={{ textAlign: 'center', backgroundColor: paletteMode === 'dark' ? emerald : coal }}>
-              <CardContent>
-                <StackRow>
-                  <LeadIconTypography
-                    label={`Single sign-on to see results in the ${rootData.organization?.name} organization.`}
-                    invertDefaultColor
-                    startElement={<SsoSigninIcon />}
-                  />
-                  <PushToRight />
-                  <Button
-                    variant="contained"
-                    href={getOrganizationSsoSignInBaseLink(integratedPlatrform, organizationCustomDomain)}
-                    sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}
-                  >
-                    Single sign-on
-                  </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'center', px: { xs: 1, sm: 2, md: 3 }, pt: 1.5 }}>
+              <Box
+                sx={{
+                  width: '100%',
+                  maxWidth: 1120,
+                  mx: 'auto',
+                  borderRadius: 3,
+                  border: 1,
+                  borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(217, 119, 6, 0.18)' : 'rgba(251, 191, 36, 0.28)'),
+                  backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 251, 235, 0.92)' : 'rgba(120, 53, 15, 0.24)'),
+                  boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 20px rgba(120, 53, 15, 0.06)' : 'none'),
+                  px: 2,
+                  py: 1.5,
+                }}
+              >
+                <StackRow sx={{ alignItems: 'flex-start', gap: 1.5 }}>
+                  <InfoIcon color="warning" excludeTooltip sx={{ mt: 0.25 }} />
+                  <StackColumn sx={{ gap: 0.25 }}>
+                    <BodyIconTypography label={`Single sign-on to see results in the ${rootData.organization?.name} organization.`} />
+                    <PushToRight />
+                    <Button
+                      variant="contained"
+                      href={getOrganizationSsoSignInBaseLink(integratedPlatrform, organizationCustomDomain)}
+                      sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}
+                    >
+                      Single sign-on
+                    </Button>
+                  </StackColumn>
                 </StackRow>
-              </CardContent>
-            </Card>
+              </Box>
+            </Box>
           )}
           {rootData.me.isOnboardingDone &&
             !rootData.organization?.isOwnershipVerified &&
             (rootData.organization?.type.type === 'MARKETPLACE' || rootData.organization?.type.type === 'INDIVIDUAL') && (
-              <Card sx={{ textAlign: 'left', backgroundColor: paletteMode === 'dark' ? emerald : coal }}>
-                <CardContent>
-                  <LeadIconTypography label="We need to verify ownership for your organisation. We will get back to you within 24 hours." invertDefaultColor />
-                </CardContent>
-              </Card>
+              <Box sx={{ display: 'flex', justifyContent: 'center', px: { xs: 1, sm: 2, md: 3 }, pt: 1.5 }}>
+                <Box
+                  sx={{
+                    width: '100%',
+                    maxWidth: 1120,
+                    mx: 'auto',
+                    borderRadius: 3,
+                    border: 1,
+                    borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(217, 119, 6, 0.18)' : 'rgba(251, 191, 36, 0.28)'),
+                    backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 251, 235, 0.92)' : 'rgba(120, 53, 15, 0.24)'),
+                    boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 20px rgba(120, 53, 15, 0.06)' : 'none'),
+                    px: 2,
+                    py: 1.5,
+                  }}
+                >
+                  <StackRow sx={{ alignItems: 'flex-start', gap: 1.5 }}>
+                    <InfoIcon color="warning" excludeTooltip sx={{ mt: 0.25 }} />
+                    <StackColumn sx={{ gap: 0.25 }}>
+                      <BodyIconTypography label="Ownership verification in progress" />
+                      <CaptionIconTypography label="We need to verify ownership for your organisation. We will get back to you within 24 hours." />
+                    </StackColumn>
+                  </StackRow>
+                </Box>
+              </Box>
             )}
           {rootData.me.isOnboardingDone && rootData.organization?.isSsoTokenValid && <>{children}</>}
         </Box>
