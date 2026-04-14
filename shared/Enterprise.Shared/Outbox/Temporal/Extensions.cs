@@ -16,10 +16,12 @@ public static class Extensions
         ///     Registers both the <c>TemporalOutboxBackgroundService</c> (workflow starts) and
         ///     <c>TemporalSignalOutboxBackgroundService</c> (workflow signals) which drain outbox rows and
         ///     execute them via <see cref="ITemporalOutboxExecutor" /> / <see cref="ITemporalSignalOutboxExecutor" />.
+        ///     Automatically adapts to the registered database context configuration (pooled factory,
+        ///     non-pooled factory, or direct singleton instance) via <see cref="IOutboxDbContextAccessor{TDbContext}" />.
         ///     <para>
-        ///         Prerequisites: <see cref="Microsoft.EntityFrameworkCore.IDbContextFactory{TDbContext}" />,
-        ///         <c>ITemporalOutboxExecutor</c>, and <c>ITemporalSignalOutboxExecutor</c> must be registered
-        ///         (typically by the domain that owns the Temporal client connection).
+        ///         Prerequisites: <see cref="Microsoft.EntityFrameworkCore.IDbContextFactory{TDbContext}" /> or
+        ///         singleton <typeparamref name="TDbContext" />, <c>ITemporalOutboxExecutor</c>, and
+        ///         <c>ITemporalSignalOutboxExecutor</c> must be registered (typically by the domain that owns the Temporal client connection).
         ///     </para>
         /// </summary>
         public IServiceCollection AddTemporalOutboxBackgroundService<TDbContext>()
@@ -27,6 +29,7 @@ public static class Extensions
             services
                 .AddTemporalOutboxActivitySource()
                 .AddTemporalOutboxTelemetry()
+                .AddOutboxDbContextAccessor<TDbContext>()
                 .AddHostedService<TemporalOutboxBackgroundService<TDbContext>>()
                 .AddHostedService<TemporalSignalOutboxBackgroundService<TDbContext>>();
 

@@ -10,7 +10,7 @@ public class DbContextBaseShould
     private static PostgresTestDbContext BuildContext(bool isPostgis = false, bool isPooled = false)
     {
         var options = new DbContextOptionsBuilder<PostgresTestDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .UseInMemoryDatabase(Guid.CreateVersion7().ToString())
             .Options;
         var customOptions = new CustomDbContextOptions<PostgresTestDbContext> { IsPostgisEnabled = isPostgis, IsPooled = isPooled };
         return new PostgresTestDbContext(options, customOptions);

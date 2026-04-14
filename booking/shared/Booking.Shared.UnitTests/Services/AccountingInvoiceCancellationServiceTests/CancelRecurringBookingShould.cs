@@ -112,7 +112,7 @@ public class CancelRecurringBookingShould
             Provider = AccountingProviderConstants.Xero,
             LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
             LocalEntityId = recurringBookingId,
-            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalInvoiceId = Guid.CreateVersion7().ToString(),
             ExternalInvoiceMode = Booking.Shared.Models.AccountingInvoiceExportModeConstants.RepeatingInvoice,
             ExternalStatus = AccountingStatusConstants.Sent
         };
@@ -177,7 +177,7 @@ public class CancelRecurringBookingShould
             Provider = AccountingProviderConstants.Xero,
             LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
             LocalEntityId = recurringBookingId,
-            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalInvoiceId = Guid.CreateVersion7().ToString(),
             ExternalInvoiceMode = Booking.Shared.Models.AccountingInvoiceExportModeConstants.RepeatingInvoice,
             ExternalStatus = AccountingStatusConstants.Sent
         };
@@ -243,7 +243,7 @@ public class CancelRecurringBookingShould
             Provider = AccountingProviderConstants.Xero,
             LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
             LocalEntityId = recurringBookingId,
-            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalInvoiceId = Guid.CreateVersion7().ToString(),
             ExternalInvoiceMode = Booking.Shared.Models.AccountingInvoiceExportModeConstants.RepeatingInvoice,
             ExternalStatus = AccountingStatusConstants.Cancelled,
             ExportConfigurationState = Booking.Shared.Models.AccountingInvoiceExportConfigurationStateConstants.Cancelled,
@@ -372,10 +372,10 @@ public class CancelRecurringBookingShould
                 }
             }
         };
-        var externalInvoiceId = Guid.NewGuid().ToString();
+        var externalInvoiceId = Guid.CreateVersion7().ToString();
         var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Guid.CreateVersion7().ToString(),
             Provider = AccountingProviderConstants.Xero,
             LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
             LocalEntityId = recurringBookingId,
@@ -388,7 +388,7 @@ public class CancelRecurringBookingShould
             Id = "xero-1",
             IsActive = true,
             HasRefreshToken = true,
-            TenantId = Guid.NewGuid().ToString(),
+            TenantId = Guid.CreateVersion7().ToString(),
             AccessTokenEncrypted = accessTokenEncrypted,
             AccessTokenExpiresAt = DateTimeOffset.UtcNow.AddHours(1).ToTimestamp()
         };
@@ -458,28 +458,28 @@ public class CancelRecurringBookingShould
         };
         var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Guid.CreateVersion7().ToString(),
             Provider = AccountingProviderConstants.Xero,
             LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
             LocalEntityId = recurringBookingId,
-            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalInvoiceId = Guid.CreateVersion7().ToString(),
             ExternalInvoiceMode = Booking.Shared.Models.AccountingInvoiceExportModeConstants.RepeatingInvoice,
             ExternalStatus = AccountingStatusConstants.Sent
         };
         var accountingInvoiceInstance = new AccountingInvoiceInstance
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Guid.CreateVersion7().ToString(),
             Provider = AccountingProviderConstants.Xero,
-            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalInvoiceId = Guid.CreateVersion7().ToString(),
             ExternalStatus = AccountingStatusConstants.Sent,
             AccountingInvoiceExportLinkId = accountingInvoiceLink.Id,
             OrganizationId = organizationId
         };
         var secondAccountingInvoiceInstance = new AccountingInvoiceInstance
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Guid.CreateVersion7().ToString(),
             Provider = AccountingProviderConstants.Xero,
-            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalInvoiceId = Guid.CreateVersion7().ToString(),
             ExternalStatus = AccountingStatusConstants.Exported,
             AccountingInvoiceExportLinkId = accountingInvoiceLink.Id,
             OrganizationId = organizationId
@@ -489,7 +489,7 @@ public class CancelRecurringBookingShould
             Id = "xero-1",
             IsActive = true,
             HasRefreshToken = true,
-            TenantId = Guid.NewGuid().ToString(),
+            TenantId = Guid.CreateVersion7().ToString(),
             AccessTokenEncrypted = accessTokenEncrypted,
             AccessTokenExpiresAt = DateTimeOffset.UtcNow.AddHours(1).ToTimestamp()
         };

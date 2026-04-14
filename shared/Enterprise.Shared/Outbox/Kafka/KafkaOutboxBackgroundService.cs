@@ -20,7 +20,7 @@ namespace Enterprise.Shared.Outbox.Kafka;
 ///     This avoids holding database locks while waiting on Kafka.
 /// </summary>
 public class KafkaOutboxBackgroundService<TDbContext>(
-    IDbContextFactory<TDbContext> contextFactory,
+    IOutboxDbContextAccessor<TDbContext> contextAccessor,
     IProducerFactory producerFactory,
     IActivityAccessor activityAccessor,
     KafkaConfiguration kafkaConfiguration,
@@ -179,51 +179,58 @@ public class KafkaOutboxBackgroundService<TDbContext>(
     /// </summary>
     private async Task<List<ClaimedOutboxEvent>> TryClaimOutboxEventsAsync(CancellationToken cancellationToken)
     {
-        await using var dbContext = await contextFactory.CreateDbContextAsync(cancellationToken);
-        await using var transaction = await dbContext.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
-        var thresholdTime = timeProvider.GetUtcNow() - _retryTime;
-        var outboxEvents = await dbContext.KafkaOutbox
-            .TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
-            .Where(query => query.RetryCount == 0 || query.LastRetry < thresholdTime)
-            .OrderBy(query => query.RetryCount)
-            .ThenBy(query => query.Timestamp)
-            .Take(BatchSize)
-            .ToListAsync(cancellationToken);
-        if (outboxEvents.Count == 0)
+        var dbContext = await contextAccessor.GetContextAsync(cancellationToken);
+        try
         {
+            await using var transaction = await dbContext.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
+            var thresholdTime = timeProvider.GetUtcNow() - _retryTime;
+            var outboxEvents = await dbContext.KafkaOutbox
+                .TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
+                .Where(query => query.RetryCount == 0 || query.LastRetry < thresholdTime)
+                .OrderBy(query => query.RetryCount)
+                .ThenBy(query => query.Timestamp)
+                .Take(BatchSize)
+                .ToListAsync(cancellationToken);
+            if (outboxEvents.Count == 0)
+            {
+                await transaction.CommitAsync(cancellationToken);
+                return [];
+            }
+
+            // Detach the data needed for publishing so the DbContext from the claim step can
+            // be disposed before the Kafka call happens.
+            var now = timeProvider.GetUtcNow();
+            var leasedUntil = now.Add(_processingLeaseTime);
+            var claimed = outboxEvents
+                .Select(outboxEvent => new ClaimedOutboxEvent(
+                    outboxEvent.Id,
+                    outboxEvent.Topic,
+                    outboxEvent.Headers,
+                    outboxEvent.Key,
+                    outboxEvent.Payload,
+                    outboxEvent.Timestamp,
+                    outboxEvent.RetryCount,
+                    leasedUntil))
+                .ToList();
+
+            foreach (var outboxEvent in outboxEvents)
+            {
+                // Lease each row rather than marking it completed. If this worker dies, another
+                // worker can reclaim it after the lease window.
+                outboxEvent.RetryCount = Math.Max(1, outboxEvent.RetryCount);
+                outboxEvent.LastRetry = leasedUntil;
+                outboxEvent.ProcessingErrors = null;
+            }
+
+            await dbContext.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
-            return [];
+
+            return claimed;
         }
-
-        // Detach the data needed for publishing so the DbContext from the claim step can
-        // be disposed before the Kafka call happens.
-        var now = timeProvider.GetUtcNow();
-        var leasedUntil = now.Add(_processingLeaseTime);
-        var claimed = outboxEvents
-            .Select(outboxEvent => new ClaimedOutboxEvent(
-                outboxEvent.Id,
-                outboxEvent.Topic,
-                outboxEvent.Headers,
-                outboxEvent.Key,
-                outboxEvent.Payload,
-                outboxEvent.Timestamp,
-                outboxEvent.RetryCount,
-                leasedUntil))
-            .ToList();
-
-        foreach (var outboxEvent in outboxEvents)
+        finally
         {
-            // Lease each row rather than marking it completed. If this worker dies, another
-            // worker can reclaim it after the lease window.
-            outboxEvent.RetryCount = Math.Max(1, outboxEvent.RetryCount);
-            outboxEvent.LastRetry = leasedUntil;
-            outboxEvent.ProcessingErrors = null;
+            await contextAccessor.ReleaseContextAsync(dbContext, cancellationToken);
         }
-
-        await dbContext.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        return claimed;
     }
 
     /// <summary>
@@ -232,17 +239,24 @@ public class KafkaOutboxBackgroundService<TDbContext>(
     /// </summary>
     private async Task CompleteOutboxEventAsync(string id, DateTimeOffset leasedUntil, CancellationToken cancellationToken)
     {
-        await using var dbContext = await contextFactory.CreateDbContextAsync(cancellationToken);
-        var outboxEvent = await dbContext.KafkaOutbox.FirstOrDefaultAsync(
-            item => item.Id == id && item.LastRetry == leasedUntil,
-            cancellationToken);
-        if (outboxEvent is null)
+        var dbContext = await contextAccessor.GetContextAsync(cancellationToken);
+        try
         {
-            return;
-        }
+            var outboxEvent = await dbContext.KafkaOutbox.FirstOrDefaultAsync(
+                item => item.Id == id && item.LastRetry == leasedUntil,
+                cancellationToken);
+            if (outboxEvent is null)
+            {
+                return;
+            }
 
-        dbContext.Remove(outboxEvent);
-        await dbContext.SaveChangesAsync(cancellationToken);
+            dbContext.Remove(outboxEvent);
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+        finally
+        {
+            await contextAccessor.ReleaseContextAsync(dbContext, cancellationToken);
+        }
     }
 
     /// <summary>
@@ -256,20 +270,27 @@ public class KafkaOutboxBackgroundService<TDbContext>(
         Exception exception,
         CancellationToken cancellationToken)
     {
-        await using var dbContext = await contextFactory.CreateDbContextAsync(cancellationToken);
-        var outboxEvent = await dbContext.KafkaOutbox.FirstOrDefaultAsync(
-            item => item.Id == id && item.LastRetry == leasedUntil,
-            cancellationToken);
-        if (outboxEvent is null)
+        var dbContext = await contextAccessor.GetContextAsync(cancellationToken);
+        try
         {
-            return;
+            var outboxEvent = await dbContext.KafkaOutbox.FirstOrDefaultAsync(
+                item => item.Id == id && item.LastRetry == leasedUntil,
+                cancellationToken);
+            if (outboxEvent is null)
+            {
+                return;
+            }
+
+            outboxEvent.RetryCount = originalRetryCount + 1;
+            outboxEvent.LastRetry = timeProvider.GetUtcNow();
+            outboxEvent.ProcessingErrors = exception.ToString().Truncate(Constants.MaxOutboxProcessingErrorsLength);
+
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
-
-        outboxEvent.RetryCount = originalRetryCount + 1;
-        outboxEvent.LastRetry = timeProvider.GetUtcNow();
-        outboxEvent.ProcessingErrors = exception.ToString().Truncate(Constants.MaxOutboxProcessingErrorsLength);
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        finally
+        {
+            await contextAccessor.ReleaseContextAsync(dbContext, cancellationToken);
+        }
     }
 
     private static Headers ConvertToKafkaHeaders(IDictionary<string, string> dictionary)

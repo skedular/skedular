@@ -40,7 +40,7 @@ public class NewMetadataShould
     [AutoFakeItEasyData]
     public void Use_provided_id_when_given(string domainSource, string appSource)
     {
-        var id = Guid.NewGuid();
+        var id = Guid.CreateVersion7();
 
         var metadata = EventMetadataFactory.NewMetadata<SampleMetadata, SampleEventType>(
             domainSource, appSource, SampleEventType.Created, null, id);

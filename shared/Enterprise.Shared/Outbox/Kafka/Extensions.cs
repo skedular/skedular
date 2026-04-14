@@ -14,15 +14,22 @@ public static class Extensions
     {
         /// <summary>
         ///     Registers the Kafka outbox background service that drains <c>KafkaOutbox</c> rows and publishes
-        ///     them to Kafka. Requires <see cref="Microsoft.EntityFrameworkCore.IDbContextFactory{TDbContext}" />
-        ///     and <see cref="Enterprise.Shared.Kafka.Produce.IProducerFactory" /> to be registered.
+        ///     them to Kafka. Automatically adapts to the registered database context configuration (pooled factory,
+        ///     non-pooled factory, or direct singleton instance) via <see cref="IOutboxDbContextAccessor{TDbContext}" />.
+        ///     <para>
+        ///         Prerequisites: <see cref="Microsoft.EntityFrameworkCore.IDbContextFactory{TDbContext}" /> or
+        ///         singleton <typeparamref name="TDbContext" />, and <see cref="Enterprise.Shared.Kafka.Produce.IProducerFactory" />
+        ///         must be registered.
+        ///     </para>
         ///     <para>
         ///         The background service uses a polling/lease model with SKIP LOCKED to safely handle multiple
         ///         worker instances without double-publishing.
         ///     </para>
         /// </summary>
         public IServiceCollection AddKafkaOutboxBackgroundService<TDbContext>() where TDbContext : DbContext, IKafkaOutboxStore =>
-            services.AddHostedService<KafkaOutboxBackgroundService<TDbContext>>();
+            services
+                .AddOutboxDbContextAccessor<TDbContext>()
+                .AddHostedService<KafkaOutboxBackgroundService<TDbContext>>();
 
         /// <summary>
         ///     Registers the open-generic <see cref="IKafkaOutboxEventPublisher{TKey,TEvent}" /> for writing

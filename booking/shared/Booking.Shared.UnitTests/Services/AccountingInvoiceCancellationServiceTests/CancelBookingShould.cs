@@ -179,10 +179,10 @@ public class CancelBookingShould
                 }
             }
         };
-        var externalInvoiceId = Guid.NewGuid().ToString();
+        var externalInvoiceId = Guid.CreateVersion7().ToString();
         var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Guid.CreateVersion7().ToString(),
             Provider = AccountingProviderConstants.Xero,
             LocalEntityType = AccountingEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = marketplaceBookingId,
@@ -195,7 +195,7 @@ public class CancelBookingShould
             Id = "xero-1",
             IsActive = true,
             HasRefreshToken = true,
-            TenantId = Guid.NewGuid().ToString(),
+            TenantId = Guid.CreateVersion7().ToString(),
             AccessTokenEncrypted = accessTokenEncrypted,
             AccessTokenExpiresAt = DateTimeOffset.UtcNow.AddHours(1).ToTimestamp()
         };
@@ -268,19 +268,19 @@ public class CancelBookingShould
         };
         var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Guid.CreateVersion7().ToString(),
             Provider = AccountingProviderConstants.Xero,
             LocalEntityType = AccountingEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = marketplaceBookingId,
-            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalInvoiceId = Guid.CreateVersion7().ToString(),
             ExternalInvoiceMode = Booking.Shared.Models.AccountingInvoiceExportModeConstants.StandardInvoice,
             ExternalStatus = AccountingStatusConstants.PendingExport
         };
         var accountingInvoiceInstance = new AccountingInvoiceInstance
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Guid.CreateVersion7().ToString(),
             Provider = AccountingProviderConstants.Xero,
-            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalInvoiceId = Guid.CreateVersion7().ToString(),
             ExternalStatus = AccountingStatusConstants.Sent,
             AccountingInvoiceExportLinkId = accountingInvoiceLink.Id,
             OrganizationId = organizationId
@@ -290,7 +290,7 @@ public class CancelBookingShould
             Id = "xero-1",
             IsActive = true,
             HasRefreshToken = true,
-            TenantId = Guid.NewGuid().ToString(),
+            TenantId = Guid.CreateVersion7().ToString(),
             AccessTokenEncrypted = accessTokenEncrypted,
             AccessTokenExpiresAt = DateTimeOffset.UtcNow.AddHours(1).ToTimestamp()
         };

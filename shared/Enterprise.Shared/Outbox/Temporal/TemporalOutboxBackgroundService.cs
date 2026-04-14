@@ -18,7 +18,7 @@ namespace Enterprise.Shared.Outbox.Temporal;
 ///     This keeps database locking separate from slow Temporal RPCs.
 /// </summary>
 public class TemporalOutboxBackgroundService<TDbContext>(
-    IDbContextFactory<TDbContext> contextFactory,
+    IOutboxDbContextAccessor<TDbContext> contextAccessor,
     IActivityAccessor activityAccessor,
     ILogger<TemporalOutboxBackgroundService<TDbContext>> logger,
     TimeProvider timeProvider,
@@ -176,49 +176,56 @@ public class TemporalOutboxBackgroundService<TDbContext>(
     /// </summary>
     private async Task<List<ClaimedOutboxEvent>> TryClaimOutboxEventsAsync(CancellationToken cancellationToken)
     {
-        await using var dbContext = await contextFactory.CreateDbContextAsync(cancellationToken);
-        await using var transaction = await dbContext.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
-        var thresholdTime = timeProvider.GetUtcNow() - _retryTime;
-        var outboxEvents = await dbContext.TemporalOutbox
-            .TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
-            .Where(query => query.RetryCount == 0 || query.LastRetry < thresholdTime)
-            .OrderBy(query => query.RetryCount)
-            .ThenBy(query => query.Timestamp)
-            .Take(BatchSize)
-            .ToListAsync(cancellationToken);
-        if (outboxEvents.Count == 0)
+        var dbContext = await contextAccessor.GetContextAsync(cancellationToken);
+        try
         {
+            await using var transaction = await dbContext.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
+            var thresholdTime = timeProvider.GetUtcNow() - _retryTime;
+            var outboxEvents = await dbContext.TemporalOutbox
+                .TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
+                .Where(query => query.RetryCount == 0 || query.LastRetry < thresholdTime)
+                .OrderBy(query => query.RetryCount)
+                .ThenBy(query => query.Timestamp)
+                .Take(BatchSize)
+                .ToListAsync(cancellationToken);
+            if (outboxEvents.Count == 0)
+            {
+                await transaction.CommitAsync(cancellationToken);
+                return [];
+            }
+
+            // Materialize the minimum detached payload needed for the remote call. The claimed
+            // DbContext is disposed immediately after the claim transaction commits.
+            var now = timeProvider.GetUtcNow();
+            var leasedUntil = now.Add(_processingLeaseTime);
+            var claimed = outboxEvents
+                .Select(outboxEvent => new ClaimedOutboxEvent(
+                    outboxEvent.Id,
+                    outboxEvent.WorkflowType,
+                    outboxEvent.ExecutionArgs,
+                    outboxEvent.WorkflowOptions,
+                    outboxEvent.RetryCount,
+                    leasedUntil))
+                .ToList();
+
+            foreach (var outboxEvent in outboxEvents)
+            {
+                // Claimed rows are leased, not completed. If the worker dies mid-flight,
+                // another worker can reclaim them once the lease window expires.
+                outboxEvent.RetryCount = Math.Max(1, outboxEvent.RetryCount);
+                outboxEvent.LastRetry = leasedUntil;
+                outboxEvent.ProcessingErrors = null;
+            }
+
+            await dbContext.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
-            return [];
+
+            return claimed;
         }
-
-        // Materialize the minimum detached payload needed for the remote call. The claimed
-        // DbContext is disposed immediately after the claim transaction commits.
-        var now = timeProvider.GetUtcNow();
-        var leasedUntil = now.Add(_processingLeaseTime);
-        var claimed = outboxEvents
-            .Select(outboxEvent => new ClaimedOutboxEvent(
-                outboxEvent.Id,
-                outboxEvent.WorkflowType,
-                outboxEvent.ExecutionArgs,
-                outboxEvent.WorkflowOptions,
-                outboxEvent.RetryCount,
-                leasedUntil))
-            .ToList();
-
-        foreach (var outboxEvent in outboxEvents)
+        finally
         {
-            // Claimed rows are leased, not completed. If the worker dies mid-flight,
-            // another worker can reclaim them once the lease window expires.
-            outboxEvent.RetryCount = Math.Max(1, outboxEvent.RetryCount);
-            outboxEvent.LastRetry = leasedUntil;
-            outboxEvent.ProcessingErrors = null;
+            await contextAccessor.ReleaseContextAsync(dbContext, cancellationToken);
         }
-
-        await dbContext.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        return claimed;
     }
 
     /// <summary>
@@ -227,17 +234,24 @@ public class TemporalOutboxBackgroundService<TDbContext>(
     /// </summary>
     private async Task CompleteOutboxEventAsync(string id, DateTimeOffset leasedUntil, CancellationToken cancellationToken)
     {
-        await using var dbContext = await contextFactory.CreateDbContextAsync(cancellationToken);
-        var outboxEvent = await dbContext.TemporalOutbox.FirstOrDefaultAsync(
-            item => item.Id == id && item.LastRetry == leasedUntil,
-            cancellationToken);
-        if (outboxEvent is null)
+        var dbContext = await contextAccessor.GetContextAsync(cancellationToken);
+        try
         {
-            return;
-        }
+            var outboxEvent = await dbContext.TemporalOutbox.FirstOrDefaultAsync(
+                item => item.Id == id && item.LastRetry == leasedUntil,
+                cancellationToken);
+            if (outboxEvent is null)
+            {
+                return;
+            }
 
-        dbContext.Remove(outboxEvent);
-        await dbContext.SaveChangesAsync(cancellationToken);
+            dbContext.Remove(outboxEvent);
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+        finally
+        {
+            await contextAccessor.ReleaseContextAsync(dbContext, cancellationToken);
+        }
     }
 
     /// <summary>
@@ -251,20 +265,27 @@ public class TemporalOutboxBackgroundService<TDbContext>(
         Exception exception,
         CancellationToken cancellationToken)
     {
-        await using var dbContext = await contextFactory.CreateDbContextAsync(cancellationToken);
-        var outboxEvent = await dbContext.TemporalOutbox.FirstOrDefaultAsync(
-            item => item.Id == id && item.LastRetry == leasedUntil,
-            cancellationToken);
-        if (outboxEvent is null)
+        var dbContext = await contextAccessor.GetContextAsync(cancellationToken);
+        try
         {
-            return;
+            var outboxEvent = await dbContext.TemporalOutbox.FirstOrDefaultAsync(
+                item => item.Id == id && item.LastRetry == leasedUntil,
+                cancellationToken);
+            if (outboxEvent is null)
+            {
+                return;
+            }
+
+            outboxEvent.RetryCount = originalRetryCount + 1;
+            outboxEvent.LastRetry = timeProvider.GetUtcNow();
+            outboxEvent.ProcessingErrors = exception.ToString().Truncate(Constants.MaxOutboxProcessingErrorsLength);
+
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
-
-        outboxEvent.RetryCount = originalRetryCount + 1;
-        outboxEvent.LastRetry = timeProvider.GetUtcNow();
-        outboxEvent.ProcessingErrors = exception.ToString().Truncate(Constants.MaxOutboxProcessingErrorsLength);
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        finally
+        {
+            await contextAccessor.ReleaseContextAsync(dbContext, cancellationToken);
+        }
     }
 
     // Detached processing payload used outside the claim transaction.

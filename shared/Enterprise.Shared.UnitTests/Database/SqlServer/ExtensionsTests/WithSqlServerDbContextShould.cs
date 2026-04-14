@@ -37,12 +37,7 @@ public class WithSqlServerDbContextShould
         customOptions.IsPooled.ShouldBeFalse();
         customOptions.IsPostgisEnabled.ShouldBeTrue();
 
-        provider.GetRequiredService<IOptions<HealthCheckServiceOptions>>()
-            .Value
-            .Registrations
-            .Single()
-            .Name
-            .ShouldBe("sqlserver");
+        provider.GetRequiredService<IOptions<HealthCheckServiceOptions>>().Value.Registrations.Single().Name.ShouldBe("sqlserver");
     }
 
     [Theory]

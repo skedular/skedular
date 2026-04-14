@@ -10,7 +10,7 @@ public class DbContextBaseShould
     private static SqlServerTestDbContext BuildContext(bool isPooled = false)
     {
         var options = new DbContextOptionsBuilder<SqlServerTestDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .UseInMemoryDatabase(Guid.CreateVersion7().ToString())
             .Options;
         var customOptions = new CustomDbContextOptions<SqlServerTestDbContext> { IsPooled = isPooled };
         return new SqlServerTestDbContext(options, customOptions);
