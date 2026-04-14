@@ -19,10 +19,10 @@ public static class Extensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection WithPooledSqlServerDbContext<TDbContext>(IConfiguration configuration,
+        public IServiceCollection WithPooledSqlServerDbContext<TDbContext>(
+            IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
-            bool isPostgisEnabled = false,
             string? healthCheckName = null)
             where TDbContext : DbContext
         {
@@ -33,21 +33,18 @@ public static class Extensions
                 configuration,
                 environment,
                 connectionString,
-                isPostgisEnabled,
                 healthCheckName);
         }
 
         public IServiceCollection WithPooledSqlServerDbContextWithConnectionString<TDbContext>(IConfiguration configuration,
             IHostEnvironment environment,
             string connectionString,
-            bool isPostgisEnabled = false,
             string? healthCheckName = null)
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
             var validatedConnectionString = services.GetDatasource<TDbContext>(
                 true,
-                isPostgisEnabled,
                 connectionString,
                 healthCheckName,
                 configuration);
@@ -76,7 +73,6 @@ public static class Extensions
         public IServiceCollection WithSqlServerDbContext<TDbContext>(IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
-            bool isPostgisEnabled = false,
             string? healthCheckName = null)
             where TDbContext : DbContext
         {
@@ -87,21 +83,18 @@ public static class Extensions
                 configuration,
                 environment,
                 connectionString,
-                isPostgisEnabled,
                 healthCheckName);
         }
 
         public IServiceCollection WithSqlServerDbContextWithConnectionString<TDbContext>(IConfiguration configuration,
             IHostEnvironment environment,
             string connectionString,
-            bool isPostgisEnabled = false,
             string? healthCheckName = null)
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
             var validatedConnectionString = services.GetDatasource<TDbContext>(
                 false,
-                isPostgisEnabled,
                 connectionString,
                 healthCheckName,
                 configuration);
@@ -129,7 +122,6 @@ public static class Extensions
         public IServiceCollection WithPooledSqlServerDbContextFactory<TDbContext>(IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
-            bool isPostgisEnabled = false,
             string? healthCheckName = null)
             where TDbContext : DbContext
         {
@@ -140,21 +132,18 @@ public static class Extensions
                 configuration,
                 environment,
                 connectionString,
-                isPostgisEnabled,
                 healthCheckName);
         }
 
         public IServiceCollection WithPooledSqlServerDbContextFactoryWithConnectionString<TDbContext>(IConfiguration configuration,
             IHostEnvironment environment,
             string connectionString,
-            bool isPostgisEnabled = false,
             string? healthCheckName = null)
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
             var validatedConnectionString = services.GetDatasource<TDbContext>(
                 true,
-                isPostgisEnabled,
                 connectionString,
                 healthCheckName,
                 configuration);
@@ -183,7 +172,6 @@ public static class Extensions
         public IServiceCollection WithSqlServerDbContextFactory<TDbContext>(IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
-            bool isPostgisEnabled = false,
             string? healthCheckName = null)
             where TDbContext : DbContext
         {
@@ -194,21 +182,18 @@ public static class Extensions
                 configuration,
                 environment,
                 connectionString,
-                isPostgisEnabled,
                 healthCheckName);
         }
 
         public IServiceCollection WithSqlServerDbContextFactoryWithConnectionString<TDbContext>(IConfiguration configuration,
             IHostEnvironment environment,
             string connectionString,
-            bool isPostgisEnabled = false,
             string? healthCheckName = null)
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
             var validatedConnectionString = services.GetDatasource<TDbContext>(
                 false,
-                isPostgisEnabled,
                 connectionString,
                 healthCheckName,
                 configuration);
@@ -235,14 +220,13 @@ public static class Extensions
 
         private string GetDatasource<TDbContext>(
             bool isPooled,
-            bool isPostgisEnabled,
             string connectionString,
             string? healthCheckName,
             IConfiguration configuration)
             where TDbContext : DbContext
         {
             services
-                .AddSingleton(new CustomDbContextOptions<TDbContext> { IsPooled = isPooled, IsPostgisEnabled = isPostgisEnabled })
+                .AddSingleton(new CustomDbContextOptions<TDbContext> { IsPooled = isPooled, IsPostgisEnabled = false })
                 .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>()
                 .AddSingleton<IDatabaseMigrationService, DatabaseMigrationService>();
 

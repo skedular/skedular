@@ -6,7 +6,7 @@ namespace Enterprise.Shared.Database.SqlServer;
 
 public static class DbContextExtensions
 {
-    public static DbContextOptions<TDbContext> ToDbContextOption<TDbContext>(string[] args, bool isPostgisEnabled = false)
+    public static DbContextOptions<TDbContext> ToDbContextOption<TDbContext>(string[] args)
         where TDbContext : DbContext =>
         new DbContextOptionsBuilder<TDbContext>()
             .UseLazyLoadingProxies()
@@ -16,7 +16,7 @@ public static class DbContextExtensions
                     .GetConnectionString(string.Empty))
             .Options;
 
-    public static DbContextOptions<TDbContext> ToDbContextOption<TProgram, TDbContext>(string[] args, bool isPostgisEnabled = false)
+    public static DbContextOptions<TDbContext> ToDbContextOption<TProgram, TDbContext>(string[] args)
         where TProgram : class
         where TDbContext : DbContext =>
         new DbContextOptionsBuilder<TDbContext>()

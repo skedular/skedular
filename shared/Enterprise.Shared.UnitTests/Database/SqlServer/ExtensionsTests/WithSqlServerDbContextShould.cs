@@ -24,7 +24,7 @@ public class WithSqlServerDbContextShould
     public void Register_db_context_and_supporting_services(ServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
         services.AddLogging();
-        services.WithSqlServerDbContext<SqlServerTestDbContext>(configuration, environment, "main", true, "sqlserver");
+        services.WithSqlServerDbContext<SqlServerTestDbContext>(configuration, environment, "main", "sqlserver");
 
         var provider = services.BuildServiceProvider();
 
@@ -55,7 +55,6 @@ public class WithSqlServerDbContextShould
             configuration,
             environment,
             "Server=localhost;Database=test;User Id=sa;Password=Password123!;TrustServerCertificate=True",
-            false,
             "sqlserver-factory");
 
         var provider = services.BuildServiceProvider();
