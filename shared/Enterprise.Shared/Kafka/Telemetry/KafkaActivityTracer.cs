@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Confluent.Kafka;
 using Enterprise.Shared.Telemetry;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Kafka.Telemetry;
 
@@ -19,7 +20,11 @@ public interface IKafkaActivityTracer
 ///     JAVA Implementation:
 ///     https://github.com/open-telemetry/opentelemetry-java-instrumentation/blob/4820ec4855699cdcb6b76ce499ec629b116afbda/instrumentation/kafka-clients/kafka-clients-common/javaagent/main/java/io/opentelemetry/javaagent/instrumentation/kafka/KafkaConsumerAdditionalAttributesExtractor.java
 /// </remarks>
-public class KafkaActivityTracer(IActivityPropagator<Headers> propagator, IActivityGetter activityGetter, IKafkaActivityStarter activityStarter)
+public class KafkaActivityTracer(
+    IActivityPropagator<Headers> propagator,
+    IActivityGetter activityGetter,
+    IKafkaActivityStarter activityStarter,
+    ILogger<KafkaActivityTracer> logger)
     : IKafkaActivityTracer
 {
     /// <summary>
@@ -37,6 +42,7 @@ public class KafkaActivityTracer(IActivityPropagator<Headers> propagator, IActiv
     /// <returns></returns>
     public Activity? CreateConsumeActivity<TKey, TValue>(ConsumeResult<TKey, TValue> consumeResult)
     {
+        logger.LogDebug("Creating Kafka consume activity. Topic={Topic}, Partition={Partition}", consumeResult.Topic, consumeResult.Partition.Value);
         var propagationContext = propagator.GetActivityPropagationContext(consumeResult.Message.Headers);
         var activity = activityStarter.StartActivityFromContext(
             consumeResult.Topic,
@@ -44,12 +50,14 @@ public class KafkaActivityTracer(IActivityPropagator<Headers> propagator, IActiv
             propagationContext.ActivityContext, consumeResult.Partition.Value);
         if (activity is null)
         {
+            logger.LogDebug("Kafka consume activity was not created because no listener was available. Topic={Topic}", consumeResult.Topic);
             return null;
         }
 
         SetKafkaTagsOnConsumeActivity(activity, consumeResult);
         activity.SetStatus(ActivityStatusCode.Ok);
 
+        logger.LogInformation("Kafka consume activity created successfully. Topic={Topic}", consumeResult.Topic);
         return activity;
     }
 
@@ -64,11 +72,13 @@ public class KafkaActivityTracer(IActivityPropagator<Headers> propagator, IActiv
     /// <returns></returns>
     public Activity? CreateProduceActivity<TKey, TValue>(Message<TKey, TValue> message, string topic, int? partition = null)
     {
+        logger.LogDebug("Creating Kafka produce activity. Topic={Topic}, PartitionKnown={PartitionKnown}", topic, partition.HasValue);
         // there should be a parent activity, but if not just create an empty context
         var parentContext = activityGetter.GetCurrent()?.Context ?? new ActivityContext();
         var activity = activityStarter.StartActivityFromContext(topic, KafkaOperationType.Provide, parentContext, partition);
         if (activity is null)
         {
+            logger.LogDebug("Kafka produce activity was not created because no listener was available. Topic={Topic}", topic);
             return null;
         }
 
@@ -76,6 +86,7 @@ public class KafkaActivityTracer(IActivityPropagator<Headers> propagator, IActiv
         SetKafkaTagsOnProduceActivity(activity, message);
         activity.SetStatus(ActivityStatusCode.Ok);
 
+        logger.LogInformation("Kafka produce activity created successfully. Topic={Topic}", topic);
         return activity;
     }
 

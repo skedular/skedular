@@ -1,5 +1,6 @@
 using Enterprise.Shared.Context;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.UnitTests.Context.ContextTests;
 
@@ -10,8 +11,9 @@ public class UserSsoContextShould
     {
         var httpContext = new DefaultHttpContext();
         var accessor = A.Fake<IHttpContextAccessor>();
+        var logger = A.Fake<ILogger<Shared.Context.Context>>();
         A.CallTo(() => accessor.HttpContext).Returns(httpContext);
-        return new Shared.Context.Context(accessor);
+        return new Shared.Context.Context(accessor, logger);
     }
 
     [Theory]

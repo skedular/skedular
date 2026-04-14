@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Context;
 
@@ -53,7 +54,7 @@ public interface IContext
     UserSsoContext? GetUserSsoContext(string organizationId);
 }
 
-public class Context(IHttpContextAccessor httpContextAccessor) : IContext
+public class Context(IHttpContextAccessor httpContextAccessor, ILogger<Context> logger) : IContext
 {
     private const string CorrelationIdKey = "CorrelationId";
     private const string VerifiableTokenKey = "VerifiableToken";
@@ -78,153 +79,92 @@ public class Context(IHttpContextAccessor httpContextAccessor) : IContext
     private const string AzureTenantAudienceKey = "AzureTenantAudience";
     private const string UserSsoContextKey = "UserSsoContext";
 
-    public void SetCorrelationId(string value) => GetHttpContext().Items[CorrelationIdKey] = value;
+    public void SetCorrelationId(string value) => SetStringValue(CorrelationIdKey, value);
 
     public string GetCorrelationId() =>
         httpContextAccessor.HttpContext is null
             ? string.Empty
-            : GetHttpContext().Items.TryGetValue(CorrelationIdKey, out var value)
-                ? value as string ?? string.Empty
-                : string.Empty;
+            : GetStringValue(CorrelationIdKey);
 
-    public void SetVerifiableToken(string value) => GetHttpContext().Items[VerifiableTokenKey] = value;
+    public void SetVerifiableToken(string value) => SetStringValue(VerifiableTokenKey, value);
 
-    public string GetVerifiableToken() =>
-        GetHttpContext().Items.TryGetValue(VerifiableTokenKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetVerifiableToken() => GetStringValue(VerifiableTokenKey);
 
-    public void SetDesignation(string value) => GetHttpContext().Items[DesignationKey] = value;
+    public void SetDesignation(string value) => SetStringValue(DesignationKey, value);
 
-    public string GetDesignation() =>
-        GetHttpContext().Items.TryGetValue(DesignationKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetDesignation() => GetStringValue(DesignationKey);
 
-    public void SetTitle(string value) => GetHttpContext().Items[TitleKey] = value;
+    public void SetTitle(string value) => SetStringValue(TitleKey, value);
 
-    public string GetTitle() =>
-        GetHttpContext().Items.TryGetValue(TitleKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetTitle() => GetStringValue(TitleKey);
 
-    public void SetName(string value) => GetHttpContext().Items[NameKey] = value;
+    public void SetName(string value) => SetStringValue(NameKey, value);
 
-    public string GetName() =>
-        GetHttpContext().Items.TryGetValue(NameKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetName() => GetStringValue(NameKey);
 
-    public void SetGivenName(string value) => GetHttpContext().Items[GivenNameKey] = value;
+    public void SetGivenName(string value) => SetStringValue(GivenNameKey, value);
 
-    public string GetGivenName() =>
-        GetHttpContext().Items.TryGetValue(GivenNameKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetGivenName() => GetStringValue(GivenNameKey);
 
-    public void SetMiddleName(string value) => GetHttpContext().Items[MiddleNameKey] = value;
+    public void SetMiddleName(string value) => SetStringValue(MiddleNameKey, value);
 
-    public string GetMiddleName() =>
-        GetHttpContext().Items.TryGetValue(MiddleNameKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetMiddleName() => GetStringValue(MiddleNameKey);
 
-    public void SetFamilyName(string value) => GetHttpContext().Items[FamilyNameKey] = value;
+    public void SetFamilyName(string value) => SetStringValue(FamilyNameKey, value);
 
-    public string GetFamilyName() =>
-        GetHttpContext().Items.TryGetValue(FamilyNameKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetFamilyName() => GetStringValue(FamilyNameKey);
 
-    public void SetPhotoUrl(string value) => GetHttpContext().Items[PhotoUrlKey] = value;
+    public void SetPhotoUrl(string value) => SetStringValue(PhotoUrlKey, value);
 
-    public string GetPhotoUrl() =>
-        GetHttpContext().Items.TryGetValue(PhotoUrlKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetPhotoUrl() => GetStringValue(PhotoUrlKey);
 
-    public void SetPhotoUrl24(string value) => GetHttpContext().Items[PhotoUrl24Key] = value;
+    public void SetPhotoUrl24(string value) => SetStringValue(PhotoUrl24Key, value);
 
-    public string GetPhotoUrl24() =>
-        GetHttpContext().Items.TryGetValue(PhotoUrl24Key, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetPhotoUrl24() => GetStringValue(PhotoUrl24Key);
 
-    public void SetPhotoUrl32(string value) => GetHttpContext().Items[PhotoUrl32Key] = value;
+    public void SetPhotoUrl32(string value) => SetStringValue(PhotoUrl32Key, value);
 
-    public string GetPhotoUrl32() =>
-        GetHttpContext().Items.TryGetValue(PhotoUrl32Key, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetPhotoUrl32() => GetStringValue(PhotoUrl32Key);
 
-    public void SetPhotoUrl48(string value) => GetHttpContext().Items[PhotoUrl48Key] = value;
+    public void SetPhotoUrl48(string value) => SetStringValue(PhotoUrl48Key, value);
 
-    public string GetPhotoUrl48() =>
-        GetHttpContext().Items.TryGetValue(PhotoUrl48Key, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetPhotoUrl48() => GetStringValue(PhotoUrl48Key);
 
-    public void SetPhotoUrl72(string value) => GetHttpContext().Items[PhotoUrl72Key] = value;
+    public void SetPhotoUrl72(string value) => SetStringValue(PhotoUrl72Key, value);
 
-    public string GetPhotoUrl72() =>
-        GetHttpContext().Items.TryGetValue(PhotoUrl72Key, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetPhotoUrl72() => GetStringValue(PhotoUrl72Key);
 
-    public void SetPhotoUrl192(string value) => GetHttpContext().Items[PhotoUrl192Key] = value;
+    public void SetPhotoUrl192(string value) => SetStringValue(PhotoUrl192Key, value);
 
-    public string GetPhotoUrl192() =>
-        GetHttpContext().Items.TryGetValue(PhotoUrl192Key, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetPhotoUrl192() => GetStringValue(PhotoUrl192Key);
 
-    public void SetPhotoUrl512(string value) => GetHttpContext().Items[PhotoUrl512Key] = value;
+    public void SetPhotoUrl512(string value) => SetStringValue(PhotoUrl512Key, value);
 
-    public string GetPhotoUrl512() =>
-        GetHttpContext().Items.TryGetValue(PhotoUrl512Key, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetPhotoUrl512() => GetStringValue(PhotoUrl512Key);
 
-    public void SetEmail(string value) => GetHttpContext().Items[EmailKey] = value;
+    public void SetEmail(string value) => SetStringValue(EmailKey, value);
 
-    public string GetEmail() =>
-        GetHttpContext().Items.TryGetValue(EmailKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetEmail() => GetStringValue(EmailKey);
 
-    public void SetEmailVerified(bool value) => GetHttpContext().Items[EmailVerifiedKey] = value;
+    public void SetEmailVerified(bool value) => SetBoolValue(EmailVerifiedKey, value);
 
-    public bool GetEmailVerified() =>
-        GetHttpContext().Items.TryGetValue(EmailVerifiedKey, out var value) &&
-        value is true;
+    public bool GetEmailVerified() => GetBoolValue(EmailVerifiedKey);
 
-    public void SetTimezone(string value) => GetHttpContext().Items[TimezoneKey] = value;
+    public void SetTimezone(string value) => SetStringValue(TimezoneKey, value);
 
-    public string GetTimezone() =>
-        GetHttpContext().Items.TryGetValue(TimezoneKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetTimezone() => GetStringValue(TimezoneKey);
 
-    public void SetLocale(string value) => GetHttpContext().Items[LocaleKey] = value;
+    public void SetLocale(string value) => SetStringValue(LocaleKey, value);
 
-    public string GetLocale() =>
-        GetHttpContext().Items.TryGetValue(LocaleKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetLocale() => GetStringValue(LocaleKey);
 
-    public void SetAzureTenantId(Guid value) => GetHttpContext().Items[AzureTenantIdKey] = value.ToString();
+    public void SetAzureTenantId(Guid value) => SetGuidValue(AzureTenantIdKey, value);
 
-    public Guid GetAzureTenantId() =>
-        GetHttpContext().Items.TryGetValue(AzureTenantIdKey, out var value)
-            ? value is string strValue ? Guid.Parse(strValue) : Guid.Empty
-            : Guid.Empty;
+    public Guid GetAzureTenantId() => GetGuidValue(AzureTenantIdKey);
 
-    public void SetAzureTenantAudience(string value) => GetHttpContext().Items[AzureTenantAudienceKey] = value;
+    public void SetAzureTenantAudience(string value) => SetStringValue(AzureTenantAudienceKey, value);
 
-    public string GetAzureTenantAudience() =>
-        GetHttpContext().Items.TryGetValue(AzureTenantAudienceKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+    public string GetAzureTenantAudience() => GetStringValue(AzureTenantAudienceKey);
 
     public void AddUserSsoContext(string organizationId, UserSsoContext userSsoContext)
     {
@@ -233,23 +173,83 @@ public class Context(IHttpContextAccessor httpContextAccessor) : IContext
             if (value is ConcurrentDictionary<string, UserSsoContext> organizationUserSso)
             {
                 organizationUserSso[organizationId] = userSsoContext;
+                logger.LogDebug("Stored user SSO context in request context");
             }
         }
         else
         {
             GetHttpContext().Items[UserSsoContextKey] = new ConcurrentDictionary<string, UserSsoContext> { [organizationId] = userSsoContext };
+            logger.LogDebug("Created user SSO context collection in request context");
         }
     }
 
-    public UserSsoContext? GetUserSsoContext(string organizationId) =>
-        GetHttpContext().Items.TryGetValue(UserSsoContextKey, out var value) &&
-        value is ConcurrentDictionary<string, UserSsoContext> organizationUserSso &&
-        organizationUserSso.TryGetValue(organizationId, out var userSsoContext)
-            ? userSsoContext
-            : null;
+    public UserSsoContext? GetUserSsoContext(string organizationId)
+    {
+        if (GetHttpContext().Items.TryGetValue(UserSsoContextKey, out var value) &&
+            value is ConcurrentDictionary<string, UserSsoContext> organizationUserSso &&
+            organizationUserSso.TryGetValue(organizationId, out var userSsoContext))
+        {
+            logger.LogDebug("Resolved user SSO context from request context");
+            return userSsoContext;
+        }
+
+        logger.LogDebug("User SSO context was not present in request context");
+        return null;
+    }
+
+    private void SetStringValue(string key, string value)
+    {
+        GetHttpContext().Items[key] = value;
+        logger.LogDebug("Stored context item {ContextKey}", key);
+    }
+
+    private string GetStringValue(string key)
+    {
+        var found = GetHttpContext().Items.TryGetValue(key, out var value);
+        logger.LogDebug(found ? "Resolved context item {ContextKey}" : "Context item {ContextKey} was not present", key);
+
+        return found ? value as string ?? string.Empty : string.Empty;
+    }
+
+    private void SetBoolValue(string key, bool value)
+    {
+        GetHttpContext().Items[key] = value;
+        logger.LogDebug("Stored boolean context item {ContextKey}", key);
+    }
+
+    private bool GetBoolValue(string key)
+    {
+        var found = GetHttpContext().Items.TryGetValue(key, out var value) && value is true;
+        logger.LogDebug(found ? "Resolved boolean context item {ContextKey}" : "Boolean context item {ContextKey} was not present", key);
+
+        return found;
+    }
+
+    private void SetGuidValue(string key, Guid value)
+    {
+        GetHttpContext().Items[key] = value.ToString();
+        logger.LogDebug("Stored GUID context item {ContextKey}", key);
+    }
+
+    private Guid GetGuidValue(string key)
+    {
+        if (GetHttpContext().Items.TryGetValue(key, out var value) && value is string strValue)
+        {
+            logger.LogDebug("Resolved GUID context item {ContextKey}", key);
+            return Guid.Parse(strValue);
+        }
+
+        logger.LogDebug("GUID context item {ContextKey} was not present", key);
+        return Guid.Empty;
+    }
 
     private HttpContext GetHttpContext()
     {
+        if (httpContextAccessor.HttpContext is null)
+        {
+            logger.LogWarning("Request context was unavailable");
+        }
+
         ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
 
         return httpContextAccessor.HttpContext;

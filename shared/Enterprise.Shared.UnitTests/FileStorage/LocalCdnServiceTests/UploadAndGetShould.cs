@@ -1,5 +1,6 @@
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.FileStorage;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.UnitTests.FileStorage.LocalCdnServiceTests;
 
@@ -15,14 +16,17 @@ public class UploadAndGetShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Upload_file_and_retrieve_it(string fileName, CancellationToken cancellationToken)
+    public async Task Upload_file_and_retrieve_it(
+        string fileName,
+        ILogger<LocalCdnService> logger,
+        CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
             var fileStorageConfig = new FileStorageConfiguration { LocalCdnPath = tempDir, PublicCdnFileEndpoint = "cdn" };
-            var sut = new LocalCdnService(config, fileStorageConfig);
+            var sut = new LocalCdnService(config, fileStorageConfig, logger);
             var content = "hello cdn"u8.ToArray();
             using var stream = new MemoryStream(content);
 
@@ -42,14 +46,17 @@ public class UploadAndGetShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Upload_with_extension_appends_extension(string baseName, CancellationToken cancellationToken)
+    public async Task Upload_with_extension_appends_extension(
+        string baseName,
+        ILogger<LocalCdnService> logger,
+        CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
             var fileStorageConfig = new FileStorageConfiguration { LocalCdnPath = tempDir, PublicCdnFileEndpoint = "cdn" };
-            var sut = new LocalCdnService(config, fileStorageConfig);
+            var sut = new LocalCdnService(config, fileStorageConfig, logger);
             using var stream = new MemoryStream("data"u8.ToArray());
 
             var (uri, _) = await sut.UploadAsync(stream, "text/plain", baseName, ".txt", cancellationToken);
@@ -64,14 +71,17 @@ public class UploadAndGetShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Get_returns_false_for_missing_file(string missingFileName, CancellationToken cancellationToken)
+    public async Task Get_returns_false_for_missing_file(
+        string missingFileName,
+        ILogger<LocalCdnService> logger,
+        CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
             var fileStorageConfig = new FileStorageConfiguration { LocalCdnPath = tempDir, PublicCdnFileEndpoint = "cdn" };
-            var sut = new LocalCdnService(config, fileStorageConfig);
+            var sut = new LocalCdnService(config, fileStorageConfig, logger);
 
             var (exists, contentType, bytes) = await sut.GetAsync(missingFileName, cancellationToken);
 
@@ -87,14 +97,17 @@ public class UploadAndGetShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Get_returns_octet_stream_for_unknown_extension(string baseName, CancellationToken cancellationToken)
+    public async Task Get_returns_octet_stream_for_unknown_extension(
+        string baseName,
+        ILogger<LocalCdnService> logger,
+        CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
             var fileStorageConfig = new FileStorageConfiguration { LocalCdnPath = tempDir, PublicCdnFileEndpoint = "cdn" };
-            var sut = new LocalCdnService(config, fileStorageConfig);
+            var sut = new LocalCdnService(config, fileStorageConfig, logger);
             var fileName = baseName + ".unknownext123";
             await File.WriteAllBytesAsync(Path.Combine(tempDir, fileName), "x"u8.ToArray(), cancellationToken);
 

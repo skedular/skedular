@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.UnitTests.Context.ContextTests;
 
@@ -10,7 +11,8 @@ public class DefaultValuesShould
     {
         var accessor = A.Fake<IHttpContextAccessor>();
         A.CallTo(() => accessor.HttpContext).Returns(null);
-        var sut = new Shared.Context.Context(accessor);
+        var logger = A.Fake<ILogger<Shared.Context.Context>>();
+        var sut = new Shared.Context.Context(accessor, logger);
 
         sut.GetCorrelationId().ShouldBe(string.Empty);
     }
@@ -21,7 +23,8 @@ public class DefaultValuesShould
         var httpContext = new DefaultHttpContext();
         var accessor = A.Fake<IHttpContextAccessor>();
         A.CallTo(() => accessor.HttpContext).Returns(httpContext);
-        var sut = new Shared.Context.Context(accessor);
+        var logger = A.Fake<ILogger<Shared.Context.Context>>();
+        var sut = new Shared.Context.Context(accessor, logger);
 
         sut.GetDesignation().ShouldBe(string.Empty);
         sut.GetTitle().ShouldBe(string.Empty);

@@ -3,6 +3,7 @@ using System.IO.Compression;
 using System.Text;
 using System.Xml;
 using Flurl;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Security.Sso;
 
@@ -11,7 +12,7 @@ public interface ISamlLoginRequestFactory
     string GenerateSamlLoginRequest(string id, string redirectUrl, string entityId, string loginUrl);
 }
 
-public class SamlLoginRequestFactory(TimeProvider timeProvider) : ISamlLoginRequestFactory
+public class SamlLoginRequestFactory(TimeProvider timeProvider, ILogger<SamlLoginRequestFactory> logger) : ISamlLoginRequestFactory
 {
     public string GenerateSamlLoginRequest(string id, string redirectUrl, string entityId, string loginUrl)
     {
@@ -20,15 +21,24 @@ public class SamlLoginRequestFactory(TimeProvider timeProvider) : ISamlLoginRequ
         ArgumentException.ThrowIfNullOrWhiteSpace(entityId);
         ArgumentException.ThrowIfNullOrWhiteSpace(loginUrl);
 
+        logger.LogDebug(
+            "Generating SAML login request. RedirectUrlConfigured={RedirectUrlConfigured}, EntityIdLength={EntityIdLength}, LoginUrlConfigured={LoginUrlConfigured}",
+            !string.IsNullOrWhiteSpace(redirectUrl),
+            entityId.Length,
+            !string.IsNullOrWhiteSpace(loginUrl));
+
         var issueInstant = timeProvider.GetUtcNow().ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture);
         var authnRequestXml = BuildAuthnRequestXml(id, entityId, issueInstant);
 
         var compressedSamlRequest = DeflateCompress(Encoding.UTF8.GetBytes(authnRequestXml));
         var samlRequestBase64 = Convert.ToBase64String(compressedSamlRequest);
 
-        return loginUrl
+        var result = loginUrl
             .SetQueryParam("SAMLRequest", samlRequestBase64)
             .SetQueryParam("RelayState", redirectUrl);
+
+        logger.LogInformation("Generated SAML login request successfully");
+        return result;
     }
 
     private static string BuildAuthnRequestXml(string id, string entityId, string issueInstant)

@@ -4,6 +4,7 @@ using Enterprise.Shared.Security.Configurations;
 using Flurl.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using WorkOS;
@@ -21,7 +22,8 @@ public class WorkOSTokenService(
     IMemoryCache memoryCache,
     WorkOSClient workOsClient,
     IServiceProvider serviceProvider,
-    TimeProvider timeProvider)
+    TimeProvider timeProvider,
+    ILogger<WorkOSTokenService> logger)
     : IWorkOSTokenService
 {
     private readonly Configurations.WorkOS _configuration = identityProvidersConfiguration.WorkOS!;
@@ -30,6 +32,8 @@ public class WorkOSTokenService(
     {
         try
         {
+            logger.LogDebug("Verifying WorkOS token. TokenLength={TokenLength}", token.Length);
+
             var jws = await memoryCache.GetOrCreateAsync<Jws>("workos-public-keys", async cacheEntry =>
             {
                 cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddMinutes(15);
@@ -43,6 +47,7 @@ public class WorkOSTokenService(
             var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
             if (issuer is null || (_configuration.Issuer != issuer && _configuration.OtherIssuers.All(item => item.ToString() != issuer)))
             {
+                logger.LogWarning("WorkOS token issuer mismatch. Issuer={Issuer}", issuer);
                 return;
             }
 
@@ -61,11 +66,14 @@ public class WorkOSTokenService(
             var sub = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
             ArgumentException.ThrowIfNullOrWhiteSpace(sub);
             context.SetVerifiableToken(sub);
+            logger.LogDebug("WorkOS token subject resolved");
 
             await using var scope = serviceProvider.CreateAsyncScope();
             var customerHelper = scope.ServiceProvider.GetService<ICustomerHelper>();
             if (customerHelper is not null && !await customerHelper.DoesCustomerExistAsync(sub, cancellationToken))
             {
+                logger.LogDebug("Customer not found locally. Fetching WorkOS profile");
+
                 var userProfile = await workOsClient.MakeAPIRequest<Profile>(
                     new WorkOSRequest { Method = HttpMethod.Get, Path = $"/user_management/users/{sub}" },
                     cancellationToken);
@@ -99,6 +107,8 @@ public class WorkOSTokenService(
                     context.SetFamilyName(userProfile.LastName);
                 }
             }
+
+            logger.LogInformation("WorkOS token verified successfully");
         }
         catch
         {

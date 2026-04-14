@@ -2,6 +2,7 @@ using System.Text.Json;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Telemetry;
+using Microsoft.Extensions.Logging;
 using Temporalio.Client;
 
 namespace Enterprise.Shared.Outbox.Temporal;
@@ -22,7 +23,8 @@ public class TemporalSignalOutboxWorkflowExecutor(
     IActivityAccessor activityAccessor,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     IRandomHelper randomHelper,
-    TimeProvider timeProvider)
+    TimeProvider timeProvider,
+    ILogger<TemporalSignalOutboxWorkflowExecutor> logger)
     : ITemporalSignalOutboxWorkflowExecutor
 {
     public void Signal(string workflowId, string signalType, WorkflowSignalOptions workflowSignalOptions, IUnitOfWork unitOfWork) =>
@@ -46,6 +48,11 @@ public class TemporalSignalOutboxWorkflowExecutor(
         WorkflowSignalOptions workflowSignalOptions,
         IUnitOfWork unitOfWork)
     {
+        logger.LogDebug(
+            "Queueing Temporal workflow signal in outbox. SignalType={SignalType}, HasExecutionArgs={HasExecutionArgs}",
+            signalType,
+            executionArgs is not null);
+
         using (activityAccessor
                    .GetActivitySource(TelemetryKeys.TemporalSignalActivitySourceName)
                    .StartActivity(TelemetryKeys.TemporalSignalEventSave))
@@ -65,6 +72,8 @@ public class TemporalSignalOutboxWorkflowExecutor(
                 WorkflowSignalOptions = workflowSignalOptions,
                 Timestamp = timeProvider.GetUtcNow()
             });
+
+            logger.LogInformation("Temporal workflow signal queued in outbox successfully. SignalType={SignalType}", signalType);
         }
     }
 }

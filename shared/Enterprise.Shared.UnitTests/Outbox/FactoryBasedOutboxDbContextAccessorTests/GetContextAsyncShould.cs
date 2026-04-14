@@ -1,5 +1,6 @@
 using Enterprise.Shared.Outbox;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.UnitTests.Outbox.FactoryBasedOutboxDbContextAccessorTests;
 
@@ -13,11 +14,12 @@ public class GetContextAsyncShould
         var fakeContext1 = A.Fake<DbContext>(options => options.WithArgumentsForConstructor(() => new DbContext(new DbContextOptions<DbContext>())));
         var fakeContext2 = A.Fake<DbContext>(options => options.WithArgumentsForConstructor(() => new DbContext(new DbContextOptions<DbContext>())));
         var factory = A.Fake<IDbContextFactory<DbContext>>();
+        var logger = A.Fake<ILogger<FactoryBasedOutboxDbContextAccessor<DbContext>>>();
 
         A.CallTo(() => factory.CreateDbContextAsync(cancellationToken))
             .ReturnsNextFromSequence(Task.FromResult(fakeContext1), Task.FromResult(fakeContext2));
 
-        var sut = new FactoryBasedOutboxDbContextAccessor<DbContext>(factory);
+        var sut = new FactoryBasedOutboxDbContextAccessor<DbContext>(factory, logger);
 
         var context1 = await sut.GetContextAsync(cancellationToken);
         var context2 = await sut.GetContextAsync(cancellationToken);
@@ -32,10 +34,11 @@ public class GetContextAsyncShould
     {
         var fakeContext = A.Fake<DbContext>(options => options.WithArgumentsForConstructor(() => new DbContext(new DbContextOptions<DbContext>())));
         var factory = A.Fake<IDbContextFactory<DbContext>>();
+        var logger = A.Fake<ILogger<FactoryBasedOutboxDbContextAccessor<DbContext>>>();
 
         A.CallTo(() => factory.CreateDbContextAsync(cancellationToken)).Returns(Task.FromResult(fakeContext));
 
-        var sut = new FactoryBasedOutboxDbContextAccessor<DbContext>(factory);
+        var sut = new FactoryBasedOutboxDbContextAccessor<DbContext>(factory, logger);
         await sut.GetContextAsync(cancellationToken);
 
         A.CallTo(() => factory.CreateDbContextAsync(cancellationToken)).MustHaveHappenedOnceExactly();

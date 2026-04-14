@@ -3,6 +3,7 @@ using EmailValidation;
 using Enterprise.Shared.Azure.Configurations;
 using Enterprise.Shared.Context;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -16,17 +17,21 @@ public class AzureEntraTokenService(
     AzureEntraConfiguration azureEntraConfiguration,
     IMemoryCache memoryCache,
     IContext context,
-    TimeProvider timeProvider)
+    TimeProvider timeProvider,
+    ILogger<AzureEntraTokenService> logger)
     : IAzureEntraTokenService
 {
     public async Task VerifyTokenAsync(string token, CancellationToken cancellationToken)
     {
         try
         {
+            logger.LogDebug("Verifying Azure Entra token. TokenLength={TokenLength}", token.Length);
+
             var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
             var tenantId = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "tid")?.Value;
             if (tenantId is null)
             {
+                logger.LogWarning("Azure Entra token missing tenant id claim");
                 return;
             }
 
@@ -64,6 +69,7 @@ public class AzureEntraTokenService(
 
             if (!Guid.TryParse(tenantId, out var tenant))
             {
+                logger.LogWarning("Azure Entra tenant id claim is not a GUID");
                 return;
             }
 
@@ -100,6 +106,8 @@ public class AzureEntraTokenService(
             {
                 context.SetAzureTenantAudience(value);
             }
+
+            logger.LogInformation("Azure Entra token verified successfully");
         }
         catch
         {

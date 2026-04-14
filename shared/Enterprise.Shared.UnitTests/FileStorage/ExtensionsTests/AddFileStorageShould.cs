@@ -26,6 +26,7 @@ public class AddFileStorageShould
             })
             .Build();
 
+        services.AddLogging();
         services.AddSingleton(new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") });
         services.AddFileStorage(configuration, "https://example.com/cdn", "https://example.com/private");
 

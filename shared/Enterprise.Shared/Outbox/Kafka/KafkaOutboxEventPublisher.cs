@@ -4,6 +4,7 @@ using Enterprise.Shared.Events;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Telemetry;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Outbox.Kafka;
 
@@ -19,11 +20,13 @@ public class KafkaOutboxEventPublisher<TKey, TEvent>(
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     KafkaConfiguration kafkaConfiguration,
     IRandomHelper randomHelper,
-    TimeProvider timeProvider)
+    TimeProvider timeProvider,
+    ILogger<KafkaOutboxEventPublisher<TKey, TEvent>> logger)
     : IKafkaOutboxEventPublisher<TKey, TEvent> where TEvent : class, IEvent
 {
     public void Publish(TKey key, TEvent @event, IUnitOfWork unitOfWork)
     {
+        logger.LogDebug("Queueing Kafka event in outbox. EventType={EventType}", typeof(TEvent).FullName);
         using (activityAccessor.GetActivitySource(TelemetryKeys.KafkaActivitySourceName).StartActivity(TelemetryKeys.KafkaEventSave))
         {
             var headers = new Dictionary<string, string>();
@@ -43,6 +46,8 @@ public class KafkaOutboxEventPublisher<TKey, TEvent>(
                 Payload = payloadSerializer.Serialize(@event, new SerializationContext(MessageComponentType.Value, topic)),
                 Timestamp = timeProvider.GetUtcNow()
             });
+
+            logger.LogInformation("Kafka event queued in outbox successfully. EventType={EventType}, Topic={Topic}", typeof(TEvent).FullName, topic);
         }
     }
 }

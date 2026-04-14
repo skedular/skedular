@@ -10,10 +10,8 @@ public class IsImageFileShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Return_true_for_valid_image(CancellationToken cancellationToken)
+    public async Task Return_true_for_valid_image(ImageHelper sut, CancellationToken cancellationToken)
     {
-        var sut = new ImageHelper();
-
         // Create a minimal valid PNG in memory (8 bytes header + IHDR)
         var pngBytes = CreateMinimalPng();
         using var stream = new MemoryStream(pngBytes);
@@ -25,9 +23,8 @@ public class IsImageFileShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Return_false_for_non_image_stream(CancellationToken cancellationToken)
+    public async Task Return_false_for_non_image_stream(ImageHelper sut, CancellationToken cancellationToken)
     {
-        var sut = new ImageHelper();
         using var stream = new MemoryStream("not an image"u8.ToArray());
 
         var result = await sut.IsImageFileAsync(stream, cancellationToken);
@@ -37,9 +34,8 @@ public class IsImageFileShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Return_width_height_for_valid_image(CancellationToken cancellationToken)
+    public async Task Return_width_height_for_valid_image(ImageHelper sut, CancellationToken cancellationToken)
     {
-        var sut = new ImageHelper();
         var pngBytes = CreateMinimalPng();
         using var stream = new MemoryStream(pngBytes);
 
@@ -52,9 +48,8 @@ public class IsImageFileShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Return_false_for_non_image_on_get_dimensions(CancellationToken cancellationToken)
+    public async Task Return_false_for_non_image_on_get_dimensions(ImageHelper sut, CancellationToken cancellationToken)
     {
-        var sut = new ImageHelper();
         using var stream = new MemoryStream("not an image"u8.ToArray());
 
         var (isImage, width, height) = await sut.GetImageWidthHeightAsync(stream, cancellationToken);

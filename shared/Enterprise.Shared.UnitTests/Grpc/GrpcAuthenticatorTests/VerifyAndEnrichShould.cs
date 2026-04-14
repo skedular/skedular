@@ -1,6 +1,7 @@
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Grpc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using GrpcConstants = Enterprise.Shared.Grpc.Constants;
 
 namespace Enterprise.Shared.UnitTests.Grpc.GrpcAuthenticatorTests;
@@ -14,7 +15,8 @@ public class VerifyAndEnrichShould
         var accessor = A.Fake<IHttpContextAccessor>();
         A.CallTo(() => accessor.HttpContext).Returns(httpContext);
         var context = A.Fake<IContext>();
-        return (new GrpcAuthenticator(accessor, context), httpContext, context);
+        var logger = A.Fake<ILogger<GrpcAuthenticator>>();
+        return (new GrpcAuthenticator(accessor, context, logger), httpContext, context);
     }
 
     [Theory]

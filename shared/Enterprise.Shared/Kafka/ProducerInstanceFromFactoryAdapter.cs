@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Kafka.Produce;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Kafka;
 
@@ -12,7 +13,10 @@ namespace Enterprise.Shared.Kafka;
 /// </remarks>
 /// <typeparam name="TKey">Message Key type</typeparam>
 /// <typeparam name="TValue">Message Value type</typeparam>
-public class ProducerInstanceFromFactoryAdapter<TKey, TValue>(IProducerFactory factory, KafkaConfiguration kafkaConfiguration)
+public class ProducerInstanceFromFactoryAdapter<TKey, TValue>(
+    IProducerFactory factory,
+    KafkaConfiguration kafkaConfiguration,
+    ILogger<ProducerInstanceFromFactoryAdapter<TKey, TValue>> logger)
     : IProducer<TKey, TValue>
 {
     private readonly IProducer<TKey, TValue> _producer = factory.Build<TKey, TValue>(kafkaConfiguration);
@@ -90,6 +94,7 @@ public class ProducerInstanceFromFactoryAdapter<TKey, TValue>(IProducerFactory f
 
         if (disposing)
         {
+            logger.LogDebug("Disposing Kafka producer instance from factory. ProducerName={ProducerName}", _producer.Name);
             _producer.Dispose();
         }
 

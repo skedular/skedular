@@ -8,51 +8,39 @@ public class GenerateSamlLoginRequestShould
     [Theory]
     [AutoFakeItEasyData]
     public void Return_url_with_saml_request_and_relay_state(
+        [Frozen] TimeProvider timeProvider,
+        SamlLoginRequestFactory sut,
         string id,
         string redirectUrl,
         string entityId)
     {
-        var loginUrl = "https://idp.example.com/sso";
-        var timeProvider = A.Fake<TimeProvider>();
+        const string LoginUrl = "https://idp.example.com/sso";
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2024, 6, 15, 10, 0, 0, TimeSpan.Zero));
-        var sut = new SamlLoginRequestFactory(timeProvider);
 
-        var result = sut.GenerateSamlLoginRequest(id, redirectUrl, entityId, loginUrl);
+        var result = sut.GenerateSamlLoginRequest(id, redirectUrl, entityId, LoginUrl);
 
         result.ShouldContain("SAMLRequest=");
         result.ShouldContain("RelayState=");
-        result.ShouldStartWith(loginUrl);
+        result.ShouldStartWith(LoginUrl);
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Throw_when_id_is_empty(string redirectUrl, string entityId, string loginUrl)
-    {
-        var sut = new SamlLoginRequestFactory(A.Fake<TimeProvider>());
-        Should.Throw<ArgumentException>(() => sut.GenerateSamlLoginRequest("", redirectUrl, entityId, loginUrl));
-    }
+    public void Throw_when_id_is_empty(SamlLoginRequestFactory sut, string redirectUrl, string entityId, string loginUrl) =>
+        Should.Throw<ArgumentException>(() => sut.GenerateSamlLoginRequest(string.Empty, redirectUrl, entityId, loginUrl));
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Throw_when_redirect_url_is_empty(string id, string entityId, string loginUrl)
-    {
-        var sut = new SamlLoginRequestFactory(A.Fake<TimeProvider>());
-        Should.Throw<ArgumentException>(() => sut.GenerateSamlLoginRequest(id, "", entityId, loginUrl));
-    }
+    public void Throw_when_redirect_url_is_empty(SamlLoginRequestFactory sut, string id, string entityId, string loginUrl) =>
+        Should.Throw<ArgumentException>(() => sut.GenerateSamlLoginRequest(id, string.Empty, entityId, loginUrl));
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Throw_when_entity_id_is_empty(string id, string redirectUrl, string loginUrl)
-    {
-        var sut = new SamlLoginRequestFactory(A.Fake<TimeProvider>());
-        Should.Throw<ArgumentException>(() => sut.GenerateSamlLoginRequest(id, redirectUrl, "", loginUrl));
-    }
+    public void Throw_when_entity_id_is_empty(SamlLoginRequestFactory sut, string id, string redirectUrl, string loginUrl) =>
+        Should.Throw<ArgumentException>(() => sut.GenerateSamlLoginRequest(id, redirectUrl, string.Empty, loginUrl));
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Throw_when_login_url_is_empty(string id, string redirectUrl, string entityId)
-    {
-        var sut = new SamlLoginRequestFactory(A.Fake<TimeProvider>());
-        Should.Throw<ArgumentException>(() => sut.GenerateSamlLoginRequest(id, redirectUrl, entityId, ""));
-    }
+    public void Throw_when_login_url_is_empty(SamlLoginRequestFactory sut, string id, string redirectUrl, string entityId) =>
+        Should.Throw<ArgumentException>(() => sut.GenerateSamlLoginRequest(id, redirectUrl, entityId, string.Empty));
 }

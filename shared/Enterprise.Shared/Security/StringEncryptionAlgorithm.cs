@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using Enterprise.Shared.Security.Configurations;
+using Microsoft.Extensions.Logging;
 using SimpleBase;
 
 namespace Enterprise.Shared.Security;
@@ -11,7 +12,7 @@ public interface IStringEncryptionAlgorithm
     string Decrypt(string cipherText, EncryptionKeyConfiguration encryptionKey);
 }
 
-public class StringEncryptionAlgorithm : IStringEncryptionAlgorithm
+public class StringEncryptionAlgorithm(ILogger<StringEncryptionAlgorithm> logger) : IStringEncryptionAlgorithm
 {
     private const string VersionPrefix = "v2:";
     private const int NonceLength = 12;
@@ -20,6 +21,7 @@ public class StringEncryptionAlgorithm : IStringEncryptionAlgorithm
     public string Encrypt(string plainText, EncryptionKeyConfiguration encryptionKey)
     {
         ArgumentNullException.ThrowIfNull(encryptionKey);
+        logger.LogDebug("Encrypting string payload. PayloadLength={PayloadLength}", plainText.Length);
         var (key, _) = GetKeyAndIv(encryptionKey);
         var nonce = RandomNumberGenerator.GetBytes(NonceLength);
         var plainBytes = Encoding.UTF8.GetBytes(plainText);
@@ -34,13 +36,20 @@ public class StringEncryptionAlgorithm : IStringEncryptionAlgorithm
         Buffer.BlockCopy(tag, 0, payloadBytes, NonceLength, TagLength);
         Buffer.BlockCopy(cipherBytes, 0, payloadBytes, NonceLength + TagLength, cipherBytes.Length);
 
-        return $"{VersionPrefix}{Base58.Bitcoin.Encode(payloadBytes)}";
+        var encryptedPayload = $"{VersionPrefix}{Base58.Bitcoin.Encode(payloadBytes)}";
+        logger.LogDebug("String payload encrypted successfully. CipherLength={CipherLength}", encryptedPayload.Length);
+        return encryptedPayload;
     }
 
     public string Decrypt(string cipherText, EncryptionKeyConfiguration encryptionKey)
     {
         ArgumentNullException.ThrowIfNull(encryptionKey);
         ArgumentException.ThrowIfNullOrWhiteSpace(cipherText);
+
+        logger.LogDebug(
+            "Decrypting string payload. CipherLength={CipherLength}, IsVersion2={IsVersion2}",
+            cipherText.Length,
+            cipherText.StartsWith(VersionPrefix, StringComparison.Ordinal));
 
         return cipherText.StartsWith(VersionPrefix, StringComparison.Ordinal)
             ? DecryptVersion2(cipherText[VersionPrefix.Length..], encryptionKey)

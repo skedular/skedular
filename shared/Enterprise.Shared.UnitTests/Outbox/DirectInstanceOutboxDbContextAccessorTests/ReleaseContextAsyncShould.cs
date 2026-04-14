@@ -1,6 +1,7 @@
 using Enterprise.Shared.Outbox;
 using Enterprise.Shared.UnitTests.Database.TestSupport;
 using Enterprise.Shared.UnitTests.Fixtures;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.UnitTests.Outbox.DirectInstanceOutboxDbContextAccessorTests;
 
@@ -11,10 +12,11 @@ public class ReleaseContextAsyncShould
     [AutoFakeItEasyData([typeof(DatabaseTestContextFixtureCustomizer)])]
     public async Task Clear_change_tracker_on_release_context_async(
         DatabaseTestContext context,
+        ILogger<GetContextAccessor<DatabaseTestContext>> logger,
         CancellationToken cancellationToken)
     {
         await using var _ = context;
-        var sut = new GetContextAccessor<DatabaseTestContext>(context);
+        var sut = new GetContextAccessor<DatabaseTestContext>(context, logger);
 
         context.Parents.Add(new ParentEntity { Id = Guid.CreateVersion7().ToString() });
         await context.SaveChangesAsync(cancellationToken);
@@ -32,10 +34,11 @@ public class ReleaseContextAsyncShould
     [AutoFakeItEasyData([typeof(DatabaseTestContextFixtureCustomizer)])]
     public async Task Not_dispose_context_on_release(
         DatabaseTestContext context,
+        ILogger<GetContextAccessor<DatabaseTestContext>> logger,
         CancellationToken cancellationToken)
     {
         await using var _ = context;
-        var sut = new GetContextAccessor<DatabaseTestContext>(context);
+        var sut = new GetContextAccessor<DatabaseTestContext>(context, logger);
 
         var accessedContext = await sut.GetContextAsync(cancellationToken);
         await sut.ReleaseContextAsync(accessedContext, cancellationToken);

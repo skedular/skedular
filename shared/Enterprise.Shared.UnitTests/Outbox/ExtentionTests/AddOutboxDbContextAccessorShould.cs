@@ -13,6 +13,7 @@ public class AddOutboxDbContextAccessorShould
         var services = new ServiceCollection();
         var dbContextFactory = A.Fake<IDbContextFactory<DbContext>>();
 
+        services.AddLogging();
         services.AddSingleton(dbContextFactory);
         services.AddOutboxDbContextAccessor<DbContext>();
 
@@ -28,6 +29,7 @@ public class AddOutboxDbContextAccessorShould
         var services = new ServiceCollection();
         var dbContext = A.Fake<DbContext>(options => options.WithArgumentsForConstructor(() => new DbContext(new DbContextOptions<DbContext>())));
 
+        services.AddLogging();
         services.AddSingleton(dbContext);
         services.AddOutboxDbContextAccessor<DbContext>();
 

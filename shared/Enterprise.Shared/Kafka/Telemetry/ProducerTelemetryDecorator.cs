@@ -1,12 +1,14 @@
 using Confluent.Kafka;
 using Enterprise.Shared.Telemetry;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Kafka.Telemetry;
 
 public class ProducerTelemetryDecorator<TKey, TValue>(
     IProducer<TKey, TValue> producer,
     IActivityAccessor activityAccessor,
-    IKafkaActivityTracer tracer)
+    IKafkaActivityTracer tracer,
+    ILogger<ProducerTelemetryDecorator<TKey, TValue>> logger)
     : IProducer<TKey, TValue>
 {
     private bool _disposed;
@@ -22,6 +24,7 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
         Message<TKey, TValue> message,
         CancellationToken cancellationToken = new())
     {
+        logger.LogDebug("Producing Kafka message with telemetry decorator. Topic={Topic}", topic);
         using (tracer.CreateProduceActivity(message, topic))
         {
             try
@@ -31,6 +34,7 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
             catch (Exception ex)
             {
                 activityAccessor.AddException(ex);
+                logger.LogWarning("Kafka async produce failed. Topic={Topic}, ExceptionType={ExceptionType}", topic, ex.GetType().Name);
 
                 throw;
             }
@@ -42,6 +46,9 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
         Message<TKey, TValue> message,
         CancellationToken cancellationToken = new())
     {
+        logger.LogDebug("Producing Kafka message with telemetry decorator to partition. Topic={Topic}, Partition={Partition}",
+            topicPartition.Topic,
+            topicPartition.Partition.Value);
         using (tracer.CreateProduceActivity(message, topicPartition.Topic,
                    topicPartition.Partition.Value))
         {
@@ -52,6 +59,10 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
             catch (Exception ex)
             {
                 activityAccessor.AddException(ex);
+                logger.LogWarning("Kafka async produce to partition failed. Topic={Topic}, Partition={Partition}, ExceptionType={ExceptionType}",
+                    topicPartition.Topic,
+                    topicPartition.Partition.Value,
+                    ex.GetType().Name);
 
                 throw;
             }
@@ -63,6 +74,7 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
         Message<TKey, TValue> message,
         Action<DeliveryReport<TKey, TValue>>? deliveryHandler = null)
     {
+        logger.LogDebug("Producing Kafka message synchronously with telemetry decorator. Topic={Topic}", topic);
         using (tracer.CreateProduceActivity(message, topic))
         {
             try
@@ -72,6 +84,7 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
             catch (Exception ex)
             {
                 activityAccessor.AddException(ex);
+                logger.LogWarning("Kafka synchronous produce failed. Topic={Topic}, ExceptionType={ExceptionType}", topic, ex.GetType().Name);
 
                 throw;
             }
@@ -83,6 +96,9 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
         Message<TKey, TValue> message,
         Action<DeliveryReport<TKey, TValue>>? deliveryHandler = null)
     {
+        logger.LogDebug("Producing Kafka message synchronously with telemetry decorator to partition. Topic={Topic}, Partition={Partition}",
+            topicPartition.Topic,
+            topicPartition.Partition.Value);
         using (tracer.CreateProduceActivity(message, topicPartition.Topic,
                    topicPartition.Partition.Value))
         {
@@ -93,6 +109,11 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
             catch (Exception ex)
             {
                 activityAccessor.AddException(ex);
+                logger.LogWarning(
+                    "Kafka synchronous produce to partition failed. Topic={Topic}, Partition={Partition}, ExceptionType={ExceptionType}",
+                    topicPartition.Topic,
+                    topicPartition.Partition.Value,
+                    ex.GetType().Name);
 
                 throw;
             }
@@ -140,6 +161,7 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
 
         if (disposing)
         {
+            logger.LogDebug("Disposing Kafka telemetry decorator producer. ProducerName={ProducerName}", producer.Name);
             producer.Dispose();
         }
 

@@ -23,6 +23,7 @@ public class WithPostgreSqlDbContextShould
     ])]
     public void Register_db_context_and_supporting_services(ServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
+        services.AddLogging();
         services.WithPostgreSqlDbContext<PostgresTestDbContext>(configuration, environment, "main", true, "postgres");
 
         var provider = services.BuildServiceProvider();
@@ -49,6 +50,7 @@ public class WithPostgreSqlDbContextShould
     ])]
     public void Register_pooled_db_context_factory(ServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
+        services.AddLogging();
         services.WithPooledPostgreSqlDbContextFactoryWithConnectionString<PostgresTestDbContext>(
             configuration,
             environment,

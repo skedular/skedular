@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Telemetry;
 
@@ -13,7 +14,12 @@ public interface IActivityGetter
 /// <summary>
 ///     An abstraction of the Activity.Current
 /// </summary>
-public class ActivityGetter : IActivityGetter
+public class ActivityGetter(ILogger<ActivityGetter> logger) : IActivityGetter
 {
-    public Activity? GetCurrent() => Activity.Current;
+    public Activity? GetCurrent()
+    {
+        var current = Activity.Current;
+        logger.LogDebug("Retrieved current activity. HasCurrentActivity={HasCurrentActivity}", current is not null);
+        return current;
+    }
 }

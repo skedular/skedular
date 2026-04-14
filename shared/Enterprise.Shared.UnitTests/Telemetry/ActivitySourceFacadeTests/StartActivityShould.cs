@@ -28,7 +28,11 @@ public class StartActivityShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Start_Activity_With_Correct_Parameters(string name, string activityName, string tagKey, string tagValue)
+    public void Start_Activity_With_Correct_Parameters(
+        string name,
+        string activityName,
+        string tagKey,
+        string tagValue)
     {
         // set up listeners so the source will return activities
         var listener = new ActivityListener { ShouldListenTo = _ => true };

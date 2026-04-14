@@ -5,13 +5,9 @@ namespace Enterprise.Shared.UnitTests.Random.RandomHelperTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class RandomHelperShould
 {
-    [Fact]
-    public void GenerateGuid_returns_nonempty_guid()
-    {
-        var sut = new RandomHelper();
-
-        sut.GenerateGuid().ShouldNotBe(Guid.Empty);
-    }
+    [Theory]
+    [AutoFakeItEasyData]
+    public void GenerateGuid_returns_nonempty_guid(RandomHelper sut) => sut.GenerateGuid().ShouldNotBe(Guid.Empty);
 
     [Theory]
     [AutoFakeItEasyData]
@@ -23,13 +19,9 @@ public class RandomHelperShould
         guids.Distinct().Count().ShouldBe(5);
     }
 
-    [Fact]
-    public void Generate_returns_non_empty_string()
-    {
-        var sut = new RandomHelper();
-
-        sut.Generate().ShouldNotBeNullOrWhiteSpace();
-    }
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Generate_returns_non_empty_string(RandomHelper sut) => sut.Generate().ShouldNotBeNullOrWhiteSpace();
 
     [Theory]
     [AutoFakeItEasyData]

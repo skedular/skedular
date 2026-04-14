@@ -15,26 +15,25 @@ public class LegacyDecryptShould
         Iv = "1234567890123456" // 16 bytes
     };
 
-    [Fact]
-    public void Decrypt_legacy_cbc_ciphertext()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Decrypt_legacy_cbc_ciphertext(StringEncryptionAlgorithm sut)
     {
-        // Produce a legacy (AES-CBC) encrypted value to test the legacy path.
-        // We use the internal legacy format: Base58 of AES-CBC encrypted bytes (no "v2:" prefix).
-        var sut = new StringEncryptionAlgorithm();
-
         // First encrypt using v2 to get the key/iv shapes, then manually create a legacy token.
         // Build a legacy token the same way the old code would have produced it.
-        var plainText = "hello legacy";
+        const string PlainText = "hello legacy";
+
         var key = Encoding.UTF8.GetBytes(ValidKey.Key);
         var iv = Encoding.UTF8.GetBytes(ValidKey.Iv);
         using var aes = Aes.Create();
+
         aes.Key = key;
         aes.IV = iv;
         var encryptor = aes.CreateEncryptor();
         using var ms = new MemoryStream();
         using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
         {
-            var bytes = Encoding.UTF8.GetBytes(plainText);
+            var bytes = Encoding.UTF8.GetBytes(PlainText);
             cs.Write(bytes, 0, bytes.Length);
         }
 
@@ -46,6 +45,6 @@ public class LegacyDecryptShould
 
         var result = sut.Decrypt(legacyCipherText, ValidKey);
 
-        result.ShouldBe(plainText);
+        result.ShouldBe(PlainText);
     }
 }

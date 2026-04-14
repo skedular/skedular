@@ -9,6 +9,7 @@ using Enterprise.Shared.Security.Sso.Models;
 using Flurl.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Security.Sso;
 
@@ -23,7 +24,11 @@ public interface ISamlAssertionConsumerService
     Task<bool> ValidateCertificateAsync(string metadataUrl, CancellationToken cancellationToken);
 }
 
-public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider timeProvider, ICookieEncryptionService cookieEncryptionService)
+public class SamlAssertionConsumerService(
+    IMemoryCache memoryCache,
+    TimeProvider timeProvider,
+    ICookieEncryptionService cookieEncryptionService,
+    ILogger<SamlAssertionConsumerService> logger)
     : ISamlAssertionConsumerService
 {
     public async Task<bool> ValidateSamlResponseSignatureAsync(
@@ -31,6 +36,8 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
         string appFederationMetadataUrl,
         CancellationToken cancellationToken)
     {
+        logger.LogDebug("Validating SAML response signature");
+
         var certificate = await GetSigningCertificateFromMetadataAsync(appFederationMetadataUrl, cancellationToken);
         var xmlDoc = new XmlDocument { PreserveWhitespace = true };
         xmlDoc.LoadXml(samlResponse);
@@ -43,18 +50,23 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
         var signatureNode = xmlDoc.SelectSingleNode("/samlp:Response/saml:Assertion/ds:Signature", xmlNamespaceManager);
         if (signatureNode?.ParentNode == null)
         {
+            logger.LogWarning("SAML response signature node is missing");
             return false;
         }
 
         var signedXml = new SignedXml((XmlElement)signatureNode.ParentNode);
         signedXml.LoadXml((XmlElement)signatureNode);
 
-        return signedXml.CheckSignature(certificate, true);
+        var isValid = signedXml.CheckSignature(certificate, true);
+        logger.LogInformation("SAML response signature validation completed. IsValid={IsValid}", isValid);
+        return isValid;
     }
 
     public string VerifyAndDecodeSamlResponse(string samlResponse)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(samlResponse);
+
+        logger.LogDebug("Decoding SAML response. EncodedLength={EncodedLength}", samlResponse.Length);
 
         if (samlResponse.Contains('%'))
         {
@@ -62,12 +74,15 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
         }
 
         var samlData = Convert.FromBase64String(samlResponse);
+        logger.LogDebug("Decoded SAML response successfully. DecodedLength={DecodedLength}", samlData.Length);
         return Encoding.UTF8.GetString(samlData);
     }
 
     // Ref : https://learn.microsoft.com/en-us/entra/identity-platform/single-sign-on-saml-protocol
     public SamlResponse ExtractSamlResponse(string saml)
     {
+        logger.LogDebug("Extracting SAML response. PayloadLength={PayloadLength}", saml.Length);
+
         var samlResponse = new XmlDocument();
         samlResponse.LoadXml(saml);
 
@@ -133,6 +148,7 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
         response.StatusCode = primaryStatusCodeNode.Value;
         if (!response.StatusCode.Contains("Success"))
         {
+            logger.LogWarning("SAML response status indicates failure");
             throw new InvalidOperationException("Operation Failed.");
         }
 
@@ -142,10 +158,16 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
         var statusMessageNode = statusNode.SelectSingleNode("samlp:StatusMessage", namespaceManager);
         response.StatusMessage = statusMessageNode?.InnerText;
 
+        logger.LogInformation("Extracted SAML response successfully. RoleCount={RoleCount}", response.Roles.Count);
         return response;
     }
 
-    public void StoreSamlResponseInCookie(HttpResponse response, string organizationId, SamlResponse samlResponse) =>
+    public void StoreSamlResponseInCookie(HttpResponse response, string organizationId, SamlResponse samlResponse)
+    {
+        logger.LogDebug(
+            "Storing SAML response in cookie. SessionHasExpiry={SessionHasExpiry}",
+            samlResponse.SessionNotOnOrAfter != DateTimeOffset.MaxValue);
+
         response.Cookies.Append(
             $"{Constants.OrganizationSsoCookiePrefix}-{organizationId}",
             cookieEncryptionService.Encrypt(JsonSerializer.Serialize(samlResponse)),
@@ -156,14 +178,19 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
                 MaxAge = samlResponse.SessionNotOnOrAfter - timeProvider.GetUtcNow(),
                 Expires = samlResponse.SessionNotOnOrAfter
             });
+    }
 
-    public SamlResponse RetrieveSamlResponseFromCookie(string rawResponse) =>
-        JsonSerializer.Deserialize<SamlResponse>(cookieEncryptionService.Decrypt(rawResponse))!;
+    public SamlResponse RetrieveSamlResponseFromCookie(string rawResponse)
+    {
+        logger.LogDebug("Retrieving SAML response from cookie. PayloadLength={PayloadLength}", rawResponse.Length);
+        return JsonSerializer.Deserialize<SamlResponse>(cookieEncryptionService.Decrypt(rawResponse))!;
+    }
 
     public async Task<bool> ValidateMetadataAsync(string metadataUrl, CancellationToken cancellationToken)
     {
         try
         {
+            logger.LogDebug("Validating SAML metadata document");
             var metadata = await metadataUrl.GetStringAsync(cancellationToken: cancellationToken);
             var document = XDocument.Parse(metadata);
 
@@ -180,13 +207,16 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
                 .FirstOrDefault(x => x.Name.LocalName == "SingleSignOnService");
             if (ssoService?.Attribute("Location") == null)
             {
+                logger.LogWarning("SAML metadata validation failed because SSO service location is missing");
                 return false;
             }
 
+            logger.LogInformation("SAML metadata validated successfully");
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            logger.LogWarning("SAML metadata validation failed. ExceptionType={ExceptionType}", ex.GetType().Name);
             return false;
         }
     }
@@ -195,26 +225,32 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
     {
         try
         {
+            logger.LogDebug("Validating SAML signing certificate");
             var certificate = await GetSigningCertificateFromMetadataAsync(metadataUrl, cancellationToken);
 
             // Check if certificate is expired
             if (certificate.NotAfter < timeProvider.GetUtcNow())
             {
+                logger.LogWarning("SAML signing certificate is expired");
                 return false;
             }
 
             // Basic certificate validation
             if (!certificate.HasPrivateKey && certificate.GetRSAPublicKey() != null)
             {
+                logger.LogInformation("SAML signing certificate validated successfully using public key");
                 return true;
             }
 
             // Verify certificate has valid key usage
             var keyUsages = certificate.Extensions["2.5.29.15"] as X509KeyUsageExtension;
-            return keyUsages == null || keyUsages.KeyUsages.HasFlag(X509KeyUsageFlags.DigitalSignature);
+            var isValid = keyUsages == null || keyUsages.KeyUsages.HasFlag(X509KeyUsageFlags.DigitalSignature);
+            logger.LogInformation("SAML signing certificate validation completed. IsValid={IsValid}", isValid);
+            return isValid;
         }
-        catch
+        catch (Exception ex)
         {
+            logger.LogWarning("SAML certificate validation failed. ExceptionType={ExceptionType}", ex.GetType().Name);
             return false;
         }
     }
@@ -224,6 +260,7 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
             $"organization-sso-settings-{metadataUrl}",
             async cacheEntry =>
             {
+                logger.LogDebug("Loading SAML signing certificate from metadata source");
                 cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddHours(1);
 
                 var metadata = await metadataUrl.GetStringAsync(cancellationToken: cancellationToken);
@@ -231,6 +268,7 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
                 var certNode = document.Descendants().FirstOrDefault(x => x.Name.LocalName == "X509Certificate");
                 if (certNode == null)
                 {
+                    logger.LogWarning("SAML metadata did not contain an X509Certificate element");
                     throw new SamlMetadataException();
                 }
 

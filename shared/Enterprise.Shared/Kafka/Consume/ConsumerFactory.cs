@@ -4,6 +4,7 @@ using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Kafka.Logger;
 using Enterprise.Shared.Kafka.Serialization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Kafka.Consume;
 
@@ -16,17 +17,21 @@ public class ConsumerFactory(
     ApplicationConfiguration applicationConfiguration,
     IServiceProvider serviceProvider,
     IKafkaClientNaming clientNaming,
-    IKafkaLogger kafkaLogger)
+    IKafkaLogger kafkaLogger,
+    ILogger<ConsumerFactory> logger)
     : IConsumerFactory
 {
     public IConsumer<TKey, TValue> Build<TKey, TValue>(KafkaConfiguration kafkaConfiguration, Action<ConsumerBuilder<TKey, TValue>>? options = null)
     {
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
+        logger.LogDebug("Building Kafka consumer. KeyType={KeyType}, ValueType={ValueType}", typeof(TKey).FullName, typeof(TValue).FullName);
         return BuildConsumer(options, BuildConsumerConfig(kafkaConfiguration));
     }
 
     private IConsumer<TKey, TValue> BuildConsumer<TKey, TValue>(Action<ConsumerBuilder<TKey, TValue>>? options, ConsumerConfig consumerConfig)
     {
+        logger.LogDebug("Configuring Kafka consumer builder. KeyType={KeyType}, ValueType={ValueType}", typeof(TKey).FullName,
+            typeof(TValue).FullName);
         var builder = new ConsumerBuilder<TKey, TValue>(consumerConfig);
         if (!KafkaSerialization.CanSerializeNatively<TKey>())
         {
@@ -42,6 +47,8 @@ public class ConsumerFactory(
 
         kafkaLogger.SetLogHandler(builder);
         options?.Invoke(builder);
+        logger.LogInformation("Kafka consumer built successfully. KeyType={KeyType}, ValueType={ValueType}", typeof(TKey).FullName,
+            typeof(TValue).FullName);
         return builder.Build();
     }
 
@@ -106,6 +113,9 @@ public class ConsumerFactory(
             config.CancellationDelayMaxMs = kafkaConfiguration.CancellationDelayMaxMs.Value;
         }
 
+        logger.LogDebug("Kafka consumer configuration created. GroupId={GroupId}, HasSecurityProtocol={HasSecurityProtocol}",
+            groupId,
+            kafkaConfiguration.SecurityProtocol is not null);
         return config;
     }
 }

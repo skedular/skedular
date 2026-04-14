@@ -2,6 +2,8 @@ using System.Data;
 using System.Data.Common;
 using Enterprise.Shared.Database.Interceptors;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Enterprise.Shared.Database.SqlServer.Interceptors;
 
@@ -12,6 +14,11 @@ namespace Enterprise.Shared.Database.SqlServer.Interceptors;
 /// </summary>
 public class SelectForUpdateCommandInterceptor : DbCommandInterceptor
 {
+    private readonly ILogger<SelectForUpdateCommandInterceptor> _logger;
+
+    public SelectForUpdateCommandInterceptor(ILogger<SelectForUpdateCommandInterceptor>? logger = null) =>
+        _logger = logger ?? NullLogger<SelectForUpdateCommandInterceptor>.Instance;
+
     public override InterceptionResult<object> ScalarExecuting(DbCommand command, CommandEventData eventData, InterceptionResult<object> result)
     {
         ManipulateCommand(command);
@@ -51,16 +58,18 @@ public class SelectForUpdateCommandInterceptor : DbCommandInterceptor
         return new ValueTask<InterceptionResult<DbDataReader>>(result);
     }
 
-    private static void ManipulateCommand(IDbCommand command)
+    private void ManipulateCommand(IDbCommand command)
     {
         if (command.CommandText.StartsWith("-- " + EntityFrameworkInterceptorTags.ForUpdateSkipLocked, StringComparison.Ordinal))
         {
+            _logger.LogDebug("Applying UPDLOCK, READPAST, ROWLOCK hint to SQL Server command");
             command.CommandText = ReplaceFromWithLockHint(command.CommandText, "UPDLOCK, READPAST, ROWLOCK");
             return;
         }
 
         if (command.CommandText.StartsWith("-- " + EntityFrameworkInterceptorTags.ForUpdate, StringComparison.Ordinal))
         {
+            _logger.LogDebug("Applying UPDLOCK, ROWLOCK hint to SQL Server command");
             command.CommandText = ReplaceFromWithLockHint(command.CommandText, "UPDLOCK, ROWLOCK");
         }
     }

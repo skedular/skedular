@@ -1,5 +1,6 @@
 using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 
 namespace Enterprise.Shared.Email;
@@ -27,7 +28,7 @@ public interface IEmailService
         CancellationToken cancellationToken);
 }
 
-public class EmailService : IEmailService
+public class EmailService(ILogger<EmailService> logger) : IEmailService
 {
     public async Task SendEmailAsync(
         string templateId,
@@ -38,6 +39,13 @@ public class EmailService : IEmailService
         ICollection<string> bccAddresses,
         CancellationToken cancellationToken)
     {
+        logger.LogInformation(
+            "Sending templated email. TemplateId={TemplateId}, To={ToCount}, Cc={CcCount}, Bcc={BccCount}",
+            templateId,
+            toAddresses.Count,
+            ccAddresses.Count,
+            bccAddresses.Count);
+
         using var client = new AmazonSimpleEmailServiceClient();
         var request = new SendTemplatedEmailRequest
         {
@@ -51,6 +59,7 @@ public class EmailService : IEmailService
         };
 
         await client.SendTemplatedEmailAsync(request, cancellationToken);
+        logger.LogInformation("Templated email sent successfully. TemplateId={TemplateId}", templateId);
     }
 
     public async Task SendRawEmailAsync(
@@ -64,6 +73,14 @@ public class EmailService : IEmailService
         ICollection<EmailAttachment> emailAttachments,
         CancellationToken cancellationToken)
     {
+        logger.LogInformation(
+            "Sending raw email. SubjectLength={SubjectLength}, To={ToCount}, Cc={CcCount}, Bcc={BccCount}, Attachments={AttachmentCount}",
+            subject.Length,
+            toAddresses.Count,
+            ccAddresses.Count,
+            bccAddresses.Count,
+            emailAttachments.Count);
+
         var message = new MimeMessage();
 
         message.From.Add(MailboxAddress.Parse(sender));
@@ -96,5 +113,6 @@ public class EmailService : IEmailService
 
         using var client = new AmazonSimpleEmailServiceClient();
         await client.SendRawEmailAsync(request, cancellationToken);
+        logger.LogInformation("Raw email sent successfully. SubjectLength={SubjectLength}", subject.Length);
     }
 }

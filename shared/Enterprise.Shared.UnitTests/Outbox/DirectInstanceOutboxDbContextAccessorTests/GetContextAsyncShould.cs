@@ -1,5 +1,6 @@
 using Enterprise.Shared.Outbox;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.UnitTests.Outbox.DirectInstanceOutboxDbContextAccessorTests;
 
@@ -8,10 +9,12 @@ public class GetContextAsyncShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Return_same_context_on_multiple_get_context_async_calls(CancellationToken cancellationToken)
+    public async Task Return_same_context_on_multiple_get_context_async_calls(
+        ILogger<GetContextAccessor<DbContext>> logger,
+        CancellationToken cancellationToken)
     {
         var fakeContext = A.Fake<DbContext>(options => options.WithArgumentsForConstructor(() => new DbContext(new DbContextOptions<DbContext>())));
-        var sut = new GetContextAccessor<DbContext>(fakeContext);
+        var sut = new GetContextAccessor<DbContext>(fakeContext, logger);
 
         var context1 = await sut.GetContextAsync(cancellationToken);
         var context2 = await sut.GetContextAsync(cancellationToken);
@@ -23,10 +26,10 @@ public class GetContextAsyncShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Ignore_cancellation_token(CancellationToken cancellationToken)
+    public async Task Ignore_cancellation_token(ILogger<GetContextAccessor<DbContext>> logger, CancellationToken cancellationToken)
     {
         var fakeContext = A.Fake<DbContext>(options => options.WithArgumentsForConstructor(() => new DbContext(new DbContextOptions<DbContext>())));
-        var sut = new GetContextAccessor<DbContext>(fakeContext);
+        var sut = new GetContextAccessor<DbContext>(fakeContext, logger);
 
         var context = await sut.GetContextAsync(cancellationToken);
 

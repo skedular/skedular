@@ -24,6 +24,7 @@ public class AddXeroServicesShould
             })
             .Build();
 
+        services.AddLogging();
         services.AddSingleton<IStringEncryptionAlgorithm, StringEncryptionAlgorithm>();
         services.AddXeroServices(configuration);
 

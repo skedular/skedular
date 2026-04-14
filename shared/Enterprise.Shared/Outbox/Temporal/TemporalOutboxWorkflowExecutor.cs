@@ -3,6 +3,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Temporal;
+using Microsoft.Extensions.Logging;
 using Temporalio.Client;
 
 namespace Enterprise.Shared.Outbox.Temporal;
@@ -19,7 +20,8 @@ public class TemporalOutboxWorkflowExecutor(
     IActivityAccessor activityAccessor,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     IRandomHelper randomHelper,
-    TimeProvider timeProvider)
+    TimeProvider timeProvider,
+    ILogger<TemporalOutboxWorkflowExecutor> logger)
     : ITemporalOutboxWorkflowExecutor
 {
     public void Execute<TWorkflow>(WorkflowOptions workflowOptions, IUnitOfWork unitOfWork) where TWorkflow : class =>
@@ -34,6 +36,11 @@ public class TemporalOutboxWorkflowExecutor(
 
     private void ExecuteInternal<TWorkflow>(string? executionArgs, WorkflowOptions workflowOptions, IUnitOfWork unitOfWork) where TWorkflow : class
     {
+        logger.LogDebug(
+            "Queueing Temporal workflow in outbox. WorkflowType={WorkflowType}, HasExecutionArgs={HasExecutionArgs}",
+            typeof(TWorkflow).FullName,
+            executionArgs is not null);
+
         using (activityAccessor.GetActivitySource(TelemetryKeys.TemporalActivitySourceName).StartActivity(TelemetryKeys.TemporalEventSave))
         {
             dictionaryActivityPropagator.PropagateActivity(new Dictionary<string, string>());
@@ -50,6 +57,8 @@ public class TemporalOutboxWorkflowExecutor(
                 WorkflowOptions = workflowOptions,
                 Timestamp = timeProvider.GetUtcNow()
             });
+
+            logger.LogInformation("Temporal workflow queued in outbox successfully. WorkflowType={WorkflowType}", typeof(TWorkflow).FullName);
         }
     }
 }

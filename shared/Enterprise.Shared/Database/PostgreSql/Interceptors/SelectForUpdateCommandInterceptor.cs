@@ -2,6 +2,8 @@
 using System.Data.Common;
 using Enterprise.Shared.Database.Interceptors;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Enterprise.Shared.Database.PostgreSql.Interceptors;
 
@@ -12,6 +14,11 @@ namespace Enterprise.Shared.Database.PostgreSql.Interceptors;
 /// </summary>
 public class SelectForUpdateCommandInterceptor : DbCommandInterceptor
 {
+    private readonly ILogger<SelectForUpdateCommandInterceptor> _logger;
+
+    public SelectForUpdateCommandInterceptor(ILogger<SelectForUpdateCommandInterceptor>? logger = null) =>
+        _logger = logger ?? NullLogger<SelectForUpdateCommandInterceptor>.Instance;
+
     public override InterceptionResult<object> ScalarExecuting(DbCommand command, CommandEventData eventData, InterceptionResult<object> result)
     {
         ManipulateCommand(command);
@@ -51,15 +58,17 @@ public class SelectForUpdateCommandInterceptor : DbCommandInterceptor
         return new ValueTask<InterceptionResult<DbDataReader>>(result);
     }
 
-    private static void ManipulateCommand(IDbCommand command)
+    private void ManipulateCommand(IDbCommand command)
     {
         if (command.CommandText.StartsWith("-- " + EntityFrameworkInterceptorTags.ForUpdate, StringComparison.Ordinal))
         {
+            _logger.LogDebug("Applying FOR UPDATE lock hint to PostgreSQL command");
             command.CommandText += " FOR UPDATE";
         }
 
         if (command.CommandText.StartsWith("-- " + EntityFrameworkInterceptorTags.ForUpdateSkipLocked, StringComparison.Ordinal))
         {
+            _logger.LogDebug("Applying FOR UPDATE SKIP LOCKED lock hint to PostgreSQL command");
             command.CommandText += " FOR UPDATE SKIP LOCKED";
         }
     }

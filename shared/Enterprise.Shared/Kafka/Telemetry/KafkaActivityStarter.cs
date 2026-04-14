@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Enterprise.Shared.Telemetry;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Kafka.Telemetry;
 
@@ -15,7 +16,7 @@ public interface IKafkaActivityStarter
 /// <summary>
 ///     Starts Kafka Activities
 /// </summary>
-public class KafkaActivityStarter(IActivityAccessor activityAccessor) : IKafkaActivityStarter
+public class KafkaActivityStarter(IActivityAccessor activityAccessor, ILogger<KafkaActivityStarter> logger) : IKafkaActivityStarter
 {
     private const string MessagingSystem = "kafka";
     private const string DestinationKind = "topic";
@@ -34,6 +35,11 @@ public class KafkaActivityStarter(IActivityAccessor activityAccessor) : IKafkaAc
         ActivityContext parentContext,
         int? partition = null)
     {
+        logger.LogDebug("Starting Kafka activity from context. Topic={Topic}, OperationType={OperationType}, PartitionKnown={PartitionKnown}",
+            topic,
+            activityKind,
+            partition.HasValue);
+
         var openTelemetryActivityKind = GetOpenTelemetryActivityKind(activityKind);
 
         var activityNameVerb = GetActivityVerb(activityKind);
@@ -52,11 +58,16 @@ public class KafkaActivityStarter(IActivityAccessor activityAccessor) : IKafkaAc
                 ActivitySpanId.CreateRandom(), ActivityTraceFlags.Recorded);
         }
 
-        return activitySource.StartActivity(
+        var activity = activitySource.StartActivity(
             activityName,
             openTelemetryActivityKind,
             parentContext,
             tags);
+        logger.LogDebug("Kafka activity creation completed. Topic={Topic}, OperationType={OperationType}, ActivityCreated={ActivityCreated}",
+            topic,
+            activityKind,
+            activity is not null);
+        return activity;
     }
 
     /// <summary>

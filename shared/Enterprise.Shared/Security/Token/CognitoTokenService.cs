@@ -4,6 +4,7 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Security.Configurations;
 using Flurl.Http;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,7 +16,8 @@ public class CognitoTokenService(
     IdentityProvidersConfiguration identityProvidersConfiguration,
     IContext context,
     IMemoryCache memoryCache,
-    TimeProvider timeProvider)
+    TimeProvider timeProvider,
+    ILogger<CognitoTokenService> logger)
     : ICognitoTokenService
 {
     private readonly IReadOnlyCollection<string> _audiences = identityProvidersConfiguration.Cognito!.Audiences is null
@@ -29,6 +31,8 @@ public class CognitoTokenService(
     {
         try
         {
+            logger.LogDebug("Verifying Cognito token. TokenLength={TokenLength}", token.Length);
+
             var jws = await memoryCache.GetOrCreateAsync<Jws>("cognito-public-keys", async cacheEntry =>
             {
                 cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddMinutes(15);
@@ -42,6 +46,7 @@ public class CognitoTokenService(
             var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
             if (issuer is not null && _cognitoConfiguration.Issuer != issuer)
             {
+                logger.LogWarning("Cognito token issuer mismatch. Issuer={Issuer}", issuer);
                 return;
             }
 
@@ -61,6 +66,7 @@ public class CognitoTokenService(
             var value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
             ArgumentException.ThrowIfNullOrWhiteSpace(value);
             context.SetVerifiableToken(value);
+            logger.LogDebug("Cognito token subject resolved");
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "name")?.Value;
             if (value is not null)
@@ -103,6 +109,8 @@ public class CognitoTokenService(
                     context.SetEmailVerified(bool.Parse(value));
                 }
             }
+
+            logger.LogInformation("Cognito token verified successfully");
         }
         catch
         {

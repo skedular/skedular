@@ -5,11 +5,10 @@ namespace Enterprise.Shared.UnitTests.Version.VersionServiceTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class GetVersionShould
 {
-    [Fact]
-    public void Return_non_null_version_for_known_assembly()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_non_null_version_for_known_assembly(VersionService<GetVersionShould> sut)
     {
-        var sut = new VersionService<GetVersionShould>();
-
         var version = sut.GetVersion();
 
         version.ShouldNotBeNull();
