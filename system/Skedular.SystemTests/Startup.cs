@@ -1,3 +1,4 @@
+using System;
 using Api.Shared.Clients.OpenApi.Skedular.Booking.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.V1;
@@ -29,6 +30,7 @@ using Projects;
 using Slack.Shared.Database;
 using Team.Shared.Database;
 using Testing.Shared.IntegrationTests.Aspire;
+using Xunit;
 
 namespace Skedular.SystemTests;
 
@@ -98,7 +100,7 @@ public class Startup
                 environment,
                 bookingDbConnectionString,
                 true,
-                "bookingnpgsql")
+                "bookingdb")
             .WithPooledPostgreSqlDbContextFactoryWithConnectionString<CoreDbContext>(
                 configuration,
                 environment,
