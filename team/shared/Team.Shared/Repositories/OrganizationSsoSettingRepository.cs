@@ -1,5 +1,5 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Team.Shared.Database;
 using Team.Shared.Database.Entities;

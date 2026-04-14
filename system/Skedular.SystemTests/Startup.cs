@@ -13,7 +13,7 @@ using Booking.Shared.Database;
 using Core.Shared.Database;
 using Customer.Shared.Database;
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Flurl;
 using Location.Shared.Database;
@@ -93,53 +93,53 @@ public class Startup
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 
         services
-            .WithPooledDbContextFactoryWithConnectionString<BookingDbContext>(
+            .WithPooledPostgreSqlDbContextFactoryWithConnectionString<BookingDbContext>(
                 configuration,
                 environment,
                 bookingDbConnectionString,
                 true,
                 "bookingnpgsql")
-            .WithPooledDbContextFactoryWithConnectionString<CoreDbContext>(
+            .WithPooledPostgreSqlDbContextFactoryWithConnectionString<CoreDbContext>(
                 configuration,
                 environment,
                 coreDbConnectionString,
                 true,
                 "coredb")
-            .WithPooledDbContextFactoryWithConnectionString<CustomerDbContext>(
+            .WithPooledPostgreSqlDbContextFactoryWithConnectionString<CustomerDbContext>(
                 configuration,
                 environment,
                 customerDbConnectionString,
                 true,
                 "customerdb")
-            .WithPooledDbContextFactoryWithConnectionString<LocationDbContext>(
+            .WithPooledPostgreSqlDbContextFactoryWithConnectionString<LocationDbContext>(
                 configuration,
                 environment,
                 locationDbConnectionString,
                 true,
                 "locationdb")
-            .WithPooledDbContextFactoryWithConnectionString<MarketplaceDbContext>(
+            .WithPooledPostgreSqlDbContextFactoryWithConnectionString<MarketplaceDbContext>(
                 configuration,
                 environment, marketplaceDbConnectionString,
                 true,
                 "marketplacedb")
-            .WithPooledDbContextFactoryWithConnectionString<MsTeamsDbContext>(
+            .WithPooledPostgreSqlDbContextFactoryWithConnectionString<MsTeamsDbContext>(
                 configuration,
                 environment, msteamsDbConnectionString,
                 true,
                 "msteeamsdb")
-            .WithPooledDbContextFactoryWithConnectionString<OrganizationDbContext>(
+            .WithPooledPostgreSqlDbContextFactoryWithConnectionString<OrganizationDbContext>(
                 configuration,
                 environment,
                 organizationDbConnectionString,
                 true,
                 "organizationdb")
-            .WithPooledDbContextFactoryWithConnectionString<SlackDbContext>(
+            .WithPooledPostgreSqlDbContextFactoryWithConnectionString<SlackDbContext>(
                 configuration,
                 environment,
                 slackDbConnectionString,
                 true,
                 "slackdb")
-            .WithPooledDbContextFactoryWithConnectionString<TeamDbContext>(
+            .WithPooledPostgreSqlDbContextFactoryWithConnectionString<TeamDbContext>(
                 configuration,
                 environment,
                 teamDbConnectionString,

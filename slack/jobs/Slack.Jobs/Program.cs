@@ -1,7 +1,7 @@
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
@@ -28,7 +28,7 @@ public class Program
 
         services
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb", true)
+            .WithPooledPostgreSqlDbContextFactory<SlackDbContext>(configuration, environment, "slackdb", true)
             .AddKafkaOutboxBackgroundService<SlackDbContext>()
             .AddTemporalOutboxBackgroundService<SlackDbContext>()
             .AddDomainSharedConfigurations(configuration)

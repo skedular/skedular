@@ -1,6 +1,6 @@
 using Core.Shared.Database.Entities;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Core.Shared.Database;
 
-public class CoreDbContext(DbContextOptions<CoreDbContext> options, CustomDbContextOptions customDbContextOptions)
+public class CoreDbContext(DbContextOptions<CoreDbContext> options, CustomDbContextOptions<CoreDbContext> customDbContextOptions)
     : DbContextBase<CoreDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
     public DbSet<Customer> Customer { get; set; }
@@ -25,6 +25,6 @@ public class CoreDbContext(DbContextOptions<CoreDbContext> options, CustomDbCont
     public class CoreDbContextDesignFactory : IDesignTimeDbContextFactory<CoreDbContext>
     {
         public CoreDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<CoreDbContext>(true), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
+            new(args.ToDbContextOption<CoreDbContext>(true), new CustomDbContextOptions<CoreDbContext> { IsPooled = false, IsPostgisEnabled = true });
     }
 }

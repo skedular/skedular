@@ -1,28 +1,12 @@
-using System.Reflection;
 using Enterprise.Shared.Database.SqlServer.Interceptors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Enterprise.Shared.Database.SqlServer;
 
-public abstract class DbContextBase<TDbContext>(DbContextOptions<TDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContext(options), IUnitOfWork where TDbContext : DbContextBase<TDbContext>
+public abstract class DbContextBase<TDbContext>(DbContextOptions<TDbContext> options, CustomDbContextOptions<TDbContext> customDbContextOptions)
+    : RelationalDbContextBase<TDbContext>(options, customDbContextOptions)
+    where TDbContext : DbContextBase<TDbContext>
 {
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        var contextAssembly = Assembly.GetAssembly(typeof(TDbContext));
-        ArgumentNullException.ThrowIfNull(contextAssembly);
-
-        builder.ApplyConfigurationsFromAssembly(contextAssembly);
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!customDbContextOptions.IsPooled)
-        {
-            optionsBuilder.AddInterceptors(new SelectForUpdateCommandInterceptor());
-        }
-
-        base.OnConfiguring(optionsBuilder);
-    }
+    protected override IInterceptor CreateSelectForUpdateCommandInterceptor() => new SelectForUpdateCommandInterceptor();
 }

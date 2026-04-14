@@ -3,7 +3,7 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Reflection;
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Database.Postgres.Interceptors;
+using Enterprise.Shared.Database.PostgreSql.Interceptors;
 using Enterprise.Shared.Telemetry.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -14,13 +14,13 @@ using Microsoft.Extensions.Hosting;
 using Npgsql;
 using OpenTelemetry.Trace;
 
-namespace Enterprise.Shared.Database.Postgres;
+namespace Enterprise.Shared.Database.PostgreSql;
 
 public static class Extensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection WithPooledDbContext<TDbContext>(
+        public IServiceCollection WithPooledPostgreSqlDbContext<TDbContext>(
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
@@ -31,7 +31,7 @@ public static class Extensions
             var connectionString = configuration.GetConnectionString(connectionName);
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
-            return services.WithPooledDbContextWithConnectionString<TDbContext>(
+            return services.WithPooledPostgreSqlDbContextWithConnectionString<TDbContext>(
                 configuration,
                 environment,
                 connectionString,
@@ -39,7 +39,7 @@ public static class Extensions
                 healthCheckName);
         }
 
-        public IServiceCollection WithPooledDbContextWithConnectionString<TDbContext>(
+        public IServiceCollection WithPooledPostgreSqlDbContextWithConnectionString<TDbContext>(
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionString,
@@ -48,7 +48,7 @@ public static class Extensions
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName, configuration);
+            var dataSource = services.GetDatasource<TDbContext>(true, isPostgisEnabled, connectionString, healthCheckName, configuration);
 
             return services.AddDbContextPool<TDbContext>(options =>
             {
@@ -76,7 +76,7 @@ public static class Extensions
             });
         }
 
-        public IServiceCollection WithDbContext<TDbContext>(
+        public IServiceCollection WithPostgreSqlDbContext<TDbContext>(
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
@@ -87,7 +87,7 @@ public static class Extensions
             var connectionString = configuration.GetConnectionString(connectionName);
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
-            return services.WithDbContextWithConnectionString<TDbContext>(
+            return services.WithPostgreSqlDbContextWithConnectionString<TDbContext>(
                 configuration,
                 environment,
                 connectionString,
@@ -95,7 +95,7 @@ public static class Extensions
                 healthCheckName);
         }
 
-        public IServiceCollection WithDbContextWithConnectionString<TDbContext>(
+        public IServiceCollection WithPostgreSqlDbContextWithConnectionString<TDbContext>(
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionString,
@@ -104,7 +104,7 @@ public static class Extensions
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName, configuration);
+            var dataSource = services.GetDatasource<TDbContext>(false, isPostgisEnabled, connectionString, healthCheckName, configuration);
 
             return services.AddDbContext<TDbContext>(options =>
             {
@@ -131,7 +131,7 @@ public static class Extensions
             });
         }
 
-        public IServiceCollection WithPooledDbContextFactory<TDbContext>(
+        public IServiceCollection WithPooledPostgreSqlDbContextFactory<TDbContext>(
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
@@ -142,7 +142,7 @@ public static class Extensions
             var connectionString = configuration.GetConnectionString(connectionName);
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
-            return services.WithPooledDbContextFactoryWithConnectionString<TDbContext>(
+            return services.WithPooledPostgreSqlDbContextFactoryWithConnectionString<TDbContext>(
                 configuration,
                 environment,
                 connectionString,
@@ -150,7 +150,7 @@ public static class Extensions
                 healthCheckName);
         }
 
-        public IServiceCollection WithPooledDbContextFactoryWithConnectionString<TDbContext>(
+        public IServiceCollection WithPooledPostgreSqlDbContextFactoryWithConnectionString<TDbContext>(
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionString,
@@ -159,7 +159,7 @@ public static class Extensions
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName, configuration);
+            var dataSource = services.GetDatasource<TDbContext>(true, isPostgisEnabled, connectionString, healthCheckName, configuration);
 
             return services.AddPooledDbContextFactory<TDbContext>(options =>
             {
@@ -187,7 +187,7 @@ public static class Extensions
             });
         }
 
-        public IServiceCollection WithDbContextFactory<TDbContext>(
+        public IServiceCollection WithPostgreSqlDbContextFactory<TDbContext>(
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
@@ -198,7 +198,7 @@ public static class Extensions
             var connectionString = configuration.GetConnectionString(connectionName);
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
-            return services.WithDbContextFactoryWithConnectionString<TDbContext>(
+            return services.WithPostgreSqlDbContextFactoryWithConnectionString<TDbContext>(
                 configuration,
                 environment,
                 connectionString,
@@ -206,7 +206,7 @@ public static class Extensions
                 healthCheckName);
         }
 
-        public IServiceCollection WithDbContextFactoryWithConnectionString<TDbContext>(
+        public IServiceCollection WithPostgreSqlDbContextFactoryWithConnectionString<TDbContext>(
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionString,
@@ -215,7 +215,7 @@ public static class Extensions
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName, configuration);
+            var dataSource = services.GetDatasource<TDbContext>(false, isPostgisEnabled, connectionString, healthCheckName, configuration);
 
             return services.AddDbContextFactory<TDbContext>(options =>
             {
@@ -242,23 +242,28 @@ public static class Extensions
             });
         }
 
-        private NpgsqlDataSource GetDatasource(bool isPooled, bool isPostgisEnabled, string connectionString, string? healthCheckName,
+        private NpgsqlDataSource GetDatasource<TDbContext>(
+            bool isPooled,
+            bool isPostgisEnabled,
+            string connectionString,
+            string? healthCheckName,
             IConfiguration configuration)
+            where TDbContext : DbContext
         {
             services
-                .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled, IsPostgisEnabled = isPostgisEnabled })
+                .AddSingleton(new CustomDbContextOptions<TDbContext> { IsPooled = isPooled, IsPostgisEnabled = isPostgisEnabled })
                 .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>()
                 .AddSingleton<IDatabaseMigrationService, DatabaseMigrationService>();
 
             var dataSource = connectionString.BuildDataSource(isPostgisEnabled);
 
             services.AddDatabaseHealthCheck(dataSource, healthCheckName);
-            services.AddPostgresTelemetry(configuration);
+            services.AddTelemetry(configuration);
 
             return dataSource;
         }
 
-        private void AddPostgresTelemetry(IConfiguration configuration)
+        private void AddTelemetry(IConfiguration configuration)
         {
             if (services.Any(item => item.ServiceType == typeof(PostgresTelemetryRegistrationMarker)))
             {

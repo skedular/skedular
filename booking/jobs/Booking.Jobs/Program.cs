@@ -6,7 +6,7 @@ using Booking.Shared.Workflows;
 using Enterprise.Shared;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Cache;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
@@ -30,7 +30,7 @@ public class Program
 
         services
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb", true)
+            .WithPooledPostgreSqlDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb", true)
             .AddKafkaOutboxBackgroundService<BookingDbContext>()
             .AddTemporalOutboxBackgroundService<BookingDbContext>()
             .AddDomainSharedConfigurations(configuration)

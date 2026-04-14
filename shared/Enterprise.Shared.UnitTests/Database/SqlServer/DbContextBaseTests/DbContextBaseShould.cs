@@ -12,7 +12,7 @@ public class DbContextBaseShould
         var options = new DbContextOptionsBuilder<SqlServerTestDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
-        var customOptions = new CustomDbContextOptions { IsPooled = isPooled };
+        var customOptions = new CustomDbContextOptions<SqlServerTestDbContext> { IsPooled = isPooled };
         return new SqlServerTestDbContext(options, customOptions);
     }
 

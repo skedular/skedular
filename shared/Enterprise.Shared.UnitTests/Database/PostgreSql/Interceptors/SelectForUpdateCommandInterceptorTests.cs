@@ -1,8 +1,8 @@
 using Enterprise.Shared.Database.Interceptors;
-using Enterprise.Shared.Database.Postgres.Interceptors;
+using Enterprise.Shared.Database.PostgreSql.Interceptors;
 using Npgsql;
 
-namespace Enterprise.Shared.UnitTests.Database.Postgres.Interceptors;
+namespace Enterprise.Shared.UnitTests.Database.PostgreSql.Interceptors;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class SelectForUpdateCommandInterceptorTests

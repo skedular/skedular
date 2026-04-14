@@ -5,7 +5,7 @@ using Core.Shared;
 using Core.Shared.Database;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.Kafka;
 
@@ -26,7 +26,7 @@ public class Program
         services
             .AddRedis(configuration, "redis")
             .AddFileStorage(configuration, CoreApiHelper.GetPublicCdnFileEndpoint(), CoreApiHelper.GetPrivateFileEndpoint())
-            .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb", true)
+            .WithPooledPostgreSqlDbContextFactory<CoreDbContext>(configuration, environment, "coredb", true)
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key,

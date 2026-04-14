@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-namespace Enterprise.Shared.Database.Postgres;
+namespace Enterprise.Shared.Database.PostgreSql;
 
 public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, TimeProvider timeProvider) : IRepository<TEntity>
     where TDbContext : DbContextBase<TDbContext>
@@ -29,8 +29,7 @@ public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, 
         var schema = entityType.GetSchema();
         var fullTableName = schema == null ? $"public.\"{tableName}\"" : $"{schema}.\"{tableName}\"";
 
-        var sql =
-            $"INSERT INTO {fullTableName} (\"Id\", \"CreatedAt\") VALUES (@Id, @CreatedAt) ON CONFLICT (\"Id\") DO NOTHING;";
+        var sql = $"INSERT INTO {fullTableName} (\"Id\", \"CreatedAt\") VALUES (@Id, @CreatedAt) ON CONFLICT (\"Id\") DO NOTHING;";
         await DbContext.Database.ExecuteSqlRawAsync(
             sql,
             [

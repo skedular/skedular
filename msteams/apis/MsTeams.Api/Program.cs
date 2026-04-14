@@ -1,7 +1,7 @@
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Security;
@@ -30,7 +30,7 @@ public class Program
             .AddSso()
             .AddSecurity()
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
-            .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb", true)
+            .WithPooledPostgreSqlDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb", true)
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddDomainSharedServices()

@@ -2,7 +2,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.UnitTests.Database.TestSupport;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enterprise.Shared.UnitTests.Database.Postgres.RepositoryFactoryBaseTests;
+namespace Enterprise.Shared.UnitTests.Database.PostgreSql.RepositoryFactoryBaseTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class RepositoryFactoryBaseShould
@@ -18,7 +18,7 @@ public class RepositoryFactoryBaseShould
     {
         var context = new PostgresTestDbContext(
             new DbContextOptionsBuilder<PostgresTestDbContext>().UseNpgsql("Host=localhost;Database=test;Username=test;Password=test").Options,
-            new CustomDbContextOptions());
+            new CustomDbContextOptions<PostgresTestDbContext>());
 
         sut.SetDbContext(context);
         sut.UnitOfWork.ShouldBeSameAs(context);

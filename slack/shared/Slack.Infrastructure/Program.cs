@@ -1,5 +1,5 @@
 ﻿using Enterprise.Shared;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Slack.Infrastructure.Services;
 using Slack.Shared;
@@ -20,7 +20,7 @@ public class Program
         _ = services.AddKafka(configuration, "kafka");
 
         services
-            .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb", true)
+            .WithPooledPostgreSqlDbContextFactory<SlackDbContext>(configuration, environment, "slackdb", true)
             .AddRepositoryFactory()
             .AddServices()
             .AddJobs();

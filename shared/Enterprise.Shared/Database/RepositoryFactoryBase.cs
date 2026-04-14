@@ -1,6 +1,8 @@
-namespace Enterprise.Shared.Database.Postgres;
+using Microsoft.EntityFrameworkCore;
 
-public abstract class RepositoryFactoryBase<TDbContext> : IAsyncDisposable where TDbContext : DbContextBase<TDbContext>
+namespace Enterprise.Shared.Database;
+
+public abstract class RepositoryFactoryBase<TDbContext> : IAsyncDisposable where TDbContext : DbContext, IUnitOfWork
 {
     protected TDbContext? _dbContext;
 

@@ -2,7 +2,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.UnitTests.Database.TestSupport;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enterprise.Shared.UnitTests.Database.Postgres.DbContextBaseTests;
+namespace Enterprise.Shared.UnitTests.Database.PostgreSql.DbContextBaseTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class DbContextBaseShould
@@ -12,7 +12,7 @@ public class DbContextBaseShould
         var options = new DbContextOptionsBuilder<PostgresTestDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
-        var customOptions = new CustomDbContextOptions { IsPostgisEnabled = isPostgis, IsPooled = isPooled };
+        var customOptions = new CustomDbContextOptions<PostgresTestDbContext> { IsPostgisEnabled = isPostgis, IsPooled = isPooled };
         return new PostgresTestDbContext(options, customOptions);
     }
 

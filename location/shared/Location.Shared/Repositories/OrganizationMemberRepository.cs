@@ -1,6 +1,6 @@
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Location.Shared.Database;
 using Location.Shared.Database.Entities;
 using Microsoft.EntityFrameworkCore;

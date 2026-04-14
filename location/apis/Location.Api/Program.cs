@@ -1,7 +1,7 @@
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Security;
@@ -29,7 +29,7 @@ public class Program
             .AddRedis(configuration, "redis")
             .AddSso()
             .AddSecurity()
-            .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb", true)
+            .WithPooledPostgreSqlDbContextFactory<LocationDbContext>(configuration, environment, "locationdb", true)
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()

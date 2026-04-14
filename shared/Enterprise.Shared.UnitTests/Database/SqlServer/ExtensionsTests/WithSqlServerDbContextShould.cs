@@ -12,7 +12,7 @@ using Microsoft.Extensions.Options;
 namespace Enterprise.Shared.UnitTests.Database.SqlServer.ExtensionsTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
-public class WithDbContextShould
+public class WithSqlServerDbContextShould
 {
     [Theory]
     [AutoFakeItEasyData(
@@ -21,12 +21,9 @@ public class WithDbContextShould
         typeof(FakeHostEnvironmentFixtureCustomizer),
         typeof(SqlServerConfigurationFixtureCustomizer)
     ])]
-    public void Register_sql_server_db_context_and_supporting_services(
-        ServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment)
+    public void Register_db_context_and_supporting_services(ServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
-        services.WithDbContext<SqlServerTestDbContext>(configuration, environment, "main", true, "sqlserver");
+        services.WithSqlServerDbContext<SqlServerTestDbContext>(configuration, environment, "main", true, "sqlserver");
 
         var provider = services.BuildServiceProvider();
 
@@ -36,7 +33,7 @@ public class WithDbContextShould
         var options = provider.GetRequiredService<DbContextOptions<SqlServerTestDbContext>>();
         options.Extensions.Select(item => item.GetType().Name).ShouldContain(name => name.Contains("SqlServer"));
 
-        var customOptions = provider.GetRequiredService<CustomDbContextOptions>();
+        var customOptions = provider.GetRequiredService<CustomDbContextOptions<SqlServerTestDbContext>>();
         customOptions.IsPooled.ShouldBeFalse();
         customOptions.IsPostgisEnabled.ShouldBeTrue();
 
@@ -55,12 +52,9 @@ public class WithDbContextShould
         typeof(FakeHostEnvironmentFixtureCustomizer),
         typeof(SqlServerConfigurationFixtureCustomizer)
     ])]
-    public void Register_pooled_sql_server_db_context_factory(
-        ServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment)
+    public void Register_pooled_db_context_factory(ServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
-        services.WithPooledDbContextFactoryWithConnectionString<SqlServerTestDbContext>(
+        services.WithPooledSqlServerDbContextFactoryWithConnectionString<SqlServerTestDbContext>(
             configuration,
             environment,
             "Server=localhost;Database=test;User Id=sa;Password=Password123!;TrustServerCertificate=True",
@@ -70,6 +64,6 @@ public class WithDbContextShould
         var provider = services.BuildServiceProvider();
 
         provider.GetRequiredService<IDbContextFactory<SqlServerTestDbContext>>().ShouldNotBeNull();
-        provider.GetRequiredService<CustomDbContextOptions>().IsPooled.ShouldBeTrue();
+        provider.GetRequiredService<CustomDbContextOptions<SqlServerTestDbContext>>().IsPooled.ShouldBeTrue();
     }
 }

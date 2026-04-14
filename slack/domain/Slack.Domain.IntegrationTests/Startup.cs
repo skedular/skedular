@@ -4,7 +4,7 @@ using Api.Shared.Services.Grpc.Skedular.Slack.V1;
 using Aspire.Hosting.Testing;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Flurl;
 using Microsoft.Extensions.Configuration;
@@ -65,7 +65,7 @@ public class Startup
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 
         services
-            .WithPooledDbContextFactoryWithConnectionString<SlackDbContext>(
+            .WithPooledPostgreSqlDbContextFactoryWithConnectionString<SlackDbContext>(
                 configuration,
                 environment,
                 slackDbConnectionString,

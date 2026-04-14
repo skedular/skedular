@@ -1,5 +1,5 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.UnitTests.Database.TestSupport;
 using Enterprise.Shared.UnitTests.Fixtures;
 using Microsoft.EntityFrameworkCore;
@@ -9,10 +9,10 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
-namespace Enterprise.Shared.UnitTests.Database.Postgres.ExtensionsTests;
+namespace Enterprise.Shared.UnitTests.Database.PostgreSql.ExtensionsTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
-public class WithDbContextShould
+public class WithPostgreSqlDbContextShould
 {
     [Theory]
     [AutoFakeItEasyData(
@@ -21,12 +21,9 @@ public class WithDbContextShould
         typeof(FakeHostEnvironmentFixtureCustomizer),
         typeof(PostgresConfigurationFixtureCustomizer)
     ])]
-    public void Register_postgres_db_context_and_supporting_services(
-        ServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment)
+    public void Register_db_context_and_supporting_services(ServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
-        services.WithDbContext<PostgresTestDbContext>(configuration, environment, "main", true, "postgres");
+        services.WithPostgreSqlDbContext<PostgresTestDbContext>(configuration, environment, "main", true, "postgres");
 
         var provider = services.BuildServiceProvider();
 
@@ -36,7 +33,7 @@ public class WithDbContextShould
         var options = provider.GetRequiredService<DbContextOptions<PostgresTestDbContext>>();
         options.Extensions.Select(item => item.GetType().Name).ShouldContain(name => name.Contains("Npgsql"));
 
-        var customOptions = provider.GetRequiredService<CustomDbContextOptions>();
+        var customOptions = provider.GetRequiredService<CustomDbContextOptions<PostgresTestDbContext>>();
         customOptions.IsPooled.ShouldBeFalse();
         customOptions.IsPostgisEnabled.ShouldBeTrue();
 
@@ -50,12 +47,9 @@ public class WithDbContextShould
         typeof(FakeHostEnvironmentFixtureCustomizer),
         typeof(PostgresConfigurationFixtureCustomizer)
     ])]
-    public void Register_pooled_postgres_db_context_factory(
-        ServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment)
+    public void Register_pooled_db_context_factory(ServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
-        services.WithPooledDbContextFactoryWithConnectionString<PostgresTestDbContext>(
+        services.WithPooledPostgreSqlDbContextFactoryWithConnectionString<PostgresTestDbContext>(
             configuration,
             environment,
             "Host=localhost;Database=test;Username=test;Password=test",
@@ -65,6 +59,6 @@ public class WithDbContextShould
         var provider = services.BuildServiceProvider();
 
         provider.GetRequiredService<IDbContextFactory<PostgresTestDbContext>>().ShouldNotBeNull();
-        provider.GetRequiredService<CustomDbContextOptions>().IsPooled.ShouldBeTrue();
+        provider.GetRequiredService<CustomDbContextOptions<PostgresTestDbContext>>().IsPooled.ShouldBeTrue();
     }
 }

@@ -1,5 +1,5 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +8,7 @@ using Team.Shared.Database.Entities;
 
 namespace Team.Shared.Database;
 
-public class TeamDbContext(DbContextOptions<TeamDbContext> options, CustomDbContextOptions customDbContextOptions)
+public class TeamDbContext(DbContextOptions<TeamDbContext> options, CustomDbContextOptions<TeamDbContext> customDbContextOptions)
     : DbContextBase<TeamDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
     public DbSet<Customer> Customer { get; set; }
@@ -28,6 +28,6 @@ public class TeamDbContext(DbContextOptions<TeamDbContext> options, CustomDbCont
     public class TeamDbContextDesignFactory : IDesignTimeDbContextFactory<TeamDbContext>
     {
         public TeamDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<TeamDbContext>(true), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
+            new(args.ToDbContextOption<TeamDbContext>(true), new CustomDbContextOptions<TeamDbContext> { IsPooled = false, IsPostgisEnabled = true });
     }
 }

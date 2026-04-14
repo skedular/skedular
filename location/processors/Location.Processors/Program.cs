@@ -2,7 +2,7 @@ using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Temporal;
 using Location.Processors.Subscribers;
@@ -29,7 +29,7 @@ public class Program
 
         services
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb", true)
+            .WithPooledPostgreSqlDbContextFactory<LocationDbContext>(configuration, environment, "locationdb", true)
             .AddKafkaReliableEventConsumers<
                 BookingSubscriber,
                 BookingKey,

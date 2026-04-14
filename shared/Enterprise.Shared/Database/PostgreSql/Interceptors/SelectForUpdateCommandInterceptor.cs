@@ -3,7 +3,7 @@ using System.Data.Common;
 using Enterprise.Shared.Database.Interceptors;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Enterprise.Shared.Database.Postgres.Interceptors;
+namespace Enterprise.Shared.Database.PostgreSql.Interceptors;
 
 /// <summary>
 ///     Update SQL commands to include FOR UPDATE commands if tagged

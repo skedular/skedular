@@ -2,7 +2,7 @@
 using Booking.Shared;
 using Booking.Shared.Database;
 using Enterprise.Shared;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 
 namespace Booking.Infrastructure;
@@ -20,7 +20,7 @@ public class Program
         _ = services.AddKafka(configuration, "kafka");
 
         services
-            .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb", true)
+            .WithPooledPostgreSqlDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb", true)
             .AddRepositoryFactory()
             .AddServices()
             .AddJobs();

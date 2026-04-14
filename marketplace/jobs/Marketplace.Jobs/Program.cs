@@ -1,7 +1,7 @@
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
@@ -24,7 +24,7 @@ public class Program
 
         services
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb", true)
+            .WithPooledPostgreSqlDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb", true)
             .AddKafkaOutboxBackgroundService<MarketplaceDbContext>()
             .AddTemporalOutboxBackgroundService<MarketplaceDbContext>()
             .AddDomainSharedConfigurations(configuration)

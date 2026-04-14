@@ -1,5 +1,5 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enterprise.Shared.UnitTests.Database.TestSupport;
@@ -69,7 +69,7 @@ public class DatabaseTestContext(DbContextOptions options) : DbContext(options),
 
 public sealed class PostgresTestDbContext(
     DbContextOptions<PostgresTestDbContext> options,
-    CustomDbContextOptions customDbContextOptions)
+    CustomDbContextOptions<PostgresTestDbContext> customDbContextOptions)
     : DbContextBase<PostgresTestDbContext>(options, customDbContextOptions)
 {
     public DbSet<ParentEntity> Parents => Set<ParentEntity>();
@@ -88,7 +88,7 @@ public sealed class PostgresTestDbContext(
 
 public sealed class SqlServerTestDbContext(
     DbContextOptions<SqlServerTestDbContext> options,
-    CustomDbContextOptions customDbContextOptions)
+    CustomDbContextOptions<SqlServerTestDbContext> customDbContextOptions)
     : Shared.Database.SqlServer.DbContextBase<SqlServerTestDbContext>(options, customDbContextOptions)
 {
     public DbSet<ParentEntity> Parents => Set<ParentEntity>();
@@ -110,7 +110,7 @@ public sealed class PostgresTestRepositoryFactory : RepositoryFactoryBase<Postgr
     public void SetDbContext(PostgresTestDbContext? dbContext) => _dbContext = dbContext;
 }
 
-public sealed class SqlServerTestRepositoryFactory : Shared.Database.SqlServer.RepositoryFactoryBase<SqlServerTestDbContext>
+public sealed class SqlServerTestRepositoryFactory : RepositoryFactoryBase<SqlServerTestDbContext>
 {
     public void SetDbContext(SqlServerTestDbContext? dbContext) => _dbContext = dbContext;
 }

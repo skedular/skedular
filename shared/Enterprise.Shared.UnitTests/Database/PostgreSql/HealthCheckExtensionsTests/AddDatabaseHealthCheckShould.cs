@@ -1,10 +1,10 @@
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.UnitTests.Fixtures;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 
-namespace Enterprise.Shared.UnitTests.Database.Postgres.HealthCheckExtensionsTests;
+namespace Enterprise.Shared.UnitTests.Database.PostgreSql.HealthCheckExtensionsTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class AddDatabaseHealthCheckShould

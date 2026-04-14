@@ -2,7 +2,7 @@ using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Temporal;
 using MsTeams.Processors.Subscribers;
@@ -25,7 +25,7 @@ public class Program
 
         services
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb", true)
+            .WithPooledPostgreSqlDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb", true)
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key,

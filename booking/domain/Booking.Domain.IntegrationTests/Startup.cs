@@ -8,7 +8,7 @@ using Booking.Shared.Database;
 using Enterprise.Shared;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Flurl;
 using Microsoft.Extensions.Configuration;
@@ -73,7 +73,7 @@ public class Startup
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 
         services
-            .WithPooledDbContextFactoryWithConnectionString<BookingDbContext>(
+            .WithPooledPostgreSqlDbContextFactoryWithConnectionString<BookingDbContext>(
                 configuration,
                 environment,
                 bookingDbConnectionString,

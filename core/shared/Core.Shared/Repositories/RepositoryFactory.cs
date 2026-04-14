@@ -1,6 +1,5 @@
 ﻿using Core.Shared.Database;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
 using Microsoft.EntityFrameworkCore;
 
 namespace Core.Shared.Repositories;

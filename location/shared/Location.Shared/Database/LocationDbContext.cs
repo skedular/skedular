@@ -1,5 +1,5 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
 using Location.Shared.Database.Entities;
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Location.Shared.Database;
 
-public class LocationDbContext(DbContextOptions<LocationDbContext> options, CustomDbContextOptions customDbContextOptions)
+public class LocationDbContext(DbContextOptions<LocationDbContext> options, CustomDbContextOptions<LocationDbContext> customDbContextOptions)
     : DbContextBase<LocationDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
     public DbSet<LocationPhysicalAddress> LocationPhysicalAddress { get; set; }
@@ -38,6 +38,7 @@ public class LocationDbContext(DbContextOptions<LocationDbContext> options, Cust
     public class LocationDbContextDesignFactory : IDesignTimeDbContextFactory<LocationDbContext>
     {
         public LocationDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<LocationDbContext>(true), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
+            new(args.ToDbContextOption<LocationDbContext>(true),
+                new CustomDbContextOptions<LocationDbContext> { IsPooled = false, IsPostgisEnabled = true });
     }
 }

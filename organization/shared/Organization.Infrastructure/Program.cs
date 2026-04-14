@@ -1,5 +1,5 @@
 ﻿using Enterprise.Shared;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Organization.Infrastructure.Services;
 using Organization.Shared;
@@ -20,7 +20,7 @@ public class Program
         _ = services.AddKafka(configuration, "kafka");
 
         services
-            .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb", true)
+            .WithPooledPostgreSqlDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb", true)
             .AddRepositoryFactory()
             .AddServices()
             .AddJobs();

@@ -17,270 +17,277 @@ namespace Enterprise.Shared.Database.SqlServer;
 
 public static class Extensions
 {
-    public static IServiceCollection WithPooledDbContext<TDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment,
-        string connectionName,
-        bool isPostgisEnabled = false,
-        string? healthCheckName = null)
-        where TDbContext : DbContext
+    extension(IServiceCollection services)
     {
-        var connectionString = configuration.GetConnectionString(connectionName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
-
-        return services.WithPooledDbContextWithConnectionString<TDbContext>(
-            configuration,
-            environment,
-            connectionString,
-            isPostgisEnabled,
-            healthCheckName);
-    }
-
-    public static IServiceCollection WithPooledDbContextWithConnectionString<TDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment,
-        string connectionString,
-        bool isPostgisEnabled = false,
-        string? healthCheckName = null)
-        where TDbContext : DbContext
-    {
-        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var validatedConnectionString = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName, configuration);
-
-        return services.AddDbContextPool<TDbContext>(options =>
+        public IServiceCollection WithPooledSqlServerDbContext<TDbContext>(IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionName,
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
+            where TDbContext : DbContext
         {
-            if (environment.IsDevelopment())
-            {
-                options.EnableSensitiveDataLogging();
-            }
+            var connectionString = configuration.GetConnectionString(connectionName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
-            options
-                .AddInterceptors(new SelectForUpdateCommandInterceptor())
-                .UseSqlServer(
-                    validatedConnectionString,
-                    sqlServerOptions =>
-                    {
-                        sqlServerOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
-                                                                   QuerySplittingBehavior.SplitQuery);
-                        sqlServerOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
-                    })
-                .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
-        });
-    }
-
-    public static IServiceCollection WithDbContext<TDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment,
-        string connectionName,
-        bool isPostgisEnabled = false,
-        string? healthCheckName = null)
-        where TDbContext : DbContext
-    {
-        var connectionString = configuration.GetConnectionString(connectionName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
-
-        return services.WithDbContextWithConnectionString<TDbContext>(
-            configuration,
-            environment,
-            connectionString,
-            isPostgisEnabled,
-            healthCheckName);
-    }
-
-    public static IServiceCollection WithDbContextWithConnectionString<TDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment,
-        string connectionString,
-        bool isPostgisEnabled = false,
-        string? healthCheckName = null)
-        where TDbContext : DbContext
-    {
-        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var validatedConnectionString = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName, configuration);
-
-        return services.AddDbContext<TDbContext>(options =>
-        {
-            if (environment.IsDevelopment())
-            {
-                options.EnableSensitiveDataLogging();
-            }
-
-            options
-                .UseSqlServer(
-                    validatedConnectionString,
-                    sqlServerOptions =>
-                    {
-                        sqlServerOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
-                                                                   QuerySplittingBehavior.SplitQuery);
-                        sqlServerOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
-                    })
-                .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
-        });
-    }
-
-    public static IServiceCollection WithPooledDbContextFactory<TDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment,
-        string connectionName,
-        bool isPostgisEnabled = false,
-        string? healthCheckName = null)
-        where TDbContext : DbContext
-    {
-        var connectionString = configuration.GetConnectionString(connectionName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
-
-        return services.WithPooledDbContextFactoryWithConnectionString<TDbContext>(
-            configuration,
-            environment,
-            connectionString,
-            isPostgisEnabled,
-            healthCheckName);
-    }
-
-    public static IServiceCollection WithPooledDbContextFactoryWithConnectionString<TDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment,
-        string connectionString,
-        bool isPostgisEnabled = false,
-        string? healthCheckName = null)
-        where TDbContext : DbContext
-    {
-        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var validatedConnectionString = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName, configuration);
-
-        return services.AddPooledDbContextFactory<TDbContext>(options =>
-        {
-            if (environment.IsDevelopment())
-            {
-                options.EnableSensitiveDataLogging();
-            }
-
-            options
-                .AddInterceptors(new SelectForUpdateCommandInterceptor())
-                .UseSqlServer(
-                    validatedConnectionString,
-                    sqlServerOptions =>
-                    {
-                        sqlServerOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
-                                                                   QuerySplittingBehavior.SplitQuery);
-                        sqlServerOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
-                    })
-                .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
-        });
-    }
-
-    public static IServiceCollection WithDbContextFactory<TDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment,
-        string connectionName,
-        bool isPostgisEnabled = false,
-        string? healthCheckName = null)
-        where TDbContext : DbContext
-    {
-        var connectionString = configuration.GetConnectionString(connectionName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
-
-        return services.WithDbContextFactoryWithConnectionString<TDbContext>(
-            configuration,
-            environment,
-            connectionString,
-            isPostgisEnabled,
-            healthCheckName);
-    }
-
-    public static IServiceCollection WithDbContextFactoryWithConnectionString<TDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment,
-        string connectionString,
-        bool isPostgisEnabled = false,
-        string? healthCheckName = null)
-        where TDbContext : DbContext
-    {
-        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var validatedConnectionString = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName, configuration);
-
-        return services.AddDbContextFactory<TDbContext>(options =>
-        {
-            if (environment.IsDevelopment())
-            {
-                options.EnableSensitiveDataLogging();
-            }
-
-            options
-                .UseSqlServer(
-                    validatedConnectionString,
-                    sqlServerOptions =>
-                    {
-                        sqlServerOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
-                                                                   QuerySplittingBehavior.SplitQuery);
-                        sqlServerOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
-                    })
-                .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
-        });
-    }
-
-    private static string GetDatasource(
-        this IServiceCollection services,
-        bool isPooled,
-        bool isPostgisEnabled,
-        string connectionString,
-        string? healthCheckName,
-        IConfiguration configuration)
-    {
-        services
-            .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled, IsPostgisEnabled = isPostgisEnabled })
-            .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>()
-            .AddSingleton<IDatabaseMigrationService, DatabaseMigrationService>();
-
-        var validatedConnectionString = connectionString.BuildConnectionString();
-
-        services.AddDatabaseHealthCheck(validatedConnectionString, healthCheckName);
-        services.AddSqlServerTelemetry(configuration);
-
-        return validatedConnectionString;
-    }
-
-    private static void AddSqlServerTelemetry(this IServiceCollection services, IConfiguration configuration)
-    {
-        if (services.Any(item => item.ServiceType == typeof(SqlServerTelemetryRegistrationMarker)))
-        {
-            return;
+            return services.WithPooledSqlServerDbContextWithConnectionString<TDbContext>(
+                configuration,
+                environment,
+                connectionString,
+                isPostgisEnabled,
+                healthCheckName);
         }
 
-        services.TryAddSingleton<SqlServerTelemetryRegistrationMarker>();
-        var openTelemetryConfiguration = configuration.GetSection(OpenTelemetryConfiguration.Key).Get<OpenTelemetryConfiguration>();
+        public IServiceCollection WithPooledSqlServerDbContextWithConnectionString<TDbContext>(IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionString,
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
+            where TDbContext : DbContext
+        {
+            var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+            var validatedConnectionString = services.GetDatasource<TDbContext>(
+                true,
+                isPostgisEnabled,
+                connectionString,
+                healthCheckName,
+                configuration);
 
-        services.AddOpenTelemetry()
-            .WithTracing(tracing =>
+            return services.AddDbContextPool<TDbContext>(options =>
             {
-                tracing.AddSqlClientInstrumentation();
-
-                if (openTelemetryConfiguration?.EntityFrameworkEnabled == true)
+                if (environment.IsDevelopment())
                 {
-                    tracing.AddEntityFrameworkCoreInstrumentation(options =>
-                    {
-                        options.EnrichWithIDbCommand = delegate(Activity activity, IDbCommand command)
-                        {
-                            activity.DisplayName = $"{command.CommandType} main";
-                            activity.SetTag("db.type", command.CommandType);
-                            activity.SetTag("db.text", command.CommandText);
-                            activity.SetTag(
-                                "db.parameters",
-                                string.Join(",",
-                                    command.Parameters.OfType<DbParameter>()
-                                        .Select(parameter => $"{parameter.ParameterName}={parameter.Value}")));
-                        };
-                    });
+                    options.EnableSensitiveDataLogging();
                 }
+
+                options
+                    .AddInterceptors(new SelectForUpdateCommandInterceptor())
+                    .UseSqlServer(
+                        validatedConnectionString,
+                        sqlServerOptions =>
+                        {
+                            sqlServerOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                                       QuerySplittingBehavior.SplitQuery);
+                            sqlServerOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+                        })
+                    .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
             });
+        }
+
+        public IServiceCollection WithSqlServerDbContext<TDbContext>(IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionName,
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
+            where TDbContext : DbContext
+        {
+            var connectionString = configuration.GetConnectionString(connectionName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
+            return services.WithSqlServerDbContextWithConnectionString<TDbContext>(
+                configuration,
+                environment,
+                connectionString,
+                isPostgisEnabled,
+                healthCheckName);
+        }
+
+        public IServiceCollection WithSqlServerDbContextWithConnectionString<TDbContext>(IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionString,
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
+            where TDbContext : DbContext
+        {
+            var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+            var validatedConnectionString = services.GetDatasource<TDbContext>(
+                false,
+                isPostgisEnabled,
+                connectionString,
+                healthCheckName,
+                configuration);
+
+            return services.AddDbContext<TDbContext>(options =>
+            {
+                if (environment.IsDevelopment())
+                {
+                    options.EnableSensitiveDataLogging();
+                }
+
+                options
+                    .UseSqlServer(
+                        validatedConnectionString,
+                        sqlServerOptions =>
+                        {
+                            sqlServerOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                                       QuerySplittingBehavior.SplitQuery);
+                            sqlServerOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+                        })
+                    .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
+            });
+        }
+
+        public IServiceCollection WithPooledSqlServerDbContextFactory<TDbContext>(IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionName,
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
+            where TDbContext : DbContext
+        {
+            var connectionString = configuration.GetConnectionString(connectionName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
+            return services.WithPooledSqlServerDbContextFactoryWithConnectionString<TDbContext>(
+                configuration,
+                environment,
+                connectionString,
+                isPostgisEnabled,
+                healthCheckName);
+        }
+
+        public IServiceCollection WithPooledSqlServerDbContextFactoryWithConnectionString<TDbContext>(IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionString,
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
+            where TDbContext : DbContext
+        {
+            var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+            var validatedConnectionString = services.GetDatasource<TDbContext>(
+                true,
+                isPostgisEnabled,
+                connectionString,
+                healthCheckName,
+                configuration);
+
+            return services.AddPooledDbContextFactory<TDbContext>(options =>
+            {
+                if (environment.IsDevelopment())
+                {
+                    options.EnableSensitiveDataLogging();
+                }
+
+                options
+                    .AddInterceptors(new SelectForUpdateCommandInterceptor())
+                    .UseSqlServer(
+                        validatedConnectionString,
+                        sqlServerOptions =>
+                        {
+                            sqlServerOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                                       QuerySplittingBehavior.SplitQuery);
+                            sqlServerOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+                        })
+                    .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
+            });
+        }
+
+        public IServiceCollection WithSqlServerDbContextFactory<TDbContext>(IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionName,
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
+            where TDbContext : DbContext
+        {
+            var connectionString = configuration.GetConnectionString(connectionName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
+            return services.WithSqlServerDbContextFactoryWithConnectionString<TDbContext>(
+                configuration,
+                environment,
+                connectionString,
+                isPostgisEnabled,
+                healthCheckName);
+        }
+
+        public IServiceCollection WithSqlServerDbContextFactoryWithConnectionString<TDbContext>(IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionString,
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
+            where TDbContext : DbContext
+        {
+            var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+            var validatedConnectionString = services.GetDatasource<TDbContext>(
+                false,
+                isPostgisEnabled,
+                connectionString,
+                healthCheckName,
+                configuration);
+
+            return services.AddDbContextFactory<TDbContext>(options =>
+            {
+                if (environment.IsDevelopment())
+                {
+                    options.EnableSensitiveDataLogging();
+                }
+
+                options
+                    .UseSqlServer(
+                        validatedConnectionString,
+                        sqlServerOptions =>
+                        {
+                            sqlServerOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                                       QuerySplittingBehavior.SplitQuery);
+                            sqlServerOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+                        })
+                    .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
+            });
+        }
+
+        private string GetDatasource<TDbContext>(
+            bool isPooled,
+            bool isPostgisEnabled,
+            string connectionString,
+            string? healthCheckName,
+            IConfiguration configuration)
+            where TDbContext : DbContext
+        {
+            services
+                .AddSingleton(new CustomDbContextOptions<TDbContext> { IsPooled = isPooled, IsPostgisEnabled = isPostgisEnabled })
+                .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>()
+                .AddSingleton<IDatabaseMigrationService, DatabaseMigrationService>();
+
+            var validatedConnectionString = connectionString.BuildConnectionString();
+
+            services.AddDatabaseHealthCheck(validatedConnectionString, healthCheckName);
+            services.AddTelemetry(configuration);
+
+            return validatedConnectionString;
+        }
+
+        private void AddTelemetry(IConfiguration configuration)
+        {
+            if (services.Any(item => item.ServiceType == typeof(SqlServerTelemetryRegistrationMarker)))
+            {
+                return;
+            }
+
+            services.TryAddSingleton<SqlServerTelemetryRegistrationMarker>();
+            var openTelemetryConfiguration = configuration.GetSection(OpenTelemetryConfiguration.Key).Get<OpenTelemetryConfiguration>();
+
+            services.AddOpenTelemetry()
+                .WithTracing(tracing =>
+                {
+                    tracing.AddSqlClientInstrumentation();
+
+                    if (openTelemetryConfiguration?.EntityFrameworkEnabled == true)
+                    {
+                        tracing.AddEntityFrameworkCoreInstrumentation(options =>
+                        {
+                            options.EnrichWithIDbCommand = delegate(Activity activity, IDbCommand command)
+                            {
+                                activity.DisplayName = $"{command.CommandType} main";
+                                activity.SetTag("db.type", command.CommandType);
+                                activity.SetTag("db.text", command.CommandText);
+                                activity.SetTag(
+                                    "db.parameters",
+                                    string.Join(",",
+                                        command.Parameters.OfType<DbParameter>()
+                                            .Select(parameter => $"{parameter.ParameterName}={parameter.Value}")));
+                            };
+                        });
+                    }
+                });
+        }
     }
 
     private sealed class SqlServerTelemetryRegistrationMarker;

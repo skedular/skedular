@@ -1,6 +1,6 @@
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 
-namespace Enterprise.Shared.UnitTests.Database.Postgres.PostgreSqlConfigurationExtensionsTests;
+namespace Enterprise.Shared.UnitTests.Database.PostgreSql.PostgreSqlConfigurationExtensionsTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class BuildDataSourceShould

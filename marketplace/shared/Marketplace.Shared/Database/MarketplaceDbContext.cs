@@ -1,5 +1,5 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
 using Marketplace.Shared.Database.Entities;
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Marketplace.Shared.Database;
 
-public class MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options, CustomDbContextOptions customDbContextOptions)
+public class MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options, CustomDbContextOptions<MarketplaceDbContext> customDbContextOptions)
     : DbContextBase<MarketplaceDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
     public DbSet<Customer> Customer { get; set; }
@@ -26,6 +26,7 @@ public class MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options
     public class MarketplaceDbContextDesignFactory : IDesignTimeDbContextFactory<MarketplaceDbContext>
     {
         public MarketplaceDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<MarketplaceDbContext>(true), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
+            new(args.ToDbContextOption<MarketplaceDbContext>(true),
+                new CustomDbContextOptions<MarketplaceDbContext> { IsPooled = false, IsPostgisEnabled = true });
     }
 }

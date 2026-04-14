@@ -5,7 +5,7 @@ using Customer.Shared.Database;
 using Customer.Shared.Workflows;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
@@ -29,7 +29,7 @@ public class Program
 
         services
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb", true)
+            .WithPooledPostgreSqlDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb", true)
             .AddKafkaOutboxBackgroundService<CustomerDbContext>()
             .AddTemporalOutboxBackgroundService<CustomerDbContext>()
             .AddDomainSharedConfigurations(configuration)

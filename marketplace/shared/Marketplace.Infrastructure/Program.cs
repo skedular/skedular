@@ -1,5 +1,5 @@
 ﻿using Enterprise.Shared;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Marketplace.Infrastructure.Services;
 using Marketplace.Shared;
@@ -20,7 +20,7 @@ public class Program
         _ = services.AddKafka(configuration, "kafka");
 
         services
-            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb", true)
+            .WithPooledPostgreSqlDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb", true)
             .AddRepositoryFactory()
             .AddServices()
             .AddJobs();

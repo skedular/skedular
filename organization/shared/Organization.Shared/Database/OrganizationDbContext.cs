@@ -1,5 +1,5 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +8,9 @@ using Organization.Shared.Database.Entities;
 
 namespace Organization.Shared.Database;
 
-public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> options, CustomDbContextOptions customDbContextOptions)
+public class OrganizationDbContext(
+    DbContextOptions<OrganizationDbContext> options,
+    CustomDbContextOptions<OrganizationDbContext> customDbContextOptions)
     : DbContextBase<OrganizationDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
     public DbSet<OrganizationPhysicalAddress> OrganizationPhysicalAddress { get; set; }
@@ -47,6 +49,7 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public class OrganizationDbContextDesignFactory : IDesignTimeDbContextFactory<OrganizationDbContext>
     {
         public OrganizationDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<OrganizationDbContext>(true), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
+            new(args.ToDbContextOption<OrganizationDbContext>(true),
+                new CustomDbContextOptions<OrganizationDbContext> { IsPooled = false, IsPostgisEnabled = true });
     }
 }

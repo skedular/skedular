@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 
-namespace Enterprise.Shared.Database.Postgres;
+namespace Enterprise.Shared.Database.PostgreSql;
 
 public static class HealthCheckExtensions
 {

@@ -1,5 +1,4 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
 using Microsoft.EntityFrameworkCore;
 using Team.Shared.Database;
 using TimeProvider = System.TimeProvider;

@@ -2,7 +2,7 @@
 using Customer.Shared;
 using Customer.Shared.Database;
 using Enterprise.Shared;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 
 namespace Customer.Infrastructure;
@@ -20,7 +20,7 @@ public class Program
         _ = services.AddKafka(configuration, "kafka");
 
         services
-            .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb", true)
+            .WithPooledPostgreSqlDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb", true)
             .AddRepositoryFactory()
             .AddServices()
             .AddJobs();

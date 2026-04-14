@@ -1,6 +1,6 @@
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Booking.Shared.Database;
 
-public class BookingDbContext(DbContextOptions<BookingDbContext> options, CustomDbContextOptions customDbContextOptions)
+public class BookingDbContext(DbContextOptions<BookingDbContext> options, CustomDbContextOptions<BookingDbContext> customDbContextOptions)
     : DbContextBase<BookingDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
     public DbSet<MarketplaceBookingSubscription> MarketplaceBookingSubscription { get; set; }
@@ -49,6 +49,7 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     public class BookingDbContextDesignFactory : IDesignTimeDbContextFactory<BookingDbContext>
     {
         public BookingDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<BookingDbContext>(true), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
+            new(args.ToDbContextOption<BookingDbContext>(true),
+                new CustomDbContextOptions<BookingDbContext> { IsPooled = false, IsPostgisEnabled = true });
     }
 }

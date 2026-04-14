@@ -6,7 +6,7 @@ using Core.Shared;
 using Core.Shared.Database;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Flurl;
 using Microsoft.Extensions.Configuration;
@@ -65,7 +65,7 @@ public class Startup
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 
         services
-            .WithPooledDbContextFactoryWithConnectionString<CoreDbContext>(
+            .WithPooledPostgreSqlDbContextFactoryWithConnectionString<CoreDbContext>(
                 configuration,
                 environment,
                 coreDbConnectionString,

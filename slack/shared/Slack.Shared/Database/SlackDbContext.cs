@@ -1,5 +1,5 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +8,7 @@ using Slack.Shared.Database.Entities;
 
 namespace Slack.Shared.Database;
 
-public class SlackDbContext(DbContextOptions<SlackDbContext> options, CustomDbContextOptions customDbContextOptions)
+public class SlackDbContext(DbContextOptions<SlackDbContext> options, CustomDbContextOptions<SlackDbContext> customDbContextOptions)
     : DbContextBase<SlackDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
     public DbSet<Customer> Customer { get; set; }
@@ -29,6 +29,7 @@ public class SlackDbContext(DbContextOptions<SlackDbContext> options, CustomDbCo
     public class SlackDbContextDesignFactory : IDesignTimeDbContextFactory<SlackDbContext>
     {
         public SlackDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<SlackDbContext>(true), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
+            new(args.ToDbContextOption<SlackDbContext>(true),
+                new CustomDbContextOptions<SlackDbContext> { IsPooled = false, IsPostgisEnabled = true });
     }
 }

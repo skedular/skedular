@@ -2,7 +2,7 @@ using Enterprise.Shared.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Enterprise.Shared.Database.Postgres;
+namespace Enterprise.Shared.Database.PostgreSql;
 
 public static class DbContextExtensions
 {

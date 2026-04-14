@@ -2,7 +2,7 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Database;
 using Booking.Shared.Models;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Database.Postgres;
+using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Time;
 using HotChocolate.Types.Pagination;
