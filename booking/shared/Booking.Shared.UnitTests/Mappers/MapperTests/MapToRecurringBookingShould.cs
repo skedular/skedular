@@ -46,7 +46,7 @@ public class MapToRecurringBookingShould
             InvolvedTeams = [],
             RequestedResources = []
         };
-        var existingBooking = new Booking.Shared.Models.Booking
+        var existingBooking = new Shared.Models.Booking
         {
             Id = "booking-1",
             From = new DateTimeOffset(2026, 4, 12, 22, 0, 0, TimeSpan.Zero),
