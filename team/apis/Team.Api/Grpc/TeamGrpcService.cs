@@ -26,13 +26,15 @@ public class TeamGrpcService(
     ITeamService teamService,
     ITeamAuthorizationService teamAuthorizationService,
     IMapper mapper,
-    ITopicEventSender topicEventSender) : TeamService.TeamServiceBase
+    ITopicEventSender topicEventSender,
+    ILogger<TeamGrpcService> logger) : TeamService.TeamServiceBase
 {
     public override async Task<RaiseGraphqlChangeResponse> RaiseGraphqlChange(RaiseGraphqlChangeInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
         await topicEventSender.SendAsync(request.TopicName, request.Id, context.CancellationToken);
+        logger.LogInformation("gRPC RaiseGraphqlChange sent for topic {TopicName} and id {EntityId}", request.TopicName, request.Id);
 
         return new RaiseGraphqlChangeResponse();
     }
@@ -49,6 +51,7 @@ public class TeamGrpcService(
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
         var team = await teamService.GetByIdAsync(request.Id, true, context.CancellationToken) ?? throw new TeamNotFound();
+        logger.LogInformation("gRPC Admin_Get resolved team {TeamId}", request.Id);
 
         return mapper.MapToGrpcResponse(team);
     }
@@ -58,6 +61,7 @@ public class TeamGrpcService(
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
         var team = await teamService.GetByIdAsync(request.Id, false, context.CancellationToken) ?? throw new TeamNotFound();
+        logger.LogInformation("gRPC Get resolved team {TeamId}", request.Id);
 
         return mapper.MapToGrpcResponse(team);
     }
@@ -104,6 +108,11 @@ public class TeamGrpcService(
 
         connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
 
+        if (totalCount == 0)
+        {
+            logger.LogInformation("gRPC GetPaginatedTeams returned no teams for organization {OrganizationId}", request.Where.OrganizationId);
+        }
+
         return connection;
     }
 
@@ -112,6 +121,7 @@ public class TeamGrpcService(
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
         var permissions = await teamAuthorizationService.GetPermissionsAsync(request.Id, context.CancellationToken);
+        logger.LogInformation("gRPC GetPermissions resolved for team {TeamId}", request.Id);
         return new Permissions
         {
             CanView = permissions.CanView,
@@ -128,7 +138,10 @@ public class TeamGrpcService(
 
         ArgumentException.ThrowIfNullOrEmpty(request.OrganizationId);
 
-        return mapper.MapToGrpcResponse(await teamService.AddAsync(mapper.MapTo(request), context.CancellationToken));
+        var added = await teamService.AddAsync(mapper.MapTo(request), context.CancellationToken);
+        logger.LogInformation("gRPC Add created team {TeamId}", added.Id);
+
+        return mapper.MapToGrpcResponse(added);
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Update(UpdateInput request, ServerCallContext context)
@@ -137,7 +150,10 @@ public class TeamGrpcService(
 
         ArgumentException.ThrowIfNullOrEmpty(request.OrganizationId);
 
-        return mapper.MapToGrpcResponse(await teamService.UpdateAsync(mapper.MapTo(request), true, context.CancellationToken));
+        var updated = await teamService.UpdateAsync(mapper.MapTo(request), true, context.CancellationToken);
+        logger.LogInformation("gRPC Update modified team {TeamId}", updated.Id);
+
+        return mapper.MapToGrpcResponse(updated);
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Remove(
@@ -146,6 +162,9 @@ public class TeamGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await teamService.DeleteAsync(request.Id, context.CancellationToken));
+        var deleted = await teamService.DeleteAsync(request.Id, context.CancellationToken);
+        logger.LogInformation("gRPC Remove deleted team {TeamId}", request.Id);
+
+        return mapper.MapToGrpcResponse(deleted);
     }
 }

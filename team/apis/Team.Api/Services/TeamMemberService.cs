@@ -50,7 +50,8 @@ public class TeamMemberService(
     ITeamOutboxPublisher teamOutboxPublisher,
     IMapper mapper,
     IRandomHelper randomHelper,
-    TimeProvider timeProvider) : ITeamMemberService
+    TimeProvider timeProvider,
+    ILogger<TeamMemberService> logger) : ITeamMemberService
 {
     public async Task<(PaginatedInfo, ICollection<Edge<TeamMember>>, int)> GetPaginatedMembersAsync(
         PaginationInputParam paginationInputParam,
@@ -70,6 +71,11 @@ public class TeamMemberService(
             searchCriteria,
             orderByFields,
             cancellationToken);
+
+        if (totalCount == 0)
+        {
+            logger.LogInformation("Paginated team members query returned no results for team {TeamId}", team.Id);
+        }
 
         return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(team)).ToList(), totalCount);
     }
@@ -110,6 +116,8 @@ public class TeamMemberService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        logger.LogInformation("Team member role updated for member {TeamMemberId} to role {Role}", id, memberRole);
 
         return mapper.MapTo(teamMember, mapper.MapTo(team));
     }
@@ -154,10 +162,12 @@ public class TeamMemberService(
             repositoryFactory.TeamMemberRepository.Update(organizationMember);
         }
 
-        teamOutboxPublisher.PublishTeams(teams.Select(mapper.MapTo), repositoryFactory.UnitOfWork);
+        teamOutboxPublisher.PublishTeams(teams.Select(mapper.MapTo).ToList(), repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        logger.LogInformation("Team member statuses updated for {MemberCount} members to status {Status}", teamMembers.Count, status);
 
         return teamMembers
             .Select(item => mapper.MapTo(item, mapper.MapTo(teams.Single(organization => organization.Id == item.Team.Id))))
@@ -213,6 +223,8 @@ public class TeamMemberService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        logger.LogInformation("Team members update completed for team {TeamId}", existingTeam.Id);
 
         existingTeam.TeamMembers = existingTeam.TeamMembers.Where(item => item.IsNotDeleted()).ToList();
         return mapper.MapTo(existingTeam);
@@ -309,6 +321,8 @@ public class TeamMemberService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
+        logger.LogInformation("Single team member removal completed for member {TeamMemberId}", id);
+
         return mapper.MapTo(existingTeamMember);
     }
 
@@ -348,11 +362,13 @@ public class TeamMemberService(
                 mapped.TeamMembers = mapped.TeamMembers.Where(organizationMember => organizationMember.IsNotDeleted()).ToList();
 
                 return mapped;
-            }),
+            }).ToList(),
             repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+        logger.LogInformation("Batch team member removal completed for {MemberCount} members", teamMembers.Count);
+
         return teamMembers
             .Select(item => mapper.MapTo(item, mapper.MapTo(teams.Single(organization => organization.Id == item.Team.Id))))
             .ToList();
@@ -403,6 +419,8 @@ public class TeamMemberService(
 
                 await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                 await updateTransaction.CommitAsync(cancellationToken);
+
+                logger.LogInformation("Existing deleted team member reactivated for team {TeamId}", existingTeam.Id);
             }
 
             return mapper.MapTo(existingTeamMember);
@@ -430,6 +448,8 @@ public class TeamMemberService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        logger.LogInformation("Team member added to team {TeamId}", existingTeam.Id);
 
         return mapper.MapTo(addedItem);
     }

@@ -2,6 +2,7 @@ using Api.Shared.Services;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 using Team.Shared.Database.Entities;
 using Team.Shared.Repositories;
 
@@ -20,7 +21,8 @@ public class CachedCustomerService(
     ApplicationConfiguration applicationConfiguration,
     IRepositoryFactory repositoryFactory,
     IContext context,
-    HybridCache hybridCache)
+    HybridCache hybridCache,
+    ILogger<CachedCustomerService> logger)
     : ICachedCustomerService
 {
     public async ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken)
@@ -40,6 +42,7 @@ public class CachedCustomerService(
         }
         catch (CustomerNotFound)
         {
+            logger.LogDebug("Customer existence check returned no result for provided verifiable token context");
             return false;
         }
     }
@@ -77,6 +80,7 @@ public class CachedCustomerService(
         }
         catch (CustomerNotFound)
         {
+            logger.LogDebug("Customer lookup returned no result for customer id {CustomerId}", id);
             return null;
         }
     }
@@ -94,8 +98,11 @@ public class CachedCustomerService(
         }
     }
 
-    private async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
+    private async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken)
+    {
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
+        logger.LogDebug("Cache eviction for customer {CustomerId}", id);
+    }
 
     private async ValueTask<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken)
     {
@@ -110,12 +117,16 @@ public class CachedCustomerService(
         }
         catch (CustomerNotFound)
         {
+            logger.LogDebug("Customer lookup returned no result for provided verifiable token context");
             return null;
         }
     }
 
-    private async ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
+    private async ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken)
+    {
         await hybridCache.RemoveAsync(CreateKeyByVerifiableToken(verifiableToken), cancellationToken);
+        logger.LogDebug("Cache eviction for customer verifiable token context");
+    }
 
     private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-id:{id}";
 

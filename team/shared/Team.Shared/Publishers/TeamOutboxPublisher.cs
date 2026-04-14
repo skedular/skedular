@@ -4,6 +4,7 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Models;
 using Enterprise.Shared.Outbox.Kafka;
+using Microsoft.Extensions.Logging;
 using Team.Shared.Mappers;
 using Event = Api.Shared.Clients.Events.Skedular.Team.V1.Event;
 using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Type;
@@ -12,16 +13,17 @@ namespace Team.Shared.Publishers;
 
 public interface ITeamOutboxPublisher
 {
-    void PublishTeams(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork);
+    void PublishTeams(ICollection<Models.Team> teams, IUnitOfWork unitOfWork);
 }
 
 public class TeamOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IMapper mapper,
     IContext context,
-    IKafkaOutboxEventPublisher<Key, Event> publisher) : ITeamOutboxPublisher
+    IKafkaOutboxEventPublisher<Key, Event> publisher,
+    ILogger<TeamOutboxPublisher> logger) : ITeamOutboxPublisher
 {
-    public void PublishTeams(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork)
+    public void PublishTeams(ICollection<Models.Team> teams, IUnitOfWork unitOfWork)
     {
         foreach (var team in teams)
         {
@@ -38,5 +40,7 @@ public class TeamOutboxPublisher(
                 },
                 unitOfWork);
         }
+
+        logger.LogInformation("Team outbox publish completed for {PublishedCount} events", teams.Count);
     }
 }

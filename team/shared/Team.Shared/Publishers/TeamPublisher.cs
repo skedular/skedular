@@ -3,6 +3,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Models;
+using Microsoft.Extensions.Logging;
 using Team.Shared.Mappers;
 using Event = Api.Shared.Clients.Events.Skedular.Team.V1.Event;
 using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Type;
@@ -18,10 +19,12 @@ public class TeamPublisher(
     ApplicationConfiguration applicationConfiguration,
     IMapper mapper,
     IContext context,
-    IKafkaPublisher<Key, Event> publisher)
+    IKafkaPublisher<Key, Event> publisher,
+    ILogger<TeamPublisher> logger)
     : ITeamPublisher
 {
-    public async Task PublishTeamsAsync(ICollection<Models.Team> teams, CancellationToken cancellationToken) =>
+    public async Task PublishTeamsAsync(ICollection<Models.Team> teams, CancellationToken cancellationToken)
+    {
         await Task.WhenAll(teams.Select(team => publisher.PublishAsync(
             new Key { TeamId = team.Id },
             new Event
@@ -34,4 +37,7 @@ public class TeamPublisher(
                 Data = new Data { Team = mapper.MapTo(team) }
             },
             cancellationToken)));
+
+        logger.LogInformation("Team publisher publish completed for {PublishedCount} events", teams.Count);
+    }
 }

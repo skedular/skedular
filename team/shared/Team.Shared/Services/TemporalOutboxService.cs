@@ -3,6 +3,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Temporal;
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
+using Microsoft.Extensions.Logging;
 using Team.Shared.Workflows;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
@@ -23,14 +24,16 @@ public class TemporalOutboxService(
     ITemporalHelperService temporalHelperService,
     IWorkflowIdService workflowIdService,
     ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
-    ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor) : ITemporalOutboxService
+    ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
+    ILogger<TemporalOutboxService> logger) : ITemporalOutboxService
 {
     private static readonly string s_inviteToJoinTeam = typeof(InviteToJoinTeam).ToWorkflowType();
 
     private static readonly string s_inviteToJoinTeamInvitationStatusChangedAsync =
         typeof(InviteToJoinTeam).GetMethod(nameof(InviteToJoinTeam.InvitationStatusChangedAsync))!.ToWorkflowSignalType();
 
-    public void StartWorkflowInviteToJoin(InviteToJoinTeamInput args, IUnitOfWork unitOfWork) =>
+    public void StartWorkflowInviteToJoin(InviteToJoinTeamInput args, IUnitOfWork unitOfWork)
+    {
         temporalOutboxWorkflowExecutor.Execute<InviteToJoinTeam, InviteToJoinTeamInput>(
             args,
             new WorkflowOptions
@@ -43,12 +46,19 @@ public class TemporalOutboxService(
             },
             unitOfWork);
 
-    public void SignalWorkflowInviteToJoinInvitationStatusChanged(string joinInvitationId, IUnitOfWork unitOfWork) =>
+        logger.LogInformation("Temporal outbox enqueued invite-to-join workflow for invitation {JoinInvitationId}", args.JoinInvitationId);
+    }
+
+    public void SignalWorkflowInviteToJoinInvitationStatusChanged(string joinInvitationId, IUnitOfWork unitOfWork)
+    {
         temporalSignalOutboxWorkflowExecutor.Signal(
             workflowIdService.InviteToJoin(joinInvitationId),
             s_inviteToJoinTeamInvitationStatusChangedAsync,
             new WorkflowSignalOptions(),
             unitOfWork);
+
+        logger.LogInformation("Temporal outbox enqueued invitation-status signal for invitation {JoinInvitationId}", joinInvitationId);
+    }
 
     public async Task StartWorkflowAsync(
         string workflowType,
@@ -69,9 +79,12 @@ public class TemporalOutboxService(
                 _ = await temporalClient.StartWorkflowAsync(
                     (InviteToJoinTeam workflow) => workflow.ExecuteAsync(input),
                     workflowOptions);
+
+                logger.LogInformation("Temporal workflow start dispatched for workflow {WorkflowId}", workflowOptions.Id);
             }
             catch (WorkflowAlreadyStartedException)
             {
+                logger.LogInformation("Temporal workflow start skipped because workflow {WorkflowId} already exists", workflowOptions.Id);
             }
         }
     }
@@ -88,12 +101,15 @@ public class TemporalOutboxService(
         {
             if (!await temporalHelperService.IsRunningAsync<InviteToJoinTeam>(workflowId, cancellationToken))
             {
+                logger.LogInformation("Temporal signal skipped because workflow {WorkflowId} is not running", workflowId);
                 return;
             }
 
             await temporalClient
                 .GetWorkflowHandle<InviteToJoinTeam>(workflowId)
                 .SignalAsync(workflow => workflow.InvitationStatusChangedAsync(), workflowSignalOptions);
+
+            logger.LogInformation("Temporal signal dispatched for workflow {WorkflowId}", workflowId);
         }
     }
 }

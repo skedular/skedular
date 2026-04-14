@@ -1,0 +1,165 @@
+contract: team-domain-logging-observability
+version: 1
+execution:
+  verification_sequence:
+    - verify-host-bootstrap-unchanged
+    - apply-logger-constructor-injection
+    - implement-log-level-policy
+    - enforce-safe-structured-properties
+    - update-unit-and-integration-tests
+    - run-focused-team-test-suites
+scope:
+  include:
+    - team/apis/Team.Api/Services
+    - team/apis/Team.Api/Services/Authorization
+    - team/apis/Team.Api/Grpc/TeamGrpcService.cs
+    - team/processors/Team.Processors/Subscribers/CustomerSubscriber.cs
+    - team/shared/Team.Shared/Services/Cache
+    - team/shared/Team.Shared/Publishers/TeamOutboxPublisher.cs
+    - team/shared/Team.Shared/Publishers/TeamPublisher.cs
+    - team/shared/Team.Shared/Activities
+    - team/shared/Team.Shared/Services/TemporalOutboxService.cs
+  exclude:
+    - api-definitions
+    - generated-surfaces
+
+requirements:
+  logger-injection:
+    rule: Constructor MUST include ILogger<TComponent> for all in-scope components
+  log-level-policy:
+    authorization:
+      denied: Warning
+      granted: Information
+    cache:
+      miss: Debug
+      eviction: Debug
+    read-methods:
+      when: denial-or-failure-or-empty-result-only
+    mutation-and-event-success:
+      level: Information
+    exception:
+      when-caught-and-rethrown: Error-before-rethrow
+  safety:
+    allowed-properties:
+      - id
+      - count
+      - boolean
+      - enum
+      - outcome
+    forbidden-properties:
+      - email
+      - full-name
+      - token
+      - claim-value
+      - password
+      - cookie
+      - secret
+      - raw-payload
+
+test-obligations:
+  unit-tests:
+    required: true
+    pattern: AutoFakeItEasyData-with-sut-injection
+    forbid:
+      - NullLogger
+      - ad-hoc-logger-instantiation
+  integration-tests:
+    required-when:
+      - persistence-boundary-changed
+      - event-processing-behaviour-changed
+      - workflow-boundary-changed
+    assertion-rule: repository-layer-no-direct-dbcontext
+
+component-matrix:
+  api-services:
+    - team/apis/Team.Api/Services/TeamService.cs
+    - team/apis/Team.Api/Services/TeamMemberService.cs
+    - team/apis/Team.Api/Services/InvitationService.cs
+    - team/apis/Team.Api/Services/CustomerService.cs
+    - team/apis/Team.Api/Services/WorkaroundService.cs
+  authorization-services:
+    - team/apis/Team.Api/Services/Authorization/OrganizationAuthorizationService.cs
+    - team/apis/Team.Api/Services/Authorization/OrganizationOfferingService.cs
+    - team/apis/Team.Api/Services/Authorization/OrganizationSsoAuthorizationService.cs
+    - team/apis/Team.Api/Services/Authorization/TeamAuthorizationService.cs
+  grpc:
+    - team/apis/Team.Api/Grpc/TeamGrpcService.cs
+  processors:
+    - team/processors/Team.Processors/Subscribers/CustomerSubscriber.cs
+  shared-services:
+    - team/shared/Team.Shared/Services/Cache/CachedTeamService.cs
+    - team/shared/Team.Shared/Services/Cache/CachedOrganizationService.cs
+    - team/shared/Team.Shared/Services/Cache/CachedCustomerService.cs
+    - team/shared/Team.Shared/Services/TemporalOutboxService.cs
+  shared-activities:
+    - team/shared/Team.Shared/Activities/InvitationIntegrations.cs
+    - team/shared/Team.Shared/Activities/EmailIntegrations.cs
+  publishers:
+    - team/shared/Team.Shared/Publishers/TeamOutboxPublisher.cs
+    - team/shared/Team.Shared/Publishers/TeamPublisher.cs
+
+coverage-checklist:
+  setup:
+    - host bootstrap unchanged in Team.Api, Team.Jobs, Team.Processors Program.cs
+    - in-scope component list is complete and explicit
+  implementation:
+    - ILogger<TComponent> injected in each in-scope component
+    - authorization denied uses Warning and granted uses Information
+    - cache miss and eviction use Debug
+    - read methods log only denial/failure/empty-result outcomes
+    - exception is logged before rethrow when caught
+  safety:
+    - no sensitive structured properties (email, token, full-name, claims, credentials)
+  tests:
+    - unit tests updated for constructor dependency changes
+    - no manual NullLogger or ad hoc logger instantiation in tests
+    - integration tests added where persistence/event/workflow boundaries are touched
+  completion:
+    - focused Team test suites pass
+    - implementation coverage recorded and signed off
+
+review-notes:
+  secret-safety-review:
+    date: 2026-04-15
+    result: pass-with-observation
+    details:
+      - reviewed logger templates in Team.Api, Team.Shared, and Team.Processors touched files
+      - no raw token/password/claim/cookie/secret values were logged as structured properties
+      - email-related activity logs only reference invitation IDs and outcomes, not address values
+  exception-policy-review:
+    date: 2026-04-15
+    result: pass
+    details:
+      - no catch-and-rethrow patterns introduced in touched files
+      - catch blocks are return/fallback style in cache and temporal-start duplicate handling
+  existing-subscriber-alignment:
+    date: 2026-04-15
+    result: verified-no-change
+    details:
+      - reviewed `LocationSubscriber` and `OrganizationSubscriber` logging patterns
+      - no sensitive structured properties detected
+      - no behaviour or log output changes introduced in those files
+
+implementation-coverage:
+  snapshot_date: 2026-04-15
+  completed_task_count: 26
+  remaining_task_count: 9
+  completed_focus:
+    - setup and foundational documentation/checklist tasks
+    - logger constructor injection for API, shared, publishers, cache, activities, and grpc surfaces
+    - policy-aligned log level instrumentation (authorization, cache, read-empty outcomes)
+    - compile validation for Team.Api, Team.Shared, Team.Processors, Team.Jobs
+    - focused Team unit test execution recorded in quickstart
+  remaining_focus:
+    - dedicated unit tests for service logging behaviour
+    - dedicated integration tests for mutation/invitation/subscriber logging flows
+    - final subscriber-safe alignment confirmation for existing location/organization subscribers
+
+signoff-checklist:
+  logger-injection-complete: true
+  log-level-policy-applied: true
+  secret-safety-reviewed: true
+  exception-policy-reviewed: true
+  focused-build-validation-passed: true
+  focused-test-validation-passed: true
+  full-story-test-tasks-complete: false

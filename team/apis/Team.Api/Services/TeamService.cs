@@ -45,13 +45,15 @@ public class TeamService(
     ITeamOutboxPublisher teamOutboxPublisher,
     IMapper mapper,
     ITeamMemberService teamMemberService,
-    ICachedTeamService cachedTeamService) : ITeamService
+    ICachedTeamService cachedTeamService,
+    ILogger<TeamService> logger) : ITeamService
 {
     public async Task<Shared.Models.Team> AddAsync(Shared.Models.Team team, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(team.Organization);
 
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        logger.LogInformation("Team add requested by customer {CustomerId}", customerId);
 
         Location? primaryLocation = null;
         if (team.PrimaryLocation is not null)
@@ -144,6 +146,8 @@ public class TeamService(
 
         await cachedTeamService.UpdateByIdAsync(team.Id, cancellationToken);
 
+        logger.LogInformation("Team add completed for team {TeamId}", team.Id);
+
         return team;
     }
 
@@ -152,6 +156,7 @@ public class TeamService(
         ArgumentException.ThrowIfNullOrWhiteSpace(team.Id);
 
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        logger.LogInformation("Team update requested for team {TeamId} by customer {CustomerId}", team.Id, customerId);
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken) ?? throw new TeamNotFound();
         Location? primaryLocation = null;
 
@@ -191,7 +196,11 @@ public class TeamService(
             throw new NoMoreInteractionAllowed();
         }
 
-        return await UpdateInternalAsync(team, existingTeam, customerId, organization, primaryLocation, updateTeamMembers, cancellationToken);
+        var updatedTeam =
+            await UpdateInternalAsync(team, existingTeam, customerId, organization, primaryLocation, updateTeamMembers, cancellationToken);
+        logger.LogInformation("Team update completed for team {TeamId}", updatedTeam.Id);
+
+        return updatedTeam;
     }
 
     public async Task<Shared.Models.Team> DeleteAsync(string id, CancellationToken cancellationToken)
@@ -217,6 +226,8 @@ public class TeamService(
 
         await cachedTeamService.RemoveByIdAsync(existingTeam.Id, cancellationToken);
 
+        logger.LogInformation("Team delete completed for team {TeamId} by customer {CustomerId}", existingTeam.Id, customerId);
+
         return deletedTeam;
     }
 
@@ -233,6 +244,7 @@ public class TeamService(
         var team = await cachedTeamService.GetByIdAsync(id, cancellationToken);
         if (team is null)
         {
+            logger.LogInformation("Team lookup returned no result for team {TeamId}", id);
             return null;
         }
 
@@ -303,6 +315,11 @@ public class TeamService(
             mappedTeams.Add(new Edge<Shared.Models.Team>(await EnrichTeamAsync(customerId, edge.Node, cancellationToken), edge.Cursor));
         }
 
+        if (totalCount == 0)
+        {
+            logger.LogInformation("Paginated team query returned no results");
+        }
+
         return (paginatedInfo, mappedTeams, totalCount);
     }
 
@@ -327,6 +344,11 @@ public class TeamService(
         }
 
         var teams = await repositoryFactory.TeamRepository.GetByCustomerIdUntrackedAsync(customerId, organization?.Id, cancellationToken);
+
+        if (teams.Count == 0)
+        {
+            logger.LogInformation("My teams query returned no teams for customer {CustomerId}", customerId);
+        }
 
         await cachedTeamService.UpdateAsync(teams, cancellationToken);
 

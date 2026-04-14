@@ -1,6 +1,7 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
+using Microsoft.Extensions.Logging;
 using Team.Shared.Services;
 using Team.Shared.Workflows;
 using Temporalio.Api.Enums.V1;
@@ -17,6 +18,7 @@ public class StartWorkflowInviteToJoinShould
         [Frozen] TemporalConfiguration temporalConfiguration,
         [Frozen] IWorkflowIdService workflowIdService,
         [Frozen] ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
+        [Frozen] ILogger<TemporalOutboxService> logger,
         TemporalOutboxService sut,
         InviteToJoinTeamInput args,
         IUnitOfWork unitOfWork,
@@ -34,5 +36,9 @@ public class StartWorkflowInviteToJoinShould
                 options.IdReusePolicy == WorkflowIdReusePolicy.AllowDuplicate &&
                 options.IdConflictPolicy == WorkflowIdConflictPolicy.TerminateExisting),
             unitOfWork)).MustHaveHappenedOnceExactly();
+
+        A.CallTo(logger)
+            .Where(call => call.Method.Name == nameof(ILogger.Log))
+            .MustHaveHappened();
     }
 }

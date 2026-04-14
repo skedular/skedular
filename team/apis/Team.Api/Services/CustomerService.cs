@@ -10,14 +10,24 @@ public interface ICustomerService
     Task<Customer> GetAsync(CancellationToken cancellationToken);
 }
 
-public class CustomerService(IRepositoryFactory repositoryFactory, IContext context) : ICustomerService
+public class CustomerService(IRepositoryFactory repositoryFactory, IContext context, ILogger<CustomerService> logger) : ICustomerService
 {
     public async Task<Customer> GetAsync(CancellationToken cancellationToken)
     {
         var verifiableToken = context.GetVerifiableToken();
-        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+        if (string.IsNullOrWhiteSpace(verifiableToken))
+        {
+            logger.LogWarning("Customer lookup failed because verifiable token is missing");
+            ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+        }
 
-        return await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ??
-               throw new CustomerNotFound();
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken);
+        if (customer is null)
+        {
+            logger.LogInformation("Customer lookup returned no result for provided verifiable token context");
+            throw new CustomerNotFound();
+        }
+
+        return customer;
     }
 }

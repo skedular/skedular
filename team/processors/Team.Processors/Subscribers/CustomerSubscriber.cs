@@ -31,6 +31,7 @@ public class CustomerSubscriber(
                     }
 
                     await HandleCustomerUpsertedEventAsync(customer, existingCustomer, cancellationToken);
+                    logger.LogInformation("Customer upsert event processed for customer {CustomerId}", customer.Id);
                 }
                 break;
 
@@ -47,10 +48,12 @@ public class CustomerSubscriber(
 
                     if (existingCustomer is null)
                     {
+                        logger.LogInformation("Customer delete event skipped because customer {CustomerId} does not exist", customer.Id);
                         return EventSubscriberResults.Success;
                     }
 
                     await HandleCustomerDeletedEventAsync(existingCustomer, cancellationToken);
+                    logger.LogInformation("Customer delete event processed for customer {CustomerId}", customer.Id);
                 }
                 break;
         }

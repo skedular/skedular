@@ -1,10 +1,11 @@
 using Api.Shared.Services.Models;
+using Microsoft.Extensions.Logging;
 using Team.Shared.Repositories;
 using Temporalio.Activities;
 
 namespace Team.Shared.Activities;
 
-public class InvitationIntegrations(IRepositoryFactory repositoryFactory)
+public class InvitationIntegrations(IRepositoryFactory repositoryFactory, ILogger<InvitationIntegrations> logger)
 {
     [Activity]
     public async Task ExpireInvitationAsync(string joinInvitationId)
@@ -14,6 +15,7 @@ public class InvitationIntegrations(IRepositoryFactory repositoryFactory)
         if (joinInvitation is null || joinInvitation.Status != InvitationStatusConstants.Pending)
         {
             // Invitation doesn't exist or was already processed
+            logger.LogInformation("Expire invitation activity skipped for invitation {JoinInvitationId}", joinInvitationId);
             return;
         }
 
@@ -21,5 +23,7 @@ public class InvitationIntegrations(IRepositoryFactory repositoryFactory)
         joinInvitation.Status = InvitationStatusConstants.Expired;
         repositoryFactory.JoinInvitationRepository.Update(joinInvitation);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        logger.LogInformation("Expire invitation activity completed for invitation {JoinInvitationId}", joinInvitationId);
     }
 }

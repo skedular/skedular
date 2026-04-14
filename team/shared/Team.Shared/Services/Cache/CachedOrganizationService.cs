@@ -1,6 +1,7 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Configurations;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 using Team.Shared.Database.Entities;
 using Team.Shared.Repositories;
 
@@ -16,7 +17,8 @@ public interface ICachedOrganizationService
 public class CachedOrganizationService(
     ApplicationConfiguration applicationConfiguration,
     IRepositoryFactory repositoryFactory,
-    HybridCache hybridCache)
+    HybridCache hybridCache,
+    ILogger<CachedOrganizationService> logger)
     : ICachedOrganizationService
 {
     public async ValueTask<Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken)
@@ -52,6 +54,10 @@ public class CachedOrganizationService(
         }
         catch (OrganizationNotFound)
         {
+            logger.LogDebug(
+                "Organization lookup returned no result for organization id {OrganizationId} and custom domain {OrganizationCustomDomain}",
+                id,
+                customDomain);
             return null;
         }
     }
@@ -68,6 +74,8 @@ public class CachedOrganizationService(
                 throw new OrganizationNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
+
+            logger.LogDebug("Cache refresh for organization {OrganizationId}", id);
         }
 
         if (!string.IsNullOrWhiteSpace(customDomain))
@@ -82,6 +90,8 @@ public class CachedOrganizationService(
                 throw new OrganizationNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
+
+            logger.LogDebug("Cache refresh for organization custom domain {OrganizationCustomDomain}", customDomain);
         }
     }
 
@@ -90,11 +100,13 @@ public class CachedOrganizationService(
         if (!string.IsNullOrWhiteSpace(id))
         {
             await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
+            logger.LogDebug("Cache eviction for organization {OrganizationId}", id);
         }
 
         if (!string.IsNullOrWhiteSpace(customDomain))
         {
             await hybridCache.RemoveAsync(CreateKeyByUniqueAlphanumericName(customDomain), cancellationToken);
+            logger.LogDebug("Cache eviction for organization custom domain {OrganizationCustomDomain}", customDomain);
         }
     }
 

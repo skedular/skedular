@@ -1,5 +1,6 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Temporal;
+using Microsoft.Extensions.Logging;
 using Team.Shared.Services;
 using Temporalio.Client;
 
@@ -13,6 +14,7 @@ public class SignalWorkflowInviteToJoinInvitationStatusChangedShould
     public void Enqueue_Signal_With_Correct_Workflow_Id(
         [Frozen] IWorkflowIdService workflowIdService,
         [Frozen] ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
+        [Frozen] ILogger<TemporalOutboxService> logger,
         TemporalOutboxService sut,
         IUnitOfWork unitOfWork,
         string joinInvitationId,
@@ -27,5 +29,9 @@ public class SignalWorkflowInviteToJoinInvitationStatusChangedShould
             A<string>._,
             A<WorkflowSignalOptions>._,
             unitOfWork)).MustHaveHappenedOnceExactly();
+
+        A.CallTo(logger)
+            .Where(call => call.Method.Name == nameof(ILogger.Log))
+            .MustHaveHappened();
     }
 }

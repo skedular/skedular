@@ -5,6 +5,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Email;
 using Enterprise.Shared.Grpc;
 using Flurl;
+using Microsoft.Extensions.Logging;
 using Team.Shared.Configurations;
 using Team.Shared.Repositories;
 using Temporalio.Activities;
@@ -17,7 +18,8 @@ public class EmailIntegrations(
     CustomerConfiguration customerConfiguration,
     IEmailService emailService,
     IRepositoryFactory repositoryFactory,
-    CustomerService.CustomerServiceClient customerServiceClient)
+    CustomerService.CustomerServiceClient customerServiceClient,
+    ILogger<EmailIntegrations> logger)
 {
     [Activity]
     public async Task SendInviteCustomerToJoinTeamNewCustomerAsync(string joinInvitationId)
@@ -26,6 +28,7 @@ public class EmailIntegrations(
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(joinInvitationId, cancellationToken);
         if (joinInvitation is null)
         {
+            logger.LogInformation("Send new-customer invite email skipped for invitation {JoinInvitationId}", joinInvitationId);
             return;
         }
 
@@ -33,6 +36,9 @@ public class EmailIntegrations(
         var inviteeCustomerEmail = joinInvitation.Email;
         if (string.IsNullOrWhiteSpace(inviteeCustomerEmail))
         {
+            logger.LogInformation(
+                "Send new-customer invite email skipped because no invitee email exists for invitation {JoinInvitationId}",
+                joinInvitationId);
             return;
         }
 
@@ -73,6 +79,8 @@ public class EmailIntegrations(
             [],
             [],
             cancellationToken);
+
+        logger.LogInformation("Send new-customer invite email completed for invitation {JoinInvitationId}", joinInvitationId);
     }
 
     [Activity]
@@ -82,6 +90,7 @@ public class EmailIntegrations(
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(joinInvitationId, cancellationToken);
         if (joinInvitation is null)
         {
+            logger.LogInformation("Send existing-customer invite email skipped for invitation {JoinInvitationId}", joinInvitationId);
             return;
         }
 
@@ -89,6 +98,9 @@ public class EmailIntegrations(
         var inviteeCustomerId = joinInvitation.Invitee?.Id;
         if (string.IsNullOrWhiteSpace(inviteeCustomerId))
         {
+            logger.LogInformation(
+                "Send existing-customer invite email skipped because no invitee customer is linked for invitation {JoinInvitationId}",
+                joinInvitationId);
             return;
         }
 
@@ -134,5 +146,7 @@ public class EmailIntegrations(
             [],
             [],
             cancellationToken);
+
+        logger.LogInformation("Send existing-customer invite email completed for invitation {JoinInvitationId}", joinInvitationId);
     }
 }

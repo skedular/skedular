@@ -25,7 +25,7 @@ public interface IInvitationService
     Task<JoinInvitation> CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int )> GetMyPaginatedJoinInvitationsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
         ICollection<JoinTeamInvitationOrder> orderByFields,
@@ -42,7 +42,8 @@ public class InvitationService(
     ITemporalOutboxService temporalOutboxService,
     ITeamOutboxPublisher teamOutboxPublisher,
     ICachedCustomerService cachedCustomerService,
-    ICachedTeamService cachedTeamService) : IInvitationService
+    ICachedTeamService cachedTeamService,
+    ILogger<InvitationService> logger) : IInvitationService
 {
     public async Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
         string teamId,
@@ -51,6 +52,7 @@ public class InvitationService(
     {
         if (emails.Count == 0)
         {
+            logger.LogInformation("Invite members request skipped because email list is empty for team {TeamId}", teamId);
             return [];
         }
 
@@ -74,6 +76,7 @@ public class InvitationService(
             .ToList();
         if (emails.Count == 0)
         {
+            logger.LogInformation("Invite members request produced no new invitations for team {TeamId}", teamId);
             return [];
         }
 
@@ -116,6 +119,8 @@ public class InvitationService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
+        logger.LogInformation("Invitation create flow completed for team {TeamId} with {InvitationCount} invitations", teamId, joinInvitations.Count);
+
         return joinInvitations;
     }
 
@@ -154,6 +159,8 @@ public class InvitationService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
+        logger.LogInformation("Invitation {InvitationId} accepted for team {TeamId}", joinInvitation.Id, team.Id);
+
         return mapper.MapTo(joinInvitation);
     }
 
@@ -176,6 +183,8 @@ public class InvitationService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        logger.LogInformation("Invitation {InvitationId} rejected", joinInvitation.Id);
 
         return mapper.MapTo(joinInvitation);
     }
@@ -203,16 +212,25 @@ public class InvitationService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
+        logger.LogInformation("Invitation {InvitationId} cancelled", joinInvitation.Id);
+
         return mapper.MapTo(joinInvitation);
     }
 
     public async Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        return await repositoryFactory.JoinInvitationRepository.PendingInvitationsCountAsync(
+        var count = await repositoryFactory.JoinInvitationRepository.PendingInvitationsCountAsync(
             customer.Id,
             customer.Identities.Where(item => !string.IsNullOrWhiteSpace(item.Email)).Select(item => item.Email!).ToList(),
             cancellationToken);
+
+        if (count == 0)
+        {
+            logger.LogInformation("Pending invitations query returned zero results for customer {CustomerId}", customer.Id);
+        }
+
+        return count;
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
@@ -230,6 +248,10 @@ public class InvitationService(
             searchCriteria,
             orderByFields,
             cancellationToken);
+        if (totalCount == 0)
+        {
+            logger.LogInformation("Paginated invitations query returned zero results for customer {CustomerId}", customerId);
+        }
 
         return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
     }
