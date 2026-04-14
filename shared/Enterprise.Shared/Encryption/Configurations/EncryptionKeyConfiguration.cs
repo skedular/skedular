@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Security.Configurations;
+namespace Enterprise.Shared.Encryption.Configurations;
 
 public class EncryptionKeyConfiguration
 {

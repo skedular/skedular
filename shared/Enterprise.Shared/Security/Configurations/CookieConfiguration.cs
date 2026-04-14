@@ -1,3 +1,5 @@
+using Enterprise.Shared.Encryption.Configurations;
+
 namespace Enterprise.Shared.Security.Configurations;
 
 public class CookieConfiguration

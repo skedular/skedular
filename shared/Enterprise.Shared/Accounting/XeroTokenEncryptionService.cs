@@ -1,5 +1,5 @@
 using Enterprise.Shared.Accounting.Configurations;
-using Enterprise.Shared.Security;
+using Enterprise.Shared.Encryption;
 using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Accounting;

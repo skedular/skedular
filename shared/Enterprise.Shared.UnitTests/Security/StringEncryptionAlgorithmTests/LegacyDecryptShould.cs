@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
-using Enterprise.Shared.Security;
-using Enterprise.Shared.Security.Configurations;
+using Enterprise.Shared.Encryption;
+using Enterprise.Shared.Encryption.Configurations;
 using SimpleBase;
 
 namespace Enterprise.Shared.UnitTests.Security.StringEncryptionAlgorithmTests;

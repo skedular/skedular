@@ -1,4 +1,4 @@
-using Enterprise.Shared.Security.Configurations;
+using Enterprise.Shared.Encryption.Configurations;
 
 namespace Enterprise.Shared.Accounting.Configurations;
 

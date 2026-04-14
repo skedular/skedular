@@ -1,10 +1,10 @@
 using System.Security.Cryptography;
 using System.Text;
-using Enterprise.Shared.Security.Configurations;
+using Enterprise.Shared.Encryption.Configurations;
 using Microsoft.Extensions.Logging;
 using SimpleBase;
 
-namespace Enterprise.Shared.Security;
+namespace Enterprise.Shared.Encryption;
 
 public interface IStringEncryptionAlgorithm
 {

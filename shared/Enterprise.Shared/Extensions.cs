@@ -7,6 +7,7 @@ using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Email;
+using Enterprise.Shared.Encryption;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Helpers;
 using Enterprise.Shared.Image;
@@ -155,7 +156,7 @@ public static class Extensions
         ///     Registers: configuration loading, <see cref="Configurations.ApplicationConfiguration" />,
         ///     OpenTelemetry, service discovery, HTTP resilience (optional), authentication/authorization,
         ///     CORS, ProblemDetails, HttpContextAccessor, essential singletons
-        ///     (<see cref="Security.IStringEncryptionAlgorithm" />, <see cref="IVersionService" />,
+        ///     (<see cref="IStringEncryptionAlgorithm" />, <see cref="IVersionService" />,
         ///     <see cref="IImageHelper" />, <see cref="Context.Context" />,
         ///     <see cref="IRandomHelper" />, <see cref="IO.IDirectoryService" />,
         ///     <see cref="Email.IEmailService" />, <see cref="TimeProvider" />),

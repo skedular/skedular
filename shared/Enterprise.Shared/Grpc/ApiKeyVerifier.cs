@@ -25,19 +25,23 @@ public class GrpcAuthenticator(IHttpContextAccessor httpContextAccessor, IContex
         logger.LogDebug("gRPC API key verified successfully");
 
         var verifiableTokens = httpContextAccessor.HttpContext?.Request.Headers[Constants.VerifiableTokenKey];
-        if (verifiableTokens is not null && !string.IsNullOrWhiteSpace(verifiableTokens.Value.FirstOrDefault()))
+        if (verifiableTokens is null || string.IsNullOrWhiteSpace(verifiableTokens.Value.FirstOrDefault()))
         {
-            var splitVerifiableTokens = verifiableTokens.Value
-                .First()!
-                .Split(",")
-                .Select(item => item.Trim())
-                .Where(item => !string.IsNullOrWhiteSpace(item))
-                .ToList();
-            if (splitVerifiableTokens.Count != 0)
-            {
-                logger.LogDebug("Applying verifiable token from gRPC headers. TokenCount={TokenCount}", splitVerifiableTokens.Count);
-                context.SetVerifiableToken(splitVerifiableTokens.First());
-            }
+            return;
         }
+
+        var splitVerifiableTokens = verifiableTokens.Value
+            .First()!
+            .Split(",")
+            .Select(item => item.Trim())
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .ToList();
+        if (splitVerifiableTokens.Count == 0)
+        {
+            return;
+        }
+
+        logger.LogDebug("Applying verifiable token from gRPC headers. TokenCount={TokenCount}", splitVerifiableTokens.Count);
+        context.SetVerifiableToken(splitVerifiableTokens.First());
     }
 }

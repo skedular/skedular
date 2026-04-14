@@ -1,3 +1,4 @@
+using Enterprise.Shared.Encryption;
 using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Configurations;
 
