@@ -107,11 +107,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@stripe/react-stripe-js':
-        specifier: ^6.1.0
-        version: 6.1.0(@stripe/stripe-js@9.1.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: ^6.2.0
+        version: 6.2.0(@stripe/stripe-js@9.2.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@stripe/stripe-js':
-        specifier: ^9.1.0
-        version: 9.1.0
+        specifier: ^9.2.0
+        version: 9.2.0
       '@vercel/analytics':
         specifier: ^2.0.1
         version: 2.0.1(next@16.2.3(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(nuxt@4.3.1(@azure/identity@4.13.0)(@parcel/watcher@2.5.6)(@types/node@25.6.0)(@vue/compiler-sfc@3.5.30)(cac@6.7.14)(commander@13.1.0)(db0@0.3.4)(eslint@9.39.2(jiti@2.6.1))(ioredis@5.10.0)(magicast@0.5.2)(optionator@0.9.4)(rollup@4.59.0)(terser@5.46.0)(typescript@6.0.2)(vite@7.3.1(@types/node@25.6.0)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2))(yaml@2.8.2))(react@19.2.5)(vue-router@4.6.4(vue@3.5.30(typescript@6.0.2)))(vue@3.5.30(typescript@6.0.2))
@@ -161,8 +161,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(logrocket@12.1.0)(react@19.2.5)
       mui-rff:
-        specifier: ^8.2.24
-        version: 8.2.24(b481a3d3fa8d6af1877b985bceeb2e76)
+        specifier: ^8.2.25
+        version: 8.2.25(b481a3d3fa8d6af1877b985bceeb2e76)
       next:
         specifier: ^16.2.3
         version: 16.2.3(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -267,8 +267,8 @@ importers:
         specifier: ^29.0.2
         version: 29.0.2
       prettier:
-        specifier: ^3.8.2
-        version: 3.8.2
+        specifier: ^3.8.3
+        version: 3.8.3
       relay-compiler:
         specifier: ^20.1.1
         version: 20.1.1
@@ -325,8 +325,8 @@ importers:
         specifier: ^16.2.3
         version: 16.2.3(eslint@9.39.2(jiti@2.6.1))(typescript@6.0.2)
       prettier:
-        specifier: ^3.8.2
-        version: 3.8.2
+        specifier: ^3.8.3
+        version: 3.8.3
       typescript:
         specifier: ^6.0.2
         version: 6.0.2
@@ -2758,15 +2758,15 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@stripe/react-stripe-js@6.1.0':
-    resolution: {integrity: sha512-LbKbRv4+wUSHLb5VNxqiYcKaqXPvTju0bJaF0RrzH0h4+aKWDXAk4RzUBcpNxxj8KtjuxICElANs1Li7aTv1IQ==}
+  '@stripe/react-stripe-js@6.2.0':
+    resolution: {integrity: sha512-GSCErjljZEQv9LaxP30xGOwstcMyyUzb5JyihXwvjOU95yrfhbiPG4K2KkwxYxn+WY0/AyHsRhPPoGRw7urBzg==}
     peerDependencies:
-      '@stripe/stripe-js': '>=9.0.0 <10.0.0'
+      '@stripe/stripe-js': '>=9.2.0 <10.0.0'
       react: '>=16.8.0 <20.0.0'
       react-dom: '>=16.8.0 <20.0.0'
 
-  '@stripe/stripe-js@9.1.0':
-    resolution: {integrity: sha512-v51LoEfZNiNS/5DcarWPCYgn24w4dqwwALR4GTbMW/N0DDzzj4DgYNoixX6PYvpt6uIJMucGUabn/BHhylggIQ==}
+  '@stripe/stripe-js@9.2.0':
+    resolution: {integrity: sha512-YSzLC0t6VS9MDdPTynSMqU8IxrItFUjkDORALFT6sSMR/XZ5Vgm3RDp/Gk7z727MC4A9s4MFVel0gF0c7+kdrg==}
     engines: {node: '>=12.16'}
 
   '@swc/helpers@0.5.15':
@@ -6005,13 +6005,13 @@ packages:
   muggle-string@0.4.1:
     resolution: {integrity: sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==}
 
-  mui-rff@8.2.24:
-    resolution: {integrity: sha512-GBWSLzF/OyYXvflxOqAJzO9zk3xh9BprVpoo/pWHWfyxbt//5EW0gPjeDU+9h5ukxecW9/Tg7LfGCmxtOrGJhg==}
+  mui-rff@8.2.25:
+    resolution: {integrity: sha512-JGYAbl7n3KxeneW/n9HgmijYkc3ydleyeqNAhhIrlOF26wEx35P4KpAlgv348a5Pis0nPKDE2K1ObiUdApzEAg==}
     peerDependencies:
       '@emotion/react': ^11.14.0
       '@emotion/styled': ^11.14.1
-      '@mui/material': ^7.3.9
-      '@mui/system': ^7.3.9
+      '@mui/material': ^7.3.10
+      '@mui/system': ^7.3.10
       '@mui/x-date-pickers': ^8.27.2
       final-form: ^5.0.0
       react: ^19.2.4
@@ -6589,6 +6589,11 @@ packages:
 
   prettier@3.8.2:
     resolution: {integrity: sha512-8c3mgTe0ASwWAJK+78dpviD+A8EqhndQPUBpNUIPt6+xWlIigCwfN01lWr9MAede4uqXGTEKeQWTvzb3vjia0Q==}
+    engines: {node: '>=14'}
+    hasBin: true
+
+  prettier@3.8.3:
+    resolution: {integrity: sha512-7igPTM53cGHMW8xWuVTydi2KO233VFiTNyF5hLJqpilHfmn8C8gPf+PS7dUT64YcXFbiMGZxS9pCSxL/Dxm/Jw==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -10606,14 +10611,14 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@stripe/react-stripe-js@6.1.0(@stripe/stripe-js@9.1.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
+  '@stripe/react-stripe-js@6.2.0(@stripe/stripe-js@9.2.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
     dependencies:
-      '@stripe/stripe-js': 9.1.0
+      '@stripe/stripe-js': 9.2.0
       prop-types: 15.8.1
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
-  '@stripe/stripe-js@9.1.0': {}
+  '@stripe/stripe-js@9.2.0': {}
 
   '@swc/helpers@0.5.15':
     dependencies:
@@ -14745,7 +14750,7 @@ snapshots:
   muggle-string@0.4.1:
     optional: true
 
-  mui-rff@8.2.24(b481a3d3fa8d6af1877b985bceeb2e76):
+  mui-rff@8.2.25(b481a3d3fa8d6af1877b985bceeb2e76):
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.5)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
@@ -15699,6 +15704,8 @@ snapshots:
   prelude-ls@1.2.1: {}
 
   prettier@3.8.2: {}
+
+  prettier@3.8.3: {}
 
   pretty-bytes@7.1.0:
     optional: true
