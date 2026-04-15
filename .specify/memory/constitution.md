@@ -1,22 +1,24 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: (none) → 1.0.0  (initial ratification)
+Version change: 1.0.0 → 1.1.0
 
-Modified principles: N/A — first version
+Modified principles:
+  - III. Proportionate and Correct Testing → III. Proportionate Testing and Logging Verification
+  - V. Change Safety and Pattern Consistency (expanded for observability checks)
+  - Added: VI. Mandatory Feature Logging and Observability
 
 Added sections:
-  - Core Principles (I–V)
-  - Stack Reference
-  - Governance
+  - Logging and Observability Expectations (under Governance)
 
-Removed sections: N/A
+Removed sections: none
 
 Templates reviewed and alignment status:
-  ✅ .specify/templates/plan-template.md  — Constitution Check section present; gates below now apply
-  ✅ .specify/templates/spec-template.md  — Requirements and testing sections align with Principle III
-  ✅ .specify/templates/tasks-template.md — Task phases and test-optionality wording align with Principle III
-  ✅ .specify/templates/constitution-template.md — source template; no update required
+  ✅ .specify/templates/plan-template.md  — added mandatory logging constitution gate
+  ✅ .specify/templates/spec-template.md  — added mandatory observability/logging requirement section
+  ✅ .specify/templates/tasks-template.md — added required logging tasks in foundational and per-story phases
+  ✅ README.md — reviewed; no direct constitution-reference text required changes
+  ⚠ pending: .specify/templates/commands/*.md (directory not present in this repository)
 
 Deferred TODOs: none
 -->
@@ -57,7 +59,7 @@ independent deployability, and prevent coupling that accumulates into architectu
 **Review gate**: New code that reads another domain's database, bypasses a service boundary, or
 duplicates shared infrastructure logic requires explicit justification before merging.
 
-### III. Proportionate and Correct Testing
+### III. Proportionate Testing and Logging Verification
 
 Every backend change MUST include unit tests. Changes that cross persistence or integration
 boundaries (database, Kafka, Temporal, external HTTP) MUST also include integration tests.
@@ -65,7 +67,9 @@ System/end-to-end tests are reserved for true cross-domain or real-infrastructur
 Integration tests MUST NOT access `DbContext` or Entity Framework directly; all persistence
 assertions MUST go through repository or query-layer methods. Web UI changes MUST use Vitest
 and React Testing Library. Tests MUST be scenario-driven and assert observable behaviour, not
-internal implementation details.
+internal implementation details. Any new or changed critical workflow MUST include tests that
+verify expected logging side effects at the appropriate boundary (for example, warning/error
+paths and key lifecycle transitions).
 
 **Rationale**: Proportionate testing keeps the suite fast and meaningful without under-testing
 behaviour that is genuinely risky. Banning raw EF in integration tests keeps assertions
@@ -101,7 +105,9 @@ New work MUST favour consistency with existing patterns over introducing paralle
 Any deviation from established patterns — new frameworks, alternative persistence approaches,
 alternative event serialisation — requires explicit justification documented in the relevant
 plan or ADR. Exceptions to any principle in this constitution MUST be rare, explicit, and
-justified; undocumented exceptions are violations.
+justified; undocumented exceptions are violations. Any feature design that omits operational
+logging for its core flows is treated as a pattern violation unless an explicit exception is
+approved and documented.
 
 **Rationale**: A large monorepo with many domains becomes unmaintainable when each domain
 independently reinvents patterns. Explicit justification for exceptions keeps the architecture
@@ -109,6 +115,26 @@ legible and deviations visible to reviewers.
 
 **Review gate**: Plan and task artefacts for any feature that introduces a new shared pattern or
 deviates from an existing one MUST include a brief justification note before tasks are accepted.
+
+### VI. Mandatory Feature Logging and Observability
+
+Every feature MUST include structured logging as a first-class deliverable. "Feature complete"
+means business behaviour, tests, and logs are all present. Logging MUST cover:
+
+- start and completion of core feature workflows
+- meaningful state transitions and branch decisions
+- integration boundaries (external APIs, Kafka, Temporal, databases) with correlation context
+- failure and recovery paths with actionable detail for operators
+
+Logs MUST use consistent structured properties, avoid sensitive payload leakage, and follow
+existing domain logging conventions in `shared/` and domain-specific libraries. Silent features
+without operationally useful logs are non-compliant.
+
+**Rationale**: Reliable operations and incident response depend on reconstructing feature
+behaviour from logs without source-level debugging in production.
+
+**Review gate**: A feature PR MUST identify where logging was added or updated, and reviewers
+MUST reject changes that add feature behaviour without corresponding structured logs.
 
 ## Stack Reference
 
@@ -143,9 +169,14 @@ contributors. Spec, plan, and task artefacts produced by `/speckit.specify`, `/s
 and `/speckit.tasks` MUST reference the applicable review gates. Implementation PRs are expected
 to have been checked against every applicable gate before review is requested.
 
+**Logging and observability expectations**: For every feature, logging is mandatory rather than
+optional polish. Planning artefacts MUST call out logging scope. Task breakdowns MUST include
+explicit logging implementation work. Verification MUST include checks that logs are emitted for
+successful and failure paths of the feature's primary workflows.
+
 **Non-compliance**: A violation identified during review blocks merge until resolved or until an
 explicit, documented exception is agreed and committed alongside the change.
 
 ---
 
-**Version**: 1.0.0 | **Ratified**: 2026-04-14 | **Last Amended**: 2026-04-14
+**Version**: 1.1.0 | **Ratified**: 2026-04-14 | **Last Amended**: 2026-04-15

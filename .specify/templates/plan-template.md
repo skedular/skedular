@@ -45,6 +45,9 @@ Answer each gate. If a gate fails, resolve the issue before proceeding.
       and British spelling in user-facing copy.
 - [ ] **V. Pattern Consistency** — Does this feature introduce a new pattern or deviate from an existing one?
       If yes, a brief justification MUST be documented here before tasks are accepted.
+- [ ] **VI. Logging** — Does this feature add or change behaviour?
+      If yes, confirm structured logging scope is explicitly planned for core workflows,
+      state transitions, integration boundaries, and failure paths.
 
 ## Project Structure
 
