@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Web;
 using System.Xml;
 using System.Xml.Linq;
+using Enterprise.Shared.Cookie;
 using Enterprise.Shared.Security.Sso.Models;
 using Flurl.Http;
 using Microsoft.AspNetCore.Http;

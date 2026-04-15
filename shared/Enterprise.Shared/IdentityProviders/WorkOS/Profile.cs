@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Enterprise.Shared.Security.WorkOS;
+namespace Enterprise.Shared.IdentityProviders.WorkOS;
 
 public class Profile : global::WorkOS.Profile
 {

@@ -1,14 +1,15 @@
 using System.IdentityModel.Tokens.Jwt;
 using EmailValidation;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Security.Configurations;
+using Enterprise.Shared.IdentityProviders.Configurations;
+using Enterprise.Shared.Security.Token;
 using Flurl.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Enterprise.Shared.Security.Token;
+namespace Enterprise.Shared.IdentityProviders.Cognito;
 
 public interface ICognitoTokenService : ITokenService;
 
@@ -25,7 +26,7 @@ public class CognitoTokenService(
         : identityProvidersConfiguration.Cognito.Audiences.Split(",").Select(audience => audience.Trim())
             .Where(audience => !string.IsNullOrWhiteSpace(audience)).ToList();
 
-    private readonly Cognito _cognitoConfiguration = identityProvidersConfiguration.Cognito!;
+    private readonly Configurations.Cognito _cognitoConfiguration = identityProvidersConfiguration.Cognito!;
 
     public async Task VerifyTokenAsync(string token, CancellationToken cancellationToken)
     {

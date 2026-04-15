@@ -1,7 +1,7 @@
 using Enterprise.Shared.Encryption;
 using Enterprise.Shared.Encryption.Configurations;
 
-namespace Enterprise.Shared.UnitTests.Security.StringEncryptionAlgorithmTests;
+namespace Enterprise.Shared.UnitTests.Encryption.StringEncryptionAlgorithmTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class EncryptDecryptShould

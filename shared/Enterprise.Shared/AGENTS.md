@@ -21,7 +21,8 @@ Every module exposes its own `Add*` / `Use*` extension methods. Call only the on
 | Method                                                      | Where defined                   | What it registers                                                                                                                                             |
 |-------------------------------------------------------------|---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `builder.AddCoreServices<TProgram>()`                       | `Extensions.cs`                 | Config, `ApplicationConfiguration`, OpenTelemetry, service discovery, HTTP timeout, auth/authz, CORS, problem details, core singletons, liveness health check |
-| `builder.AddIdentityTokenProviders()`                       | `Extensions.cs`                 | Each token provider registered only when its config section is present: WorkOS, Cognito, Google, Azure Entra, cookie encryption                               |
+| `builder.AddIdentityTokenProviders()`                       | `Extensions.cs`                 | Each token provider registered only when its config section is present: WorkOS, Cognito, Google, Azure Entra; also aggregates the registered `ITokenService`s |
+| `builder.AddCookieServices()`                               | `Extensions.cs`                 | `CookieConfiguration` + `ICookieEncryptionService` when the `Cookie` config section is present                                                                |
 | `builder.AddHybridCaching()`                                | `Extensions.cs`                 | Redis-backed `HybridCache` with GeoJSON-aware JSON options — requires Redis to be registered separately                                                       |
 | `builder.AddApiControllers<TProgram>()`                     | `Extensions.cs`                 | MVC controllers, camelCase JSON, Swagger/NSwag, validation error shapes                                                                                       |
 | `builder.AddSerilogLogging<TProgram>()`                     | `Extensions.cs`                 | Serilog host integration, clears default log providers                                                                                                        |
@@ -35,7 +36,7 @@ Every module exposes its own `Add*` / `Use*` extension methods. Call only the on
 | `services.AddStripe(...)`                                   | `Payment/Extensions.cs`         | Stripe SDK service interfaces                                                                                                                                 |
 | `services.AddXeroServices(...)`                             | `Accounting/Extensions.cs`      | `IXeroSdkClientFactory`, `IXeroTokenEncryptionService`                                                                                                        |
 | `services.AddMcpServer(...)`                                | `Ai/Extentions.cs`              | Model Context Protocol server                                                                                                                                 |
-| `services.AddSecurity()`                                    | `Security/Extensions.cs`        | `IEnumerable<ITokenService>` aggregated from registered providers, gRPC authenticator                                                                         |
+| `services.AddSecurity()`                                    | `Security/Extensions.cs`        | gRPC authenticator and the security middleware surface; expects token providers to already be registered                                                      |
 | `services.AddSso()`                                         | `Security/Sso/Extensions.cs`    | SAML assertion consumer + login request factory                                                                                                               |
 | `services.AddKafkaOutboxBackgroundService<TDbContext>()`    | `Outbox/Kafka/Extensions.cs`    | Background service that drains `KafkaOutbox` rows to Kafka                                                                                                    |
 | `services.AddKafkaOutboxService()`                          | `Outbox/Kafka/Extensions.cs`    | Open-generic `IKafkaOutboxEventPublisher<,>` — already called by `AddKafka`                                                                                   |
@@ -69,9 +70,23 @@ Each subfolder has its own `AGENTS.md` with module-specific rules:
 - `Kafka/` — Kafka producer/consumer/outbox infrastructure
 - `Outbox/` — Transactional outbox pattern (Kafka sub-module and Temporal sub-module)
 - `Payment/` — Stripe SDK service registration
-- `Security/` — Multi-provider token validation, SAML SSO, cookie encryption
+- `Cookie/` — Cookie configuration and `ICookieEncryptionService`
+- `Encryption/` — Shared encryption primitives and `IStringEncryptionAlgorithm`
+- `IdentityProviders/` — Provider-specific token validators and related configuration
+- `Security/` — Security middleware pipeline, SAML SSO, gRPC authentication, and shared token contracts
 - `Telemetry/` — OpenTelemetry traces, metrics, context propagation
 - `Temporal/` — Temporal workflow worker and client registration
+
+## Auth And Encryption Layout
+
+- Keep auth and encryption code split by concern:
+    - `Cookie/` for cookie-specific encryption wiring
+    - `Encryption/` for reusable low-level encryption primitives
+    - `IdentityProviders/` for WorkOS, Cognito, Google, and Azure Entra token validators
+    - `Security/` for middleware, SSO, gRPC auth, and `ITokenService` consumption
+- Do not re-couple cookie services into `AddIdentityTokenProviders()`.
+- Do not move provider implementations into `Security/`; that folder is now the consumer/pipeline boundary rather than
+  the provider-implementation home.
 
 ## Cross-Cutting Helpers
 

@@ -1,6 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Security.Configurations;
+using Enterprise.Shared.IdentityProviders.Configurations;
+using Enterprise.Shared.Security;
+using Enterprise.Shared.Security.Token;
 using Flurl.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,9 +10,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using WorkOS;
-using Profile = Enterprise.Shared.Security.WorkOS.Profile;
 
-namespace Enterprise.Shared.Security.Token;
+namespace Enterprise.Shared.IdentityProviders.WorkOS;
 
 // ReSharper disable once InconsistentNaming
 public interface IWorkOSTokenService : ITokenService;

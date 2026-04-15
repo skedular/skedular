@@ -2,21 +2,22 @@
 
 ## Purpose
 
-Provides multi-provider JWT/SAML token validation, cookie encryption, SAML SSO, and a gRPC
-authenticator. Each identity provider is registered only when its configuration section is present,
-so hosts that do not use a given provider pay no runtime cost.
+Provides the security pipeline surface: request token validation middleware, SAML SSO, shared token
+contracts, and a gRPC authenticator. Provider implementations and cookie encryption now live in
+their own sibling modules and are composed into this pipeline by the root `Enterprise.Shared`
+extensions.
 
 ## Sub-modules
 
-| Sub-module      | Namespace                          | Entry point                                               |
-|-----------------|------------------------------------|-----------------------------------------------------------|
-| Core security   | `Enterprise.Shared.Security`       | `services.AddSecurity()` + `app.UseSecurity()`            |
-| SSO (SAML)      | `Enterprise.Shared.Security.Sso`   | `services.AddSso()` + `app.UseSso()`                      |
-| Token providers | `Enterprise.Shared.Security.Token` | Registered automatically by `AddIdentityTokenProviders()` |
+| Sub-module      | Namespace                          | Entry point                                    |
+|-----------------|------------------------------------|------------------------------------------------|
+| Core security   | `Enterprise.Shared.Security`       | `services.AddSecurity()` + `app.UseSecurity()` |
+| SSO (SAML)      | `Enterprise.Shared.Security.Sso`   | `services.AddSso()` + `app.UseSso()`           |
+| Token contracts | `Enterprise.Shared.Security.Token` | Consumed by registered token-provider modules  |
 
 ## Registration
 
-### Token providers (called from `AddIdentityTokenProviders()`)
+### Token providers (called from root `AddIdentityTokenProviders()`)
 
 ```csharp
 // In root Extensions.cs — each provider registered only when its config section exists
@@ -32,8 +33,8 @@ Supported providers and their config keys:
 | Google         | `IdentityProviders:Google`  | `IGoogleTokenService`                                   |
 | Azure Entra ID | `Azure:Entra`               | `IAzureEntraTokenService`, `IGraphServiceClientFactory` |
 
-All providers implement `ITokenService`. `AddSecurity()` aggregates the registered ones into
-`IEnumerable<ITokenService>` for multi-provider validation pipelines.
+All providers implement `ITokenService`. Root `AddIdentityTokenProviders()` aggregates the
+registered ones into `IEnumerable<ITokenService>` for multi-provider validation pipelines.
 
 ### Core security middleware
 
@@ -48,12 +49,12 @@ instances and enriches the request context with the resolved identity.
 ### Cookie encryption
 
 ```csharp
-// Registered automatically when CookieConfiguration section is present
-// Config section key: "Cookie"
+// Registered separately by the root Extensions.cs helper
+builder.AddCookieServices();
 ```
 
-`ICookieEncryptionService` uses `IStringEncryptionAlgorithm` internally. The encryption key comes from
-`CookieConfiguration.EncryptionKey`.
+`ICookieEncryptionService` no longer lives under `Security/`. It is owned by the `Cookie/` module and
+uses `IStringEncryptionAlgorithm` from `Encryption/`.
 
 ### SAML SSO
 
@@ -67,8 +68,10 @@ app.UseSso();   // adds SsoContextEnricherMiddleware
 
 ## Encryption Boundary
 
-- `IStringEncryptionAlgorithm` — low-level cipher shared by cookie encryption and Xero token encryption.
-- `ICookieEncryptionService` — cookie-specific wrapper. Do not share with Xero token encryption.
+- `IStringEncryptionAlgorithm` lives under `Encryption/` and is the low-level cipher shared by cookie
+  encryption and Xero token encryption.
+- `ICookieEncryptionService` lives under `Cookie/` and remains the cookie-specific wrapper. Do not
+  share it with Xero token encryption.
 - `IXeroTokenEncryptionService` lives in `Accounting/` with its own key configuration.
 
 ## gRPC Authentication
@@ -97,6 +100,8 @@ incoming gRPC calls. Use `GrpcExtensions.CreateMetadata(...)` to attach credenti
 ## Rules
 
 - Do not reuse `ICookieEncryptionService` for Xero token encryption — they must stay separate.
-- `ITokenService` implementations must be registered before `AddSecurity()` is called; the aggregation
-  snapshot is built at startup.
+- `ITokenService` implementations must be registered before the app starts serving requests; root
+  `AddIdentityTokenProviders()` builds the aggregated `IEnumerable<ITokenService>` at startup.
+- Do not add cookie-encryption registration logic back into `Security/Extensions.cs`; keep that split in
+  the root `Enterprise.Shared/Extensions.cs` composition layer.
 - Do not bypass `SecurityContextEnricherMiddleware` by reading tokens manually in controllers.

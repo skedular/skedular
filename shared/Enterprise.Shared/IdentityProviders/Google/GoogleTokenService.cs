@@ -1,10 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Security.Configurations;
+using Enterprise.Shared.IdentityProviders.Configurations;
+using Enterprise.Shared.Security.Token;
 using Google.Apis.Auth;
 using Microsoft.Extensions.Logging;
 
-namespace Enterprise.Shared.Security.Token;
+namespace Enterprise.Shared.IdentityProviders.Google;
 
 public interface IGoogleTokenService : ITokenService;
 

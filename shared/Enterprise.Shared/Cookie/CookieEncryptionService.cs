@@ -1,8 +1,8 @@
+using Enterprise.Shared.Cookie.Configurations;
 using Enterprise.Shared.Encryption;
-using Enterprise.Shared.Security.Configurations;
 using Microsoft.Extensions.Logging;
 
-namespace Enterprise.Shared.Security;
+namespace Enterprise.Shared.Cookie;
 
 public interface ICookieEncryptionService
 {

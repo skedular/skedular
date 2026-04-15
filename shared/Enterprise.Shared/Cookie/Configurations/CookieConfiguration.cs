@@ -1,6 +1,6 @@
 using Enterprise.Shared.Encryption.Configurations;
 
-namespace Enterprise.Shared.Security.Configurations;
+namespace Enterprise.Shared.Cookie.Configurations;
 
 public class CookieConfiguration
 {

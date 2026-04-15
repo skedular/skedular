@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using EmailValidation;
 using Enterprise.Shared.Azure.Configurations;
 using Enterprise.Shared.Context;
+using Enterprise.Shared.Security.Token;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -9,7 +10,7 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Enterprise.Shared.Security.Token;
+namespace Enterprise.Shared.IdentityProviders.Azure;
 
 public interface IAzureEntraTokenService : ITokenService;
 

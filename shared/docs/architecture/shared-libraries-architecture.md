@@ -101,7 +101,10 @@ flowchart TB
         end
 
         subgraph Auth["Auth / Identity"]
-            Sec["Security\n• SSO / JWT helpers\n• WorkOS integration\n• Token helpers\n• CookieEncryptionService\n• StringEncryptionAlgorithm\n• ICustomerHelper"]
+            Sec["Security\n• Security middleware\n• SSO / JWT helpers\n• Token contracts\n• gRPC authenticator\n• ICustomerHelper"]
+            Idp["IdentityProviders\n• WorkOS / Cognito / Google / Azure Entra validators\n• provider config"]
+            Ck["Cookie\n• CookieEncryptionService\n• CookieConfiguration"]
+            Enc["Encryption\n• StringEncryptionAlgorithm\n• encryption key primitives"]
         end
 
         subgraph Integrations["External integrations"]
@@ -292,7 +295,10 @@ flowchart LR
 | `shared/Enterprise.Shared/Kafka/` | Enterprise.Shared | Kafka produce/consume helpers |
 | `shared/Enterprise.Shared/Temporal/` | Enterprise.Shared | Temporal configuration + helpers |
 | `shared/Enterprise.Shared/Database/` | Enterprise.Shared | EF Core base entities, repositories, interceptors |
-| `shared/Enterprise.Shared/Security/` | Enterprise.Shared | SSO, JWT, WorkOS, encryption |
+| `shared/Enterprise.Shared/Security/` | Enterprise.Shared | Security middleware, SSO, JWT contracts, gRPC auth |
+| `shared/Enterprise.Shared/IdentityProviders/` | Enterprise.Shared | WorkOS, Cognito, Google, Azure Entra token validators |
+| `shared/Enterprise.Shared/Cookie/` | Enterprise.Shared | Cookie encryption wrapper and cookie config |
+| `shared/Enterprise.Shared/Encryption/` | Enterprise.Shared | Shared low-level encryption primitives |
 | `shared/Enterprise.Shared/Cache/` | Enterprise.Shared | Redis helpers |
 | `shared/Enterprise.Shared/GraphQL/` | Enterprise.Shared | HotChocolate helpers |
 | `shared/Enterprise.Shared/Payment/` | Enterprise.Shared | Stripe helpers |

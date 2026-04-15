@@ -6,16 +6,21 @@ using Enterprise.Shared.Azure.Configurations;
 using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
+using Enterprise.Shared.Cookie;
+using Enterprise.Shared.Cookie.Configurations;
 using Enterprise.Shared.Email;
 using Enterprise.Shared.Encryption;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Helpers;
+using Enterprise.Shared.IdentityProviders.Azure;
+using Enterprise.Shared.IdentityProviders.Cognito;
+using Enterprise.Shared.IdentityProviders.Configurations;
+using Enterprise.Shared.IdentityProviders.Google;
+using Enterprise.Shared.IdentityProviders.WorkOS;
 using Enterprise.Shared.Image;
 using Enterprise.Shared.IO;
 using Enterprise.Shared.Logging;
 using Enterprise.Shared.Random;
-using Enterprise.Shared.Security;
-using Enterprise.Shared.Security.Configurations;
 using Enterprise.Shared.Security.Token;
 using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Version;
@@ -226,12 +231,11 @@ public static class Extensions
 
         /// <summary>
         ///     Registers identity token provider services based on configuration presence.
-        ///     Conditionally wires up: WorkOS (<see cref="Security.Token.IWorkOSTokenService" />),
-        ///     Cognito (<see cref="Security.Token.ICognitoTokenService" />),
-        ///     Google (<see cref="Security.Token.IGoogleTokenService" />),
+        ///     Conditionally wires up: WorkOS (<see cref="IWorkOSTokenService" />),
+        ///     Cognito (<see cref="ICognitoTokenService" />),
+        ///     Google (<see cref="IGoogleTokenService" />),
         ///     Azure Entra (<see cref="Azure.Graph.IGraphServiceClientFactory" />,
-        ///     <see cref="Security.Token.IAzureEntraTokenService" />), and cookie encryption
-        ///     (<see cref="Security.ICookieEncryptionService" />).
+        ///     <see cref="IAzureEntraTokenService" />), and cookie encryption
         ///     Each provider is registered only when its corresponding configuration section exists.
         /// </summary>
         public WebApplicationBuilder AddIdentityTokenProviders()
@@ -251,12 +255,12 @@ public static class Extensions
                         .AddSingleton<IWorkOSTokenService, WorkOSTokenService>();
                 }
 
-                if (identityProvidersConfiguration.Cognito is not null)
+                if (identityProvidersConfiguration.Cognito is not null && identityProvidersConfiguration.Cognito.JwksUri is not null)
                 {
                     services.AddSingleton<ICognitoTokenService, CognitoTokenService>();
                 }
 
-                if (identityProvidersConfiguration.Google is not null)
+                if (identityProvidersConfiguration.Google is not null && !string.IsNullOrWhiteSpace(identityProvidersConfiguration.Google.Issuer))
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(identityProvidersConfiguration.Google.Issuer);
 
@@ -272,6 +276,46 @@ public static class Extensions
                     .AddSingleton<IGraphServiceClientFactory, GraphServiceClientFactory>()
                     .AddSingleton<IAzureEntraTokenService, AzureEntraTokenService>();
             }
+
+            services
+                .AddSingleton<IEnumerable<ITokenService>>(sp =>
+                {
+                    var tokenServices = new List<ITokenService>();
+
+                    var workOsTokenService = sp.GetService<IWorkOSTokenService>();
+                    if (workOsTokenService is not null)
+                    {
+                        tokenServices.Add(workOsTokenService);
+                    }
+
+                    var cognitoTokenService = sp.GetService<ICognitoTokenService>();
+                    if (cognitoTokenService is not null)
+                    {
+                        tokenServices.Add(cognitoTokenService);
+                    }
+
+                    var googleTokenService = sp.GetService<IGoogleTokenService>();
+                    if (googleTokenService is not null)
+                    {
+                        tokenServices.Add(googleTokenService);
+                    }
+
+                    var azureEntraTokenService = sp.GetService<IAzureEntraTokenService>();
+                    if (azureEntraTokenService is not null)
+                    {
+                        tokenServices.Add(azureEntraTokenService);
+                    }
+
+                    return tokenServices;
+                });
+
+            return builder;
+        }
+
+        public WebApplicationBuilder AddCookieServices()
+        {
+            var services = builder.Services;
+            var configuration = builder.Configuration;
 
             var cookieConfiguration = configuration.GetSection(CookieConfiguration.Key).Get<CookieConfiguration>();
             if (cookieConfiguration is not null)
@@ -415,6 +459,7 @@ public static class Extensions
             builder
                 .AddCoreServices<TProgram>(enableHttpResilience)
                 .AddIdentityTokenProviders()
+                .AddCookieServices()
                 .AddHybridCaching()
                 .AddApiControllers<TProgram>()
                 .AddSerilogLogging<TProgram>();

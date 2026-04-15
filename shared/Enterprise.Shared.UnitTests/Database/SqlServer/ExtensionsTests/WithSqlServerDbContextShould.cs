@@ -36,7 +36,7 @@ public class WithSqlServerDbContextShould
 
         var customOptions = provider.GetRequiredService<CustomDbContextOptions<SqlServerTestDbContext>>();
         customOptions.IsPooled.ShouldBeFalse();
-        customOptions.IsPostgisEnabled.ShouldBeTrue();
+        customOptions.IsPostgisEnabled.ShouldBeFalse();
 
         provider.GetRequiredService<IOptions<HealthCheckServiceOptions>>().Value.Registrations.Single().Name.ShouldBe("sqlserver");
     }

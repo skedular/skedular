@@ -5,13 +5,13 @@ using Enterprise.Shared.Email;
 using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.GraphQL.Configurations;
 using Enterprise.Shared.GraphQL.Types;
+using Enterprise.Shared.IdentityProviders.Configurations;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Payment.Configurations;
-using Enterprise.Shared.Security.Configurations;
 using Enterprise.Shared.Security.Sso.Models;
 using Enterprise.Shared.Temporal.Configurations;
 
@@ -157,8 +157,8 @@ public class ConfigurationPocoShould
         var config = new IdentityProvidersConfiguration
         {
             Cognito = new Cognito { JwksUri = new Uri("https://cognito.example.com"), Issuer = "iss", Audiences = "aud" },
-            Google = new Shared.Security.Configurations.Google { ApplicationId = "appId", Issuer = "google" },
-            WorkOS = new Shared.Security.Configurations.WorkOS
+            Google = new IdentityProviders.Configurations.Google { ApplicationId = "appId", Issuer = "google" },
+            WorkOS = new IdentityProviders.Configurations.WorkOS
             {
                 JwksUri = new Uri("https://workos.example.com"), Issuer = "workos", ApiKey = "key"
             }
