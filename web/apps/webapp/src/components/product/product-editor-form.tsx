@@ -15,7 +15,7 @@ import MultipleChoicesAmenities from '@/components/organization/multiple-choices
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { createCancellationRefundRule, createPricingOption, isEventType, PricingOptionForm, ProductDetails } from '@/components/product/product-editor-shared';
-import { GuidedEditorProgress, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
+import { GuidedEditorProgress, PageHeaderPanel, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -46,11 +46,17 @@ type Props = {
   paletteMode: 'dark' | 'light';
 };
 
-const steps = [
+const baseSteps = [
   { id: 'basics', title: 'Basics', subtitle: 'Identity, media, tags, currency' },
   { id: 'offers', title: 'Offers', subtitle: 'Sellable options, pricing, payment, cancellation' },
   { id: 'review', title: 'Review', subtitle: 'What customers and admins will understand' },
 ] as const;
+
+type ProductEditorStep = {
+  id: (typeof baseSteps)[number]['id'];
+  title: string;
+  subtitle: string;
+};
 
 const prettifyEnum = (value?: string | null) =>
   (value ?? 'Not set')
@@ -145,7 +151,7 @@ const ProductEditorForm = ({
   onSetPrimaryFeatureImage,
   paletteMode,
 }: Props) => {
-  const [activeStep, setActiveStep] = useState<(typeof steps)[number]['id']>('basics');
+  const [activeStep, setActiveStep] = useState<ProductEditorStep['id']>('basics');
   const [expandedOfferId, setExpandedOfferId] = useState<string | false>(values.pricingOptions[0]?.id ?? false);
   const isEventProduct = isEventType(values?.type);
   const validationItems = useMemo(() => Array.from(new Set(summarizeErrors(errors))).slice(0, 8), [errors]);
@@ -155,6 +161,21 @@ const ProductEditorForm = ({
     pricingOptions.findIndex((pricingOption) => pricingOption.id === expandedOfferId),
   );
   const activeOffer = pricingOptions[activeOfferIndex] ?? null;
+  const pageTitle = mode === 'add' ? 'Create Product' : 'Edit Product';
+  const pageDescription =
+    mode === 'add'
+      ? 'Move through the setup in a clearer order: basics first, then offers, then a final review.'
+      : 'Update the product in focused sections instead of editing one long block.';
+  const submitLabel = mode === 'add' ? 'Create' : 'Update';
+  const steps: ProductEditorStep[] = baseSteps.map((step) =>
+    step.id === 'review'
+      ? {
+          ...step,
+          title: mode === 'add' ? 'Review & Create' : 'Review & Update',
+          subtitle: mode === 'add' ? 'Final check before creating the product' : 'Final check before updating the product',
+        }
+      : step,
+  );
 
   const changeNestedField = (path: string, value: unknown) => {
     form.change(path, value);
@@ -380,7 +401,7 @@ const ProductEditorForm = ({
   );
 
   const renderBasics = () => (
-    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
+    <StackColumn spacing={2}>
       <SettingsSectionCard title="Product Media" description="Set the visual identity first. The cover image anchors the whole product.">
         <FormFieldLabel label="Feature Images">
           <StackColumn>
@@ -464,7 +485,7 @@ const ProductEditorForm = ({
   );
 
   const renderOffers = () => (
-    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
+    <StackColumn spacing={2}>
       <SettingsSectionCard
         title="Offer Setup"
         description="Choose or create one offer at a time. This page is slower on purpose so the pricing, payments, and cancellation rules stay readable."
@@ -553,9 +574,15 @@ const ProductEditorForm = ({
   );
 
   const renderReview = () => (
-    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-      <SectionIconTypography label="Review" />
-      <BodyIconTypography label="Check the high-level shape before saving. This is the compact product story your team needs to understand." />
+    <StackColumn>
+      <SectionIconTypography label={mode === 'add' ? 'Review & Create' : 'Review & Update'} />
+      <BodyIconTypography
+        label={
+          mode === 'add'
+            ? 'Check the high-level shape before creating the product. This is the compact product story your team needs to understand.'
+            : 'Check the high-level shape before updating the product. This is the compact product story your team needs to understand.'
+        }
+      />
       <Divider />
 
       <Card variant="outlined">
@@ -583,77 +610,70 @@ const ProductEditorForm = ({
 
   return (
     <FormStackColumn onSubmit={onSubmit}>
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 360px' }, gap: 3 }}>
-        <StackColumn>
-          <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-            <GuidedEditorProgress
-              title={mode === 'add' ? 'Create Product' : 'Edit Product'}
-              description={
-                mode === 'add'
-                  ? 'Move through the product setup in a clearer order: basics first, then offers, then a final review.'
-                  : 'Update the product in focused sections instead of editing one long block.'
-              }
-              steps={steps}
-              activeStepId={activeStep}
-              onStepChange={(stepId) => setActiveStep(stepId as (typeof steps)[number]['id'])}
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+        <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', backgroundColor: 'transparent', gap: 2 }}>
+          <PageHeaderPanel eyebrow="Product setup" title={pageTitle} description={pageDescription}>
+            <SmallIconTypography
+              label={mode === 'add' ? 'Basics first, then offers, then a final check before saving.' : 'Update the product in smaller sections instead of one long form.'}
             />
-          </StackColumn>
+          </PageHeaderPanel>
 
-          {activeStep === 'basics' ? renderBasics() : null}
-          {activeStep === 'offers' ? renderOffers() : null}
-          {activeStep === 'review' ? renderReview() : null}
+          <GuidedEditorProgress steps={steps} activeStepId={activeStep} onStepChange={(stepId) => setActiveStep(stepId as ProductEditorStep['id'])} variant="compact" />
 
-          <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-            <StackRow sx={{ gap: 1, justifyContent: 'space-between', flexWrap: 'wrap' }}>
-              <StackRow sx={{ gap: 1 }}>
-                {activeStep !== 'basics' ? (
-                  <Button variant="outlined" onClick={() => setActiveStep(steps[Math.max(0, steps.findIndex((step) => step.id === activeStep) - 1)]!.id)}>
-                    Back
-                  </Button>
-                ) : null}
-                {activeStep !== 'review' ? (
-                  <Button variant="outlined" onClick={() => setActiveStep(steps[Math.min(steps.length - 1, steps.findIndex((step) => step.id === activeStep) + 1)]!.id)}>
-                    Continue
-                  </Button>
-                ) : null}
-              </StackRow>
-              <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                {mode === 'add' ? 'Create Product' : 'Save Changes'}
-              </Button>
-            </StackRow>
-          </StackColumn>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 2 }}>
+            <StackColumn>
+              {activeStep === 'basics' ? renderBasics() : null}
+              {activeStep === 'offers' ? renderOffers() : null}
+              {activeStep === 'review' ? renderReview() : null}
+
+              {activeStep === 'review' ? (
+                <StackColumn>
+                  <StackRow sx={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                      {submitLabel}
+                    </Button>
+                  </StackRow>
+                </StackColumn>
+              ) : null}
+            </StackColumn>
+
+            <StickyReviewRail
+              title="Review rail"
+              description="Keep the product story and validation visible while editing longer sections."
+              top={24}
+              sx={{ pl: { xs: 0, xl: 0 }, pr: 0, pt: 0 }}
+            >
+              <SettingsSectionCard title="Summary" description="A compact view of the product your team is shaping.">
+                <StackColumn spacing={1.5}>
+                  <LeadIconTypography label={values.title?.trim() || 'Untitled product'} />
+                  <SmallIconTypography label={values.subTitle?.trim() || 'Add a subtitle so people understand the offer quickly.'} />
+                  <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
+                    <Chip size="small" label={prettifyEnum(values.type)} />
+                    <Chip size="small" label={values.currency || 'No currency'} />
+                    <Chip size="small" label={`${featureImages.length} image${featureImages.length === 1 ? '' : 's'}`} />
+                  </StackRow>
+                  <Divider />
+                  <BodyIconTypography label={`Offers: ${values.pricingOptions.length}`} />
+                  {values.pricingOptions.map((pricingOption, index) => (
+                    <Box key={pricingOption.id} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25 }}>
+                      <OfferSummary pricingOption={pricingOption} index={index} />
+                    </Box>
+                  ))}
+                </StackColumn>
+              </SettingsSectionCard>
+
+              <SettingsSectionCard title="Validation" description="Surface the most important issues without forcing the user back to the top of the form.">
+                <StackColumn spacing={1.25}>
+                  {validationItems.length === 0 ? (
+                    <SmallIconTypography label="No blocking validation issues yet." />
+                  ) : (
+                    validationItems.map((item) => <SmallIconTypography key={item} label={item} />)
+                  )}
+                </StackColumn>
+              </SettingsSectionCard>
+            </StickyReviewRail>
+          </Box>
         </StackColumn>
-
-        <StickyReviewRail title="Review rail" description="Keep the product story and validation visible while editing longer sections.">
-          <SettingsSectionCard title="Summary" description="A compact view of the product your team is shaping.">
-            <StackColumn spacing={1.5}>
-              <LeadIconTypography label={values.title?.trim() || 'Untitled product'} />
-              <SmallIconTypography label={values.subTitle?.trim() || 'Add a subtitle so people understand the offer quickly.'} />
-              <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
-                <Chip size="small" label={prettifyEnum(values.type)} />
-                <Chip size="small" label={values.currency || 'No currency'} />
-                <Chip size="small" label={`${featureImages.length} image${featureImages.length === 1 ? '' : 's'}`} />
-              </StackRow>
-              <Divider />
-              <BodyIconTypography label={`Offers: ${values.pricingOptions.length}`} />
-              {values.pricingOptions.map((pricingOption, index) => (
-                <Box key={pricingOption.id} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25 }}>
-                  <OfferSummary pricingOption={pricingOption} index={index} />
-                </Box>
-              ))}
-            </StackColumn>
-          </SettingsSectionCard>
-
-          <SettingsSectionCard title="Validation" description="Surface the most important issues without forcing the user back to the top of the form.">
-            <StackColumn spacing={1.25}>
-              {validationItems.length === 0 ? (
-                <SmallIconTypography label="No blocking validation issues yet." />
-              ) : (
-                validationItems.map((item) => <SmallIconTypography key={item} label={item} />)
-              )}
-            </StackColumn>
-          </SettingsSectionCard>
-        </StickyReviewRail>
       </Box>
     </FormStackColumn>
   );

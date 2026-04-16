@@ -1,5 +1,4 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
-import { AppBarWithStackColumn } from '@/components/commons';
 import { listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import ProductEditorForm from '@/components/product/product-editor-form';
@@ -675,10 +674,6 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
     });
   };
 
-  const handleCloseClick = () => {
-    router.back();
-  };
-
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
     setFeatureImages((prev) => [response, ...prev]);
     setPrimaryFeatureImage((prevPrimary) => prevPrimary ?? response);
@@ -708,73 +703,71 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Product Information">
-          <Form
-            onSubmit={handleProductDetailUpdateClick}
-            initialValues={{
-              title,
-              subTitle,
-              includedFeatures,
-              type,
-              currency,
-              productTagIds,
-              amenityIds,
-              pricingOptions:
-                rootData.product.pricingOptions.length > 0
-                  ? rootData.product.pricingOptions.map((pricingOption) => ({
-                      id: uuid(),
-                      title: pricingOption.listingMetadata.title ?? null,
-                      subTitle: pricingOption.listingMetadata.subTitle ?? null,
-                      cadence: pricingOption.purchaseCadence,
-                      price: pricingOption.price.toString(),
-                      supportsSubscriptionAutoRenewal: pricingOption.supportsSubscriptionAutoRenewal,
-                      numberOfResourcesToBook: pricingOption.numberOfResourcesToBook.toString(),
-                      minDurationMinutes: pricingOption.minDurationMinutes ? pricingOption.minDurationMinutes.toString() : '',
-                      maxDurationMinutes: pricingOption.maxDurationMinutes ? pricingOption.maxDurationMinutes.toString() : '',
-                      cancellationPolicyType: pricingOption.cancellationPolicyType,
-                      cancellationRefundRules: normalizeCancellationRefundRules(pricingOption.cancellationPolicyType, pricingOption.cancellationRefundRules).map((item) => ({
-                        minutesBefore: item.minutesBefore.toString(),
-                        refundPercentage: item.refundPercentage.toString(),
-                      })),
-                      isTaxInclusive: pricingOption.isTaxInclusive,
-                      maxAllowedResourcesLockTimePaidViaCard: pricingOption.maxAllowedResourcesLockTimePaidViaCard.toString(),
-                      maxAllowedResourcesLockTimePaidViaBankTransfer: (pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
-                      billingMode: (pricingOption as unknown as { billingMode?: string }).billingMode ?? 'NOT_SET',
-                      acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((item) => item),
-                    }))
-                  : [createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer)],
-            }}
-            validate={validateProductDetails}
-            render={({ handleSubmit, values, form, errors }) => {
-              debounceSetTitle(values!.title);
-              debounceSetSubTitle(values!.subTitle);
-              debounceSetIncludedFeatures(values!.includedFeatures);
-              debounceSetType(values!.type);
-              debounceSetCurrency(values!.currency);
-              debounceSetProductTagIds(values!.productTagIds);
-              debounceSetAmenityIds(values!.amenityIds);
+        <Form
+          onSubmit={handleProductDetailUpdateClick}
+          initialValues={{
+            title,
+            subTitle,
+            includedFeatures,
+            type,
+            currency,
+            productTagIds,
+            amenityIds,
+            pricingOptions:
+              rootData.product.pricingOptions.length > 0
+                ? rootData.product.pricingOptions.map((pricingOption) => ({
+                    id: uuid(),
+                    title: pricingOption.listingMetadata.title ?? null,
+                    subTitle: pricingOption.listingMetadata.subTitle ?? null,
+                    cadence: pricingOption.purchaseCadence,
+                    price: pricingOption.price.toString(),
+                    supportsSubscriptionAutoRenewal: pricingOption.supportsSubscriptionAutoRenewal,
+                    numberOfResourcesToBook: pricingOption.numberOfResourcesToBook.toString(),
+                    minDurationMinutes: pricingOption.minDurationMinutes ? pricingOption.minDurationMinutes.toString() : '',
+                    maxDurationMinutes: pricingOption.maxDurationMinutes ? pricingOption.maxDurationMinutes.toString() : '',
+                    cancellationPolicyType: pricingOption.cancellationPolicyType,
+                    cancellationRefundRules: normalizeCancellationRefundRules(pricingOption.cancellationPolicyType, pricingOption.cancellationRefundRules).map((item) => ({
+                      minutesBefore: item.minutesBefore.toString(),
+                      refundPercentage: item.refundPercentage.toString(),
+                    })),
+                    isTaxInclusive: pricingOption.isTaxInclusive,
+                    maxAllowedResourcesLockTimePaidViaCard: pricingOption.maxAllowedResourcesLockTimePaidViaCard.toString(),
+                    maxAllowedResourcesLockTimePaidViaBankTransfer: (pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
+                    billingMode: (pricingOption as unknown as { billingMode?: string }).billingMode ?? 'NOT_SET',
+                    acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((item) => item),
+                  }))
+                : [createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer)],
+          }}
+          validate={validateProductDetails}
+          render={({ handleSubmit, values, form, errors }) => {
+            debounceSetTitle(values!.title);
+            debounceSetSubTitle(values!.subTitle);
+            debounceSetIncludedFeatures(values!.includedFeatures);
+            debounceSetType(values!.type);
+            debounceSetCurrency(values!.currency);
+            debounceSetProductTagIds(values!.productTagIds);
+            debounceSetAmenityIds(values!.amenityIds);
 
-              return (
-                <ProductEditorForm
-                  mode="edit"
-                  onSubmit={handleSubmit}
-                  rootDataRelay={rootData}
-                  values={values as ProductDetails}
-                  errors={errors}
-                  form={form as unknown as { change: (name: string, nextValue: unknown) => void }}
-                  requiredFields={requiredFields}
-                  organizationCustomDomain={organizationCustomDomain}
-                  featureImages={featureImages}
-                  primaryFeatureImage={primaryFeatureImage}
-                  onUploadCompleted={handleFeatureImageUploadCompleted}
-                  onRemoveFeatureImage={handleRemoveFeatureImage}
-                  onSetPrimaryFeatureImage={handleSetPrimaryFeatureImage}
-                  paletteMode={paletteMode}
-                />
-              );
-            }}
-          />
-        </AppBarWithStackColumn>
+            return (
+              <ProductEditorForm
+                mode="edit"
+                onSubmit={handleSubmit}
+                rootDataRelay={rootData}
+                values={values as ProductDetails}
+                errors={errors}
+                form={form as unknown as { change: (name: string, nextValue: unknown) => void }}
+                requiredFields={requiredFields}
+                organizationCustomDomain={organizationCustomDomain}
+                featureImages={featureImages}
+                primaryFeatureImage={primaryFeatureImage}
+                onUploadCompleted={handleFeatureImageUploadCompleted}
+                onRemoveFeatureImage={handleRemoveFeatureImage}
+                onSetPrimaryFeatureImage={handleSetPrimaryFeatureImage}
+                paletteMode={paletteMode}
+              />
+            );
+          }}
+        />
       </Box>
     </Box>
   );

@@ -1,5 +1,4 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
-import { AppBarWithStackColumn } from '@/components/commons';
 import { listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -315,7 +314,8 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
       .required('Please add at least one pricing option.'),
   });
 
-const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain, onAdded, onCancel }: Props) => {
+const AddProduct = (props: Props) => {
+  const { queryReference, onReloadRequired, organizationCustomDomain, onAdded } = props;
   const rootData = usePreloadedQuery<addProduct_rootQuery>(RootQuery, queryReference);
   const [commitAddProduct] = useMutation<addProduct_addProductMutation>(graphql`
     mutation addProduct_addProductMutation($input: AddProductInput!) @raw_response_type {
@@ -412,11 +412,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
 
   const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>([]);
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(null);
-
-  const handleCloseClick = () => {
-    onCancel();
-    onReloadRequired();
-  };
 
   const handleProductAddClick = ({ title, subTitle, includedFeatures, type, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
     const id = uuid();
@@ -577,50 +572,48 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBarWithStackColumn onClose={handleCloseClick} label="Add Product">
-          <Form
-            onSubmit={handleProductAddClick}
-            initialValues={{
-              title,
-              subTitle,
-              includedFeatures,
-              type,
-              currency,
-              productTagIds,
-              amenityIds,
-              pricingOptions: [createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer)],
-            }}
-            validate={validateProductDetails}
-            render={({ handleSubmit, values, form, errors }) => {
-              debounceSetTitle(values!.title);
-              debounceSetSubTitle(values!.subTitle);
-              debounceSetIncludedFeatures(values!.includedFeatures);
-              debounceSetType(values!.type);
-              debounceSetCurrency(values!.currency);
-              debounceSetProductTagIds(values!.productTagIds);
-              debounceSetAmenityIds(values!.amenityIds);
+        <Form
+          onSubmit={handleProductAddClick}
+          initialValues={{
+            title,
+            subTitle,
+            includedFeatures,
+            type,
+            currency,
+            productTagIds,
+            amenityIds,
+            pricingOptions: [createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer)],
+          }}
+          validate={validateProductDetails}
+          render={({ handleSubmit, values, form, errors }) => {
+            debounceSetTitle(values!.title);
+            debounceSetSubTitle(values!.subTitle);
+            debounceSetIncludedFeatures(values!.includedFeatures);
+            debounceSetType(values!.type);
+            debounceSetCurrency(values!.currency);
+            debounceSetProductTagIds(values!.productTagIds);
+            debounceSetAmenityIds(values!.amenityIds);
 
-              return (
-                <ProductEditorForm
-                  mode="add"
-                  onSubmit={handleSubmit}
-                  rootDataRelay={rootData}
-                  values={values as ProductDetails}
-                  errors={errors}
-                  form={form as unknown as { change: (name: string, nextValue: unknown) => void }}
-                  requiredFields={requiredFields}
-                  organizationCustomDomain={organizationCustomDomain}
-                  featureImages={featureImages}
-                  primaryFeatureImage={primaryFeatureImage}
-                  onUploadCompleted={handleFeatureImageUploadCompleted}
-                  onRemoveFeatureImage={handleRemoveFeatureImage}
-                  onSetPrimaryFeatureImage={handleSetPrimaryFeatureImage}
-                  paletteMode={paletteMode}
-                />
-              );
-            }}
-          />
-        </AppBarWithStackColumn>
+            return (
+              <ProductEditorForm
+                mode="add"
+                onSubmit={handleSubmit}
+                rootDataRelay={rootData}
+                values={values as ProductDetails}
+                errors={errors}
+                form={form as unknown as { change: (name: string, nextValue: unknown) => void }}
+                requiredFields={requiredFields}
+                organizationCustomDomain={organizationCustomDomain}
+                featureImages={featureImages}
+                primaryFeatureImage={primaryFeatureImage}
+                onUploadCompleted={handleFeatureImageUploadCompleted}
+                onRemoveFeatureImage={handleRemoveFeatureImage}
+                onSetPrimaryFeatureImage={handleSetPrimaryFeatureImage}
+                paletteMode={paletteMode}
+              />
+            );
+          }}
+        />
       </Box>
     </Box>
   );
