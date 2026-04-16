@@ -3,7 +3,7 @@ import type { bookings_bookings_refetchableFragment } from '@/queries/__generate
 import type { bookings_query$key } from '@/queries/__generated__/bookings_query.graphql';
 import Box from '@mui/system/Box';
 import dayjs, { Dayjs } from 'dayjs';
-import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
+import { memo, startTransition, useCallback, useEffect, useMemo, type ReactNode } from 'react';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 import BookingCard from './booking-card';
 import OrganizationBookingsPageShell from './organization-bookings-page-shell';
@@ -17,11 +17,13 @@ type Props = {
   locationIds: string[];
   teamIds: string[];
   customerIds: string[];
+  toolbar?: ReactNode;
+  actions?: ReactNode;
 };
 
 type MarketplaceSubscriptionLookup = Record<string, string>;
 
-const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomain, from, to, locationIds, teamIds, customerIds }: Props) => {
+const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomain, from, to, locationIds, teamIds, customerIds, toolbar, actions }: Props) => {
   const rootData = useFragment<bookings_query$key>(
     graphql`
       fragment bookings_query on Query {
@@ -130,7 +132,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
   }
 
   return (
-    <OrganizationBookingsPageShell isEmpty={bookings.length === 0} emptyMessage="No bookings match the selected week and filters.">
+    <OrganizationBookingsPageShell actions={actions} toolbar={toolbar} isEmpty={bookings.length === 0} emptyMessage="No bookings match the selected week and filters.">
       <Box
         sx={{
           display: 'grid',

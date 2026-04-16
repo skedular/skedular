@@ -86,6 +86,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
           width: '100%',
           maxWidth: 1120,
           mx: 'auto',
+          pt: { xs: 1, sm: 1, md: 2 },
           backgroundColor: 'transparent',
           gap: 2,
         }}

@@ -3,7 +3,7 @@ import type { myBookings_bookings_refetchableFragment } from '@/queries/__genera
 import type { myBookings_query$key } from '@/queries/__generated__/myBookings_query.graphql';
 import Box from '@mui/system/Box';
 import dayjs, { Dayjs } from 'dayjs';
-import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
+import { memo, startTransition, useCallback, useEffect, useMemo, type ReactNode } from 'react';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 import MyBookingCard from './my-booking-card';
 import MyBookingsPageShell from './my-bookings-page-shell';
@@ -16,6 +16,9 @@ type Props = {
   to: Dayjs;
   locationIds: string[];
   teamIds: string[];
+  toolbar?: ReactNode;
+  actions?: ReactNode;
+  hasTopInset?: boolean;
 };
 
 type CustomerDetails = {
@@ -29,7 +32,7 @@ type CustomerDetails = {
 
 type MarketplaceSubscriptionLookup = Record<string, string>;
 
-const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomain, from, to, locationIds, teamIds }: Props) => {
+const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomain, from, to, locationIds, teamIds, toolbar, actions, hasTopInset = true }: Props) => {
   const rootData = useFragment<myBookings_query$key>(
     graphql`
       fragment myBookings_query on Query {
@@ -189,7 +192,13 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
   }
 
   return (
-    <MyBookingsPageShell isEmpty={myBookings.length === 0} emptyMessage="No bookings match the selected week and filters.">
+    <MyBookingsPageShell
+      actions={actions}
+      toolbar={toolbar}
+      hasTopInset={hasTopInset}
+      isEmpty={myBookings.length === 0}
+      emptyMessage="No bookings match the selected week and filters."
+    >
       <Box
         sx={{
           display: 'grid',

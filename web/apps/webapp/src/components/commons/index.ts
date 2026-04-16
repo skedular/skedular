@@ -2,6 +2,7 @@ export { default as AppBarWithStackColumn } from './appbar-with-stack-column';
 export { default as BodyIconTypography } from './body-icon-typography';
 export { default as CaptionIconTypography } from './caption-icon-typography';
 export { default as ColorPicker } from './color-picker';
+export { default as CollectionToolbar } from './collection-toolbar';
 export { default as CreditCard } from './credit-card';
 export { default as DefaultDialogTitle } from './default-dialog-title';
 export { default as ErrorTypography } from './error-typography';

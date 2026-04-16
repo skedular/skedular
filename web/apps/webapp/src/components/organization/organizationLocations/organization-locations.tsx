@@ -1,4 +1,4 @@
-import { BodyIconTypography, GridContainer, PushToRight, StackColumn } from '@/components/commons';
+import { BodyIconTypography, GridContainer, StackColumn } from '@/components/commons';
 import StackRow from '@/components/commons/stack-row';
 import { Loading } from '@/components/loading';
 import { NewLocationButton } from '@/components/location/addLocation';
@@ -193,7 +193,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
       <GridContainer spacing={1} sx={{ alignItems: 'center' }}>
         <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
         <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
-        <PushToRight />
       </GridContainer>
 
       {organizationCustomDomain === 'skedularpubliclocations' && (

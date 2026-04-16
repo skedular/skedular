@@ -1,4 +1,4 @@
-import { StackColumn, SubtitleIconTypography } from '@/components/commons';
+import { CollectionToolbar, StackColumn, SubtitleIconTypography } from '@/components/commons';
 import { defaultPadding } from '@/libs/theme';
 import Box from '@mui/system/Box';
 import { PageHeaderPanel } from '@skedular/ui';
@@ -6,14 +6,17 @@ import type { ReactNode } from 'react';
 
 type Props = {
   actions?: ReactNode;
+  toolbar?: ReactNode;
   isEmpty: boolean;
   children?: ReactNode;
 };
 
-const OrganizationProductsPageShell = ({ actions, isEmpty, children }: Props) => (
+const OrganizationProductsPageShell = ({ actions, toolbar, isEmpty, children }: Props) => (
   <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
-    <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: defaultPadding }} spacing={2}>
-      <PageHeaderPanel title="Products" description="Create and manage the bookable offers customers can purchase." actions={actions} />
+    <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
+      <PageHeaderPanel title="Products" description="Create and manage the bookable offers customers can purchase." />
+
+      <CollectionToolbar filters={toolbar} actions={actions} />
 
       {isEmpty ? (
         <Box

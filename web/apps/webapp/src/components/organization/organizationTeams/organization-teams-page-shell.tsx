@@ -1,4 +1,4 @@
-import { StackColumn, SubtitleIconTypography } from '@/components/commons';
+import { CollectionToolbar, StackColumn, SubtitleIconTypography } from '@/components/commons';
 import { defaultPadding } from '@/libs/theme';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
@@ -23,10 +23,10 @@ const surfaceSx: SxProps<Theme> = {
 
 const OrganizationTeamsPageShell = ({ actions, toolbar, isEmpty, emptyMessage = 'Create your first team to get started.', children }: Props) => (
   <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', pb: defaultPadding }}>
-    <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: defaultPadding }} spacing={2}>
-      <PageHeaderPanel title="Teams" description="Create teams, manage members, and choose the main location for each team." actions={actions} />
+    <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
+      <PageHeaderPanel title="Teams" description="Create teams, manage members, and choose the main location for each team." />
 
-      {toolbar ? <Box sx={{ ...surfaceSx, px: 2, py: 1.5 }}>{toolbar}</Box> : null}
+      <CollectionToolbar filters={toolbar} actions={actions} />
 
       {isEmpty ? (
         <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>

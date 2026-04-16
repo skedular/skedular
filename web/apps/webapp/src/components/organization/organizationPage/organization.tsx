@@ -1,29 +1,19 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { MyBookings } from '@/components/booking/myBookings';
-import { GridContainer, PushToRight, StackColumn } from '@/components/commons';
+import { GridContainer, StackColumn } from '@/components/commons';
 import { WeekRangePicker } from '@/components/datePickers';
 import { GettingStarted } from '@/components/gettingStarted';
 import { Loading } from '@/components/loading';
 import { LocationSelector } from '@/components/location/locationSelector';
 import { RelayError, toRootError } from '@/components/relayError';
 import { TeamSelector } from '@/components/team/teamSelector';
-import { defaultPadding } from '@/libs/theme';
 import { endOfWeek, startOfDay, startOfWeek } from '@/libs/utils';
 import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
-import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
-
-const filterSurfaceSx: SxProps<Theme> = {
-  borderRadius: 4,
-  border: 1,
-  borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
-  backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.88)' : theme.palette.background.paper),
-  boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : '0 1px 3px rgba(0, 0, 0, 0.24)'),
-};
 
 type Props = {
   queryReference: PreloadedQuery<organization_rootQuery, Record<string, unknown>>;
@@ -93,18 +83,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationCustomDoma
 
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-      <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto' }} spacing={2}>
-        <Box sx={{ paddingTop: defaultPadding }}>
-          <Box sx={{ ...filterSurfaceSx, px: 2, py: 1.5 }}>
-            <GridContainer spacing={1}>
-              <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
-              <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
-              <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
-              <PushToRight />
-              <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationCustomDomain={organizationCustomDomain} />
-            </GridContainer>
-          </Box>
-        </Box>
+      <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
         <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
 
         <MyBookings
@@ -115,6 +94,15 @@ const Organization = ({ queryReference, onReloadRequired, organizationCustomDoma
           to={endWeek}
           locationIds={locationIds}
           teamIds={teamIds}
+          toolbar={
+            <GridContainer spacing={1}>
+              <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
+              <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
+              <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
+            </GridContainer>
+          }
+          hasTopInset={false}
+          actions={<NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationCustomDomain={organizationCustomDomain} />}
         />
       </StackColumn>
     </Box>
