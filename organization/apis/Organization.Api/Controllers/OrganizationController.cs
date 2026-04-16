@@ -212,7 +212,7 @@ public class OrganizationController(
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
 
-            if (stripeConfiguration.LogStripPlatformAccountWebhookMessages)
+            if (stripeConfiguration.LogStripePlatformAccountWebhookMessages)
             {
                 var tempFileDirectoryPath = Path.Combine(s_homeDirectory, "stripe-logs/organization/platform");
                 Directory.CreateDirectory(tempFileDirectoryPath);

@@ -104,7 +104,7 @@ public class BookingController(
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
 
-            if (stripeConfiguration.LogStripPlatformAccountWebhookMessages)
+            if (stripeConfiguration.LogStripePlatformAccountWebhookMessages)
             {
                 var tempFileDirectoryPath = Path.Combine(s_homeDirectory, "stripe-logs/booking/platform");
                 Directory.CreateDirectory(tempFileDirectoryPath);

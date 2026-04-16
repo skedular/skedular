@@ -19,7 +19,7 @@ services.AddStripe(configuration);
 service interfaces as singletons (implementation: the matching Stripe SDK service class):
 
 | Stripe resource      | Interfaces registered                                                 |
-|----------------------|-----------------------------------------------------------------------|
+| -------------------- | --------------------------------------------------------------------- |
 | Customer             | `ICreatable`, `IUpdatable`, `IDeletable`, `IListable`, `IRetrievable` |
 | Account              | `ICreatable`, `IUpdatable`, `IDeletable`, `IRetrievable`              |
 | AccountLink          | `ICreatable`                                                          |
@@ -43,7 +43,7 @@ service interfaces as singletons (implementation: the matching Stripe SDK servic
     "OrganizationConnectAccountWebhookKey": "whsec_...",
     "BookingPlatformAccountWebhookKey": "whsec_...",
     "BookingConnectAccountWebhookKey": "whsec_...",
-    "LogStripPlatformAccountWebhookMessages": false,
+    "LogStripePlatformAccountWebhookMessages": false,
     "LogStripeConnectAccountWebhookMessages": false,
     "OAuthClientId": "ca_..."
   }

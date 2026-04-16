@@ -10,7 +10,7 @@ public class StripeConfiguration
     public string OrganizationConnectAccountWebhookKey { get; set; } = string.Empty;
     public string BookingPlatformAccountWebhookKey { get; set; } = string.Empty;
     public string BookingConnectAccountWebhookKey { get; set; } = string.Empty;
-    public bool LogStripPlatformAccountWebhookMessages { get; set; }
+    public bool LogStripePlatformAccountWebhookMessages { get; set; }
     public bool LogStripeConnectAccountWebhookMessages { get; set; }
     public string OAuthClientId { get; set; } = string.Empty;
 }
