@@ -10,7 +10,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/system/Box';
 import dayjs from 'dayjs';
@@ -86,26 +85,31 @@ const GuestStoreFrontUpcomingBookingsStrip = ({ rootDataRelay }: Props) => {
   return (
     <Card
       sx={{
+        height: '100%',
         borderRadius: 4,
         overflow: 'hidden',
         border: 1,
         borderColor: (theme) => alpha(theme.palette.primary.main, 0.18),
         background: (theme) =>
-          `linear-gradient(135deg, ${alpha(theme.palette.primary.light, 0.12)} 0%, ${alpha(theme.palette.background.paper, 1)} 46%, ${alpha(theme.palette.warning.light, 0.1)} 100%)`,
+          `linear-gradient(135deg, ${alpha(theme.palette.primary.light, 0.1)} 0%, ${alpha(theme.palette.background.paper, 1)} 58%, ${alpha(theme.palette.warning.light, 0.08)} 100%)`,
       }}
     >
-      <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
-        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ justifyContent: 'space-between', alignItems: { xs: 'flex-start', md: 'center' } }}>
-          <Box sx={{ maxWidth: 720 }}>
+      <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
+        <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: 1.5 }}>
+          <Box sx={{ minWidth: 0 }}>
             <CaptionIconTypography label="Your week here" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
-            <LeadIconTypography label="Upcoming bookings" sx={{ mt: 0.75 }} />
+            <StackRow sx={{ mt: 0.5, alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+              <LeadIconTypography label="Bookings" />
+              <Chip
+                size="small"
+                color={upcomingBookings.length > 0 ? 'primary' : 'default'}
+                variant={upcomingBookings.length > 0 ? 'filled' : 'outlined'}
+                label={upcomingBookings.length > 0 ? `${upcomingBookings.length} this week` : 'Nothing booked'}
+              />
+            </StackRow>
             <BodyIconTypography
-              label={
-                upcomingBookings.length > 0
-                  ? 'Keep track of bookings coming up this week. Open any booking to review payment progress, invoice access, and the latest assignment details.'
-                  : 'No upcoming bookings are scheduled for this week. As soon as you book a space here, it will show up in this strip.'
-              }
-              sx={{ mt: 0.75, opacity: 0.82 }}
+              label={upcomingBookings.length > 0 ? 'Open a booking to check time, payment, and assignment details.' : 'When you book here, it will appear in this summary.'}
+              sx={{ mt: 0.75, opacity: 0.78 }}
             />
           </Box>
 
@@ -113,19 +117,18 @@ const GuestStoreFrontUpcomingBookingsStrip = ({ rootDataRelay }: Props) => {
             component={NextLink}
             href={getMarketplaceBookingsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain)}
             variant="text"
-            sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
+            endIcon={<ChevronRightIcon fontSize="small" />}
+            sx={{ textTransform: 'none', whiteSpace: 'nowrap', px: 0, minWidth: 'auto', alignSelf: 'flex-start' }}
           >
-            View all bookings
+            All bookings
           </Button>
-        </Stack>
+        </StackRow>
 
         {upcomingBookings.length > 0 ? (
-          <Box
+          <StackColumn
             sx={{
-              mt: 2.5,
-              display: 'grid',
-              gap: 1.5,
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' },
+              mt: 1.75,
+              gap: 1,
             }}
           >
             {upcomingBookings.map((booking) => {
@@ -148,17 +151,17 @@ const GuestStoreFrontUpcomingBookingsStrip = ({ rootDataRelay }: Props) => {
                     borderRadius: 3,
                     border: 1,
                     borderColor: (theme) => alpha(theme.palette.divider, 0.9),
-                    bgcolor: (theme) => alpha(theme.palette.background.paper, 0.82),
+                    bgcolor: (theme) => alpha(theme.palette.background.paper, 0.86),
                     backdropFilter: 'blur(10px)',
                     transition: 'transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease',
                     '&:hover': {
                       transform: 'translateY(-2px)',
-                      boxShadow: (theme) => theme.shadows[4],
+                      boxShadow: (theme) => theme.shadows[3],
                       borderColor: (theme) => theme.palette.primary.main,
                     },
                   }}
                 >
-                  <Box sx={{ p: 2 }}>
+                  <Box sx={{ p: 1.5 }}>
                     <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'nowrap' }}>
                       <Box>
                         <SmallIconTypography label={toStoredBookingDate(booking.from)} sx={{ opacity: 0.62, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
@@ -175,31 +178,41 @@ const GuestStoreFrontUpcomingBookingsStrip = ({ rootDataRelay }: Props) => {
                       />
                     </StackRow>
 
-                    <StackColumn spacing={1.1} sx={{ mt: 2 }}>
-                      <StackRow sx={{ flexWrap: 'nowrap' }}>
+                    <StackColumn spacing={0.8} sx={{ mt: 1.25 }}>
+                      <StackRow sx={{ flexWrap: 'nowrap', alignItems: 'center' }}>
                         <LocationIcon fontSize="small" />
                         <BodyIconTypography label={locationLabel} sx={{ opacity: 0.88 }} />
                       </StackRow>
-                      <StackRow sx={{ flexWrap: 'nowrap' }}>
+                      <StackRow sx={{ flexWrap: 'nowrap', alignItems: 'center' }}>
                         <QuantityIcon fontSize="small" />
                         <BodyIconTypography label={`Quantity ${booking.marketplaceBooking?.quantity ?? 1}`} sx={{ opacity: 0.88 }} />
                       </StackRow>
-                      <StackRow sx={{ flexWrap: 'nowrap' }}>
+                      <StackRow sx={{ flexWrap: 'nowrap', alignItems: 'center' }}>
                         <ResourceIcon fontSize="small" />
                         <BodyIconTypography label={resourcesLabel} sx={{ opacity: 0.88 }} />
                       </StackRow>
                     </StackColumn>
-
-                    <StackRow sx={{ mt: 2, justifyContent: 'space-between', flexWrap: 'nowrap' }}>
-                      <BodyIconTypography label="Open booking" sx={{ color: 'primary.main', fontWeight: 600 }} />
-                      <ChevronRightIcon fontSize="small" />
-                    </StackRow>
                   </Box>
                 </Link>
               );
             })}
+          </StackColumn>
+        ) : (
+          <Box
+            sx={{
+              mt: 1.75,
+              borderRadius: 3,
+              border: 1,
+              borderStyle: 'dashed',
+              borderColor: (theme) => alpha(theme.palette.primary.main, 0.24),
+              bgcolor: (theme) => alpha(theme.palette.background.paper, 0.64),
+              px: 1.5,
+              py: 1.25,
+            }}
+          >
+            <SmallIconTypography label="No bookings for this week yet." sx={{ opacity: 0.72 }} />
           </Box>
-        ) : null}
+        )}
       </CardContent>
     </Card>
   );

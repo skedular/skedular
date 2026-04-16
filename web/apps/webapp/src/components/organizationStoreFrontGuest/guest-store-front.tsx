@@ -141,8 +141,20 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
   return (
     <Box sx={{ bgcolor: (theme) => theme.palette.background.default, minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ mt: { xs: 3, md: 4 } }}>
-        <GuestStoreFrontUpcomingBookingsStrip rootDataRelay={rootData} />
-        <GuestStoreFrontActiveSubscriptionsStrip rootDataRelay={rootData} />
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 2,
+            gridTemplateColumns: {
+              xs: '1fr',
+              lg: 'minmax(0, 1fr) minmax(0, 1fr)',
+            },
+            alignItems: 'start',
+          }}
+        >
+          <GuestStoreFrontUpcomingBookingsStrip rootDataRelay={rootData} />
+          <GuestStoreFrontActiveSubscriptionsStrip rootDataRelay={rootData} />
+        </Box>
       </Container>
 
       <Container maxWidth="xl" sx={{ mt: { xs: 2, md: 3 } }}>
