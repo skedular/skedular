@@ -6,7 +6,7 @@ using Team.Api.Services;
 namespace Team.Api.GraphQL.Team;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
 {
     [UseResolverScope]
     public async Task<TeamPayload> AddTeamAsync(
@@ -14,7 +14,9 @@ public class RootMutation(IMapper mapper)
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
     {
+        logger.LogInformation("Starting {OperationName}", nameof(AddTeamAsync));
         var team = await teamService.AddAsync(mapper.MapTo(input), cancellationToken);
+        logger.LogInformation("Completed {OperationName}", nameof(AddTeamAsync));
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 

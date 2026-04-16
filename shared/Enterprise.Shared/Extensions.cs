@@ -444,7 +444,7 @@ public static class Extensions
         }
 
         /// <summary>
-        ///     Skedular opinionated bundle: calls <see cref="AddCoreServices{TProgram}" />,
+        ///     Opinionated bundle: calls <see cref="AddCoreServices{TProgram}" />,
         ///     <see cref="AddIdentityTokenProviders" />, <see cref="AddHybridCaching" />,
         ///     <see cref="AddApiControllers{TProgram}" />, and <see cref="AddSerilogLogging{TProgram}" />
         ///     in the expected order.
@@ -474,7 +474,7 @@ public static class Extensions
         ///     and <c>MapControllers()</c>. In development mode also enables Swagger/OpenAPI UI.
         ///     <para>
         ///         Use this method for apps that do not use GraphQL or that map GraphQL endpoints explicitly.
-        ///         Skedular internal apps should use <see cref="UseWebApplicationDefaults{TProgram}" /> which
+        ///         internal apps should use <see cref="UseWebApplicationDefaults{TProgram}" /> which
         ///         also maps GraphQL, unless they intentionally opt out.
         ///     </para>
         /// </summary>
@@ -490,7 +490,7 @@ public static class Extensions
         }
 
         /// <summary>
-        ///     Skedular opinionated bundle: applies the full middleware pipeline including GraphQL endpoint
+        ///     Opinionated bundle: applies the full middleware pipeline including GraphQL endpoint
         ///     mapping. Internally calls <see cref="UseApplicationCore{TProgram}" />'s shared setup and also
         ///     maps GraphQL endpoints via <see cref="GraphQL.GraphqlExtensions.MapGraphqlEndpoints" />.
         ///     <para>

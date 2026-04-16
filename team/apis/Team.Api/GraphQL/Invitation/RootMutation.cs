@@ -6,7 +6,7 @@ using Team.Api.Services;
 namespace Team.Api.GraphQL.Invitation;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
 {
     [UseResolverScope]
     public async Task<InviteCustomersToJoinTeamPayload> InviteCustomersToJoinTeamAsync(
@@ -25,12 +25,14 @@ public class RootMutation(IMapper mapper)
     public async Task<InvitationToJoinTeamPayload> AcceptInvitationToJoinTeamAsync(
         AcceptInvitationToJoinTeamInput input,
         [Service] IInvitationService invitationService,
-        CancellationToken cancellationToken) =>
-        new()
-        {
-            ClientMutationId = input.ClientMutationId,
-            InviteCustomerToJoinTeam = mapper.MapTo(await invitationService.AcceptInvitationToJoinAsync(input.Id, cancellationToken))
-        };
+        CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Starting {OperationName}", nameof(AcceptInvitationToJoinTeamAsync));
+        var invitation = await invitationService.AcceptInvitationToJoinAsync(input.Id, cancellationToken);
+        logger.LogInformation("Completed {OperationName}", nameof(AcceptInvitationToJoinTeamAsync));
+
+        return new InvitationToJoinTeamPayload { ClientMutationId = input.ClientMutationId, InviteCustomerToJoinTeam = mapper.MapTo(invitation) };
+    }
 
     [UseResolverScope]
     public async Task<InvitationToJoinTeamPayload> RejectInvitationToJoinTeamAsync(

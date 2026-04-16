@@ -69,9 +69,4 @@
         <Using Include="Xunit"/>
         <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
     </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Cookie\"/>
-        <Folder Include="Encryption\"/>
-    </ItemGroup>
 </Project>
