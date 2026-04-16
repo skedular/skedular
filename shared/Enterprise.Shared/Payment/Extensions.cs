@@ -37,7 +37,6 @@ public static class Extensions
                 .AddSingleton<IUpdatable<Customer, CustomerUpdateOptions>, CustomerService>()
                 .AddSingleton<IDeletable<Customer, CustomerDeleteOptions>, CustomerService>()
                 .AddSingleton<IListable<Customer, CustomerListOptions>, CustomerService>()
-                .AddSingleton<IListable<Customer, CustomerListOptions>, CustomerService>()
                 .AddSingleton<IRetrievable<Customer, CustomerGetOptions>, CustomerService>()
                 .AddSingleton<ICreatable<Account, AccountCreateOptions>, AccountService>()
                 .AddSingleton<IUpdatable<Account, AccountUpdateOptions>, AccountService>()
