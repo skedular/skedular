@@ -27,6 +27,11 @@ public class KafkaOutboxConfiguration : IEntityTypeConfiguration<KafkaOutbox>
         builder.Property(item => item.Id).HasMaxLength(Constants.MaxUniqueIdLength);
         builder.Property(item => item.Topic).HasMaxLength(Constants.MaxKafkaTopicNameLength);
         builder.Property(item => item.ProcessingErrors).HasMaxLength(Constants.MaxOutboxProcessingErrorsLength);
+        builder
+            .Property(item => item.Headers)
+            .HasConversion(
+                OutboxJsonValueConverter.CreateConverter<Dictionary<string, string>>(),
+                OutboxJsonValueConverter.CreateComparer<Dictionary<string, string>>());
 
         builder.HasIndex(item => item.LastRetry);
         builder.HasIndex(item => item.RetryCount);

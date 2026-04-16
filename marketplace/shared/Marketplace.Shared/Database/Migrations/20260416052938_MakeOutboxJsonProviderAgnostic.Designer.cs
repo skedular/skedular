@@ -2,20 +2,23 @@
 using System;
 using System.Collections.Generic;
 using Api.Shared.Services.Models;
+using Marketplace.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Team.Shared.Database;
 
 #nullable disable
 
-namespace Team.Shared.Database.Migrations
+namespace Marketplace.Shared.Database.Migrations
 {
-    [DbContext(typeof(TeamDbContext))]
-    partial class TeamDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MarketplaceDbContext))]
+    [Migration("20260416052938_MakeOutboxJsonProviderAgnostic")]
+    partial class MakeOutboxJsonProviderAgnostic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,7 +163,7 @@ namespace Team.Shared.Database.Migrations
                     b.ToTable("TemporalSignalOutbox");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.Customer", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Customer", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -181,24 +184,8 @@ namespace Team.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("FamilyName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("GivenName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("MiddleName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
 
                     b.Property<string>("Type")
                         .HasMaxLength(20)
@@ -210,22 +197,14 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("FamilyName");
-
-                    b.HasIndex("GivenName");
-
-                    b.HasIndex("MiddleName");
-
                     b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("Name");
 
                     b.HasIndex("Type");
 
                     b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.Identity", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Identity", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(200)
@@ -272,112 +251,7 @@ namespace Team.Shared.Database.Migrations
                     b.ToTable("Identity");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.JoinInvitation", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CreatedById")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(320)
-                        .HasColumnType("character varying(320)");
-
-                    b.Property<uint>("EntityFrameworkVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.Property<string>("InviteeId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<string>("TeamId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("Email");
-
-                    b.HasIndex("InviteeId");
-
-                    b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("Role");
-
-                    b.HasIndex("Status");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("JoinInvitation");
-                });
-
-            modelBuilder.Entity("Team.Shared.Database.Entities.Location", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<uint>("EntityFrameworkVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.ToTable("Location");
-                });
-
-            modelBuilder.Entity("Team.Shared.Database.Entities.Organization", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Organization", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -389,6 +263,10 @@ namespace Team.Shared.Database.Migrations
                     b.Property<string>("CustomDomain")
                         .HasMaxLength(63)
                         .HasColumnType("character varying(63)");
+
+                    b.Property<string>("CustomerFacingTermsAndConditionsUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -426,6 +304,10 @@ namespace Team.Shared.Database.Migrations
                         .HasColumnType("character varying(50)")
                         .HasDefaultValue("PRIVATE");
 
+                    b.Property<string>("Website")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
@@ -441,10 +323,14 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("Name");
 
+                    b.HasIndex("Type");
+
+                    b.HasIndex("Website");
+
                     b.ToTable("Organization");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.OrganizationMember", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.OrganizationMember", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -507,7 +393,7 @@ namespace Team.Shared.Database.Migrations
                     b.ToTable("OrganizationMember");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.OrganizationSsoSetting", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.OrganizationSsoSetting", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -564,15 +450,15 @@ namespace Team.Shared.Database.Migrations
                     b.ToTable("OrganizationSsoSetting");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.Team", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.OrganizationTag", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("About")
-                        .HasMaxLength(100000)
-                        .HasColumnType("character varying(100000)");
+                    b.Property<string>("Color")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -586,27 +472,23 @@ namespace Team.Shared.Database.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
-                    b.Property<ICollection<CdnImageFile>>("FeatureImages")
-                        .HasColumnType("jsonb");
+                    b.Property<DateTimeOffset?>("EventRaisedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("PrimaryLocationId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Timezone")
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
+                    b.Property<string>("Type")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
@@ -620,14 +502,12 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.HasIndex("PrimaryLocationId");
+                    b.HasIndex("Type");
 
-                    b.HasIndex("Timezone");
-
-                    b.ToTable("Team");
+                    b.ToTable("OrganizationTag");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.TeamMember", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Product", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -635,10 +515,6 @@ namespace Team.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CustomerId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -649,25 +525,13 @@ namespace Team.Shared.Database.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
+                    b.Property<bool>("Inactive")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("OrganizationMemberId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)")
-                        .HasDefaultValue("ACTIVE");
-
-                    b.Property<string>("TeamId")
+                    b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
 
@@ -677,25 +541,92 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
+                    b.HasIndex("Inactive");
+
                     b.HasIndex("ModifiedAt");
 
-                    b.HasIndex("OrganizationMemberId");
+                    b.HasIndex("OrganizationId");
 
-                    b.HasIndex("Role");
-
-                    b.HasIndex("Status");
-
-                    b.HasIndex("TeamId");
-
-                    b.HasIndex("CustomerId", "TeamId")
-                        .IsUnique();
-
-                    b.ToTable("TeamMember");
+                    b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.Identity", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.ProductVersion", b =>
                 {
-                    b.HasOne("Team.Shared.Database.Entities.Customer", "Customer")
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<ICollection<CdnImageFile>>("FeatureImages")
+                        .HasColumnType("jsonb");
+
+                    b.Property<ListingMetadata>("ListingMetadata")
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<ICollection<ProductPricing>>("PricingOptions")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("RESOURCE");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Currency");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("Type");
+
+                    b.ToTable("ProductVersion");
+                });
+
+            modelBuilder.Entity("OrganizationTagProductVersion", b =>
+                {
+                    b.Property<string>("OrganizationTagsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ProductVersionOrganizationTagsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("OrganizationTagsId", "ProductVersionOrganizationTagsId");
+
+                    b.HasIndex("ProductVersionOrganizationTagsId");
+
+                    b.ToTable("OrganizationTagProductVersion");
+                });
+
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Identity", b =>
+                {
+                    b.HasOne("Marketplace.Shared.Database.Entities.Customer", "Customer")
                         .WithMany("Identities")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -704,51 +635,15 @@ namespace Team.Shared.Database.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.JoinInvitation", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.OrganizationMember", b =>
                 {
-                    b.HasOne("Team.Shared.Database.Entities.Customer", "CreatedBy")
-                        .WithMany("JoinInvitationsCreatedBy")
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Team.Shared.Database.Entities.Customer", "Invitee")
-                        .WithMany("JoinInvitationsInvitee")
-                        .HasForeignKey("InviteeId");
-
-                    b.HasOne("Team.Shared.Database.Entities.Team", "Team")
-                        .WithMany("JoinInvitations")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("Invitee");
-
-                    b.Navigation("Team");
-                });
-
-            modelBuilder.Entity("Team.Shared.Database.Entities.Location", b =>
-                {
-                    b.HasOne("Team.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("Locations")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Organization");
-                });
-
-            modelBuilder.Entity("Team.Shared.Database.Entities.OrganizationMember", b =>
-                {
-                    b.HasOne("Team.Shared.Database.Entities.Customer", "Customer")
+                    b.HasOne("Marketplace.Shared.Database.Entities.Customer", "Customer")
                         .WithMany("OrganizationMembers")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Team.Shared.Database.Entities.Organization", "Organization")
+                    b.HasOne("Marketplace.Shared.Database.Entities.Organization", "Organization")
                         .WithMany("OrganizationMembers")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -759,98 +654,86 @@ namespace Team.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.OrganizationSsoSetting", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.OrganizationSsoSetting", b =>
                 {
-                    b.HasOne("Team.Shared.Database.Entities.Organization", "Organization")
+                    b.HasOne("Marketplace.Shared.Database.Entities.Organization", "Organization")
                         .WithOne("OrganizationSsoSettings")
-                        .HasForeignKey("Team.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId")
+                        .HasForeignKey("Marketplace.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.Team", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.OrganizationTag", b =>
                 {
-                    b.HasOne("Team.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("Teams")
+                    b.HasOne("Marketplace.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("Tags")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Team.Shared.Database.Entities.Location", "PrimaryLocation")
-                        .WithMany("PrimaryLocationForTeams")
-                        .HasForeignKey("PrimaryLocationId");
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Product", b =>
+                {
+                    b.HasOne("Marketplace.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("Products")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Organization");
-
-                    b.Navigation("PrimaryLocation");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.TeamMember", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.ProductVersion", b =>
                 {
-                    b.HasOne("Team.Shared.Database.Entities.Customer", "Customer")
-                        .WithMany("TeamMembers")
-                        .HasForeignKey("CustomerId")
+                    b.HasOne("Marketplace.Shared.Database.Entities.Product", "Product")
+                        .WithMany("ProductVersions")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Team.Shared.Database.Entities.OrganizationMember", "OrganizationMember")
-                        .WithMany("TeamMembers")
-                        .HasForeignKey("OrganizationMemberId");
-
-                    b.HasOne("Team.Shared.Database.Entities.Team", "Team")
-                        .WithMany("TeamMembers")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("OrganizationMember");
-
-                    b.Navigation("Team");
+                    b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.Customer", b =>
+            modelBuilder.Entity("OrganizationTagProductVersion", b =>
+                {
+                    b.HasOne("Marketplace.Shared.Database.Entities.OrganizationTag", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationTagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Marketplace.Shared.Database.Entities.ProductVersion", null)
+                        .WithMany()
+                        .HasForeignKey("ProductVersionOrganizationTagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Customer", b =>
                 {
                     b.Navigation("Identities");
 
-                    b.Navigation("JoinInvitationsCreatedBy");
-
-                    b.Navigation("JoinInvitationsInvitee");
-
                     b.Navigation("OrganizationMembers");
-
-                    b.Navigation("TeamMembers");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.Location", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Organization", b =>
                 {
-                    b.Navigation("PrimaryLocationForTeams");
-                });
-
-            modelBuilder.Entity("Team.Shared.Database.Entities.Organization", b =>
-                {
-                    b.Navigation("Locations");
-
                     b.Navigation("OrganizationMembers");
 
                     b.Navigation("OrganizationSsoSettings");
 
-                    b.Navigation("Teams");
+                    b.Navigation("Products");
+
+                    b.Navigation("Tags");
                 });
 
-            modelBuilder.Entity("Team.Shared.Database.Entities.OrganizationMember", b =>
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Product", b =>
                 {
-                    b.Navigation("TeamMembers");
-                });
-
-            modelBuilder.Entity("Team.Shared.Database.Entities.Team", b =>
-                {
-                    b.Navigation("JoinInvitations");
-
-                    b.Navigation("TeamMembers");
+                    b.Navigation("ProductVersions");
                 });
 #pragma warning restore 612, 618
         }

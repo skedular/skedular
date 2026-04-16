@@ -27,7 +27,11 @@ public class TemporalOutboxConfiguration : IEntityTypeConfiguration<TemporalOutb
         builder.Property(item => item.Id).HasMaxLength(Constants.MaxUniqueIdLength);
         builder.Property(item => item.WorkflowType).HasMaxLength(Constants.MaxWorkflowTypeLength);
         builder.Property(item => item.ExecutionArgs).HasMaxLength(Constants.MaxWorkflowExecutionArgsLength);
-        builder.Property(item => item.WorkflowOptions).HasColumnType("jsonb");
+        builder
+            .Property(item => item.WorkflowOptions)
+            .HasConversion(
+                OutboxJsonValueConverter.CreateConverter<WorkflowOptions>(),
+                OutboxJsonValueConverter.CreateComparer<WorkflowOptions>());
         builder.Property(item => item.ProcessingErrors).HasMaxLength(Constants.MaxOutboxProcessingErrorsLength);
 
         builder.HasIndex(item => item.LastRetry);

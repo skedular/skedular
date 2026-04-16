@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Api.Shared.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Team.Shared.Database;
@@ -13,9 +14,11 @@ using Team.Shared.Database;
 namespace Team.Shared.Database.Migrations
 {
     [DbContext(typeof(TeamDbContext))]
-    partial class TeamDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260416054605_MakeOutboxJsonProviderAgnostic")]
+    partial class MakeOutboxJsonProviderAgnostic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

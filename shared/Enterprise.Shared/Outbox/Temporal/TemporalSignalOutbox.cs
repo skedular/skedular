@@ -29,7 +29,11 @@ public class TemporalSignalOutboxConfiguration : IEntityTypeConfiguration<Tempor
         builder.Property(item => item.WorkflowId).HasMaxLength(Constants.MaxWorkflowUniqueIdLength);
         builder.Property(item => item.SignalType).HasMaxLength(Constants.MaxWorkflowSignalLength);
         builder.Property(item => item.ExecutionArgs).HasMaxLength(Constants.MaxWorkflowExecutionArgsLength);
-        builder.Property(item => item.WorkflowSignalOptions).HasColumnType("jsonb");
+        builder
+            .Property(item => item.WorkflowSignalOptions)
+            .HasConversion(
+                OutboxJsonValueConverter.CreateConverter<WorkflowSignalOptions>(),
+                OutboxJsonValueConverter.CreateComparer<WorkflowSignalOptions>());
         builder.Property(item => item.ProcessingErrors).HasMaxLength(Constants.MaxOutboxProcessingErrorsLength);
 
         builder.HasIndex(item => item.LastRetry);
