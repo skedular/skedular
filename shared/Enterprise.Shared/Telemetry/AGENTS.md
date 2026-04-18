@@ -27,14 +27,12 @@ services.ConfigureOpenTelemetry(configuration, appName);
   "OpenTelemetry": {
     "ConsoleEnabled": false,
     "MetricsIngestEnabled": true,
-    "JaegerEndpoint": "http://jaeger:4317",
     "EntityFrameworkEnabled": true,
     "MeterProviderName": "my-service"
   }
 }
 ```
 
-- `JaegerEndpoint` — when non-empty, adds the Jaeger exporter targeting that endpoint.
 - `MetricsIngestEnabled` — enables the custom application meter (`MeterProviderName`).
 - `EntityFrameworkEnabled` — adds EF Core query instrumentation.
 - `ConsoleEnabled` — writes traces and metrics to stdout (development / debugging only).

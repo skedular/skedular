@@ -6,7 +6,7 @@ public static class IEventExtensions
 {
     private static readonly Regex s_validKafkaTopicCharacters = new(
         @"^[a-z0-9\.\-_]+$",
-        RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
 
     public static string GetTopicName(this IEvent @event, string environmentName)
     {
