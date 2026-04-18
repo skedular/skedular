@@ -20,7 +20,10 @@ npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular
 
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/core_v1.yaml --output ./src/clients/openapi/skedular/v1/core/fetch --name SkedularCoreV1Client --client fetch --exportSchemas true &
 
-npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/location_v1.yaml --output ./src/clients/openapi/skedular/v1/location/fetch --name SkedularLocationV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/location/location_v1.yaml --output ./src/clients/openapi/skedular/v1/location/core/fetch --name SkedularLocationCoreV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/location/location_graphql_v1.yaml --output ./src/clients/openapi/skedular/v1/location/graphql/fetch --name SkedularLocationGraphqlV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/location/location_workaround_v1.yaml --output ./src/clients/openapi/skedular/v1/location/workaround/fetch --name SkedularLocationWorkaroundV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/location/location_analytics_v1.yaml --output ./src/clients/openapi/skedular/v1/location/analytics/fetch --name SkedularLocationAnalyticsV1Client --client fetch --exportSchemas true &
 
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/marketplace/marketplace_v1.yaml --output ./src/clients/openapi/skedular/v1/marketplace/core/fetch --name SkedularMarketplaceCoreV1Client --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/marketplace/marketplace_graphql_v1.yaml --output ./src/clients/openapi/skedular/v1/marketplace/graphql/fetch --name SkedularMarketplaceGraphqlV1Client --client fetch --exportSchemas true &

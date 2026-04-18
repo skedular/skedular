@@ -1,0 +1,80 @@
+openapi: 3.1.1
+info:
+  title: Location Workaround API v1
+  description: "Location Workaround REST API"
+  version: 1.0.0
+
+servers:
+  - url: https://api.skedular.app
+    description: production
+  - url: https://apistaging.skedular.app
+    description: staging
+  - url: http://localhost:9000
+    description: local gateway
+  - url: http://localhost:10600
+    description: local
+
+paths:
+  /v1/location/{locationId}/republish:
+    put:
+      tags:
+        - v1
+        - location
+        - workaround
+      summary: republish location
+      operationId: republish
+      parameters:
+        - in: path
+          name: locationId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: the status of location republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/location/republish-all:
+    put:
+      tags:
+        - v1
+        - location
+        - workaround
+      summary: republish all locations
+      operationId: republishAll
+
+      responses:
+        "200":
+          description: the status of location republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+components:
+  schemas:
+    ProblemDetails:
+      type: object
+      additionalProperties: { }
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string

@@ -251,10 +251,10 @@ RUN /app/publish/Skedularctl mcp-tool-generate \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/skedular/location_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Location.V1 \
-  /Classname:Location \
-  /Output:/output/Skedular/Location/V1/Location.g.cs \
+  /Input:/openapi/skedular/location/location_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Location.Core.V1 \
+  /Classname:LocationCore \
+  /Output:/output/Skedular/Location/V1/LocationCore.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -267,10 +267,79 @@ RUN nswag \
   /JsonLibrary:SystemTextJson \
   /ExcludedTypeNames:FileParameter
 
-RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Location/V1/Location.g.cs
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Location/V1/LocationCore.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-  --input-file /output/Skedular/Location/V1/Location.g.cs \
-  --output-file /output/Skedular/Location/V1/Location.g.cs
+  --input-file /output/Skedular/Location/V1/LocationCore.g.cs \
+  --output-file /output/Skedular/Location/V1/LocationCore.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/location/location_graphql_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Location.Graphql.V1 \
+  /Classname:LocationGraphql \
+  /Output:/output/Skedular/Location/V1/LocationGraphql.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Location/V1/LocationGraphql.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Location/V1/LocationGraphql.g.cs \
+  --output-file /output/Skedular/Location/V1/LocationGraphql.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/location/location_workaround_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Location.Workaround.V1 \
+  /Classname:LocationWorkaround \
+  /Output:/output/Skedular/Location/V1/LocationWorkaround.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Location/V1/LocationWorkaround.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Location/V1/LocationWorkaround.g.cs \
+  --output-file /output/Skedular/Location/V1/LocationWorkaround.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/location/location_analytics_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Location.Analytics.V1 \
+  /Classname:LocationAnalytics \
+  /Output:/output/Skedular/Location/V1/LocationAnalytics.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Location/V1/LocationAnalytics.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Location/V1/LocationAnalytics.g.cs \
+  --output-file /output/Skedular/Location/V1/LocationAnalytics.g.cs
 
 RUN nswag \
   openapi2cscontroller \

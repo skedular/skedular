@@ -9,7 +9,10 @@ using Api.Shared.Clients.OpenApi.Skedular.Customer.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Workaround.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Gateway.V1;
-using Api.Shared.Clients.OpenApi.Skedular.Location.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Location.Analytics.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Location.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Location.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Location.Workaround.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Workaround.V1;
@@ -172,7 +175,10 @@ public class Startup
             .AddSingleton<ICustomerStripeClient>(_ => new CustomerStripeClient(customerApiClient))
             .AddSingleton<ICustomerWorkaroundClient>(_ => new CustomerWorkaroundClient(customerApiClient))
             .AddSingleton<ICoreClient>(_ => new CoreClient(coreApiClient))
-            .AddSingleton<ILocationClient>(_ => new LocationClient(locationApiClient))
+            .AddSingleton<ILocationCoreClient>(_ => new LocationCoreClient(locationApiClient))
+            .AddSingleton<ILocationGraphqlClient>(_ => new LocationGraphqlClient(locationApiClient))
+            .AddSingleton<ILocationWorkaroundClient>(_ => new LocationWorkaroundClient(locationApiClient))
+            .AddSingleton<ILocationAnalyticsClient>(_ => new LocationAnalyticsClient(locationApiClient))
             .AddSingleton<IMarketplaceCoreClient>(_ => new MarketplaceCoreClient(marketplaceApiClient))
             .AddSingleton<IMarketplaceGraphqlClient>(_ => new MarketplaceGraphqlClient(marketplaceApiClient))
             .AddSingleton<IMarketplaceWorkaroundClient>(_ => new MarketplaceWorkaroundClient(marketplaceApiClient))

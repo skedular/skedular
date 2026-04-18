@@ -1,10 +1,10 @@
-using Api.Shared.Clients.OpenApi.Skedular.Location.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Location.Core.V1;
 
 namespace Location.Domain.IntegrationTests.Api.Rest.LocationControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Location.Api")]
-public class GetVersionShould(ILocationClient locationClient)
+public class GetVersionShould(ILocationCoreClient locationClient)
 {
     [Theory]
     [AutoFakeItEasyData]

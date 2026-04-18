@@ -79,7 +79,10 @@
         <File Path="api-definitions/openapi/skedular/gateway_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/location/">
-        <File Path="api-definitions/openapi/skedular/location_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/location/location_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/location/location_graphql_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/location/location_workaround_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/location/location_analytics_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/marketplace/">
         <File Path="api-definitions/openapi/skedular/marketplace/marketplace_v1.yaml"/>

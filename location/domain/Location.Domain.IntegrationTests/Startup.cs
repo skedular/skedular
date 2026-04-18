@@ -1,4 +1,7 @@
-using Api.Shared.Clients.OpenApi.Skedular.Location.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Location.Analytics.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Location.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Location.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Location.Workaround.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Aspire.Hosting.Testing;
@@ -78,7 +81,10 @@ public class Startup
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddSingleton<ILocationClient>(_ => new LocationClient(locationApiClient));
+            .AddSingleton<ILocationCoreClient>(_ => new LocationCoreClient(locationApiClient))
+            .AddSingleton<ILocationGraphqlClient>(_ => new LocationGraphqlClient(locationApiClient))
+            .AddSingleton<ILocationWorkaroundClient>(_ => new LocationWorkaroundClient(locationApiClient))
+            .AddSingleton<ILocationAnalyticsClient>(_ => new LocationAnalyticsClient(locationApiClient));
 
         services
             .AddSkedularGraphQLV1()

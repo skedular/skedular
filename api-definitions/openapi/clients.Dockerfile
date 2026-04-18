@@ -218,10 +218,70 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/location_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Location.V1 \
-  /Classname:LocationClient \
-  /Output:/output/Skedular/Location/V1/Location.g.cs \
+  /Input:/openapi/skedular/location/location_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Location.Core.V1 \
+  /Classname:LocationCoreClient \
+  /Output:/output/Skedular/Location/V1/LocationCore.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/location/location_graphql_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Location.Graphql.V1 \
+  /Classname:LocationGraphqlClient \
+  /Output:/output/Skedular/Location/V1/LocationGraphql.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/location/location_workaround_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Location.Workaround.V1 \
+  /Classname:LocationWorkaroundClient \
+  /Output:/output/Skedular/Location/V1/LocationWorkaround.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/location/location_analytics_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Location.Analytics.V1 \
+  /Classname:LocationAnalyticsClient \
+  /Output:/output/Skedular/Location/V1/LocationAnalytics.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
