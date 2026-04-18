@@ -9,12 +9,13 @@ public class GetContextAsyncShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Create_new_context_on_get_context_async(CancellationToken cancellationToken)
+    public async Task Create_new_context_on_get_context_async(
+        IDbContextFactory<DbContext> factory,
+        ILogger<FactoryBasedOutboxDbContextAccessor<DbContext>> logger,
+        CancellationToken cancellationToken)
     {
         var fakeContext1 = A.Fake<DbContext>(options => options.WithArgumentsForConstructor(() => new DbContext(new DbContextOptions<DbContext>())));
         var fakeContext2 = A.Fake<DbContext>(options => options.WithArgumentsForConstructor(() => new DbContext(new DbContextOptions<DbContext>())));
-        var factory = A.Fake<IDbContextFactory<DbContext>>();
-        var logger = A.Fake<ILogger<FactoryBasedOutboxDbContextAccessor<DbContext>>>();
 
         A.CallTo(() => factory.CreateDbContextAsync(cancellationToken))
             .ReturnsNextFromSequence(Task.FromResult(fakeContext1), Task.FromResult(fakeContext2));
@@ -30,11 +31,12 @@ public class GetContextAsyncShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Pass_cancellation_token_to_factory(CancellationToken cancellationToken)
+    public async Task Pass_cancellation_token_to_factory(
+        IDbContextFactory<DbContext> factory,
+        ILogger<FactoryBasedOutboxDbContextAccessor<DbContext>> logger,
+        CancellationToken cancellationToken)
     {
         var fakeContext = A.Fake<DbContext>(options => options.WithArgumentsForConstructor(() => new DbContext(new DbContextOptions<DbContext>())));
-        var factory = A.Fake<IDbContextFactory<DbContext>>();
-        var logger = A.Fake<ILogger<FactoryBasedOutboxDbContextAccessor<DbContext>>>();
 
         A.CallTo(() => factory.CreateDbContextAsync(cancellationToken)).Returns(Task.FromResult(fakeContext));
 

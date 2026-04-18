@@ -2,16 +2,16 @@ using Enterprise.Shared.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Enterprise.Shared.UnitTests.Outbox.ExtentionTests;
+namespace Enterprise.Shared.UnitTests.Outbox.ExtensionTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class AddOutboxDbContextAccessorShould
 {
-    [Fact]
-    public void Register_factory_based_accessor_when_factory_is_registered()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Register_factory_based_accessor_when_factory_is_registered(IDbContextFactory<DbContext> dbContextFactory)
     {
         var services = new ServiceCollection();
-        var dbContextFactory = A.Fake<IDbContextFactory<DbContext>>();
 
         services.AddLogging();
         services.AddSingleton(dbContextFactory);
@@ -44,7 +44,7 @@ public class AddOutboxDbContextAccessorShould
     {
         var services = new ServiceCollection();
 
-        var act = () => services.AddOutboxDbContextAccessor<DbContext>();
+        var act = services.AddOutboxDbContextAccessor<DbContext>;
 
         act.ShouldThrow<InvalidOperationException>();
     }
