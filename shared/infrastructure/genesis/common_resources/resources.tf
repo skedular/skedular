@@ -57,8 +57,8 @@ module "webapp" {
   environment       = var.environment
 }
 
-module "privatewebapp" {
-  source = "../modules/privatewebapp"
+module "webapp_spaces" {
+  source = "../modules/webapp-spaces"
 
   providers = {
     aws = aws
@@ -68,8 +68,8 @@ module "privatewebapp" {
   environment       = var.environment
 }
 
-module "marketplacewebapp" {
-  source = "../modules/marketplacewebapp"
+module "webapp_teams" {
+  source = "../modules/webapp-teams"
 
   providers = {
     aws = aws

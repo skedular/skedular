@@ -3,9 +3,9 @@ terraform {
 
   backend "s3" {
     region         = "us-east-1"
-    bucket         = "unityhub-production-marketplacewebapp-terraform-state"
+    bucket         = "unityhub-production-webappspaces-help-terraform-state"
     key            = "terraform.tfstate"
-    dynamodb_table = "unityhub-production-marketplacewebapp-terraform-state-lock"
+    dynamodb_table = "unityhub-production-webappspaces-help-terraform-state-lock"
     profile        = ""
     role_arn       = ""
     encrypt        = "true"
