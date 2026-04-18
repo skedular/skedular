@@ -6,9 +6,12 @@ set -x
 cd "$(dirname "${0}")/.."
 
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/gateway_v1.yaml --output ./src/clients/openapi/skedular/v1/gateway/fetch --name SkedularGatewayV1Client --client fetch --exportSchemas true &
+
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/booking/booking_v1.yaml --output ./src/clients/openapi/skedular/v1/booking/booking/fetch --name SkedularBookingV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/booking/booking_workaround_v1.yaml --output ./src/clients/openapi/skedular/v1/booking/workaround/fetch --name SkedularBookingWorkaroundV1Client --client fetch --exportSchemas true &
+
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/customer_v1.yaml --output ./src/clients/openapi/skedular/v1/customer/fetch --name SkedularCustomerV1Client --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/organization_v1.yaml --output ./src/clients/openapi/skedular/v1/organization/fetch --name SkedularOrganizationV1Client --client fetch --exportSchemas true &
-npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/booking_v1.yaml --output ./src/clients/openapi/skedular/v1/booking/fetch --name SkedularBookingV1Client --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/team_v1.yaml --output ./src/clients/openapi/skedular/v1/team/fetch --name SkedularTeamClient --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/location_v1.yaml --output ./src/clients/openapi/skedular/v1/location/fetch --name SkedularLocationV1Client --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/slack_v1.yaml --output ./src/clients/openapi/skedular/v1/slack/fetch --name SkedularSlackClient --client fetch --exportSchemas true &

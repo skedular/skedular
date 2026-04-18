@@ -34,9 +34,10 @@ RUN nswag \
   /GenerateNullableReferenceTypes:true \
   /JsonLibrary:SystemTextJson
 
+#########################################################################################################################
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/booking_v1.yaml \
+  /Input:/openapi/skedular/booking/booking_v1.yaml \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Booking.V1 \
   /Classname:BookingClient \
   /Output:/output/Skedular/Booking/V1/Booking.g.cs \
@@ -53,6 +54,27 @@ RUN nswag \
   /GenerateDtoTypes:true \
   /GenerateNullableReferenceTypes:true \
   /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/booking/booking_workaround_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.BookingWorkaround.V1 \
+  /Classname:BookingWorkaroundClient \
+  /Output:/output/Skedular/Booking/V1/BookingWorkaround.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+#########################################################################################################################
 
 RUN nswag \
   openapi2csclient \

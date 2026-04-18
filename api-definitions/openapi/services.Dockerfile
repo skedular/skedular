@@ -40,9 +40,10 @@ RUN nswag \
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Gateway/V1/Gateway.g.cs
 
+#########################################################################################################################
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/skedular/booking_v1.yaml \
+  /Input:/openapi/skedular/booking/booking_v1.yaml \
   /Namespace:Api.Shared.Services.OpenApi.Skedular.Booking.V1 \
   /Classname:Booking \
   /Output:/output/Skedular/Booking/V1/Booking.g.cs \
@@ -60,8 +61,32 @@ RUN nswag \
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Booking/V1/Booking.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-    --input-file /output/Skedular/Booking/V1/Booking.g.cs \
-    --output-file /output/Skedular/Booking/V1/Booking.g.cs
+  --input-file /output/Skedular/Booking/V1/Booking.g.cs \
+  --output-file /output/Skedular/Booking/V1/Booking.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/booking/booking_workaround_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.BookingWorkaround.V1 \
+  /Classname:BookingWorkaround \
+  /Output:/output/Skedular/Booking/V1/BookingWorkaround.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Booking/V1/BookingWorkaround.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Booking/V1/BookingWorkaround.g.cs \
+  --output-file /output/Skedular/Booking/V1/BookingWorkaround.g.cs
+#########################################################################################################################
 
 RUN nswag \
   openapi2cscontroller \
@@ -83,8 +108,8 @@ RUN nswag \
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Customer/V1/Customer.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-    --input-file /output/Skedular/Customer/V1/Customer.g.cs \
-    --output-file /output/Skedular/Customer/V1/Customer.g.cs
+  --input-file /output/Skedular/Customer/V1/Customer.g.cs \
+  --output-file /output/Skedular/Customer/V1/Customer.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -106,8 +131,8 @@ RUN nswag \
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Location/V1/Location.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-    --input-file /output/Skedular/Location/V1/Location.g.cs \
-    --output-file /output/Skedular/Location/V1/Location.g.cs
+  --input-file /output/Skedular/Location/V1/Location.g.cs \
+  --output-file /output/Skedular/Location/V1/Location.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -129,8 +154,8 @@ RUN nswag \
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Marketplace/V1/Marketplace.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-    --input-file /output/Skedular/Marketplace/V1/Marketplace.g.cs \
-    --output-file /output/Skedular/Marketplace/V1/Marketplace.g.cs
+  --input-file /output/Skedular/Marketplace/V1/Marketplace.g.cs \
+  --output-file /output/Skedular/Marketplace/V1/Marketplace.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -152,8 +177,8 @@ RUN nswag \
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/MsTeams/V1/MsTeams.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-    --input-file /output/Skedular/MsTeams/V1/MsTeams.g.cs \
-    --output-file /output/Skedular/MsTeams/V1/MsTeams.g.cs
+  --input-file /output/Skedular/MsTeams/V1/MsTeams.g.cs \
+  --output-file /output/Skedular/MsTeams/V1/MsTeams.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -175,8 +200,8 @@ RUN nswag \
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Organization/V1/Organization.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-    --input-file /output/Skedular/Organization/V1/Organization.g.cs \
-    --output-file /output/Skedular/Organization/V1/Organization.g.cs
+  --input-file /output/Skedular/Organization/V1/Organization.g.cs \
+  --output-file /output/Skedular/Organization/V1/Organization.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -198,8 +223,8 @@ RUN nswag \
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Slack/V1/Slack.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-    --input-file /output/Skedular/Slack/V1/Slack.g.cs \
-    --output-file /output/Skedular/Slack/V1/Slack.g.cs
+  --input-file /output/Skedular/Slack/V1/Slack.g.cs \
+  --output-file /output/Skedular/Slack/V1/Slack.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -221,8 +246,8 @@ RUN nswag \
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Team/V1/Team.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-    --input-file /output/Skedular/Team/V1/Team.g.cs \
-    --output-file /output/Skedular/Team/V1/Team.g.cs
+  --input-file /output/Skedular/Team/V1/Team.g.cs \
+  --output-file /output/Skedular/Team/V1/Team.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -244,7 +269,7 @@ RUN nswag \
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Core/V1/Core.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-    --input-file /output/Skedular/Core/V1/Core.g.cs \
-    --output-file /output/Skedular/Core/V1/Core.g.cs
+  --input-file /output/Skedular/Core/V1/Core.g.cs \
+  --output-file /output/Skedular/Core/V1/Core.g.cs
 
 RUN find /output -type f -name "*.g.cs" -exec sed -i 's/Microsoft\.AspNetCore\.Mvc\.ActionResult<Microsoft\.AspNetCore\.Mvc\.FileResult>/Microsoft.AspNetCore.Mvc.IActionResult/g' {} +

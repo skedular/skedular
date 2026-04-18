@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Booking.V1;
+using Api.Shared.Clients.OpenApi.Skedular.BookingWorkaround.V1;
 using Api.Shared.Services.Grpc.Skedular.InfrastructureTest.V1;
 using Booking.Domain.IntegrationTests.Fixtures;
 using Booking.Shared.Repositories;
@@ -9,7 +9,7 @@ namespace Booking.Domain.IntegrationTests.Billing;
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Booking.Api")]
 public class GenerateOrganizationArrearsInvoicesApiShould(
-    IBookingClient bookingClient,
+    IBookingWorkaroundClient bookingWorkaroundClient,
     IRepositoryFactory repositoryFactory,
     InfrastructureTestService.InfrastructureTestServiceClient infrastructureTestClient,
     IEventually eventually)
@@ -23,7 +23,7 @@ public class GenerateOrganizationArrearsInvoicesApiShould(
         await infrastructureTestClient.ResetAsync(new ResetInput(), cancellationToken: cancellationToken);
         await BillingScenarioSeeder.SeedAsync(repositoryFactory, scenario, cancellationToken);
 
-        await bookingClient.GenerateOrganizationArrearsInvoicesAsync(scenario.Organization.Id, cancellationToken);
+        await bookingWorkaroundClient.GenerateOrganizationArrearsInvoicesAsync(scenario.Organization.Id, cancellationToken);
 
         await eventually.ConsistentlyAsync(
             async ct =>

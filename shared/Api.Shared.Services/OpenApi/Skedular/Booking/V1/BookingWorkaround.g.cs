@@ -25,62 +25,58 @@ using Microsoft.AspNetCore.Mvc;
 #pragma warning disable 8625 // Disable "CS8625 Cannot convert null literal to non-nullable reference type"
 #pragma warning disable 8765 // Disable "CS8765 Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes)."
 
-namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
+namespace Api.Shared.Services.OpenApi.Skedular.BookingWorkaround.V1
 {
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.0.0 (NJsonSchema v11.6.0.0 (Newtonsoft.Json v13.0.0.0))")]
     [ModelContextProtocol.Server.McpServerToolType]
-    public abstract class BookingControllerBase : Microsoft.AspNetCore.Mvc.Controller
+    public abstract class BookingWorkaroundControllerBase : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary>
-        /// return API version
+        /// republish booking
         /// </summary>
-        /// <returns>the version of the API</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/booking/version")]
+        /// <returns>the status of booking republishing</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/{bookingId}/republish")]
         [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("return API version")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [System.ComponentModel.Description("republish booking")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> Republish(string bookingId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
-        /// raise graphql change
+        /// republish all bookings
         /// </summary>
-        /// <param name="x_API_Key">API Key</param>
-        /// <returns>the result of raising the graphql change</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/booking/raiseGraphqlChange/{topicName}/{id}")]
+        /// <returns>the status of republishing all bookings</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/republish-all")]
         [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("raise graphql change")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RaiseGraphqlChange(string topicName, string id, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [System.ComponentModel.Description("republish all bookings")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAll(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
-        /// Stripe Platform Account Webhook
+        /// generate all locations resources slots
         /// </summary>
-        /// <param name="stripe_Signature">Stripe webhook signature</param>
-        /// <returns>the status of processing the Stripe Platform Account event</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/booking/stripe/platform/account/webhook")]
+        /// <returns>the status of republishing all location resources slots</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/generate-all-resources-slots")]
         [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("Stripe Platform Account Webhook")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripePlatformAccountEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [System.ComponentModel.Description("generate all locations resources slots")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> GenerateAllLocationsResourcesSlots(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
-        /// Stripe Connect Account Webhook
+        /// generate location's resources slots
         /// </summary>
-        /// <param name="stripe_Signature">Stripe webhook signature</param>
-        /// <returns>the status of processing the Stripe Connect Account event</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/booking/stripe/connect/account/webhook")]
+        /// <returns>the status of republishing locations resources slots</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/resources-slots/{locationId}/generate-all-resources-slots")]
         [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("Stripe Connect Account Webhook")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripeConnectAccountEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [System.ComponentModel.Description("generate location's resources slots")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> GenerateLocationResourcesSlots(string locationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
-        /// Xero Webhook
+        /// generate organization arrears invoices
         /// </summary>
-        /// <param name="x_xero_signature">Xero webhook signature</param>
-        /// <returns>the status of processing the Xero webhook event</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/booking/xero/webhook")]
+        /// <returns>the status of generating organization arrears invoices</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/organizations/{organizationId}/generate-arrears-invoices")]
         [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("Xero Webhook")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessXeroWebhookEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "x-xero-signature")] string? x_xero_signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [System.ComponentModel.Description("generate organization arrears invoices")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> GenerateOrganizationArrearsInvoices(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 

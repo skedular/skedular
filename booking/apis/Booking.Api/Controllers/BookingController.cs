@@ -1,7 +1,6 @@
 using System.Globalization;
 using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.OpenApi.Skedular.Booking.V1;
-using Booking.Api.Services;
 using Booking.Shared.Publishers;
 using Booking.Shared.Services;
 using Enterprise.Shared.Accounting.Configurations;
@@ -21,7 +20,6 @@ public class BookingController(
     BookingConfiguration bookingConfiguration,
     StripeConfiguration stripeConfiguration,
     XeroConfiguration xeroConfiguration,
-    IWorkaroundService workaroundService,
     IBookingInternalPublisher bookingInternalPublisher,
     IXeroWebhookService xeroWebhookService,
     TimeProvider timeProvider,
@@ -54,43 +52,6 @@ public class BookingController(
         }
 
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(topicName, id, cancellationToken);
-
-        return Ok();
-    }
-
-    public override async Task<IActionResult> Republish(string bookingId, CancellationToken cancellationToken = default)
-    {
-        await workaroundService.RepublishBookingAsync(bookingId, cancellationToken);
-
-        return Ok();
-    }
-
-    public override async Task<IActionResult> RepublishAll(CancellationToken cancellationToken = default)
-    {
-        await workaroundService.RepublishAllBookingsAsync(cancellationToken);
-
-        return Ok();
-    }
-
-    public override async Task<IActionResult> GenerateAllLocationsResourcesSlots(CancellationToken cancellationToken = default)
-    {
-        await workaroundService.GenerateAllLocationsResourcesSlotsAsync(cancellationToken);
-
-        return Ok();
-    }
-
-    public override async Task<IActionResult> GenerateLocationResourcesSlots(string locationId, CancellationToken cancellationToken = default)
-    {
-        await workaroundService.GenerateLocationResourcesSlotsAsync(locationId, cancellationToken);
-
-        return Ok();
-    }
-
-    public override async Task<IActionResult> GenerateOrganizationArrearsInvoices(
-        string organizationId,
-        CancellationToken cancellationToken = default)
-    {
-        await workaroundService.GenerateOrganizationArrearsInvoicesAsync(organizationId, cancellationToken);
 
         return Ok();
     }

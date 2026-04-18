@@ -1,4 +1,5 @@
 using Api.Shared.Clients.OpenApi.Skedular.Booking.V1;
+using Api.Shared.Clients.OpenApi.Skedular.BookingWorkaround.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Grpc.Skedular.InfrastructureTest.V1;
@@ -88,7 +89,8 @@ public class Startup
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddSingleton<IBookingClient>(_ => new BookingClient(bookingApiClient));
+            .AddSingleton<IBookingClient>(_ => new BookingClient(bookingApiClient))
+            .AddSingleton<IBookingWorkaroundClient>(_ => new BookingWorkaroundClient(bookingApiClient));
 
         services
             .AddSkedularGraphQLV1()

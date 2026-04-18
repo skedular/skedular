@@ -1,7 +1,7 @@
 openapi: 3.1.1
 info:
-  title: Booking API v1
-  description: "Booking REST API"
+  title: Booking Workaround API v1
+  description: "Booking Workaround REST API"
   version: 1.0.0
 
 servers:
@@ -15,66 +15,6 @@ servers:
     description: local
 
 paths:
-  /v1/booking/version:
-    get:
-      tags:
-        - v1
-        - booking
-      summary: return API version
-      operationId: getVersion
-
-      responses:
-        "200":
-          description: the version of the API
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Version"
-
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetails"
-
-  /v1/booking/raiseGraphqlChange/{topicName}/{id}:
-    get:
-      tags:
-        - v1
-        - booking
-        - graphql
-      summary: raise graphql change
-      operationId: raiseGraphqlChange
-      parameters:
-        - in: path
-          name: topicName
-          schema:
-            type: string
-          required: true
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-        - in: header
-          name: X-API-Key
-          schema:
-            type: string
-          required: true
-          description: API Key
-
-      responses:
-        "200":
-          description: the result of raising the graphql change
-
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetails"
-
   /v1/booking/{bookingId}/republish:
     put:
       tags:
@@ -192,87 +132,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
-
-  /v1/booking/stripe/platform/account/webhook:
-    post:
-      tags:
-        - v1
-        - booking
-        - stripe
-        - webhook
-        - platform
-      summary: Stripe Platform Account Webhook
-      operationId: processStripePlatformAccountEvent
-      parameters:
-        - in: header
-          name: Stripe-Signature
-          schema:
-            type: string
-          required: false
-          description: Stripe webhook signature
-
-      responses:
-        "200":
-          description: the status of processing the Stripe Platform Account event
-
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetails"
-
-  /v1/booking/stripe/connect/account/webhook:
-    post:
-      tags:
-        - v1
-        - booking
-        - stripe
-        - webhook
-        - connect
-      summary: Stripe Connect Account Webhook
-      operationId: processStripeConnectAccountEvent
-      parameters:
-        - in: header
-          name: Stripe-Signature
-          schema:
-            type: string
-          required: false
-          description: Stripe webhook signature
-
-      responses:
-        "200":
-          description: the status of processing the Stripe Connect Account event
-
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetails"
-
-  /v1/booking/xero/webhook:
-    post:
-      tags:
-        - v1
-        - booking
-        - xero
-        - webhook
-      summary: Xero Webhook
-      operationId: processXeroWebhookEvent
-      parameters:
-        - in: header
-          name: x-xero-signature
-          schema:
-            type: string
-          required: false
-          description: Xero webhook signature
-
-      responses:
-        "200":
-          description: the status of processing the Xero webhook event
-        "401":
-          description: invalid Xero webhook signature
 
 components:
   schemas:

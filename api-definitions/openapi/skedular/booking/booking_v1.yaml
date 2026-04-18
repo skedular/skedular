@@ -1,0 +1,200 @@
+openapi: 3.1.1
+info:
+  title: Booking API v1
+  description: "Booking REST API"
+  version: 1.0.0
+
+servers:
+  - url: https://api.skedular.app
+    description: production
+  - url: https://apistaging.skedular.app
+    description: staging
+  - url: http://localhost:9000
+    description: local gateway
+  - url: http://localhost:10300
+    description: local
+
+paths:
+  /v1/booking/version:
+    get:
+      tags:
+        - v1
+        - booking
+      summary: return API version
+      operationId: getVersion
+
+      responses:
+        "200":
+          description: the version of the API
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Version"
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/booking/raiseGraphqlChange/{topicName}/{id}:
+    get:
+      tags:
+        - v1
+        - booking
+        - graphql
+      summary: raise graphql change
+      operationId: raiseGraphqlChange
+      parameters:
+        - in: path
+          name: topicName
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: X-API-Key
+          schema:
+            type: string
+          required: true
+          description: API Key
+
+      responses:
+        "200":
+          description: the result of raising the graphql change
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/booking/stripe/platform/account/webhook:
+    post:
+      tags:
+        - v1
+        - booking
+        - stripe
+        - webhook
+        - platform
+      summary: Stripe Platform Account Webhook
+      operationId: processStripePlatformAccountEvent
+      parameters:
+        - in: header
+          name: Stripe-Signature
+          schema:
+            type: string
+          required: false
+          description: Stripe webhook signature
+
+      responses:
+        "200":
+          description: the status of processing the Stripe Platform Account event
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/booking/stripe/connect/account/webhook:
+    post:
+      tags:
+        - v1
+        - booking
+        - stripe
+        - webhook
+        - connect
+      summary: Stripe Connect Account Webhook
+      operationId: processStripeConnectAccountEvent
+      parameters:
+        - in: header
+          name: Stripe-Signature
+          schema:
+            type: string
+          required: false
+          description: Stripe webhook signature
+
+      responses:
+        "200":
+          description: the status of processing the Stripe Connect Account event
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/booking/xero/webhook:
+    post:
+      tags:
+        - v1
+        - booking
+        - xero
+        - webhook
+      summary: Xero Webhook
+      operationId: processXeroWebhookEvent
+      parameters:
+        - in: header
+          name: x-xero-signature
+          schema:
+            type: string
+          required: false
+          description: Xero webhook signature
+
+      responses:
+        "200":
+          description: the status of processing the Xero webhook event
+        "401":
+          description: invalid Xero webhook signature
+
+components:
+  schemas:
+    ProblemDetails:
+      type: object
+      additionalProperties: { }
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+
+    Version:
+      type: object
+      required:
+        - major
+        - minor
+        - build
+        - revision
+      properties:
+        major:
+          type: integer
+          format: int32
+          description: major version
+        minor:
+          type: integer
+          format: int32
+          description: minor version
+        build:
+          type: integer
+          format: int32
+          description: build number
+        revision:
+          type: integer
+          format: int32
+          description: revision
