@@ -1,7 +1,6 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { getMarketplaceLocationLink, getMarketplaceProductBookingLink, getMarketplaceProductSubscribeLink } from '@/components/links';
-import MarketplaceCancellationPolicyDetails from '@/components/marketplaceProduct/cancellation-policy-details';
-import CustomerTermsAndConditionsPanel from '@/components/marketplaceProduct/customer-terms-and-conditions-panel';
+import { CustomerTermsAndConditionsPanel, MarketplaceCancellationPolicyDetails } from '@/components/marketplaceProduct';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import { formatPriceForDisplay } from '@/libs/utils';

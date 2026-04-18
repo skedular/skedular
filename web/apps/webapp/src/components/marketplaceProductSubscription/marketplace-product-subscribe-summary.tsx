@@ -1,5 +1,5 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, SubtitleIconTypography } from '@/components/commons';
-import MarketplaceCancellationPolicyDetails from '@/components/marketplaceProduct/cancellation-policy-details';
+import { MarketplaceCancellationPolicyDetails } from '@/components/marketplaceProduct';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';

@@ -1,6 +1,6 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { getMarketplaceProductLink, getMarketplaceSubscriptionDetailsLink } from '@/components/links';
-import CustomerTermsAndConditionsPanel from '@/components/marketplaceProduct/customer-terms-and-conditions-panel';
+import { CustomerTermsAndConditionsPanel } from '@/components/marketplaceProduct';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';

@@ -152,6 +152,8 @@ export const getOrganizationBookingAddLink = (
     redirectUrl: options?.redirectUrl,
   });
 export const getOrganizationSubscriptionsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/subscriptions`;
+export const getOrganizationSubscriptionBaseLink = (integratedPlatrform: string | undefined, id: string, subscriptionId: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/subscriptions/${subscriptionId}`;
 export const getOrganizationUsersBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/users`;
 export const getOrganizationUserProfileBaseLink = (integratedPlatrform: string | undefined, id: string, customerId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/users/${customerId}?section=profile`;
