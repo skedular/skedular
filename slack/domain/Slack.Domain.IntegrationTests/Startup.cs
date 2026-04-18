@@ -1,4 +1,7 @@
-using Api.Shared.Clients.OpenApi.Skedular.Slack.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Slack.Callback.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Slack.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Slack.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Slack.Workaround.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Slack.V1;
 using Aspire.Hosting.Testing;
@@ -78,7 +81,10 @@ public class Startup
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddSingleton<ISlackClient>(_ => new SlackClient(slackApiClient));
+            .AddSingleton<ISlackCoreClient>(_ => new SlackCoreClient(slackApiClient))
+            .AddSingleton<ISlackGraphqlClient>(_ => new SlackGraphqlClient(slackApiClient))
+            .AddSingleton<ISlackCallbackClient>(_ => new SlackCallbackClient(slackApiClient))
+            .AddSingleton<ISlackWorkaroundClient>(_ => new SlackWorkaroundClient(slackApiClient));
 
         services
             .AddSkedularGraphQLV1()

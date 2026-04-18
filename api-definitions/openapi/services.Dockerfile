@@ -343,10 +343,10 @@ RUN /app/publish/Skedularctl mcp-tool-generate \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/skedular/slack_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Slack.V1 \
-  /Classname:Slack \
-  /Output:/output/Skedular/Slack/V1/Slack.g.cs \
+  /Input:/openapi/skedular/slack/slack_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Slack.Core.V1 \
+  /Classname:SlackCore \
+  /Output:/output/Skedular/Slack/V1/SlackCore.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -359,10 +359,79 @@ RUN nswag \
   /JsonLibrary:SystemTextJson \
   /ExcludedTypeNames:FileParameter
 
-RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Slack/V1/Slack.g.cs
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Slack/V1/SlackCore.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-  --input-file /output/Skedular/Slack/V1/Slack.g.cs \
-  --output-file /output/Skedular/Slack/V1/Slack.g.cs
+  --input-file /output/Skedular/Slack/V1/SlackCore.g.cs \
+  --output-file /output/Skedular/Slack/V1/SlackCore.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/slack/slack_graphql_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Slack.Graphql.V1 \
+  /Classname:SlackGraphql \
+  /Output:/output/Skedular/Slack/V1/SlackGraphql.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Slack/V1/SlackGraphql.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Slack/V1/SlackGraphql.g.cs \
+  --output-file /output/Skedular/Slack/V1/SlackGraphql.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/slack/slack_callback_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Slack.Callback.V1 \
+  /Classname:SlackCallback \
+  /Output:/output/Skedular/Slack/V1/SlackCallback.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Slack/V1/SlackCallback.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Slack/V1/SlackCallback.g.cs \
+  --output-file /output/Skedular/Slack/V1/SlackCallback.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/slack/slack_workaround_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Slack.Workaround.V1 \
+  /Classname:SlackWorkaround \
+  /Output:/output/Skedular/Slack/V1/SlackWorkaround.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Slack/V1/SlackWorkaround.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Slack/V1/SlackWorkaround.g.cs \
+  --output-file /output/Skedular/Slack/V1/SlackWorkaround.g.cs
 
 RUN nswag \
   openapi2cscontroller \

@@ -2,7 +2,7 @@ using Enterprise.Shared.Version;
 using Microsoft.Extensions.Logging;
 using Team.Api.Controllers;
 
-namespace Team.Api.UnitTests.Controllers.TeamControllerTests;
+namespace Team.Api.UnitTests.Controllers.TeamCoreControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class GetVersionShould
@@ -19,9 +19,7 @@ public class GetVersionShould
 
         await sut.GetVersion(CancellationToken.None);
 
-        var logCalls = Fake.GetCalls(logger)
-            .Where(call => call.Method.Name == nameof(ILogger.Log))
-            .ToList();
+        var logCalls = Fake.GetCalls(logger).Where(call => call.Method.Name == nameof(ILogger.Log)).ToList();
 
         logCalls.Count(call => Equals(call.Arguments[0], LogLevel.Information)).ShouldBe(2);
     }

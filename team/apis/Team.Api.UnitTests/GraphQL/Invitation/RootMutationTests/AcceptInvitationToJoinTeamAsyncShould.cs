@@ -27,9 +27,7 @@ public class AcceptInvitationToJoinTeamAsyncShould
 
         await sut.AcceptInvitationToJoinTeamAsync(input, invitationService, cancellationToken);
 
-        var logCalls = Fake.GetCalls(logger)
-            .Where(call => call.Method.Name == nameof(ILogger.Log))
-            .ToList();
+        var logCalls = Fake.GetCalls(logger).Where(call => call.Method.Name == nameof(ILogger.Log)).ToList();
 
         logCalls.Count(call => Equals(call.Arguments[0], LogLevel.Information)).ShouldBe(2);
     }

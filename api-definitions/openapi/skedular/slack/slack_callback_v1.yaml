@@ -1,0 +1,64 @@
+openapi: 3.1.1
+info:
+  title: Slack Callback API v1
+  description: "Slack Callback REST API"
+  version: 1.0.0
+
+servers:
+  - url: https://api.skedular.app
+    description: production
+  - url: https://apistaging.skedular.app
+    description: staging
+  - url: http://localhost:9000
+    description: local gateway
+  - url: http://localhost:10700
+    description: local
+
+paths:
+  /v1/slack/callback:
+    get:
+      tags:
+        - v1
+        - slack
+      summary: slack installation callback
+      operationId: callback
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: the response
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+components:
+  schemas:
+    ProblemDetails:
+      type: object
+      additionalProperties: { }
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string

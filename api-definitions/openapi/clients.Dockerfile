@@ -298,10 +298,70 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/slack_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Slack.V1 \
-  /Classname:SlackClient \
-  /Output:/output/Skedular/Slack/V1/Slack.g.cs \
+  /Input:/openapi/skedular/slack/slack_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Slack.Core.V1 \
+  /Classname:SlackCoreClient \
+  /Output:/output/Skedular/Slack/V1/SlackCore.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/slack/slack_graphql_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Slack.Graphql.V1 \
+  /Classname:SlackGraphqlClient \
+  /Output:/output/Skedular/Slack/V1/SlackGraphql.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/slack/slack_callback_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Slack.Callback.V1 \
+  /Classname:SlackCallbackClient \
+  /Output:/output/Skedular/Slack/V1/SlackCallback.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/slack/slack_workaround_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Slack.Workaround.V1 \
+  /Classname:SlackWorkaroundClient \
+  /Output:/output/Skedular/Slack/V1/SlackWorkaround.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \

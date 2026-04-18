@@ -1,10 +1,10 @@
-using Api.Shared.Clients.OpenApi.Skedular.Slack.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Slack.Core.V1;
 
 namespace Slack.Domain.IntegrationTests.Api.Rest.SlackControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Slack.Api")]
-public class GetVersionShould(ISlackClient slackClient)
+public class GetVersionShould(ISlackCoreClient slackClient)
 {
     [Theory]
     [AutoFakeItEasyData]
