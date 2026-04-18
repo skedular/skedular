@@ -78,11 +78,6 @@ public static class OpenTelemetryExtensions
                         {
                             tracing.AddConsoleExporter();
                         }
-
-                        if (!string.IsNullOrWhiteSpace(openTelemetryConfiguration.JaegerEndpoint))
-                        {
-                            tracing.AddJaegerExporter(options => options.Endpoint = new Uri(openTelemetryConfiguration.JaegerEndpoint));
-                        }
                     });
 
             if (!string.IsNullOrWhiteSpace(configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]))
