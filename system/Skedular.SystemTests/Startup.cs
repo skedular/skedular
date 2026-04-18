@@ -14,7 +14,9 @@ using Api.Shared.Clients.OpenApi.Skedular.Marketplace.V1;
 using Api.Shared.Clients.OpenApi.Skedular.MsTeams.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Organization.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Slack.V1;
-using Api.Shared.Clients.OpenApi.Skedular.Team.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Team.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Team.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Team.Workaround.V1;
 using Aspire.Hosting.Testing;
 using Booking.Shared.Database;
 using Core.Shared.Database;
@@ -152,6 +154,7 @@ public class Startup
                 teamDbConnectionString,
                 true,
                 "teamdb")
+            .AddSingleton<IGatewayClient>(_ => new GatewayClient(gatewayClient))
             .AddSingleton<IBookingCoreClient>(_ => new BookingCoreClient(bookingApiClient))
             .AddSingleton<IBookingGraphqlClient>(_ => new BookingGraphqlClient(bookingApiClient))
             .AddSingleton<IBookingStripeWebhookClient>(_ => new BookingStripeWebhookClient(bookingApiClient))
@@ -167,8 +170,9 @@ public class Startup
             .AddSingleton<IMsTeamsClient>(_ => new MsTeamsClient(msteamsApiClient))
             .AddSingleton<IOrganizationClient>(_ => new OrganizationClient(organizationApiClient))
             .AddSingleton<ISlackClient>(_ => new SlackClient(slackApiClient))
-            .AddSingleton<ITeamClient>(_ => new TeamClient(teamApiClient))
-            .AddSingleton<IGatewayClient>(_ => new GatewayClient(gatewayClient));
+            .AddSingleton<ITeamCoreClient>(_ => new TeamCoreClient(teamApiClient))
+            .AddSingleton<ITeamGraphqlClient>(_ => new TeamGraphqlClient(teamApiClient))
+            .AddSingleton<ITeamWorkaroundClient>(_ => new TeamWorkaroundClient(teamApiClient));
 
         services
             .AddSkedularGraphQLV1()
