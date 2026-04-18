@@ -1,0 +1,174 @@
+name: "webapp-spaces"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "v*"
+    paths:
+      - ".github/actions/**"
+      - ".github/workflows/lint.yml"
+      - ".github/workflows/webapp-spaces.yml"
+      - "web/pnpm-lock.yaml"
+      - "web/apps/webapp-spaces/**"
+      - "web/packages/**"
+      - "web/infrastructure/**"
+      - "shared/infrastructure/**"
+  pull_request:
+    branches:
+      - "main"
+    paths:
+      - ".github/actions/**"
+      - ".github/workflows/lint.yml"
+      - ".github/workflows/webapp-spaces.yml"
+      - "web/pnpm-lock.yaml"
+      - "web/apps/webapp-spaces/**"
+      - "web/packages/**"
+      - "web/infrastructure/**"
+      - "shared/infrastructure/**"
+
+jobs:
+  build:
+    name: "Build"
+    runs-on:
+      - ubuntu-latest
+    if: github.event.pull_request.draft == false
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions: write-all
+
+    steps:
+      - name: Checkout code with full history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Build, Test and validate
+        uses: "./.github/actions/build-test-push"
+        with:
+          dockerFilePath: ./web/apps/webapp-spaces/Dockerfile
+          dockerBuildContextPath: .
+          dockerRegistry: ghcr.io
+          dockerRegistryUsername: ${{ github.actor }}
+          dockerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          dockerNamespace: unityhubio
+          dockerRepository: webapp-spaces
+
+      - name: Configure AWS credentials - staging
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.STAGING_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Lint, Validate and Plan - staging
+        uses: "./.github/actions/lint-validate-infrastructure"
+        env:
+          TF_VAR_cloudflare_api_key: ${{ secrets.CLOUDFLARE_API_KEY }}
+          TF_VAR_vercel_api_token: ${{ secrets.VERCEL_API_TOKEN }}
+          TF_VAR_gcp_web_credentials_client_id: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_ID }}
+          TF_VAR_slack_client_secret: ${{ secrets.STAGING_SLACK_CLIENT_SECRET }}
+          TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
+          TF_VAR_google_map_api_key: ${{ secrets.STAGING_GOOGLE_MAP_API_KEY }}
+          TF_VAR_workos_api_key: ${{ secrets.STAGING_WORKOS_API_KEY }}
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          workingDirectory: ./web/apps/webapp-spaces/infrastructure/workspaces/staging
+          componentName: "webapp-spaces"
+          environment: staging
+
+      - name: Configure AWS credentials - production
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.PRODUCTION_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Lint, Validate and Plan - production
+        uses: "./.github/actions/lint-validate-infrastructure"
+        env:
+          TF_VAR_cloudflare_api_key: ${{ secrets.CLOUDFLARE_API_KEY }}
+          TF_VAR_vercel_api_token: ${{ secrets.VERCEL_API_TOKEN }}
+          TF_VAR_gcp_web_credentials_client_id: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_ID }}
+          TF_VAR_slack_client_secret: ${{ secrets.PRODUCTION_SLACK_CLIENT_SECRET }}
+          TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
+          TF_VAR_google_map_api_key: ${{ secrets.PRODUCTION_GOOGLE_MAP_API_KEY }}
+          TF_VAR_workos_api_key: ${{ secrets.PRODUCTION_WORKOS_API_KEY }}
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          workingDirectory: ./web/apps/webapp-spaces/infrastructure/workspaces/production
+          componentName: "webapp-spaces"
+          environment: production
+
+  staging:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    name: "Deploy to staging"
+    runs-on:
+      - ubuntu-latest
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions: write-all
+    environment: staging
+    needs:
+      - build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.STAGING_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Deploy Infrastructure
+        uses: "./.github/actions/deploy-infrastructure"
+        env:
+          TF_VAR_cloudflare_api_key: ${{ secrets.CLOUDFLARE_API_KEY }}
+          TF_VAR_vercel_api_token: ${{ secrets.VERCEL_API_TOKEN }}
+          TF_VAR_gcp_web_credentials_client_id: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_ID }}
+          TF_VAR_slack_client_secret: ${{ secrets.STAGING_SLACK_CLIENT_SECRET }}
+          TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
+          TF_VAR_google_map_api_key: ${{ secrets.STAGING_GOOGLE_MAP_API_KEY }}
+          TF_VAR_workos_api_key: ${{ secrets.STAGING_WORKOS_API_KEY }}
+        with:
+          workingDirectory: ./web/apps/webapp-spaces/infrastructure/workspaces/staging
+
+  production:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    name: "Deploy to production"
+    runs-on:
+      - ubuntu-latest
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions: write-all
+    environment: production
+    needs:
+      - staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.PRODUCTION_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Deploy Infrastructure
+        uses: "./.github/actions/deploy-infrastructure"
+        env:
+          TF_VAR_cloudflare_api_key: ${{ secrets.CLOUDFLARE_API_KEY }}
+          TF_VAR_vercel_api_token: ${{ secrets.VERCEL_API_TOKEN }}
+          TF_VAR_gcp_web_credentials_client_id: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_ID }}
+          TF_VAR_slack_client_secret: ${{ secrets.PRODUCTION_SLACK_CLIENT_SECRET }}
+          TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
+          TF_VAR_google_map_api_key: ${{ secrets.PRODUCTION_GOOGLE_MAP_API_KEY }}
+          TF_VAR_workos_api_key: ${{ secrets.PRODUCTION_WORKOS_API_KEY }}
+        with:
+          workingDirectory: ./web/apps/webapp-spaces/infrastructure/workspaces/production

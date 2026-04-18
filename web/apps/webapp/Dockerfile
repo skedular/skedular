@@ -30,7 +30,6 @@ RUN apk update && \
     apk add --upgrade apk-tools && \
     apk upgrade --available
 
-RUN mkdir -p /web/apps/msteams
 WORKDIR /web/apps/webapp
 COPY --from=build /src/web/apps/webapp /web/apps/webapp
 

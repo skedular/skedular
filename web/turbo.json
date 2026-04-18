@@ -85,20 +85,106 @@
     "webapp#relay": {
       "dependsOn": ["^relay"]
     },
-    "webapphelp#build": {
+    "webapp-help#build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
     },
-    "webapphelp#start": {
+    "webapp-help#start": {
       "dependsOn": ["^start"]
     },
-    "webapphelp#lint": {
+    "webapp-help#lint": {
       "dependsOn": ["^lint"]
     },
-    "webapphelp#lint-fix": {
+    "webapp-help#lint-fix": {
       "dependsOn": ["^lint-fix"]
     },
-    "webapphelp#format": {
+    "webapp-help#format": {
+      "dependsOn": ["^format"]
+    },
+    "webapp-teams#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
+    },
+    "webapp-teams#start": {
+      "dependsOn": ["^start"]
+    },
+    "webapp-teams#lint": {
+      "dependsOn": ["^lint"]
+    },
+    "webapp-teams#test": {
+      "dependsOn": ["^test"],
+      "outputs": []
+    },
+    "webapp-teams#test:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "webapp-teams#lint-fix": {
+      "dependsOn": ["^lint-fix"]
+    },
+    "webapp-teams#format": {
+      "dependsOn": ["^format"]
+    },
+    "webapp-teams#relay": {
+      "dependsOn": ["^relay"]
+    },
+    "webapp-spaces#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
+    },
+    "webapp-spaces#start": {
+      "dependsOn": ["^start"]
+    },
+    "webapp-spaces#lint": {
+      "dependsOn": ["^lint"]
+    },
+    "webapp-spaces#test": {
+      "dependsOn": ["^test"],
+      "outputs": []
+    },
+    "webapp-spaces#test:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "webapp-spaces#lint-fix": {
+      "dependsOn": ["^lint-fix"]
+    },
+    "webapp-spaces#format": {
+      "dependsOn": ["^format"]
+    },
+    "webapp-spaces#relay": {
+      "dependsOn": ["^relay"]
+    },
+    "webapp-teams-help#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
+    },
+    "webapp-teams-help#start": {
+      "dependsOn": ["^start"]
+    },
+    "webapp-teams-help#lint": {
+      "dependsOn": ["^lint"]
+    },
+    "webapp-teams-help#lint-fix": {
+      "dependsOn": ["^lint-fix"]
+    },
+    "webapp-teams-help#format": {
+      "dependsOn": ["^format"]
+    },
+    "webapp-spaces-help#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
+    },
+    "webapp-spaces-help#start": {
+      "dependsOn": ["^start"]
+    },
+    "webapp-spaces-help#lint": {
+      "dependsOn": ["^lint"]
+    },
+    "webapp-spaces-help#lint-fix": {
+      "dependsOn": ["^lint-fix"]
+    },
+    "webapp-spaces-help#format": {
       "dependsOn": ["^format"]
     }
   },

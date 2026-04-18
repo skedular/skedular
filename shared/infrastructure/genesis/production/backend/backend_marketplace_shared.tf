@@ -7,7 +7,6 @@ terraform {
     key            = "terraform.tfstate"
     dynamodb_table = "unityhub-production-marketplace-shared-terraform-state-lock"
     profile        = ""
-    role_arn       = ""
     encrypt        = "true"
   }
 }

@@ -54,8 +54,6 @@ runs:
     - name: Update Pull Request
       uses: actions/github-script@v7
       if: ${{ github.event_name == 'pull_request' }}
-      env:
-        PLAN: ${{ steps.plan.outputs.stdout }}
       with:
         github-token: ${{ inputs.githubToken }}
         script: |
@@ -64,11 +62,7 @@ runs:
           ### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
           ### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
           ### Terraform Plan 📖 \`${{ steps.plan.outcome }}\`
-          <details><summary>Show Plan</summary>
-          \`\`\`terraform\n
-          ${process.env.PLAN}
-          \`\`\`
-          </details>
+          _Terraform plan output omitted in PR comment to avoid CI argument-size limits._
           *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
           github.rest.issues.createComment({
             issue_number: context.issue.number,
