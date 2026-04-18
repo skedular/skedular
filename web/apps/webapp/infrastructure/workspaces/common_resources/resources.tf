@@ -205,12 +205,6 @@ resource "vercel_project_domain" "default" {
   domain     = module.shared_common.webapp_domain_name
 }
 
-resource "vercel_project_domain" "skedulartrial" {
-  project_id = vercel_project.default.id
-  team_id    = local.team_id
-  domain     = "skedulartrial.${module.shared_common.webapp_domain_name}"
-}
-
 data "vercel_project_directory" "default" {
   path = "../../../../.."
 }
@@ -226,19 +220,6 @@ resource "vercel_deployment" "default" {
 resource "cloudflare_dns_record" "default" {
   zone_id = module.shared_common.cloudflare_webapp_zone_id
   name    = local.is_staging ? module.shared_common.webapp_domain_name : "@"
-  content = "cname.vercel-dns.com."
-  type    = "CNAME"
-  proxied = false
-  ttl     = 600
-
-  depends_on = [
-    vercel_project_domain.default,
-  ]
-}
-
-resource "cloudflare_dns_record" "skedulartrial" {
-  zone_id = module.shared_common.cloudflare_webapp_zone_id
-  name    = "skedulartrial.${module.shared_common.webapp_domain_name}"
   content = "cname.vercel-dns.com."
   type    = "CNAME"
   proxied = false
