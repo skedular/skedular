@@ -56,6 +56,13 @@
         <File Path="api-definitions/openapi/clients.Dockerfile"/>
         <File Path="api-definitions/openapi/generate.sh"/>
         <File Path="api-definitions/openapi/services.Dockerfile"/>
+        <File Path="api-definitions/openapi/AGENTS.md"/>
+        <File Path="api-definitions/openapi/clients.manifest.tsv"/>
+        <File Path="api-definitions/openapi/services.manifest.tsv"/>
+    </Folder>
+    <Folder Name="/api-definitions/openapi/scripts/">
+        <File Path="api-definitions/openapi/scripts/generate-clients.sh"/>
+        <File Path="api-definitions/openapi/scripts/generate-services.sh"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/">
     </Folder>
