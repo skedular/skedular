@@ -1,10 +1,10 @@
-using Api.Shared.Clients.OpenApi.Skedular.Marketplace.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Core.V1;
 
 namespace Marketplace.Domain.IntegrationTests.Api.Rest.MarketplaceControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Marketplace.Api")]
-public class GetVersionShould(IMarketplaceClient marketplaceClient)
+public class GetVersionShould(IMarketplaceCoreClient marketplaceClient)
 {
     [Theory]
     [AutoFakeItEasyData]

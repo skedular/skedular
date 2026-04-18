@@ -238,10 +238,50 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/marketplace_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Marketplace.V1 \
-  /Classname:MarketplaceClient \
-  /Output:/output/Skedular/Marketplace/V1/Marketplace.g.cs \
+  /Input:/openapi/skedular/marketplace/marketplace_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Marketplace.Core.V1 \
+  /Classname:MarketplaceCoreClient \
+  /Output:/output/Skedular/Marketplace/V1/MarketplaceCore.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/marketplace/marketplace_graphql_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Marketplace.Graphql.V1 \
+  /Classname:MarketplaceGraphqlClient \
+  /Output:/output/Skedular/Marketplace/V1/MarketplaceGraphql.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/marketplace/marketplace_workaround_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Marketplace.Workaround.V1 \
+  /Classname:MarketplaceWorkaroundClient \
+  /Output:/output/Skedular/Marketplace/V1/MarketplaceWorkaround.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \

@@ -10,7 +10,9 @@ using Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Workaround.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Gateway.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Location.V1;
-using Api.Shared.Clients.OpenApi.Skedular.Marketplace.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Workaround.V1;
 using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Workaround.V1;
@@ -171,7 +173,9 @@ public class Startup
             .AddSingleton<ICustomerWorkaroundClient>(_ => new CustomerWorkaroundClient(customerApiClient))
             .AddSingleton<ICoreClient>(_ => new CoreClient(coreApiClient))
             .AddSingleton<ILocationClient>(_ => new LocationClient(locationApiClient))
-            .AddSingleton<IMarketplaceClient>(_ => new MarketplaceClient(marketplaceApiClient))
+            .AddSingleton<IMarketplaceCoreClient>(_ => new MarketplaceCoreClient(marketplaceApiClient))
+            .AddSingleton<IMarketplaceGraphqlClient>(_ => new MarketplaceGraphqlClient(marketplaceApiClient))
+            .AddSingleton<IMarketplaceWorkaroundClient>(_ => new MarketplaceWorkaroundClient(marketplaceApiClient))
             .AddSingleton<IMsTeamsCoreClient>(_ => new MsTeamsCoreClient(msteamsApiClient))
             .AddSingleton<IMsTeamsGraphqlClient>(_ => new MsTeamsGraphqlClient(msteamsApiClient))
             .AddSingleton<IMsTeamsWorkaroundClient>(_ => new MsTeamsWorkaroundClient(msteamsApiClient))

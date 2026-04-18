@@ -25,23 +25,14 @@ using Microsoft.AspNetCore.Mvc;
 #pragma warning disable 8625 // Disable "CS8625 Cannot convert null literal to non-nullable reference type"
 #pragma warning disable 8765 // Disable "CS8765 Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes)."
 
-namespace Api.Shared.Services.OpenApi.Skedular.Marketplace.V1
+namespace Api.Shared.Services.OpenApi.Skedular.Marketplace.Graphql.V1
 {
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.0.0 (NJsonSchema v11.6.0.0 (Newtonsoft.Json v13.0.0.0))")]
     [ModelContextProtocol.Server.McpServerToolType]
-    public abstract class MarketplaceControllerBase : Microsoft.AspNetCore.Mvc.Controller
+    public abstract class MarketplaceGraphqlControllerBase : Microsoft.AspNetCore.Mvc.Controller
     {
-        /// <summary>
-        /// return API version
-        /// </summary>
-        /// <returns>the version of the API</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/marketplace/version")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("return API version")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
         /// <summary>
         /// raise graphql change
         /// </summary>
@@ -51,24 +42,6 @@ namespace Api.Shared.Services.OpenApi.Skedular.Marketplace.V1
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("raise graphql change")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RaiseGraphqlChange(string topicName, string id, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// republish organization products
-        /// </summary>
-        /// <returns>the status of all organization products republishing</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/marketplace/{organizationId}/products/republish-all")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("republish organization products")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAllOrganizationProducts(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// republish all products
-        /// </summary>
-        /// <returns>the status of all products republishing</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/marketplace/products/republish-all")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("republish all products")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAllProducts(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
@@ -90,49 +63,6 @@ namespace Api.Shared.Services.OpenApi.Skedular.Marketplace.V1
 
         [System.Text.Json.Serialization.JsonPropertyName("instance")]
         public string Instance { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.0.0 (NJsonSchema v11.6.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Version
-    {
-
-        /// <summary>
-        /// major version
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("major")]
-        [System.ComponentModel.Description("major version")]
-        public int Major { get; set; } = default!;
-
-        /// <summary>
-        /// minor version
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("minor")]
-        [System.ComponentModel.Description("minor version")]
-        public int Minor { get; set; } = default!;
-
-        /// <summary>
-        /// build number
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("build")]
-        [System.ComponentModel.Description("build number")]
-        public int Build { get; set; } = default!;
-
-        /// <summary>
-        /// revision
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("revision")]
-        [System.ComponentModel.Description("revision")]
-        public int Revision { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 

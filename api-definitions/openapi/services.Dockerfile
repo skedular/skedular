@@ -274,10 +274,10 @@ RUN /app/publish/Skedularctl mcp-tool-generate \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/skedular/marketplace_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Marketplace.V1 \
-  /Classname:Marketplace \
-  /Output:/output/Skedular/Marketplace/V1/Marketplace.g.cs \
+  /Input:/openapi/skedular/marketplace/marketplace_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Marketplace.Core.V1 \
+  /Classname:MarketplaceCore \
+  /Output:/output/Skedular/Marketplace/V1/MarketplaceCore.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -290,10 +290,56 @@ RUN nswag \
   /JsonLibrary:SystemTextJson \
   /ExcludedTypeNames:FileParameter
 
-RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Marketplace/V1/Marketplace.g.cs
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Marketplace/V1/MarketplaceCore.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-  --input-file /output/Skedular/Marketplace/V1/Marketplace.g.cs \
-  --output-file /output/Skedular/Marketplace/V1/Marketplace.g.cs
+  --input-file /output/Skedular/Marketplace/V1/MarketplaceCore.g.cs \
+  --output-file /output/Skedular/Marketplace/V1/MarketplaceCore.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/marketplace/marketplace_graphql_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Marketplace.Graphql.V1 \
+  /Classname:MarketplaceGraphql \
+  /Output:/output/Skedular/Marketplace/V1/MarketplaceGraphql.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Marketplace/V1/MarketplaceGraphql.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Marketplace/V1/MarketplaceGraphql.g.cs \
+  --output-file /output/Skedular/Marketplace/V1/MarketplaceGraphql.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/marketplace/marketplace_workaround_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Marketplace.Workaround.V1 \
+  /Classname:MarketplaceWorkaround \
+  /Output:/output/Skedular/Marketplace/V1/MarketplaceWorkaround.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Marketplace/V1/MarketplaceWorkaround.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Marketplace/V1/MarketplaceWorkaround.g.cs \
+  --output-file /output/Skedular/Marketplace/V1/MarketplaceWorkaround.g.cs
 
 RUN nswag \
   openapi2cscontroller \

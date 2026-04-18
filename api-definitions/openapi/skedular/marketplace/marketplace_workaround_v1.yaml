@@ -1,0 +1,82 @@
+openapi: 3.1.1
+info:
+  title: Marketplace Workaround API v1
+  description: "Marketplace Workaround REST API"
+  version: 1.0.0
+
+servers:
+  - url: https://api.skedular.app
+    description: production
+  - url: https://apistaging.skedular.app
+    description: staging
+  - url: http://localhost:9000
+    description: local gateway
+  - url: http://localhost:11000
+    description: local
+
+paths:
+  /v1/marketplace/{organizationId}/products/republish-all:
+    put:
+      tags:
+        - v1
+        - marketplace
+        - product
+        - workaround
+      summary: republish organization products
+      operationId: republishAllOrganizationProducts
+      parameters:
+        - in: path
+          name: organizationId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: the status of all organization products republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/marketplace/products/republish-all:
+    put:
+      tags:
+        - v1
+        - marketplace
+        - product
+        - workaround
+      summary: republish all products
+      operationId: republishAllProducts
+
+      responses:
+        "200":
+          description: the status of all products republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+components:
+  schemas:
+    ProblemDetails:
+      type: object
+      additionalProperties: { }
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
