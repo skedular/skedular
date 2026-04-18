@@ -43,7 +43,7 @@
         <PackageReference Include="StrawberryShake.Server" Version="15.1.14"/>
 
         <!-- Code Coverage -->
-        <PackageReference Include="coverlet.collector" Version="8.0.1">
+        <PackageReference Include="coverlet.collector" Version="10.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
