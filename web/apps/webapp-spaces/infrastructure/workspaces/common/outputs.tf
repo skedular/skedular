@@ -6,9 +6,9 @@ output "tags" {
 }
 
 output "project_name" {
-  value = "${var.environment}-webapp"
+  value = "${var.environment}-webapp-spaces"
 }
 
 output "cognito_user_pool_client_name" {
-  value = "${var.environment}_webapp"
+  value = "${var.environment}_webapp-spaces"
 }
