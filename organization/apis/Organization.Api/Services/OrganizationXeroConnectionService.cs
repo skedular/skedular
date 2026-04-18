@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using Api.Shared.Services.OpenApi.Skedular.Organization.V1;
+using Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Accounting.Configurations;
 using Enterprise.Shared.Configurations;
@@ -65,7 +65,7 @@ public class OrganizationXeroConnectionService(
 
     private static readonly Lazy<string> s_xeroOAuthCallbackBaseUrl = new(() =>
     {
-        var method = typeof(OrganizationControllerBase).GetMethod(nameof(OrganizationControllerBase.XeroOAuthCallback));
+        var method = typeof(OrganizationCoreControllerBase).GetMethod(nameof(OrganizationCoreControllerBase.XeroOAuthCallback));
         ArgumentNullException.ThrowIfNull(method);
 
         var routeAttribute = method.GetCustomAttributes(typeof(RouteAttribute), true).Cast<RouteAttribute>().First();

@@ -1,4 +1,6 @@
-using Api.Shared.Clients.OpenApi.Skedular.Organization.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Organization.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Aspire.Hosting.Testing;
@@ -80,7 +82,9 @@ public class Startup
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddSingleton<IOrganizationClient>(_ => new OrganizationClient(organizationApiClient));
+            .AddSingleton<IOrganizationCoreClient>(_ => new OrganizationCoreClient(organizationApiClient))
+            .AddSingleton<IOrganizationGraphqlClient>(_ => new OrganizationGraphqlClient(organizationApiClient))
+            .AddSingleton<IOrganizationWorkaroundClient>(_ => new OrganizationWorkaroundClient(organizationApiClient));
 
         services
             .AddSkedularGraphQLV1()

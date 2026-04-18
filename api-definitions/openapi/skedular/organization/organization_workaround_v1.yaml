@@ -1,0 +1,218 @@
+openapi: 3.1.1
+info:
+  title: Organization Workaround API v1
+  description: "Organization Workaround REST API"
+  version: 1.0.0
+
+servers:
+  - url: https://api.skedular.app
+    description: production
+  - url: https://apistaging.skedular.app
+    description: staging
+  - url: http://localhost:9000
+    description: local gateway
+  - url: http://localhost:10200
+    description: local
+
+paths:
+  /v1/organization/{organizationId}/republish:
+    put:
+      tags:
+        - v1
+        - organization
+        - workaround
+      summary: republish organization
+      operationId: republish
+      parameters:
+        - in: path
+          name: organizationId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: the status of organization republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/republish-all:
+    put:
+      tags:
+        - v1
+        - organization
+        - workaround
+      summary: republish all organizations
+      operationId: republishAll
+
+      responses:
+        "200":
+          description: the status of organization republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/regenerate-all-offerings:
+    put:
+      tags:
+        - v1
+        - organization
+        - offering
+        - workaround
+      summary: regenerate all offerings
+      operationId: regenerateAllOfferings
+
+      responses:
+        "200":
+          description: the status of regenrating all offerings
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/rerun-all-offerings-workflows:
+    put:
+      tags:
+        - v1
+        - organization
+        - offering
+        - workaround
+      summary: rerun all offerings workflows
+      operationId: rerunAllOfferingsWorkflows
+
+      responses:
+        "200":
+          description: the status of running all offerings workflows
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/azure-tenant/resync-all-azure-tenants:
+    put:
+      tags:
+        - v1
+        - organization
+        - azure-tenant
+        - workaround
+      summary: resync all azure tenants
+      operationId: reSyncAllAzureTenants
+
+      responses:
+        "200":
+          description: the status of resyncing all azure tenants
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/azure-tenant/{tenantId}/resync:
+    put:
+      tags:
+        - v1
+        - organization
+        - azure-tenant
+        - workaround
+      summary: resync azure tenant
+      operationId: reSyncAzureTenant
+      parameters:
+        - in: path
+          name: tenantId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: the status of resyncing azure tenant
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/analytics/regenerate-all-daily-analytics:
+    put:
+      tags:
+        - v1
+        - organization
+        - analytics
+        - workaround
+      summary: regenerate all organizations daily analytics
+      operationId: regenerateAllDailyAnalytics
+
+      responses:
+        "200":
+          description: the status of regenerating all organizations daily analytics
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/analytics/{organizationId}/regenerate-daily-analytics:
+    put:
+      tags:
+        - v1
+        - organization
+        - analytics
+        - workaround
+      summary: regenerate organization daily analytics
+      operationId: regenerateDailyAnalytics
+      parameters:
+        - in: path
+          name: organizationId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: the status of regenerating organization daily analytics
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+components:
+  schemas:
+    ProblemDetails:
+      type: object
+      additionalProperties: { }
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string

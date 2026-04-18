@@ -33,7 +33,9 @@ npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/msteams/msteams_graphql_v1.yaml --output ./src/clients/openapi/skedular/v1/msteams/graphql/fetch --name SkedularMsTeamsGraphqlV1Client --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/msteams/msteams_workaround_v1.yaml --output ./src/clients/openapi/skedular/v1/msteams/workaround/fetch --name SkedularMsTeamsWorkaroundV1Client --client fetch --exportSchemas true &
 
-npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/organization_v1.yaml --output ./src/clients/openapi/skedular/v1/organization/fetch --name SkedularOrganizationV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/organization/organization_v1.yaml --output ./src/clients/openapi/skedular/v1/organization/core/fetch --name SkedularOrganizationCoreV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/organization/organization_graphql_v1.yaml --output ./src/clients/openapi/skedular/v1/organization/graphql/fetch --name SkedularOrganizationGraphqlV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/organization/organization_workaround_v1.yaml --output ./src/clients/openapi/skedular/v1/organization/workaround/fetch --name SkedularOrganizationWorkaroundV1Client --client fetch --exportSchemas true &
 
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/slack/slack_v1.yaml --output ./src/clients/openapi/skedular/v1/slack/core/fetch --name SkedularSlackCoreV1Client --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/slack/slack_graphql_v1.yaml --output ./src/clients/openapi/skedular/v1/slack/graphql/fetch --name SkedularSlackGraphqlV1Client --client fetch --exportSchemas true &

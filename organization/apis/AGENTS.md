@@ -14,13 +14,13 @@ This file covers `organization/apis/`.
 ## Xero API Boundary
 
 - Xero OAuth routes are contract-first OpenAPI surfaces, not ad hoc controller-only endpoints.
-- Add or change Xero REST routes in `api-definitions/openapi/skedular/organization_v1.yaml`, regenerate, then implement
+- Add or change Xero REST routes in `api-definitions/openapi/skedular/organization/*.yaml`, regenerate, then implement
   the generated controller surface.
 - `organization/apis/` owns:
-    - Xero authorize URL generation
-    - OAuth callback handling
-    - tenant-selection completion/update rules
-    - org-facing connection settings mutations/queries
+  - Xero authorize URL generation
+  - OAuth callback handling
+  - tenant-selection completion/update rules
+  - org-facing connection settings mutations/queries
 - `organization/apis/` also owns the allowed Xero billing-mode list exposed to the UI/API surface.
 - `organization/apis/` owns the org-facing invoice payment-terms settings too, such as default invoice due days.
 - Keep the billing-mode surface small and explicit. Booking should own the downstream invoice-behavior differences.
@@ -37,8 +37,8 @@ This file covers `organization/apis/`.
   files, then regenerate the web Relay artifacts that use `organizationXeroBillingModes`.
 - Token expiry timestamps are integration-managed state and should not be writable from GraphQL settings mutations.
 - The OAuth callback is intentionally not customer-JWT-authenticated. Trust comes from:
-    - our encrypted `state`
-    - successful Xero code exchange using our client credentials
+  - our encrypted `state`
+  - successful Xero code exchange using our client credentials
 - Keep callback route building tied to generated controller metadata instead of hardcoding route strings.
 - Xero connection writes must invalidate `ICachedOrganizationService`; otherwise the setup UI can keep serving stale org
   Xero state after callback/update/remove.

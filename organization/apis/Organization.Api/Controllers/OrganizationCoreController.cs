@@ -2,24 +2,22 @@ using System.Globalization;
 using Api.Shared.Services;
 using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.Offering;
-using Api.Shared.Services.OpenApi.Skedular.Organization.V1;
+using Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1;
 using Enterprise.Shared.Version;
-using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Mvc;
 using Organization.Api.Services;
 using Organization.Shared.Publishers;
 using Stripe;
 using StripeConfiguration = Enterprise.Shared.Payment.Configurations.StripeConfiguration;
-using Version = Api.Shared.Services.OpenApi.Skedular.Organization.V1.Version;
+using Version = Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1.Version;
 
 namespace Organization.Api.Controllers;
 
 [ApiController]
-public class OrganizationController(
+public class OrganizationCoreController(
     IVersionService versionService,
     OrganizationConfiguration organizationConfiguration,
     StripeConfiguration stripeConfiguration,
-    IWorkaroundService workaroundService,
     IAzureTenantService azureTenantService,
     IOrganizationSsoService organizationSsoService,
     IPaymentService paymentService,
@@ -29,8 +27,8 @@ public class OrganizationController(
     IOrganizationOfferingService organizationOfferingService,
     IOrganizationOwnershipService organizationOwnershipService,
     TimeProvider timeProvider,
-    ILogger<OrganizationController> logger,
-    ITopicEventSender topicEventSender) : OrganizationControllerBase
+    ILogger<OrganizationCoreController> logger)
+    : OrganizationCoreControllerBase
 {
     private static readonly string s_homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
@@ -40,53 +38,11 @@ public class OrganizationController(
 
         return Task.FromResult<ActionResult<Version>>(new Version
         {
-            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision
         });
-    }
-
-    public override async Task<IActionResult> RaiseGraphqlChange(
-        string topicName,
-        string id,
-        // ReSharper disable once InconsistentNaming
-        string x_API_Key,
-        CancellationToken cancellationToken = default)
-    {
-        if (x_API_Key != organizationConfiguration.ApiKey)
-        {
-            return Unauthorized();
-        }
-
-        await topicEventSender.SendAsync(topicName, id, cancellationToken);
-
-        return Ok();
-    }
-
-    public override async Task<IActionResult> Republish(string organizationId, CancellationToken cancellationToken = default)
-    {
-        await workaroundService.RepublishOrganizationAsync(organizationId, cancellationToken);
-
-        return Ok();
-    }
-
-    public override async Task<IActionResult> RepublishAll(CancellationToken cancellationToken = default)
-    {
-        await workaroundService.RepublishAllOrganizationsAsync(cancellationToken);
-
-        return Ok();
-    }
-
-    public override async Task<IActionResult> RegenerateAllOfferings(CancellationToken cancellationToken = default)
-    {
-        await organizationOfferingService.RegenerateAllOfferingsAsync(cancellationToken);
-
-        return Ok();
-    }
-
-    public override async Task<IActionResult> RerunAllOfferingsWorkflows(CancellationToken cancellationToken = default)
-    {
-        await organizationOfferingService.RerunAllOfferingsWorkflowsAsync(cancellationToken);
-
-        return Ok();
     }
 
     public override async Task<IActionResult> ChangeOrganizationOffering(
@@ -169,11 +125,12 @@ public class OrganizationController(
     }
 
     public override async Task<IActionResult> AddPaymentMethod(
-        // ReSharper disable InconsistentNaming
+        // ReSharper disable once InconsistentNaming
         string setup_intent,
+        // ReSharper disable once InconsistentNaming
         string setup_intent_client_secret,
+        // ReSharper disable once InconsistentNaming
         string redirect_status,
-        // ReSharper restore InconsistentNaming
         CancellationToken cancellationToken = default) =>
         Redirect(await paymentService.HandleStripePaymentMethodEventAsync(setup_intent_client_secret, redirect_status, cancellationToken));
 
@@ -298,7 +255,6 @@ public class OrganizationController(
                             json,
                             cancellationToken);
                     }
-
                     break;
             }
 
@@ -327,33 +283,5 @@ public class OrganizationController(
         var redirectUrl = await organizationStripeConnectAccountService.ConnectExistingAccountAsync(code, scope, state, cancellationToken);
 
         return Redirect(redirectUrl.ToString());
-    }
-
-    public override async Task<IActionResult> ReSyncAllAzureTenants(CancellationToken cancellationToken = default)
-    {
-        await workaroundService.ReSyncAllAzureTenantsAsync(cancellationToken);
-
-        return Ok();
-    }
-
-    public override async Task<IActionResult> ReSyncAzureTenant(string tenantId, CancellationToken cancellationToken = default)
-    {
-        await workaroundService.ReSyncAzureTenantAsync(tenantId, cancellationToken);
-
-        return Ok();
-    }
-
-    public override async Task<IActionResult> RegenerateAllDailyAnalytics(CancellationToken cancellationToken = default)
-    {
-        await workaroundService.RegenerateAllDailyAnalyticsAsync(cancellationToken);
-
-        return Ok();
-    }
-
-    public override async Task<IActionResult> RegenerateDailyAnalytics(string organizationId, CancellationToken cancellationToken = default)
-    {
-        await workaroundService.RegenerateDailyAnalyticsAsync(organizationId, cancellationToken);
-
-        return Ok();
     }
 }

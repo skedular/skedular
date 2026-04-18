@@ -17,7 +17,6 @@ RUN --mount=type=cache,target=~/.nuget/packages dotnet restore "Skedularctl.cspr
 RUN --mount=type=cache,target=~/.nuget/packages dotnet build "Skedularctl.csproj" --no-restore -c Release -o /app/build
 RUN --mount=type=cache,target=~/.nuget/packages dotnet publish "Skedularctl.csproj" -c Release -o /app/publish
 
-RUN mkdir -p /output/V1
 COPY ["api-definitions/openapi", "/openapi"]
 
 RUN nswag \
@@ -481,10 +480,10 @@ RUN /app/publish/Skedularctl mcp-tool-generate \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/skedular/organization_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Organization.V1 \
-  /Classname:Organization \
-  /Output:/output/Skedular/Organization/V1/Organization.g.cs \
+  /Input:/openapi/skedular/organization/organization_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1 \
+  /Classname:OrganizationCore \
+  /Output:/output/Skedular/Organization/V1/OrganizationCore.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -497,10 +496,56 @@ RUN nswag \
   /JsonLibrary:SystemTextJson \
   /ExcludedTypeNames:FileParameter
 
-RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Organization/V1/Organization.g.cs
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Organization/V1/OrganizationCore.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-  --input-file /output/Skedular/Organization/V1/Organization.g.cs \
-  --output-file /output/Skedular/Organization/V1/Organization.g.cs
+  --input-file /output/Skedular/Organization/V1/OrganizationCore.g.cs \
+  --output-file /output/Skedular/Organization/V1/OrganizationCore.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/organization/organization_graphql_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Organization.Graphql.V1 \
+  /Classname:OrganizationGraphql \
+  /Output:/output/Skedular/Organization/V1/OrganizationGraphql.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Organization/V1/OrganizationGraphql.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Organization/V1/OrganizationGraphql.g.cs \
+  --output-file /output/Skedular/Organization/V1/OrganizationGraphql.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/organization/organization_workaround_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1 \
+  /Classname:OrganizationWorkaround \
+  /Output:/output/Skedular/Organization/V1/OrganizationWorkaround.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Organization/V1/OrganizationWorkaround.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Organization/V1/OrganizationWorkaround.g.cs \
+  --output-file /output/Skedular/Organization/V1/OrganizationWorkaround.g.cs
 
 RUN nswag \
   openapi2cscontroller \

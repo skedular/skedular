@@ -1,10 +1,10 @@
-using Api.Shared.Clients.OpenApi.Skedular.Organization.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1;
 
 namespace Organization.Domain.IntegrationTests.Api.Rest.OrganizationControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Organization.Api")]
-public class GetVersionShould(IOrganizationClient organizationClient)
+public class GetVersionShould(IOrganizationCoreClient organizationClient)
 {
     [Theory]
     [AutoFakeItEasyData]

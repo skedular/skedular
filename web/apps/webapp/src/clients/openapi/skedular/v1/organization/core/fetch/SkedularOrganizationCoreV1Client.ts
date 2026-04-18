@@ -5,10 +5,8 @@
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
-import { AnalyticsService } from './services/AnalyticsService';
 import { AzureTenantService } from './services/AzureTenantService';
 import { ConnectService } from './services/ConnectService';
-import { GraphqlService } from './services/GraphqlService';
 import { OauthService } from './services/OauthService';
 import { OfferingService } from './services/OfferingService';
 import { OnboardingService } from './services/OnboardingService';
@@ -22,14 +20,11 @@ import { SsoService } from './services/SsoService';
 import { StripeService } from './services/StripeService';
 import { V1Service } from './services/V1Service';
 import { WebhookService } from './services/WebhookService';
-import { WorkaroundService } from './services/WorkaroundService';
 import { XeroService } from './services/XeroService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
-export class SkedularOrganizationV1Client {
-    public readonly analytics: AnalyticsService;
+export class SkedularOrganizationCoreV1Client {
     public readonly azureTenant: AzureTenantService;
     public readonly connect: ConnectService;
-    public readonly graphql: GraphqlService;
     public readonly oauth: OauthService;
     public readonly offering: OfferingService;
     public readonly onboarding: OnboardingService;
@@ -43,7 +38,6 @@ export class SkedularOrganizationV1Client {
     public readonly stripe: StripeService;
     public readonly v1: V1Service;
     public readonly webhook: WebhookService;
-    public readonly workaround: WorkaroundService;
     public readonly xero: XeroService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
@@ -58,10 +52,8 @@ export class SkedularOrganizationV1Client {
             HEADERS: config?.HEADERS,
             ENCODE_PATH: config?.ENCODE_PATH,
         });
-        this.analytics = new AnalyticsService(this.request);
         this.azureTenant = new AzureTenantService(this.request);
         this.connect = new ConnectService(this.request);
-        this.graphql = new GraphqlService(this.request);
         this.oauth = new OauthService(this.request);
         this.offering = new OfferingService(this.request);
         this.onboarding = new OnboardingService(this.request);
@@ -75,7 +67,6 @@ export class SkedularOrganizationV1Client {
         this.stripe = new StripeService(this.request);
         this.v1 = new V1Service(this.request);
         this.webhook = new WebhookService(this.request);
-        this.workaround = new WorkaroundService(this.request);
         this.xero = new XeroService(this.request);
     }
 }

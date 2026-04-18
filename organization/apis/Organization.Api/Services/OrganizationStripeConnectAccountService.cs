@@ -1,6 +1,6 @@
 using System.Net;
 using Api.Shared.Services;
-using Api.Shared.Services.OpenApi.Skedular.Organization.V1;
+using Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
@@ -68,7 +68,7 @@ public class OrganizationStripeConnectAccountService(
 {
     private static readonly Lazy<string> s_stripeConnectAccountOAuthCallbackBaseUrl = new(() =>
     {
-        var method = typeof(OrganizationControllerBase).GetMethod(nameof(OrganizationControllerBase.StripeConnectAccountOAuthCallback));
+        var method = typeof(OrganizationCoreControllerBase).GetMethod(nameof(OrganizationCoreControllerBase.StripeConnectAccountOAuthCallback));
         ArgumentNullException.ThrowIfNull(method);
 
         var routeAttribute = method.GetCustomAttributes(typeof(RouteAttribute), true).Cast<RouteAttribute>().First();
@@ -364,7 +364,10 @@ public class OrganizationStripeConnectAccountService(
         var oauthToken = await oauthTokenCreateService.CreateAsync(
             new OAuthTokenCreateOptions
             {
-                GrantType = "authorization_code", Code = code, Scope = scope, ClientSecret = stripeConfiguration.SecretKey
+                GrantType = "authorization_code",
+                Code = code,
+                Scope = scope,
+                ClientSecret = stripeConfiguration.SecretKey
             },
             new RequestOptions(),
             cancellationToken);
@@ -483,7 +486,9 @@ public class OrganizationStripeConnectAccountService(
                     repositoryFactory.OrganizationStripeConnectAccountAuthorizationRepository.Add(
                         new OrganizationStripeConnectAccountAuthorization
                         {
-                            Id = randomHelper.Generate(), IsAuthorized = true, OrganizationStripeConnectAccount = account
+                            Id = randomHelper.Generate(),
+                            IsAuthorized = true,
+                            OrganizationStripeConnectAccount = account
                         });
             }
             else
@@ -505,7 +510,9 @@ public class OrganizationStripeConnectAccountService(
                     repositoryFactory.OrganizationStripeConnectAccountAuthorizationRepository.Add(
                         new OrganizationStripeConnectAccountAuthorization
                         {
-                            Id = randomHelper.Generate(), IsAuthorized = false, OrganizationStripeConnectAccount = account
+                            Id = randomHelper.Generate(),
+                            IsAuthorized = false,
+                            OrganizationStripeConnectAccount = account
                         });
             }
             else

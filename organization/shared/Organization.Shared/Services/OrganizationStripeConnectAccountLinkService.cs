@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.Skedular.Organization.V1;
+using Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Random;
 using Flurl;
@@ -26,8 +26,8 @@ public class OrganizationStripeConnectAccountLinkService(
 {
     private static readonly Lazy<string> s_refreshLinkBaseUrl = new(() =>
     {
-        var method = typeof(OrganizationControllerBase).GetMethod(
-            nameof(OrganizationControllerBase.RefreshOrganizationStripeConnectAccountOnboarding));
+        var method = typeof(OrganizationCoreControllerBase).GetMethod(
+            nameof(OrganizationCoreControllerBase.RefreshOrganizationStripeConnectAccountOnboarding));
         ArgumentNullException.ThrowIfNull(method);
 
         var routeAttribute = method.GetCustomAttributes(typeof(RouteAttribute), true).Cast<RouteAttribute>().First();
@@ -57,7 +57,10 @@ public class OrganizationStripeConnectAccountLinkService(
 
         var accountRefreshCodeEntity = new OrganizationStripeConnectAccountRefreshCode
         {
-            Id = randomHelper.Generate(), Code = code, RedirectUrl = redirectUrl, OrganizationStripeConnectAccount = accountEntity
+            Id = randomHelper.Generate(),
+            Code = code,
+            RedirectUrl = redirectUrl,
+            OrganizationStripeConnectAccount = accountEntity
         };
 
         _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);

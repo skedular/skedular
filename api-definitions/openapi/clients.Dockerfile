@@ -9,7 +9,6 @@ RUN apt-get update -y && \
   apt-get clean
 RUN npm install -y -g nswag@latest
 
-RUN mkdir -p /output/V1
 COPY ["api-definitions/openapi", "/openapi"]
 
 ENV DOTNET_ROLL_FORWARD=LatestMajor
@@ -418,10 +417,50 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/organization_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Organization.V1 \
-  /Classname:OrganizationClient \
-  /Output:/output/Skedular/Organization/V1/Organization.g.cs \
+  /Input:/openapi/skedular/organization/organization_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1 \
+  /Classname:OrganizationCoreClient \
+  /Output:/output/Skedular/Organization/V1/OrganizationCore.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/organization/organization_graphql_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Organization.Graphql.V1 \
+  /Classname:OrganizationGraphqlClient \
+  /Output:/output/Skedular/Organization/V1/OrganizationGraphql.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/organization/organization_workaround_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1 \
+  /Classname:OrganizationWorkaroundClient \
+  /Output:/output/Skedular/Organization/V1/OrganizationWorkaround.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \

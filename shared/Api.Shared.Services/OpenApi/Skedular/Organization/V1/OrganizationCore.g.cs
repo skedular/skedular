@@ -25,13 +25,13 @@ using Microsoft.AspNetCore.Mvc;
 #pragma warning disable 8625 // Disable "CS8625 Cannot convert null literal to non-nullable reference type"
 #pragma warning disable 8765 // Disable "CS8765 Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes)."
 
-namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
+namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
 {
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.0.0 (NJsonSchema v11.6.0.0 (Newtonsoft.Json v13.0.0.0))")]
     [ModelContextProtocol.Server.McpServerToolType]
-    public abstract class OrganizationControllerBase : Microsoft.AspNetCore.Mvc.Controller
+    public abstract class OrganizationCoreControllerBase : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary>
         /// return API version
@@ -41,52 +41,6 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("return API version")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// raise graphql change
-        /// </summary>
-        /// <param name="x_API_Key">API Key</param>
-        /// <returns>the result of raising the graphql change</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/raiseGraphqlChange/{topicName}/{id}")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("raise graphql change")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RaiseGraphqlChange(string topicName, string id, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// republish organization
-        /// </summary>
-        /// <returns>the status of organization republishing</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/republish")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("republish organization")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> Republish(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// republish all organizations
-        /// </summary>
-        /// <returns>the status of organization republishing</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/republish-all")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("republish all organizations")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAll(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// regenerate all offerings
-        /// </summary>
-        /// <returns>the status of regenrating all offerings</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/regenerate-all-offerings")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("regenerate all offerings")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateAllOfferings(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// rerun all offerings workflows
-        /// </summary>
-        /// <returns>the status of running all offerings workflows</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/rerun-all-offerings-workflows")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("rerun all offerings workflows")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RerunAllOfferingsWorkflows(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// change organization offering
@@ -199,42 +153,6 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Xero OAuth callback")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> XeroOAuthCallback([Microsoft.AspNetCore.Mvc.FromQuery] string code, [Microsoft.AspNetCore.Mvc.FromQuery] string state, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// resync all azure tenants
-        /// </summary>
-        /// <returns>the status of resyncing all azure tenants</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/azure-tenant/resync-all-azure-tenants")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("resync all azure tenants")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ReSyncAllAzureTenants(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// resync azure tenant
-        /// </summary>
-        /// <returns>the status of resyncing azure tenant</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/azure-tenant/{tenantId}/resync")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("resync azure tenant")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ReSyncAzureTenant(string tenantId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// regenerate all organizations daily analytics
-        /// </summary>
-        /// <returns>the status of regenerating all organizations daily analytics</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/analytics/regenerate-all-daily-analytics")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("regenerate all organizations daily analytics")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateAllDailyAnalytics(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// regenerate organization daily analytics
-        /// </summary>
-        /// <returns>the status of regenerating organization daily analytics</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/analytics/{organizationId}/regenerate-daily-analytics")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("regenerate organization daily analytics")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateDailyAnalytics(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 

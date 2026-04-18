@@ -95,7 +95,9 @@
         <File Path="api-definitions/openapi/skedular/msteams/msteams_workaround_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/organization/">
-        <File Path="api-definitions/openapi/skedular/organization_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/organization/organization_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/organization/organization_graphql_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/organization/organization_workaround_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/slack/">
         <File Path="api-definitions/openapi/skedular/slack/slack_v1.yaml"/>
