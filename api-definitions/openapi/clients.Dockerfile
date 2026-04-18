@@ -12,7 +12,5 @@ RUN npm install -y -g "nswag@${NSWAG_VERSION}"
 
 COPY ["api-definitions/openapi", "/openapi"]
 
-ENV DOTNET_ROLL_FORWARD=LatestMajor
-
 RUN chmod +x /openapi/scripts/generate-clients.sh && \
   /openapi/scripts/generate-clients.sh
