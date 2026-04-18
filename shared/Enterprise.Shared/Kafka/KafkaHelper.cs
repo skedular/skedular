@@ -1,8 +1,8 @@
-﻿using Confluent.Kafka;
+﻿using Api.Shared.Events;
+using Confluent.Kafka;
 using Confluent.Kafka.Admin;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
-using Enterprise.Shared.Events;
 using Enterprise.Shared.Kafka.Configurations;
 using Google.Protobuf;
 using Microsoft.Extensions.Logging;

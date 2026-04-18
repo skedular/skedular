@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace Enterprise.Shared.Events;
+namespace Api.Shared.Events;
 
 public static class KafkaTopicHelper
 {
@@ -8,6 +8,8 @@ public static class KafkaTopicHelper
     {
         var eventType = typeof(TEvent);
         var attribute = eventType.GetCustomAttribute<KafkaTopicAttribute>();
-        return attribute ?? throw new ArgumentNullException($"{eventType.FullName} does not have KafkaTopicAttribute implemented", nameof(attribute));
+        return attribute ?? throw new ArgumentNullException(
+            nameof(attribute),
+            $"{eventType.FullName} does not have KafkaTopicAttribute implemented");
     }
 }

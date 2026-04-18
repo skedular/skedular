@@ -1,7 +1,7 @@
-using Enterprise.Shared.Events;
+using Api.Shared.Events;
 using Google.Protobuf.WellKnownTypes;
 
-namespace Enterprise.Shared.UnitTests.Events.EventMetadataFactoryTests;
+namespace Api.Shared.UnitTests.Events.EventMetadataFactoryTests;
 
 public enum SampleEventType
 {

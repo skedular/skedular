@@ -1,6 +1,6 @@
+using Api.Shared.Events;
 using Confluent.Kafka;
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Events;
 using Enterprise.Shared.Hosting;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Kafka.Produce;

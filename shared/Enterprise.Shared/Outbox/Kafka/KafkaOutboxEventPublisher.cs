@@ -1,6 +1,6 @@
+using Api.Shared.Events;
 using Confluent.Kafka;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Events;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Telemetry;

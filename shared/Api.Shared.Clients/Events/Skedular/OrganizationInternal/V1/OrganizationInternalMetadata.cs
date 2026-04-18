@@ -1,4 +1,4 @@
-using Enterprise.Shared.Events;
+using Api.Shared.Events;
 
 namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1;
 
@@ -17,6 +17,7 @@ public partial class Key : IEvent
     string IEvent.RetryTopicNamePrefix => OrganizationInternalMetadataShape.RetryTopicNamePrefix;
     int IEvent.RetryTopicCount => OrganizationInternalMetadataShape.RetryTopicCount;
     string IEvent.DeadLetterTopicName => OrganizationInternalMetadataShape.DeadLetterTopicName;
+    string? IEvent.CorrelationId => null;
 }
 
 [KafkaTopic(3, 1, 3, 3)]

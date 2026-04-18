@@ -1,6 +1,6 @@
-using Enterprise.Shared.Events;
+using Api.Shared.Events;
 
-namespace Enterprise.Shared.UnitTests.Events.IEventTests;
+namespace Api.Shared.UnitTests.Events.IEventTests;
 
 [KafkaTopic(1, 1, 1, 1)]
 public class TopicEvent : IEvent
@@ -9,6 +9,7 @@ public class TopicEvent : IEvent
     public string RetryTopicNamePrefix => "booking.created.retry";
     public int RetryTopicCount => 2;
     public string DeadLetterTopicName => "booking.created.dead-letter";
+    public string? CorrelationId => null;
 }
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]

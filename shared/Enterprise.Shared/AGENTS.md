@@ -19,7 +19,7 @@ Every module exposes its own `Add*` / `Use*` extension methods. Call only the on
 ### Builder Modules (`WebApplicationBuilder` / `IServiceCollection` extensions)
 
 | Method                                                      | Where defined                   | What it registers                                                                                                                                             |
-|-------------------------------------------------------------|---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ----------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `builder.AddCoreServices<TProgram>()`                       | `Extensions.cs`                 | Config, `ApplicationConfiguration`, OpenTelemetry, service discovery, HTTP timeout, auth/authz, CORS, problem details, core singletons, liveness health check |
 | `builder.AddIdentityTokenProviders()`                       | `Extensions.cs`                 | Each token provider registered only when its config section is present: WorkOS, Cognito, Google, Azure Entra; also aggregates the registered `ITokenService`s |
 | `builder.AddCookieServices()`                               | `Extensions.cs`                 | `CookieConfiguration` + `ICookieEncryptionService` when the `Cookie` config section is present                                                                |
@@ -46,7 +46,7 @@ Every module exposes its own `Add*` / `Use*` extension methods. Call only the on
 ### App Modules (`WebApplication` extensions)
 
 | Method                                      | Where defined                  | What it does                                                                                         |
-|---------------------------------------------|--------------------------------|------------------------------------------------------------------------------------------------------|
+| ------------------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------- |
 | `app.UseApplicationCore<TProgram>()`        | `Extensions.cs`                | Exception handling, CORS, routing, auth, health checks, context middleware, controllers — no GraphQL |
 | `app.UseWebApplicationDefaults<TProgram>()` | `Extensions.cs`                | **In-repo bundle** — `UseApplicationCore` + `MapGraphqlEndpoints` (no-op when GraphQL config absent) |
 | `app.MapGraphqlEndpoints(configuration)`    | `GraphQL/GraphqlExtensions.cs` | Maps the HotChocolate GraphQL route                                                                  |
@@ -62,12 +62,10 @@ Each subfolder has its own `AGENTS.md` with module-specific rules:
 - `Ai/` — AI agent session helpers and MCP server
 - `Cache/` — Redis connection and `HybridCache`
 - `Database/` — EF Core base types, Postgres and SQL Server registration helpers
-- Kafka topic contracts (`IEvent`, `KafkaTopicAttribute`) now live in `shared/Api.Shared.Clients/Events`; `Kafka/` and
-  `Outbox/` consume them from there
 - `FileStorage/` — CDN and private file upload (local or Cloudflare)
 - `GraphQL/` — HotChocolate server setup and endpoint mapping
 - `Grpc/` — gRPC metadata helpers
-- `Kafka/` — Kafka producer/consumer/outbox infrastructure
+- `Kafka/` — Kafka producer/consumer/outbox infrastructure; depends on `Api.Shared` for event contracts
 - `Outbox/` — Transactional outbox pattern (Kafka sub-module and Temporal sub-module)
 - `Payment/` — Stripe SDK service registration
 - `Cookie/` — Cookie configuration and `ICookieEncryptionService`
@@ -80,10 +78,10 @@ Each subfolder has its own `AGENTS.md` with module-specific rules:
 ## Auth And Encryption Layout
 
 - Keep auth and encryption code split by concern:
-    - `Cookie/` for cookie-specific encryption wiring
-    - `Encryption/` for reusable low-level encryption primitives
-    - `IdentityProviders/` for WorkOS, Cognito, Google, and Azure Entra token validators
-    - `Security/` for middleware, SSO, gRPC auth, and `ITokenService` consumption
+  - `Cookie/` for cookie-specific encryption wiring
+  - `Encryption/` for reusable low-level encryption primitives
+  - `IdentityProviders/` for WorkOS, Cognito, Google, and Azure Entra token validators
+  - `Security/` for middleware, SSO, gRPC auth, and `ITokenService` consumption
 - Do not re-couple cookie services into `AddIdentityTokenProviders()`.
 - Do not move provider implementations into `Security/`; that folder is now the consumer/pipeline boundary rather than
   the provider-implementation home.

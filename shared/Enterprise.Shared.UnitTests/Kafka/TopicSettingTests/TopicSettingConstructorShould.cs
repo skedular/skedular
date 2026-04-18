@@ -1,4 +1,4 @@
-using Enterprise.Shared.Events;
+using Api.Shared.Events;
 using Enterprise.Shared.Kafka.Consume;
 
 namespace Enterprise.Shared.UnitTests.Kafka.TopicSettingTests;
@@ -10,6 +10,7 @@ file sealed class TestTopicEvent : IEvent
     public string RetryTopicNamePrefix => "test.topic.retry";
     public int RetryTopicCount => 3;
     public string DeadLetterTopicName => "test.topic.dead-letter";
+    public string? CorrelationId { get; }
 }
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]

@@ -1,9 +1,5 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <AssemblyName>Booking.Domain.FakeDependencies</AssemblyName>
-        <AssemblyTitle>Booking.Domain.FakeDependencies</AssemblyTitle>
-        <Product>Skedular Booking Domain Fake Dependencies</Product>
-        <Description>Booking domain fake dependency host for integration tests</Description>
         <Author>Skedular Team</Author>
         <Copyright>© Skedular 2026. All rights reserved.</Copyright>
         <Company>Skedular Ltd</Company>
@@ -13,11 +9,12 @@
         <WriteVersionInfoToBuildLog>true</WriteVersionInfoToBuildLog>
         <UseFullSemVerForNuGet>true</UseFullSemVerForNuGet>
         <UpdateVersionProperties>true</UpdateVersionProperties>
-        <OutputType>Exe</OutputType>
         <TargetFramework>net10.0</TargetFramework>
         <LangVersion>14</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,28 +22,32 @@
         <PackageReference Include="GitVersion.MsBuild" Version="6.7.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+    </ItemGroup>
 
-        <!-- Build Tools / gRPC (Server) -->
-        <PackageReference Include="Grpc.Tools" Version="2.80.0">
+    <ItemGroup>
+        <!-- Test Framework -->
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0"/>
+
+        <!-- Code Coverage -->
+        <PackageReference Include="coverlet.collector" Version="10.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <!-- gRPC (Server) -->
-        <PackageReference Include="Grpc.AspNetCore" Version="2.76.0"/>
+        <!-- Analyzers -->
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/core_v1.proto" GrpcServices="Server"/>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/organization_v1.proto" GrpcServices="Server"/>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/infrastructure_test_v1.proto" GrpcServices="Server"/>
+        <ProjectReference Include="../Api.Shared/Api.Shared.csproj"/>
+        <ProjectReference Include="../Testing.Shared/Testing.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../../shared/Enterprise.Shared/Enterprise.Shared.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <EmbeddedResource Include="appsettings.json"/>
+        <Using Include="Xunit"/>
+        <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
     </ItemGroup>
 </Project>

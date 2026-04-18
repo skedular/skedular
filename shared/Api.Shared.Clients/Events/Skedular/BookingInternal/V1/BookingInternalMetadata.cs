@@ -1,4 +1,4 @@
-using Enterprise.Shared.Events;
+using Api.Shared.Events;
 
 namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1;
 
@@ -16,6 +16,7 @@ public partial class Key : IEvent
     string IEvent.RetryTopicNamePrefix => BookingInternalMetadataShape.RetryTopicNamePrefix;
     int IEvent.RetryTopicCount => BookingInternalMetadataShape.RetryTopicCount;
     string IEvent.DeadLetterTopicName => BookingInternalMetadataShape.DeadLetterTopicName;
+    string? IEvent.CorrelationId => null;
 }
 
 [KafkaTopic(3, 1, 3, 3)]

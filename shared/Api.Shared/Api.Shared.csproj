@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <AssemblyName>Customer.Domain.FakeDependencies</AssemblyName>
-        <AssemblyTitle>Customer.Domain.FakeDependencies</AssemblyTitle>
-        <Product>Skedular Customer Domain Fake Dependencies</Product>
-        <Description>Customer domain fake dependency host for integration tests</Description>
+        <AssemblyName>Api.Shared</AssemblyName>
+        <AssemblyTitle>Api.Shared</AssemblyTitle>
+        <Product>Skedular Api.Shared</Product>
+        <Description>Skedular Api.Shared</Description>
         <Author>Skedular Team</Author>
         <Copyright>© Skedular 2026. All rights reserved.</Copyright>
         <Company>Skedular Ltd</Company>
@@ -13,8 +13,7 @@
         <WriteVersionInfoToBuildLog>true</WriteVersionInfoToBuildLog>
         <UseFullSemVerForNuGet>true</UseFullSemVerForNuGet>
         <UpdateVersionProperties>true</UpdateVersionProperties>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>14</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
@@ -25,16 +24,9 @@
         <PackageReference Include="GitVersion.MsBuild" Version="6.7.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-
-        <!-- gRPC (Server) -->
-        <PackageReference Include="Grpc.AspNetCore" Version="2.76.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../../shared/Enterprise.Shared/Enterprise.Shared.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <EmbeddedResource Include="appsettings.json"/>
+        <PackageReference Include="Google.Protobuf" Version="3.34.1"/>
     </ItemGroup>
 </Project>

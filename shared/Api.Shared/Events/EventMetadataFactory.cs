@@ -1,6 +1,6 @@
 using Google.Protobuf.WellKnownTypes;
 
-namespace Enterprise.Shared.Events;
+namespace Api.Shared.Events;
 
 public interface IEventMetadata<TType>
 {
@@ -23,11 +23,11 @@ public static class EventMetadataFactory
         where TMetadata : class, IEventMetadata<TType>, new() =>
         new()
         {
-            Id = id.HasValue ? id.Value.ToString() : Guid.CreateVersion7().ToString(),
+            Id = id.HasValue ? id.Value.ToString() : Guid.NewGuid().ToString(),
             DomainSource = domainSource,
             AppSource = appSource,
-            Type = type,
-            Time = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow()),
-            CorrelationId = string.IsNullOrWhiteSpace(correlationId) ? Guid.CreateVersion7().ToString() : correlationId
+            Type = type!,
+            Time = Timestamp.FromDateTimeOffset(DateTimeOffset.UtcNow),
+            CorrelationId = string.IsNullOrWhiteSpace(correlationId) ? Guid.NewGuid().ToString() : correlationId!
         };
 }

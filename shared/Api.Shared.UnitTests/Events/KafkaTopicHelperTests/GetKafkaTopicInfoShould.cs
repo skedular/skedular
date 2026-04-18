@@ -1,6 +1,6 @@
-using Enterprise.Shared.Events;
+using Api.Shared.Events;
 
-namespace Enterprise.Shared.UnitTests.Events.KafkaTopicHelperTests;
+namespace Api.Shared.UnitTests.Events.KafkaTopicHelperTests;
 
 [KafkaTopic(4, 3, 1, 1)]
 public class SampleEvent : IEvent
@@ -9,6 +9,7 @@ public class SampleEvent : IEvent
     public string RetryTopicNamePrefix => "test.sample.retry";
     public int RetryTopicCount => 3;
     public string DeadLetterTopicName => "test.sample.dead-letter";
+    public string? CorrelationId => null;
 }
 
 public class EventWithoutAttribute : IEvent
@@ -17,6 +18,7 @@ public class EventWithoutAttribute : IEvent
     public string RetryTopicNamePrefix => "test.no-attr.retry";
     public int RetryTopicCount => 1;
     public string DeadLetterTopicName => "test.no-attr.dead-letter";
+    public string? CorrelationId => null;
 }
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]

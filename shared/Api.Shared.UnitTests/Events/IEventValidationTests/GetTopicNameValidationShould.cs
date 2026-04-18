@@ -1,6 +1,6 @@
-using Enterprise.Shared.Events;
+using Api.Shared.Events;
 
-namespace Enterprise.Shared.UnitTests.Events.IEventValidationTests;
+namespace Api.Shared.UnitTests.Events.IEventValidationTests;
 
 [KafkaTopic(1, 1, 1, 1)]
 file sealed class ValidEvent : IEvent
@@ -9,6 +9,7 @@ file sealed class ValidEvent : IEvent
     public string RetryTopicNamePrefix => "booking.created.retry";
     public int RetryTopicCount => 2;
     public string DeadLetterTopicName => "booking.created.dead-letter";
+    public string? CorrelationId => null;
 }
 
 [KafkaTopic(1, 1, 1, 1)]
