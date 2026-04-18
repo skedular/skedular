@@ -1,7 +1,7 @@
 import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { ReactNode } from 'react';
+import { StackColumn, StackRow } from './index';
 
 type Props = {
   icon?: ReactNode;
@@ -21,17 +21,17 @@ const SetupFeatureCard = ({ icon, title, description }: Props) => (
       boxShadow: 'none',
     }}
   >
-    <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-start' }}>
+    <StackRow spacing={1.5} sx={{ alignItems: 'flex-start' }}>
       {icon}
-      <Stack spacing={0.5} sx={{ minWidth: 0 }}>
+      <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
         <Typography variant="subtitle1" sx={{ fontWeight: 700, color: 'inherit' }}>
           {title}
         </Typography>
         <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.82)' }}>
           {description}
         </Typography>
-      </Stack>
-    </Stack>
+      </StackColumn>
+    </StackRow>
   </Card>
 );
 

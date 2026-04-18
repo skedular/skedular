@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { ReactNode } from 'react';
+import { StackColumn, StackRow } from './index';
 
 export type GuidedEditorStep = {
   id: string;
@@ -21,17 +21,17 @@ type Props = {
 };
 
 const GuidedEditorProgress = ({ title, description, steps, activeStepId, onStepChange, variant = 'default' }: Props) => (
-  <Stack spacing={2}>
+  <StackColumn spacing={2}>
     {title || description ? (
       <>
-        <Stack spacing={0.5}>
+        <StackColumn spacing={0.5}>
           {title ? <Typography variant="h6">{title}</Typography> : null}
           {description ? (
             <Typography variant="body2" sx={{ opacity: 0.8 }}>
               {description}
             </Typography>
           ) : null}
-        </Stack>
+        </StackColumn>
         <Divider />
       </>
     ) : null}
@@ -91,8 +91,7 @@ const GuidedEditorProgress = ({ title, description, steps, activeStepId, onStepC
         </Box>
       </Box>
     ) : (
-      <Stack
-        direction="row"
+      <StackRow
         spacing={1}
         sx={{
           gap: 1.25,
@@ -135,7 +134,7 @@ const GuidedEditorProgress = ({ title, description, steps, activeStepId, onStepC
               },
             }}
           >
-            <Stack spacing={0.25} sx={{ alignItems: 'flex-start' }}>
+            <StackColumn spacing={0.25} sx={{ alignItems: 'flex-start' }}>
               <Typography variant="body1" sx={{ fontWeight: 700, lineHeight: 1.2 }}>
                 {step.title}
               </Typography>
@@ -152,12 +151,12 @@ const GuidedEditorProgress = ({ title, description, steps, activeStepId, onStepC
                   {step.subtitle}
                 </Typography>
               ) : null}
-            </Stack>
+            </StackColumn>
           </Button>
         ))}
-      </Stack>
+      </StackRow>
     )}
-  </Stack>
+  </StackColumn>
 );
 
 export default GuidedEditorProgress;

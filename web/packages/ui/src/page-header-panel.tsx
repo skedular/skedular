@@ -6,6 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { SxProps, Theme } from '@mui/system';
 import type { PropsWithChildren, ReactNode } from 'react';
+import { StackColumn, StackRow } from './index';
 
 type Props = {
   title: ReactNode;
@@ -30,9 +31,9 @@ const PageHeaderPanel = ({ title, description, eyebrow, actions, sx, children }:
     ]}
   >
     <CardContent sx={{ p: 2 }}>
-      <Stack spacing={2}>
+      <StackColumn spacing={2}>
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ justifyContent: 'space-between', alignItems: { xs: 'flex-start', md: 'center' } }}>
-          <Stack spacing={0.75} sx={{ minWidth: 0 }}>
+          <StackColumn spacing={0.75} sx={{ minWidth: 0 }}>
             {eyebrow ? (
               typeof eyebrow === 'string' ? (
                 <Chip label={eyebrow} size="small" sx={{ alignSelf: 'flex-start', textTransform: 'uppercase', letterSpacing: '0.04em' }} />
@@ -46,11 +47,11 @@ const PageHeaderPanel = ({ title, description, eyebrow, actions, sx, children }:
                 {description}
               </Typography>
             ) : null}
-          </Stack>
+          </StackColumn>
           {actions ? (
-            <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
+            <StackRow spacing={1} sx={{ flexWrap: 'wrap', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
               {actions}
-            </Stack>
+            </StackRow>
           ) : null}
         </Stack>
         {children != null ? (
@@ -64,7 +65,7 @@ const PageHeaderPanel = ({ title, description, eyebrow, actions, sx, children }:
             )}
           </Box>
         ) : null}
-      </Stack>
+      </StackColumn>
     </CardContent>
   </Card>
 );

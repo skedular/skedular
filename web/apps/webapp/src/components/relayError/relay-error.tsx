@@ -1,6 +1,6 @@
 'use client';
 
-import { BodyIconTypography, MediumHeadingIconTypography, SmallHeadingIconTypography, SmallIconTypography } from '@/components/commons';
+import { BodyIconTypography, MediumHeadingIconTypography, SmallHeadingIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
 import { ErrorIcon, HomeIcon, RefreshIcon } from '@/components/icons';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -97,13 +97,13 @@ const RelayError = ({ error }: Props) => {
         }}
       >
         <CardContent sx={{ padding: { xs: 3, sm: 5 } }}>
-          <Stack spacing={3}>
-            <Stack spacing={2} sx={{ alignItems: 'flex-start' }}>
+          <StackColumn spacing={3}>
+            <StackColumn spacing={2} sx={{ alignItems: 'flex-start' }}>
               <Chip icon={<ErrorIcon color="error" />} label="Error" color="error" variant="outlined" sx={{ borderRadius: 2 }} />
               <MediumHeadingIconTypography label="Something went wrong" />
               <BodyIconTypography label={DEFAULT_ERROR_MESSAGE} sx={{ maxWidth: 560 }} />
               <SmallIconTypography label={DEFAULT_HELPER_MESSAGE} sx={{ maxWidth: 560 }} />
-            </Stack>
+            </StackColumn>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
               <Button variant="contained" startIcon={<RefreshIcon />} onClick={handleRefreshClicked}>
@@ -120,12 +120,12 @@ const RelayError = ({ error }: Props) => {
             {detailMessages.length > 0 && (
               <>
                 <Divider />
-                <Stack spacing={1.5}>
+                <StackColumn spacing={1.5}>
                   <Button variant="text" sx={{ alignSelf: 'flex-start', paddingLeft: 0, paddingRight: 0 }} onClick={() => setShowDetails((current) => !current)}>
                     {showDetails ? 'Hide details' : 'Show details'}
                   </Button>
                   <Collapse in={showDetails}>
-                    <Stack
+                    <StackColumn
                       spacing={1.5}
                       sx={{
                         padding: 2,
@@ -139,12 +139,12 @@ const RelayError = ({ error }: Props) => {
                       {detailMessages.map((message, index) => (
                         <BodyIconTypography key={`${message}-${index}`} label={message} />
                       ))}
-                    </Stack>
+                    </StackColumn>
                   </Collapse>
-                </Stack>
+                </StackColumn>
               </>
             )}
-          </Stack>
+          </StackColumn>
         </CardContent>
       </Card>
     </Box>

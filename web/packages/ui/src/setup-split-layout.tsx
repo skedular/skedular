@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { ReactNode } from 'react';
+import { StackColumn } from './index';
 
 type Props = {
   asideTitle?: string;
@@ -34,7 +34,7 @@ const SetupSplitLayout = ({ asideTitle, asideDescription, asideChildren, mainTit
       }}
     >
       {(asideTitle || asideDescription) && (
-        <Stack spacing={1}>
+        <StackColumn spacing={1}>
           {asideTitle && (
             <Typography variant="h5" sx={{ fontWeight: 700, color: 'inherit' }}>
               {asideTitle}
@@ -45,14 +45,14 @@ const SetupSplitLayout = ({ asideTitle, asideDescription, asideChildren, mainTit
               {asideDescription}
             </Typography>
           )}
-        </Stack>
+        </StackColumn>
       )}
       {asideChildren}
     </Box>
 
     <Box sx={{ display: 'grid', gap: 2, minWidth: 0 }}>
       {(mainTitle || mainDescription) && (
-        <Stack spacing={1}>
+        <StackColumn spacing={1}>
           {mainTitle && (
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               {mainTitle}
@@ -63,7 +63,7 @@ const SetupSplitLayout = ({ asideTitle, asideDescription, asideChildren, mainTit
               {mainDescription}
             </Typography>
           )}
-        </Stack>
+        </StackColumn>
       )}
       {children}
     </Box>

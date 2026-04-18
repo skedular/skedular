@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { SxProps, Theme } from '@mui/system';
 import type { PropsWithChildren, ReactNode } from 'react';
+import { StackColumn, StackRow } from './index';
 
 type Props = {
   title: ReactNode;
@@ -27,25 +28,25 @@ const SettingsSectionCard = ({ title, description, actions, sx, children }: Prop
     ]}
   >
     <CardContent sx={{ p: 2 }}>
-      <Stack spacing={2}>
+      <StackColumn spacing={2}>
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} sx={{ justifyContent: 'space-between', alignItems: { xs: 'flex-start', md: 'flex-start' } }}>
-          <Stack spacing={0.5} sx={{ minWidth: 0 }}>
+          <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
             <Typography variant="subtitle1">{title}</Typography>
             {description ? (
               <Typography variant="body2" sx={{ opacity: 0.8 }}>
                 {description}
               </Typography>
             ) : null}
-          </Stack>
+          </StackColumn>
           {actions ? (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+            <StackRow spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               {actions}
-            </Stack>
+            </StackRow>
           ) : null}
         </Stack>
         <Divider />
         {children}
-      </Stack>
+      </StackColumn>
     </CardContent>
   </Card>
 );

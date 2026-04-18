@@ -1,7 +1,7 @@
-import Stack from '@mui/material/Stack';
 import type { SxProps, Theme } from '@mui/system';
 import { ResponsiveStyleValue } from '@mui/system';
 import type { PropsWithChildren } from 'react';
+import FormStackColumnBase from './form-stack-column-base';
 
 interface AnyObject {
   [key: string]: unknown;
@@ -14,9 +14,9 @@ type Props = {
 };
 
 const FormStackColumn = ({ children, sx, spacing, onSubmit }: PropsWithChildren<Props>) => (
-  <Stack direction="column" spacing={spacing === undefined ? 1 : spacing} sx={{ paddingTop: 0, ...sx }} component="form" noValidate onSubmit={onSubmit}>
+  <FormStackColumnBase spacing={spacing === undefined ? 1 : spacing} sx={{ paddingTop: 0, ...sx }} onSubmit={onSubmit}>
     {children}
-  </Stack>
+  </FormStackColumnBase>
 );
 
 export default FormStackColumn;

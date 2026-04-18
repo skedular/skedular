@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import type { ReactNode } from 'react';
+import { StackRow } from './index';
 
 type Props = {
   primaryAction: ReactNode;
@@ -8,10 +8,10 @@ type Props = {
 };
 
 const EditorActionBar = ({ primaryAction, secondaryActions }: Props) => (
-  <Stack direction="row" spacing={1} sx={{ gap: 1, justifyContent: 'space-between', flexWrap: 'wrap' }}>
-    <Stack direction="row" spacing={1} sx={{ gap: 1, flexWrap: 'wrap' }}>
+  <StackRow spacing={1} sx={{ gap: 1, justifyContent: 'space-between', flexWrap: 'wrap' }}>
+    <StackRow spacing={1} sx={{ gap: 1, flexWrap: 'wrap' }}>
       {secondaryActions}
-    </Stack>
+    </StackRow>
     {typeof primaryAction === 'string' ? (
       <Button variant="contained" type="submit" sx={{ textTransform: 'none' }}>
         {primaryAction}
@@ -19,7 +19,7 @@ const EditorActionBar = ({ primaryAction, secondaryActions }: Props) => (
     ) : (
       primaryAction
     )}
-  </Stack>
+  </StackRow>
 );
 
 export default EditorActionBar;

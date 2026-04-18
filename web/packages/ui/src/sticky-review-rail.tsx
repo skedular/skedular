@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { SxProps, Theme } from '@mui/system';
 import type { PropsWithChildren, ReactNode } from 'react';
+import { StackColumn } from './index';
 
 type Props = {
   title: ReactNode;
@@ -12,7 +12,7 @@ type Props = {
 };
 
 const StickyReviewRail = ({ title, description, top = 24, sx, children }: PropsWithChildren<Props>) => (
-  <Stack
+  <StackColumn
     spacing={2}
     sx={[
       {
@@ -35,7 +35,7 @@ const StickyReviewRail = ({ title, description, top = 24, sx, children }: PropsW
       ) : null}
     </Box>
     {children}
-  </Stack>
+  </StackColumn>
 );
 
 export default StickyReviewRail;
