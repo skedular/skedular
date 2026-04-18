@@ -58,7 +58,11 @@ This file is the entry point for AI agents working anywhere under `booking/`.
 ## Source Map
 
 - API trigger:
-    - `booking/apis/Booking.Api/Controllers/BookingController.cs`
+    - `booking/apis/Booking.Api/Controllers/BookingCoreController.cs`
+    - `booking/apis/Booking.Api/Controllers/BookingGraphqlController.cs`
+    - `booking/apis/Booking.Api/Controllers/BookingStripeWebhookController.cs`
+    - `booking/apis/Booking.Api/Controllers/BookingXeroWebhookController.cs`
+    - `booking/apis/Booking.Api/Controllers/BookingWorkaroundController.cs`
     - `booking/apis/Booking.Api/Services/WorkaroundService.cs`
 - Shared billing logic:
     - `booking/shared/Booking.Shared/Services/OrganizationArrearsChargeSegmentService.cs`

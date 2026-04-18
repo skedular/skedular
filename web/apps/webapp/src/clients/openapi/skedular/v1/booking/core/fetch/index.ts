@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export { SkedularBookingV1Client } from './SkedularBookingV1Client';
+export { SkedularBookingCoreV1Client } from './SkedularBookingCoreV1Client';
 
 export { ApiError } from './core/ApiError';
 export { BaseHttpRequest } from './core/BaseHttpRequest';
@@ -16,11 +16,5 @@ export type { Version } from './models/Version';
 export { $ProblemDetails } from './schemas/$ProblemDetails';
 export { $Version } from './schemas/$Version';
 
-export { BookingService } from './services/BookingService';
-export { ConnectService } from './services/ConnectService';
-export { GraphqlService } from './services/GraphqlService';
-export { PlatformService } from './services/PlatformService';
-export { StripeService } from './services/StripeService';
+export { CoreService } from './services/CoreService';
 export { V1Service } from './services/V1Service';
-export { WebhookService } from './services/WebhookService';
-export { XeroService } from './services/XeroService';

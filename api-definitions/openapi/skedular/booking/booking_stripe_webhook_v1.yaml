@@ -1,7 +1,7 @@
 openapi: 3.1.1
 info:
-  title: Booking Core API v1
-  description: "Booking Core REST API"
+  title: Booking Stripe Webhook API v1
+  description: "Booking Stripe Webhook REST API"
   version: 1.0.0
 
 servers:
@@ -15,21 +15,27 @@ servers:
     description: local
 
 paths:
-  /v1/booking/version:
-    get:
+  /v1/booking/stripe/platform/account/webhook:
+    post:
       tags:
         - v1
-        - core
-      summary: return API version
-      operationId: getVersion
+        - booking
+        - stripe
+        - webhook
+        - platform
+      summary: Stripe Platform Account Webhook
+      operationId: processStripePlatformAccountEvent
+      parameters:
+        - in: header
+          name: Stripe-Signature
+          schema:
+            type: string
+          required: false
+          description: Stripe webhook signature
 
       responses:
         "200":
-          description: the version of the API
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Version"
+          description: the status of processing the Stripe Platform Account event
 
         default:
           description: unexpected error
@@ -37,6 +43,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/booking/stripe/connect/account/webhook:
+    post:
+      tags:
+        - v1
+        - booking
+        - stripe
+        - webhook
+        - connect
+      summary: Stripe Connect Account Webhook
+      operationId: processStripeConnectAccountEvent
+      parameters:
+        - in: header
+          name: Stripe-Signature
+          schema:
+            type: string
+          required: false
+          description: Stripe webhook signature
+
+      responses:
+        "200":
+          description: the status of processing the Stripe Connect Account event
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
 components:
   schemas:
     ProblemDetails:

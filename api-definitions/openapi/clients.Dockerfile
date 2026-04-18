@@ -38,9 +38,69 @@ RUN nswag \
 RUN nswag \
   openapi2csclient \
   /Input:/openapi/skedular/booking/booking_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Booking.V1 \
-  /Classname:BookingClient \
-  /Output:/output/Skedular/Booking/V1/Booking.g.cs \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Booking.Core.V1 \
+  /Classname:BookingCoreClient \
+  /Output:/output/Skedular/Booking/V1/BookingCore.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/booking/booking_graphql_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Booking.Graphql.V1 \
+  /Classname:BookingGraphqlClient \
+  /Output:/output/Skedular/Booking/V1/BookingGraphql.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/booking/booking_stripe_webhook_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Booking.StripeWebhook.V1 \
+  /Classname:BookingStripeWebhookClient \
+  /Output:/output/Skedular/Booking/V1/BookingStripeWebhook.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/booking/booking_xero_webhook_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Booking.XeroWebhook.V1 \
+  /Classname:BookingXeroWebhookClient \
+  /Output:/output/Skedular/Booking/V1/BookingXeroWebhook.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \

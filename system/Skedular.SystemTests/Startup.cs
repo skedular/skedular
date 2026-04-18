@@ -1,5 +1,4 @@
-using System;
-using Api.Shared.Clients.OpenApi.Skedular.Booking.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Booking.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Gateway.V1;
@@ -30,7 +29,6 @@ using Projects;
 using Slack.Shared.Database;
 using Team.Shared.Database;
 using Testing.Shared.IntegrationTests.Aspire;
-using Xunit;
 
 namespace Skedular.SystemTests;
 
@@ -147,7 +145,7 @@ public class Startup
                 teamDbConnectionString,
                 true,
                 "teamdb")
-            .AddSingleton<IBookingClient>(_ => new BookingClient(bookingApiClient))
+            .AddSingleton<IBookingCoreClient>(_ => new BookingCoreClient(bookingApiClient))
             .AddSingleton<ICoreClient>(_ => new CoreClient(coreApiClient))
             .AddSingleton<ICustomerClient>(_ => new CustomerClient(customerApiClient))
             .AddSingleton<ILocationClient>(_ => new LocationClient(locationApiClient))

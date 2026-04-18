@@ -65,6 +65,10 @@
         <ProjectReference Include="../Enterprise.Shared/Enterprise.Shared.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="OpenApi\"/>
+    </ItemGroup>
+
     <Target Name="IncludeGeneratedEventProtobufSources" BeforeTargets="CoreCompile">
         <ItemGroup>
             <!-- Event protobuf classes are generated into obj/ and intentionally not checked into the repo.

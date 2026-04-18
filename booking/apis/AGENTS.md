@@ -10,7 +10,7 @@ There is an API endpoint used to force the organization arrears workflow to run 
 
 Relevant code:
 
-- `Booking.Api/Controllers/BookingController.cs`
+- `Booking.Api/Controllers/BookingWorkaroundController.cs`
 - `Booking.Api/Services/WorkaroundService.cs`
 
 ## Important Behavior

@@ -1,7 +1,7 @@
 openapi: 3.1.1
 info:
-  title: Booking Core API v1
-  description: "Booking Core REST API"
+  title: Booking Graphql API v1
+  description: "Booking Graphql REST API"
   version: 1.0.0
 
 servers:
@@ -15,21 +15,35 @@ servers:
     description: local
 
 paths:
-  /v1/booking/version:
+  /v1/booking/raiseGraphqlChange/{topicName}/{id}:
     get:
       tags:
         - v1
-        - core
-      summary: return API version
-      operationId: getVersion
+        - booking
+        - graphql
+      summary: raise graphql change
+      operationId: raiseGraphqlChange
+      parameters:
+        - in: path
+          name: topicName
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: X-API-Key
+          schema:
+            type: string
+          required: true
+          description: API Key
 
       responses:
         "200":
-          description: the version of the API
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Version"
+          description: the result of raising the graphql change
 
         default:
           description: unexpected error
@@ -37,6 +51,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
+
 components:
   schemas:
     ProblemDetails:

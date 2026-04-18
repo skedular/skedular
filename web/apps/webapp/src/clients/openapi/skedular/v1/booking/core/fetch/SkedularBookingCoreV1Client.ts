@@ -5,24 +5,12 @@
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
-import { BookingService } from './services/BookingService';
-import { ConnectService } from './services/ConnectService';
-import { GraphqlService } from './services/GraphqlService';
-import { PlatformService } from './services/PlatformService';
-import { StripeService } from './services/StripeService';
+import { CoreService } from './services/CoreService';
 import { V1Service } from './services/V1Service';
-import { WebhookService } from './services/WebhookService';
-import { XeroService } from './services/XeroService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
-export class SkedularBookingV1Client {
-    public readonly booking: BookingService;
-    public readonly connect: ConnectService;
-    public readonly graphql: GraphqlService;
-    public readonly platform: PlatformService;
-    public readonly stripe: StripeService;
+export class SkedularBookingCoreV1Client {
+    public readonly core: CoreService;
     public readonly v1: V1Service;
-    public readonly webhook: WebhookService;
-    public readonly xero: XeroService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -36,14 +24,8 @@ export class SkedularBookingV1Client {
             HEADERS: config?.HEADERS,
             ENCODE_PATH: config?.ENCODE_PATH,
         });
-        this.booking = new BookingService(this.request);
-        this.connect = new ConnectService(this.request);
-        this.graphql = new GraphqlService(this.request);
-        this.platform = new PlatformService(this.request);
-        this.stripe = new StripeService(this.request);
+        this.core = new CoreService(this.request);
         this.v1 = new V1Service(this.request);
-        this.webhook = new WebhookService(this.request);
-        this.xero = new XeroService(this.request);
     }
 }
 

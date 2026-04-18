@@ -44,9 +44,9 @@ RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /outpu
 RUN nswag \
   openapi2cscontroller \
   /Input:/openapi/skedular/booking/booking_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Booking.V1 \
-  /Classname:Booking \
-  /Output:/output/Skedular/Booking/V1/Booking.g.cs \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Booking.Core.V1 \
+  /Classname:BookingCore \
+  /Output:/output/Skedular/Booking/V1/BookingCore.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -59,10 +59,79 @@ RUN nswag \
   /JsonLibrary:SystemTextJson \
   /ExcludedTypeNames:FileParameter
 
-RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Booking/V1/Booking.g.cs
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Booking/V1/BookingCore.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-  --input-file /output/Skedular/Booking/V1/Booking.g.cs \
-  --output-file /output/Skedular/Booking/V1/Booking.g.cs
+  --input-file /output/Skedular/Booking/V1/BookingCore.g.cs \
+  --output-file /output/Skedular/Booking/V1/BookingCore.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/booking/booking_graphql_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Booking.Graphql.V1 \
+  /Classname:BookingGraphql \
+  /Output:/output/Skedular/Booking/V1/BookingGraphql.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Booking/V1/BookingGraphql.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Booking/V1/BookingGraphql.g.cs \
+  --output-file /output/Skedular/Booking/V1/BookingGraphql.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/booking/booking_stripe_webhook_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Booking.StripeWebhook.V1 \
+  /Classname:BookingStripeWebhook \
+  /Output:/output/Skedular/Booking/V1/BookingStripeWebhook.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Booking/V1/BookingStripeWebhook.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Booking/V1/BookingStripeWebhook.g.cs \
+  --output-file /output/Skedular/Booking/V1/BookingStripeWebhook.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/booking/booking_xero_webhook_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Booking.XeroWebhook.V1 \
+  /Classname:BookingXeroWebhook \
+  /Output:/output/Skedular/Booking/V1/BookingXeroWebhook.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Booking/V1/BookingXeroWebhook.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Booking/V1/BookingXeroWebhook.g.cs \
+  --output-file /output/Skedular/Booking/V1/BookingXeroWebhook.g.cs
 
 RUN nswag \
   openapi2cscontroller \

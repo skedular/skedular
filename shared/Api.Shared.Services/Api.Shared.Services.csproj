@@ -36,4 +36,8 @@
     <ItemGroup>
         <ProjectReference Include="../Enterprise.Shared/Enterprise.Shared.csproj"/>
     </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="OpenApi\"/>
+    </ItemGroup>
 </Project>

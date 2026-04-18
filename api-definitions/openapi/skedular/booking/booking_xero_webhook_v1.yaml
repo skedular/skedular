@@ -1,7 +1,7 @@
 openapi: 3.1.1
 info:
-  title: Booking Core API v1
-  description: "Booking Core REST API"
+  title: Booking Xero Webhook API v1
+  description: "Booking Xero Webhook REST API"
   version: 1.0.0
 
 servers:
@@ -15,28 +15,29 @@ servers:
     description: local
 
 paths:
-  /v1/booking/version:
-    get:
+  /v1/booking/xero/webhook:
+    post:
       tags:
         - v1
-        - core
-      summary: return API version
-      operationId: getVersion
+        - booking
+        - xero
+        - webhook
+      summary: Xero Webhook
+      operationId: processXeroWebhookEvent
+      parameters:
+        - in: header
+          name: x-xero-signature
+          schema:
+            type: string
+          required: false
+          description: Xero webhook signature
 
       responses:
         "200":
-          description: the version of the API
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Version"
+          description: the status of processing the Xero webhook event
+        "401":
+          description: invalid Xero webhook signature
 
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetails"
 components:
   schemas:
     ProblemDetails:
