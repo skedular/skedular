@@ -1,7 +1,7 @@
 output "tags" {
   description = "Common tags"
   value = {
-    domain = "webapp"
+    domain = "webapp-spaces"
   }
 }
 
