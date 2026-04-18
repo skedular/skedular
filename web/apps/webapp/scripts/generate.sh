@@ -18,7 +18,8 @@ npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/customer/customer_workaround_v1.yaml --output ./src/clients/openapi/skedular/v1/customer/workaround/fetch --name SkedularCustomerWorkaroundV1Client --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/customer/customer_stripe_v1.yaml --output ./src/clients/openapi/skedular/v1/customer/stripe/fetch --name SkedularCustomerStripeV1Client --client fetch --exportSchemas true &
 
-npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/core_v1.yaml --output ./src/clients/openapi/skedular/v1/core/fetch --name SkedularCoreV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/core/core_v1.yaml --output ./src/clients/openapi/skedular/v1/core/core/fetch --name SkedularCoreCoreV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/core/core_graphql_v1.yaml --output ./src/clients/openapi/skedular/v1/core/graphql/fetch --name SkedularCoreGraphqlV1Client --client fetch --exportSchemas true &
 
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/location/location_v1.yaml --output ./src/clients/openapi/skedular/v1/location/core/fetch --name SkedularLocationCoreV1Client --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/location/location_graphql_v1.yaml --output ./src/clients/openapi/skedular/v1/location/graphql/fetch --name SkedularLocationGraphqlV1Client --client fetch --exportSchemas true &

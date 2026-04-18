@@ -1,4 +1,4 @@
-import { FileUploadResponse, SkedularCoreV1Client } from '@/clients/openapi/skedular/v1/core/fetch';
+import { FileUploadResponse, SkedularCoreCoreV1Client } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { StackColumn, TwoButtonsDialogActions } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext } from '@/libs/providers';
@@ -62,7 +62,7 @@ const ImageFileUploader = ({ onUploadCompleted, helperText }: Props) => {
     formData.append('file', file);
 
     try {
-      const client = new SkedularCoreV1Client({ BASE: '/api' });
+      const client = new SkedularCoreCoreV1Client({ BASE: '/api' });
       const response = (await client.core.uploadPublicAccessFile({
         file,
       })) as FileUploadResponse;

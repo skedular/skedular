@@ -1,4 +1,4 @@
-import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
+import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';

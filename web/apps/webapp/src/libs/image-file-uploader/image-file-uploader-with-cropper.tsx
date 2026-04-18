@@ -1,4 +1,4 @@
-import { FileUploadResponse, SkedularCoreV1Client } from '@/clients/openapi/skedular/v1/core/fetch';
+import { FileUploadResponse, SkedularCoreCoreV1Client } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { BodyIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext } from '@/libs/providers';
@@ -183,7 +183,7 @@ const ImageFileUploaderWithCropper = ({ onUploadCompleted, helperText }: Props) 
     formData.append('file', file); // must match OpenAPI schema key
 
     try {
-      const client = new SkedularCoreV1Client({ BASE: '/api' });
+      const client = new SkedularCoreCoreV1Client({ BASE: '/api' });
       const response = (await client.core.uploadPublicAccessFile({ file })) as FileUploadResponse;
 
       onUploadCompleted(response);

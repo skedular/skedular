@@ -1,4 +1,4 @@
-import { SkedularCoreV1Client } from '@/clients/openapi/skedular/v1/core/fetch';
+import { SkedularCoreCoreV1Client } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { authkit } from '@workos-inc/authkit-nextjs';
 import { Buffer } from 'buffer';
 import { NextRequest } from 'next/server';
@@ -18,7 +18,7 @@ const handler = async (request: NextRequest) => {
     'X-SSO-Cookies': Buffer.from(JSON.stringify(request.cookies.getAll().filter((item) => item.name.startsWith('organization-sso'))), 'binary').toString('base64'),
   };
 
-  const client = new SkedularCoreV1Client({ BASE: process.env.GATEWAY_ENDPOINT, HEADERS: headers });
+  const client = new SkedularCoreCoreV1Client({ BASE: process.env.GATEWAY_ENDPOINT, HEADERS: headers });
 
   return Response.json(
     await client.core.uploadPrivateAccessFile({

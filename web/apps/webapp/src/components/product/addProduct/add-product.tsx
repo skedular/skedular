@@ -1,4 +1,4 @@
-import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
+import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';

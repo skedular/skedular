@@ -7,7 +7,7 @@ import type { ProblemDetails } from '../models/ProblemDetails';
 import type { Version } from '../models/Version';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
-export class CoreService {
+export class V1Service {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * return API version
@@ -19,32 +19,6 @@ export class CoreService {
         return this.httpRequest.request({
             method: 'GET',
             url: '/v1/core/version',
-        });
-    }
-    /**
-     * raise graphql change
-     * @param topicName
-     * @param id
-     * @param xApiKey API Key
-     * @returns any the result of raising the graphql change
-     * @returns ProblemDetails unexpected error
-     * @throws ApiError
-     */
-    public raiseGraphqlChange(
-        topicName: string,
-        id: string,
-        xApiKey: string,
-    ): CancelablePromise<any | ProblemDetails> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/v1/core/raiseGraphqlChange/{topicName}/{id}',
-            path: {
-                'topicName': topicName,
-                'id': id,
-            },
-            headers: {
-                'X-API-Key': xApiKey,
-            },
         });
     }
     /**

@@ -710,10 +710,10 @@ RUN /app/publish/Skedularctl mcp-tool-generate \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/skedular/core_v1.yaml \
+  /Input:/openapi/skedular/core/core_v1.yaml \
   /Namespace:Api.Shared.Services.OpenApi.Skedular.Core.V1 \
-  /Classname:Core \
-  /Output:/output/Skedular/Core/V1/Core.g.cs \
+  /Classname:CoreCore \
+  /Output:/output/Skedular/Core/V1/CoreCore.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -726,9 +726,32 @@ RUN nswag \
   /JsonLibrary:SystemTextJson \
   /ExcludedTypeNames:FileParameter
 
-RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Core/V1/Core.g.cs
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Core/V1/CoreCore.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-  --input-file /output/Skedular/Core/V1/Core.g.cs \
-  --output-file /output/Skedular/Core/V1/Core.g.cs
+  --input-file /output/Skedular/Core/V1/CoreCore.g.cs \
+  --output-file /output/Skedular/Core/V1/CoreCore.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/core/core_graphql_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Core.V1 \
+  /Classname:CoreGraphql \
+  /Output:/output/Skedular/Core/V1/CoreGraphql.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Core/V1/CoreGraphql.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Core/V1/CoreGraphql.g.cs \
+  --output-file /output/Skedular/Core/V1/CoreGraphql.g.cs
 
 RUN find /output -type f -name "*.g.cs" -exec sed -i 's/Microsoft\.AspNetCore\.Mvc\.ActionResult<Microsoft\.AspNetCore\.Mvc\.FileResult>/Microsoft.AspNetCore.Mvc.IActionResult/g' {} +

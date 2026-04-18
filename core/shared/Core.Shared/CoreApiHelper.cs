@@ -7,7 +7,7 @@ public class CoreApiHelper
 {
     private static readonly Lazy<string> s_publicCdnFileEndpoint = new(() =>
     {
-        var method = typeof(CoreControllerBase).GetMethod(nameof(CoreControllerBase.GetPublicCdnFile));
+        var method = typeof(CoreCoreControllerBase).GetMethod(nameof(CoreCoreControllerBase.GetPublicCdnFile));
         ArgumentNullException.ThrowIfNull(method);
 
         var routeAttribute = method.GetCustomAttributes(typeof(RouteAttribute), true).Cast<RouteAttribute>().First();
@@ -18,7 +18,7 @@ public class CoreApiHelper
 
     private static readonly Lazy<string> s_privateFileEndpoint = new(() =>
     {
-        var method = typeof(CoreControllerBase).GetMethod(nameof(CoreControllerBase.GetPrivateFile));
+        var method = typeof(CoreCoreControllerBase).GetMethod(nameof(CoreCoreControllerBase.GetPrivateFile));
         ArgumentNullException.ThrowIfNull(method);
 
         var routeAttribute = method.GetCustomAttributes(typeof(RouteAttribute), true).Cast<RouteAttribute>().First();

@@ -1,4 +1,4 @@
-import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
+import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import ProductEditorForm from '@/components/product/product-editor-form';

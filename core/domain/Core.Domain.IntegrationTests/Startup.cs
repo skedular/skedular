@@ -78,7 +78,8 @@ public class Startup
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddSingleton<ICoreClient>(_ => new CoreClient(coreApiClient));
+            .AddSingleton<ICoreCoreClient>(_ => new CoreCoreClient(coreApiClient))
+            .AddSingleton<ICoreGraphqlClient>(_ => new CoreGraphqlClient(coreApiClient));
 
         services
             .AddSkedularGraphQLV1()

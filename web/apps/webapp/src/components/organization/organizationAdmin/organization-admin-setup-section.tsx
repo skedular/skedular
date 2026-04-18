@@ -1,4 +1,4 @@
-import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
+import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { FormFieldLabel, FormStackColumn, HelperText, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon } from '@/components/icons';
 import { ListingMetadata } from '@/components/listingMetadata';

@@ -31,7 +31,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.0.0 (NJsonSchema v11.6.0.0 (Newtonsoft.Json v13.0.0.0))")]
     [ModelContextProtocol.Server.McpServerToolType]
-    public abstract class CoreControllerBase : Microsoft.AspNetCore.Mvc.Controller
+    public abstract class CoreCoreControllerBase : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary>
         /// return API version
@@ -41,16 +41,6 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("return API version")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// raise graphql change
-        /// </summary>
-        /// <param name="x_API_Key">API Key</param>
-        /// <returns>the result of raising the graphql change</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/core/raiseGraphqlChange/{topicName}/{id}")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("raise graphql change")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RaiseGraphqlChange(string topicName, string id, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Upload file with public access

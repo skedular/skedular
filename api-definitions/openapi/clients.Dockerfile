@@ -617,10 +617,30 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/core_v1.yaml \
+  /Input:/openapi/skedular/core/core_v1.yaml \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Core.V1 \
-  /Classname:CoreClient \
-  /Output:/output/Skedular/Core/V1/Core.g.cs \
+  /Classname:CoreCoreClient \
+  /Output:/output/Skedular/Core/V1/CoreCore.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/core/core_graphql_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Core.V1 \
+  /Classname:CoreGraphqlClient \
+  /Output:/output/Skedular/Core/V1/CoreGraphql.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \

@@ -4,13 +4,13 @@ namespace Core.Domain.IntegrationTests.Api.Rest.CoreControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Core.Api")]
-public class GetVersionShould(ICoreClient coreClient)
+public class GetVersionShould(ICoreCoreClient coreCoreClient)
 {
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Version(CancellationToken cancellationToken)
     {
-        var result = await coreClient.GetVersionAsync(cancellationToken);
+        var result = await coreCoreClient.GetVersionAsync(cancellationToken);
 
         result.ShouldNotBeNull();
     }
