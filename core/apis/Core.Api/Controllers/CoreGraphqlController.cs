@@ -1,5 +1,5 @@
 using Api.Shared.Services.Configurations.Grpc;
-using Api.Shared.Services.OpenApi.Skedular.Core.V1;
+using Api.Shared.Services.OpenApi.Skedular.Core.Graphql.V1;
 using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Mvc;
 

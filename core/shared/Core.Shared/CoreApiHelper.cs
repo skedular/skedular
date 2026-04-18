@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.Skedular.Core.V1;
+using Api.Shared.Services.OpenApi.Skedular.Core.Core.V1;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Core.Shared;

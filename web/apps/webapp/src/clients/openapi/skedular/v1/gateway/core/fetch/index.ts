@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export { SkedularGatewayV1Client } from './SkedularGatewayV1Client';
+export { SkedularGatewayCoreV1Client } from './SkedularGatewayCoreV1Client';
 
 export { ApiError } from './core/ApiError';
 export { BaseHttpRequest } from './core/BaseHttpRequest';

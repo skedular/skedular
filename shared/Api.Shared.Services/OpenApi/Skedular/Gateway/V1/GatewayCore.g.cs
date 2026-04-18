@@ -25,50 +25,22 @@ using Microsoft.AspNetCore.Mvc;
 #pragma warning disable 8625 // Disable "CS8625 Cannot convert null literal to non-nullable reference type"
 #pragma warning disable 8765 // Disable "CS8765 Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes)."
 
-namespace Api.Shared.Services.OpenApi.Skedular.MsTeams.V1
+namespace Api.Shared.Services.OpenApi.Skedular.Gateway.Core.V1
 {
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.0.0 (NJsonSchema v11.6.0.0 (Newtonsoft.Json v13.0.0.0))")]
     [ModelContextProtocol.Server.McpServerToolType]
-    public abstract class MsTeamsControllerBase : Microsoft.AspNetCore.Mvc.Controller
+    public abstract class GatewayCoreControllerBase : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary>
         /// return API version
         /// </summary>
         /// <returns>the version of the API</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/msteams/version")]
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/gateway/version")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("return API version")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// raise graphql change
-        /// </summary>
-        /// <param name="x_API_Key">API Key</param>
-        /// <returns>the result of raising the graphql change</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/msteams/raiseGraphqlChange/{topicName}/{id}")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("raise graphql change")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RaiseGraphqlChange(string topicName, string id, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// resync all MsTeams
-        /// </summary>
-        /// <returns>the status of resyncing all MsTeams</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/msteams/azure-tenant/resync-all-msteams")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("resync all MsTeams")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ReSyncAllMsTeams(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// resync MsTeams
-        /// </summary>
-        /// <returns>the status of resyncing MsTeams</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/msteams/azure-tenant/{tenantId}/resync")]
-        [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("resync MsTeams")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ReSyncMsTeams(string tenantId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 

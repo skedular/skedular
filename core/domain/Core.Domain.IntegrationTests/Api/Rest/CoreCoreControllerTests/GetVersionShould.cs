@@ -1,6 +1,6 @@
-using Api.Shared.Clients.OpenApi.Skedular.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Core.Core.V1;
 
-namespace Core.Domain.IntegrationTests.Api.Rest.CoreControllerTests;
+namespace Core.Domain.IntegrationTests.Api.Rest.CoreCoreControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Core.Api")]

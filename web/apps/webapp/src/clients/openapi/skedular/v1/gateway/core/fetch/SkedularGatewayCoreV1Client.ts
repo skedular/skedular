@@ -5,18 +5,12 @@
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
-import { GraphqlService } from './services/GraphqlService';
-import { MarketplaceService } from './services/MarketplaceService';
-import { ProductService } from './services/ProductService';
+import { GatewayService } from './services/GatewayService';
 import { V1Service } from './services/V1Service';
-import { WorkaroundService } from './services/WorkaroundService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
-export class SkedularMarketplaceV1Client {
-    public readonly graphql: GraphqlService;
-    public readonly marketplace: MarketplaceService;
-    public readonly product: ProductService;
+export class SkedularGatewayCoreV1Client {
+    public readonly gateway: GatewayService;
     public readonly v1: V1Service;
-    public readonly workaround: WorkaroundService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -30,11 +24,8 @@ export class SkedularMarketplaceV1Client {
             HEADERS: config?.HEADERS,
             ENCODE_PATH: config?.ENCODE_PATH,
         });
-        this.graphql = new GraphqlService(this.request);
-        this.marketplace = new MarketplaceService(this.request);
-        this.product = new ProductService(this.request);
+        this.gateway = new GatewayService(this.request);
         this.v1 = new V1Service(this.request);
-        this.workaround = new WorkaroundService(this.request);
     }
 }
 

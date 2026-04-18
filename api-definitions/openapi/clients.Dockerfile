@@ -15,10 +15,10 @@ ENV DOTNET_ROLL_FORWARD=LatestMajor
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/gateway_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Gateway.V1 \
-  /Classname:GatewayClient \
-  /Output:/output/Skedular/Gateway/V1/Gateway.g.cs \
+  /Input:/openapi/skedular/gateway/gateway_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Gateway.Core.V1 \
+  /Classname:GatewayCoreClient \
+  /Output:/output/Skedular/Gateway/V1/GatewayCore.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
@@ -33,7 +33,6 @@ RUN nswag \
   /GenerateNullableReferenceTypes:true \
   /JsonLibrary:SystemTextJson
 
-#########################################################################################################################
 RUN nswag \
   openapi2csclient \
   /Input:/openapi/skedular/booking/booking_v1.yaml \
@@ -133,7 +132,6 @@ RUN nswag \
   /GenerateDtoTypes:true \
   /GenerateNullableReferenceTypes:true \
   /JsonLibrary:SystemTextJson
-#########################################################################################################################
 
 RUN nswag \
   openapi2csclient \
@@ -618,7 +616,7 @@ RUN nswag \
 RUN nswag \
   openapi2csclient \
   /Input:/openapi/skedular/core/core_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Core.V1 \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Core.Core.V1 \
   /Classname:CoreCoreClient \
   /Output:/output/Skedular/Core/V1/CoreCore.g.cs \
   /GenerateClientClasses:true \
@@ -638,7 +636,7 @@ RUN nswag \
 RUN nswag \
   openapi2csclient \
   /Input:/openapi/skedular/core/core_graphql_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Core.V1 \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Core.Graphql.V1 \
   /Classname:CoreGraphqlClient \
   /Output:/output/Skedular/Core/V1/CoreGraphql.g.cs \
   /GenerateClientClasses:true \

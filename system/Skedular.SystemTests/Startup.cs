@@ -3,12 +3,13 @@ using Api.Shared.Clients.OpenApi.Skedular.Booking.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Booking.StripeWebhook.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Booking.XeroWebhook.V1;
 using Api.Shared.Clients.OpenApi.Skedular.BookingWorkaround.V1;
-using Api.Shared.Clients.OpenApi.Skedular.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Core.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Core.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Workaround.V1;
-using Api.Shared.Clients.OpenApi.Skedular.Gateway.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Gateway.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Location.Analytics.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Location.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Location.Graphql.V1;
@@ -166,7 +167,7 @@ public class Startup
                 teamDbConnectionString,
                 true,
                 "teamdb")
-            .AddSingleton<IGatewayClient>(_ => new GatewayClient(gatewayClient))
+            .AddSingleton<IGatewayCoreClient>(_ => new GatewayCoreClient(gatewayClient))
             .AddSingleton<IBookingCoreClient>(_ => new BookingCoreClient(bookingApiClient))
             .AddSingleton<IBookingGraphqlClient>(_ => new BookingGraphqlClient(bookingApiClient))
             .AddSingleton<IBookingStripeWebhookClient>(_ => new BookingStripeWebhookClient(bookingApiClient))

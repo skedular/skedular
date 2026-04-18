@@ -1,10 +1,10 @@
 using Api.Shared.Services.Models;
-using Api.Shared.Services.OpenApi.Skedular.Core.V1;
+using Api.Shared.Services.OpenApi.Skedular.Core.Core.V1;
 using Core.Shared.Models;
 using Enterprise.Shared;
 using CdnFile = Core.Shared.Models.CdnFile;
 using Customer = Core.Shared.Models.Customer;
-using File = Api.Shared.Services.OpenApi.Skedular.Core.V1.File;
+using File = Api.Shared.Services.OpenApi.Skedular.Core.Core.V1.File;
 
 namespace Core.Api.Mappers;
 

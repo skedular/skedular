@@ -5,7 +5,7 @@ set -x
 
 cd "$(dirname "${0}")/.."
 
-npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/gateway_v1.yaml --output ./src/clients/openapi/skedular/v1/gateway/fetch --name SkedularGatewayV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/gateway/gateway_v1.yaml --output ./src/clients/openapi/skedular/v1/gateway/core/fetch --name SkedularGatewayCoreV1Client --client fetch --exportSchemas true &
 
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/booking/booking_v1.yaml --output ./src/clients/openapi/skedular/v1/booking/core/fetch --name SkedularBookingCoreV1Client --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/booking/booking_graphql_v1.yaml --output ./src/clients/openapi/skedular/v1/booking/graphql/fetch --name SkedularBookingGraphqlV1Client --client fetch --exportSchemas true &

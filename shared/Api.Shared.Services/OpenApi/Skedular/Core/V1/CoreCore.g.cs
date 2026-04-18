@@ -25,7 +25,7 @@ using Microsoft.AspNetCore.Mvc;
 #pragma warning disable 8625 // Disable "CS8625 Cannot convert null literal to non-nullable reference type"
 #pragma warning disable 8765 // Disable "CS8765 Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes)."
 
-namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
+namespace Api.Shared.Services.OpenApi.Skedular.Core.Core.V1
 {
     using System = global::System;
 

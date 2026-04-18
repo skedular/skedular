@@ -1,10 +1,10 @@
-using Api.Shared.Services.OpenApi.Skedular.Core.V1;
+using Api.Shared.Services.OpenApi.Skedular.Core.Core.V1;
 using Core.Api.Mappers;
 using Core.Api.Services;
 using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.Version;
 using Microsoft.AspNetCore.Mvc;
-using Version = Api.Shared.Services.OpenApi.Skedular.Core.V1.Version;
+using Version = Api.Shared.Services.OpenApi.Skedular.Core.Core.V1.Version;
 
 namespace Core.Api.Controllers;
 
@@ -23,10 +23,7 @@ public class CoreCoreController(
 
         return Task.FromResult<ActionResult<Version>>(new Version
         {
-            Major = version.Major,
-            Minor = version.Minor,
-            Build = version.Build,
-            Revision = version.Revision
+            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
         });
     }
 

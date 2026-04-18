@@ -12,7 +12,9 @@ RUN npm install -y -g nswag@latest
 COPY [".git", "shared/.git"]
 COPY ["shared/Enterprise.Shared", "shared/Enterprise.Shared"]
 COPY ["shared/Skedularctl", "shared/Skedularctl"]
+
 WORKDIR shared/Skedularctl
+
 RUN --mount=type=cache,target=~/.nuget/packages dotnet restore "Skedularctl.csproj"
 RUN --mount=type=cache,target=~/.nuget/packages dotnet build "Skedularctl.csproj" --no-restore -c Release -o /app/build
 RUN --mount=type=cache,target=~/.nuget/packages dotnet publish "Skedularctl.csproj" -c Release -o /app/publish
@@ -21,10 +23,10 @@ COPY ["api-definitions/openapi", "/openapi"]
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/skedular/gateway_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Gateway.V1 \
-  /Classname:Gateway \
-  /Output:/output/Skedular/Gateway/V1/Gateway.g.cs \
+  /Input:/openapi/skedular/gateway/gateway_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Gateway.Core.V1 \
+  /Classname:GatewayCore \
+  /Output:/output/Skedular/Gateway/V1/GatewayCore.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -37,9 +39,11 @@ RUN nswag \
   /JsonLibrary:SystemTextJson \
   /ExcludedTypeNames:FileParameter
 
-RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Gateway/V1/Gateway.g.cs
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Gateway/V1/GatewayCore.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Gateway/V1/GatewayCore.g.cs \
+  --output-file /output/Skedular/Gateway/V1/GatewayCore.g.cs
 
-#########################################################################################################################
 RUN nswag \
   openapi2cscontroller \
   /Input:/openapi/skedular/booking/booking_v1.yaml \
@@ -154,7 +158,6 @@ RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /outpu
 RUN /app/publish/Skedularctl mcp-tool-generate \
   --input-file /output/Skedular/Booking/V1/BookingWorkaround.g.cs \
   --output-file /output/Skedular/Booking/V1/BookingWorkaround.g.cs
-#########################################################################################################################
 
 RUN nswag \
   openapi2cscontroller \
@@ -711,7 +714,7 @@ RUN /app/publish/Skedularctl mcp-tool-generate \
 RUN nswag \
   openapi2cscontroller \
   /Input:/openapi/skedular/core/core_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Core.V1 \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Core.Core.V1 \
   /Classname:CoreCore \
   /Output:/output/Skedular/Core/V1/CoreCore.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
@@ -734,7 +737,7 @@ RUN /app/publish/Skedularctl mcp-tool-generate \
 RUN nswag \
   openapi2cscontroller \
   /Input:/openapi/skedular/core/core_graphql_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Core.V1 \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Core.Graphql.V1 \
   /Classname:CoreGraphql \
   /Output:/output/Skedular/Core/V1/CoreGraphql.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
