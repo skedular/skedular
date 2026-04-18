@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<170d2d0c00ec61984273341998930b51>>
+ * @generated SignedSource<<d50e07a4d4e22a74c454208712b163c4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,6 +31,9 @@ export type marketplaceProductDetailBookingCard_product$data = {
     readonly includedFeatures: ReadonlyArray<string> | null | undefined;
     readonly subTitle: string | null | undefined;
     readonly title: string | null | undefined;
+  };
+  readonly organization: {
+    readonly customerFacingTermsAndConditionsUrl: string | null | undefined;
   };
   readonly pricingOptions: ReadonlyArray<{
     readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
@@ -110,6 +113,24 @@ return {
   "name": "marketplaceProductDetailBookingCard_product",
   "selections": [
     (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Marketplace_OrganizationDetails",
+      "kind": "LinkedField",
+      "name": "organization",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "customerFacingTermsAndConditionsUrl",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -303,6 +324,6 @@ return {
 };
 })();
 
-(node as any).hash = "2359e002b6f9c8899cbb505a21354eb3";
+(node as any).hash = "06783a5b8b0607bf6b6589bb1dbdbefc";
 
 export default node;

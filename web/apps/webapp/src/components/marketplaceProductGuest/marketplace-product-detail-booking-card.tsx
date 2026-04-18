@@ -1,6 +1,7 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { getMarketplaceLocationLink, getMarketplaceProductBookingLink, getMarketplaceProductSubscribeLink } from '@/components/links';
 import MarketplaceCancellationPolicyDetails from '@/components/marketplaceProduct/cancellation-policy-details';
+import CustomerTermsAndConditionsPanel from '@/components/marketplaceProduct/customer-terms-and-conditions-panel';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import { formatPriceForDisplay } from '@/libs/utils';
@@ -54,6 +55,9 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
     graphql`
       fragment marketplaceProductDetailBookingCard_product on ProductDetails {
         id
+        organization {
+          customerFacingTermsAndConditionsUrl
+        }
         type {
           type
           name
@@ -168,6 +172,9 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
           {productType && <CaptionIconTypography label={productType.description} sx={{ mb: 2, opacity: 0.78 }} />}
 
           <LeadIconTypography label="Select a pricing option" sx={{ mb: 1.2 }} />
+          <Box sx={{ mb: 1.5 }}>
+            <CustomerTermsAndConditionsPanel termsAndConditionsUrl={product.organization.customerFacingTermsAndConditionsUrl} />
+          </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {pricingPlans.map((pricingPlan) => (
               <Box

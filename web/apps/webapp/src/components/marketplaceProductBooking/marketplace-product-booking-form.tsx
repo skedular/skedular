@@ -1,5 +1,6 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { getMarketplaceProductBookingDetailsLink, getMarketplaceProductLink, getSignInLink } from '@/components/links';
+import CustomerTermsAndConditionsPanel from '@/components/marketplaceProduct/customer-terms-and-conditions-panel';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
@@ -191,6 +192,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
   const [availableResourcesCount, setAvailableResourcesCount] = useState<number | null>(null);
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
   const [availabilityErrorMessage, setAvailabilityErrorMessage] = useState('');
+  const [hasAcceptedTermsAndConditions, setHasAcceptedTermsAndConditions] = useState(false);
 
   const effectiveSelectedPricingId = useMemo(() => {
     if (bookingPricingOptions.some((item) => item.id === selectedPricingId)) {
@@ -443,6 +445,11 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
       return;
     }
 
+    if (rootData.product.organization.customerFacingTermsAndConditionsUrl && !hasAcceptedTermsAndConditions) {
+      toast.error(<NotificationContent content="Accept the space terms and conditions before continuing." />);
+      return;
+    }
+
     const toastId = toast(<NotificationContent content={`Making your booking for ${toShortDate(dateRangeValidation.from.toISOString())}...`} />, infoNotificationOptions);
     const id = uuid();
 
@@ -632,6 +639,12 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
 
             <TextField label="Notes" multiline minRows={3} value={notes} onChange={(event) => setNotes(event.target.value)} helperText="Optional notes for the workspace team." />
 
+            <CustomerTermsAndConditionsPanel
+              accepted={hasAcceptedTermsAndConditions}
+              onAcceptedChange={setHasAcceptedTermsAndConditions}
+              termsAndConditionsUrl={rootData.product.organization.customerFacingTermsAndConditionsUrl}
+            />
+
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.25, justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
               <Box>
                 <SubtitleIconTypography label={rootData.product.listingMetadata.title ?? ''} />
@@ -644,7 +657,14 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
                 <Button
                   variant="contained"
                   onClick={handleSubmit}
-                  disabled={isInFlight || !selectedPricingOption || isCheckingAvailability || !dateRangeValidation.valid || !hasEnoughResourcesAvailable}
+                  disabled={
+                    isInFlight ||
+                    !selectedPricingOption ||
+                    isCheckingAvailability ||
+                    !dateRangeValidation.valid ||
+                    !hasEnoughResourcesAvailable ||
+                    (!!rootData.me?.id && !!rootData.product.organization.customerFacingTermsAndConditionsUrl && !hasAcceptedTermsAndConditions)
+                  }
                   sx={{ textTransform: 'none' }}
                 >
                   {rootData.me ? 'Book now' : 'Sign in to continue'}
@@ -665,7 +685,6 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
         productType={rootData.product.type.type}
         quantity={effectiveQuantity}
         taxLabel={selectedPricingOption?.isTaxInclusive ? 'Tax included' : 'Tax added at invoice'}
-        termsAndConditionsUrl={rootData.product?.organization.customerFacingTermsAndConditionsUrl}
         title={selectedPricingOption?.listingMetadata.title ?? rootData.product.listingMetadata.title ?? ''}
       />
     </Box>

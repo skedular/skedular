@@ -1,5 +1,6 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { getMarketplaceProductLink, getMarketplaceSubscriptionDetailsLink } from '@/components/links';
+import CustomerTermsAndConditionsPanel from '@/components/marketplaceProduct/customer-terms-and-conditions-panel';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
@@ -181,6 +182,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | ''>('');
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>(() => [...(rootData.me?.emails ?? [])]);
   const [autoRenew, setAutoRenew] = useState(true);
+  const [hasAcceptedTermsAndConditions, setHasAcceptedTermsAndConditions] = useState(false);
 
   const effectiveSelectedPricingId = useMemo(() => {
     if (subscriptionPricingOptions.some((item) => item.id === selectedPricingId)) {
@@ -236,6 +238,11 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
 
     if (!effectivePaymentMethod) {
       toast.error(<NotificationContent content="Select a payment method to continue." />);
+      return;
+    }
+
+    if (rootData.product.organization.customerFacingTermsAndConditionsUrl && !hasAcceptedTermsAndConditions) {
+      toast.error(<NotificationContent content="Accept the space terms and conditions before continuing." />);
       return;
     }
 
@@ -400,6 +407,12 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
               }
             />
 
+            <CustomerTermsAndConditionsPanel
+              accepted={hasAcceptedTermsAndConditions}
+              onAcceptedChange={setHasAcceptedTermsAndConditions}
+              termsAndConditionsUrl={rootData.product.organization.customerFacingTermsAndConditionsUrl}
+            />
+
             <Box
               sx={{
                 display: 'flex',
@@ -418,7 +431,12 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
                 <Button variant="text" onClick={() => router.push(productLink)} sx={{ textTransform: 'none' }}>
                   Back to product
                 </Button>
-                <Button variant="contained" onClick={handleSubmit} disabled={isInFlight || !selectedPricingOption} sx={{ textTransform: 'none' }}>
+                <Button
+                  variant="contained"
+                  onClick={handleSubmit}
+                  disabled={isInFlight || !selectedPricingOption || (!!rootData.product.organization.customerFacingTermsAndConditionsUrl && !hasAcceptedTermsAndConditions)}
+                  sx={{ textTransform: 'none' }}
+                >
                   Start plan
                 </Button>
               </StackRow>
@@ -438,7 +456,6 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
         quantity={quantity}
         startsOnLabel={toShortDate(startedAt.toISOString())}
         taxLabel={selectedPricingOption?.isTaxInclusive ? 'Tax included' : 'Tax added at invoice'}
-        termsAndConditionsUrl={rootData.product?.organization.customerFacingTermsAndConditionsUrl}
         title={selectedPricingOption?.listingMetadata.title ?? rootData.product.listingMetadata.title ?? ''}
       />
     </Box>

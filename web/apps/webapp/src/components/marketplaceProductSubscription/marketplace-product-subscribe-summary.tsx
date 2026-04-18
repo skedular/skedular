@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
-import Link from '@mui/material/Link';
 import { memo } from 'react';
 
 type Props = {
@@ -18,7 +17,6 @@ type Props = {
   quantity: number;
   startsOnLabel: string;
   taxLabel: string;
-  termsAndConditionsUrl: string | null | undefined;
   title: string;
 };
 
@@ -40,7 +38,6 @@ const MarketplaceProductSubscribeSummary = ({
   quantity,
   startsOnLabel,
   taxLabel,
-  termsAndConditionsUrl,
   title,
 }: Props) => {
   return (
@@ -80,16 +77,6 @@ const MarketplaceProductSubscribeSummary = ({
         <Box sx={{ mt: 2.5 }}>
           <MarketplaceCancellationPolicyDetails cancellationPolicyType={cancellationPolicyType} cancellationRefundRules={cancellationRefundRules} eventLabel="the next renewal" />
         </Box>
-
-        {termsAndConditionsUrl && (
-          <Box sx={{ mt: 2.5, p: 2, borderRadius: 3, bgcolor: (theme) => theme.palette.action.hover }}>
-            <StackColumn spacing={1}>
-              <Link href={termsAndConditionsUrl} target="_blank" rel="noreferrer" underline="hover" sx={{ width: 'fit-content' }}>
-                Review pricing terms and conditions
-              </Link>
-            </StackColumn>
-          </Box>
-        )}
       </CardContent>
     </Card>
   );
