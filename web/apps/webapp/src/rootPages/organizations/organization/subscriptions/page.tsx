@@ -1,5 +1,6 @@
 import {
   BodyIconTypography,
+  CollectionToolbar,
   DefaultDialogTitle,
   PushToRight,
   SmallIconTypography,
@@ -9,6 +10,7 @@ import {
   TwoButtonsDialogActions,
 } from '@/components/commons';
 import { getOrganizationBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
+import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
 import {
   SupportedMarketplaceBookingSubscriptionCancellationMode,
@@ -29,8 +31,8 @@ import type { pageOrganizationSubscriptions_deleteMarketplaceBookingSubscription
 import type { pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation.graphql';
 import type { pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptions_rootQuery } from '@/queries/__generated__/pageOrganizationSubscriptions_rootQuery.graphql';
-import { Breadcrumbs } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -42,8 +44,11 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
+import type { GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { PageHeaderPanel } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
@@ -51,8 +56,6 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-import type { GridColDef } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
 
 const surfaceSx: SxProps<Theme> = {
   borderRadius: 4,
@@ -72,6 +75,16 @@ const innerPanelSx: SxProps<Theme> = {
   px: 1.5,
   py: 1.25,
   backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.03)' : theme.palette.action.hover),
+};
+
+const clickablePanelSx: SxProps<Theme> = {
+  cursor: 'pointer',
+  transition: 'border-color 120ms ease, transform 120ms ease, background-color 120ms ease',
+  '&:hover': {
+    borderColor: (theme) => theme.palette.primary.main,
+    backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.05)' : theme.palette.action.selected),
+    transform: 'translateY(-1px)',
+  },
 };
 
 const RootQuery = graphql`
@@ -223,9 +236,12 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
   const router = useRouter();
   const { integratedPlatrform } = useIntegratedPlatrform();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
-  const [viewMode, setViewMode] = useState<SubscriptionViewMode>('card');
+  const [viewMode, setViewMode] = useState<SubscriptionViewMode>('list');
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedSubscriptionId, setSelectedSubscriptionId] = useState<string | null>(null);
+  const [searchText, setSearchText] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [paymentFilter, setPaymentFilter] = useState('ALL');
   const [commitDeleteMarketplaceBookingSubscription, isDeleteMarketplaceBookingSubscriptionInFlight] =
     useMutation<pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation>(graphql`
       mutation pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
@@ -305,10 +321,36 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
 
     return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
   }, [rootData.marketplaceBookingSubscriptionCancellationModes]);
-  const selectedSubscription = useMemo(() => subscriptions.find((item) => item.id === selectedSubscriptionId) ?? null, [selectedSubscriptionId, subscriptions]);
+  const filteredSubscriptions = useMemo(() => {
+    const normalizedSearch = searchText.trim().toLowerCase();
+
+    return subscriptions.filter((subscription) => {
+      const lifecycleDisplay = toMarketplaceBookingSubscriptionLifecycleDisplay({
+        autoRenew: subscription.autoRenew,
+        cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
+        isCancelled: subscription.status.type === 'CANCELLED',
+        fallbackActiveLabel: subscription.status.name,
+      });
+      const productTitle = subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription';
+      const customerLabel = subscription.involvedCustomers.length > 0 ? getCustomerDisplayName(subscription.involvedCustomers[0]) : 'Customer unavailable';
+      const paymentMethodLabel = subscription.marketplaceBooking.paymentMethod.name ?? '';
+
+      const matchesSearch =
+        normalizedSearch.length === 0 ||
+        productTitle.toLowerCase().includes(normalizedSearch) ||
+        customerLabel.toLowerCase().includes(normalizedSearch) ||
+        paymentMethodLabel.toLowerCase().includes(normalizedSearch);
+
+      const matchesStatus = statusFilter === 'ALL' || lifecycleDisplay.statusLabel === statusFilter;
+      const matchesPayment = paymentFilter === 'ALL' || subscription.marketplaceBooking.paymentStatus.name === paymentFilter;
+
+      return matchesSearch && matchesStatus && matchesPayment;
+    });
+  }, [paymentFilter, searchText, statusFilter, subscriptions]);
+  const selectedSubscription = useMemo(() => filteredSubscriptions.find((item) => item.id === selectedSubscriptionId) ?? null, [filteredSubscriptions, selectedSubscriptionId]);
   const subscriptionListRows = useMemo<SubscriptionListRow[]>(
     () =>
-      subscriptions.map((subscription) => {
+      filteredSubscriptions.map((subscription) => {
         const sortedRecurringBookings = [...subscription.recurringBookings].sort((left, right) => new Date(left.startDate).getTime() - new Date(right.startDate).getTime());
         const currentCycle = sortedRecurringBookings[sortedRecurringBookings.length - 1] ?? null;
         const lifecycleDisplay = toMarketplaceBookingSubscriptionLifecycleDisplay({
@@ -336,8 +378,26 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
           hasPendingPayment: sortedRecurringBookings.some((item) => item.marketplaceBooking?.paymentStatus.type === 'PENDING'),
         };
       }),
+    [filteredSubscriptions],
+  );
+  const availableStatusFilters = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          subscriptions.map(
+            (subscription) =>
+              toMarketplaceBookingSubscriptionLifecycleDisplay({
+                autoRenew: subscription.autoRenew,
+                cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
+                isCancelled: subscription.status.type === 'CANCELLED',
+                fallbackActiveLabel: subscription.status.name,
+              }).statusLabel,
+          ),
+        ),
+      ),
     [subscriptions],
   );
+  const availablePaymentFilters = useMemo(() => Array.from(new Set(subscriptions.map((subscription) => subscription.marketplaceBooking.paymentStatus.name))), [subscriptions]);
 
   const handleBackClick = () => {
     router.push(getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain));
@@ -504,10 +564,25 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
         minWidth: 170,
         renderCell: (params) => (
           <StackRow sx={{ py: 0.5, alignItems: 'center', gap: 0.25 }}>
-            <Button variant="text" size="small" sx={{ textTransform: 'none' }} onClick={() => handleOpenSubscriptionClick(params.row.id)}>
+            <Button
+              variant="text"
+              size="small"
+              sx={{ textTransform: 'none' }}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleOpenSubscriptionClick(params.row.id);
+              }}
+            >
               Open
             </Button>
-            <IconButton size="small" onClick={(event) => handleOpenMoreActionsClick(params.row.id, event)} aria-label="Open subscription actions">
+            <IconButton
+              size="small"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleOpenMoreActionsClick(params.row.id, event);
+              }}
+              aria-label="Open subscription actions"
+            >
               <MoreVertIcon fontSize="small" />
             </IconButton>
           </StackRow>
@@ -638,6 +713,39 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       </Box>
     </StackColumn>
   );
+  const pageToolbar =
+    subscriptions.length > 0 ? (
+      <CollectionToolbar
+        filters={
+          <Box
+            sx={{
+              display: 'grid',
+              gap: 1,
+              gridTemplateColumns: { xs: '1fr', md: 'minmax(240px, 1.2fr) repeat(2, minmax(180px, 0.8fr))' },
+            }}
+          >
+            <TextField label="Search subscriptions" value={searchText} onChange={(event) => setSearchText(event.target.value)} size="small" />
+            <TextField select label="Status" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} size="small">
+              <MenuItem value="ALL">All statuses</MenuItem>
+              {availableStatusFilters.map((status) => (
+                <MenuItem key={status} value={status}>
+                  {status}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField select label="Payment" value={paymentFilter} onChange={(event) => setPaymentFilter(event.target.value)} size="small">
+              <MenuItem value="ALL">All payments</MenuItem>
+              {availablePaymentFilters.map((payment) => (
+                <MenuItem key={payment} value={payment}>
+                  {payment}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
+        }
+        actions={<ListGridToggle defaultValue={viewMode === 'list' ? 'list' : 'grid'} onChange={(view) => setViewMode(view === 'list' ? 'list' : 'card')} />}
+      />
+    ) : null;
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
@@ -648,19 +756,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
             description="Review customer subscriptions, update recurring payments, manage refunds, and stop future billing now or at the end of the current period."
           />
 
-          {subscriptions.length > 0 ? (
-            <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-              <BodyIconTypography label={`${subscriptions.length} subscriptions`} sx={{ opacity: 0.78 }} />
-              <StackRow spacing={1}>
-                <Button variant={viewMode === 'card' ? 'contained' : 'outlined'} size="small" sx={{ textTransform: 'none' }} onClick={() => setViewMode('card')}>
-                  Card view
-                </Button>
-                <Button variant={viewMode === 'list' ? 'contained' : 'outlined'} size="small" sx={{ textTransform: 'none' }} onClick={() => setViewMode('list')}>
-                  List view
-                </Button>
-              </StackRow>
-            </StackRow>
-          ) : null}
+          {pageToolbar}
 
           {!rootData.organizationBookingPermissions.canModifyPaymentMethod ? (
             <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
@@ -670,6 +766,10 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
             <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
               <SmallIconTypography label="This organisation does not have any subscriptions yet." sx={{ opacity: 0.78 }} />
             </Box>
+          ) : filteredSubscriptions.length === 0 ? (
+            <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
+              <SmallIconTypography label="No subscriptions match current filters." sx={{ opacity: 0.78 }} />
+            </Box>
           ) : viewMode === 'list' ? (
             <Box sx={{ ...surfaceSx, p: 1.5 }}>
               <DataGrid
@@ -678,10 +778,16 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                 disableRowSelectionOnClick
                 ignoreDiacritics
                 hideFooter
+                onRowClick={(params) => handleOpenSubscriptionClick(params.row.id)}
                 getRowHeight={() => 'auto'}
                 rowSpacingType="margin"
                 getRowSpacing={() => ({ top: 4, bottom: 4 })}
-                sx={defaultGridStyle}
+                sx={{
+                  ...defaultGridStyle,
+                  '& .MuiDataGrid-row': {
+                    cursor: 'pointer',
+                  },
+                }}
                 localeText={{ noRowsLabel: 'No subscriptions found' }}
                 initialState={{
                   sorting: {
@@ -692,7 +798,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
             </Box>
           ) : (
             <Grid container spacing={2}>
-              {subscriptions.map((subscription) => {
+              {filteredSubscriptions.map((subscription) => {
                 const sortedRecurringBookings = [...subscription.recurringBookings].sort((left, right) => new Date(left.startDate).getTime() - new Date(right.startDate).getTime());
                 const lifecycleDisplay = toMarketplaceBookingSubscriptionLifecycleDisplay({
                   autoRenew: subscription.autoRenew,
@@ -708,33 +814,32 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                     <Card sx={subscriptionCardSx}>
                       <CardContent sx={{ p: 2, height: '100%' }}>
                         <StackColumn spacing={2} sx={{ height: '100%' }}>
-                          <StackRow sx={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: 1 }}>
-                            <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
-                              <SubtitleIconTypography label={productTitle} />
-                              <SmallIconTypography label={customerLabel} sx={{ opacity: 0.82 }} />
-                              <SmallIconTypography
-                                label={`Started ${new Date(subscription.startedAt).toLocaleDateString()}${subscription.nextRenewalAt ? ` • Next renewal ${new Date(subscription.nextRenewalAt).toLocaleDateString()}` : ''}`}
-                                sx={{ opacity: 0.72 }}
-                              />
-                            </StackColumn>
-                            <PushToRight />
-                            <Chip label={lifecycleDisplay.statusLabel} color={lifecycleDisplay.statusColor} variant="outlined" />
-                          </StackRow>
+                          <Box onClick={() => handleOpenSubscriptionClick(subscription.id)} sx={{ ...innerPanelSx, ...clickablePanelSx, p: 0, overflow: 'hidden' }}>
+                            <Box sx={{ p: 1.5 }}>
+                              <StackRow sx={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: 1 }}>
+                                <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
+                                  <SubtitleIconTypography label={productTitle} />
+                                  <SmallIconTypography label={customerLabel} sx={{ opacity: 0.82 }} />
+                                  <SmallIconTypography
+                                    label={`Started ${new Date(subscription.startedAt).toLocaleDateString()}${subscription.nextRenewalAt ? ` • Next renewal ${new Date(subscription.nextRenewalAt).toLocaleDateString()}` : ''}`}
+                                    sx={{ opacity: 0.72 }}
+                                  />
+                                </StackColumn>
+                                <PushToRight />
+                                <Chip label={lifecycleDisplay.statusLabel} color={lifecycleDisplay.statusColor} variant="outlined" />
+                              </StackRow>
 
-                          <StackRow sx={{ justifyContent: 'flex-end', mt: -1 }}>
-                            <Button variant="text" size="small" sx={{ textTransform: 'none' }} onClick={() => handleOpenSubscriptionClick(subscription.id)}>
-                              Open details
-                            </Button>
-                          </StackRow>
-
-                          <Box sx={innerPanelSx}>
-                            <StackColumn spacing={0.75}>
-                              <BodyIconTypography label={`Renewal: ${lifecycleDisplay.renewalLabel}`} />
-                              <SmallIconTypography
-                                label={`Current payment: ${subscription.marketplaceBooking.paymentStatus.name} • Payment method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
-                                sx={{ opacity: 0.78 }}
-                              />
-                            </StackColumn>
+                              <Box sx={{ ...innerPanelSx, mt: 1.5 }}>
+                                <StackColumn spacing={0.75}>
+                                  <BodyIconTypography label={`Renewal: ${lifecycleDisplay.renewalLabel}`} />
+                                  <SmallIconTypography
+                                    label={`Current payment: ${subscription.marketplaceBooking.paymentStatus.name} • Payment method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
+                                    sx={{ opacity: 0.78 }}
+                                  />
+                                  <SmallIconTypography label="Open details and manage this subscription" sx={{ opacity: 0.72 }} />
+                                </StackColumn>
+                              </Box>
+                            </Box>
                           </Box>
 
                           {subscription.status.type === 'ACTIVE' ? (

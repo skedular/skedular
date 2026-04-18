@@ -26,9 +26,17 @@ const ListGridToggle = ({ defaultValue, onChange }: Props) => {
       value={alignment}
       exclusive
       onChange={handleChange}
+      size="small"
       sx={{
         borderRadius: 4,
-        overflow: 'hidden', // Ensures no visual artifacts from children
+        overflow: 'hidden',
+        alignSelf: 'center',
+        height: 40,
+        '& .MuiToggleButton-root': {
+          px: 1.25,
+          py: 0.75,
+          borderRadius: 0,
+        },
       }}
     >
       <Tooltip title="List layout">
