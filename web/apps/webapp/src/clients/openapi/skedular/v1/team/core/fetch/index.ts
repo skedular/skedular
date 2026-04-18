@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export { SkedularTeamClient } from './SkedularTeamClient';
+export { SkedularTeamCoreV1Client } from './SkedularTeamCoreV1Client';
 
 export { ApiError } from './core/ApiError';
 export { BaseHttpRequest } from './core/BaseHttpRequest';
@@ -16,7 +16,5 @@ export type { Version } from './models/Version';
 export { $ProblemDetails } from './schemas/$ProblemDetails';
 export { $Version } from './schemas/$Version';
 
-export { GraphqlService } from './services/GraphqlService';
 export { TeamService } from './services/TeamService';
 export { V1Service } from './services/V1Service';
-export { WorkaroundService } from './services/WorkaroundService';

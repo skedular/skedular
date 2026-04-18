@@ -1,4 +1,6 @@
-using Api.Shared.Clients.OpenApi.Skedular.Team.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Team.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Team.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Team.Workaround.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Aspire.Hosting.Testing;
@@ -78,7 +80,9 @@ public class Startup
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddSingleton<ITeamClient>(_ => new TeamClient(teamApiClient));
+            .AddSingleton<ITeamCoreClient>(_ => new TeamCoreClient(teamApiClient))
+            .AddSingleton<ITeamGraphqlClient>(_ => new TeamGraphqlClient(teamApiClient))
+            .AddSingleton<ITeamWorkaroundClient>(_ => new TeamWorkaroundClient(teamApiClient));
 
         services
             .AddSkedularGraphQLV1()

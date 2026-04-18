@@ -366,10 +366,10 @@ RUN /app/publish/Skedularctl mcp-tool-generate \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/skedular/team_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Team.V1 \
-  /Classname:Team \
-  /Output:/output/Skedular/Team/V1/Team.g.cs \
+  /Input:/openapi/skedular/team/team_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Team.Core.V1 \
+  /Classname:TeamCore \
+  /Output:/output/Skedular/Team/V1/TeamCore.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -382,10 +382,56 @@ RUN nswag \
   /JsonLibrary:SystemTextJson \
   /ExcludedTypeNames:FileParameter
 
-RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Team/V1/Team.g.cs
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Team/V1/TeamCore.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-  --input-file /output/Skedular/Team/V1/Team.g.cs \
-  --output-file /output/Skedular/Team/V1/Team.g.cs
+  --input-file /output/Skedular/Team/V1/TeamCore.g.cs \
+  --output-file /output/Skedular/Team/V1/TeamCore.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/team/team_graphql_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Team.Graphql.V1 \
+  /Classname:TeamGraphql \
+  /Output:/output/Skedular/Team/V1/TeamGraphql.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Team/V1/TeamGraphql.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Team/V1/TeamGraphql.g.cs \
+  --output-file /output/Skedular/Team/V1/TeamGraphql.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/team/team_workaround_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Team.Workaround.V1 \
+  /Classname:TeamWorkaround \
+  /Output:/output/Skedular/Team/V1/TeamWorkaround.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Team/V1/TeamWorkaround.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Team/V1/TeamWorkaround.g.cs \
+  --output-file /output/Skedular/Team/V1/TeamWorkaround.g.cs
 
 RUN nswag \
   openapi2cscontroller \

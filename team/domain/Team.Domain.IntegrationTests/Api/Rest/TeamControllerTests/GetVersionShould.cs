@@ -1,10 +1,10 @@
-using Api.Shared.Clients.OpenApi.Skedular.Team.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Team.Core.V1;
 
 namespace Team.Domain.IntegrationTests.Api.Rest.TeamControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Team.Api")]
-public class GetVersionShould(ITeamClient teamClient)
+public class GetVersionShould(ITeamCoreClient teamClient)
 {
     [Theory]
     [AutoFakeItEasyData]
