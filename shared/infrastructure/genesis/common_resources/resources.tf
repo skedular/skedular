@@ -57,6 +57,28 @@ module "webapp" {
   environment       = var.environment
 }
 
+module "privatewebapp" {
+  source = "../modules/privatewebapp"
+
+  providers = {
+    aws = aws
+  }
+
+  organization_name = module.common.organization_name
+  environment       = var.environment
+}
+
+module "marketplacewebapp" {
+  source = "../modules/marketplacewebapp"
+
+  providers = {
+    aws = aws
+  }
+
+  organization_name = module.common.organization_name
+  environment       = var.environment
+}
+
 module "customer" {
   source = "../modules/customer"
 
