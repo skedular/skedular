@@ -24,7 +24,9 @@ npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular
 
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/marketplace_v1.yaml --output ./src/clients/openapi/skedular/v1/marketplace/fetch --name SkedularMarketplaceV1Client --client fetch --exportSchemas true &
 
-npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/msteams_v1.yaml --output ./src/clients/openapi/skedular/v1/msteams/fetch --name SkedularMSTeamsV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/msteams/msteams_v1.yaml --output ./src/clients/openapi/skedular/v1/msteams/core/fetch --name SkedularMsTeamsCoreV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/msteams/msteams_graphql_v1.yaml --output ./src/clients/openapi/skedular/v1/msteams/graphql/fetch --name SkedularMsTeamsGraphqlV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/msteams/msteams_workaround_v1.yaml --output ./src/clients/openapi/skedular/v1/msteams/workaround/fetch --name SkedularMsTeamsWorkaroundV1Client --client fetch --exportSchemas true &
 
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/organization_v1.yaml --output ./src/clients/openapi/skedular/v1/organization/fetch --name SkedularOrganizationV1Client --client fetch --exportSchemas true &
 

@@ -11,7 +11,9 @@ using Api.Shared.Clients.OpenApi.Skedular.Customer.Workaround.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Gateway.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Location.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Marketplace.V1;
-using Api.Shared.Clients.OpenApi.Skedular.MsTeams.V1;
+using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Workaround.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Organization.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Slack.Callback.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Slack.Core.V1;
@@ -170,7 +172,9 @@ public class Startup
             .AddSingleton<ICoreClient>(_ => new CoreClient(coreApiClient))
             .AddSingleton<ILocationClient>(_ => new LocationClient(locationApiClient))
             .AddSingleton<IMarketplaceClient>(_ => new MarketplaceClient(marketplaceApiClient))
-            .AddSingleton<IMsTeamsClient>(_ => new MsTeamsClient(msteamsApiClient))
+            .AddSingleton<IMsTeamsCoreClient>(_ => new MsTeamsCoreClient(msteamsApiClient))
+            .AddSingleton<IMsTeamsGraphqlClient>(_ => new MsTeamsGraphqlClient(msteamsApiClient))
+            .AddSingleton<IMsTeamsWorkaroundClient>(_ => new MsTeamsWorkaroundClient(msteamsApiClient))
             .AddSingleton<IOrganizationClient>(_ => new OrganizationClient(organizationApiClient))
             .AddSingleton<ISlackCoreClient>(_ => new SlackCoreClient(slackApiClient))
             .AddSingleton<ISlackGraphqlClient>(_ => new SlackGraphqlClient(slackApiClient))

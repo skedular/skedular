@@ -258,10 +258,50 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/msteams_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.Skedular.MsTeams.V1 \
-  /Classname:MsTeamsClient \
-  /Output:/output/Skedular/MsTeams/V1/MsTeams.g.cs \
+  /Input:/openapi/skedular/msteams/msteams_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.MsTeams.Core.V1 \
+  /Classname:MsTeamsCoreClient \
+  /Output:/output/Skedular/MsTeams/V1/MsTeamsCore.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/msteams/msteams_graphql_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.MsTeams.Graphql.V1 \
+  /Classname:MsTeamsGraphqlClient \
+  /Output:/output/Skedular/MsTeams/V1/MsTeamsGraphql.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/msteams/msteams_workaround_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.MsTeams.Workaround.V1 \
+  /Classname:MsTeamsWorkaroundClient \
+  /Output:/output/Skedular/MsTeams/V1/MsTeamsWorkaround.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \

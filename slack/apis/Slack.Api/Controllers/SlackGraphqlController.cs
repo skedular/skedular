@@ -6,10 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Slack.Api.Controllers;
 
 [ApiController]
-public class SlackGraphqlController(
-    SlackConfiguration slackConfiguration,
-    ITopicEventSender topicEventSender)
-    : SlackGraphqlControllerBase
+public class SlackGraphqlController(SlackConfiguration slackConfiguration, ITopicEventSender topicEventSender) : SlackGraphqlControllerBase
 {
     public override async Task<IActionResult> RaiseGraphqlChange(
         string topicName,

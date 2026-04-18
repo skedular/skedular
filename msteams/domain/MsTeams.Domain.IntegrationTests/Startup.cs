@@ -1,4 +1,6 @@
-using Api.Shared.Clients.OpenApi.Skedular.MsTeams.V1;
+using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Workaround.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.MsTeams.V1;
 using Aspire.Hosting.Testing;
@@ -78,7 +80,9 @@ public class Startup
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddSingleton<IMsTeamsClient>(_ => new MsTeamsClient(msteamsApiClient));
+            .AddSingleton<IMsTeamsCoreClient>(_ => new MsTeamsCoreClient(msteamsApiClient))
+            .AddSingleton<IMsTeamsGraphqlClient>(_ => new MsTeamsGraphqlClient(msteamsApiClient))
+            .AddSingleton<IMsTeamsWorkaroundClient>(_ => new MsTeamsWorkaroundClient(msteamsApiClient));
 
         services
             .AddSkedularGraphQLV1()

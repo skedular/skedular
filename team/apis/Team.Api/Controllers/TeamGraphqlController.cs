@@ -2,15 +2,11 @@ using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.OpenApi.Skedular.Team.Graphql.V1;
 using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Team.Api.Controllers;
 
 [ApiController]
-public class TeamGraphqlController(
-    TeamConfiguration teamConfiguration,
-    ITopicEventSender topicEventSender,
-    ILogger<TeamGraphqlController> logger)
+public class TeamGraphqlController(TeamConfiguration teamConfiguration, ITopicEventSender topicEventSender, ILogger<TeamGraphqlController> logger)
     : TeamGraphqlControllerBase
 {
     public override async Task<IActionResult> RaiseGraphqlChange(

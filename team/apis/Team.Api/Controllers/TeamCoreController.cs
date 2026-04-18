@@ -1,7 +1,6 @@
 using Api.Shared.Services.OpenApi.Skedular.Team.Core.V1;
 using Enterprise.Shared.Version;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Version = Api.Shared.Services.OpenApi.Skedular.Team.Core.V1.Version;
 
 namespace Team.Api.Controllers;
@@ -19,10 +18,7 @@ public class TeamCoreController(IVersionService versionService, ILogger<TeamCore
 
         return Task.FromResult<ActionResult<Version>>(new Version
         {
-            Major = version.Major,
-            Minor = version.Minor,
-            Build = version.Build,
-            Revision = version.Revision
+            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
         });
     }
 }

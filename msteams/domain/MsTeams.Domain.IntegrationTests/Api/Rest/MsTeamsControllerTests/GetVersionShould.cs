@@ -1,10 +1,10 @@
-using Api.Shared.Clients.OpenApi.Skedular.MsTeams.V1;
+using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Core.V1;
 
 namespace MsTeams.Domain.IntegrationTests.Api.Rest.MsTeamsControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Msteams.Api")]
-public class GetVersionShould(IMsTeamsClient msTeamsClient)
+public class GetVersionShould(IMsTeamsCoreClient msTeamsClient)
 {
     [Theory]
     [AutoFakeItEasyData]
