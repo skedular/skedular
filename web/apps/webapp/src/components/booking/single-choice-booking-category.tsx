@@ -1,7 +1,7 @@
 import { BodyIconTypography } from '@/components/commons';
-import { Autocomplete } from '@/components/forms';
 import type { singleChoiceBookingCategory_query$key } from '@/queries/__generated__/singleChoiceBookingCategory_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 

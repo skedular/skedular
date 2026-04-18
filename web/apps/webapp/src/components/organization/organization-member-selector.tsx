@@ -1,9 +1,9 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { BodyIconTypography } from '@/components/commons';
-import { Autocomplete } from '@/components/forms';
 import { getCustomerFullName, keyboardSearchDebounceTimeout } from '@/libs/utils';
 import type { organizationMemberSelector_query$key } from '@/queries/__generated__/organizationMemberSelector_query.graphql';
 import type { organizationMemberSelector_refetchableFragment } from '@/queries/__generated__/organizationMemberSelector_refetchableFragment.graphql';
+import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { graphql, useRefetchableFragment } from 'react-relay';
 import { useDebounceCallback } from 'usehooks-ts';

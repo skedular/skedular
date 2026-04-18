@@ -1,8 +1,8 @@
 import { BodyIconTypography } from '@/components/commons';
-import { Autocomplete } from '@/components/forms';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
 import type { multipleChoicesZones_query$key } from '@/queries/__generated__/multipleChoicesZones_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
