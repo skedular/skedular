@@ -13,7 +13,11 @@ npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/booking/booking_xero_webhook_v1.yaml --output ./src/clients/openapi/skedular/v1/booking/xero-webhook/fetch --name SkedularBookingXeroWebhookV1Client --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/booking/booking_workaround_v1.yaml --output ./src/clients/openapi/skedular/v1/booking/workaround/fetch --name SkedularBookingWorkaroundV1Client --client fetch --exportSchemas true &
 
-npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/customer_v1.yaml --output ./src/clients/openapi/skedular/v1/customer/fetch --name SkedularCustomerV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/customer/customer_v1.yaml --output ./src/clients/openapi/skedular/v1/customer/core/fetch --name SkedularCustomerCoreV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/customer/customer_graphql_v1.yaml --output ./src/clients/openapi/skedular/v1/customer/graphql/fetch --name SkedularCustomerGraphqlV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/customer/customer_workaround_v1.yaml --output ./src/clients/openapi/skedular/v1/customer/workaround/fetch --name SkedularCustomerWorkaroundV1Client --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/customer/customer_stripe_v1.yaml --output ./src/clients/openapi/skedular/v1/customer/stripe/fetch --name SkedularCustomerStripeV1Client --client fetch --exportSchemas true &
+
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/organization_v1.yaml --output ./src/clients/openapi/skedular/v1/organization/fetch --name SkedularOrganizationV1Client --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/team_v1.yaml --output ./src/clients/openapi/skedular/v1/team/fetch --name SkedularTeamClient --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/location_v1.yaml --output ./src/clients/openapi/skedular/v1/location/fetch --name SkedularLocationV1Client --client fetch --exportSchemas true &

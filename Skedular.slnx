@@ -59,7 +59,6 @@
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/">
         <File Path="api-definitions/openapi/skedular/core_v1.yaml"/>
-        <File Path="api-definitions/openapi/skedular/customer_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/gateway_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/location_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/marketplace_v1.yaml"/>
@@ -74,6 +73,12 @@
         <File Path="api-definitions/openapi/skedular/booking/booking_stripe_webhook_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/booking/booking_workaround_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/booking/booking_xero_webhook_v1.yaml"/>
+    </Folder>
+    <Folder Name="/api-definitions/openapi/skedular/customer/">
+        <File Path="api-definitions/openapi/skedular/customer/customer_graphql_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/customer/customer_stripe_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/customer/customer_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/customer/customer_workaround_v1.yaml"/>
     </Folder>
     <Folder Name="/booking/">
         <File Path="booking/AGENTS.md"/>

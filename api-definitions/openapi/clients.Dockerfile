@@ -138,10 +138,70 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/customer_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Customer.V1 \
-  /Classname:CustomerClient \
-  /Output:/output/Skedular/Customer/V1/Customer.g.cs \
+  /Input:/openapi/skedular/customer/customer_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Customer.Core.V1 \
+  /Classname:CustomerCoreClient \
+  /Output:/output/Skedular/Customer/V1/CustomerCore.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/customer/customer_graphql_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Customer.Graphql.V1 \
+  /Classname:CustomerGraphqlClient \
+  /Output:/output/Skedular/Customer/V1/CustomerGraphql.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/customer/customer_workaround_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Customer.Workaround.V1 \
+  /Classname:CustomerWorkaroundClient \
+  /Output:/output/Skedular/Customer/V1/CustomerWorkaround.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/skedular/customer/customer_stripe_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1 \
+  /Classname:CustomerStripeClient \
+  /Output:/output/Skedular/Customer/V1/CustomerStripe.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \

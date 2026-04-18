@@ -1,0 +1,105 @@
+openapi: 3.1.1
+info:
+  title: Customer Workaround API v1
+  description: "Customer Workaround REST API"
+  version: 1.0.0
+
+servers:
+  - url: https://api.skedular.app
+    description: production
+  - url: https://apistaging.skedular.app
+    description: staging
+  - url: http://localhost:9000
+    description: local gateway
+  - url: http://localhost:10500
+    description: local
+
+paths:
+  /v1/customer/{customerId}/republish:
+    put:
+      tags:
+        - v1
+        - customer
+        - workaround
+      summary: republish customer
+      operationId: republish
+      parameters:
+        - in: path
+          name: customerId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: the status of customer event republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/customer/republish-all:
+    put:
+      tags:
+        - v1
+        - customer
+        - workaround
+      summary: republish all customers
+      operationId: republishAll
+
+      responses:
+        "200":
+          description: the status of customer republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+components:
+  schemas:
+    ProblemDetails:
+      type: object
+      additionalProperties: { }
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+
+    Version:
+      type: object
+      required:
+        - major
+        - minor
+        - build
+        - revision
+      properties:
+        major:
+          type: integer
+          format: int32
+          description: major version
+        minor:
+          type: integer
+          format: int32
+          description: minor version
+        build:
+          type: integer
+          format: int32
+          description: build number
+        revision:
+          type: integer
+          format: int32
+          description: revision

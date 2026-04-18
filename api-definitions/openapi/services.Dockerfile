@@ -159,10 +159,10 @@ RUN /app/publish/Skedularctl mcp-tool-generate \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/skedular/customer_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Customer.V1 \
-  /Classname:Customer \
-  /Output:/output/Skedular/Customer/V1/Customer.g.cs \
+  /Input:/openapi/skedular/customer/customer_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Customer.Core.V1 \
+  /Classname:CustomerCore \
+  /Output:/output/Skedular/Customer/V1/CustomerCore.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -175,10 +175,79 @@ RUN nswag \
   /JsonLibrary:SystemTextJson \
   /ExcludedTypeNames:FileParameter
 
-RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Customer/V1/Customer.g.cs
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Customer/V1/CustomerCore.g.cs
 RUN /app/publish/Skedularctl mcp-tool-generate \
-  --input-file /output/Skedular/Customer/V1/Customer.g.cs \
-  --output-file /output/Skedular/Customer/V1/Customer.g.cs
+  --input-file /output/Skedular/Customer/V1/CustomerCore.g.cs \
+  --output-file /output/Skedular/Customer/V1/CustomerCore.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/customer/customer_graphql_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Customer.Graphql.V1 \
+  /Classname:CustomerGraphql \
+  /Output:/output/Skedular/Customer/V1/CustomerGraphql.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Customer/V1/CustomerGraphql.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Customer/V1/CustomerGraphql.g.cs \
+  --output-file /output/Skedular/Customer/V1/CustomerGraphql.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/customer/customer_workaround_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Customer.Workaround.V1 \
+  /Classname:CustomerWorkaround \
+  /Output:/output/Skedular/Customer/V1/CustomerWorkaround.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Customer/V1/CustomerWorkaround.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Customer/V1/CustomerWorkaround.g.cs \
+  --output-file /output/Skedular/Customer/V1/CustomerWorkaround.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/customer/customer_stripe_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Customer.Stripe.V1 \
+  /Classname:CustomerStripe \
+  /Output:/output/Skedular/Customer/V1/CustomerStripe.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Customer/V1/CustomerStripe.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+  --input-file /output/Skedular/Customer/V1/CustomerStripe.g.cs \
+  --output-file /output/Skedular/Customer/V1/CustomerStripe.g.cs
 
 RUN nswag \
   openapi2cscontroller \

@@ -1,10 +1,10 @@
-using Api.Shared.Clients.OpenApi.Skedular.Customer.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Customer.Core.V1;
 
 namespace Customer.Domain.IntegrationTests.Api.Rest.CustomerControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Customer.Api")]
-public class GetVersionShould(ICustomerClient customerClient)
+public class GetVersionShould(ICustomerCoreClient customerClient)
 {
     [Theory]
     [AutoFakeItEasyData]

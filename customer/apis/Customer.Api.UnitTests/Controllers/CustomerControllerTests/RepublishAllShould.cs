@@ -11,7 +11,7 @@ public class RepublishAllShould
     [AutoFakeItEasyData]
     public async Task Call_RepublishAllCustomersAsync(
         [Frozen] IWorkaroundService workaroundService,
-        [NoAutoProperties] CustomerController sut,
+        [NoAutoProperties] CustomerWorkaroundController sut,
         CancellationToken cancellationToken)
     {
         _ = await sut.RepublishAll(cancellationToken);
@@ -21,7 +21,7 @@ public class RepublishAllShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Return_OkResult([NoAutoProperties] CustomerController sut, CancellationToken cancellationToken)
+    public async Task Return_OkResult([NoAutoProperties] CustomerWorkaroundController sut, CancellationToken cancellationToken)
     {
         var result = await sut.RepublishAll(cancellationToken);
 
@@ -32,7 +32,7 @@ public class RepublishAllShould
     [AutoFakeItEasyData]
     public async Task Throw_Exception_When_Workaround_Service_Throws(
         [Frozen] IWorkaroundService workaroundService,
-        [NoAutoProperties] CustomerController sut,
+        [NoAutoProperties] CustomerWorkaroundController sut,
         CancellationToken cancellationToken)
     {
         A.CallTo(() => workaroundService.RepublishAllCustomersAsync(A<CancellationToken>._)).Throws<Exception>();

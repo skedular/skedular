@@ -1,4 +1,7 @@
-using Api.Shared.Clients.OpenApi.Skedular.Customer.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Customer.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Customer.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Customer.Workaround.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Aspire.Hosting.Testing;
@@ -78,7 +81,10 @@ public class Startup
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddSingleton<ICustomerClient>(_ => new CustomerClient(customerApiClient));
+            .AddSingleton<ICustomerCoreClient>(_ => new CustomerCoreClient(customerApiClient))
+            .AddSingleton<ICustomerGraphqlClient>(_ => new CustomerGraphqlClient(customerApiClient))
+            .AddSingleton<ICustomerStripeClient>(_ => new CustomerStripeClient(customerApiClient))
+            .AddSingleton<ICustomerWorkaroundClient>(_ => new CustomerWorkaroundClient(customerApiClient));
 
         services
             .AddSkedularGraphQLV1()

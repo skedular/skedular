@@ -1,4 +1,7 @@
 using Api.Shared.Clients.OpenApi.Skedular.Booking.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Booking.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Booking.StripeWebhook.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Booking.XeroWebhook.V1;
 using Api.Shared.Clients.OpenApi.Skedular.BookingWorkaround.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
@@ -90,7 +93,10 @@ public class Startup
             .AddPublishers()
             .AddOutboxPublishers()
             .AddSingleton<IBookingCoreClient>(_ => new BookingCoreClient(bookingApiClient))
-            .AddSingleton<IBookingWorkaroundClient>(_ => new BookingWorkaroundClient(bookingApiClient));
+            .AddSingleton<IBookingGraphqlClient>(_ => new BookingGraphqlClient(bookingApiClient))
+            .AddSingleton<IBookingStripeWebhookClient>(_ => new BookingStripeWebhookClient(bookingApiClient))
+            .AddSingleton<IBookingWorkaroundClient>(_ => new BookingWorkaroundClient(bookingApiClient))
+            .AddSingleton<IBookingXeroWebhookClient>(_ => new BookingXeroWebhookClient(bookingApiClient));
 
         services
             .AddSkedularGraphQLV1()

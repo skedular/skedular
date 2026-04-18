@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Customer.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Customer.Workaround.V1;
 using Customer.Domain.IntegrationTests.Fixtures;
 using Customer.Shared.Repositories;
 
@@ -6,7 +6,7 @@ namespace Customer.Domain.IntegrationTests.Api.Rest.CustomerControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Customer.Api")]
-public class RepublishShould(ICustomerClient customerClient, IRepositoryFactory repositoryFactory)
+public class RepublishShould(ICustomerWorkaroundClient customerClient, IRepositoryFactory repositoryFactory)
 {
     [Theory]
     [AutoFakeItEasyData([typeof(BasicCustomerWithIdentityFixtureCustomizer)])]

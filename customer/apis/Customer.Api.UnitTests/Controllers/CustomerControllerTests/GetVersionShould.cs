@@ -10,7 +10,7 @@ public class GetVersionShould
     [AutoFakeItEasyData]
     public async Task Call_GetVersion(
         [Frozen] IVersionService versionService,
-        [NoAutoProperties] CustomerController sut,
+        [NoAutoProperties] CustomerCoreController sut,
         CancellationToken cancellationToken)
     {
         _ = await sut.GetVersion(cancellationToken);
@@ -22,7 +22,7 @@ public class GetVersionShould
     [AutoFakeItEasyData]
     public async Task Return_Version(
         [Frozen] IVersionService versionService,
-        [NoAutoProperties] CustomerController sut,
+        [NoAutoProperties] CustomerCoreController sut,
         Version version,
         CancellationToken cancellationToken)
     {
@@ -41,7 +41,7 @@ public class GetVersionShould
     [AutoFakeItEasyData]
     public async Task Throw_Exception_When_Version_Service_Throws(
         [Frozen] IVersionService versionService,
-        [NoAutoProperties] CustomerController sut,
+        [NoAutoProperties] CustomerCoreController sut,
         CancellationToken cancellationToken)
     {
         A.CallTo(() => versionService.GetVersion()).Throws<Exception>();

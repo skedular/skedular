@@ -11,7 +11,7 @@ public class RepublishShould
     [AutoFakeItEasyData]
     public async Task Call_RepublishCustomerAsync(
         [Frozen] IWorkaroundService workaroundService,
-        [NoAutoProperties] CustomerController sut,
+        [NoAutoProperties] CustomerWorkaroundController sut,
         string customerId,
         CancellationToken cancellationToken)
     {
@@ -23,7 +23,7 @@ public class RepublishShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_OkResult(
-        [NoAutoProperties] CustomerController sut,
+        [NoAutoProperties] CustomerWorkaroundController sut,
         string customerId,
         CancellationToken cancellationToken)
     {
@@ -36,7 +36,7 @@ public class RepublishShould
     [AutoFakeItEasyData]
     public async Task Throw_Exception_When_Workaround_Service_Throws(
         [Frozen] IWorkaroundService workaroundService,
-        [NoAutoProperties] CustomerController sut,
+        [NoAutoProperties] CustomerWorkaroundController sut,
         string customerId,
         CancellationToken cancellationToken)
     {

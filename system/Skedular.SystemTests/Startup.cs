@@ -1,6 +1,13 @@
 using Api.Shared.Clients.OpenApi.Skedular.Booking.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Booking.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Booking.StripeWebhook.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Booking.XeroWebhook.V1;
+using Api.Shared.Clients.OpenApi.Skedular.BookingWorkaround.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Core.V1;
-using Api.Shared.Clients.OpenApi.Skedular.Customer.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Customer.Core.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Customer.Graphql.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1;
+using Api.Shared.Clients.OpenApi.Skedular.Customer.Workaround.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Gateway.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Location.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Marketplace.V1;
@@ -146,8 +153,15 @@ public class Startup
                 true,
                 "teamdb")
             .AddSingleton<IBookingCoreClient>(_ => new BookingCoreClient(bookingApiClient))
+            .AddSingleton<IBookingGraphqlClient>(_ => new BookingGraphqlClient(bookingApiClient))
+            .AddSingleton<IBookingStripeWebhookClient>(_ => new BookingStripeWebhookClient(bookingApiClient))
+            .AddSingleton<IBookingWorkaroundClient>(_ => new BookingWorkaroundClient(bookingApiClient))
+            .AddSingleton<IBookingXeroWebhookClient>(_ => new BookingXeroWebhookClient(bookingApiClient))
+            .AddSingleton<ICustomerCoreClient>(_ => new CustomerCoreClient(customerApiClient))
+            .AddSingleton<ICustomerGraphqlClient>(_ => new CustomerGraphqlClient(customerApiClient))
+            .AddSingleton<ICustomerStripeClient>(_ => new CustomerStripeClient(customerApiClient))
+            .AddSingleton<ICustomerWorkaroundClient>(_ => new CustomerWorkaroundClient(customerApiClient))
             .AddSingleton<ICoreClient>(_ => new CoreClient(coreApiClient))
-            .AddSingleton<ICustomerClient>(_ => new CustomerClient(customerApiClient))
             .AddSingleton<ILocationClient>(_ => new LocationClient(locationApiClient))
             .AddSingleton<IMarketplaceClient>(_ => new MarketplaceClient(marketplaceApiClient))
             .AddSingleton<IMsTeamsClient>(_ => new MsTeamsClient(msteamsApiClient))
