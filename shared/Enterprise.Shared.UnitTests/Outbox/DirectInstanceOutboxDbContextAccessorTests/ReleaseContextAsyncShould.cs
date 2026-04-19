@@ -1,7 +1,7 @@
 using Enterprise.Shared.Outbox;
-using Enterprise.Shared.UnitTests.Database.TestSupport;
-using Enterprise.Shared.UnitTests.Fixtures;
 using Microsoft.Extensions.Logging;
+using Testing.Shared.Database.TestSupport;
+using Testing.Shared.Fixtures;
 
 namespace Enterprise.Shared.UnitTests.Outbox.DirectInstanceOutboxDbContextAccessorTests;
 

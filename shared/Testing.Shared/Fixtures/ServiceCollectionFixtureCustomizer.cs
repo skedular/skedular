@@ -1,7 +1,7 @@
 using AutoFixture;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Enterprise.Shared.UnitTests.Fixtures;
+namespace Testing.Shared.Fixtures;
 
 public class ServiceCollectionFixtureCustomizer : IFixtureCustomizer
 {

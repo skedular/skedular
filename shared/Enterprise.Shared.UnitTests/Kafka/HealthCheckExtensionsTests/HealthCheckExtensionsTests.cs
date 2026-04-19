@@ -1,9 +1,9 @@
 ﻿using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
-using Enterprise.Shared.UnitTests.Fixtures;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
+using Testing.Shared.Fixtures;
 
 namespace Enterprise.Shared.UnitTests.Kafka.HealthCheckExtensionsTests;
 

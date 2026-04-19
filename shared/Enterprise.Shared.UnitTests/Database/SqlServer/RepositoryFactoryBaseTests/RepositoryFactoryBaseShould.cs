@@ -1,6 +1,6 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.UnitTests.Database.TestSupport;
 using Microsoft.EntityFrameworkCore;
+using Testing.Shared.Database.TestSupport;
 
 namespace Enterprise.Shared.UnitTests.Database.SqlServer.RepositoryFactoryBaseTests;
 

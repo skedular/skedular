@@ -2,7 +2,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enterprise.Shared.UnitTests.Database.TestSupport;
+namespace Testing.Shared.Database.TestSupport;
 
 public class ParentEntity : EntityBase
 {
@@ -89,7 +89,7 @@ public sealed class PostgresTestDbContext(
 public sealed class SqlServerTestDbContext(
     DbContextOptions<SqlServerTestDbContext> options,
     CustomDbContextOptions<SqlServerTestDbContext> customDbContextOptions)
-    : Shared.Database.SqlServer.DbContextBase<SqlServerTestDbContext>(options, customDbContextOptions)
+    : Enterprise.Shared.Database.SqlServer.DbContextBase<SqlServerTestDbContext>(options, customDbContextOptions)
 {
     public DbSet<ParentEntity> Parents => Set<ParentEntity>();
 

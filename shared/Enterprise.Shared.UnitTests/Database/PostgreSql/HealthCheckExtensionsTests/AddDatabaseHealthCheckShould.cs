@@ -1,8 +1,8 @@
 using Enterprise.Shared.Database.PostgreSql;
-using Enterprise.Shared.UnitTests.Fixtures;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
+using Testing.Shared.Fixtures;
 
 namespace Enterprise.Shared.UnitTests.Database.PostgreSql.HealthCheckExtensionsTests;
 

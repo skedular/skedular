@@ -1,13 +1,13 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.SqlServer;
-using Enterprise.Shared.UnitTests.Database.TestSupport;
-using Enterprise.Shared.UnitTests.Fixtures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Testing.Shared.Database.TestSupport;
+using Testing.Shared.Fixtures;
 
 namespace Enterprise.Shared.UnitTests.Database.SqlServer.ExtensionsTests;
 

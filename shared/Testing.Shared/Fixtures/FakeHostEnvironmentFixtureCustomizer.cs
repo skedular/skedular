@@ -2,7 +2,7 @@ using AutoFixture;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 
-namespace Enterprise.Shared.UnitTests.Fixtures;
+namespace Testing.Shared.Fixtures;
 
 internal sealed class FakeHostEnvironment : IHostEnvironment
 {

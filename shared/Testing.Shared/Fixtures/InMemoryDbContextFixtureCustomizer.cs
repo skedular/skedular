@@ -2,7 +2,7 @@ using AutoFixture;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enterprise.Shared.UnitTests.Fixtures;
+namespace Testing.Shared.Fixtures;
 
 public abstract class InMemoryDbContextFixtureCustomizer<TDbContext> : IFixtureCustomizer where TDbContext : DbContext
 {

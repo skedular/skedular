@@ -1,5 +1,5 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.UnitTests.Database.TestSupport;
+using Testing.Shared.Database.TestSupport;
 
 namespace Enterprise.Shared.UnitTests.Database.EntityBaseWithDeletedTests;
 

@@ -1,9 +1,9 @@
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Accounting.Configurations;
 using Enterprise.Shared.Encryption;
-using Enterprise.Shared.UnitTests.Fixtures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Testing.Shared.Fixtures;
 
 namespace Enterprise.Shared.UnitTests.Accounting.ExtensionsTests;
 

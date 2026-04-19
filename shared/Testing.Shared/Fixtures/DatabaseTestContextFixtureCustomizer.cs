@@ -1,5 +1,5 @@
-using Enterprise.Shared.UnitTests.Database.TestSupport;
+using Testing.Shared.Database.TestSupport;
 
-namespace Enterprise.Shared.UnitTests.Fixtures;
+namespace Testing.Shared.Fixtures;
 
 public sealed class DatabaseTestContextFixtureCustomizer : InMemoryDbContextFixtureCustomizer<DatabaseTestContext>;

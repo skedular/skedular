@@ -1,6 +1,6 @@
 using Enterprise.Shared.Database;
 
-namespace Enterprise.Shared.UnitTests.Database.EntityBaseTests2;
+namespace Enterprise.Shared.UnitTests.Database.ReplicatedSpecEntityTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class ReplicatedEntityBaseShould
