@@ -11,10 +11,11 @@ RUN apt-get update -y && \
 RUN npm install -y -g "nswag@${NSWAG_VERSION}"
 
 COPY [".git", "shared/.git"]
+COPY ["shared/Api.Shared", "shared/Api.Shared"]
 COPY ["shared/Enterprise.Shared", "shared/Enterprise.Shared"]
 COPY ["shared/Skedularctl", "shared/Skedularctl"]
 
-WORKDIR shared/Skedularctl
+WORKDIR /shared/Skedularctl
 
 RUN --mount=type=cache,target=~/.nuget/packages dotnet restore "Skedularctl.csproj"
 RUN --mount=type=cache,target=~/.nuget/packages dotnet build "Skedularctl.csproj" --no-restore -c Release -o /app/build
