@@ -4,17 +4,20 @@ namespace Enterprise.Shared.Database.SqlServer;
 
 public static class SqlServerConfigurationExtensions
 {
-    public static string BuildConnectionString(this string connectionString)
+    extension(string connectionString)
     {
-        try
+        public string BuildConnectionString()
         {
-            // Validate connection string
-            var builder = new SqlConnectionStringBuilder(connectionString);
-            return builder.ConnectionString;
-        }
-        catch (Exception ex)
-        {
-            throw new ArgumentException($"Failed to build SQL Server connection string: {ex.Message}");
+            try
+            {
+                // Validate connection string
+                var builder = new SqlConnectionStringBuilder(connectionString);
+                return builder.ConnectionString;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException($"Failed to build SQL Server connection string: {ex.Message}");
+            }
         }
     }
 }

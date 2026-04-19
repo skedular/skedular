@@ -28,7 +28,7 @@ public class LocalCdnService(
         stream.Position = 0;
         fileName = string.IsNullOrWhiteSpace(extension) ? fileName : $"{fileName}{extension}";
 
-        var fullPath = Path.Combine(fileStorageConfiguration.LocalCdnPath, fileName);
+        var fullPath = Path.Combine(fileStorageConfiguration.FileServerPublicFilePath, fileName);
 
         await using var fileStream = File.Create(fullPath);
         await stream.CopyToAsync(fileStream, cancellationToken);
@@ -42,7 +42,7 @@ public class LocalCdnService(
     {
         logger.LogDebug("Reading CDN file from local storage. FileName={FileName}", fileName);
 
-        var fullPath = Path.Combine(fileStorageConfiguration.LocalCdnPath, fileName);
+        var fullPath = Path.Combine(fileStorageConfiguration.FileServerPublicFilePath, fileName);
         if (!File.Exists(fullPath))
         {
             logger.LogWarning("CDN file not found in local storage. FileName={FileName}", fileName);

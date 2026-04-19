@@ -3,8 +3,8 @@
 ## Purpose
 
 Provides CDN (public file serving) and private file storage behind two interfaces:
-`ICdnService` and `IPrivateFileService`. Implementations switch between a local filesystem backend
-(development) and Cloudflare (production) based on configuration.
+`ICdnService` and `IFileService`. Implementations switch between a local filesystem backend
+(development/file-server mode) and Cloudflare R2 (production) based on configuration.
 
 ## Registration
 
@@ -12,7 +12,7 @@ Provides CDN (public file serving) and private file storage behind two interface
 services.AddFileStorage(
     configuration,
     publicCdnFileEndpoint: "https://cdn.example.com/files/",
-    privateFileEndpoint: "https://api.example.com/files/private/");
+  fileEndpoint: "https://api.example.com/files/private/");
 ```
 
 The two endpoint strings are provided by the calling host because endpoint URLs are host-specific.
@@ -21,10 +21,10 @@ The two endpoint strings are provided by the calling host because endpoint URLs 
 
 ## What Gets Registered
 
-| Condition                      | `ICdnService` impl     | `IPrivateFileService` impl     |
-|--------------------------------|------------------------|--------------------------------|
-| `FileStorage:UseLocal = true`  | `LocalCdnService`      | `LocalPrivateFileService`      |
-| `FileStorage:UseLocal = false` | `CloudflareCdnService` | `CloudflarePrivateFileService` |
+| Condition                           | `ICdnService` impl     | `IFileService` impl     |
+| ----------------------------------- | ---------------------- | ----------------------- |
+| `FileStorage:UseFileServer = true`  | `LocalCdnService`      | `LocalFileService`      |
+| `FileStorage:UseFileServer = false` | `CloudflareCdnService` | `CloudflareFileService` |
 
 When running locally, the service automatically creates the required directories under
 `~/wwwroot/cdn` and `~/wwwroot/private` if they do not exist.
@@ -34,22 +34,27 @@ When running locally, the service automatically creates the required directories
 ```json
 {
   "FileStorage": {
-    "UseLocal": true,
-    "LocalCdnPath": "",
-    "LocalPrivateFilePath": "",
+    "UseFileServer": true,
+    "FileServerPublicFilePath": "",
+    "FileServerFilePath": "",
     "MaxFileSize": 10485760
   },
   "Cloudflare": {
     "AccountId": "...",
-    "ApiToken": "...",
-    "BucketName": "...",
-    "PublicUrl": "https://..."
+    "AccessKey": "...",
+    "SecretKey": "...",
+    "CdnR2BucketName": "...",
+    "FileR2BucketName": "...",
+    "CdnBaseUrl": "https://..."
   }
 }
 ```
 
-`LocalCdnPath` and `LocalPrivateFilePath` default to `~/wwwroot/cdn` and `~/wwwroot/private`
+`FileServerPublicFilePath` and `FileServerFilePath` default to `~/wwwroot/cdn` and `~/wwwroot/private`
 when left empty.
+
+`PublicCdnFileEndpoint` and `FileEndpoint` are populated by `AddFileStorage(...)` from the host-specific
+route prefixes and are used to build returned file URLs.
 
 `MaxFileSize` is applied as the `MultipartBodyLengthLimit` for file upload endpoints.
 
@@ -58,6 +63,7 @@ when left empty.
 - Always call `AddFileStorage` with the host-specific endpoint strings rather than reading them
   inside the module — the module does not know its own public URL.
 - Do not reference `Cloudflare` configuration directly in domain code — inject `ICdnService` or
-  `IPrivateFileService` instead.
-- AWS S3 (`AWSSDK.S3`) is a declared dependency but is not used by the current implementations;
-  do not add S3 service registrations here unless an `S3*` implementation is also added.
+  `IFileService` instead.
+- Cloudflare R2 access is implemented through the AWS S3 SDK (`AWSSDK.S3`) against the R2
+  S3-compatible endpoint; keep that dependency aligned with both `CloudflareCdnService` and
+  `CloudflareFileService`.

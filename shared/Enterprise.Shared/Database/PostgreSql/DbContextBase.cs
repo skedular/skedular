@@ -10,6 +10,15 @@ public abstract class DbContextBase<TDbContext>(DbContextOptions<TDbContext> opt
 {
     protected override void ConfigureProviderModel(ModelBuilder builder)
     {
+        foreach (var entityType in builder.Model.GetEntityTypes().Where(item => typeof(EntityBase).IsAssignableFrom(item.ClrType)))
+        {
+            builder.Entity(entityType.ClrType)
+                .Property<uint>(nameof(EntityBase.EntityFrameworkVersion))
+                .IsRowVersion()
+                .HasColumnType("xid")
+                .HasColumnName("xmin");
+        }
+
         if (CustomDbContextOptions.IsPostgisEnabled)
         {
             builder.HasPostgresExtension("postgis");

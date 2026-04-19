@@ -7,17 +7,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.FileStorage;
 
-public class CloudflarePrivateFileService(
+public class CloudflareFileService(
     ApplicationConfiguration applicationConfiguration,
     FileStorageConfiguration fileStorageConfiguration,
     CloudflareConfiguration cloudflareConfiguration,
-    ILogger<CloudflarePrivateFileService> logger)
-    : IPrivateFileService
+    ILogger<CloudflareFileService> logger)
+    : IFileService
 {
     public async Task<Uri> UploadAsync(Stream stream, string contentType, string fileName, string? extension, CancellationToken cancellationToken)
     {
         logger.LogInformation(
-            "Uploading private file to Cloudflare R2. FileName={FileName}, ContentType={ContentType}, Extension={Extension}",
+            "Uploading file to Cloudflare R2. FileName={FileName}, ContentType={ContentType}, Extension={Extension}",
             fileName,
             contentType,
             extension);
@@ -38,7 +38,7 @@ public class CloudflarePrivateFileService(
 
         var request = new PutObjectRequest
         {
-            BucketName = cloudflareConfiguration.PrivateFileR2BucketName,
+            BucketName = cloudflareConfiguration.FileR2BucketName,
             Key = fileName,
             InputStream = stream,
             ContentType = contentType,
@@ -48,18 +48,18 @@ public class CloudflarePrivateFileService(
 
         _ = await client.PutObjectAsync(request, cancellationToken);
 
-        logger.LogInformation("Private file uploaded to Cloudflare R2. Bucket={BucketName}, FileName={FileName}",
-            cloudflareConfiguration.PrivateFileR2BucketName,
+        logger.LogInformation("File uploaded to Cloudflare R2. Bucket={BucketName}, FileName={FileName}",
+            cloudflareConfiguration.FileR2BucketName,
             fileName);
 
-        return new Uri(Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), fileStorageConfiguration.PrivateFileEndpoint, fileName));
+        return new Uri(Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), fileStorageConfiguration.FileEndpoint, fileName));
     }
 
     public async Task<(bool, string, byte[])> GetAsync(string fileName, CancellationToken cancellationToken)
     {
         try
         {
-            logger.LogDebug("Reading private file from Cloudflare R2. FileName={FileName}", fileName);
+            logger.LogDebug("Reading file from Cloudflare R2. FileName={FileName}", fileName);
 
             var uri = new Uri($"https://{cloudflareConfiguration.AccountId}.r2.cloudflarestorage.com");
             using var client = new AmazonS3Client(
@@ -73,22 +73,22 @@ public class CloudflarePrivateFileService(
                 });
 
             _ = await client.GetObjectMetadataAsync(
-                new GetObjectMetadataRequest { BucketName = cloudflareConfiguration.PrivateFileR2BucketName, Key = fileName }, cancellationToken);
+                new GetObjectMetadataRequest { BucketName = cloudflareConfiguration.FileR2BucketName, Key = fileName }, cancellationToken);
 
-            var request = new GetObjectRequest { BucketName = cloudflareConfiguration.PrivateFileR2BucketName, Key = fileName };
+            var request = new GetObjectRequest { BucketName = cloudflareConfiguration.FileR2BucketName, Key = fileName };
 
             using var response = await client.GetObjectAsync(request, cancellationToken);
             using var memoryStream = new MemoryStream();
             await response.ResponseStream.CopyToAsync(memoryStream, cancellationToken);
 
-            logger.LogDebug("Private file read succeeded from Cloudflare R2. FileName={FileName}, ContentType={ContentType}",
+            logger.LogDebug("File read succeeded from Cloudflare R2. FileName={FileName}, ContentType={ContentType}",
                 fileName,
                 response.Headers.ContentType);
             return (true, response.Headers.ContentType, memoryStream.ToArray());
         }
         catch (AmazonS3Exception ex)
         {
-            logger.LogWarning(ex, "Failed to read private file from Cloudflare R2. FileName={FileName}", fileName);
+            logger.LogWarning(ex, "Failed to read file from Cloudflare R2. FileName={FileName}", fileName);
             return (false, string.Empty, []);
         }
     }

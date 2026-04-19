@@ -13,7 +13,7 @@ public class CoreCoreController(
     IVersionService versionService,
     IFileUploaderService fileUploaderService,
     ICdnService cdnService,
-    IPrivateFileService privateFileService,
+    IFileService fileService,
     IMapper mapper)
     : CoreCoreControllerBase
 {
@@ -60,7 +60,7 @@ public class CoreCoreController(
 
     public override async Task<IActionResult> GetPrivateFile(string filename, CancellationToken cancellationToken = default)
     {
-        var (exists, contentType, content) = await privateFileService.GetAsync(filename, cancellationToken);
+        var (exists, contentType, content) = await fileService.GetAsync(filename, cancellationToken);
         return exists ? File(content, contentType) : NotFound();
     }
 }

@@ -2,7 +2,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.FileStorage;
 using Microsoft.Extensions.Logging;
 
-namespace Enterprise.Shared.UnitTests.FileStorage.LocalPrivateFileServiceTests;
+namespace Enterprise.Shared.UnitTests.FileStorage.LocalFileServiceTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class UploadAndGetShould
@@ -18,16 +18,16 @@ public class UploadAndGetShould
     [AutoFakeItEasyData]
     public async Task Upload_file_and_retrieve_it(
         string fileName,
-        ILogger<LocalPrivateFileService> logger,
+        ILogger<LocalFileService> logger,
         CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration { LocalPrivateFilePath = tempDir, PrivateFileEndpoint = "private" };
-            var sut = new LocalPrivateFileService(config, fileStorageConfig, logger);
-            var content = "private content"u8.ToArray();
+            var fileStorageConfig = new FileStorageConfiguration { FileServerFilePath = tempDir, FileEndpoint = "files" };
+            var sut = new LocalFileService(config, fileStorageConfig, logger);
+            var content = "image content"u8.ToArray();
             using var stream = new MemoryStream(content);
 
             var uri = await sut.UploadAsync(stream, "text/plain", fileName, null, cancellationToken);
@@ -48,15 +48,15 @@ public class UploadAndGetShould
     [AutoFakeItEasyData]
     public async Task Upload_with_extension_appends_extension(
         string baseName,
-        ILogger<LocalPrivateFileService> logger,
+        ILogger<LocalFileService> logger,
         CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration { LocalPrivateFilePath = tempDir, PrivateFileEndpoint = "private" };
-            var sut = new LocalPrivateFileService(config, fileStorageConfig, logger);
+            var fileStorageConfig = new FileStorageConfiguration { FileServerFilePath = tempDir, FileEndpoint = "files" };
+            var sut = new LocalFileService(config, fileStorageConfig, logger);
             using var stream = new MemoryStream("data"u8.ToArray());
 
             var uri = await sut.UploadAsync(stream, "text/plain", baseName, ".pdf", cancellationToken);
@@ -73,15 +73,15 @@ public class UploadAndGetShould
     [AutoFakeItEasyData]
     public async Task Get_returns_false_for_missing_file(
         string missingFileName,
-        ILogger<LocalPrivateFileService> logger,
+        ILogger<LocalFileService> logger,
         CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration { LocalPrivateFilePath = tempDir, PrivateFileEndpoint = "private" };
-            var sut = new LocalPrivateFileService(config, fileStorageConfig, logger);
+            var fileStorageConfig = new FileStorageConfiguration { FileServerFilePath = tempDir, FileEndpoint = "files" };
+            var sut = new LocalFileService(config, fileStorageConfig, logger);
 
             var (exists, contentType, bytes) = await sut.GetAsync(missingFileName, cancellationToken);
 
@@ -99,15 +99,15 @@ public class UploadAndGetShould
     [AutoFakeItEasyData]
     public async Task Get_returns_octet_stream_for_unknown_extension(
         string baseName,
-        ILogger<LocalPrivateFileService> logger,
+        ILogger<LocalFileService> logger,
         CancellationToken cancellationToken)
     {
         var tempDir = CreateTempDir();
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration { LocalPrivateFilePath = tempDir, PrivateFileEndpoint = "private" };
-            var sut = new LocalPrivateFileService(config, fileStorageConfig, logger);
+            var fileStorageConfig = new FileStorageConfiguration { FileServerFilePath = tempDir, FileEndpoint = "files" };
+            var sut = new LocalFileService(config, fileStorageConfig, logger);
             var fileName = baseName + ".unknownext123";
             await File.WriteAllBytesAsync(Path.Combine(tempDir, fileName), "x"u8.ToArray(), cancellationToken);
 

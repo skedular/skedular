@@ -16,7 +16,7 @@ public class CoreApiHelper
         return routeAttribute.Template[..routeAttribute.Template.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase)];
     });
 
-    private static readonly Lazy<string> s_privateFileEndpoint = new(() =>
+    private static readonly Lazy<string> s_fileEndpoint = new(() =>
     {
         var method = typeof(CoreCoreControllerBase).GetMethod(nameof(CoreCoreControllerBase.GetPrivateFile));
         ArgumentNullException.ThrowIfNull(method);
@@ -29,5 +29,5 @@ public class CoreApiHelper
 
     public static string GetPublicCdnFileEndpoint() => s_publicCdnFileEndpoint.Value;
 
-    public static string GetPrivateFileEndpoint() => s_privateFileEndpoint.Value;
+    public static string GetPrivateFileEndpoint() => s_fileEndpoint.Value;
 }

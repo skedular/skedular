@@ -28,7 +28,7 @@ public interface IFileUploaderService
 public class FileUploaderService(
     ICustomerService customerService,
     ICdnService cdnService,
-    IPrivateFileService privateFileService,
+    IFileService fileService,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     IMapper mapper,
@@ -101,7 +101,7 @@ public class FileUploaderService(
         }
 
         var id = randomHelper.Generate();
-        var storageUrl = await privateFileService.UploadAsync(stream, contentType, id, extension, cancellationToken);
+        var storageUrl = await fileService.UploadAsync(stream, contentType, id, extension, cancellationToken);
         var response = await imageHelper.GetImageWidthHeightAsync(stream, cancellationToken);
         var privateFile = new Shared.Database.Entities.PrivateFile
         {
@@ -119,7 +119,7 @@ public class FileUploaderService(
 
             try
             {
-                var thumbnailStorageUrl = await privateFileService.UploadAsync(
+                var thumbnailStorageUrl = await fileService.UploadAsync(
                     thumbnailResponse.ThumbnailStream,
                     contentType, $"{id}_thumbnail",
                     ".png",

@@ -6,16 +6,16 @@ using Path = System.IO.Path;
 
 namespace Enterprise.Shared.FileStorage;
 
-public class LocalPrivateFileService(
+public class LocalFileService(
     ApplicationConfiguration applicationConfiguration,
     FileStorageConfiguration fileStorageConfiguration,
-    ILogger<LocalPrivateFileService> logger)
-    : IPrivateFileService
+    ILogger<LocalFileService> logger)
+    : IFileService
 {
     public async Task<Uri> UploadAsync(Stream stream, string contentType, string fileName, string? extension, CancellationToken cancellationToken)
     {
         logger.LogInformation(
-            "Uploading private file to local storage. FileName={FileName}, ContentType={ContentType}, Extension={Extension}",
+            "Uploading file to local storage. FileName={FileName}, ContentType={ContentType}, Extension={Extension}",
             fileName,
             contentType,
             extension);
@@ -23,24 +23,24 @@ public class LocalPrivateFileService(
         stream.Position = 0;
         fileName = string.IsNullOrWhiteSpace(extension) ? fileName : $"{fileName}{extension}";
 
-        var fullPath = Path.Combine(fileStorageConfiguration.LocalPrivateFilePath, fileName);
+        var fullPath = Path.Combine(fileStorageConfiguration.FileServerFilePath, fileName);
 
         await using var fileStream = File.Create(fullPath);
         await stream.CopyToAsync(fileStream, cancellationToken);
 
-        logger.LogInformation("Private file uploaded to local storage. FileName={FileName}", fileName);
+        logger.LogInformation("File uploaded to local storage. FileName={FileName}", fileName);
 
-        return new Uri(Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), fileStorageConfiguration.PrivateFileEndpoint, fileName));
+        return new Uri(Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), fileStorageConfiguration.FileEndpoint, fileName));
     }
 
     public async Task<(bool, string, byte[])> GetAsync(string fileName, CancellationToken cancellationToken)
     {
-        logger.LogDebug("Reading private file from local storage. FileName={FileName}", fileName);
+        logger.LogDebug("Reading file from local storage. FileName={FileName}", fileName);
 
-        var fullPath = Path.Combine(fileStorageConfiguration.LocalPrivateFilePath, fileName);
+        var fullPath = Path.Combine(fileStorageConfiguration.FileServerFilePath, fileName);
         if (!File.Exists(fullPath))
         {
-            logger.LogWarning("Private file not found in local storage. FileName={FileName}", fileName);
+            logger.LogWarning("File not found in local storage. FileName={FileName}", fileName);
             return (false, string.Empty, []);
         }
 
@@ -50,7 +50,7 @@ public class LocalPrivateFileService(
             contentType = "application/octet-stream";
         }
 
-        logger.LogDebug("Private file read succeeded from local storage. FileName={FileName}, ContentType={ContentType}", fileName, contentType);
+        logger.LogDebug("File read succeeded from local storage. FileName={FileName}, ContentType={ContentType}", fileName, contentType);
         return (true, contentType, await File.ReadAllBytesAsync(fullPath, cancellationToken));
     }
 }

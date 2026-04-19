@@ -6,32 +6,33 @@ namespace Enterprise.Shared.Kafka;
 
 public static class HealthCheckExtensions
 {
-    /// <summary>
-    ///     Checks for Kafka connectivity.
-    ///     Pass in your bootstrapServers list.
-    ///     This binds to the "services" tag that outputs to /health/readiness
-    /// </summary>
-    public static IHealthChecksBuilder AddKafkaBrokerHealthCheck(
-        this IServiceCollection services,
-        KafkaConfiguration kafkaConfiguration,
-        int healthCheckTimeOutInSeconds = 5
-    )
+    /// <param name="services">The service collection to configure.</param>
+    extension(IServiceCollection services)
     {
-        var producerConfig = new ProducerConfig
+        /// <summary>
+        ///     Checks for Kafka connectivity.
+        ///     Pass in your bootstrapServers list.
+        ///     This binds to the "services" tag that outputs to /health/readiness
+        /// </summary>
+        public IHealthChecksBuilder AddKafkaBrokerHealthCheck(KafkaConfiguration kafkaConfiguration, int healthCheckTimeOutInSeconds = 5
+        )
         {
-            BootstrapServers = kafkaConfiguration.BootstrapServers,
-            SecurityProtocol = kafkaConfiguration.SecurityProtocol,
-            SaslMechanism = kafkaConfiguration.SaslMechanism,
-            SaslUsername = kafkaConfiguration.SaslUsername,
-            SaslPassword = kafkaConfiguration.SaslPassword
-        };
+            var producerConfig = new ProducerConfig
+            {
+                BootstrapServers = kafkaConfiguration.BootstrapServers,
+                SecurityProtocol = kafkaConfiguration.SecurityProtocol,
+                SaslMechanism = kafkaConfiguration.SaslMechanism,
+                SaslUsername = kafkaConfiguration.SaslUsername,
+                SaslPassword = kafkaConfiguration.SaslPassword
+            };
 
-        return services
-            .AddHealthChecks()
-            .AddKafka(
-                producerConfig,
-                tags: [HealthCheck.Constants.ReadinessTag],
-                timeout: TimeSpan.FromSeconds(healthCheckTimeOutInSeconds)
-            );
+            return services
+                .AddHealthChecks()
+                .AddKafka(
+                    producerConfig,
+                    tags: [HealthCheck.Constants.ReadinessTag],
+                    timeout: TimeSpan.FromSeconds(healthCheckTimeOutInSeconds)
+                );
+        }
     }
 }

@@ -19,7 +19,7 @@ Every module exposes its own `Add*` / `Use*` extension methods. Call only the on
 ### Builder Modules (`WebApplicationBuilder` / `IServiceCollection` extensions)
 
 | Method                                                      | Where defined                   | What it registers                                                                                                                                             |
-| ----------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|-------------------------------------------------------------|---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `builder.AddCoreServices<TProgram>()`                       | `Extensions.cs`                 | Config, `ApplicationConfiguration`, OpenTelemetry, service discovery, HTTP timeout, auth/authz, CORS, problem details, core singletons, liveness health check |
 | `builder.AddIdentityTokenProviders()`                       | `Extensions.cs`                 | Each token provider registered only when its config section is present: WorkOS, Cognito, Google, Azure Entra; also aggregates the registered `ITokenService`s |
 | `builder.AddCookieServices()`                               | `Extensions.cs`                 | `CookieConfiguration` + `ICookieEncryptionService` when the `Cookie` config section is present                                                                |
@@ -32,7 +32,7 @@ Every module exposes its own `Add*` / `Use*` extension methods. Call only the on
 | `services.AddTemporalClient(...)`                           | `Temporal/Extensions.cs`        | Temporal client only (no hosted worker)                                                                                                                       |
 | `services.AddGraphql(...)`                                  | `GraphQL/GraphqlExtensions.cs`  | HotChocolate GraphQL server                                                                                                                                   |
 | `services.AddRedis(...)`                                    | `Cache/Extensions.cs`           | `IConnectionMultiplexer` + `IDistributedCache` via StackExchange.Redis                                                                                        |
-| `services.AddFileStorage(...)`                              | `FileStorage/Extensions.cs`     | `ICdnService` + `IPrivateFileService` (local dev or Cloudflare)                                                                                               |
+| `services.AddFileStorage(...)`                              | `FileStorage/Extensions.cs`     | `ICdnService` + `IFileService` (local dev or Cloudflare)                                                                                                      |
 | `services.AddStripe(...)`                                   | `Payment/Extensions.cs`         | Stripe SDK service interfaces                                                                                                                                 |
 | `services.AddXeroServices(...)`                             | `Accounting/Extensions.cs`      | `IXeroSdkClientFactory`, `IXeroTokenEncryptionService`                                                                                                        |
 | `services.AddMcpServer(...)`                                | `Ai/Extentions.cs`              | Model Context Protocol server                                                                                                                                 |
@@ -46,7 +46,7 @@ Every module exposes its own `Add*` / `Use*` extension methods. Call only the on
 ### App Modules (`WebApplication` extensions)
 
 | Method                                      | Where defined                  | What it does                                                                                         |
-| ------------------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------- |
+|---------------------------------------------|--------------------------------|------------------------------------------------------------------------------------------------------|
 | `app.UseApplicationCore<TProgram>()`        | `Extensions.cs`                | Exception handling, CORS, routing, auth, health checks, context middleware, controllers — no GraphQL |
 | `app.UseWebApplicationDefaults<TProgram>()` | `Extensions.cs`                | **In-repo bundle** — `UseApplicationCore` + `MapGraphqlEndpoints` (no-op when GraphQL config absent) |
 | `app.MapGraphqlEndpoints(configuration)`    | `GraphQL/GraphqlExtensions.cs` | Maps the HotChocolate GraphQL route                                                                  |
@@ -78,10 +78,10 @@ Each subfolder has its own `AGENTS.md` with module-specific rules:
 ## Auth And Encryption Layout
 
 - Keep auth and encryption code split by concern:
-  - `Cookie/` for cookie-specific encryption wiring
-  - `Encryption/` for reusable low-level encryption primitives
-  - `IdentityProviders/` for WorkOS, Cognito, Google, and Azure Entra token validators
-  - `Security/` for middleware, SSO, gRPC auth, and `ITokenService` consumption
+    - `Cookie/` for cookie-specific encryption wiring
+    - `Encryption/` for reusable low-level encryption primitives
+    - `IdentityProviders/` for WorkOS, Cognito, Google, and Azure Entra token validators
+    - `Security/` for middleware, SSO, gRPC auth, and `ITokenService` consumption
 - Do not re-couple cookie services into `AddIdentityTokenProviders()`.
 - Do not move provider implementations into `Security/`; that folder is now the consumer/pipeline boundary rather than
   the provider-implementation home.

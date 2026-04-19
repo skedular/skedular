@@ -25,7 +25,7 @@ public class UploadAndGetShould
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration { LocalCdnPath = tempDir, PublicCdnFileEndpoint = "cdn" };
+            var fileStorageConfig = new FileStorageConfiguration { FileServerPublicFilePath = tempDir, PublicCdnFileEndpoint = "cdn" };
             var sut = new LocalCdnService(config, fileStorageConfig, logger);
             var content = "hello cdn"u8.ToArray();
             using var stream = new MemoryStream(content);
@@ -55,7 +55,7 @@ public class UploadAndGetShould
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration { LocalCdnPath = tempDir, PublicCdnFileEndpoint = "cdn" };
+            var fileStorageConfig = new FileStorageConfiguration { FileServerPublicFilePath = tempDir, PublicCdnFileEndpoint = "cdn" };
             var sut = new LocalCdnService(config, fileStorageConfig, logger);
             using var stream = new MemoryStream("data"u8.ToArray());
 
@@ -80,7 +80,7 @@ public class UploadAndGetShould
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration { LocalCdnPath = tempDir, PublicCdnFileEndpoint = "cdn" };
+            var fileStorageConfig = new FileStorageConfiguration { FileServerPublicFilePath = tempDir, PublicCdnFileEndpoint = "cdn" };
             var sut = new LocalCdnService(config, fileStorageConfig, logger);
 
             var (exists, contentType, bytes) = await sut.GetAsync(missingFileName, cancellationToken);
@@ -106,7 +106,7 @@ public class UploadAndGetShould
         try
         {
             var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration { LocalCdnPath = tempDir, PublicCdnFileEndpoint = "cdn" };
+            var fileStorageConfig = new FileStorageConfiguration { FileServerPublicFilePath = tempDir, PublicCdnFileEndpoint = "cdn" };
             var sut = new LocalCdnService(config, fileStorageConfig, logger);
             var fileName = baseName + ".unknownext123";
             await File.WriteAllBytesAsync(Path.Combine(tempDir, fileName), "x"u8.ToArray(), cancellationToken);

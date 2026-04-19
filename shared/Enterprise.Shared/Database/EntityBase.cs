@@ -23,7 +23,7 @@ public static class EntityBaseExtension
         {
             builder.HasKey(item => item.Id);
 
-            builder.Property(item => item.EntityFrameworkVersion).IsRowVersion();
+            builder.Property(item => item.EntityFrameworkVersion).IsConcurrencyToken();
             builder.Property(item => item.Id).HasMaxLength(maxUniqueIdLength);
 
             builder.HasIndex(item => item.CreatedAt);

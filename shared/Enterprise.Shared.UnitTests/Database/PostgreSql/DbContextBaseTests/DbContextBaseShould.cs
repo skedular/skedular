@@ -1,5 +1,6 @@
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Testing.Shared.Database.TestSupport;
 
 namespace Enterprise.Shared.UnitTests.Database.PostgreSql.DbContextBaseTests;
@@ -10,7 +11,7 @@ public class DbContextBaseShould
     private static PostgresTestDbContext BuildContext(bool isPostgis = false, bool isPooled = false)
     {
         var options = new DbContextOptionsBuilder<PostgresTestDbContext>()
-            .UseInMemoryDatabase(Guid.CreateVersion7().ToString())
+            .UseNpgsql("Host=localhost;Database=test;Username=test;Password=test")
             .Options;
         var customOptions = new CustomDbContextOptions<PostgresTestDbContext> { IsPostgisEnabled = isPostgis, IsPooled = isPooled };
         return new PostgresTestDbContext(options, customOptions);
@@ -35,5 +36,20 @@ public class DbContextBaseShould
     {
         using var ctx = BuildContext(isPooled: true);
         ctx.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void Map_entity_framework_version_to_postgres_xmin()
+    {
+        using var ctx = BuildContext();
+
+        var entityType = ctx.Model.FindEntityType(typeof(ParentEntity));
+        var versionProperty = entityType?.FindProperty(nameof(EntityBase.EntityFrameworkVersion));
+
+        versionProperty.ShouldNotBeNull();
+        versionProperty.IsConcurrencyToken.ShouldBeTrue();
+        versionProperty.ValueGenerated.ShouldBe(ValueGenerated.OnAddOrUpdate);
+        versionProperty.GetColumnType().ShouldBe("xid");
+        versionProperty.GetColumnName().ShouldBe("xmin");
     }
 }

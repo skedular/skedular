@@ -204,11 +204,11 @@ services:
       Kafka__SchemaRegistry__UseLatestVersion: false
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
-      FileStorage__UseLocal: false
+      FileStorage__UseFileServer: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-staging
-      Cloudflare__PrivateFileR2BucketName: skedular-private-staging
+      Cloudflare__FileR2BucketName: skedular-private-staging
       Cloudflare__CdnBaseUrl: "https://cloudflarecdnstaging.skedular.app"
       Email__NewCustomerFeedbackSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__NewCustomerJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
@@ -347,11 +347,11 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__EntityFrameworkEnabled: true
-      FileStorage__UseLocal: false
+      FileStorage__UseFileServer: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-staging
-      Cloudflare__PrivateFileR2BucketName: skedular-private-staging
+      Cloudflare__FileR2BucketName: skedular-private-staging
       Cloudflare__CdnBaseUrl: "https://cloudflarecdnstaging.skedular.app"
       Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
@@ -466,11 +466,11 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__EntityFrameworkEnabled: true
-      FileStorage__UseLocal: false
+      FileStorage__UseFileServer: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-staging
-      Cloudflare__PrivateFileR2BucketName: skedular-private-staging
+      Cloudflare__FileR2BucketName: skedular-private-staging
       Cloudflare__CdnBaseUrl: "https://cloudflarecdnstaging.skedular.app"
       Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
@@ -580,11 +580,11 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__EntityFrameworkEnabled: true
-      FileStorage__UseLocal: false
+      FileStorage__UseFileServer: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-staging
-      Cloudflare__PrivateFileR2BucketName: skedular-private-staging
+      Cloudflare__FileR2BucketName: skedular-private-staging
       Cloudflare__CdnBaseUrl: "https://cloudflarecdnstaging.skedular.app"
       Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
@@ -641,11 +641,11 @@ services:
       Kafka__SchemaRegistry__UseLatestVersion: false
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
-      FileStorage__UseLocal: false
+      FileStorage__UseFileServer: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-prod
-      Cloudflare__PrivateFileR2BucketName: skedular-private-prod
+      Cloudflare__FileR2BucketName: skedular-private-prod
       Cloudflare__CdnBaseUrl: "https://cloudflarecdn.skedular.app"
       Email__NewCustomerFeedbackSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__NewCustomerJoinedEmailSender: "Skedular <no-reply@skedular.app>"
@@ -783,11 +783,11 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__EntityFrameworkEnabled: true
-      FileStorage__UseLocal: false
+      FileStorage__UseFileServer: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-prod
-      Cloudflare__PrivateFileR2BucketName: skedular-private-prod
+      Cloudflare__FileR2BucketName: skedular-private-prod
       Cloudflare__CdnBaseUrl: "https://cloudflarecdn.skedular.app"
       Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
@@ -902,11 +902,11 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__EntityFrameworkEnabled: true
-      FileStorage__UseLocal: false
+      FileStorage__UseFileServer: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-prod
-      Cloudflare__PrivateFileR2BucketName: skedular-private-prod
+      Cloudflare__FileR2BucketName: skedular-private-prod
       Cloudflare__CdnBaseUrl: "https://cloudflarecdn.skedular.app"
       Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
@@ -1016,11 +1016,11 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__EntityFrameworkEnabled: true
-      FileStorage__UseLocal: false
+      FileStorage__UseFileServer: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-prod
-      Cloudflare__PrivateR2BucketName: skedular-private-prod
+      Cloudflare__FileR2BucketName: skedular-private-prod
       Cloudflare__CdnBaseUrl: "https://cloudflarecdn.skedular.app"
       Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}

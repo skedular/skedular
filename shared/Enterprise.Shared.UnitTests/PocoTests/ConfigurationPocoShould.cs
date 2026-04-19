@@ -138,7 +138,7 @@ public class ConfigurationPocoShould
         config.AccessKey.ShouldBe(string.Empty);
         config.SecretKey.ShouldBe(string.Empty);
         config.CdnR2BucketName.ShouldBe(string.Empty);
-        config.PrivateFileR2BucketName.ShouldBe(string.Empty);
+        config.FileR2BucketName.ShouldBe(string.Empty);
         config.CdnBaseUrl.ShouldBe(new Uri("https://cdn.example.com"));
     }
 
@@ -237,9 +237,10 @@ public class ConfigurationPocoShould
     public void FileStorageConfiguration_defaults()
     {
         var config = new FileStorageConfiguration();
-        config.UseLocal.ShouldBeTrue();
-        config.LocalCdnPath.ShouldBe(string.Empty);
-        config.LocalPrivateFilePath.ShouldBe(string.Empty);
+        config.UseFileServer.ShouldBeTrue();
+        config.FileServerPublicFilePath.ShouldBe(string.Empty);
+        config.FileServerFilePath.ShouldBe(string.Empty);
+        config.FileEndpoint.ShouldBe(string.Empty);
         config.MaxFileSize.ShouldBe(0);
     }
 }

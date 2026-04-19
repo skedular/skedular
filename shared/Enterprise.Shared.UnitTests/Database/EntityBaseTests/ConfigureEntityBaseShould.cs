@@ -11,8 +11,7 @@ public class ConfigureEntityBaseShould
     [AutoFakeItEasyData]
     public void Configure_expected_key_indexes_and_row_version_metadata(string databaseName)
     {
-        using var context =
-            new DatabaseTestContext(new DbContextOptionsBuilder<DatabaseTestContext>().UseInMemoryDatabase(databaseName).Options);
+        using var context = new DatabaseTestContext(new DbContextOptionsBuilder<DatabaseTestContext>().UseInMemoryDatabase(databaseName).Options);
 
         var entityType = context.Model.FindEntityType(typeof(SpecEntity));
 
@@ -35,8 +34,7 @@ public class ConfigureEntityBaseShould
     [AutoFakeItEasyData]
     public void Configure_replicated_entity_with_deleted_expected_indexes(string databaseName)
     {
-        using var context =
-            new DatabaseTestContext(new DbContextOptionsBuilder<DatabaseTestContext>().UseInMemoryDatabase(databaseName).Options);
+        using var context = new DatabaseTestContext(new DbContextOptionsBuilder<DatabaseTestContext>().UseInMemoryDatabase(databaseName).Options);
 
         var entityType = context.Model.FindEntityType(typeof(ReplicatedDeletedEntity));
 
