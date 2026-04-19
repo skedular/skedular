@@ -15,6 +15,7 @@ while IFS='|' read -r input namespace classname output; do
     /Namespace:"${namespace}" \
     /Classname:"${classname}" \
     /Output:"${output}" \
+    /TemplateDirectory:"/openapi/templates/nswag/CSharp" \
     /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
     /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
     /ControllerStyle:abstract \
@@ -26,8 +27,6 @@ while IFS='|' read -r input namespace classname output; do
     /GenerateNullableReferenceTypes:true \
     /JsonLibrary:SystemTextJson \
     /ExcludedTypeNames:FileParameter
-
-  sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' "${output}"
 
   /app/publish/Skedularctl mcp-tool-generate \
     --input-file "${output}" \

@@ -118,6 +118,11 @@
         <File Path="api-definitions/openapi/skedular/team/team_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/team/team_workaround_v1.yaml"/>
     </Folder>
+    <Folder Name="/api-definitions/openapi/templates/"/>
+    <Folder Name="/api-definitions/openapi/templates/nswag/"/>
+    <Folder Name="/api-definitions/openapi/templates/nswag/CSharp/">
+        <File Path="api-definitions\openapi\templates\nswag\CSharp\Controller.liquid"/>
+    </Folder>
     <Folder Name="/booking/">
         <File Path="booking/AGENTS.md"/>
     </Folder>

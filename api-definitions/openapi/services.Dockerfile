@@ -25,5 +25,3 @@ COPY ["api-definitions/openapi", "/openapi"]
 
 RUN chmod +x /openapi/scripts/generate-services.sh && \
   /openapi/scripts/generate-services.sh
-
-RUN find /output -type f -name "*.g.cs" -exec sed -i 's/Microsoft\.AspNetCore\.Mvc\.ActionResult<Microsoft\.AspNetCore\.Mvc\.FileResult>/Microsoft.AspNetCore.Mvc.IActionResult/g' {} +
