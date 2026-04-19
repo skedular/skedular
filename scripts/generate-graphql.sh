@@ -7,6 +7,9 @@ BASE_DIR="$(cd "$(dirname "${0}")/.." && pwd)"
 
 dotnet tool restore
 
+# Always start clean: remove stale Fusion pack/compose artifacts before regeneration.
+find "${BASE_DIR}" -type f \( -name "*.fsp" -o -name "*.fgp" \) -delete
+
 cd "${BASE_DIR}/booking/apis/Booking.Api"
 dotnet run -- schema export --output schema.graphql
 dotnet fusion subgraph pack

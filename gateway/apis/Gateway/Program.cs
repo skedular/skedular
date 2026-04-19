@@ -28,31 +28,39 @@ public class Program
             .AddSingleton<IConfigurationRewriter, ServiceDiscoveryConfigurationRewrite>()
             .AddScoped<RequestContextPropagationHandler>();
 
-        var filename = Path.GetTempFileName();
-        using (var embeddedGatewayFileStream = typeof(Program).Assembly.GetManifestResourceStream($"{typeof(Program).Namespace}.gateway.fgp"))
-        {
-            ArgumentNullException.ThrowIfNull(embeddedGatewayFileStream);
-            using (var fileStream = File.OpenWrite(filename))
-            {
-                embeddedGatewayFileStream.CopyTo(fileStream);
-            }
-        }
-
         var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
         ArgumentNullException.ThrowIfNull(graphqlConfig);
 
-        _ = services
-            .AddFusionGatewayServer()
-            .ConfigureFromFile(filename)
-            .ModifyRequestOptions(options =>
+        var embeddedFgpStream = typeof(Program).Assembly.GetManifestResourceStream($"{typeof(Program).Namespace}.gateway.fgp");
+        if (embeddedFgpStream is null && !builder.Environment.IsDevelopment())
+        {
+            throw new InvalidOperationException(
+                "gateway.fgp embedded resource is required in non-development environments. Run scripts/generate-graphql.ps1 to generate it.");
+        }
+
+        if (embeddedFgpStream is not null)
+        {
+            var filename = Path.GetTempFileName();
+            using (embeddedFgpStream)
+            using (var fileStream = File.OpenWrite(filename))
             {
-                options.ExecutionTimeout = TimeSpan.FromMinutes(1);
-                options.IncludeExceptionDetails = graphqlConfig.IncludeExceptionDetails;
-            }).ModifyFusionOptions(options =>
-            {
-                options.AllowQueryPlan = graphqlConfig.AllowQueryPlan;
-                options.IncludeDebugInfo = graphqlConfig.IncludeDebugInfo;
-            });
+                embeddedFgpStream.CopyTo(fileStream);
+            }
+
+            _ = services
+                .AddFusionGatewayServer()
+                .ConfigureFromFile(filename)
+                .ModifyRequestOptions(options =>
+                {
+                    options.ExecutionTimeout = TimeSpan.FromMinutes(1);
+                    options.IncludeExceptionDetails = graphqlConfig.IncludeExceptionDetails;
+                })
+                .ModifyFusionOptions(options =>
+                {
+                    options.AllowQueryPlan = graphqlConfig.AllowQueryPlan;
+                    options.IncludeDebugInfo = graphqlConfig.IncludeDebugInfo;
+                });
+        }
 
         services
             .AddReverseProxy()
