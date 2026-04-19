@@ -37,6 +37,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.StripeWebhook.V1
         /// </summary>
         /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <returns>the status of processing the Stripe Platform Account event</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/booking/stripe/platform/account/webhook")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Stripe Platform Account Webhook")]
@@ -47,6 +48,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.StripeWebhook.V1
         /// </summary>
         /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <returns>the status of processing the Stripe Connect Account event</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/booking/stripe/connect/account/webhook")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Stripe Connect Account Webhook")]

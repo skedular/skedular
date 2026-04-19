@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Customer.Workaround.V1
         /// republish customer
         /// </summary>
         /// <returns>the status of customer event republishing</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/customer/{customerId}/republish")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish customer")]
@@ -45,6 +46,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Customer.Workaround.V1
         /// republish all customers
         /// </summary>
         /// <returns>the status of customer republishing</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/customer/republish-all")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish all customers")]

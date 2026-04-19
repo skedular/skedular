@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.BookingWorkaround.V1
         /// republish booking
         /// </summary>
         /// <returns>the status of booking republishing</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/{bookingId}/republish")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish booking")]
@@ -45,6 +46,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.BookingWorkaround.V1
         /// republish all bookings
         /// </summary>
         /// <returns>the status of republishing all bookings</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/republish-all")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish all bookings")]
@@ -54,6 +56,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.BookingWorkaround.V1
         /// generate all locations resources slots
         /// </summary>
         /// <returns>the status of republishing all location resources slots</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/generate-all-resources-slots")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("generate all locations resources slots")]
@@ -63,6 +66,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.BookingWorkaround.V1
         /// generate location's resources slots
         /// </summary>
         /// <returns>the status of republishing locations resources slots</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/resources-slots/{locationId}/generate-all-resources-slots")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("generate location's resources slots")]
@@ -72,6 +76,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.BookingWorkaround.V1
         /// generate organization arrears invoices
         /// </summary>
         /// <returns>the status of generating organization arrears invoices</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/organizations/{organizationId}/generate-arrears-invoices")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("generate organization arrears invoices")]

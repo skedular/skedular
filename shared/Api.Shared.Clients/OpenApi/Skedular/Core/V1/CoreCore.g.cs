@@ -661,6 +661,14 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Core.Core.V1
                     return converted == null ? string.Empty : converted;
                 }
             }
+            else if (value is System.DateTimeOffset dateTimeOffset)
+            {
+                return dateTimeOffset.ToString("O", cultureInfo);
+            }
+            else if (value is System.DateTime dateTime)
+            {
+                return dateTime.ToString("O", cultureInfo);
+            }
             else if (value is bool) 
             {
                 return System.Convert.ToString((bool)value, cultureInfo).ToLowerInvariant();

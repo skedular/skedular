@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Slack.Workaround.V1
         /// resync all slack workspace
         /// </summary>
         /// <returns>the status of resyncing all slack workspaces</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/slack/workspace/resync-all-workspaces")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("resync all slack workspace")]
@@ -45,6 +46,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Slack.Workaround.V1
         /// resync slack workspace
         /// </summary>
         /// <returns>the status of resyncing slack workspace</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/slack/workspace/{workspaceId}/resync")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("resync slack workspace")]

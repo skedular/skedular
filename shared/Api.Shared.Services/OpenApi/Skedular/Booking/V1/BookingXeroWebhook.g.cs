@@ -37,6 +37,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.XeroWebhook.V1
         /// </summary>
         /// <param name="x_xero_signature">Xero webhook signature</param>
         /// <returns>the status of processing the Xero webhook event</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/booking/xero/webhook")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Xero Webhook")]

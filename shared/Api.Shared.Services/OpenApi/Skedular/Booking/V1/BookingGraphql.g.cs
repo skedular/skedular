@@ -37,6 +37,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.Graphql.V1
         /// </summary>
         /// <param name="x_API_Key">API Key</param>
         /// <returns>the result of raising the graphql change</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/booking/raiseGraphqlChange/{topicName}/{id}")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("raise graphql change")]

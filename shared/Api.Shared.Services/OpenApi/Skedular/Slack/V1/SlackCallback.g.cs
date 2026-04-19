@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Slack.Callback.V1
         /// slack installation callback
         /// </summary>
         /// <returns>the response</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/slack/callback")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("slack installation callback")]

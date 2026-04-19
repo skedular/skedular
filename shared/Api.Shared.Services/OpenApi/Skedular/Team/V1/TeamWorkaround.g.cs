@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Team.Workaround.V1
         /// republish team
         /// </summary>
         /// <returns>the status of team republishing</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/team/{teamId}/republish")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish team")]
@@ -45,6 +46,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Team.Workaround.V1
         /// republish all teams
         /// </summary>
         /// <returns>the status of team republishing</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/team/republish-all")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish all teams")]

@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.Core.V1
         /// return API version
         /// </summary>
         /// <returns>the version of the API</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/booking/version")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("return API version")]

@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.Analytics.V1
         /// regenerate all locations daily analytics
         /// </summary>
         /// <returns>the status of regenerating all locations daily analytics</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/location/analytics/regenerate-all-daily-analytics")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("regenerate all locations daily analytics")]
@@ -45,6 +46,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.Analytics.V1
         /// regenerate location daily analytics
         /// </summary>
         /// <returns>the status of regenerating location daily analytics</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/location/analytics/{locationId}/regenerate-daily-analytics")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("regenerate location daily analytics")]

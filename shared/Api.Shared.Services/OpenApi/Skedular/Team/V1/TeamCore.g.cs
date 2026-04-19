@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Team.Core.V1
         /// return API version
         /// </summary>
         /// <returns>the version of the API</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/team/version")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("return API version")]

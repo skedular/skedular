@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Customer.Stripe.V1
         /// add customer payment method
         /// </summary>
         /// <returns>the readiness status</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/customer/add-payment-method")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("add customer payment method")]

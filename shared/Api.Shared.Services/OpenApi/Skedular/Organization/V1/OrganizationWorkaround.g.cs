@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         /// republish organization
         /// </summary>
         /// <returns>the status of organization republishing</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/republish")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish organization")]
@@ -45,6 +46,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         /// republish all organizations
         /// </summary>
         /// <returns>the status of organization republishing</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/republish-all")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish all organizations")]
@@ -54,6 +56,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         /// regenerate all offerings
         /// </summary>
         /// <returns>the status of regenrating all offerings</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/regenerate-all-offerings")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("regenerate all offerings")]
@@ -63,6 +66,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         /// rerun all offerings workflows
         /// </summary>
         /// <returns>the status of running all offerings workflows</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/rerun-all-offerings-workflows")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("rerun all offerings workflows")]
@@ -72,6 +76,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         /// resync all azure tenants
         /// </summary>
         /// <returns>the status of resyncing all azure tenants</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/azure-tenant/resync-all-azure-tenants")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("resync all azure tenants")]
@@ -81,6 +86,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         /// resync azure tenant
         /// </summary>
         /// <returns>the status of resyncing azure tenant</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/azure-tenant/{tenantId}/resync")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("resync azure tenant")]
@@ -90,6 +96,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         /// regenerate all organizations daily analytics
         /// </summary>
         /// <returns>the status of regenerating all organizations daily analytics</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/analytics/regenerate-all-daily-analytics")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("regenerate all organizations daily analytics")]
@@ -99,6 +106,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         /// regenerate organization daily analytics
         /// </summary>
         /// <returns>the status of regenerating organization daily analytics</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/analytics/{organizationId}/regenerate-daily-analytics")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("regenerate organization daily analytics")]

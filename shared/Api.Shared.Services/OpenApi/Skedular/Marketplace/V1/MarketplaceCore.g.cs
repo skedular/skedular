@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Marketplace.Core.V1
         /// return API version
         /// </summary>
         /// <returns>the version of the API</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/marketplace/version")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("return API version")]

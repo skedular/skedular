@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.Core.V1
         /// return API version
         /// </summary>
         /// <returns>the version of the API</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/core/version")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("return API version")]
@@ -46,10 +47,12 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.Core.V1
         /// </summary>
         /// <param name="file">The file to upload</param>
         /// <returns>the response of uploading file</returns>
+        [Microsoft.AspNetCore.Mvc.Consumes("multipart/form-data")]
+
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/core/uploadPublicAccessFile")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Upload file with public access")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<FileUploadResponse>> UploadPublicAccessFile(Microsoft.AspNetCore.Http.IFormFile file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<FileUploadResponse>> UploadPublicAccessFile([Microsoft.AspNetCore.Mvc.FromForm] Microsoft.AspNetCore.Http.IFormFile file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Serve static file from local CDN
@@ -59,6 +62,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.Core.V1
         /// </remarks>
         /// <param name="filename">Name of the file to return</param>
         /// <returns>File successfully returned</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/core/cdn/{filename}")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Serve static file from local CDN   Returns a file stored in the local CDN by filename")]
@@ -69,10 +73,12 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.Core.V1
         /// </summary>
         /// <param name="file">The file to upload</param>
         /// <returns>the response of uploading file</returns>
+        [Microsoft.AspNetCore.Mvc.Consumes("multipart/form-data")]
+
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/core/uploadPrivateAccessFile")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Upload file with private access")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<FileUploadResponse>> UploadPrivateAccessFile(Microsoft.AspNetCore.Http.IFormFile file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<FileUploadResponse>> UploadPrivateAccessFile([Microsoft.AspNetCore.Mvc.FromForm] Microsoft.AspNetCore.Http.IFormFile file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Serve static file from local private storage
@@ -82,6 +88,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.Core.V1
         /// </remarks>
         /// <param name="filename">Name of the file to return</param>
         /// <returns>File successfully returned</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/core/private/{filename}")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Serve static file from local private storage   Returns a file stored in the local private storage by filename")]

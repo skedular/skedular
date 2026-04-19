@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.Workaround.V1
         /// republish location
         /// </summary>
         /// <returns>the status of location republishing</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/location/{locationId}/republish")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish location")]
@@ -45,6 +46,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.Workaround.V1
         /// republish all locations
         /// </summary>
         /// <returns>the status of location republishing</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/location/republish-all")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish all locations")]

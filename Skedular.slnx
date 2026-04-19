@@ -121,6 +121,7 @@
     <Folder Name="/api-definitions/openapi/templates/"/>
     <Folder Name="/api-definitions/openapi/templates/nswag/"/>
     <Folder Name="/api-definitions/openapi/templates/nswag/CSharp/">
+        <File Path="api-definitions\openapi\templates\nswag\CSharp\Client.Class.ConvertToString.liquid"/>
         <File Path="api-definitions\openapi\templates\nswag\CSharp\Controller.liquid"/>
     </Folder>
     <Folder Name="/booking/">

@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// return API version
         /// </summary>
         /// <returns>the version of the API</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/version")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("return API version")]
@@ -46,6 +47,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// </summary>
         /// <param name="x_API_Key">API Key</param>
         /// <returns>the status of changing organization offering</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/offering/{offeringCode}")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("change organization offering")]
@@ -56,6 +58,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// </summary>
         /// <param name="x_API_Key">API Key</param>
         /// <returns>the status of verifying organization ownership</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/ownership/verify")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("verify organization ownership")]
@@ -64,6 +67,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// <summary>
         /// generate an admin consent Url for the given tenant
         /// </summary>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/azure-tenant-admin-consent-url")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("generate an admin consent Url for the given tenant")]
@@ -73,6 +77,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// OnBoard a tenant
         /// </summary>
         /// <returns>onboarding response</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/onboard-azure-tenant")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("OnBoard a tenant")]
@@ -82,6 +87,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// sso acs
         /// </summary>
         /// <returns>Sso Saml Acs</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/organization/sso/saml/acs")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("sso acs")]
@@ -91,6 +97,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// add payment method
         /// </summary>
         /// <returns>the readiness status</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/add-payment-method")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("add payment method")]
@@ -100,6 +107,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// return OrganizationStripeConnectAccount onboarding refresh URL
         /// </summary>
         /// <returns>should never be returned</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/organization-stripe-connect-account/refresh-onboarding-url")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("return OrganizationStripeConnectAccount onboarding refresh URL")]
@@ -110,6 +118,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// </summary>
         /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <returns>the status of processing the Stripe Platform Account event</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/organization/stripe/platform/account/webhook")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Stripe Platform Account Webhook")]
@@ -120,6 +129,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// </summary>
         /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <returns>the status of processing the Stripe Connect Account event</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/organization/stripe/connect/account/webhook")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Stripe Connect Account Webhook")]
@@ -132,6 +142,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// <param name="scope">read_write or read_only, depending what you passed on the initial GET request.</param>
         /// <param name="state">The value of the state parameter you provided on the initial GET request.</param>
         /// <returns>the status of processing the Stripe Connect Account event</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/stripe/connect/account/oauth/callback")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Stripe Connect Account OAuth Callback")]
@@ -140,6 +151,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// <summary>
         /// Xero OAuth start
         /// </summary>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/xero/oauth/start")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Xero OAuth start")]
@@ -148,6 +160,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         /// <summary>
         /// Xero OAuth callback
         /// </summary>
+
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/xero/oauth/callback")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Xero OAuth callback")]

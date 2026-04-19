@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Marketplace.Workaround.V1
         /// republish organization products
         /// </summary>
         /// <returns>the status of all organization products republishing</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/marketplace/{organizationId}/products/republish-all")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish organization products")]
@@ -45,6 +46,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Marketplace.Workaround.V1
         /// republish all products
         /// </summary>
         /// <returns>the status of all products republishing</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/marketplace/products/republish-all")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish all products")]

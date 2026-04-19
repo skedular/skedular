@@ -15,6 +15,7 @@ while IFS='|' read -r input namespace classname output; do
     /Namespace:"${namespace}" \
     /Classname:"${classname}" \
     /Output:"${output}" \
+    /TemplateDirectory:"/openapi/templates/nswag/CSharp" \
     /GenerateClientClasses:true \
     /OperationGenerationMode:SingleClientFromOperationId \
     /GenerateClientInterfaces:true \

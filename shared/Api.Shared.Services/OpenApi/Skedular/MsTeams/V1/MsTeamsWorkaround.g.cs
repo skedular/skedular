@@ -36,6 +36,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.MsTeams.Workaround.V1
         /// resync all MsTeams
         /// </summary>
         /// <returns>the status of resyncing all MsTeams</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/msteams/azure-tenant/resync-all-msteams")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("resync all MsTeams")]
@@ -45,6 +46,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.MsTeams.Workaround.V1
         /// resync MsTeams
         /// </summary>
         /// <returns>the status of resyncing MsTeams</returns>
+
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/msteams/azure-tenant/{tenantId}/resync")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("resync MsTeams")]
