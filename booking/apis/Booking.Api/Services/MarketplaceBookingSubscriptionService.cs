@@ -11,10 +11,8 @@ using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
-using Microsoft.EntityFrameworkCore;
 using Constants = Booking.Shared.GraphQL.Constants;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
-using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.Services;
 
@@ -130,11 +128,7 @@ public class MarketplaceBookingSubscriptionService(
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.TeamIds.Count != 0)
         {
-            var criteria = searchCriteria;
-            var teams = await repositoryFactory.TeamRepository.Query(
-                    new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && criteria.TeamIds.Contains(query.Id) }
-                        .AddInclude(query => query.Organization!))
-                .ToListAsync(cancellationToken);
+            var teams = await repositoryFactory.TeamRepository.GetActiveByIdsAsync(searchCriteria.TeamIds.Distinct().ToList(), cancellationToken);
 
             foreach (var team in teams)
             {

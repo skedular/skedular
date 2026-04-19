@@ -10,6 +10,8 @@ public interface ITeamRepository : IRepository<Team>
 {
     Task<Team> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Team?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Team>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<ICollection<Team>> GetDueForDailyUpdateAsync(DateTimeOffset now, CancellationToken cancellationToken);
     Team Add(Team team);
     Team Update(Team team);
     Team Remove(Team team);
@@ -22,6 +24,48 @@ public class TeamRepository(SlackDbContext dbContext, TimeProvider timeProvider)
         await DbContext.Team
             .Include(query => query.DailyUpdateChannel)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    /// <summary>
+    ///     Returns the active Slack teams for the supplied identifiers.
+    /// </summary>
+    /// <param name="ids">The team identifiers to resolve.</param>
+    /// <param name="cancellationToken">The cancellation token for the database query.</param>
+    /// <returns>The non-deleted Slack teams that match the supplied identifiers.</returns>
+    /// <remarks>
+    ///     This repository-owned lookup replaced the shared specification used by Slack actions when they validate a set of active teams.
+    /// </remarks>
+    public async Task<ICollection<Team>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.Team
+            .Where(query => !query.DeletedAt.HasValue && ids.Contains(query.Id))
+            .Include(query => query.DailyUpdateChannel)
+            .ToListAsync(cancellationToken);
+    }
+
+    /// <summary>
+    ///     Returns the Slack teams that are currently due for an automatic daily update.
+    /// </summary>
+    /// <param name="now">The current timestamp used to evaluate the daily update schedule.</param>
+    /// <param name="cancellationToken">The cancellation token for the database query.</param>
+    /// <returns>The Slack teams that satisfy the daily update timing and workspace requirements.</returns>
+    /// <remarks>
+    ///     This keeps the daily-update scheduling criteria in the repository so jobs can fetch only teams that are ready for another Slack update.
+    /// </remarks>
+    public async Task<ICollection<Team>> GetDueForDailyUpdateAsync(DateTimeOffset now, CancellationToken cancellationToken) =>
+        await DbContext.Team
+            .Where(query =>
+                !query.DeletedAt.HasValue &&
+                (now - query.CreatedAt).TotalHours >= 24 &&
+                query.DailyUpdateChannel != null &&
+                !query.DailyUpdateChannel.Workspace.DeletedAt.HasValue &&
+                (!query.SlackChannelDailyUpdateLastSentAt.HasValue ||
+                 (now - query.SlackChannelDailyUpdateLastSentAt.Value).TotalHours >= 23))
+            .ToListAsync(cancellationToken);
 
     public Team Add(Team team)
     {

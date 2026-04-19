@@ -209,10 +209,7 @@ public class EditTeamButtonHandler(
             {
                 if (block is ChannelSelectValue value)
                 {
-                    var teamEntity = await repositoryFactory.TeamRepository.Query(
-                            new Specification<Shared.Database.Entities.Team> { Criteria = query => query.Id == context.TeamId }
-                                .AddInclude(query => query.DailyUpdateChannel!))
-                        .FirstOrDefaultAsync(cancellationToken);
+                    var teamEntity = await repositoryFactory.TeamRepository.GetByIdAsync(context.TeamId, cancellationToken);
                     if (teamEntity is not null)
                     {
                         teamEntity.DailyUpdateChannel = string.IsNullOrWhiteSpace(value.SelectedChannel)

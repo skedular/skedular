@@ -7,8 +7,6 @@ using Location.Shared.Models;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Microsoft.EntityFrameworkCore;
-using DailyDeskCountRecording = Location.Shared.Database.Entities.DailyDeskCountRecording;
-using DailyRoomCountRecording = Location.Shared.Database.Entities.DailyRoomCountRecording;
 
 namespace Location.Api.Services;
 
@@ -123,27 +121,17 @@ public class LocationAnalyticsService(
             .AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
-        var dailyDeskCounts = await repositoryFactory.DailyDeskCountRecordingRepository
-            .Query(new Specification<DailyDeskCountRecording>
-                {
-                    Criteria = query =>
-                        !query.DeletedAt.HasValue && locationIds.Contains(query.Location.Id) && query.Date >= from && query.Date <= until
-                }
-                .ApplyOrderBy(query => query.Date)
-                .AddInclude(query => query.Location))
-            .AsNoTrackingWithIdentityResolution()
-            .ToListAsync(cancellationToken);
+        var dailyDeskCounts = await repositoryFactory.DailyDeskCountRecordingRepository.GetByLocationIdsAndDateRangeAsync(
+            locationIds,
+            from,
+            until,
+            cancellationToken);
 
-        var dailyRoomCounts = await repositoryFactory.DailyRoomCountRecordingRepository
-            .Query(new Specification<DailyRoomCountRecording>
-                {
-                    Criteria = query =>
-                        !query.DeletedAt.HasValue && locationIds.Contains(query.Location.Id) && query.Date >= from && query.Date <= until
-                }
-                .ApplyOrderBy(query => query.Date)
-                .AddInclude(query => query.Location))
-            .AsNoTrackingWithIdentityResolution()
-            .ToListAsync(cancellationToken);
+        var dailyRoomCounts = await repositoryFactory.DailyRoomCountRecordingRepository.GetByLocationIdsAndDateRangeAsync(
+            locationIds,
+            from,
+            until,
+            cancellationToken);
 
         return locationIds.Select(locationId =>
         {

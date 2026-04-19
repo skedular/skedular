@@ -4,7 +4,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
-using Microsoft.EntityFrameworkCore;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
@@ -102,13 +101,7 @@ public class TagService(
         var tagType = tag.Type.ToOrganizationTagType();
 
         var matchingTagFound = await repositoryFactory.TagRepository
-            .Query(new Specification<Shared.Database.Entities.Tag>
-            {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    query.Organization.Id == tag.Organization.Id &&
-                                    query.Type == tagType &&
-                                    EF.Functions.ILike(query.Name, tag.Name)
-            }).AnyAsync(cancellationToken);
+            .ExistsActiveWithNameAsync(tag.Organization.Id, tagType, tag.Name, null, cancellationToken);
         if (matchingTagFound)
         {
             if (tag.Type == OrganizationTagType.Custom)
@@ -293,12 +286,7 @@ public class TagService(
         var tagType = tag.Type.ToOrganizationTagType();
         var organizationId = existingTag.Organization.Id;
         var matchingTagFound = await repositoryFactory.TagRepository
-            .Query(new Specification<Shared.Database.Entities.Tag>
-            {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.Type == tagType &&
-                    EF.Functions.ILike(query.Name, tagName) && query.Id != tagId
-            }).AnyAsync(cancellationToken);
+            .ExistsActiveWithNameAsync(organizationId, tagType, tagName, tagId, cancellationToken);
         if (matchingTagFound)
         {
             if (tag.Type == OrganizationTagType.Custom)

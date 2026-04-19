@@ -10,8 +10,6 @@ using Marketplace.Shared.Models;
 using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
 using Marketplace.Shared.Services.Cache;
-using Microsoft.EntityFrameworkCore;
-using OrganizationTag = Marketplace.Shared.Database.Entities.OrganizationTag;
 
 namespace Marketplace.Api.Services;
 
@@ -101,16 +99,11 @@ public class ProductService(
 
         productVersion.Id = randomHelper.Generate();
         var tagIds = productVersion.OrganizationTags.Select(item => item.Id).ToList();
-        var tags = await repositoryFactory.OrganizationTagRepository.Query(
-            new Specification<OrganizationTag>
-            {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    tagIds.Contains(query.Id) &&
-                                    (query.Organization.Id == organizationId || (query.Organization.CustomDomain != null &&
-                                                                                 query.Organization.CustomDomain ==
-                                                                                 organizationCustomDomain)) &&
-                                    !query.Organization.DeletedAt.HasValue
-            }).ToListAsync(cancellationToken);
+        var tags = await repositoryFactory.OrganizationTagRepository.GetActiveByIdsForOrganizationAsync(
+            tagIds,
+            organizationId,
+            organizationCustomDomain,
+            cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -305,15 +298,11 @@ public class ProductService(
 
         productVersion.Id = randomHelper.Generate();
         var tagIds = productVersion.OrganizationTags.Select(item => item.Id).ToList();
-        var existingProductRef = existingProduct;
-        var tags = await repositoryFactory.OrganizationTagRepository.Query(
-            new Specification<OrganizationTag>
-            {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    tagIds.Contains(query.Id) &&
-                                    query.Organization.Id == existingProductRef.Organization.Id &&
-                                    !query.Organization.DeletedAt.HasValue
-            }).ToListAsync(cancellationToken);
+        var tags = await repositoryFactory.OrganizationTagRepository.GetActiveByIdsForOrganizationAsync(
+            tagIds,
+            existingProduct.Organization.Id,
+            null,
+            cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 

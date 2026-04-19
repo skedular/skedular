@@ -9,6 +9,7 @@ namespace Booking.Shared.Repositories;
 public interface IOrganizationArrearsInvoiceRepository : IRepository<OrganizationArrearsInvoice>
 {
     OrganizationArrearsInvoice Add(OrganizationArrearsInvoice organizationArrearsInvoice);
+    Task<OrganizationArrearsInvoice?> GetByIdWithLinesAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<OrganizationArrearsInvoice>> GetByBookingIdUntrackedAsync(string bookingId, CancellationToken cancellationToken);
 
     Task<ICollection<OrganizationArrearsInvoice>> GetByMarketplaceBookingSubscriptionIdUntrackedAsync(
@@ -44,6 +45,24 @@ public class OrganizationArrearsInvoiceRepository(BookingDbContext dbContext, Ti
 
         return DbContext.OrganizationArrearsInvoice.Add(organizationArrearsInvoice).Entity;
     }
+
+    /// <summary>
+    ///     Loads a single organization arrears invoice together with its line items.
+    /// </summary>
+    /// <param name="id">The local invoice identifier to retrieve.</param>
+    /// <param name="cancellationToken">The cancellation token for the database query.</param>
+    /// <returns>
+    ///     The matching invoice with its <c>Lines</c> collection populated, or <see langword="null" /> when no invoice exists for the supplied
+    ///     identifier.
+    /// </returns>
+    /// <remarks>
+    ///     This repository-owned lookup was introduced to replace the former shared specification path for cancellation and reconciliation flows that need
+    ///     the full invoice aggregate.
+    /// </remarks>
+    public async Task<OrganizationArrearsInvoice?> GetByIdWithLinesAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.OrganizationArrearsInvoice
+            .Include(query => query.Lines)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<OrganizationArrearsInvoice>> GetByBookingIdUntrackedAsync(string bookingId, CancellationToken cancellationToken) =>
         await DbContext.OrganizationArrearsInvoice

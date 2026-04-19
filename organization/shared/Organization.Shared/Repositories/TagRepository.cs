@@ -15,6 +15,14 @@ public interface ITagRepository : IRepository<Tag>
 {
     Task<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Tag>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+
+    Task<bool> ExistsActiveWithNameAsync(
+        string organizationId,
+        string type,
+        string name,
+        string? excludeId,
+        CancellationToken cancellationToken);
+
     Tag Add(Tag tag);
     Tag Update(Tag tag);
     void RemoveRange(ICollection<Tag> tags);
@@ -68,11 +76,41 @@ internal static class TagExtensions
 public class TagRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<OrganizationDbContext, Tag>(dbContext, timeProvider), ITagRepository
 {
+    private const string LikeEscapeCharacter = "\\";
+
     public async Task<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Tag.AddDependentObjects().FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Tag>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Tag.Where(query => ids.Contains(query.Id)).AddDependentObjects().ToListAsync(cancellationToken);
+
+    /// <summary>
+    ///     Checks whether an active organization tag already exists with the supplied name and type for an organization.
+    /// </summary>
+    /// <param name="organizationId">The organization identifier that owns the tag name namespace.</param>
+    /// <param name="type">The tag type that must also match.</param>
+    /// <param name="name">The candidate tag name to validate.</param>
+    /// <param name="excludeId">An optional tag identifier to exclude from the duplicate check, typically the tag currently being updated.</param>
+    /// <param name="cancellationToken">The cancellation token for the database query.</param>
+    /// <returns><see langword="true" /> when another active tag with the same effective name and type exists; otherwise <see langword="false" />.</returns>
+    /// <remarks>
+    ///     This exact-name check stays in the repository so tag create and update flows can reuse the same duplicate rule without reviving the old
+    ///     specification abstraction.
+    /// </remarks>
+    public async Task<bool> ExistsActiveWithNameAsync(
+        string organizationId,
+        string type,
+        string name,
+        string? excludeId,
+        CancellationToken cancellationToken) =>
+        await DbContext.Tag.AnyAsync(
+            query =>
+                !query.DeletedAt.HasValue &&
+                query.Organization.Id == organizationId &&
+                query.Type == type &&
+                EF.Functions.ILike(query.Name, EscapeLikePattern(name), LikeEscapeCharacter) &&
+                (excludeId == null || query.Id != excludeId),
+            cancellationToken);
 
     public Tag Add(Tag tag)
     {
@@ -143,4 +181,15 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
             })
             .ToList();
     }
+
+    /// <summary>
+    ///     Escapes SQL LIKE wildcard characters in a user-supplied name so an exact-name comparison can safely use <c>ILIKE</c>.
+    /// </summary>
+    /// <param name="value">The raw user-supplied value that may contain wildcard characters.</param>
+    /// <returns>The escaped value safe to pass into an exact-match <c>ILIKE</c> predicate.</returns>
+    private static string EscapeLikePattern(string value) =>
+        value
+            .Replace(LikeEscapeCharacter, LikeEscapeCharacter + LikeEscapeCharacter, StringComparison.Ordinal)
+            .Replace("%", LikeEscapeCharacter + "%", StringComparison.Ordinal)
+            .Replace("_", LikeEscapeCharacter + "_", StringComparison.Ordinal);
 }

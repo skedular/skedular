@@ -1,11 +1,9 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
-using Microsoft.EntityFrameworkCore;
 using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
 using Slack.Shared.Services.Cache;
-using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 
 namespace Slack.Jobs.Jobs;
 
@@ -27,20 +25,8 @@ public class UpdateWorkspaceMemberProfileStatusJob(
                 var workspaceMemberService = scope.ServiceProvider.GetRequiredService<IWorkspaceMemberService>();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
                 var now = timeProvider.GetUtcNow();
-                var workspaceMembers = await repositoryFactory.WorkspaceMemberRepository.Query(
-                        new Specification<WorkspaceMember>
-                        {
-                            Criteria = query =>
-                                !query.DeletedAt.HasValue &&
-                                !query.Workspace.DeletedAt.HasValue &&
-                                query.AutomaticallyUpdateProfileStatus.HasValue &&
-                                query.AutomaticallyUpdateProfileStatus.Value &&
-                                (!query.LastProfileStatusUpdatedAt.HasValue ||
-                                 (now - query.LastProfileStatusUpdatedAt.Value).TotalHours >= 24) &&
-                                EF.Functions.ILike(query.Workspace.AuthedUserScope, "%users.profile:read%") &&
-                                EF.Functions.ILike(query.Workspace.AuthedUserScope, "%users.profile:write%")
-                        }.AddInclude(query => query.Workspace))
-                    .ToListAsync(cancellationToken);
+                var workspaceMembers = await repositoryFactory.WorkspaceMemberRepository
+                    .GetForAutomaticProfileStatusUpdateAsync(now, cancellationToken);
 
                 var workspaceMemberIds = new List<string>();
                 foreach (var workspaceMember in workspaceMembers)

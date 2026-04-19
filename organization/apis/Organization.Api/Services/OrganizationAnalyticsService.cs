@@ -1,12 +1,9 @@
 using Api.Shared.Services;
-using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Organization.Api.GraphQL.Analytics;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services.Cache;
-using DailyMemberCountRecording = Organization.Shared.Database.Entities.DailyMemberCountRecording;
-
 namespace Organization.Api.Services;
 
 public interface IOrganizationAnalyticsService
@@ -47,15 +44,7 @@ public class OrganizationAnalyticsService(
             .ToListAsync(cancellationToken);
 
         var dailyMemberCounts = await repositoryFactory.DailyMemberCountRecordingRepository
-            .Query(new Specification<DailyMemberCountRecording>
-                {
-                    Criteria = query =>
-                        !query.DeletedAt.HasValue && query.Organization.Id == organization.Id && query.Date >= from &&
-                        query.Date <= until
-                }
-                .ApplyOrderBy(query => query.Date))
-            .AsNoTrackingWithIdentityResolution()
-            .ToListAsync(cancellationToken);
+            .GetByOrganizationIdAndDateRangeAsync(organization.Id, from, until, cancellationToken);
 
         var organizationMemberAttendancePercentages = dailyMemberCounts.Select(item =>
         {
@@ -78,7 +67,8 @@ public class OrganizationAnalyticsService(
 
         return new OrganizationAnalytics
         {
-            MemberAttendancePercentage = organizationMemberAttendancePercentages, DailyBookingsTotals = organizationDailyBookingsTotals
+            MemberAttendancePercentage = organizationMemberAttendancePercentages,
+            DailyBookingsTotals = organizationDailyBookingsTotals
         };
     }
 }

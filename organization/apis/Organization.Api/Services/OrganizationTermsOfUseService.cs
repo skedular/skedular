@@ -1,5 +1,3 @@
-using Enterprise.Shared.Database;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Organization.Api.Mappers;
 using Organization.Shared.Models;
@@ -26,16 +24,11 @@ public class OrganizationTermsOfUseService(
             {
                 cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddHours(1);
 
-                var termsOfUse = await repositoryFactory.TermsOfUseRepository
-                    .Query(new Specification<Shared.Database.Entities.TermsOfUse> { Criteria = query => !query.DeletedAt.HasValue && query.Active })
-                    .AsNoTrackingWithIdentityResolution()
-                    .FirstAsync(cancellationToken);
+                var termsOfUse = await repositoryFactory.TermsOfUseRepository.GetActiveAsync(cancellationToken);
 
                 return mapper.MapTo(termsOfUse)!;
             }))!;
 
     public async Task<Shared.Database.Entities.TermsOfUse> GetActiveTermsOfUseEntityAsync(CancellationToken cancellationToken) =>
-        await repositoryFactory.TermsOfUseRepository
-            .Query(new Specification<Shared.Database.Entities.TermsOfUse> { Criteria = query => !query.DeletedAt.HasValue && query.Active })
-            .FirstAsync(cancellationToken);
+        await repositoryFactory.TermsOfUseRepository.GetActiveAsync(cancellationToken);
 }

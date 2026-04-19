@@ -11,6 +11,11 @@ namespace Slack.Shared.Repositories;
 public interface IWorkspaceMemberRepository : IRepository<WorkspaceMember>
 {
     Task<WorkspaceMember?> GetByIdAsync(string id, CancellationToken cancellationToken);
+
+    Task<ICollection<WorkspaceMember>> GetForAutomaticProfileStatusUpdateAsync(
+        DateTimeOffset now,
+        CancellationToken cancellationToken);
+
     WorkspaceMember Add(WorkspaceMember workspaceMember);
     WorkspaceMember Update(WorkspaceMember workspaceMember);
     void RemoveRange(ICollection<WorkspaceMember> workspaceMembers);
@@ -35,6 +40,31 @@ public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider ti
         await DbContext.WorkspaceMember
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    /// <summary>
+    ///     Returns workspace members that are eligible for automatic Slack profile status updates.
+    /// </summary>
+    /// <param name="now">The current timestamp used to evaluate the update cadence.</param>
+    /// <param name="cancellationToken">The cancellation token for the database query.</param>
+    /// <returns>The workspace members whose profile status should be refreshed automatically.</returns>
+    /// <remarks>
+    ///     This query replaced the shared specification used by the profile-status job and keeps the Slack capability checks close to the data they filter.
+    /// </remarks>
+    public async Task<ICollection<WorkspaceMember>> GetForAutomaticProfileStatusUpdateAsync(
+        DateTimeOffset now,
+        CancellationToken cancellationToken) =>
+        await DbContext.WorkspaceMember
+            .Where(query =>
+                !query.DeletedAt.HasValue &&
+                !query.Workspace.DeletedAt.HasValue &&
+                query.AutomaticallyUpdateProfileStatus.HasValue &&
+                query.AutomaticallyUpdateProfileStatus.Value &&
+                (!query.LastProfileStatusUpdatedAt.HasValue ||
+                 (now - query.LastProfileStatusUpdatedAt.Value).TotalHours >= 24) &&
+                EF.Functions.ILike(query.Workspace.AuthedUserScope, "%users.profile:read%") &&
+                EF.Functions.ILike(query.Workspace.AuthedUserScope, "%users.profile:write%"))
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
 
     public WorkspaceMember Add(WorkspaceMember workspaceMember)
     {

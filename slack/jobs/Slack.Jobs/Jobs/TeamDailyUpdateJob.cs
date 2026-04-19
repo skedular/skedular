@@ -1,7 +1,5 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
-using Microsoft.EntityFrameworkCore;
-using Slack.Shared.Database.Entities;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
 
@@ -21,16 +19,7 @@ public class TeamDailyUpdateJob(IServiceProvider serviceProvider, TimeProvider t
                 var teamDailyUpdaterService = scope.ServiceProvider.GetRequiredService<ITeamDailyUpdaterService>();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
                 var now = timeProvider.GetUtcNow();
-                var teams = await repositoryFactory.TeamRepository.Query(
-                    new Specification<Team>
-                    {
-                        Criteria = query =>
-                            !query.DeletedAt.HasValue &&
-                            (now - query.CreatedAt).TotalHours >= 24 &&
-                            query.DailyUpdateChannel != null && !query.DailyUpdateChannel.Workspace.DeletedAt.HasValue &&
-                            (!query.SlackChannelDailyUpdateLastSentAt.HasValue ||
-                             (now - query.SlackChannelDailyUpdateLastSentAt.Value).TotalHours >= 23)
-                    }).ToListAsync(cancellationToken);
+                var teams = await repositoryFactory.TeamRepository.GetDueForDailyUpdateAsync(now, cancellationToken);
 
                 foreach (var teamId in teams.Where(item => now.IsMatchingHour(item.Timezone, 7)).Select(item => item.Id))
                 {

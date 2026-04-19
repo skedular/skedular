@@ -2,7 +2,6 @@ using Api.Shared.Services;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
-using Microsoft.EntityFrameworkCore;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
@@ -17,12 +16,12 @@ public interface IOrganizationOfferingService
 {
     Task UpdateOfferingAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericNam,
+        string? organizationUniqueAlphanumericName,
         OfferingCode offeringCode,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
-    Task CancelOfferingAsync(string? organizationId, string? organizationUniqueAlphanumericNam, CancellationToken cancellationToken);
+    Task CancelOfferingAsync(string? organizationId, string? organizationUniqueAlphanumericName, CancellationToken cancellationToken);
     Task RegenerateAllOfferingsAsync(CancellationToken cancellationToken);
     Task RerunAllOfferingsWorkflowsAsync(CancellationToken cancellationToken);
 }
@@ -41,7 +40,7 @@ public class OrganizationOfferingService(
 {
     public async Task UpdateOfferingAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericNam,
+        string? organizationUniqueAlphanumericName,
         OfferingCode offeringCode,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
@@ -49,7 +48,7 @@ public class OrganizationOfferingService(
         var offering = offeringCode.GetOffering();
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               organizationUniqueAlphanumericNam,
+                               organizationUniqueAlphanumericName,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!ignoreAuthorizationCheck)
@@ -76,26 +75,17 @@ public class OrganizationOfferingService(
         OrganizationOffering? matchingOffering;
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
-            matchingOffering = await repositoryFactory.OrganizationOfferingRepository.Query(
-                new Specification<OrganizationOffering>
-                {
-                    Criteria = query =>
-                        query.Organization.Id == organizationId && query.Code == offeringCode && query.Start <= now && query.End >= now
-                }.ApplyOrderBy(query => query.Id)).FirstOrDefaultAsync(cancellationToken);
+            matchingOffering = await repositoryFactory.OrganizationOfferingRepository
+                .GetCurrentByOrganizationIdAndCodeAsync(organizationId, offeringCode, now, includeDeleted: true, cancellationToken);
         }
-        else if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericNam))
+        else if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
         {
-            matchingOffering = await repositoryFactory.OrganizationOfferingRepository.Query(
-                new Specification<OrganizationOffering>
-                {
-                    Criteria = query => query.Organization.CustomDomain == organizationUniqueAlphanumericNam &&
-                                        query.Code == offeringCode &&
-                                        query.Start <= now && query.End >= now
-                }.ApplyOrderBy(query => query.Id)).FirstOrDefaultAsync(cancellationToken);
+            matchingOffering = await repositoryFactory.OrganizationOfferingRepository
+                .GetCurrentByCustomDomainAndCodeAsync(organizationUniqueAlphanumericName, offeringCode, now, includeDeleted: true, cancellationToken);
         }
         else
         {
-            throw new InvalidOperationException("Either organizationId or organizationUniqueAlphanumericNam must be provided.");
+            throw new InvalidOperationException("Either organizationId or organizationUniqueAlphanumericName must be provided.");
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -140,7 +130,7 @@ public class OrganizationOfferingService(
 
         organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
             organizationId,
-            organizationUniqueAlphanumericNam,
+            organizationUniqueAlphanumericName,
             cancellationToken);
         organizationOutboxPublisher.PublishOrganizations(
             [mapper.MapTo(organization!, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization!.Id))],
@@ -150,8 +140,8 @@ public class OrganizationOfferingService(
         await transaction.CommitAsync(cancellationToken);
     }
 
-    public async Task CancelOfferingAsync(string? organizationId, string? organizationUniqueAlphanumericNam, CancellationToken cancellationToken) =>
-        await UpdateOfferingAsync(organizationId, organizationUniqueAlphanumericNam, OfferingCode.FreeTierV1, false, cancellationToken);
+    public async Task CancelOfferingAsync(string? organizationId, string? organizationUniqueAlphanumericName, CancellationToken cancellationToken) =>
+        await UpdateOfferingAsync(organizationId, organizationUniqueAlphanumericName, OfferingCode.FreeTierV1, false, cancellationToken);
 
     public async Task RegenerateAllOfferingsAsync(CancellationToken cancellationToken)
     {

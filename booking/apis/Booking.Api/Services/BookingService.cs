@@ -7,10 +7,7 @@ using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
-using Microsoft.EntityFrameworkCore;
-using Location = Booking.Shared.Database.Entities.Location;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
-using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.Services;
 
@@ -110,17 +107,14 @@ public class BookingService(
 
             searchCriteria = searchCriteria with
             {
-                OrganizationId = scopedOrganization.Id, OrganizationCustomDomain = scopedOrganization.CustomDomain
+                OrganizationId = scopedOrganization.Id,
+                OrganizationCustomDomain = scopedOrganization.CustomDomain
             };
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.LocationIds.Count != 0)
         {
-            var criteria = searchCriteria;
-            var locations = await repositoryFactory.LocationRepository.Query(
-                    new Specification<Location> { Criteria = query => !query.DeletedAt.HasValue && criteria.LocationIds.Contains(query.Id) }
-                        .AddInclude(query => query.Organization!))
-                .ToListAsync(cancellationToken);
+            var locations = await repositoryFactory.LocationRepository.GetActiveByIdsAsync(searchCriteria.LocationIds.Distinct().ToList(), cancellationToken);
 
             foreach (var location in locations)
             {
@@ -140,11 +134,7 @@ public class BookingService(
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.TeamIds.Count != 0)
         {
-            var criteria = searchCriteria;
-            var teams = await repositoryFactory.TeamRepository.Query(
-                    new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && criteria.TeamIds.Contains(query.Id) }
-                        .AddInclude(query => query.Organization!))
-                .ToListAsync(cancellationToken);
+            var teams = await repositoryFactory.TeamRepository.GetActiveByIdsAsync(searchCriteria.TeamIds.Distinct().ToList(), cancellationToken);
 
             foreach (var team in teams)
             {

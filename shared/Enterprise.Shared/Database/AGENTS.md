@@ -8,11 +8,11 @@ registration helpers for PostgreSQL and SQL Server. Outbox entity configuration 
 
 ## Sub-modules
 
-| Sub-module        | Namespace                              | Notes                                                             |
-|-------------------|----------------------------------------|-------------------------------------------------------------------|
-| Core abstractions | `Enterprise.Shared.Database`           | `EntityBase`, `IRepository<T>`, `IUnitOfWork`, `Specification<T>` |
-| PostgreSQL        | `Enterprise.Shared.Database.Postgres`  | Aspire-aware registration, PostGIS, health checks                 |
-| SQL Server        | `Enterprise.Shared.Database.SqlServer` | Parallel API to Postgres; use when targeting SQL Server           |
+| Sub-module        | Namespace                              | Notes                                                   |
+| ----------------- | -------------------------------------- | ------------------------------------------------------- |
+| Core abstractions | `Enterprise.Shared.Database`           | `EntityBase`, `IRepository<T>`, `IUnitOfWork`           |
+| PostgreSQL        | `Enterprise.Shared.Database.Postgres`  | Aspire-aware registration, PostGIS, health checks       |
+| SQL Server        | `Enterprise.Shared.Database.SqlServer` | Parallel API to Postgres; use when targeting SQL Server |
 
 ## Registration — PostgreSQL
 
@@ -49,7 +49,7 @@ services.WithPooledDbContext<MyDbContext>(configuration, environment, "mydb");
 ## Base Types
 
 | Type                    | Use                                                             |
-|-------------------------|-----------------------------------------------------------------|
+| ----------------------- | --------------------------------------------------------------- |
 | `EntityBase`            | Owned entity with auto-generated `Id`, `CreatedAt`, `UpdatedAt` |
 | `EntityBaseWithDeleted` | `EntityBase` + soft-delete `DeletedAt`                          |
 | `ReplicatedEntityBase`  | Read-side entity replicated from another context                |
@@ -59,15 +59,16 @@ services.WithPooledDbContext<MyDbContext>(configuration, environment, "mydb");
 ## Repository Pattern
 
 ```csharp
-// Query through specifications — do not expose IQueryable outside the repository
+// Expose explicit repository methods with concrete return types
 public class MyRepository(MyDbContext db) : RepositoryBase<MyDbContext, MyEntity>(db), IMyRepository { }
 
 // Implement unit-of-work through the DbContext
 public class MyDbContext : DbContextBase<MyDbContext>, IUnitOfWork, IKafkaOutboxStore { ... }
 ```
 
-- `IRepository<T>` exposes queryable access via `Specification<T>`.
-- `SpecificationEvaluator` applies `Where`, `Include`, `OrderBy`, and pagination to an `IQueryable`.
+- `IRepository<T>` is infrastructure-only and must not be surfaced as a generic query-composition contract for domain production code.
+- Public repository interfaces must expose explicit business-oriented methods with concrete return types such as entity, nullable entity, collection, or paginated result.
+- Reuse overlapping query-building only inside repository implementations or helpers; do not expose `IQueryable` or a replacement generic specification abstraction from domain repositories.
 - `IUnitOfWork` wraps `SaveChangesAsync` — always commit through the unit-of-work, not `DbContext` directly.
 
 ## Interceptors
@@ -96,6 +97,8 @@ Registers a readiness health check that verifies database connectivity. The heal
 ## Rules
 
 - Do not query `DbContext` or EF directly from integration tests. Use repository methods.
+- Do not add new production usages of `Specification<T>`, `ISpecification<T>`, `SpecificationEvaluator`, or `IRepository.Query(ISpecification<T>)`.
+- Keep workflow logging at the service, job, processor, or activity boundary rather than introducing broad repository-level logging.
 - Do not call `SaveChanges()` inside a loop — batch changes and call once per unit-of-work boundary.
 - `QuerySplittingBehavior` defaults to `SplitQuery` (set in `ApplicationConfiguration`); override
   per-query with `.AsSingleQuery()` only when a split produces incorrect results.

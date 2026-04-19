@@ -34,11 +34,6 @@ public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, 
 
     public IUnitOfWork UnitOfWork => DbContext;
 
-    public virtual IQueryable<TEntity> Query(ISpecification<TEntity>? specification = null) => ApplySpecification(specification);
-
-    protected virtual IQueryable<TEntity> ApplySpecification(ISpecification<TEntity>? spec) =>
-        SpecificationEvaluator<TEntity>.GetQuery(DbContext.Set<TEntity>().AsQueryable(), spec);
-
     public virtual async Task UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
         var entityType = DbContext.Model.FindEntityType(typeof(TEntity));

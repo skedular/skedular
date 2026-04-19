@@ -3,9 +3,8 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.VisualBasic;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Repositories;
@@ -75,10 +74,7 @@ public class AzureTenantService(
             {
                 cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddHours(1);
 
-                return await repositoryFactory.AzureTenantRepository.Query(
-                        new Specification<AzureTenant> { Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString() })
-                    .AsNoTrackingWithIdentityResolution()
-                    .AnyAsync(cancellationToken);
+                return await repositoryFactory.AzureTenantRepository.ExistsActiveByIdAsync(tenantId.ToString(), cancellationToken);
             });
     }
 

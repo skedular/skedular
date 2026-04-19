@@ -128,9 +128,7 @@ public class OrganizationService(
 
         organization.IsOwnershipVerified = false;
 
-        var termsOfUse = await repositoryFactory.TermsOfUseRepository
-            .Query(new Specification<TermsOfUse> { Criteria = query => !query.DeletedAt.HasValue })
-            .FirstAsync(cancellationToken);
+        var termsOfUse = await repositoryFactory.TermsOfUseRepository.GetActiveAsync(cancellationToken);
 
         if (organization.TermsOfUse?.Id != termsOfUse.Id)
         {
@@ -139,9 +137,7 @@ public class OrganizationService(
 
         var industrySubCategoryIds = organization.IndustrySubCategories.Select(item => item.Id).ToList();
         var industrySubCategories = await repositoryFactory.IndustrySubCategoryRepository
-            .Query(new Specification<IndustrySubCategory> { Criteria = query => industrySubCategoryIds.Contains(query.Id) }
-                .AddInclude(query => query.IndustryMainCategory))
-            .ToListAsync(cancellationToken);
+            .GetByIdsWithMainCategoryAsync(industrySubCategoryIds, cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -476,12 +472,7 @@ public class OrganizationService(
         var industrySubCategoryEntities = industrySubCategoryIds.Count == 0
             ? []
             : await repositoryFactory.IndustrySubCategoryRepository
-                .Query(new Specification<IndustrySubCategory>
-                    {
-                        Criteria = query => !query.DeletedAt.HasValue && industrySubCategoryIds.Contains(query.Id)
-                    }
-                    .AddInclude(query => query.IndustryMainCategory))
-                .ToListAsync(cancellationToken);
+                .GetActiveByIdsWithMainCategoryAsync(industrySubCategoryIds, cancellationToken);
 
         // Don't change CustomDomain if no custom domain provided
         organization.CustomDomain = string.IsNullOrWhiteSpace(organization.CustomDomain)

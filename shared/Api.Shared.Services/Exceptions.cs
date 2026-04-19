@@ -36,6 +36,10 @@ public class OnlySingleResourceTypeAllowed() : Exception("Please choose only one
 
 public class OrganizationTermsOfUseAgreementMissing() : Exception("You need to accept the organisation's terms before continuing.");
 
+public class ActiveTermsOfUseNotFoundException() : InvalidOperationException("No active terms of use record was found.");
+
+public class MultipleActiveTermsOfUseFoundException() : InvalidOperationException("Multiple active terms of use records were found.");
+
 public class PaymentMethodRequired() : Exception("Please choose a payment method.");
 
 public class BookingNotFound() : Exception("We couldn't find that booking.");

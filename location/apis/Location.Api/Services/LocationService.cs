@@ -14,11 +14,9 @@ using Location.Shared.Repositories;
 using Location.Shared.Services;
 using Location.Shared.Services.Cache;
 using Location.Shared.Workflows;
-using Microsoft.EntityFrameworkCore;
 using Constants = Api.Shared.Services.Constants;
 using Customer = Location.Shared.Database.Entities.Customer;
 using Organization = Location.Shared.Database.Entities.Organization;
-using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
 namespace Location.Api.Services;
 
@@ -131,16 +129,11 @@ public class LocationService(
             };
         }
 
-        var locationRef = location;
-        var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
-            new Specification<OrganizationTag>
-            {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    locationRef.OrganizationTags.Select(item => item.Id).Contains(query.Id) &&
-                                    (query.Organization.Id == locationRef.Organization.Id || query.Organization.CustomDomain ==
-                                        locationRef.Organization.CustomDomain) &&
-                                    !query.Organization.DeletedAt.HasValue
-            }).ToListAsync(cancellationToken);
+        var organizationTags = await repositoryFactory.OrganizationTagRepository.GetActiveByIdsForOrganizationAsync(
+            location.OrganizationTags.Select(item => item.Id).ToList(),
+            location.Organization.Id,
+            location.Organization.CustomDomain,
+            cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -355,17 +348,11 @@ public class LocationService(
             };
         }
 
-        var locationRef = location;
-        var locationEntityRef = existingLocation;
-        var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
-            new Specification<OrganizationTag>
-            {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    locationRef.OrganizationTags.Select(item => item.Id).Contains(query.Id) &&
-                                    (query.Organization.Id == locationEntityRef.Organization.Id || query.Organization.CustomDomain ==
-                                        locationEntityRef.Organization.CustomDomain) &&
-                                    !query.Organization.DeletedAt.HasValue
-            }).ToListAsync(cancellationToken);
+        var organizationTags = await repositoryFactory.OrganizationTagRepository.GetActiveByIdsForOrganizationAsync(
+            location.OrganizationTags.Select(item => item.Id).ToList(),
+            existingLocation.Organization.Id,
+            existingLocation.Organization.CustomDomain,
+            cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 

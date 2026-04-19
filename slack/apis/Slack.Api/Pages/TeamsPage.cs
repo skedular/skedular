@@ -2,7 +2,6 @@ using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL.Types;
-using Microsoft.EntityFrameworkCore;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
 using Slack.Api.Services;
@@ -20,7 +19,6 @@ using SlackNet.Interaction;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
 using Button = SlackNet.Blocks.Button;
-using Team = Slack.Shared.Database.Entities.Team;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 
@@ -346,10 +344,7 @@ public class TeamsPage(
 
         var teams = connection.Edges.Select(item => item.Node).ToList();
         var teamIds = teams.Select(item => item.Id).ToList();
-        var teamsWithChannel = await repositoryFactory.TeamRepository.Query(
-                new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id) }
-                    .AddInclude(query => query.DailyUpdateChannel!))
-            .ToListAsync(cancellationToken);
+        var teamsWithChannel = await repositoryFactory.TeamRepository.GetActiveByIdsAsync(teamIds, cancellationToken);
         teams = teams.Select(item =>
         {
             var matchedTeam = teamsWithChannel.FirstOrDefault(replicatedTeam => replicatedTeam.Id == item.Id);
@@ -442,7 +437,9 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageTeams, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageTeams,
+                Text = Icons.FirstPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.TeamsPage.Pagination.First = null;
@@ -452,7 +449,9 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageTeams, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageTeams,
+                Text = Icons.PreviousPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -465,7 +464,9 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageTeams, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageTeams,
+                Text = Icons.NextPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.TeamsPage.Pagination.First = null;
@@ -475,7 +476,9 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageTeams, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageTeams,
+                Text = Icons.LastPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -538,10 +541,7 @@ public class TeamsPage(
             Optional = true
         };
 
-        var teamEntity = await repositoryFactory.TeamRepository
-            .Query(new Specification<Team> { Criteria = query => query.Id == team.Id }
-                .AddInclude(query => query.DailyUpdateChannel!))
-            .FirstOrDefaultAsync(cancellationToken);
+        var teamEntity = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
 
         var updateChannel = new InputBlock
         {
@@ -549,7 +549,8 @@ public class TeamsPage(
             Label = "Slack update channel".ToPlainText(),
             Element = new ChannelSelectMenu
             {
-                ActionId = TeamActionTypes.SlackUpdateChannel, InitialChannel = teamEntity?.DailyUpdateChannel?.Id
+                ActionId = TeamActionTypes.SlackUpdateChannel,
+                InitialChannel = teamEntity?.DailyUpdateChannel?.Id
             },
             Optional = true
         };

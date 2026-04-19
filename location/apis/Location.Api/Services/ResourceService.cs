@@ -12,8 +12,6 @@ using Location.Shared.Repositories;
 using Location.Shared.Services;
 using Location.Shared.Services.Cache;
 using Location.Shared.Workflows;
-using Microsoft.EntityFrameworkCore;
-using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
 namespace Location.Api.Services;
 
@@ -89,28 +87,21 @@ public class ResourceService(
             throw new UnauthorizedAccessException();
         }
 
-        var matchingResourceFound = await repositoryFactory.ResourceRepository.Query(
-                new Specification<Shared.Database.Entities.Resource>
-                {
-                    Criteria = query =>
-                        !query.DeletedAt.HasValue &&
-                        query.Location.Id == resource.Location.Id &&
-                        EF.Functions.ILike(query.Name, resource.Name)
-                })
-            .AnyAsync(cancellationToken);
+        var matchingResourceFound = await repositoryFactory.ResourceRepository.ExistsActiveWithNameAsync(
+            resource.Location.Id,
+            resource.Name,
+            null,
+            cancellationToken);
         if (matchingResourceFound)
         {
             throw new ResourceWithSameNameExist();
         }
 
-        var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
-            new Specification<OrganizationTag>
-            {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    resource.Tags.Select(item => item.Id).Contains(query.Id) &&
-                                    query.Organization.Id == existingLocation.Organization.Id &&
-                                    !query.Organization.DeletedAt.HasValue
-            }).ToListAsync(cancellationToken);
+        var organizationTags = await repositoryFactory.OrganizationTagRepository.GetActiveByIdsForOrganizationAsync(
+            resource.Tags.Select(item => item.Id).ToList(),
+            existingLocation.Organization.Id,
+            null,
+            cancellationToken);
 
         var resourceTypeTag = organizationTags
             .Where(item => !string.IsNullOrWhiteSpace(item.Type))
@@ -445,31 +436,21 @@ public class ResourceService(
             throw new UnauthorizedAccessException();
         }
 
-        var resourceId = resource.Id;
-        var resourceName = resource.Name;
-        var tags = resource.Tags;
-        var locationId = existingResource.Location.Id;
-        var matchingResourceFound = await repositoryFactory.ResourceRepository.Query(
-            new Specification<Shared.Database.Entities.Resource>
-            {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    query.Location.Id == locationId &&
-                                    EF.Functions.ILike(query.Name, resourceName) &&
-                                    query.Id != resourceId
-            }).AnyAsync(cancellationToken);
+        var matchingResourceFound = await repositoryFactory.ResourceRepository.ExistsActiveWithNameAsync(
+            existingResource.Location.Id,
+            resource.Name,
+            resource.Id,
+            cancellationToken);
         if (matchingResourceFound)
         {
             throw new ResourceWithSameNameExist();
         }
 
-        var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
-            new Specification<OrganizationTag>
-            {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    tags.Select(item => item.Id).Contains(query.Id) &&
-                                    query.Organization.Id == existingLocation.Organization.Id &&
-                                    !query.Organization.DeletedAt.HasValue
-            }).ToListAsync(cancellationToken);
+        var organizationTags = await repositoryFactory.OrganizationTagRepository.GetActiveByIdsForOrganizationAsync(
+            resource.Tags.Select(item => item.Id).ToList(),
+            existingLocation.Organization.Id,
+            null,
+            cancellationToken);
 
         var resourceTypeTag = organizationTags
             .Where(item => !string.IsNullOrWhiteSpace(item.Type))

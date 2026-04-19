@@ -7,7 +7,6 @@ using Customer.Shared.Repositories;
 using Customer.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
-using Microsoft.EntityFrameworkCore;
 using Organization = Customer.Shared.Database.Entities.Organization;
 using OrganizationMember = Customer.Shared.Database.Entities.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;
@@ -158,10 +157,8 @@ public class OrganizationSubscriber(
 
         foreach (var organizationMemberId in organizationMemberIds)
         {
-            var member = await repositoryFactory.OrganizationMemberRepository.Query(
-                    new Specification<OrganizationMember> { Criteria = query => query.Id == organizationMemberId }
-                        .AddInclude(query => query.Customer))
-                .FirstAsync(cancellationToken);
+            var member = await repositoryFactory.OrganizationMemberRepository.GetByIdWithCustomerAsync(organizationMemberId, cancellationToken) ??
+                         throw new InvalidOperationException($"Organization member {organizationMemberId} was not found.");
 
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken) ??
                            throw new CustomerNotFound();

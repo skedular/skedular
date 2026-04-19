@@ -13,6 +13,7 @@ public interface ITeamRepository : IRepository<Team>
     Task<Team?> GetByIdAsync(string id, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
     Task<Team?> GetByIdUntrackedAsync(string id, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
     Task<ICollection<Team>> GetByIdsAsync(ICollection<string> ids, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
+    Task<ICollection<Team>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Team Update(Team team);
     Team Remove(Team team);
     Task<ICollection<Team>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
@@ -63,6 +64,30 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
             .Where(query => ids.Contains(query.Id))
             .AddDependentObjects(true, includeDeletedTeamMembers)
             .ToListAsync(cancellationToken);
+
+    /// <summary>
+    ///     Returns the active teams for the supplied identifiers with only the organization relationship loaded.
+    /// </summary>
+    /// <param name="ids">The team identifiers to resolve.</param>
+    /// <param name="cancellationToken">The cancellation token for the database query.</param>
+    /// <returns>The non-deleted teams that match the supplied identifiers.</returns>
+    /// <remarks>
+    ///     This lightweight authorization lookup replaces the heavier specification path and intentionally loads only the organization data needed by
+    ///     booking access checks.
+    /// </remarks>
+    public async Task<ICollection<Team>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.Team
+            .Where(query => !query.DeletedAt.HasValue && ids.Contains(query.Id))
+            .AsNoTrackingWithIdentityResolution()
+            .Include(query => query.Organization)
+            .ToListAsync(cancellationToken);
+    }
 
     public Team Update(Team team)
     {

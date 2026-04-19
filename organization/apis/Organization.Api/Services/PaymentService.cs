@@ -2,7 +2,6 @@ using Api.Shared.Services;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
-using Microsoft.EntityFrameworkCore;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Repositories;
@@ -100,13 +99,7 @@ public class PaymentService(
         {
             var now = timeProvider.GetUtcNow();
             var organizationOffering = await repositoryFactory.OrganizationOfferingRepository
-                .Query(new Specification<OrganizationOffering>
-                    {
-                        Criteria = query =>
-                            !query.DeletedAt.HasValue && query.Organization.Id == organization.Id && query.Start <= now && query.End >= now
-                    }
-                    .ApplyOrderBy(query => query.Id))
-                .FirstOrDefaultAsync(cancellationToken);
+                .GetCurrentActiveByOrganizationIdAsync(organization.Id, now, cancellationToken);
             if (organizationOffering is not null)
             {
                 if (organizationOffering.Code.IsFreeOffering())
@@ -123,14 +116,12 @@ public class PaymentService(
             // Looking for an existing offering to avoid creating a duplicated offering as well as making sure we are not
             // losing track of active users against a free offering
             var existingFreeOffering = await repositoryFactory.OrganizationOfferingRepository
-                .Query(new Specification<OrganizationOffering>
-                    {
-                        Criteria = query =>
-                            query.Organization.Id == organization.Id && query.Start <= now && query.End >= now &&
-                            query.Code == OfferingCode.FreeTierV1
-                    }
-                    .ApplyOrderBy(query => query.Id))
-                .FirstOrDefaultAsync(cancellationToken);
+                .GetCurrentByOrganizationIdAndCodeAsync(
+                    organization.Id,
+                    OfferingCode.FreeTierV1,
+                    now,
+                    includeDeleted: true,
+                    cancellationToken);
 
             if (existingFreeOffering is null)
             {

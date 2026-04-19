@@ -710,7 +710,10 @@ public class OrganizationArrearsBillingIntegrations(
             DueDate = dueDate,
             LineItems = draft.Lines.Select(line => new LineItem
             {
-                Description = line.Description, Quantity = 1, UnitAmount = line.Amount, AccountCode = xeroConnection.DefaultSalesAccountCode
+                Description = line.Description,
+                Quantity = 1,
+                UnitAmount = line.Amount,
+                AccountCode = xeroConnection.DefaultSalesAccountCode
             }).ToList()
         };
     }
@@ -816,9 +819,7 @@ public class OrganizationArrearsBillingIntegrations(
         }
 
         var organizationArrearsInvoice = await repositoryFactory.OrganizationArrearsInvoiceRepository
-            .Query()
-            .Include(query => query.Lines)
-            .FirstOrDefaultAsync(query => query.Id == accountingInvoiceLink.LocalEntityId, cancellationToken);
+            .GetByIdWithLinesAsync(accountingInvoiceLink.LocalEntityId, cancellationToken);
         if (organizationArrearsInvoice is null)
         {
             return;

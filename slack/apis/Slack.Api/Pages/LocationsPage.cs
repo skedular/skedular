@@ -2,7 +2,6 @@ using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL.Types;
-using Microsoft.EntityFrameworkCore;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
 using Slack.Api.Services;
@@ -19,7 +18,6 @@ using SlackNet.Interaction;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
 using Button = SlackNet.Blocks.Button;
-using Location = Slack.Shared.Database.Entities.Location;
 using LocationEdge = Slack.Shared.Models.LocationEdge;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
@@ -415,9 +413,7 @@ public class LocationsPage(
         var locations = connection.Edges.Select(item => item.Node).ToList();
         var locationIds = locations.Select(item => item.Id).ToList();
         var locationsWithChannel = await repositoryFactory.LocationRepository
-            .Query(new Specification<Location> { Criteria = query => !query.DeletedAt.HasValue && locationIds.Contains(query.Id) }
-                .AddInclude(query => query.DailyUpdateChannel!))
-            .ToListAsync(cancellationToken);
+            .GetActiveByIdsAsync(locationIds, cancellationToken);
         locations = locations.Select(item =>
         {
             var matchedLocation =
@@ -524,7 +520,9 @@ public class LocationsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageLocations, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageLocations,
+                Text = Icons.FirstPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.LocationsPage.Pagination.First = null;
@@ -534,7 +532,9 @@ public class LocationsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageLocations, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageLocations,
+                Text = Icons.PreviousPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -547,7 +547,9 @@ public class LocationsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageLocations, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageLocations,
+                Text = Icons.NextPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.LocationsPage.Pagination.First = null;
@@ -557,7 +559,9 @@ public class LocationsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageLocations, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageLocations,
+                Text = Icons.LastPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -588,7 +592,9 @@ public class LocationsPage(
             Label = "About".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = LocationActionTypes.About, InitialValue = location.ListingMetadata.About.ToSafeString(), Multiline = true
+                ActionId = LocationActionTypes.About,
+                InitialValue = location.ListingMetadata.About.ToSafeString(),
+                Multiline = true
             },
             Optional = true
         };
@@ -608,10 +614,7 @@ public class LocationsPage(
             Optional = false
         };
 
-        var locationEntity = await repositoryFactory.LocationRepository
-            .Query(new Specification<Location> { Criteria = query => query.Id == location.Id }
-                .AddInclude(query => query.DailyUpdateChannel!))
-            .FirstOrDefaultAsync(cancellationToken);
+        var locationEntity = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
 
         var updateChannel = new InputBlock
         {
@@ -619,7 +622,8 @@ public class LocationsPage(
             Label = "Slack update channel".ToPlainText(),
             Element = new ChannelSelectMenu
             {
-                ActionId = LocationActionTypes.SlackUpdateChannel, InitialChannel = locationEntity?.DailyUpdateChannel?.Id
+                ActionId = LocationActionTypes.SlackUpdateChannel,
+                InitialChannel = locationEntity?.DailyUpdateChannel?.Id
             },
             Optional = true
         };

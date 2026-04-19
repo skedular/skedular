@@ -130,10 +130,7 @@ public class EditLocationButtonHandler(
             {
                 if (slackUpdateChannel is ChannelSelectValue value)
                 {
-                    var locationEntity = await repositoryFactory.LocationRepository.Query(
-                            new Specification<Shared.Database.Entities.Location> { Criteria = query => query.Id == context.LocationId }
-                                .AddInclude(query => query.DailyUpdateChannel!))
-                        .FirstOrDefaultAsync(cancellationToken);
+                    var locationEntity = await repositoryFactory.LocationRepository.GetByIdAsync(context.LocationId, cancellationToken);
                     if (locationEntity is not null)
                     {
                         locationEntity.DailyUpdateChannel = string.IsNullOrWhiteSpace(value.SelectedChannel)

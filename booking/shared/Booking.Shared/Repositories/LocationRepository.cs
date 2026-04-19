@@ -11,6 +11,7 @@ public interface ILocationRepository : IRepository<Location>
 {
     Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
     Task<Location?> GetByIdAsync(string id, bool includeDeletedResources, CancellationToken cancellationToken);
+    Task<ICollection<Location>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
 
     Task<ICollection<Location>> GetAllWithActiveOrganizationAsync(
         bool includeDeletedResources,
@@ -64,6 +65,30 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
         await DbContext.Location
             .AddDependentObjects(includeDeletedResources, true, [])
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    /// <summary>
+    ///     Returns the active locations for the supplied identifiers with only the organization relationship loaded.
+    /// </summary>
+    /// <param name="ids">The location identifiers to resolve.</param>
+    /// <param name="cancellationToken">The cancellation token for the database query.</param>
+    /// <returns>The non-deleted locations that match the supplied identifiers.</returns>
+    /// <remarks>
+    ///     This lightweight authorization lookup replaces the heavier specification path and intentionally loads only the organization data needed by
+    ///     booking access checks.
+    /// </remarks>
+    public async Task<ICollection<Location>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.Location
+            .Where(query => !query.DeletedAt.HasValue && ids.Contains(query.Id))
+            .AsNoTrackingWithIdentityResolution()
+            .Include(query => query.Organization)
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<ICollection<Location>> GetAllWithActiveOrganizationAsync(
         bool includeDeletedResources,

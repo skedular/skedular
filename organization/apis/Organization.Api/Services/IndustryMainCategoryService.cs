@@ -1,5 +1,3 @@
-using Enterprise.Shared.Database;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Organization.Api.Mappers;
 using Organization.Shared.Models;
@@ -21,12 +19,7 @@ public class IndustryMainCategoryService(IRepositoryFactory repositoryFactory, I
             {
                 cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddHours(1);
 
-                var industryMainCategories = await repositoryFactory.IndustryMainCategoryRepository
-                    .Query(new Specification<Shared.Database.Entities.IndustryMainCategory> { Criteria = query => !query.DeletedAt.HasValue }
-                        .AddInclude(query => query.IndustrySubCategories)
-                        .ApplyOrderBy(query => query.Name))
-                    .AsNoTrackingWithIdentityResolution()
-                    .ToListAsync(cancellationToken);
+                var industryMainCategories = await repositoryFactory.IndustryMainCategoryRepository.GetAllActiveWithSubCategoriesAsync(cancellationToken);
 
                 return mapper.MapTo(industryMainCategories).ToList();
             }))!;

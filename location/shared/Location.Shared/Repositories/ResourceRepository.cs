@@ -16,6 +16,8 @@ public interface IResourceRepository : IRepository<Resource>
 {
     Task<Resource?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<ICollection<Resource>> GetByIdsWithOrganizationTagsUntrackedAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<bool> ExistsActiveWithNameAsync(string locationId, string name, string? excludeId, CancellationToken cancellationToken);
     Resource Add(Resource resource);
     Resource Update(Resource resource);
     void RemoveRange(ICollection<Resource> resources);
@@ -32,12 +34,12 @@ internal static class ResourceExtensions
 {
     extension(IQueryable<Resource> originalQuery)
     {
-        internal IIncludableQueryable<Resource, IEnumerable<OrganizationTag>> AddDependentObjects() =>
-            originalQuery
-                .Include(query => query.Location)
-                .Include(query => query.ResourcePosition)
-                .ThenInclude(query => query!.FloorPlan)
-                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
+        internal IIncludableQueryable<Resource, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.Location)
+            .Include(query => query.ResourcePosition)
+            .ThenInclude(query => query!.FloorPlan)
+            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
         internal IQueryable<Resource> AddSearchCriteria(ResourceSearchCriteria searchCriteria)
         {
@@ -68,16 +70,62 @@ internal static class ResourceExtensions
 public class ResourceRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Resource>(dbContext, timeProvider), IResourceRepository
 {
+    private const string LikeEscapeCharacter = "\\";
+
     public async Task<Resource?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Resource
-            .AddDependentObjects()
+            .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Resource
             .Where(query => ids.Contains(query.Id))
-            .AddDependentObjects()
+            .AddDependentObjects(true)
             .ToListAsync(cancellationToken);
+
+    /// <summary>
+    ///     Returns the requested resources with only their active organization tags loaded and without change tracking.
+    /// </summary>
+    /// <param name="ids">The resource identifiers to resolve.</param>
+    /// <param name="cancellationToken">The cancellation token for the database query.</param>
+    /// <returns>The matching resources with active organization tags populated.</returns>
+    /// <remarks>
+    ///     This focused read was added for derived-state rebuilding so that workflow only pays for organization tags instead of the full resource include
+    ///     graph.
+    /// </remarks>
+    public async Task<ICollection<Resource>> GetByIdsWithOrganizationTagsUntrackedAsync(
+        ICollection<string> ids,
+        CancellationToken cancellationToken) =>
+        await DbContext.Resource
+            .Where(query => ids.Contains(query.Id))
+            .AsNoTrackingWithIdentityResolution()
+            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+            .ToListAsync(cancellationToken);
+
+    /// <summary>
+    ///     Checks whether an active resource already exists with the supplied name for a location.
+    /// </summary>
+    /// <param name="locationId">The location identifier that owns the resource name namespace.</param>
+    /// <param name="name">The candidate resource name to validate.</param>
+    /// <param name="excludeId">An optional resource identifier to exclude from the duplicate check, typically the resource currently being updated.</param>
+    /// <param name="cancellationToken">The cancellation token for the database query.</param>
+    /// <returns><see langword="true" /> when another active resource with the same effective name exists; otherwise <see langword="false" />.</returns>
+    /// <remarks>
+    ///     This exact-name check stays in the repository so resource create and update flows can reuse the same duplicate rule without reviving the old
+    ///     specification abstraction.
+    /// </remarks>
+    public async Task<bool> ExistsActiveWithNameAsync(
+        string locationId,
+        string name,
+        string? excludeId,
+        CancellationToken cancellationToken) =>
+        await DbContext.Resource.AnyAsync(
+            query =>
+                !query.DeletedAt.HasValue &&
+                query.Location.Id == locationId &&
+                EF.Functions.ILike(query.Name, EscapeLikePattern(name), LikeEscapeCharacter) &&
+                (excludeId == null || query.Id != excludeId),
+            cancellationToken);
 
     public Resource Add(Resource resource)
     {
@@ -114,7 +162,7 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
         CancellationToken cancellationToken) =>
         await DbContext.Resource
             .AddSearchCriteria(searchCriteria)
-            .AddDependentObjects()
+            .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
     private static List<KeysetPaginationField<Resource>> GetPaginationFields(ICollection<ResourceOrder> orderByFields)
@@ -140,4 +188,15 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
             })
             .ToList();
     }
+
+    /// <summary>
+    ///     Escapes SQL LIKE wildcard characters in a user-supplied name so an exact-name comparison can safely use <c>ILIKE</c>.
+    /// </summary>
+    /// <param name="value">The raw user-supplied value that may contain wildcard characters.</param>
+    /// <returns>The escaped value safe to pass into an exact-match <c>ILIKE</c> predicate.</returns>
+    private static string EscapeLikePattern(string value) =>
+        value
+            .Replace(LikeEscapeCharacter, LikeEscapeCharacter + LikeEscapeCharacter, StringComparison.Ordinal)
+            .Replace("%", LikeEscapeCharacter + "%", StringComparison.Ordinal)
+            .Replace("_", LikeEscapeCharacter + "_", StringComparison.Ordinal);
 }

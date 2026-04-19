@@ -16,6 +16,7 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
         CancellationToken cancellationToken);
 
     Task<OrganizationMember?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<OrganizationMember?> GetByIdWithCustomerAsync(string id, CancellationToken cancellationToken);
     OrganizationMember Add(OrganizationMember organizationMember);
     OrganizationMember Update(OrganizationMember organizationMember);
     void RemoveRange(ICollection<OrganizationMember> organizationMembers);
@@ -41,6 +42,21 @@ public class OrganizationMemberRepository(CustomerDbContext dbContext, TimeProvi
 
     public async Task<OrganizationMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember.FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    /// <summary>
+    ///     Loads an organization member together with its linked customer record.
+    /// </summary>
+    /// <param name="id">The organization member identifier to retrieve.</param>
+    /// <param name="cancellationToken">The cancellation token for the database query.</param>
+    /// <returns>The organization member with <c>Customer</c> populated, or <see langword="null" /> when the member does not exist.</returns>
+    /// <remarks>
+    ///     This focused lookup was added to replace the old shared specification used by subscriber flows that need both the member and the linked customer
+    ///     in a single repository call.
+    /// </remarks>
+    public async Task<OrganizationMember?> GetByIdWithCustomerAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.OrganizationMember
+            .Include(query => query.Customer)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public OrganizationMember Add(OrganizationMember organizationMember)
     {

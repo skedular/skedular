@@ -1,7 +1,5 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
-using Microsoft.EntityFrameworkCore;
-using Slack.Shared.Database.Entities;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
 
@@ -22,16 +20,7 @@ public class LocationDailyUpdateJob(IServiceProvider serviceProvider, TimeProvid
                 var locationDailyUpdaterService = scope.ServiceProvider.GetRequiredService<ILocationDailyUpdaterService>();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
                 var now = timeProvider.GetUtcNow();
-                var locations = await repositoryFactory.LocationRepository.Query(
-                    new Specification<Location>
-                    {
-                        Criteria = query =>
-                            !query.DeletedAt.HasValue &&
-                            (now - query.CreatedAt).TotalHours >= 24 &&
-                            query.DailyUpdateChannel != null && !query.DailyUpdateChannel.Workspace.DeletedAt.HasValue &&
-                            (!query.SlackChannelDailyUpdateLastSentAt.HasValue ||
-                             (now - query.SlackChannelDailyUpdateLastSentAt.Value).TotalHours >= 23)
-                    }).ToListAsync(cancellationToken);
+                var locations = await repositoryFactory.LocationRepository.GetDueForDailyUpdateAsync(now, cancellationToken);
 
                 foreach (var locationId in locations.Where(item => now.IsMatchingHour(item.Timezone, 7)).Select(item => item.Id))
                 {
