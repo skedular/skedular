@@ -7,6 +7,5 @@ public class FromCursorShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void Return_original_cursor_value(string cursor) =>
-        cursor.FromCursor().ShouldBe(cursor);
+    public void Return_original_cursor_value(string cursor) => cursor.FromCursor().ShouldBe(cursor);
 }

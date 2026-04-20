@@ -18,17 +18,31 @@ public class OrganizationTermsOfUseService(
     TimeProvider timeProvider)
     : IOrganizationTermsOfUseService
 {
-    public async Task<TermsOfUse> GetActiveTermsOfUseAsync(CancellationToken cancellationToken) =>
-        (await memoryCache.GetOrCreateAsync("organization-active-term-of-use",
-            async cacheEntry =>
-            {
-                cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddHours(1);
+    private const string ActiveTermsOfUseCacheKey = "organization-active-term-of-use";
+    private static readonly TimeSpan ActiveTermsOfUseCacheDuration = TimeSpan.FromHours(1);
 
-                var termsOfUse = await repositoryFactory.TermsOfUseRepository.GetActiveAsync(cancellationToken);
+    public async Task<TermsOfUse> GetActiveTermsOfUseAsync(CancellationToken cancellationToken)
+    {
+        if (memoryCache.TryGetValue<CachedTermsOfUse>(ActiveTermsOfUseCacheKey, out var cachedTermsOfUse) &&
+            cachedTermsOfUse is not null &&
+            cachedTermsOfUse.ExpiresAt > timeProvider.GetUtcNow())
+        {
+            return cachedTermsOfUse.Value;
+        }
 
-                return mapper.MapTo(termsOfUse)!;
-            }))!;
+        var termsOfUse = await repositoryFactory.TermsOfUseRepository.GetActiveAsync(cancellationToken);
+        var mappedTermsOfUse = mapper.MapTo(termsOfUse)!;
+
+        memoryCache.Set(
+            ActiveTermsOfUseCacheKey,
+            new CachedTermsOfUse(mappedTermsOfUse, timeProvider.GetUtcNow().Add(ActiveTermsOfUseCacheDuration)),
+            new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = ActiveTermsOfUseCacheDuration });
+
+        return mappedTermsOfUse;
+    }
 
     public async Task<Shared.Database.Entities.TermsOfUse> GetActiveTermsOfUseEntityAsync(CancellationToken cancellationToken) =>
         await repositoryFactory.TermsOfUseRepository.GetActiveAsync(cancellationToken);
+
+    private sealed record CachedTermsOfUse(TermsOfUse Value, DateTimeOffset ExpiresAt);
 }

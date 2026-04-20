@@ -189,7 +189,9 @@ public static class PaginationExtensions
                 return Expression.Constant(false);
             }
 
-            return direction == OrderDirection.Ascending ? Expression.Constant(false) : Expression.NotEqual(member, nullConstant);
+            return direction == OrderDirection.Ascending
+                ? Expression.Constant(false)
+                : Expression.NotEqual(member, Expression.Constant(null, member.Type));
         }
 
         var constant = Expression.Constant(cursorValue, typeof(string));
@@ -218,9 +220,7 @@ public static class PaginationExtensions
         OrderDirection direction,
         bool isNullable)
     {
-        var type = member.Type;
         var constant = CreateTypedConstant(member, cursorValue);
-        var nullConstant = Expression.Constant(null, type);
 
         if (cursorValue is null)
         {
@@ -229,7 +229,9 @@ public static class PaginationExtensions
                 return Expression.Constant(false);
             }
 
-            return direction == OrderDirection.Ascending ? Expression.Constant(false) : Expression.NotEqual(member, nullConstant);
+            return direction == OrderDirection.Ascending
+                ? Expression.Constant(false)
+                : Expression.NotEqual(member, Expression.Constant(null, member.Type));
         }
 
         var orderedComparison = direction == OrderDirection.Ascending
@@ -240,6 +242,8 @@ public static class PaginationExtensions
         {
             return orderedComparison;
         }
+
+        var nullConstant = Expression.Constant(null, member.Type);
 
         return direction == OrderDirection.Ascending
             ? Expression.OrElse(
@@ -253,6 +257,12 @@ public static class PaginationExtensions
         var type = member.Type;
         if (cursorValue is null)
         {
+            // Null cursor values cannot be compared against non-nullable value types.
+            if (Nullable.GetUnderlyingType(type) is null && type.IsValueType)
+            {
+                return Expression.Equal(Expression.Constant(1), Expression.Constant(0));
+            }
+
             return Expression.Equal(member, Expression.Constant(null, member.Type));
         }
 
