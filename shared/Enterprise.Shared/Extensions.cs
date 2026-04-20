@@ -30,7 +30,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Caching.Hybrid;
@@ -391,12 +391,39 @@ public static class Extensions
                         problemDetails.Instance = context.HttpContext.Request.Path;
 
                         // find out which status code to use
-                        var actionExecutingContext = context as ActionExecutingContext;
+                        var controllerParameters = context.ActionDescriptor.Parameters
+                            .OfType<ControllerParameterDescriptor>()
+                            .Where(parameter => parameter.ParameterInfo.Name is not nameof(CancellationToken))
+                            .Where(parameter => !parameter.ParameterInfo.HasDefaultValue)
+                            .ToList();
 
-                        // only validation errors should be here
-                        if (context.ModelState.ErrorCount > 0 && (context is ControllerContext ||
-                                                                  actionExecutingContext?.ActionArguments.Count ==
-                                                                  context.ActionDescriptor.Parameters.Count))
+                        var hasRequestContractFailure = controllerParameters.Any(parameter =>
+                        {
+                            if (!context.ModelState.TryGetValue(parameter.Name, out var entry))
+                            {
+                                return true;
+                            }
+
+                            if (entry.Errors.Any(error => error.Exception is not null))
+                            {
+                                return true;
+                            }
+
+                            return parameter.ParameterInfo.ParameterType == typeof(string) &&
+                                   entry.RawValue is string rawValue &&
+                                   string.IsNullOrWhiteSpace(rawValue);
+                        });
+
+                        // Missing or malformed required inputs are request-contract failures and should return 400.
+                        if (hasRequestContractFailure)
+                        {
+                            problemDetails.Status = StatusCodes.Status400BadRequest;
+                            problemDetails.Title = "One or more errors on input occurred.";
+                            return new BadRequestObjectResult(problemDetails) { ContentTypes = { "application/problem+json" } };
+                        }
+
+                        // only semantic validation errors should return 422
+                        if (context.ModelState.ErrorCount > 0)
                         {
                             problemDetails.Type = "https://myapi.com/path/to/modelrequirements";
                             problemDetails.Status = StatusCodes.Status422UnprocessableEntity;

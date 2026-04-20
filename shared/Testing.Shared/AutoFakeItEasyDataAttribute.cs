@@ -15,37 +15,40 @@ public static class AutoFakeItEasyCustomizers
     public static void RegisterGlobalCustomizer<T>() where T : IFixtureCustomizer => GlobalCustomizerTypes.Add(typeof(T));
 }
 
-public class AutoFakeItEasyDataAttribute(Type[]? fixtureCustomizers = null, bool skipGlobalCustomizers = false) : AutoDataAttribute(() =>
+public class AutoFakeItEasyDataAttribute(Type[]? fixtureCustomizers = null, bool skipGlobalCustomizers = false)
+    : AutoDataAttribute(() => CreateFixture(fixtureCustomizers, skipGlobalCustomizers))
 {
-    var fixture = new Fixture().Customize(new AutoFakeItEasyCustomization());
-
-    fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-
-    fixture.Customizations.Add(new ExceptionContextGenerator());
-    fixture.Customizations.Add(new CancellationTokenGenerator());
-    fixture.Customizations.Add(new CoordinateGenerator());
-    fixture.Customizations.Add(new DateTimeOffsetGenerator());
-    fixture.Customizations.Add(new TimeProviderGenerator());
-
-    if (!skipGlobalCustomizers)
+    internal static IFixture CreateFixture(Type[]? fixtureCustomizers = null, bool skipGlobalCustomizers = false)
     {
-        ApplyGlobalCustomizers(fixture);
-    }
+        var fixture = new Fixture().Customize(new AutoFakeItEasyCustomization());
 
-    if (fixtureCustomizers is null)
-    {
+        fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
+        fixture.Customizations.Add(new ExceptionContextGenerator());
+        fixture.Customizations.Add(new CancellationTokenGenerator());
+        fixture.Customizations.Add(new CoordinateGenerator());
+        fixture.Customizations.Add(new DateTimeOffsetGenerator());
+        fixture.Customizations.Add(new TimeProviderGenerator());
+
+        if (!skipGlobalCustomizers)
+        {
+            ApplyGlobalCustomizers(fixture);
+        }
+
+        if (fixtureCustomizers is null)
+        {
+            return fixture;
+        }
+
+        foreach (var fixtureCustomizerType in fixtureCustomizers.Where(fixtureCustomizer =>
+                     fixtureCustomizer.GetInterfaces().Any(implementedInterface => implementedInterface == typeof(IFixtureCustomizer))))
+        {
+            ApplyCustomizationsFromType(fixture, fixtureCustomizerType);
+        }
+
         return fixture;
     }
 
-    foreach (var fixtureCustomizerType in fixtureCustomizers.Where(fixtureCustomizer =>
-                 fixtureCustomizer.GetInterfaces().Any(implementedInterface => implementedInterface == typeof(IFixtureCustomizer))))
-    {
-        ApplyCustomizationsFromType(fixture, fixtureCustomizerType);
-    }
-
-    return fixture;
-})
-{
     private static void ApplyGlobalCustomizers(IFixture fixture)
     {
         foreach (var fixtureCustomizerType in AutoFakeItEasyCustomizers.GlobalCustomizerTypes)
