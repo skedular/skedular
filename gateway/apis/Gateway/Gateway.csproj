@@ -31,7 +31,7 @@
 
     <ItemGroup>
         <!-- GraphQL Federation -->
-        <PackageReference Include="HotChocolate.Fusion" Version="15.1.14"/>
+        <PackageReference Include="HotChocolate.Fusion" Version="15.1.15"/>
 
         <!-- Reverse Proxy -->
         <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0"/>

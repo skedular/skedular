@@ -10,7 +10,7 @@
       "rollForward": false
     },
     "dotnet-ef": {
-      "version": "10.0.6",
+      "version": "10.0.7",
       "commands": [
         "dotnet-ef"
       ],
@@ -24,7 +24,7 @@
       "rollForward": false
     },
     "hotchocolate.fusion.commandline": {
-      "version": "15.1.14",
+      "version": "15.1.15",
       "commands": [
         "fusion"
       ],
@@ -38,7 +38,7 @@
       "rollForward": false
     },
     "strawberryshake.tools": {
-      "version": "15.1.14",
+      "version": "15.1.15",
       "commands": [
         "dotnet-graphql"
       ],

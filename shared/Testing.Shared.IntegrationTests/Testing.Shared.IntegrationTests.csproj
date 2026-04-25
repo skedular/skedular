@@ -32,7 +32,7 @@
 
     <ItemGroup>
         <!-- Aspire / Test Hosting -->
-        <PackageReference Include="Aspire.Hosting.Testing" Version="13.2.2"/>
+        <PackageReference Include="Aspire.Hosting.Testing" Version="13.2.4"/>
 
         <!-- gRPC -->
         <PackageReference Include="Grpc.Net.Client" Version="2.76.0"/>

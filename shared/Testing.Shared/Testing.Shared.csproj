@@ -48,8 +48,8 @@
         <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.1.0"/>
 
         <!-- Entity Framework Core (In-Memory Testing) -->
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.6"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.6"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.7"/>
 
         <!-- Analyzers -->
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">

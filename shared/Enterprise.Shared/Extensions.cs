@@ -90,15 +90,8 @@ public static class Extensions
             app.UseRewriter(new RewriteOptions().AddRedirect("^$", HealthCheck.Constants.ReadinessPath));
         }
 
-        app.UseRouting();
-
-        // UseAuthentication must appear between UseRouting and UseEndpoints
-        app.UseAuthentication();
-
-        // UseAuthorization must appear between UseRouting and UseEndpoints
-        app.UseAuthorization();
-
-        // Health checks must go before any middleware
+        // Health checks must run before authentication/authorization so they are
+        // accessible by infrastructure probes (DCP, k8s, load balancers) without credentials.
         app.UseHealthChecks(
             HealthCheck.Constants.LivenessPath,
             new HealthCheckOptions
@@ -114,6 +107,14 @@ public static class Extensions
                 Predicate = registration =>
                     registration.Tags.Contains(HealthCheck.Constants.ReadinessTag) || registration.Name.Contains("services")
             });
+
+        app.UseRouting();
+
+        // UseAuthentication must appear between UseRouting and UseEndpoints
+        app.UseAuthentication();
+
+        // UseAuthorization must appear between UseRouting and UseEndpoints
+        app.UseAuthorization();
 
         app.UseMiddleware<ContextEnricherMiddleware>();
     }
