@@ -4,7 +4,6 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Security.Configurations;
 using Enterprise.Shared.Security.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -85,10 +84,7 @@ public static class Extensions
                     };
                 });
 
-            services.AddAuthorizationBuilder()
-                .SetFallbackPolicy(new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build());
+            services.AddAuthorizationBuilder();
 
             return services;
         }
