@@ -32,7 +32,7 @@ public class McpToolGenerateService : IMcpToolGenerateService
         ArgumentException.ThrowIfNullOrWhiteSpace(options.OutputFilePath);
 
         var inputFilePath = Path.GetFullPath(options.InputFilePath);
-        if (!File.Exists(inputFilePath))
+        if (!Path.Exists(inputFilePath))
         {
             throw new FileNotFoundException($"Unable to locate input file '{inputFilePath}'.", inputFilePath);
         }

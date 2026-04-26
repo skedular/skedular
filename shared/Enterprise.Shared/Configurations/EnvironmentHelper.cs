@@ -1,10 +1,12 @@
+using Path = System.IO.Path;
+
 namespace Enterprise.Shared.Configurations;
 
 public static class EnvironmentHelper
 {
     public static async Task LoadEnvFileAsync(string envFilePath, CancellationToken cancellationToken)
     {
-        if (!File.Exists(envFilePath))
+        if (!Path.Exists(envFilePath))
         {
             return;
         }

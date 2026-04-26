@@ -38,7 +38,7 @@ public class LocalFileService(
         logger.LogDebug("Reading file from local storage. FileName={FileName}", fileName);
 
         var fullPath = Path.Combine(fileStorageConfiguration.FileServerFilePath, fileName);
-        if (!File.Exists(fullPath))
+        if (!Path.Exists(fullPath))
         {
             logger.LogWarning("File not found in local storage. FileName={FileName}", fileName);
             return (false, string.Empty, []);

@@ -24,7 +24,7 @@ public class MigrateAsyncShould
 
             await sut.MigrateAsync(context, cancellationToken);
 
-            File.Exists(path).ShouldBeTrue();
+            Path.Exists(path).ShouldBeTrue();
             (await context.Database.CanConnectAsync(cancellationToken)).ShouldBeTrue();
 
             await context.Database.CloseConnectionAsync();
@@ -32,7 +32,7 @@ public class MigrateAsyncShould
         finally
         {
             SqliteConnection.ClearAllPools();
-            if (File.Exists(path))
+            if (Path.Exists(path))
             {
                 File.Delete(path);
             }
