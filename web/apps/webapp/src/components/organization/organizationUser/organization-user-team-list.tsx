@@ -4,6 +4,7 @@ import { getCustomerFullName } from '@skedular/shared';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
 import { memo } from 'react';
 
 export type OrganizationUserTeamListItem = {
@@ -27,37 +28,25 @@ type Props = {
 const OrganizationUserTeamList = ({ items }: Props) => {
   if (items.length === 0) {
     return (
-      <Box
-        sx={{
-          border: 1,
-          borderStyle: 'dashed',
-          borderColor: 'divider',
-          borderRadius: 3,
-          p: 3,
-          backgroundColor: 'background.paper',
-        }}
-      >
+      <StackColumn spacing={0.5}>
         <LeadIconTypography label="No teams found" />
         <SmallIconTypography label="This user is not currently assigned to any teams in this organisation." />
-      </Box>
+      </StackColumn>
     );
   }
 
   return (
     <StackColumn spacing={1.5}>
-      {items.map((item) => (
-        <Box
-          key={item.id}
-          sx={{
-            border: 1,
-            borderColor: 'divider',
-            borderRadius: 2.5,
-            px: 1.5,
-            py: 1.25,
-            backgroundColor: 'background.paper',
-            boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 2px 10px rgba(15, 23, 42, 0.04)' : theme.shadows[1]),
-          }}
-        >
+      <StackColumn spacing={0.5}>
+        <LeadIconTypography label="User Teams" />
+        <SmallIconTypography label="Teams in this organisation that include this user." />
+      </StackColumn>
+
+      <Divider />
+
+      {items.map((item, index) => (
+        <StackColumn key={item.id} spacing={1.5}>
+          {index > 0 && <Divider />}
           <StackRow sx={{ alignItems: 'flex-start', gap: 1.5, minWidth: 0, flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
             <TeamAvatar name={{ name: item.name }} photo={{ url: item.featureImageUrl }} size="medium" />
 
@@ -101,7 +90,7 @@ const OrganizationUserTeamList = ({ items }: Props) => {
               </StackRow>
             </StackColumn>
           </StackRow>
-        </Box>
+        </StackColumn>
       ))}
     </StackColumn>
   );

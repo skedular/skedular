@@ -1,22 +1,19 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { AppBarWithStackColumn, CaptionIconTypography, FormFieldLabel, FormStackColumn, GridContainer, LeadIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { CaptionIconTypography, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoinceTimezone } from '@/components/forms';
-import { getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
+import { PaletteModeContext } from '@skedular/shared';
+import { defaultButtonStyle, defaultPadding, EditorActionBar, PageHeaderPanel } from '@skedular/ui';
 import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
 import type { mySettings_rootQuery } from '@/queries/__generated__/mySettings_rootQuery.graphql';
 import type { mySettings_updateCustomerDetailsMutation, PersonalInformationVisibility } from '@/queries/__generated__/mySettings_updateCustomerDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
@@ -77,6 +74,11 @@ const profileDetailsSchema = object({
   personalInformationVisibility: string().required('Personal Information Visibility is required'),
 });
 
+const formColumnSx = {
+  width: '100%',
+  maxWidth: 760,
+};
+
 const MySettings = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<mySettings_rootQuery>(RootQuery, queryReference);
 
@@ -102,16 +104,10 @@ const MySettings = ({ queryReference }: Props) => {
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
-  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateProfileDetails = makeValidate(profileDetailsSchema);
   const requiredProfileDetailsFields = makeRequired(profileDetailsSchema);
-
-  const handleCloseClick = () => {
-    router.push(getRootLink(integratedPlatrform));
-  };
 
   const handleProfileDetailUpdateClick = ({
     timezone,
@@ -188,9 +184,36 @@ const MySettings = ({ queryReference }: Props) => {
   const me = rootData.me;
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBarWithStackColumn onClose={handleCloseClick} label="Edit My Settings">
+    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pt: { xs: 1, sm: 1, md: 2 }, pb: defaultPadding }}>
+      <StackColumn
+        sx={{
+          width: '100%',
+          maxWidth: 1200,
+          mx: 'auto',
+          backgroundColor: 'transparent',
+          gap: 2,
+        }}
+      >
+        <PageHeaderPanel eyebrow="User settings" title="My Settings" description="Manage your profile details, contact information, timezone, and visibility settings.">
+          <StackRow sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+            <CustomerAvatar name={me} photo={{ url: me?.photoUrl }} size="large" />
+            <StackColumn spacing={0.5}>
+              <LeadIconTypography label={getCustomerFullName(me)} />
+              <CaptionIconTypography label={me.email} />
+            </StackColumn>
+          </StackRow>
+        </PageHeaderPanel>
+
+        <Box
+          sx={{
+            borderRadius: 4,
+            border: 1,
+            borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+            bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+            boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+            overflow: 'hidden',
+          }}
+        >
           <Form
             onSubmit={handleProfileDetailUpdateClick}
             initialValues={{
@@ -206,25 +229,15 @@ const MySettings = ({ queryReference }: Props) => {
             }}
             validate={validateProfileDetails}
             render={({ handleSubmit }) => (
-              <FormStackColumn onSubmit={handleSubmit}>
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <GridContainer sx={{ justifyContent: 'space-between' }}>
-                    <Grid>
-                      <StackRow>
-                        <CustomerAvatar name={me} photo={{ url: me?.photoUrl }} size="large" />
-                        <StackColumn spacing={-0.5}>
-                          <LeadIconTypography label={getCustomerFullName(me)} />
-                          <CaptionIconTypography label={me.email} />
-                        </StackColumn>
-                      </StackRow>
-                    </Grid>
+              <FormStackColumn onSubmit={handleSubmit} sx={{ p: defaultPadding, ...formColumnSx }}>
+                <StackColumn spacing={2}>
+                  <StackColumn spacing={0.5}>
+                    <LeadIconTypography label="Profile" />
+                    <SmallIconTypography label="Edit the details shown across your account and organisations." />
+                  </StackColumn>
 
-                    <Grid></Grid>
-                  </GridContainer>
                   <Divider />
-                </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <FormFieldLabel label="Designation">
                     <TextField name="designation" required={requiredProfileDetailsFields.designation} />
                   </FormFieldLabel>
@@ -266,18 +279,18 @@ const MySettings = ({ queryReference }: Props) => {
                   </FormFieldLabel>
                 </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <StackRow>
+                <EditorActionBar
+                  primaryAction={
                     <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                       Update
                     </Button>
-                  </StackRow>
-                </StackColumn>
+                  }
+                />
               </FormStackColumn>
             )}
           />
-        </AppBarWithStackColumn>
-      </Box>
+        </Box>
+      </StackColumn>
     </Box>
   );
 };

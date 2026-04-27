@@ -587,7 +587,7 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
 
   return (
     <Box sx={{ px: { xs: 2, md: 3 }, py: 3 }}>
-      <Box sx={{ maxWidth: 1320, mx: 'auto', display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', xl: 'minmax(0, 2fr) 320px' }, gap: 3 }}>
+      <Box sx={{ maxWidth: 1320, mx: 'auto', display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', xl: 'minmax(0, 2fr) 320px' }, gap: 2 }}>
         <StackColumn spacing={2.5} sx={{ minWidth: 0 }}>
           <PageHeaderPanel
             title="Add booking"

@@ -649,7 +649,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
 
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
-      <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', backgroundColor: 'transparent', gap: 2 }}>
+      <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', backgroundColor: 'transparent', gap: 2 }}>
         <PageHeaderPanel eyebrow="Private Booking" title={pageTitle} description="Update the date, time, member, location, and resources for this booking." />
 
         <Form

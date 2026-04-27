@@ -24,7 +24,7 @@ const surfaceSx: SxProps<Theme> = {
 
 const MyBookingsPageShell = ({ actions, toolbar, isEmpty, emptyMessage = 'No bookings match the current filters.', hasTopInset = true, children }: Props) => (
   <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', pb: defaultPadding }}>
-    <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: hasTopInset ? { xs: 1, sm: 1, md: 2 } : 0 }} spacing={2}>
+    <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pt: hasTopInset ? { xs: 1, sm: 1, md: 2 } : 0 }} spacing={2}>
       <PageHeaderPanel title="My Bookings" description="Review the bookings that matter to you for the selected week." />
 
       <CollectionToolbar filters={toolbar} actions={actions} />

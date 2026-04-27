@@ -1,9 +1,9 @@
-import { AppBarWithStackColumn, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { LeadIconTypography, PageHeaderPanel, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { PaletteModeContext } from '@skedular/shared';
-import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@skedular/ui';
+import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
 import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
 import type { notifications_acceptInvitationToJoinOrganizationMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinOrganizationMutation.graphql';
 import type { notifications_acceptInvitationToJoinTeamMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinTeamMutation.graphql';
@@ -12,9 +12,8 @@ import type { notifications_rejectInvitationToJoinTeamMutation } from '@/queries
 import type { notifications_rootQuery } from '@/queries/__generated__/notifications_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import type { GridColDef } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
-import { useRouter } from 'next/navigation';
+import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -85,15 +84,6 @@ const RootQuery = graphql`
   }
 `;
 
-type InvitationToJoinOrganizationRowType = {
-  id: string;
-  changeTriggerId?: string;
-};
-
-type InvitationToJoinTeamRowType = {
-  id: string;
-};
-
 const Notifications = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<notifications_rootQuery>(RootQuery, queryReference);
 
@@ -153,7 +143,6 @@ const Notifications = ({ queryReference }: Props) => {
     }
   `);
 
-  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const myInvitationsToJoinOrganizations = useMemo(
@@ -164,10 +153,6 @@ const Notifications = ({ queryReference }: Props) => {
     () => (rootData.myInvitationsToJoinTeams ? rootData.myInvitationsToJoinTeams.edges.map((edge) => edge.node) : []),
     [rootData.myInvitationsToJoinTeams],
   );
-
-  const handleCloseClick = () => {
-    router.back();
-  };
 
   const handleRejectInvitationToJoinOrganizationClick = (id: string) => {
     const invitation = myInvitationsToJoinOrganizations.find((item) => item.id === id);
@@ -369,151 +354,113 @@ const Notifications = ({ queryReference }: Props) => {
     });
   };
 
-  const invitationsToJoinOrganizationsRows: InvitationToJoinOrganizationRowType[] = useMemo(
-    () => myInvitationsToJoinOrganizations.map((invitation) => ({ id: invitation.id })),
-    [myInvitationsToJoinOrganizations],
-  );
-
-  const invitationsToJoinOrganizationsColumns: GridColDef<(typeof invitationsToJoinOrganizationsRows)[number]>[] = [
-    {
-      field: 'message',
-      headerName: '',
-      editable: false,
-      renderCell: (params) => {
-        const id = params.id as string;
-        const invitation = myInvitationsToJoinOrganizations.find((item) => item.id === id);
-        if (!invitation) {
-          return null;
-        }
-
-        return <SmallIconTypography label={`"${getCustomerFullName(invitation.createdBy)}" has invited you to join organisation "${invitation.organization.name}"`} />;
-      },
-      display: 'flex',
-      minWidth: 500,
-    },
-    {
-      field: 'rejectOrApprove',
-      headerName: '',
-      editable: false,
-      renderCell: (params) => {
-        const id = params.id as string;
-        const invitation = myInvitationsToJoinOrganizations.find((item) => item.id === (params.id as string));
-        if (!invitation) {
-          return null;
-        }
-
-        if (invitation.status.type === 'PENDING') {
-          return (
-            <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
-              <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinOrganizationClick(id)} sx={{ textTransform: 'none' }}>
-                <SmallIconTypography label="Reject" />
-              </Button>
-              <Button variant="contained" onClick={() => handleAcceptInvitationToJoinOrganizationClick(id)} sx={{ textTransform: 'none' }}>
-                <SmallIconTypography label="Approve" />
-              </Button>
-            </StackRow>
-          );
-        }
-
-        return <SmallIconTypography label={invitation.status.name} />;
-      },
-      display: 'flex',
-      minWidth: 300,
-    },
-  ];
-
-  const invitationsToJoinTeamsRows: InvitationToJoinTeamRowType[] = useMemo(
-    () => myInvitationsToJoinTeams.map((invitation) => ({ id: invitation.id })),
-    [myInvitationsToJoinTeams],
-  );
-
-  const invitationsToJoinTeamsColumns: GridColDef<(typeof invitationsToJoinTeamsRows)[number]>[] = [
-    {
-      field: 'message',
-      headerName: '',
-      editable: false,
-      renderCell: (params) => {
-        const id = params.id as string;
-        const invitation = myInvitationsToJoinTeams.find((item) => item.id === id);
-        if (!invitation) {
-          return null;
-        }
-
-        return <SmallIconTypography label={`"${getCustomerFullName(invitation.createdBy)}" has invited you to join team "${invitation.team.name}"`} />;
-      },
-      display: 'flex',
-      minWidth: 500,
-    },
-    {
-      field: 'rejectOrApprove',
-      headerName: '',
-      editable: false,
-      renderCell: (params) => {
-        const id = params.id as string;
-        const invitation = myInvitationsToJoinTeams.find((item) => item.id === (params.id as string));
-        if (!invitation) {
-          return null;
-        }
-
-        if (invitation.status.type === 'PENDING') {
-          return (
-            <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
-              <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinTeamClick(id)} sx={{ textTransform: 'none' }}>
-                <SmallIconTypography label="Reject" />
-              </Button>
-              <Button variant="contained" onClick={() => handleAcceptInvitationToJoinTeamClick(id)} sx={{ textTransform: 'none' }}>
-                <SmallIconTypography label="Approve" />
-              </Button>
-            </StackRow>
-          );
-        }
-
-        return <SmallIconTypography label={invitation.status.name} />;
-      },
-      display: 'flex',
-      minWidth: 300,
-    },
-  ];
+  const pendingInvitationCount = myInvitationsToJoinOrganizations.length + myInvitationsToJoinTeams.length;
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBarWithStackColumn onClose={handleCloseClick} label="Notifications" />
-        <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-          {invitationsToJoinOrganizationsRows.length > 0 && (
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                rows={invitationsToJoinOrganizationsRows}
-                columns={invitationsToJoinOrganizationsColumns}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                hideFooter
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No organisation invitations found' }}
-              />
-            </StackRow>
-          )}
-          {invitationsToJoinTeamsRows.length > 0 && (
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                rows={invitationsToJoinTeamsRows}
-                columns={invitationsToJoinTeamsColumns}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                hideFooter
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No team invitations found' }}
-              />
-            </StackRow>
-          )}
-        </StackColumn>
-      </Box>
+    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pt: { xs: 1, sm: 1, md: 2 }, pb: defaultPadding }}>
+      <StackColumn
+        sx={{
+          width: '100%',
+          maxWidth: 1280,
+          mx: 'auto',
+          backgroundColor: 'transparent',
+          gap: 2,
+        }}
+      >
+        <PageHeaderPanel eyebrow="Notifications" title="Notifications" description="Review pending invitations to join organisations and teams.">
+          <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
+            <Chip size="small" label={`${pendingInvitationCount} pending`} />
+            <Chip size="small" label={`${myInvitationsToJoinOrganizations.length} organisation invitation${myInvitationsToJoinOrganizations.length === 1 ? '' : 's'}`} />
+            <Chip size="small" label={`${myInvitationsToJoinTeams.length} team invitation${myInvitationsToJoinTeams.length === 1 ? '' : 's'}`} />
+          </StackRow>
+        </PageHeaderPanel>
+
+        <Box
+          sx={{
+            borderRadius: 4,
+            border: 1,
+            borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+            bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+            boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+            overflow: 'hidden',
+            p: defaultPadding,
+          }}
+        >
+          <StackColumn spacing={2}>
+            <StackColumn spacing={0.5}>
+              <LeadIconTypography label="Pending Invitations" />
+              <SmallIconTypography label="Accept or reject outstanding organisation and team invitations." />
+            </StackColumn>
+
+            <Divider />
+
+            {pendingInvitationCount === 0 && (
+              <StackColumn spacing={0.5}>
+                <LeadIconTypography label="No pending notifications" />
+                <SmallIconTypography label="You do not have any organisation or team invitations to review." />
+              </StackColumn>
+            )}
+
+            {myInvitationsToJoinOrganizations.length > 0 && (
+              <StackColumn spacing={1.5}>
+                <LeadIconTypography label="Organisation Invitations" />
+                {myInvitationsToJoinOrganizations.map((invitation, index) => (
+                  <StackColumn key={invitation.id} spacing={1.5}>
+                    {index > 0 && <Divider />}
+                    <StackRow sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 2, flexWrap: 'wrap' }}>
+                      <StackColumn spacing={0.5}>
+                        <SmallIconTypography label={`"${getCustomerFullName(invitation.createdBy)}" has invited you to join organisation "${invitation.organization.name}"`} />
+                        <SmallIconTypography label={`Status: ${invitation.status.name}`} />
+                      </StackColumn>
+
+                      {invitation.status.type === 'PENDING' && (
+                        <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
+                          <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinOrganizationClick(invitation.id)} sx={defaultButtonStyle}>
+                            Reject
+                          </Button>
+                          <Button variant="contained" onClick={() => handleAcceptInvitationToJoinOrganizationClick(invitation.id)} sx={defaultButtonStyle}>
+                            Accept
+                          </Button>
+                        </StackRow>
+                      )}
+                    </StackRow>
+                  </StackColumn>
+                ))}
+              </StackColumn>
+            )}
+
+            {myInvitationsToJoinOrganizations.length > 0 && myInvitationsToJoinTeams.length > 0 && <Divider />}
+
+            {myInvitationsToJoinTeams.length > 0 && (
+              <StackColumn spacing={1.5}>
+                <LeadIconTypography label="Team Invitations" />
+                {myInvitationsToJoinTeams.map((invitation, index) => (
+                  <StackColumn key={invitation.id} spacing={1.5}>
+                    {index > 0 && <Divider />}
+                    <StackRow sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 2, flexWrap: 'wrap' }}>
+                      <StackColumn spacing={0.5}>
+                        <SmallIconTypography label={`"${getCustomerFullName(invitation.createdBy)}" has invited you to join team "${invitation.team.name}"`} />
+                        <SmallIconTypography label={`Status: ${invitation.status.name}`} />
+                      </StackColumn>
+
+                      {invitation.status.type === 'PENDING' && (
+                        <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
+                          <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinTeamClick(invitation.id)} sx={defaultButtonStyle}>
+                            Reject
+                          </Button>
+                          <Button variant="contained" onClick={() => handleAcceptInvitationToJoinTeamClick(invitation.id)} sx={defaultButtonStyle}>
+                            Accept
+                          </Button>
+                        </StackRow>
+                      )}
+                    </StackRow>
+                  </StackColumn>
+                ))}
+              </StackColumn>
+            )}
+          </StackColumn>
+        </Box>
+      </StackColumn>
     </Box>
   );
 };

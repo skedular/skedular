@@ -611,7 +611,7 @@ const ProductEditorForm = ({
   return (
     <FormStackColumn onSubmit={onSubmit}>
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
-        <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', backgroundColor: 'transparent', gap: 2 }}>
+        <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', backgroundColor: 'transparent', gap: 2 }}>
           <PageHeaderPanel eyebrow="Product setup" title={pageTitle} description={pageDescription}>
             <SmallIconTypography
               label={mode === 'add' ? 'Basics first, then offers, then a final check before saving.' : 'Update the product in smaller sections instead of one long form.'}

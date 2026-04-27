@@ -23,7 +23,7 @@ const surfaceSx: SxProps<Theme> = {
 
 const OrganizationLocationsPageShell = ({ actions, toolbar, isEmpty, emptyMessage = 'No locations yet', children }: Props) => (
   <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
-    <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
+    <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
       <PageHeaderPanel title="Locations" description="Manage bookable spaces, availability context, and contact details for each location." />
 
       <CollectionToolbar filters={toolbar} actions={actions} />

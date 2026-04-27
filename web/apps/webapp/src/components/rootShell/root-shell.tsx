@@ -167,7 +167,7 @@ const RootShell = ({
               <Box
                 sx={{
                   width: '100%',
-                  maxWidth: 1120,
+                  maxWidth: 1200,
                   mx: 'auto',
                   borderRadius: 3,
                   border: 1,
@@ -202,7 +202,7 @@ const RootShell = ({
                 <Box
                   sx={{
                     width: '100%',
-                    maxWidth: 1120,
+                    maxWidth: 1200,
                     mx: 'auto',
                     borderRadius: 3,
                     border: 1,

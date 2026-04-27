@@ -83,7 +83,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationCustomDoma
 
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-      <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
+      <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
         <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
 
         <MyBookings

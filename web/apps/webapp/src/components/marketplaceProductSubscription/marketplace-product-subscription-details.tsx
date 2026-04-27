@@ -36,6 +36,7 @@ import Container from '@mui/material/Container';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
@@ -634,33 +635,43 @@ const MarketplaceProductSubscriptionDetails = ({
                   <Chip label={displayMarketplaceBooking.paymentMethod.name} variant="outlined" />
                 </StackRow>
 
+                <Divider sx={{ my: 2.5 }} />
+
                 {subscription.refund ? (
-                  <MarketplaceRefundStatusCard
-                    entityLabel="subscription"
-                    hasInvoice={Boolean(displayMarketplaceBooking.invoiceUrl) || (subscription.arrearsInvoices?.length ?? 0) > 0}
-                    isCancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
-                    isCancelled={subscription.status.type === 'CANCELLED'}
-                    isPaymentRequired={displayMarketplaceBooking.isPaymentRequired}
-                    paymentStatusType={displayMarketplaceBooking.paymentStatus.type}
-                    refund={subscription.refund}
-                  />
+                  <StackColumn spacing={2}>
+                    <MarketplaceRefundStatusCard
+                      entityLabel="subscription"
+                      hasInvoice={Boolean(displayMarketplaceBooking.invoiceUrl) || (subscription.arrearsInvoices?.length ?? 0) > 0}
+                      isCancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
+                      isCancelled={subscription.status.type === 'CANCELLED'}
+                      isPaymentRequired={displayMarketplaceBooking.isPaymentRequired}
+                      paymentStatusType={displayMarketplaceBooking.paymentStatus.type}
+                      refund={subscription.refund}
+                    />
+                    <Divider />
+                  </StackColumn>
                 ) : null}
 
                 {subscription.status.type === 'ACTIVE' ? (
-                  <SubscriptionCancellationSection
-                    cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
-                    hasConfirmedPayment={hasConfirmedCurrentCyclePayment}
-                    isInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
-                    immediateCancellationMode={immediateCancellationMode}
-                    atPeriodEndCancellationMode={atPeriodEndCancellationMode}
-                    onImmediateCancellationClick={handleRequestImmediateCancellationClick}
-                    onAtPeriodEndCancellationClick={() =>
-                      atPeriodEndCancellationMode ? handleDeleteMarketplaceBookingSubscriptionClick(atPeriodEndCancellationMode.type, atPeriodEndCancellationMode.name) : undefined
-                    }
-                  />
+                  <StackColumn spacing={2}>
+                    <SubscriptionCancellationSection
+                      cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
+                      hasConfirmedPayment={hasConfirmedCurrentCyclePayment}
+                      isInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
+                      immediateCancellationMode={immediateCancellationMode}
+                      atPeriodEndCancellationMode={atPeriodEndCancellationMode}
+                      onImmediateCancellationClick={handleRequestImmediateCancellationClick}
+                      onAtPeriodEndCancellationClick={() =>
+                        atPeriodEndCancellationMode
+                          ? handleDeleteMarketplaceBookingSubscriptionClick(atPeriodEndCancellationMode.type, atPeriodEndCancellationMode.name)
+                          : undefined
+                      }
+                    />
+                    <Divider />
+                  </StackColumn>
                 ) : null}
 
-                <StackColumn spacing={2} sx={{ mt: 3 }}>
+                <StackColumn spacing={2}>
                   {currentCycle ? <DetailsRow label="Current period" value={`${toStoredDate(currentCycle.startDate)} - ${toStoredDate(currentCycle.endDate)}`} /> : null}
                   <DetailsRow label="Started" value={toStoredDate(subscription.startedAt)} />
                   <DetailsRow
@@ -713,26 +724,21 @@ const MarketplaceProductSubscriptionDetails = ({
                   ) : null}
                 </StackColumn>
 
-                <Box sx={{ mt: 4 }}>
+                <Divider sx={{ my: 3 }} />
+
+                <Box>
                   <CaptionIconTypography label="Included periods" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
                   <LeadIconTypography label="Recurring periods in this subscription" sx={{ mt: 0.75 }} />
-                  <Box
-                    sx={{
-                      mt: 2,
-                      display: 'grid',
-                      gap: 1.25,
-                      gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-                    }}
-                  >
+                  <StackColumn spacing={0} sx={{ mt: 1.5 }}>
                     {[...subscription.recurringBookings]
                       .sort((left, right) => new Date(right.startDate).getTime() - new Date(left.startDate).getTime())
-                      .map((recurringBooking) => {
+                      .map((recurringBooking, recurringBookingIndex, recurringBookings) => {
                         const isCurrentCycle = recurringBooking.id === currentCycle?.id;
 
                         return (
-                          <Card key={recurringBooking.id} sx={{ borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
-                            <CardContent sx={{ p: 2 }}>
-                              <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'nowrap' }}>
+                          <StackColumn key={recurringBooking.id} spacing={0}>
+                            <Box sx={{ py: 1.75 }}>
+                              <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'nowrap', gap: 2 }}>
                                 <Box>
                                   <SmallIconTypography
                                     label={isCurrentCycle ? 'Current period' : 'Subscription period'}
@@ -759,14 +765,17 @@ const MarketplaceProductSubscriptionDetails = ({
                                   Download invoice
                                 </Link>
                               ) : null}
-                            </CardContent>
-                          </Card>
+                            </Box>
+                            {recurringBookingIndex < recurringBookings.length - 1 ? <Divider /> : null}
+                          </StackColumn>
                         );
                       })}
-                  </Box>
+                  </StackColumn>
                 </Box>
 
-                <Box sx={{ mt: 4 }}>
+                <Divider sx={{ my: 3 }} />
+
+                <Box>
                   <CaptionIconTypography label="Related bookings" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
                   <LeadIconTypography label="Booking instances created from this subscription" sx={{ mt: 0.75 }} />
                   {relatedBookings.length > 0 ? (
@@ -854,18 +863,16 @@ const MarketplaceProductSubscriptionDetails = ({
                       ) : null}
                     </>
                   ) : (
-                    <Card sx={{ mt: 2, borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
-                      <CardContent sx={{ p: 2.5 }}>
-                        <BodyIconTypography
-                          label={
-                            subscription.status.type === 'CANCELLED'
-                              ? 'No upcoming booking instances remain for this cancelled subscription. Any past booking instances that were already created stay on record in their own booking history.'
-                              : 'No upcoming booking instances have been created for this subscription yet.'
-                          }
-                          sx={{ opacity: 0.8 }}
-                        />
-                      </CardContent>
-                    </Card>
+                    <Box sx={{ py: 2 }}>
+                      <BodyIconTypography
+                        label={
+                          subscription.status.type === 'CANCELLED'
+                            ? 'No upcoming booking instances remain for this cancelled subscription. Any past booking instances that were already created stay on record in their own booking history.'
+                            : 'No upcoming booking instances have been created for this subscription yet.'
+                        }
+                        sx={{ opacity: 0.8 }}
+                      />
+                    </Box>
                   )}
                 </Box>
               </CardContent>
@@ -891,7 +898,7 @@ const MarketplaceProductSubscriptionDetails = ({
       </Container>
 
       <Dialog open={!!pendingCancellationConfirmation} onClose={handleCancelImmediateCancellationClick}>
-        <DefaultDialogTitle title="Cancel Subscription Now" />
+        <DefaultDialogTitle title="Cancel subscription now" />
         <DialogContent sx={{ mt: 2 }}>
           <DialogContentText>
             {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing will stop right away. Previous invoices will still stay on record.`}
@@ -904,7 +911,7 @@ const MarketplaceProductSubscriptionDetails = ({
           <TwoButtonsDialogActions
             onPrimaryClicked={handleConfirmImmediateCancellationClick}
             onSecondaryClicked={handleCancelImmediateCancellationClick}
-            primaryLabel={pendingCancellationConfirmation?.name ?? 'Cancel now'}
+            primaryLabel="Cancel now"
             secondaryLabel="Keep subscription"
           />
         </DialogContent>

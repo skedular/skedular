@@ -60,7 +60,6 @@ const getActiveSection = (value: string | null): ResourceEditSection => {
 
 const formColumnSx = {
   width: '100%',
-  maxWidth: 760,
 };
 
 const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
@@ -717,7 +716,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       <StackColumn
         sx={{
           width: '100%',
-          maxWidth: 1120,
+          maxWidth: 1200,
           mx: 'auto',
           backgroundColor: 'transparent',
           gap: 2,
@@ -741,7 +740,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
           stickyTop={stickyTop}
         />
 
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 3 }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: { xs: 2, xl: 2 } }}>
           <Box
             sx={{
               borderRadius: 4,

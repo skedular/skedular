@@ -23,7 +23,7 @@ const surfaceSx: SxProps<Theme> = {
 
 const OrganizationBookingsPageShell = ({ actions, toolbar, isEmpty, emptyMessage = 'No bookings match the current filters.', children }: Props) => (
   <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', pb: defaultPadding }}>
-    <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
+    <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
       <PageHeaderPanel title="Bookings" description="Review and manage bookings across the organization for the selected week." />
 
       <CollectionToolbar filters={toolbar} actions={actions} />

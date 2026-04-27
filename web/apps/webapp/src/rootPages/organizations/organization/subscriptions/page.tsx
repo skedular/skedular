@@ -40,6 +40,7 @@ import Chip from '@mui/material/Chip';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -70,19 +71,12 @@ const subscriptionCardSx: SxProps<Theme> = {
   height: '100%',
 };
 
-const innerPanelSx: SxProps<Theme> = {
-  borderRadius: 3,
-  px: 1.5,
-  py: 1.25,
-  backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.03)' : theme.palette.action.hover),
-};
-
 const clickablePanelSx: SxProps<Theme> = {
   cursor: 'pointer',
-  transition: 'border-color 120ms ease, transform 120ms ease, background-color 120ms ease',
+  borderRadius: 2,
+  transition: 'transform 120ms ease, background-color 120ms ease',
   '&:hover': {
-    borderColor: (theme) => theme.palette.primary.main,
-    backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.05)' : theme.palette.action.selected),
+    backgroundColor: (theme) => theme.palette.action.hover,
     transform: 'translateY(-1px)',
   },
 };
@@ -750,7 +744,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
-        <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pb: defaultPadding }} spacing={2}>
+        <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pb: defaultPadding }} spacing={2}>
           <PageHeaderPanel
             title="Marketplace subscriptions"
             description="Review customer subscriptions, update recurring payments, manage refunds, and stop future billing now or at the end of the current period."
@@ -814,36 +808,35 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                     <Card sx={subscriptionCardSx}>
                       <CardContent sx={{ p: 2, height: '100%' }}>
                         <StackColumn spacing={2} sx={{ height: '100%' }}>
-                          <Box onClick={() => handleOpenSubscriptionClick(subscription.id)} sx={{ ...innerPanelSx, ...clickablePanelSx, p: 0, overflow: 'hidden' }}>
-                            <Box sx={{ p: 1.5 }}>
-                              <StackRow sx={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: 1 }}>
-                                <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
-                                  <SubtitleIconTypography label={productTitle} />
-                                  <SmallIconTypography label={customerLabel} sx={{ opacity: 0.82 }} />
-                                  <SmallIconTypography
-                                    label={`Started ${new Date(subscription.startedAt).toLocaleDateString()}${subscription.nextRenewalAt ? ` • Next renewal ${new Date(subscription.nextRenewalAt).toLocaleDateString()}` : ''}`}
-                                    sx={{ opacity: 0.72 }}
-                                  />
-                                </StackColumn>
-                                <PushToRight />
-                                <Chip label={lifecycleDisplay.statusLabel} color={lifecycleDisplay.statusColor} variant="outlined" />
-                              </StackRow>
+                          <Box onClick={() => handleOpenSubscriptionClick(subscription.id)} sx={{ ...clickablePanelSx, p: 1 }}>
+                            <StackRow sx={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: 1 }}>
+                              <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
+                                <SubtitleIconTypography label={productTitle} />
+                                <SmallIconTypography label={customerLabel} sx={{ opacity: 0.82 }} />
+                                <SmallIconTypography
+                                  label={`Started ${new Date(subscription.startedAt).toLocaleDateString()}${subscription.nextRenewalAt ? ` • Next renewal ${new Date(subscription.nextRenewalAt).toLocaleDateString()}` : ''}`}
+                                  sx={{ opacity: 0.72 }}
+                                />
+                              </StackColumn>
+                              <PushToRight />
+                              <Chip label={lifecycleDisplay.statusLabel} color={lifecycleDisplay.statusColor} variant="outlined" />
+                            </StackRow>
 
-                              <Box sx={{ ...innerPanelSx, mt: 1.5 }}>
-                                <StackColumn spacing={0.75}>
-                                  <BodyIconTypography label={`Renewal: ${lifecycleDisplay.renewalLabel}`} />
-                                  <SmallIconTypography
-                                    label={`Current payment: ${subscription.marketplaceBooking.paymentStatus.name} • Payment method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
-                                    sx={{ opacity: 0.78 }}
-                                  />
-                                  <SmallIconTypography label="Open details and manage this subscription" sx={{ opacity: 0.72 }} />
-                                </StackColumn>
-                              </Box>
-                            </Box>
+                            <Divider sx={{ my: 1.5 }} />
+
+                            <StackColumn spacing={0.75}>
+                              <BodyIconTypography label={`Renewal: ${lifecycleDisplay.renewalLabel}`} />
+                              <SmallIconTypography
+                                label={`Current payment: ${subscription.marketplaceBooking.paymentStatus.name} • Payment method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
+                                sx={{ opacity: 0.78 }}
+                              />
+                              <SmallIconTypography label="Open details and manage this subscription" sx={{ opacity: 0.72 }} />
+                            </StackColumn>
                           </Box>
 
                           {subscription.status.type === 'ACTIVE' ? (
-                            <Box sx={innerPanelSx}>
+                            <StackColumn spacing={2}>
+                              <Divider />
                               <SubscriptionCancellationSection
                                 cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
                                 hasConfirmedPayment={subscription.marketplaceBooking.paymentStatus.type === 'CONFIRMED'}
@@ -859,81 +852,88 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                                     : undefined
                                 }
                               />
-                            </Box>
+                            </StackColumn>
                           ) : null}
 
                           {subscription.refund ? <MarketplaceRefundAdminPanel entityLabel={`${productTitle} for ${customerLabel}`} refund={subscription.refund} /> : null}
 
+                          <Divider />
+
                           <StackColumn spacing={1}>
                             <BodyIconTypography label="Billing periods" />
                             {sortedRecurringBookings.length > 0 ? (
-                              sortedRecurringBookings.map((recurringBooking) => {
-                                const cycleLabel = `${new Date(recurringBooking.startDate).toLocaleDateString()} - ${
-                                  recurringBooking.endDate ? new Date(recurringBooking.endDate).toLocaleDateString() : 'Open ended'
-                                }`;
-                                const cycleMarketplaceBooking = recurringBooking.marketplaceBooking;
+                              <StackColumn spacing={0}>
+                                {sortedRecurringBookings.map((recurringBooking, recurringBookingIndex) => {
+                                  const cycleLabel = `${new Date(recurringBooking.startDate).toLocaleDateString()} - ${
+                                    recurringBooking.endDate ? new Date(recurringBooking.endDate).toLocaleDateString() : 'Open ended'
+                                  }`;
+                                  const cycleMarketplaceBooking = recurringBooking.marketplaceBooking;
 
-                                return (
-                                  <Box key={recurringBooking.id} sx={innerPanelSx}>
-                                    <StackColumn spacing={1}>
-                                      <StackColumn spacing={0.35}>
-                                        <BodyIconTypography label={cycleLabel} />
-                                        <SmallIconTypography
-                                          label={`Payment: ${cycleMarketplaceBooking?.paymentStatus.name ?? 'Not set'} • Payment method: ${cycleMarketplaceBooking?.paymentMethod.name ?? 'Not set'} • Quantity: ${cycleMarketplaceBooking?.quantity ?? subscription.marketplaceBooking.quantity}`}
-                                          sx={{ opacity: 0.78 }}
-                                        />
-                                      </StackColumn>
+                                  return (
+                                    <StackColumn key={recurringBooking.id} spacing={0}>
+                                      <Box sx={{ py: 1.25 }}>
+                                        <StackColumn spacing={1}>
+                                          <StackColumn spacing={0.35}>
+                                            <BodyIconTypography label={cycleLabel} />
+                                            <SmallIconTypography
+                                              label={`Payment: ${cycleMarketplaceBooking?.paymentStatus.name ?? 'Not set'} • Payment method: ${cycleMarketplaceBooking?.paymentMethod.name ?? 'Not set'} • Quantity: ${cycleMarketplaceBooking?.quantity ?? subscription.marketplaceBooking.quantity}`}
+                                              sx={{ opacity: 0.78 }}
+                                            />
+                                          </StackColumn>
 
-                                      <StackRow sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
-                                        {cycleMarketplaceBooking?.invoiceUrl ? (
-                                          <Button
-                                            variant="text"
-                                            size="small"
-                                            href={cycleMarketplaceBooking.invoiceUrl}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            sx={{ textTransform: 'none' }}
-                                          >
-                                            Download invoice
-                                          </Button>
-                                        ) : null}
+                                          <StackRow sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+                                            {cycleMarketplaceBooking?.invoiceUrl ? (
+                                              <Button
+                                                variant="text"
+                                                size="small"
+                                                href={cycleMarketplaceBooking.invoiceUrl}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                sx={{ textTransform: 'none' }}
+                                              >
+                                                Download invoice
+                                              </Button>
+                                            ) : null}
 
-                                        {cycleMarketplaceBooking?.paymentStatus.type === 'PENDING' ? (
-                                          <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
-                                            <Button
-                                              variant="contained"
-                                              size="small"
-                                              sx={{ textTransform: 'none', color: 'white' }}
-                                              onClick={() => handleConfirmRecurringBookingPaymentClick(recurringBooking.id, cycleLabel)}
-                                            >
-                                              Confirm Payment
-                                            </Button>
-                                            <Button
-                                              variant="outlined"
-                                              color="error"
-                                              size="small"
-                                              sx={{ textTransform: 'none' }}
-                                              onClick={() => handleRejectRecurringBookingPaymentClick(recurringBooking.id, cycleLabel)}
-                                            >
-                                              Reject Payment
-                                            </Button>
-                                            <Button
-                                              variant="text"
-                                              size="small"
-                                              sx={{ textTransform: 'none' }}
-                                              onClick={() => handleMakeRecurringBookingPaymentNotRequiredClick(recurringBooking.id, cycleLabel)}
-                                            >
-                                              Payment Not Required
-                                            </Button>
+                                            {cycleMarketplaceBooking?.paymentStatus.type === 'PENDING' ? (
+                                              <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
+                                                <Button
+                                                  variant="contained"
+                                                  size="small"
+                                                  sx={{ textTransform: 'none', color: 'white' }}
+                                                  onClick={() => handleConfirmRecurringBookingPaymentClick(recurringBooking.id, cycleLabel)}
+                                                >
+                                                  Confirm Payment
+                                                </Button>
+                                                <Button
+                                                  variant="outlined"
+                                                  color="error"
+                                                  size="small"
+                                                  sx={{ textTransform: 'none' }}
+                                                  onClick={() => handleRejectRecurringBookingPaymentClick(recurringBooking.id, cycleLabel)}
+                                                >
+                                                  Reject Payment
+                                                </Button>
+                                                <Button
+                                                  variant="text"
+                                                  size="small"
+                                                  sx={{ textTransform: 'none' }}
+                                                  onClick={() => handleMakeRecurringBookingPaymentNotRequiredClick(recurringBooking.id, cycleLabel)}
+                                                >
+                                                  Payment Not Required
+                                                </Button>
+                                              </StackRow>
+                                            ) : null}
                                           </StackRow>
-                                        ) : null}
-                                      </StackRow>
+                                        </StackColumn>
+                                      </Box>
+                                      {recurringBookingIndex < sortedRecurringBookings.length - 1 ? <Divider /> : null}
                                     </StackColumn>
-                                  </Box>
-                                );
-                              })
+                                  );
+                                })}
+                              </StackColumn>
                             ) : (
-                              <Box sx={innerPanelSx}>
+                              <Box sx={{ py: 1.25 }}>
                                 <SmallIconTypography label="No billing periods have been created for this subscription yet." sx={{ opacity: 0.72 }} />
                               </Box>
                             )}
@@ -992,7 +992,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                   );
                 }}
               >
-                Cancel now
+                Cancel subscription now
               </MenuItem>
             ) : null}
             {selectedSubscription.status.type === 'ACTIVE' && selectedSubscription.autoRenew && atPeriodEndCancellationMode ? (
@@ -1006,7 +1006,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                   );
                 }}
               >
-                End at period end
+                Cancel at period end
               </MenuItem>
             ) : null}
           </>
@@ -1022,7 +1022,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
           <TwoButtonsDialogActions
             onPrimaryClicked={handleConfirmImmediateCancellationClick}
             onSecondaryClicked={handleCancelImmediateCancellationClick}
-            primaryLabel={pendingCancellationConfirmation?.mode.name ?? 'Cancel now'}
+            primaryLabel="Cancel now"
             secondaryLabel="Keep subscription"
           />
         </DialogContent>

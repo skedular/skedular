@@ -18,7 +18,7 @@ import { ProductTag } from '@/components/productTag';
 import { Search } from '@/components/search';
 import { ExistingStripeConnectAccountButton, NewStripeConnectAccountButton } from '@/components/stripeConnectAccount/addStripeConnectAccount';
 import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { defaultButtonStyle, defaultGridActionPadding, defaultPadding } from '@skedular/ui';
+import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation.graphql';
@@ -46,7 +46,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import { EditorActionBar, PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
+import { EditorActionBar, PageHeaderPanel } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -1540,145 +1540,142 @@ const OrganizationMarketplaceSetup = ({
         );
       case 'stripe-connect-accounts-setup':
         return (
-          <Box sx={{ p: defaultPadding }}>
-            <SettingsSectionCard
-              title="Stripe Connect Accounts"
-              description="Review connected payout accounts, onboarding readiness, and default payout routing for this organization."
-              actions={
-                <StackColumn spacing={1} sx={{ alignItems: { xs: 'flex-start', sm: 'flex-end' } }}>
-                  <Box sx={{ display: 'flex', justifyContent: { xs: 'flex-start', sm: 'flex-end' }, width: '100%' }}>
-                    <NewStripeConnectAccountButton organizationCustomDomain={organizationCustomDomain} label="Add New Account" />
-                  </Box>
-                  <Box sx={{ display: 'flex', justifyContent: { xs: 'flex-start', sm: 'flex-end' }, width: '100%' }}>
-                    <ExistingStripeConnectAccountButton rootDataRelay={rootData} label="Add Existing Account" />
-                  </Box>
-                </StackColumn>
-              }
-            >
-              <StackColumn spacing={2}>
-                <StackRow sx={{ justifyContent: 'flex-end' }}>
-                  <Search
-                    size="small"
-                    placeholder="Search for accounts"
-                    defaultValue={organizationStripeConnectAccountNameSearchText}
-                    onChange={handleOrganizationStripeConnectAccountsSearchTextChange}
-                  />
-                </StackRow>
-
-                <OrganizationMarketplaceStripeConnectAccountManagementList
-                  items={organizationStripeConnectAccountItems}
-                  selectedIds={selectedOrganizationStripeConnectAccountIds}
-                  onToggleSelected={handleSelectedOrganizationStripeConnectAccountsChanged}
-                  onOpenAccount={(accountId) => {
-                    const account = organizationStripeConnectAccounts.find((item) => item.id === accountId);
-                    if (!account) {
-                      return;
-                    }
-
-                    router.push(getOrganizationStripeConnectAccountBaseLink(integratedPlatrform, account.organization!.customDomain!, account.id));
-                  }}
-                  onOpenMoreActions={(accountId, target) => {
-                    setSelectedOrganizationStripeConnectAccountId(accountId);
-                    setOrganizationStripeConnectAccountMoreActionsAnchorEl(target);
-                  }}
-                  onRemoveSelected={handleRemoveOrganizationStripeConnectAccountsClick}
-                />
+          <StackColumn spacing={2} sx={{ p: defaultPadding }}>
+            <StackRow sx={{ alignItems: 'flex-start', gap: 2 }}>
+              <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
+                <SectionIconTypography label="Stripe Connect Accounts" />
+                <BodyIconTypography label="Review connected payout accounts, onboarding readiness, and default payout routing for this organization." />
               </StackColumn>
-            </SettingsSectionCard>
-          </Box>
+              <PushToRight />
+              <StackColumn spacing={1} sx={{ alignItems: { xs: 'flex-start', sm: 'flex-end' } }}>
+                <NewStripeConnectAccountButton organizationCustomDomain={organizationCustomDomain} label="Add New Account" />
+                <ExistingStripeConnectAccountButton rootDataRelay={rootData} label="Add Existing Account" />
+              </StackColumn>
+            </StackRow>
+
+            <Divider />
+
+            <StackRow sx={{ justifyContent: 'flex-end' }}>
+              <Search
+                size="small"
+                placeholder="Search for accounts"
+                defaultValue={organizationStripeConnectAccountNameSearchText}
+                onChange={handleOrganizationStripeConnectAccountsSearchTextChange}
+              />
+            </StackRow>
+
+            <OrganizationMarketplaceStripeConnectAccountManagementList
+              items={organizationStripeConnectAccountItems}
+              selectedIds={selectedOrganizationStripeConnectAccountIds}
+              onToggleSelected={handleSelectedOrganizationStripeConnectAccountsChanged}
+              onOpenAccount={(accountId) => {
+                const account = organizationStripeConnectAccounts.find((item) => item.id === accountId);
+                if (!account) {
+                  return;
+                }
+
+                router.push(getOrganizationStripeConnectAccountBaseLink(integratedPlatrform, account.organization!.customDomain!, account.id));
+              }}
+              onOpenMoreActions={(accountId, target) => {
+                setSelectedOrganizationStripeConnectAccountId(accountId);
+                setOrganizationStripeConnectAccountMoreActionsAnchorEl(target);
+              }}
+              onRemoveSelected={handleRemoveOrganizationStripeConnectAccountsClick}
+            />
+          </StackColumn>
         );
       case 'bank-accounts-setup':
         return (
-          <Box sx={{ p: defaultPadding }}>
-            <SettingsSectionCard
-              title="Bank Accounts"
-              description="Manage payout destinations and review the default bank account used for marketplace settlements."
-              actions={<NewBankAccountButton organizationCustomDomain={organizationCustomDomain} />}
-            >
-              <StackColumn spacing={2}>
-                <StackRow sx={{ justifyContent: 'flex-end' }}>
-                  <Search
-                    size="small"
-                    placeholder="Search for accounts"
-                    defaultValue={organizationBankAccountNameSearchText}
-                    onChange={handleOrganizationBankAccountsSearchTextChange}
-                  />
-                </StackRow>
-
-                <OrganizationMarketplaceBankAccountManagementList
-                  items={organizationBankAccountItems}
-                  selectedIds={selectedOrganizationBankAccountIds}
-                  onToggleSelected={handleSelectedOrganizationBankAccountsChanged}
-                  onOpenAccount={(accountId) => {
-                    const account = organizationBankAccounts.find((item) => item.id === accountId);
-                    if (!account) {
-                      return;
-                    }
-
-                    router.push(getOrganizationBankAccountBaseLink(integratedPlatrform, account.organization!.customDomain!, account.id));
-                  }}
-                  onOpenMoreActions={(accountId, target) => {
-                    setSelectedOrganizationBankAccountId(accountId);
-                    setOrganizationBankAccountMoreActionsAnchorEl(target);
-                  }}
-                  onRemoveSelected={handleRemoveOrganizationBankAccountsClick}
-                />
+          <StackColumn spacing={2} sx={{ p: defaultPadding }}>
+            <StackRow sx={{ alignItems: 'flex-start', gap: 2 }}>
+              <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
+                <SectionIconTypography label="Bank Accounts" />
+                <BodyIconTypography label="Manage payout destinations and review the default bank account used for marketplace settlements." />
               </StackColumn>
-            </SettingsSectionCard>
-          </Box>
+              <PushToRight />
+              <NewBankAccountButton organizationCustomDomain={organizationCustomDomain} />
+            </StackRow>
+
+            <Divider />
+
+            <StackRow sx={{ justifyContent: 'flex-end' }}>
+              <Search
+                size="small"
+                placeholder="Search for accounts"
+                defaultValue={organizationBankAccountNameSearchText}
+                onChange={handleOrganizationBankAccountsSearchTextChange}
+              />
+            </StackRow>
+
+            <OrganizationMarketplaceBankAccountManagementList
+              items={organizationBankAccountItems}
+              selectedIds={selectedOrganizationBankAccountIds}
+              onToggleSelected={handleSelectedOrganizationBankAccountsChanged}
+              onOpenAccount={(accountId) => {
+                const account = organizationBankAccounts.find((item) => item.id === accountId);
+                if (!account) {
+                  return;
+                }
+
+                router.push(getOrganizationBankAccountBaseLink(integratedPlatrform, account.organization!.customDomain!, account.id));
+              }}
+              onOpenMoreActions={(accountId, target) => {
+                setSelectedOrganizationBankAccountId(accountId);
+                setOrganizationBankAccountMoreActionsAnchorEl(target);
+              }}
+              onRemoveSelected={handleRemoveOrganizationBankAccountsClick}
+            />
+          </StackColumn>
         );
       case 'product-tags-setup':
         return (
-          <Box sx={{ p: defaultPadding }}>
-            <SettingsSectionCard
-              title="Product Tags"
-              description="Manage the marketplace-facing tags used to classify products, resources, and customer filters."
-              actions={<AddOrganizationProductTagButton organizationCustomDomain={organizationCustomDomain} connectionIds={productTagsConnectionIds} />}
-            >
-              <StackColumn spacing={2}>
-                <StackRow sx={{ justifyContent: 'flex-end' }}>
-                  <Search size="small" placeholder="Search for product tags" defaultValue={productTagNameSearchText} onChange={handleProductTagsSearchTextChange} />
-                </StackRow>
-
-                {selectedProductTagIds.length > 0 && (
-                  <Box
-                    sx={{
-                      backgroundColor: 'background.paper',
-                      padding: defaultGridActionPadding,
-                      border: 1,
-                      borderColor: (theme) => theme.palette.divider,
-                      borderRadius: 2,
-                    }}
-                  >
-                    <StackRow sx={{ alignItems: 'center' }}>
-                      <SmallIconTypography label={`${selectedProductTagIds.length} record${selectedProductTagIds.length === 1 ? '' : 's'} selected`} />
-                      <PushToRight />
-                      <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductTagsClick} sx={{ textTransform: 'none' }}>
-                        Remove Product Tag
-                      </Button>
-                    </StackRow>
-                  </Box>
-                )}
-
-                <OrganizationAdminTagManagementList
-                  items={productTagItems}
-                  emptyTitle="No product tags found"
-                  emptyDescription="Adjust the search or add a new product tag for this organization."
-                  selectedIds={selectedProductTagIds}
-                  onToggleSelected={handleSelectedProductTagsChanged}
-                  onOpenMoreActions={(id, target) => {
-                    setSelectedProductTagId(id);
-                    setProductTagMoreActionsAnchorEl(target);
-                  }}
-                  renderPrimary={(item) => {
-                    const productTag = productTags.find((entry) => entry.id === item.id);
-
-                    return productTag ? <ProductTag productTag={productTag} showFullName /> : null;
-                  }}
-                />
+          <StackColumn spacing={2} sx={{ p: defaultPadding }}>
+            <StackRow sx={{ alignItems: 'flex-start', gap: 2 }}>
+              <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
+                <SectionIconTypography label="Product Tags" />
+                <BodyIconTypography label="Manage the marketplace-facing tags used to classify products, resources, and customer filters." />
               </StackColumn>
-            </SettingsSectionCard>
-          </Box>
+              <PushToRight />
+              <AddOrganizationProductTagButton organizationCustomDomain={organizationCustomDomain} connectionIds={productTagsConnectionIds} />
+            </StackRow>
+
+            <Divider />
+
+            <StackRow sx={{ justifyContent: 'flex-end' }}>
+              <Search size="small" placeholder="Search for product tags" defaultValue={productTagNameSearchText} onChange={handleProductTagsSearchTextChange} />
+            </StackRow>
+
+            {selectedProductTagIds.length > 0 && (
+              <StackColumn spacing={2}>
+                <Divider />
+                <StackRow sx={{ alignItems: 'center' }}>
+                  <SmallIconTypography label={`${selectedProductTagIds.length} record${selectedProductTagIds.length === 1 ? '' : 's'} selected`} />
+                  <PushToRight />
+                  <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductTagsClick} sx={{ textTransform: 'none' }}>
+                    Remove Product Tag
+                  </Button>
+                </StackRow>
+              </StackColumn>
+            )}
+
+            <OrganizationAdminTagManagementList
+              items={productTagItems}
+              emptyTitle="No product tags found"
+              emptyDescription="Adjust the search or add a new product tag for this organization."
+              selectedIds={selectedProductTagIds}
+              onToggleSelected={handleSelectedProductTagsChanged}
+              onOpenMoreActions={(id, target) => {
+                setSelectedProductTagId(id);
+                setProductTagMoreActionsAnchorEl(target);
+              }}
+              renderPrimary={(item) => {
+                const productTag = productTags.find((entry) => entry.id === item.id);
+
+                return productTag ? <ProductTag productTag={productTag} showFullName /> : null;
+              }}
+              variant="plain"
+            />
+          </StackColumn>
         );
       case 'marketplace-listing':
       default:
@@ -1727,7 +1724,7 @@ const OrganizationMarketplaceSetup = ({
         <StackColumn
           sx={{
             width: '100%',
-            maxWidth: 1120,
+            maxWidth: 1200,
             mx: 'auto',
             pt: { xs: 1, sm: 1, md: 2 },
             backgroundColor: 'transparent',

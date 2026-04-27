@@ -13,7 +13,7 @@ type Props = {
 
 const OrganizationProductsPageShell = ({ actions, toolbar, isEmpty, children }: Props) => (
   <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
-    <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
+    <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
       <PageHeaderPanel title="Products" description="Create and manage the bookable offers customers can purchase." />
 
       <CollectionToolbar filters={toolbar} actions={actions} />

@@ -23,7 +23,7 @@ const surfaceSx: SxProps<Theme> = {
 
 const OrganizationTeamsPageShell = ({ actions, toolbar, isEmpty, emptyMessage = 'Create your first team to get started.', children }: Props) => (
   <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', pb: defaultPadding }}>
-    <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
+    <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
       <PageHeaderPanel title="Teams" description="Create teams, manage members, and choose the main location for each team." />
 
       <CollectionToolbar filters={toolbar} actions={actions} />

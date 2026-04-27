@@ -27,6 +27,7 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -49,13 +50,6 @@ const surfaceSx: SxProps<Theme> = {
   borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
   backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.88)' : theme.palette.background.paper),
   boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : '0 1px 3px rgba(0, 0, 0, 0.24)'),
-};
-
-const innerPanelSx: SxProps<Theme> = {
-  borderRadius: 3,
-  px: 1.5,
-  py: 1.25,
-  backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.03)' : theme.palette.action.hover),
 };
 
 const RootQuery = graphql`
@@ -261,10 +255,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
   }, [rootData.marketplaceBookingSubscriptionCancellationModes]);
 
-  const handleBackClick = () => {
-    router.push(getOrganizationSubscriptionsBaseLink(integratedPlatrform, organizationCustomDomain));
-  };
-
   const handleDeleteMarketplaceBookingSubscriptionClick = (
     subscriptionId: string,
     productTitle: string,
@@ -452,7 +442,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     return (
       <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
-          <Box sx={{ ...surfaceSx, width: '100%', maxWidth: 1120, px: 3, py: 4 }}>
+          <Box sx={{ ...surfaceSx, width: '100%', maxWidth: 1200, px: 3, py: 4 }}>
             <BodyIconTypography label="You do not have permission to manage subscription payments for this organisation." />
           </Box>
         </Box>
@@ -476,15 +466,11 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
-        <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto', pb: defaultPadding }} spacing={2}>
+        <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pb: defaultPadding }} spacing={2}>
           <PageHeaderPanel
             title={subscription ? productTitle : 'Subscription'}
             description="Review the full subscription record, manage billing periods, process refunds, and update future billing for this customer."
           />
-
-          <Button variant="text" onClick={handleBackClick} sx={{ width: 'fit-content', textTransform: 'none', px: 0 }}>
-            Back to subscriptions
-          </Button>
 
           {!subscription ? (
             <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
@@ -514,18 +500,19 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                       <Chip label={lifecycleDisplay?.statusLabel ?? subscription.status.name} color={lifecycleDisplay?.statusColor ?? 'default'} variant="outlined" />
                     </StackRow>
 
-                    <Box sx={{ ...innerPanelSx, mt: 2 }}>
-                      <StackColumn spacing={0.75}>
-                        <BodyIconTypography label={`Renewal: ${lifecycleDisplay?.renewalLabel ?? 'Not scheduled'}`} />
-                        <BodyIconTypography
-                          label={`Current payment: ${subscription.marketplaceBooking.paymentStatus.name} • Payment method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
-                          sx={{ opacity: 0.78 }}
-                        />
-                      </StackColumn>
-                    </Box>
+                    <Divider sx={{ my: 2 }} />
+
+                    <StackColumn spacing={0.75}>
+                      <BodyIconTypography label={`Renewal: ${lifecycleDisplay?.renewalLabel ?? 'Not scheduled'}`} />
+                      <BodyIconTypography
+                        label={`Current payment: ${subscription.marketplaceBooking.paymentStatus.name} • Payment method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
+                        sx={{ opacity: 0.78 }}
+                      />
+                    </StackColumn>
 
                     {subscription.status.type === 'ACTIVE' ? (
-                      <Box sx={{ ...innerPanelSx, mt: 2 }}>
+                      <StackColumn spacing={2} sx={{ mt: 2 }}>
+                        <Divider />
                         <SubscriptionCancellationSection
                           cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
                           hasConfirmedPayment={subscription.marketplaceBooking.paymentStatus.type === 'CONFIRMED'}
@@ -541,13 +528,14 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                               : undefined
                           }
                         />
-                      </Box>
+                      </StackColumn>
                     ) : null}
 
                     {subscription.refund ? (
-                      <Box sx={{ mt: 2 }}>
+                      <StackColumn spacing={2} sx={{ mt: 2 }}>
+                        <Divider />
                         <MarketplaceRefundAdminPanel entityLabel={`${productTitle} for ${customerLabel}`} refund={subscription.refund} />
-                      </Box>
+                      </StackColumn>
                     ) : null}
                   </CardContent>
                 </Card>
@@ -567,7 +555,8 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                           const cycleMarketplaceBooking = recurringBooking.marketplaceBooking;
 
                           return (
-                            <Box key={recurringBooking.id} sx={innerPanelSx}>
+                            <StackColumn key={recurringBooking.id} spacing={1.25}>
+                              <Divider />
                               <StackColumn spacing={1}>
                                 <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: 1, flexWrap: 'wrap' }}>
                                   <StackColumn spacing={0.35}>
@@ -614,13 +603,14 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                                   </StackRow>
                                 ) : null}
                               </StackColumn>
-                            </Box>
+                            </StackColumn>
                           );
                         })
                       ) : (
-                        <Box sx={innerPanelSx}>
+                        <>
+                          <Divider />
                           <BodyIconTypography label="No billing periods have been created for this subscription yet." sx={{ opacity: 0.72 }} />
-                        </Box>
+                        </>
                       )}
                     </StackColumn>
                   </CardContent>
@@ -641,12 +631,12 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                     <SummaryRow label="Quantity" value={`${subscription.marketplaceBooking.quantity}`} />
                   </StackColumn>
 
-                  <Box sx={{ ...innerPanelSx, mt: 2 }}>
-                    <BodyIconTypography
-                      label="Use this page for detailed payment and refund decisions. The subscriptions overview stays focused on scanning status and opening the right record quickly."
-                      sx={{ opacity: 0.8 }}
-                    />
-                  </Box>
+                  <Divider sx={{ my: 2 }} />
+
+                  <BodyIconTypography
+                    label="Use this page for detailed payment and refund decisions. The subscriptions overview stays focused on scanning status and opening the right record quickly."
+                    sx={{ opacity: 0.8 }}
+                  />
 
                   <Box sx={{ mt: 2 }}>
                     <Link component={NextLink} href={getOrganizationSubscriptionsBaseLink(integratedPlatrform, organizationCustomDomain)} underline="hover">
@@ -680,7 +670,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
               setPendingCancellationConfirmation(null);
             }}
             onSecondaryClicked={() => setPendingCancellationConfirmation(null)}
-            primaryLabel={pendingCancellationConfirmation?.mode.name ?? 'Cancel now'}
+            primaryLabel="Cancel now"
             secondaryLabel="Keep subscription"
           />
         </DialogContent>

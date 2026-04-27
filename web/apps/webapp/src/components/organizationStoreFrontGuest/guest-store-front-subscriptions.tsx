@@ -34,6 +34,7 @@ import Container from '@mui/material/Container';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/system/Box';
@@ -358,6 +359,7 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
 
                       {subscription.status.type === 'ACTIVE' ? (
                         <Box sx={{ mt: 2 }} onClick={(event) => event.preventDefault()}>
+                          <Divider sx={{ mb: 2 }} />
                           <SubscriptionCancellationSection
                             cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
                             hasConfirmedPayment={subscription.marketplaceBooking.paymentStatus.type === 'CONFIRMED'}
@@ -387,6 +389,8 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
                         </Box>
                       ) : null}
 
+                      <Divider sx={{ mt: 2 }} />
+
                       <StackRow sx={{ mt: 2, justifyContent: 'space-between', flexWrap: 'nowrap' }}>
                         <BodyIconTypography label="Open subscription" sx={{ color: 'primary.main', fontWeight: 600 }} />
                         <ChevronRightIcon fontSize="small" />
@@ -407,7 +411,7 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
       </Container>
 
       <Dialog open={!!pendingCancellationConfirmation} onClose={handleCancelImmediateCancellationClick}>
-        <DefaultDialogTitle title="Cancel Subscription Now" />
+        <DefaultDialogTitle title="Cancel subscription now" />
         <DialogContent sx={{ mt: 2 }}>
           <DialogContentText>
             {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing will stop right away. Previous invoices will still stay on record.`}
@@ -415,7 +419,7 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
           <TwoButtonsDialogActions
             onPrimaryClicked={handleConfirmImmediateCancellationClick}
             onSecondaryClicked={handleCancelImmediateCancellationClick}
-            primaryLabel={pendingCancellationConfirmation?.mode.name ?? 'Cancel now'}
+            primaryLabel="Cancel now"
             secondaryLabel="Keep subscription"
           />
         </DialogContent>

@@ -977,11 +977,11 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
 
   return (
     <>
-      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pt: { xs: 1, sm: 1, md: 2 }, pb: defaultPadding }}>
         <StackColumn
           sx={{
             width: '100%',
-            maxWidth: 1120,
+            maxWidth: 1200,
             mx: 'auto',
             backgroundColor: 'transparent',
             gap: 2,

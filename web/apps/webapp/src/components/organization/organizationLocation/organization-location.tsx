@@ -563,7 +563,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
 
   const formColumnSx = {
     width: '100%',
-    maxWidth: 760,
   };
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
@@ -1020,7 +1019,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         debounceSetLocationIncludedFeatures(values!.includedFeatures);
 
         return (
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 3, pb: defaultPadding }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: { xs: 2, xl: 2 }, pb: defaultPadding }}>
             <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
               <StackColumn spacing={3}>
                 <SettingsSectionCard title="Location Setup" description="Edit the customer-facing identity, classification, and commercial details of this location.">
@@ -1177,7 +1176,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         debounceSetPhysicalAddressCountryCode(values!.countryCode);
 
         return (
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 3, pb: defaultPadding }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: { xs: 2, xl: 2 }, pb: defaultPadding }}>
             <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
               <SettingsSectionCard title="Physical Address" description="Use the exact address members and customers should navigate to.">
                 <StackColumn>
@@ -1288,11 +1287,11 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   };
 
   return (
-    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pt: { xs: 1, sm: 1, md: 2 }, pb: defaultPadding }}>
       <StackColumn
         sx={{
           width: '100%',
-          maxWidth: 1120,
+          maxWidth: 1200,
           mx: 'auto',
           backgroundColor: 'transparent',
           gap: 2,

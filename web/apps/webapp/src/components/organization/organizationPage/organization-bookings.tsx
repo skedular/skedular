@@ -116,7 +116,7 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationCu
 
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-      <StackColumn sx={{ width: '100%', maxWidth: 1120, mx: 'auto' }} spacing={2}>
+      <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto' }} spacing={2}>
         <Bookings
           rootDataRelay={rootData}
           rootDataBookingRelay={rootData}
