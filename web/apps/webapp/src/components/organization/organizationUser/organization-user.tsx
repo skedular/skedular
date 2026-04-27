@@ -1,25 +1,12 @@
 import { CustomerAvatar } from '@/components/avatars';
-import {
-  AppBarWithStackColumn,
-  BodyIconTypography,
-  CaptionIconTypography,
-  FormFieldLabel,
-  FormStackColumn,
-  GridContainer,
-  LeadIconTypography,
-  SectionIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-} from '@skedular/ui';
+import { CaptionIconTypography, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoinceTimezone } from '@/components/forms';
-import { BookingIcon, DeleteIcon } from '@/components/icons';
-import { getOrganizationBookingsBaseLink, getOrganizationUsersBaseLink } from '@/components/links';
+import { DeleteIcon } from '@/components/icons';
+import { getOrganizationUsersBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { TeamCard } from '@/components/organization/organizationTeams';
 import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
 import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@skedular/ui';
+import { defaultButtonStyle, defaultPadding, EditorActionBar, PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
 import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
 import type { organizationUser_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUser_changeOrganizationUsersStatusMutation.graphql';
 import type { organizationUser_query$key } from '@/queries/__generated__/organizationUser_query.graphql';
@@ -27,17 +14,16 @@ import type { organizationUser_removeOrganizationUsersMutation } from '@/queries
 import type { organizationUser_updateCustomerDetailsMutation, PersonalInformationVisibility } from '@/queries/__generated__/organizationUser_updateCustomerDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useContext, useEffect, useMemo, useRef } from 'react';
+import { memo, useContext, useEffect, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
-import OrganizationUserLeftSideNavigationMenuContent from './organization-user-left-side-navigation-menu-content';
+import OrganizationUserSectionNav, { OrganizationUserSection } from './organization-user-section-nav';
+import OrganizationUserTeamList, { OrganizationUserTeamListItem } from './organization-user-team-list';
 
 type Props = {
   rootDataRelay: organizationUser_query$key;
@@ -69,6 +55,21 @@ const profileDetailsSchema = object({
   phoneNumber: string().nullable(),
   personalInformationVisibility: string().required('Personal Information Visibility is required'),
 });
+
+const validSections: OrganizationUserSection[] = ['profile', 'manage-teams', 'manage-user'];
+
+const getActiveSection = (value: string | null): OrganizationUserSection => {
+  if (value && validSections.includes(value as OrganizationUserSection)) {
+    return value as OrganizationUserSection;
+  }
+
+  return 'profile';
+};
+
+const formColumnSx = {
+  width: '100%',
+  maxWidth: 760,
+};
 
 const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId }: Props) => {
   const rootData = useFragment<organizationUser_query$key>(
@@ -105,6 +106,11 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
               organization {
                 id
               }
+              featureImages {
+                thumbnail {
+                  url
+                }
+              }
               members {
                 edges {
                   node {
@@ -126,7 +132,6 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
                   }
                 }
               }
-              ...teamCard_TeamDetails
             }
           }
         }
@@ -203,11 +208,31 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const searchParams = useSearchParams();
-  const section = searchParams.get('section');
-  const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const activeSection = useMemo(() => getActiveSection(searchParams.get('section')), [searchParams]);
+  const [stickyTop, setStickyTop] = useState(0);
   const validateProfileDetails = makeValidate(profileDetailsSchema);
   const requiredProfileDetailsFields = makeRequired(profileDetailsSchema);
   const teams = useMemo(() => rootData.customerTeams.edges.map((edge) => edge.node), [rootData.customerTeams]);
+  const teamItems = useMemo<OrganizationUserTeamListItem[]>(
+    () =>
+      teams.map((team) => ({
+        id: team.id,
+        name: team.name,
+        featureImageUrl: team.featureImages[0]?.thumbnail?.url,
+        members: team.members.edges
+          .map(({ node }) => node.organizationMember?.customer)
+          .filter((member): member is NonNullable<typeof member> => !!member)
+          .map((member) => ({
+            id: member.id,
+            givenName: member.givenName,
+            middleName: member.middleName,
+            familyName: member.familyName,
+            name: member.name,
+            photoUrl: member.photoUrl,
+          })),
+      })),
+    [teams],
+  );
   const teamsConnectionIds = useMemo(() => [rootData.customerTeams.__id], [rootData.customerTeams]);
   const member = useMemo(
     () => (rootData.organization?.members && rootData.organization.members.edges.length > 0 ? rootData.organization.members.edges[0]?.node : null),
@@ -215,26 +240,17 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
   );
 
   useEffect(() => {
-    if (!section || section === 'profile') {
-      return;
-    }
+    const updateStickyTop = () => {
+      setStickyTop(document.querySelector('.app-bar')?.clientHeight ?? 0);
+    };
 
-    const element = sectionRefs.current[section];
-    if (!element) {
-      return;
-    }
+    updateStickyTop();
+    window.addEventListener('resize', updateStickyTop);
 
-    const appBarHeight = document.querySelector('.app-bar')?.clientHeight || 0;
-    const elementTop = element.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({
-      top: elementTop - appBarHeight,
-      behavior: 'smooth',
-    });
-  }, [section]);
-
-  const handleCloseClick = () => {
-    router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationCustomDomain));
-  };
+    return () => {
+      window.removeEventListener('resize', updateStickyTop);
+    };
+  }, []);
 
   const handleProfileDetailUpdateClick = ({
     timezone,
@@ -431,10 +447,6 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
     });
   };
 
-  const handleViewBookingsClick = () => {
-    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain, { customerId }));
-  };
-
   const customer = rootData.customer;
   if (!customer) {
     return null;
@@ -442,175 +454,182 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
 
   const isItMe = customer.id === rootData.me?.id;
 
-  return (
-    <Box sx={{ display: 'flex' }}>
-      <OrganizationUserLeftSideNavigationMenuContent rootDataRelay={rootData} organizationCustomDomain={organizationCustomDomain} customerId={customerId} hideIcons />
-      <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
-        <AppBarWithStackColumn onClose={handleCloseClick} label="Edit User Details">
-          <Form
-            onSubmit={handleProfileDetailUpdateClick}
-            initialValues={{
-              timezone: customer.timezone ?? '',
-              designation: customer.designation,
-              title: customer.title,
-              name: customer.name,
-              givenName: customer.givenName,
-              middleName: customer.middleName,
-              familyName: customer.familyName,
-              phoneNumber: customer.phoneNumber,
-              personalInformationVisibility: customer.personalInformationVisibility.type,
-            }}
-            validate={validateProfileDetails}
-            render={({ handleSubmit }) => (
-              <FormStackColumn onSubmit={handleSubmit}>
-                <StackColumn
-                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                  ref={(divElement) => {
-                    sectionRefs.current['profile'] = divElement;
-                  }}
-                >
-                  <GridContainer sx={{ justifyContent: 'space-between' }}>
-                    <Grid>
-                      <StackRow>
-                        <CustomerAvatar name={customer} photo={{ url: customer?.photoUrl }} size="large" />
-                        <StackColumn spacing={-0.5}>
-                          <LeadIconTypography label={getCustomerFullName(customer)} />
-                          <CaptionIconTypography label={customer.email} />
-                        </StackColumn>
-                      </StackRow>
-                    </Grid>
+  const renderProfileSection = () => (
+    <Box sx={{ p: defaultPadding }}>
+      <Form
+        onSubmit={handleProfileDetailUpdateClick}
+        initialValues={{
+          timezone: customer.timezone ?? '',
+          designation: customer.designation,
+          title: customer.title,
+          name: customer.name,
+          givenName: customer.givenName,
+          middleName: customer.middleName,
+          familyName: customer.familyName,
+          phoneNumber: customer.phoneNumber,
+          personalInformationVisibility: customer.personalInformationVisibility.type,
+        }}
+        validate={validateProfileDetails}
+        render={({ handleSubmit }) => (
+          <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+            <SettingsSectionCard title="Profile" description="Manage the identity, contact details, and visibility settings for this user.">
+              <StackColumn>
+                <FormFieldLabel label="Designation">
+                  {isItMe && <TextField name="designation" required={requiredProfileDetailsFields.designation} />}
+                  {!isItMe && <SmallIconTypography label={customer.designation} />}
+                </FormFieldLabel>
 
-                    <Grid>
-                      <Button variant="contained" sx={defaultButtonStyle} startIcon={<BookingIcon />} onClick={handleViewBookingsClick}>
-                        View User Bookings
-                      </Button>
-                    </Grid>
-                  </GridContainer>
-                  <Divider />
-                </StackColumn>
+                <FormFieldLabel label="Title">
+                  {isItMe && <TextField name="title" required={requiredProfileDetailsFields.title} />}
+                  {!isItMe && <SmallIconTypography label={customer.title} />}
+                </FormFieldLabel>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Designation">
-                    {isItMe && <TextField name="designation" required={requiredProfileDetailsFields.designation} />}
-                    {!isItMe && <SmallIconTypography label={customer.designation} />}
-                  </FormFieldLabel>
+                <FormFieldLabel label="Name">
+                  {isItMe && <TextField name="name" required={requiredProfileDetailsFields.name} />}
+                  {!isItMe && <SmallIconTypography label={customer.name} />}
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="Title">
-                    {isItMe && <TextField name="title" required={requiredProfileDetailsFields.title} />}
-                    {!isItMe && <SmallIconTypography label={customer.title} />}
-                  </FormFieldLabel>
+                <FormFieldLabel label="Given Name">
+                  {isItMe && <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />}
+                  {!isItMe && <SmallIconTypography label={customer.givenName} />}
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="Name">
-                    {isItMe && <TextField name="name" required={requiredProfileDetailsFields.name} />}
-                    {!isItMe && <SmallIconTypography label={customer.name} />}
-                  </FormFieldLabel>
+                <FormFieldLabel label="Middle Name">
+                  {isItMe && <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />}
+                  {!isItMe && <SmallIconTypography label={customer.middleName} />}
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="Given Name">
-                    {isItMe && <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />}
-                    {!isItMe && <SmallIconTypography label={customer.givenName} />}
-                  </FormFieldLabel>
+                <FormFieldLabel label="Family Name">
+                  {isItMe && <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />}
+                  {!isItMe && <SmallIconTypography label={customer.familyName} />}
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="Middle Name">
-                    {isItMe && <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />}
-                    {!isItMe && <SmallIconTypography label={customer.middleName} />}
-                  </FormFieldLabel>
+                <FormFieldLabel label="Timezone">
+                  {isItMe && <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />}
+                  {!isItMe && <SmallIconTypography label={customer.timezone} />}
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="Family Name">
-                    {isItMe && <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />}
-                    {!isItMe && <SmallIconTypography label={customer.familyName} />}
-                  </FormFieldLabel>
+                <FormFieldLabel label="Phone Number">
+                  {isItMe && <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />}
+                  {!isItMe && <SmallIconTypography label={customer.phoneNumber} />}
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="Timezone">
-                    {isItMe && <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />}
-                    {!isItMe && <SmallIconTypography label={customer.timezone} />}
-                  </FormFieldLabel>
+                <FormFieldLabel label="Personal Information Visibility" required={requiredProfileDetailsFields.personalInformationVisibility}>
+                  <SingleChoiceUserPersonalInformationVisibility
+                    rootDataRelay={rootData}
+                    name="personalInformationVisibility"
+                    required={requiredProfileDetailsFields.personalInformationVisibility}
+                  />
+                </FormFieldLabel>
+              </StackColumn>
+            </SettingsSectionCard>
 
-                  <FormFieldLabel label="Phone Number">
-                    {isItMe && <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />}
-                    {!isItMe && <SmallIconTypography label={customer.phoneNumber} />}
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Personal Information Visibility" required={requiredProfileDetailsFields.personalInformationVisibility}>
-                    <SingleChoiceUserPersonalInformationVisibility
-                      rootDataRelay={rootData}
-                      name="personalInformationVisibility"
-                      required={requiredProfileDetailsFields.personalInformationVisibility}
-                    />
-                  </FormFieldLabel>
-                </StackColumn>
-
-                {isItMe && (
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                )}
-              </FormStackColumn>
+            {isItMe && (
+              <EditorActionBar
+                primaryAction={
+                  <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                    Update
+                  </Button>
+                }
+              />
             )}
-          />
+          </FormStackColumn>
+        )}
+      />
+    </Box>
+  );
 
-          <StackColumn
-            sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-            ref={(divElement) => {
-              sectionRefs.current['manage-teams'] = divElement;
-            }}
-          >
-            <SectionIconTypography label="User Teams" />
-            <BodyIconTypography label="Teams in this organisation that include this user" />
-            <Divider />
-          </StackColumn>
+  const renderTeamsSection = () => (
+    <Box sx={{ p: defaultPadding }}>
+      <OrganizationUserTeamList items={teamItems} />
+    </Box>
+  );
 
-          <GridContainer sx={{ padding: defaultPadding }}>
-            {teams.map((team) => (
-              <Grid key={team.id}>
-                <TeamCard
-                  teamDetailsRelay={team}
-                  connectionIds={teamsConnectionIds}
-                  teammates={team.members.edges
-                    .map(({ node }) => node)
-                    .filter(({ organizationMember }) => !!organizationMember)!
-                    .map(({ organizationMember }) => organizationMember!.customer)}
-                />
-              </Grid>
-            ))}
-          </GridContainer>
-
-          <StackColumn
-            sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-            ref={(divElement) => {
-              sectionRefs.current['manage-user'] = divElement;
-            }}
-          >
-            <SectionIconTypography label="Manage This User" />
-            <BodyIconTypography label="Change this user's status or remove them from this organisation" />
-            <Divider />
-          </StackColumn>
-
-          {member && (
-            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <SmallIconTypography label={`Current status: ${member.status.name}`} />
-              <StackRow sx={{ paddingTop: 1 }}>
-                {member.status.type === 'ACTIVE' && (
-                  <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateUserClick} sx={defaultButtonStyle}>
-                    Deactivate User
+  const renderManageSection = () => (
+    <Box sx={{ p: defaultPadding }}>
+      <SettingsSectionCard title="Manage User" description="Change this user's status or remove them from this organisation.">
+        {member && (
+          <StackColumn>
+            <SmallIconTypography label={`Current status: ${member.status.name}`} />
+            <EditorActionBar
+              primaryAction={
+                <StackRow>
+                  {member.status.type === 'ACTIVE' && (
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateUserClick} sx={defaultButtonStyle}>
+                      Deactivate User
+                    </Button>
+                  )}
+                  {member.status.type === 'INACTIVE' && (
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUserClick} sx={defaultButtonStyle}>
+                      Activate User
+                    </Button>
+                  )}
+                  <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveUserClick} sx={{ textTransform: 'none' }}>
+                    Remove User
                   </Button>
-                )}
-                {member.status.type === 'INACTIVE' && (
-                  <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUserClick} sx={defaultButtonStyle}>
-                    Activate User
-                  </Button>
-                )}
-                <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveUserClick} sx={{ textTransform: 'none' }}>
-                  Remove User
-                </Button>
-              </StackRow>
-            </StackColumn>
-          )}
-        </AppBarWithStackColumn>
-      </Box>
+                </StackRow>
+              }
+            />
+          </StackColumn>
+        )}
+      </SettingsSectionCard>
+    </Box>
+  );
+
+  const renderActiveSection = () => {
+    switch (activeSection) {
+      case 'manage-teams':
+        return renderTeamsSection();
+      case 'manage-user':
+        return renderManageSection();
+      case 'profile':
+      default:
+        return renderProfileSection();
+    }
+  };
+
+  return (
+    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+      <StackColumn
+        sx={{
+          width: '100%',
+          maxWidth: 1120,
+          mx: 'auto',
+          backgroundColor: 'transparent',
+          gap: 2,
+        }}
+      >
+        <PageHeaderPanel
+          eyebrow="User profile"
+          title={getCustomerFullName(customer)}
+          description="Manage profile details, team membership, booking context, and lifecycle controls."
+        >
+          <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+            <StackRow>
+              <CustomerAvatar name={customer} photo={{ url: customer?.photoUrl }} size="large" />
+              <StackColumn spacing={0.5}>
+                <LeadIconTypography label={getCustomerFullName(customer)} />
+                <CaptionIconTypography label={customer.email} />
+              </StackColumn>
+            </StackRow>
+          </StackRow>
+        </PageHeaderPanel>
+
+        <OrganizationUserSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} customerId={customerId} stickyTop={stickyTop} />
+
+        <Box
+          sx={{
+            borderRadius: 4,
+            border: 1,
+            borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+            bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+            boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+            overflow: 'hidden',
+          }}
+        >
+          {renderActiveSection()}
+        </Box>
+      </StackColumn>
     </Box>
   );
 };

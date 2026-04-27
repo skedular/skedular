@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<31acbc2ba465d7798ccdd079e8dd22b7>>
+ * @generated SignedSource<<35c2bfa99fb37ca3e6322c5151c37930>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,6 +34,11 @@ export type organizationUser_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly featureImages: ReadonlyArray<{
+          readonly thumbnail: {
+            readonly url: string;
+          } | null | undefined;
+        }>;
         readonly id: string;
         readonly members: {
           readonly edges: ReadonlyArray<{
@@ -60,7 +65,6 @@ export type organizationUser_query$data = {
         readonly organization: {
           readonly id: string;
         };
-        readonly " $fragmentSpreads": FragmentRefs<"teamCard_TeamDetails">;
       };
     }>;
     readonly totalCount: number;
@@ -348,6 +352,35 @@ return {
                 {
                   "alias": null,
                   "args": null,
+                  "concreteType": "CdnImageFile",
+                  "kind": "LinkedField",
+                  "name": "featureImages",
+                  "plural": true,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "CdnFile",
+                      "kind": "LinkedField",
+                      "name": "thumbnail",
+                      "plural": false,
+                      "selections": [
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "url",
+                          "storageKey": null
+                        }
+                      ],
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
                   "concreteType": "ConnectionOfTeamMemberEdge",
                   "kind": "LinkedField",
                   "name": "members",
@@ -413,11 +446,6 @@ return {
                     }
                   ],
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "teamCard_TeamDetails"
                 },
                 {
                   "alias": null,
@@ -555,6 +583,6 @@ return {
 };
 })();
 
-(node as any).hash = "2c955f7d3c26c8bde3e2e3330bd5cad3";
+(node as any).hash = "9db458c2b5523ecf22501a2033493b03";
 
 export default node;
