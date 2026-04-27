@@ -8,14 +8,14 @@ import {
   StackRow,
   SubtitleIconTypography,
   TwoButtonsDialogActions,
-} from '@/components/commons';
+} from '@skedular/ui';
 import { ArrowLeftIcon } from '@/components/icons';
 import { getMarketplaceLocationLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { getCustomerFullName, getRelayErrorMessage, isStoredFullDayRange, toStoredBookingTimeRange } from '@/libs/utils';
+import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { getCustomerFullName, getRelayErrorMessage, isStoredFullDayRange, toStoredBookingTimeRange } from '@skedular/shared';
 import type { marketplaceProductBookingDetails_rootQuery } from '@/queries/__generated__/marketplaceProductBookingDetails_rootQuery.graphql';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';

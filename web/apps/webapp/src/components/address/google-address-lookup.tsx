@@ -1,6 +1,6 @@
 import { createPlacesSessionToken, fetchPlaceDetails, fetchPlacePredictions } from '@/libs/address/google-places';
 import { PlaceDetailsResult, PlacePrediction } from '@/libs/address/google-places-types';
-import { keyboardSearchDebounceTimeout } from '@/libs/utils';
+import { keyboardSearchDebounceTimeout } from '@skedular/shared';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';

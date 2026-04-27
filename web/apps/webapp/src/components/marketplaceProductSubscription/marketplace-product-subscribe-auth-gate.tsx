@@ -1,8 +1,8 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { ArrowRightIcon, CheckIcon, ClosedAllDayIcon } from '@/components/icons';
 import { getMarketplaceProductLink, getSignInLink, getSignUpLink } from '@/components/links';
-import { formatPriceForDisplay } from '@/libs/utils';
-import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
+import { formatPriceForDisplay } from '@skedular/shared';
+import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
 import type { marketplaceProductSubscribeAuthGate_query$key } from '@/queries/__generated__/marketplaceProductSubscribeAuthGate_query.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

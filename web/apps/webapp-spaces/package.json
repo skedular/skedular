@@ -9,7 +9,7 @@
     "build": "next build",
     "start": "cross-env PORT=15004 next start",
     "lint": "eslint",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "lint-fix": "eslint --fix",
     "format": "prettier --write --single-quote true --trailing-comma all --print-width 180 ./src && pnpm lint-fix",

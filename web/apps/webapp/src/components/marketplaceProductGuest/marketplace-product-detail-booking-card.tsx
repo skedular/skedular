@@ -1,9 +1,9 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceLocationLink, getMarketplaceProductBookingLink, getMarketplaceProductSubscribeLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel, MarketplaceCancellationPolicyDetails } from '@/components/marketplaceProduct';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
-import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { formatPriceForDisplay } from '@/libs/utils';
+import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { formatPriceForDisplay } from '@skedular/shared';
 import type { marketplaceProductDetailBookingCard_product$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_product.graphql';
 import type { marketplaceProductDetailBookingCard_query$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_query.graphql';
 import Button from '@mui/material/Button';

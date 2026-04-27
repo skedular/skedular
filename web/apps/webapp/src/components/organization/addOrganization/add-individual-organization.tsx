@@ -1,11 +1,11 @@
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, StackColumn } from '@/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, StackColumn } from '@skedular/ui';
 import { AnalyticsIcon, CalendarIcon } from '@/components/icons';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationTermsOfUse } from '@/components/organization';
-import { PaletteModeContext } from '@/libs/providers';
-import { defaultButtonStyle } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { defaultButtonStyle } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import { EditorActionBar, SettingsSectionCard, SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
 import type { addIndividualOrganization_addOrganizationMutation } from '@/queries/__generated__/addIndividualOrganization_addOrganizationMutation.graphql';
 import type { addIndividualOrganization_query$key } from '@/queries/__generated__/addIndividualOrganization_query.graphql';

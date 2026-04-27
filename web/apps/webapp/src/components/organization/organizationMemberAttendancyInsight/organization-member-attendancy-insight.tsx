@@ -1,5 +1,5 @@
 import { AnalyticsDaterangeSelector, AnalyticsInsightCard } from '@/components/analytics';
-import { toDayAndMonthDate, toFixed } from '@/libs/utils';
+import { toDayAndMonthDate, toFixed } from '@skedular/shared';
 import type { organizationMemberAttendancyInsight_organizationAnalytics_query$key } from '@/queries/__generated__/organizationMemberAttendancyInsight_organizationAnalytics_query.graphql';
 import { axisClasses } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';

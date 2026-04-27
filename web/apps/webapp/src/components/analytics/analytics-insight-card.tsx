@@ -1,4 +1,4 @@
-import { SectionIconTypography } from '@/components/commons';
+import { SectionIconTypography } from '@skedular/ui';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';

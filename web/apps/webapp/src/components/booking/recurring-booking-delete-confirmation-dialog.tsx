@@ -1,4 +1,4 @@
-import { DefaultDialogTitle, TwoButtonsDialogActions } from '@/components/commons';
+import { DefaultDialogTitle, TwoButtonsDialogActions } from '@skedular/ui';
 import { DialogTransition } from '@/components/transitions';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';

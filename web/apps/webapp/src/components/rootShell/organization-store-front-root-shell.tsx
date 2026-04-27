@@ -1,11 +1,11 @@
 import { OrganizationStoreFrontAppBar } from '@/components/appBar';
-import { SmallHeadingIconTypography } from '@/components/commons';
+import { SmallHeadingIconTypography } from '@skedular/ui';
 import { SignOutIcon } from '@/components/icons';
 import { getSignOutReturnToLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { Observability } from '@/components/observability';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useKnownParams } from '@/libs/providers';
+import { useKnownParams } from '@skedular/shared';
 import type { organizationStoreFrontRootShell_rootQuery } from '@/queries/__generated__/organizationStoreFrontRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

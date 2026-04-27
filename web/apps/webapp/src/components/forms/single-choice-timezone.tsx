@@ -1,4 +1,4 @@
-import { BodyIconTypography, HelperText } from '@/components/commons';
+import { BodyIconTypography, HelperText } from '@skedular/ui';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';

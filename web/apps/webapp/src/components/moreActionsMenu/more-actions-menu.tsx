@@ -1,4 +1,4 @@
-import { SmallIconTypography } from '@/components/commons';
+import { SmallIconTypography } from '@skedular/ui';
 import { BookingIcon, DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';

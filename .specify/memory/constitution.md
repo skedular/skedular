@@ -1,6 +1,24 @@
 <!--
 SYNC IMPACT REPORT
 ==================
+Version change: 1.1.0 → 1.2.0
+
+Modified principles:
+  - IV. Frontend Consistency — updated typography import source and added @skedular/ui / @skedular/shared package model
+
+Added sections: none
+Removed sections: none
+
+Templates reviewed and alignment status:
+  ⚠ pending: .specify/templates/plan-template.md — IV review gate wording unchanged but now refers to @skedular/ui
+  ⚠ pending: .specify/templates/spec-template.md — no direct reference to @/components/commons; no change required
+  ⚠ pending: .specify/templates/tasks-template.md — no direct reference; no change required
+
+Deferred TODOs: none
+-->
+<!--
+SYNC IMPACT REPORT
+==================
 Version change: 1.0.0 → 1.1.0
 
 Modified principles:
@@ -84,18 +102,43 @@ revision.
 Web work MUST follow the Next.js App Router + Relay + generated-artefact model already
 established in `web/apps/webapp`. Relay fragments MUST be collocated with the component that
 consumes them. Generated Relay artefacts and OpenAPI TypeScript clients MUST NOT be hand-edited.
-Feature and page components MUST use the project typography wrappers exported from
-`@/components/commons` rather than importing MUI `Typography` directly. All user-facing and
-operator-facing copy MUST use British spelling and grammar; technical identifiers (API fields,
-routes, schema names) are exempt.
 
-**Rationale**: Colocation and generated-artefact discipline keep the web layer coherent with the
-backend schema. Centralised typography wrappers enforce visual consistency without per-component
-overrides.
+The Skedular web monorepo uses two centralised workspace packages that apply uniformly across
+all three products (`webapp`, `webapp-teams`, `webapp-spaces`):
+
+- **`@skedular/ui`** (`web/packages/ui`) — the Skedular design system. Owns all visual
+  primitives: typography wrappers, layout building blocks, theme tokens, and colour palette.
+  A change to `@skedular/ui` propagates to every product automatically. Feature and page
+  components in any product MUST import typography wrappers from `@skedular/ui` (for example
+  `import { BodyIconTypography } from '@skedular/ui'`) rather than importing MUI `Typography`
+  directly. The only permitted exception is inside `web/packages/ui/src/typography/` itself,
+  where MUI `Typography` is the low-level primitive being wrapped.
+
+- **`@skedular/shared`** (`web/packages/shared`) — the centralised shared application layer.
+  Owns all cross-product runtime modules: React providers, hooks, utilities (date, name, Relay
+  error helpers), MUI helpers, cookie consent, and image upload. All three products MUST import
+  these modules from `@skedular/shared` rather than maintaining per-product copies.
+  `@skedular/shared` may import from `@skedular/ui`; the reverse is forbidden.
+
+Product apps (`webapp`, `webapp-teams`, `webapp-spaces`) own only product-specific feature
+components, route trees, per-product configuration (logger name, analytics tag IDs), and
+product-specific Relay queries. Auth entry points (sign-in, callback, account settings,
+notifications) remain in `webapp` and are shared entry points for all products.
+
+All user-facing and operator-facing copy MUST use British spelling and grammar; technical
+identifiers (API fields, routes, schema names) are exempt.
+
+**Rationale**: Centralising the design system and shared runtime modules into packages means a
+single change propagates to all products simultaneously, eliminating duplication and drift.
+Clear package boundaries (`@skedular/ui` for visual primitives, `@skedular/shared` for runtime
+infrastructure) make ownership decisions unambiguous and keep product apps focused on
+product-specific work.
 
 **Review gate**: PRs that hand-edit Relay artefacts, import MUI `Typography` directly in
-feature components, or introduce American-English copy in user-facing strings MUST be corrected
-before merging.
+feature or page components (outside `web/packages/ui/src/typography/`), import
+typography wrappers from any path other than `@skedular/ui`, duplicate shared providers or
+utilities inside a product app instead of using `@skedular/shared`, or introduce
+American-English copy in user-facing strings MUST be corrected before merging.
 
 ### V. Change Safety and Pattern Consistency
 
@@ -179,4 +222,4 @@ explicit, documented exception is agreed and committed alongside the change.
 
 ---
 
-**Version**: 1.1.0 | **Ratified**: 2026-04-14 | **Last Amended**: 2026-04-15
+**Version**: 1.2.0 | **Ratified**: 2026-04-14 | **Last Amended**: 2026-04-27

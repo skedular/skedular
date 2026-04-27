@@ -1,9 +1,9 @@
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, GridContainer, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, GridContainer, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoiceCountry } from '@/components/forms';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext } from '@/libs/providers';
-import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { editBankAccount_query$key } from '@/queries/__generated__/editBankAccount_query.graphql';
 import type { editBankAccount_updateOrganizationBankAccountMutation } from '@/queries/__generated__/editBankAccount_updateOrganizationBankAccountMutation.graphql';
 import Box from '@mui/material/Box';

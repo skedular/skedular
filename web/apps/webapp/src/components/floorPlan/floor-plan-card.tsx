@@ -1,11 +1,11 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackRow } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackRow } from '@skedular/ui';
 import { EllipseMenuIcon, LocationIcon } from '@/components/icons';
 import { getOrganizationLocationFloorPlanAdminEditLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { coal, sandstone } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { coal, sandstone } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { floorPlanCard_FloorPlanDetails$key } from '@/queries/__generated__/floorPlanCard_FloorPlanDetails.graphql';
 import type { floorPlanCard_deleteFloorPlanMutation } from '@/queries/__generated__/floorPlanCard_deleteFloorPlanMutation.graphql';
 import Card from '@mui/material/Card';

@@ -1,10 +1,10 @@
-import { AppBarWithStackColumn, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { AppBarWithStackColumn, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { PaletteModeContext } from '@/libs/providers';
-import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
-import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@skedular/ui';
+import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
 import type { notifications_acceptInvitationToJoinOrganizationMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinOrganizationMutation.graphql';
 import type { notifications_acceptInvitationToJoinTeamMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinTeamMutation.graphql';
 import type { notifications_rejectInvitationToJoinOrganizationMutation } from '@/queries/__generated__/notifications_rejectInvitationToJoinOrganizationMutation.graphql';

@@ -1,7 +1,7 @@
 'use client';
 
 import { postSignOutReturnToKey } from '@/components/links';
-import { useKnownParams } from '@/libs/providers';
+import { useKnownParams } from '@skedular/shared';
 import OrganizationStoreFrontPage from '@/rootPages/marketplace/page';
 import Page from '@/rootPages/page';
 import { memo, useEffect } from 'react';

@@ -1,8 +1,8 @@
-import { BodyIconTypography, LargeHeadingIconTypography, MediumHeadingIconTypography, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, LargeHeadingIconTypography, MediumHeadingIconTypography, SubtitleIconTypography } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useKnownParams } from '@/libs/providers';
-import { convertCalendarDayToStartOfDay, endOfWeek } from '@/libs/utils';
+import { useKnownParams } from '@skedular/shared';
+import { convertCalendarDayToStartOfDay, endOfWeek } from '@skedular/shared';
 import type { guestStoreFrontProductsRefetchQuery } from '@/queries/__generated__/guestStoreFrontProductsRefetchQuery.graphql';
 import type { guestStoreFrontProducts_query$key } from '@/queries/__generated__/guestStoreFrontProducts_query.graphql';
 import type { guestStoreFront_rootQuery } from '@/queries/__generated__/guestStoreFront_rootQuery.graphql';

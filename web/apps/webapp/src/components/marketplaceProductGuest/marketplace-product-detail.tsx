@@ -1,8 +1,8 @@
-import { BodyIconTypography, StackRow } from '@/components/commons';
+import { BodyIconTypography, StackRow } from '@skedular/ui';
 import { ArrowLeftIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useKnownParams } from '@/libs/providers';
+import { useKnownParams } from '@skedular/shared';
 import type { marketplaceProductDetail_rootQuery } from '@/queries/__generated__/marketplaceProductDetail_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';

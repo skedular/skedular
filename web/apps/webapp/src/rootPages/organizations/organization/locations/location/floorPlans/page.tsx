@@ -1,10 +1,10 @@
-import { BodyIconTypography, StackColumn } from '@/components/commons';
+import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { FloorPlans } from '@/components/floorPlan/floorPlans';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@/libs/providers';
-import { endOfDay, startOfDay } from '@/libs/utils';
+import { useKnownParams } from '@skedular/shared';
+import { endOfDay, startOfDay } from '@skedular/shared';
 import type { pageFloorPlans_rootQuery } from '@/queries/__generated__/pageFloorPlans_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';

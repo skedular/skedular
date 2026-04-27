@@ -1,16 +1,16 @@
 import { AppBar } from '@/components/appBar';
-import { BodyIconTypography, CaptionIconTypography, PushToRight, SmallHeadingIconTypography, StackRow } from '@/components/commons';
 import { InfoIcon, SignOutIcon } from '@/components/icons';
 import { getInstallMsTeamsLink, getOrganizationSsoSignInBaseLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
 import { RelayError, toRootError } from '@/components/relayError';
-import { InMsTeamsContext, useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
+import { InMsTeamsContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { BodyIconTypography, CaptionIconTypography, PushToRight, SmallHeadingIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { usePathname, useRouter } from 'next/navigation';
 import type { JSX, PropsWithChildren } from 'react';
@@ -18,7 +18,6 @@ import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
-import StackColumn from '../commons/stack-column';
 
 type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;

@@ -1,13 +1,13 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { DefaultDialogTitle, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography, TwoButtonsDialogActions } from '@/components/commons';
+import { DefaultDialogTitle, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
 import { EllipseMenuIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationTeamSetupBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { coal } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { coal } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { teamCard_deleteTeamMutation } from '@/queries/__generated__/teamCard_deleteTeamMutation.graphql';
 import type { teamCard_TeamDetails$key } from '@/queries/__generated__/teamCard_TeamDetails.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';

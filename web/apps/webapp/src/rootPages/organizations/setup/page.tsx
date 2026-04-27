@@ -2,7 +2,7 @@ import { getOrganizationAddIndividualLink, getOrganizationAddMarketplaceLink, ge
 import { NoOrganizationRootShell } from '@/components/rootShell';
 import type { UserType } from '@/components/setupFlow';
 import { SetupFlow } from '@/components/setupFlow';
-import { useIntegratedPlatrform } from '@/libs/providers';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 

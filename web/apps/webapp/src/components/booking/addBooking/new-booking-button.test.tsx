@@ -11,7 +11,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams('section=setup'),
 }));
 
-vi.mock(import('@/libs/providers'), async (importOriginal) => {
+vi.mock(import('@skedular/shared'), async (importOriginal) => {
   const actual = await importOriginal();
 
   return {

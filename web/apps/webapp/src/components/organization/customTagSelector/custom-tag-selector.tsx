@@ -1,4 +1,4 @@
-import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
 import { CustomTagIcon } from '@/components/icons';
 import { DefaultSelect } from '@/components/styled';
 import type { customTagSelector_allCustomTags_query$key } from '@/queries/__generated__/customTagSelector_allCustomTags_query.graphql';

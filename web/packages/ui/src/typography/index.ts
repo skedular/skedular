@@ -1,0 +1,13 @@
+export { default as IconTypography } from './icon-typography';
+export { default as BodyIconTypography } from './body-icon-typography';
+export { default as CaptionIconTypography } from './caption-icon-typography';
+export { default as ErrorTypography } from './error-typography';
+export { default as ExtraLargeHeadingIconTypography } from './extra-large-heading-icon-typography';
+export { default as LargeHeadingIconTypography } from './large-heading-icon-typography';
+export { default as LeadIconTypography } from './lead-icon-typography';
+export { default as MediumHeadingIconTypography } from './medium-heading-icon-typography';
+export { default as SectionIconTypography } from './section-icon-typography';
+export { default as SmallHeadingIconTypography } from './small-heading-icon-typography';
+export { default as SmallIconTypography } from './small-icon-typography';
+export { default as SmallSubtitleIconTypography } from './small-subtitle-icon-typography';
+export { default as SubtitleIconTypography } from './subtitle-icon-typography';

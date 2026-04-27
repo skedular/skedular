@@ -1,10 +1,10 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceProductLink, getMarketplaceSubscriptionDetailsLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel } from '@/components/marketplaceProduct';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { formatPriceForDisplay, getRelayErrorMessage, startOfDay, toShortDate } from '@/libs/utils';
+import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { formatPriceForDisplay, getRelayErrorMessage, startOfDay, toShortDate } from '@skedular/shared';
 import type { marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation.graphql';
 import type { marketplaceProductSubscribeForm_query$key, PaymentMethod } from '@/queries/__generated__/marketplaceProductSubscribeForm_query.graphql';
 import Alert from '@mui/material/Alert';

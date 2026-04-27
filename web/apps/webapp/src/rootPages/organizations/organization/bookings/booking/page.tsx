@@ -2,12 +2,12 @@ import { EditMarketplaceBooking } from '@/components/booking/editMarketplaceBook
 import { EditPrivateBooking } from '@/components/booking/editPrivateBooking';
 import { EditPrivateRecurringBooking } from '@/components/booking/editPrivateRecurringBooking';
 import { PayMarketplaceBooking } from '@/components/booking/payMarketplaceBooking';
-import { BodyIconTypography, StackColumn } from '@/components/commons';
+import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@/libs/providers';
-import { startOfDay, toShortDateWithAdditionalDayInfo } from '@/libs/utils';
+import { useKnownParams } from '@skedular/shared';
+import { startOfDay, toShortDateWithAdditionalDayInfo } from '@skedular/shared';
 import type { pageOrganizationBooking_rootQuery } from '@/queries/__generated__/pageOrganizationBooking_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';

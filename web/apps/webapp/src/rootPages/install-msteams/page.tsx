@@ -1,4 +1,4 @@
-import { SmallHeadingIconTypography } from '@/components/commons';
+import { SmallHeadingIconTypography } from '@skedular/ui';
 import { InstallIcon } from '@/components/icons';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

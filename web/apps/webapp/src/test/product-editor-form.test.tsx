@@ -1,10 +1,11 @@
+import ProductEditorForm from '@/components/product/product-editor-form';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import ProductEditorForm from '@/components/product/product-editor-form';
 
-vi.mock('@/components/commons', () => ({
+vi.mock('@skedular/ui', () => ({
+  // component stubs
   BodyIconTypography: ({ label }: { label: string }) => <div>{label}</div>,
   FormFieldLabel: ({ label, children }: { label?: string; children: ReactNode }) => (
     <div>
@@ -18,36 +19,6 @@ vi.mock('@/components/commons', () => ({
   SmallIconTypography: ({ label }: { label: string }) => <div>{label}</div>,
   StackColumn: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   StackRow: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-}));
-
-vi.mock('@/components/listingMetadata', () => ({
-  ListingMetadata: () => <div>Listing metadata</div>,
-}));
-
-vi.mock('@/components/organization', () => ({
-  MultipleChoicesPaymentMethodTypes: () => <div>Payment methods</div>,
-  MultipleChoicesProductTags: () => <div>Product tags</div>,
-  SingleChoiceCurrency: () => <div>Currency</div>,
-  SingleChoiceProductPricingBillingMode: () => <div>Billing mode</div>,
-  SingleChoiceProductPricingCadence: () => <div>Cadence</div>,
-  SingleChoiceProductPricingCancellationType: () => <div>Cancellation type</div>,
-  SingleChoiceProductType: () => <div>Product type</div>,
-}));
-
-vi.mock('@/components/organization/multiple-choices-amenities', () => ({
-  default: () => <div>Amenities</div>,
-}));
-
-vi.mock('@/libs/image-file-uploader', () => ({
-  ImageFileUploaderWithCropper: () => <div>Uploader</div>,
-}));
-
-vi.mock('mui-rff', () => ({
-  Switches: () => <div>Switches</div>,
-  TextField: () => <input />,
-}));
-
-vi.mock('@skedular/ui', () => ({
   GuidedEditorProgress: ({
     steps,
     activeStepId,
@@ -83,6 +54,41 @@ vi.mock('@skedular/ui', () => ({
       {children}
     </aside>
   ),
+  // theme constants stubs
+  defaultButtonStyle: {},
+  defaultPadding: 2,
+  defaultGridActionPadding: 1,
+  defaultGridStyle: {},
+  coal: '#000',
+  sandstone: '#f5f5f5',
+  emerald: '#00a86b',
+}));
+
+vi.mock('@/components/listingMetadata', () => ({
+  ListingMetadata: () => <div>Listing metadata</div>,
+}));
+
+vi.mock('@/components/organization', () => ({
+  MultipleChoicesPaymentMethodTypes: () => <div>Payment methods</div>,
+  MultipleChoicesProductTags: () => <div>Product tags</div>,
+  SingleChoiceCurrency: () => <div>Currency</div>,
+  SingleChoiceProductPricingBillingMode: () => <div>Billing mode</div>,
+  SingleChoiceProductPricingCadence: () => <div>Cadence</div>,
+  SingleChoiceProductPricingCancellationType: () => <div>Cancellation type</div>,
+  SingleChoiceProductType: () => <div>Product type</div>,
+}));
+
+vi.mock('@/components/organization/multiple-choices-amenities', () => ({
+  default: () => <div>Amenities</div>,
+}));
+
+vi.mock('@/libs/image-file-uploader', () => ({
+  ImageFileUploaderWithCropper: () => <div>Uploader</div>,
+}));
+
+vi.mock('mui-rff', () => ({
+  Switches: () => <div>Switches</div>,
+  TextField: () => <input />,
 }));
 
 const baseProps = {

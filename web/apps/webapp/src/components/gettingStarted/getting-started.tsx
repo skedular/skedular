@@ -1,4 +1,4 @@
-import { LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
+import { LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { CancelIcon, InviteMemberIcon, LocationIcon, ResourceIcon, TeamIcon } from '@/components/icons';
 import {
   getOrganizationLocationAddPrivateLink,
@@ -9,9 +9,9 @@ import {
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { InvitePeopleToJoinOrganizationDialog } from '@/components/organization/invitePeopleToJoinOrganization';
 import { AddResourceDialog } from '@/components/resource/addResource';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultPadding, emerald } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { defaultPadding, emerald } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { gettingStarted_completeOrganizationMemberOnboardingMutation } from '@/queries/__generated__/gettingStarted_completeOrganizationMemberOnboardingMutation.graphql';
 import type { gettingStarted_query$key } from '@/queries/__generated__/gettingStarted_query.graphql';
 import Box from '@mui/material/Box';

@@ -9,7 +9,7 @@ import {
   getOrganizationAdminTaxDetailsBaseLink,
   getOrganizationAdminZonesBaseLink,
 } from '@/components/links';
-import { useIntegratedPlatrform } from '@/libs/providers';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';

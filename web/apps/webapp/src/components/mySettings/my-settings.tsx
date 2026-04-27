@@ -1,14 +1,14 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { AppBarWithStackColumn, CaptionIconTypography, FormFieldLabel, FormStackColumn, GridContainer, LeadIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { AppBarWithStackColumn, CaptionIconTypography, FormFieldLabel, FormStackColumn, GridContainer, LeadIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
+import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
 import type { mySettings_rootQuery } from '@/queries/__generated__/mySettings_rootQuery.graphql';
 import type { mySettings_updateCustomerDetailsMutation, PersonalInformationVisibility } from '@/queries/__generated__/mySettings_updateCustomerDetailsMutation.graphql';
 import Box from '@mui/material/Box';

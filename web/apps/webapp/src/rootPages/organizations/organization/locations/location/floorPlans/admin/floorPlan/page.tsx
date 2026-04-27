@@ -1,9 +1,9 @@
-import { BodyIconTypography, StackColumn } from '@/components/commons';
+import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { EditFloorPlan } from '@/components/floorPlan/editFloorPlan';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@/libs/providers';
+import { useKnownParams } from '@skedular/shared';
 import type { pageOrganizationLocationFloorPlanAdmin_rootQuery } from '@/queries/__generated__/pageOrganizationLocationFloorPlanAdmin_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';

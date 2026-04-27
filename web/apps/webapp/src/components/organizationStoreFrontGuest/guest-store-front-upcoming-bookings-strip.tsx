@@ -1,8 +1,8 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon } from '@/components/icons';
 import { getMarketplaceBookingDetailsLink, getMarketplaceBookingsLink } from '@/components/links';
-import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { toStoredBookingTimeRange } from '@/libs/utils';
+import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { toStoredBookingTimeRange } from '@skedular/shared';
 import type { guestStoreFrontUpcomingBookingsStrip_query$key } from '@/queries/__generated__/guestStoreFrontUpcomingBookingsStrip_query.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Button from '@mui/material/Button';

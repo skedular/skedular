@@ -1,11 +1,11 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeskIcon, OtherResourceIcon, ParkingIcon, RoomIcon } from '@/components/icons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { ImageFileUploader } from '@/libs/image-file-uploader';
-import { PaletteModeContext } from '@/libs/providers';
-import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { editFloorPlan_query$key } from '@/queries/__generated__/editFloorPlan_query.graphql';
 import type { editFloorPlan_resources_query$key } from '@/queries/__generated__/editFloorPlan_resources_query.graphql';
 import type { editFloorPlan_resources_refetchableFragment } from '@/queries/__generated__/editFloorPlan_resources_refetchableFragment.graphql';

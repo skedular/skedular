@@ -19,7 +19,7 @@ import {
   SectionIconTypography,
   SmallIconTypography,
   SmallSubtitleIconTypography,
-} from '@/components/commons';
+} from '@skedular/ui';
 import {
   getMarketplaceLocationFloorPlansLink,
   getMarketplaceLocationLink,
@@ -29,8 +29,8 @@ import {
 } from '@/components/links';
 import { MarketplaceProductCard } from '@/components/marketplaceProductCard';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
-import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { formatPriceForDisplay } from '@/libs/utils';
+import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { formatPriceForDisplay } from '@skedular/shared';
 import type { marketplaceLocation_query$key } from '@/queries/__generated__/marketplaceLocation_query.graphql';
 import type { marketplaceLocation_refetchableFragment } from '@/queries/__generated__/marketplaceLocation_refetchableFragment.graphql';
 import '@/styles/leaflet/leaflet.css';

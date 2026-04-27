@@ -1,4 +1,4 @@
-import { BodyIconTypography } from '@/components/commons';
+import { BodyIconTypography } from '@skedular/ui';
 import type { singleChoiceCurrency_query$key } from '@/queries/__generated__/singleChoiceCurrency_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';

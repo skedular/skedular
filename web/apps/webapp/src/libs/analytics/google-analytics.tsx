@@ -1,4 +1,4 @@
-import { optOutCookieName } from '@/libs/cookie-consent';
+import { optOutCookieName } from '@skedular/shared';
 import { GoogleAnalytics as GA } from '@next/third-parties/google';
 import { getCookie, hasCookie } from 'cookies-next';
 import { useMemo } from 'react';

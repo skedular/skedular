@@ -11,15 +11,15 @@ import {
   SmallIconTypography,
   StackColumn,
   StackRow,
-} from '@/components/commons';
+} from '@skedular/ui';
 import { DeleteIcon, NewIcon } from '@/components/icons';
 import { getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import type { myBillingAndPayment_addMyBillingDetailsMutation } from '@/queries/__generated__/myBillingAndPayment_addMyBillingDetailsMutation.graphql';
 import type { myBillingAndPayment_customerPaymentMethodsDetails_query$key } from '@/queries/__generated__/myBillingAndPayment_customerPaymentMethodsDetails_query.graphql';
 import type { myBillingAndPayment_customerPaymentMethodsDetails_refetchableFragment } from '@/queries/__generated__/myBillingAndPayment_customerPaymentMethodsDetails_refetchableFragment.graphql';

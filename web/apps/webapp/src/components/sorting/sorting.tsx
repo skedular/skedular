@@ -1,4 +1,4 @@
-import { BodyIconTypography } from '@/components/commons';
+import { BodyIconTypography } from '@skedular/ui';
 import { AscDirectionIcon, DescDirectionIcon } from '@/components/icons';
 import SortIcon from '@mui/icons-material/Sort';
 import Divider from '@mui/material/Divider';

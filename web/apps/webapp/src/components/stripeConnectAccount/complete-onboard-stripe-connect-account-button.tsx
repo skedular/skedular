@@ -1,4 +1,4 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import type { SxProps, Theme } from '@mui/system';

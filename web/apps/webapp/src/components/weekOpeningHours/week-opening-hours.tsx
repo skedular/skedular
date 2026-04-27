@@ -1,7 +1,7 @@
 import { ClosedOpenAllDayCustomToggle } from '@/components/closedOpenAllDayCustomToggle';
-import { ErrorTypography, FormFieldLabel, StackColumn, StackRow } from '@/components/commons';
-import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getOpeningHoursFromDateTime, toOpeningHoursFromTime } from '@/libs/utils';
+import { ErrorTypography, FormFieldLabel, StackColumn, StackRow } from '@skedular/ui';
+import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
+import { getOpeningHoursFromDateTime, toOpeningHoursFromTime } from '@skedular/shared';
 import type { weekOpeningHours_query$key } from '@/queries/__generated__/weekOpeningHours_query.graphql';
 import Button from '@mui/material/Button';
 import { DateRange } from '@mui/x-date-pickers-pro/models';

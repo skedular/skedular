@@ -1,10 +1,10 @@
-import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@/components/commons';
+import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext } from '@/libs/providers';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { editOrganizationCustomTagDialog_rootQuery } from '@/queries/__generated__/editOrganizationCustomTagDialog_rootQuery.graphql';
 import type { editOrganizationCustomTagDialog_updateCustomTagMutation } from '@/queries/__generated__/editOrganizationCustomTagDialog_updateCustomTagMutation.graphql';
 import Dialog from '@mui/material/Dialog';

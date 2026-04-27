@@ -1,4 +1,4 @@
-import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
 import { ResourceIcon } from '@/components/icons';
 import { DefaultSelect } from '@/components/styled';
 import type { resourceTypeSelector_allResourceTypes_query$key } from '@/queries/__generated__/resourceTypeSelector_allResourceTypes_query.graphql';

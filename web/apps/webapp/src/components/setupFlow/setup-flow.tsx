@@ -1,6 +1,6 @@
-import { BodyIconTypography, StackRow } from '@/components/commons';
-import { PaletteModeContext } from '@/libs/providers';
-import { defaultButtonStyle } from '@/libs/theme';
+import { BodyIconTypography, StackRow } from '@skedular/ui';
+import { PaletteModeContext } from '@skedular/shared';
+import { defaultButtonStyle } from '@skedular/ui';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import BusinessIcon from '@mui/icons-material/Business';
 import CoffeeIcon from '@mui/icons-material/Coffee';

@@ -1,11 +1,11 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { NewFeedbackDialog } from '@/components/feedback';
 import { ArrowDownIcon, BillingAndPaymentIcon, FeedbackIcon, HamburgerMenuIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
 import { getBillingAndPaymentLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
 import { NoOrganizationMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { getCustomerFullName } from '@/libs/utils';
+import { SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getCustomerFullName } from '@skedular/shared';
 import type { organizationStoreFrontAppBar_query$key } from '@/queries/__generated__/organizationStoreFrontAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';

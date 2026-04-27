@@ -1,6 +1,6 @@
 import { OrganizationLocations } from '@/components/organization/organizationLocations';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@/libs/providers';
+import { useKnownParams } from '@skedular/shared';
 import { memo } from 'react';
 
 const RootPage = () => {

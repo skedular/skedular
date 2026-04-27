@@ -1,8 +1,8 @@
-import { BodyIconTypography, LeadIconTypography, PushToRight } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, PushToRight } from '@skedular/ui';
 import { HamburgerMenuIcon, SystemModeIcon } from '@/components/icons';
 import { getSignInLink, getSignUpLink } from '@/components/links';
 import { UnauthenticatedMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { SelectedPaletteModeContext, UpdatePaletteModeContext } from '@/libs/providers';
+import { SelectedPaletteModeContext, UpdatePaletteModeContext } from '@skedular/shared';
 import type { unauthenticatedOrganizationStoreFrontAppBar_query$key } from '@/queries/__generated__/unauthenticatedOrganizationStoreFrontAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';

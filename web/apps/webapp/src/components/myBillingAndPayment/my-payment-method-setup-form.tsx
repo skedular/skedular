@@ -1,6 +1,6 @@
-import { FormStackColumn, TwoButtonsDialogActions } from '@/components/commons';
+import { FormStackColumn, TwoButtonsDialogActions } from '@skedular/ui';
 import { NotificationContent, errorNotificationOptions } from '@/components/notification';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext } from '@skedular/shared';
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';

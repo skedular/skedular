@@ -1,5 +1,5 @@
 import { AnalyticsDaterangeSelector, AnalyticsInsightCard } from '@/components/analytics';
-import { toDayAndMonthDate, toFixed } from '@/libs/utils';
+import { toDayAndMonthDate, toFixed } from '@skedular/shared';
 import type { locationDeskOccupancyInsight_locationAnalytics_query$key } from '@/queries/__generated__/locationDeskOccupancyInsight_locationAnalytics_query.graphql';
 import type { locationDeskOccupancyInsight_query$key } from '@/queries/__generated__/locationDeskOccupancyInsight_query.graphql';
 import { axisClasses } from '@mui/x-charts';

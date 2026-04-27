@@ -11,16 +11,16 @@ import {
   SmallIconTypography,
   StackColumn,
   StackRow,
-} from '@/components/commons';
+} from '@skedular/ui';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { BookingIcon, DeleteIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationUsersBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { TeamCard } from '@/components/organization/organizationTeams';
 import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultButtonStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
-import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { defaultButtonStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@skedular/ui';
+import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
 import type { organizationUser_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUser_changeOrganizationUsersStatusMutation.graphql';
 import type { organizationUser_query$key } from '@/queries/__generated__/organizationUser_query.graphql';
 import type { organizationUser_removeOrganizationUsersMutation } from '@/queries/__generated__/organizationUser_removeOrganizationUsersMutation.graphql';

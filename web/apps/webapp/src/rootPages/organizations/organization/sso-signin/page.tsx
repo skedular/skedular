@@ -1,10 +1,10 @@
 import OrganizationAvatar from '@/components/avatars/organization-avatar';
-import { LeadIconTypography, SmallIconTypography } from '@/components/commons';
+import { LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { getOrganizationBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
-import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { coal, emerald } from '@/libs/theme';
+import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { coal, emerald } from '@skedular/ui';
 import type { pageOrganizationSsoSignin_rootQuery } from '@/queries/__generated__/pageOrganizationSsoSignin_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

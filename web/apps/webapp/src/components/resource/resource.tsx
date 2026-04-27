@@ -1,4 +1,4 @@
-import { stringToColor } from '@/libs/utils';
+import { stringToColor } from '@skedular/shared';
 import Chip from '@mui/material/Chip';
 import Tooltip from '@mui/material/Tooltip';
 import { memo } from 'react';

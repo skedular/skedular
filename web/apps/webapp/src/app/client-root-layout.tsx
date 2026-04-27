@@ -1,7 +1,7 @@
 'use client';
 
 import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
-import { MuiXLicense } from '@/libs/mui';
+import { MuiXLicense } from '@skedular/shared';
 import {
   DatePickerLocalizationProvider,
   GoogleAnalyticsProvider,
@@ -12,7 +12,7 @@ import {
   PaletteModeProvider,
   RelayProvider,
   ThemeProvider,
-} from '@/libs/providers';
+} from '@skedular/shared';
 import { TeamsUserCredential } from '@microsoft/teamsfx';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';

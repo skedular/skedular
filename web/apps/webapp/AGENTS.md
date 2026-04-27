@@ -21,8 +21,8 @@ src/
   app/           # Next.js App Router pages and layouts
   clients/       # HTTP API clients (generated — do not hand-edit)
   components/    # React component library
-    commons/     # Shared typography wrappers, layout primitives (see Typography Rule)
-  libs/          # Low-level utility libraries (analytics, auth, mui, providers, theme, utils)
+  libs/          # Low-level utility libraries (analytics, auth, image-file-uploader)
+    providers/   # Only integrated-platform-hook.tsx lives here; all other providers moved to @skedular/shared
   queries/       # Relay GraphQL query/mutation/fragment files
     __generated__/ # Relay-generated TypeScript artifacts — DO NOT hand-edit
   rootPages/     # Special root-level page components
@@ -36,11 +36,23 @@ scripts/
 ## Typography Rule
 
 - Never import `@mui/material/Typography` directly in feature or page components.
-- Use the Skedular wrappers exported from `@/components/commons`, e.g.:
+- Use the Skedular wrappers exported from `@skedular/ui`, e.g.:
   - `BodyIconTypography`, `SmallIconTypography`, `CaptionIconTypography`
   - `LeadIconTypography`, heading wrappers
-- The only exception is inside `src/components/commons/` implementation files where direct MUI `Typography` is the
+- The only exception is inside `@skedular/ui/src/typography/` implementation files where direct MUI `Typography` is the
   low-level primitive.
+
+## Package Boundaries
+
+- **`@skedular/ui`**: Design system — typography wrappers, layout primitives (StackColumn, StackRow), commons components, theme. Must NEVER import from `@skedular/shared`.
+- **`@skedular/shared`**: Shared runtime — providers (Relay, Theme, PaletteMode, etc.), hooks (useKnownParams, useIntegratedPlatrform), utils (date, name, relay, constants), cookie-consent, mui helpers, image uploaders. MAY import from `@skedular/ui`.
+- **webapp**: Product-specific app. Imports from both packages. `@/libs/providers/` now only contains `integrated-platform-hook.tsx` (MS Teams integration, deferred for revisit).
+
+## MS Teams Integration
+
+- `integrated-platform-hook.tsx` stays in `webapp/src/libs/providers/` for future revisit.
+- `useIntegratedPlatrform` is available from both `@skedular/shared` and the local `@/libs/providers` path.
+- The `InMsTeamsProvider` + `InMsTeamsContext` live in `@skedular/shared`.
 
 ## Redesign Program
 

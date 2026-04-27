@@ -1,5 +1,5 @@
-import { GridContainer, StackColumn } from '@/components/commons';
-import { defaultPadding } from '@/libs/theme';
+import { GridContainer, StackColumn } from '@skedular/ui';
+import { defaultPadding } from '@skedular/ui';
 import type { marketplaceLocations_locations_query$key } from '@/queries/__generated__/marketplaceLocations_locations_query.graphql';
 import type { marketplaceLocations_locations_refetchableFragment, OrganizationTagType } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
 import type { marketplaceLocations_query$key } from '@/queries/__generated__/marketplaceLocations_query.graphql';

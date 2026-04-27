@@ -2,14 +2,8 @@ import { CustomerAvatar } from '@/components/avatars';
 import LocationAvatar from '@/components/avatars/location-avatar';
 import TeamAvatar from '@/components/avatars/team-avatar';
 import InvoiceDownloadLinks from '@/components/booking/invoice-download-links';
-import { AppBarWithStackColumn, BodyIconTypography, SmallIconTypography, StackRow } from '@/components/commons';
-import FormFieldLabel from '@/components/commons/form-field-label';
-import StackColumn from '@/components/commons/stack-column';
 import { getOrganizationProductsBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getCustomerFullName, getOpeningHoursFromDateTime, getRelayErrorMessage, isMidnight, toOpeningHoursFromTime, toShortDate, toShortTime } from '@/libs/utils';
 import type { payMarketplaceBooking_booking_query$key } from '@/queries/__generated__/payMarketplaceBooking_booking_query.graphql';
 import type { payMarketplaceBooking_booking_Subscription } from '@/queries/__generated__/payMarketplaceBooking_booking_Subscription.graphql';
 import type { payMarketplaceBooking_confirmBookingPaymentMutation } from '@/queries/__generated__/payMarketplaceBooking_confirmBookingPaymentMutation.graphql';
@@ -21,6 +15,18 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
+import {
+  getCustomerFullName,
+  getOpeningHoursFromDateTime,
+  getRelayErrorMessage,
+  isMidnight,
+  PaletteModeContext,
+  toOpeningHoursFromTime,
+  toShortDate,
+  toShortTime,
+  useIntegratedPlatrform,
+} from '@skedular/shared';
+import { AppBarWithStackColumn, BodyIconTypography, defaultButtonStyle, defaultPadding, FormFieldLabel, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import dayjs, { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useMemo, useState } from 'react';

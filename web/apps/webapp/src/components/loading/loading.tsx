@@ -1,7 +1,9 @@
-import { LeadIconTypography } from '@/components/commons';
+'use client';
+
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import LinearProgress from '@mui/material/LinearProgress';
+import { LeadIconTypography } from '@skedular/ui';
 import { memo } from 'react';
 
 const indicatorSize = 80;

@@ -1,7 +1,7 @@
 import { FloorPlanCard } from '@/components/floorPlan';
 import { NewFloorplanButton } from '@/components/floorPlan/addFloorPlan';
 import { SettingsSectionCard } from '@skedular/ui';
-import { defaultPadding } from '@/libs/theme';
+import { defaultPadding } from '@skedular/ui';
 import type { organizationLocationFloorPlansSectionQuery } from '@/queries/__generated__/organizationLocationFloorPlansSectionQuery.graphql';
 import Box from '@mui/material/Box';
 import { memo, useMemo } from 'react';

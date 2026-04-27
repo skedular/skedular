@@ -8,7 +8,7 @@ import {
   StackRow,
   SubtitleIconTypography,
   TwoButtonsDialogActions,
-} from '@/components/commons';
+} from '@skedular/ui';
 import { getOrganizationBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
@@ -23,9 +23,9 @@ import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketpl
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { defaultGridStyle, defaultPadding } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { defaultGridStyle, defaultPadding } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation.graphql';

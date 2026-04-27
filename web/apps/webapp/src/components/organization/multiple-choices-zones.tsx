@@ -1,4 +1,4 @@
-import { BodyIconTypography } from '@/components/commons';
+import { BodyIconTypography } from '@skedular/ui';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
 import type { multipleChoicesZones_query$key } from '@/queries/__generated__/multipleChoicesZones_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';

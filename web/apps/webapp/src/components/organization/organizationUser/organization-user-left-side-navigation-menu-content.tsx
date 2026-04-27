@@ -1,4 +1,4 @@
-import { BodyIconTypography } from '@/components/commons';
+import { BodyIconTypography } from '@skedular/ui';
 import { BillingAndPaymentIcon, EditIcon, ProfileIcon } from '@/components/icons';
 import {
   getOrganizationUserBillingAndPaymentBaseLink,
@@ -6,7 +6,7 @@ import {
   getOrganizationUserManageTeamsBaseLink,
   getOrganizationUserProfileBaseLink,
 } from '@/components/links';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import {
   getSelectedListItemBorderRadius,
   sandstone,
@@ -14,7 +14,7 @@ import {
   secondDrawerCollapsedDrawerWidthPx,
   secondDrawerExpandedDrawerWidth,
   secondDrawerExpandedDrawerWidthPx,
-} from '@/libs/theme';
+} from '@skedular/ui';
 import type { organizationUserLeftSideNavigationMenuContent_query$key } from '@/queries/__generated__/organizationUserLeftSideNavigationMenuContent_query.graphql';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';

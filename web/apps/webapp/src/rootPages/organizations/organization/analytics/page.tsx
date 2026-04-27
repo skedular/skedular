@@ -1,9 +1,9 @@
-import { BodyIconTypography, StackColumn } from '@/components/commons';
+import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { OrganizationAnalytics } from '@/components/organization/organizationAnalytics';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@/libs/providers';
+import { useKnownParams } from '@skedular/shared';
 import type { pageOrganizationAnalytics_rootQuery } from '@/queries/__generated__/pageOrganizationAnalytics_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';

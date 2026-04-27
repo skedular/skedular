@@ -1,5 +1,5 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon } from '@/components/icons';
 import { ListingMetadata } from '@/components/listingMetadata';
 import {
@@ -14,7 +14,7 @@ import {
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import { createCancellationRefundRule, createPricingOption, isEventType, PricingOptionForm, ProductDetails } from '@/components/product/product-editor-shared';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
+import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';

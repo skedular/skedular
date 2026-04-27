@@ -1,5 +1,5 @@
 import { MarketplaceProductCard } from '@/components/marketplaceProductCard';
-import { formatPriceForDisplay } from '@/libs/utils';
+import { formatPriceForDisplay } from '@skedular/shared';
 import type { guestStoreFrontProductCard_product$key } from '@/queries/__generated__/guestStoreFrontProductCard_product.graphql';
 import type { guestStoreFrontProductCard_query$key } from '@/queries/__generated__/guestStoreFrontProductCard_query.graphql';
 import { memo, useMemo } from 'react';

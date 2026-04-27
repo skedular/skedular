@@ -8,7 +8,7 @@ import {
   StackRow,
   SubtitleIconTypography,
   TwoButtonsDialogActions,
-} from '@/components/commons';
+} from '@skedular/ui';
 import { ArrowLeftIcon, PaymentStatusIcon, QuantityIcon } from '@/components/icons';
 import { getMarketplaceSubscriptionDetailsLink } from '@/components/links';
 import { Loading } from '@/components/loading';
@@ -21,8 +21,8 @@ import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/m
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { guestStoreFrontSubscriptions_rootQuery } from '@/queries/__generated__/guestStoreFrontSubscriptions_rootQuery.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';

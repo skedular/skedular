@@ -1,11 +1,11 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceBookingCategory } from '@/components/booking';
-import { BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, StackColumn, StackRow } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext } from '@/libs/providers';
-import { defaultPadding } from '@/libs/theme';
+import { PaletteModeContext } from '@skedular/shared';
+import { defaultPadding } from '@skedular/ui';
 import {
   getCustomerFullName,
   getOpeningHoursFromDateTime,
@@ -14,7 +14,7 @@ import {
   keyboardSearchDebounceTimeout,
   toOpeningHoursFromTime,
   toShortDate,
-} from '@/libs/utils';
+} from '@skedular/shared';
 import type { editPrivateBooking_availableResources_query$key } from '@/queries/__generated__/editPrivateBooking_availableResources_query.graphql';
 import type { editPrivateBooking_availableResources_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_availableResources_refetchableFragment.graphql';
 import type { editPrivateBooking_customerTeams_query$key } from '@/queries/__generated__/editPrivateBooking_customerTeams_query.graphql';

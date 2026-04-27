@@ -1,11 +1,11 @@
-import { BodyIconTypography, CreditCard, ExtraLargeHeadingIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, CreditCard, ExtraLargeHeadingIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon, ErrorIcon, NewIcon, TickIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
-import { PaletteModeContext } from '@/libs/providers';
-import { coal, defaultButtonStyle, emerald } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { coal, defaultButtonStyle, emerald } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationAdminSubscriptionsSectionQuery } from '@/queries/__generated__/organizationAdminSubscriptionsSectionQuery.graphql';
 import type { organizationAdminSubscriptionsSection_cancelOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdminSubscriptionsSection_cancelOrganizationOfferingMutation.graphql';
 import type { organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation.graphql';

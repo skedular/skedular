@@ -1,6 +1,6 @@
 import { RootShell } from '@/components/rootShell';
 import { AddTeam } from '@/components/team/addTeam';
-import { useKnownParams } from '@/libs/providers';
+import { useKnownParams } from '@skedular/shared';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 

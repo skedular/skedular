@@ -1,6 +1,6 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { Address, PhysicalAddress } from '@/components/address';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, LeadIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, LeadIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
 import { getOrganizationLocationsBaseLink } from '@/components/links';
@@ -14,9 +14,9 @@ import OrganizationLocationManageResourcesSection from '@/components/organizatio
 import OrganizationLocationSectionNav, { OrganizationLocationSection } from '@/components/organization/organizationLocation/organization-location-section-nav';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, stringCollectionToString, stringToMultiLines } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, stringCollectionToString, stringToMultiLines } from '@skedular/shared';
 import type { organizationLocation_addLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_addLocationPhysicalAddressMutation.graphql';
 import type { organizationLocation_deleteLocationMutation } from '@/queries/__generated__/organizationLocation_deleteLocationMutation.graphql';
 import type { organizationLocation_query$key } from '@/queries/__generated__/organizationLocation_query.graphql';

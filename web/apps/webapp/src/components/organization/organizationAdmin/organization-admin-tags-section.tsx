@@ -1,4 +1,4 @@
-import { PushToRight, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { CustomTag } from '@/components/customTag';
 import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
@@ -8,9 +8,9 @@ import { AddOrganizationCustomTagButton } from '@/components/organization/addOrg
 import { EditOrganizationCustomTagDialog } from '@/components/organization/editOrganizationCustomTag';
 import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
 import { Search } from '@/components/search';
-import { PaletteModeContext } from '@/libs/providers';
-import { defaultGridActionPadding } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { defaultGridActionPadding } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationAdminTagsSectionQuery } from '@/queries/__generated__/organizationAdminTagsSectionQuery.graphql';
 import type { organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdminTagsSection_deleteCustomTagsMutation } from '@/queries/__generated__/organizationAdminTagsSection_deleteCustomTagsMutation.graphql';

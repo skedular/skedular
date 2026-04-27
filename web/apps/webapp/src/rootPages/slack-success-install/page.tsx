@@ -1,6 +1,6 @@
-import { BodyIconTypography } from '@/components/commons';
-import { PaletteModeContext } from '@/libs/providers';
-import { coal, emerald, sandstone } from '@/libs/theme';
+import { BodyIconTypography } from '@skedular/ui';
+import { PaletteModeContext } from '@skedular/shared';
+import { coal, emerald, sandstone } from '@skedular/ui';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

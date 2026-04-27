@@ -1,4 +1,4 @@
-import { BodyIconTypography, CaptionIconTypography, StackColumn } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, StackColumn } from '@skedular/ui';
 import Box from '@mui/material/Box';
 import { memo, useMemo } from 'react';
 

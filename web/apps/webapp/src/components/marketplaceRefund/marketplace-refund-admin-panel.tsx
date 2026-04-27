@@ -1,7 +1,7 @@
-import { DefaultDialogTitle, StackRow, TwoButtonsDialogActions } from '@/components/commons';
+import { DefaultDialogTitle, StackRow, TwoButtonsDialogActions } from '@skedular/ui';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext } from '@/libs/providers';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { marketplaceRefundAdminPanel_completeMarketplaceRefundMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_completeMarketplaceRefundMutation.graphql';
 import type { marketplaceRefundAdminPanel_failMarketplaceRefundMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_failMarketplaceRefundMutation.graphql';
 import type { marketplaceRefundAdminPanel_markMarketplaceRefundManualCompletedMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_markMarketplaceRefundManualCompletedMutation.graphql';

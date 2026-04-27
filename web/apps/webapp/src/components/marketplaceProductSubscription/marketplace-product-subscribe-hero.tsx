@@ -1,4 +1,4 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import type { marketplaceProductSubscribeHero_product$key } from '@/queries/__generated__/marketplaceProductSubscribeHero_product.graphql';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';

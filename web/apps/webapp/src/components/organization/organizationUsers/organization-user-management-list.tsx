@@ -1,5 +1,5 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
 import {
   compactManagementActionButtonSx,
@@ -8,7 +8,7 @@ import {
   compactManagementWarningChipSx,
   defaultButtonStyle,
   defaultGridActionPadding,
-} from '@/libs/theme';
+} from '@skedular/ui';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';

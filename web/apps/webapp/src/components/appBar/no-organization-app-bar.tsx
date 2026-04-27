@@ -1,5 +1,5 @@
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { NewFeedbackDialog } from '@/components/feedback';
 import {
   AddIcon,
@@ -14,8 +14,8 @@ import {
 } from '@/components/icons';
 import { getBillingAndPaymentLink, getNotificationsLink, getOrganizationBaseLink, getOrganizationSetupLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
 import { NoOrganizationMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { PaletteModeContext, SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { getCustomerFullName, localNow, toLongDateTime } from '@/libs/utils';
+import { PaletteModeContext, SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getCustomerFullName, localNow, toLongDateTime } from '@skedular/shared';
 import type { noOrganizationAppBar_query$key } from '@/queries/__generated__/noOrganizationAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';

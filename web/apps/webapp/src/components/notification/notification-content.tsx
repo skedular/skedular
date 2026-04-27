@@ -1,4 +1,4 @@
-import { SmallIconTypography } from '@/components/commons';
+import { SmallIconTypography } from '@skedular/ui';
 
 type Props = {
   content?: string;

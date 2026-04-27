@@ -1,4 +1,4 @@
-import { getPublicOrigin } from '@/libs/utils';
+import { getPublicOrigin } from '@skedular/shared';
 import { getSignUpUrl } from '@workos-inc/authkit-nextjs';
 import { redirect } from 'next/navigation';
 import type { NextRequest } from 'next/server';

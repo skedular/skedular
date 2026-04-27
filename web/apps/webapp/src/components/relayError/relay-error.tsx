@@ -1,6 +1,6 @@
 'use client';
 
-import { BodyIconTypography, MediumHeadingIconTypography, SmallHeadingIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
+import { BodyIconTypography, MediumHeadingIconTypography, SmallHeadingIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { ErrorIcon, HomeIcon, RefreshIcon } from '@/components/icons';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

@@ -1,4 +1,4 @@
-import { BodyIconTypography, HelperText } from '@/components/commons';
+import { BodyIconTypography, HelperText } from '@skedular/ui';
 import type { singleChoiceUserPersonalInformationVisibility_query$key } from '@/queries/__generated__/singleChoiceUserPersonalInformationVisibility_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';

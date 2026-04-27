@@ -1,12 +1,12 @@
 import { Address, PhysicalAddress } from '@/components/address';
-import { BodyIconTypography, CreditCard, FormFieldLabel, FormStackColumn, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, CreditCard, FormFieldLabel, FormStackColumn, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon, NewIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { BillingDetails, billingSchema } from '@/components/organization/organizationAdmin/organization-admin-shared';
-import { PaletteModeContext } from '@/libs/providers';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import type { organizationAdminBillingPaymentSectionQuery } from '@/queries/__generated__/organizationAdminBillingPaymentSectionQuery.graphql';
 import type { organizationAdminBillingPaymentSection_addOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdminBillingPaymentSection_addOrganizationBillingDetailsMutation.graphql';
 import type { organizationAdminBillingPaymentSection_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdminBillingPaymentSection_removeOrganizationPaymentMethodMutation.graphql';

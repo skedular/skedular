@@ -1,4 +1,4 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn } from '@skedular/ui';
 import { getSignInLink, getSignUpLink } from '@/components/links';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

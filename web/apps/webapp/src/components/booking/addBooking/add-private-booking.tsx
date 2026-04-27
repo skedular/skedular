@@ -1,13 +1,13 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceBookingCategory } from '@/components/booking';
-import { BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
 import { CalendarIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { getCustomerFullName, getRelayErrorMessage, isMidnight, keyboardSearchDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { getCustomerFullName, getRelayErrorMessage, isMidnight, keyboardSearchDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@skedular/shared';
 import type {
   BookingCategory as AddPrivateBookingCategory,
   addPrivateBookingPage_addPrivateBookingMutation,

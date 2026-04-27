@@ -1,11 +1,11 @@
-import { BodyIconTypography, GridContainer, LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, GridContainer, LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { LocationBookingInsightRoot } from '@/components/location/locationBookingInsight';
 import { LocationDeskOccupancyInsightRoot } from '@/components/location/locationDeskOccupancyInsight';
 import { LocationSelector } from '@/components/location/locationSelector';
 import { OrganizationBookingInsightRoot } from '@/components/organization/organizationBookingInsight';
 import { OrganizationMemberAttendancyInsightRoot } from '@/components/organization/organizationMemberAttendancyInsight';
-import { useIntegratedPlatrform } from '@/libs/providers';
-import { defaultPadding } from '@/libs/theme';
+import { useIntegratedPlatrform } from '@skedular/shared';
+import { defaultPadding } from '@skedular/ui';
 import type { organizationAnalytics_query$key } from '@/queries/__generated__/organizationAnalytics_query.graphql';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';

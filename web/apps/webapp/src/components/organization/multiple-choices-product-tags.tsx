@@ -1,4 +1,4 @@
-import { BodyIconTypography } from '@/components/commons';
+import { BodyIconTypography } from '@skedular/ui';
 import { AddOrganizationProductTagButton } from '@/components/organization/addOrganizationProductTag';
 import type { multipleChoicesProductTags_query$key } from '@/queries/__generated__/multipleChoicesProductTags_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';

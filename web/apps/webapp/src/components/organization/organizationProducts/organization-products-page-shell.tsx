@@ -1,5 +1,5 @@
-import { CollectionToolbar, StackColumn, SubtitleIconTypography } from '@/components/commons';
-import { defaultPadding } from '@/libs/theme';
+import { CollectionToolbar, StackColumn, SubtitleIconTypography } from '@skedular/ui';
+import { defaultPadding } from '@skedular/ui';
 import Box from '@mui/system/Box';
 import { PageHeaderPanel } from '@skedular/ui';
 import type { ReactNode } from 'react';

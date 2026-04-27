@@ -1,10 +1,10 @@
 import { BookingCard } from '@/components/booking/bookings';
-import { GridContainer, StackColumn } from '@/components/commons';
+import { GridContainer, StackColumn } from '@skedular/ui';
 import { DayPicker } from '@/components/datePickers';
 import { FloorPlanSelector } from '@/components/floorPlan/floorPlanSelector';
 import { ResourceCard } from '@/components/resource';
-import { defaultPadding, emerald, flame, maxScreenWidth } from '@/libs/theme';
-import { endOfDay, startOfDay } from '@/libs/utils';
+import { defaultPadding, emerald, flame, maxScreenWidth } from '@skedular/ui';
+import { endOfDay, startOfDay } from '@skedular/shared';
 import type { floorPlans_bookings_query$key } from '@/queries/__generated__/floorPlans_bookings_query.graphql';
 import type { floorPlans_bookings_refetchableFragment } from '@/queries/__generated__/floorPlans_bookings_refetchableFragment.graphql';
 import type { floorPlans_floorPlan_query$key } from '@/queries/__generated__/floorPlans_floorPlan_query.graphql';

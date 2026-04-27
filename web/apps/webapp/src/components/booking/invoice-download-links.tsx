@@ -1,4 +1,4 @@
-import { BodyIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
+import { BodyIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { PdfIcon } from '@/components/icons';
 import Link from '@mui/material/Link';
 import dayjs from 'dayjs';

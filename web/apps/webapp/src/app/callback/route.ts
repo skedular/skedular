@@ -1,4 +1,4 @@
-import { getPublicOrigin } from '@/libs/utils';
+import { getPublicOrigin } from '@skedular/shared';
 import { handleAuth } from '@workos-inc/authkit-nextjs';
 import type { NextRequest } from 'next/server';
 

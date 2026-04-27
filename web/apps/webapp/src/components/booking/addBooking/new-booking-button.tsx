@@ -1,8 +1,8 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { NewIcon } from '@/components/icons';
 import { getOrganizationBookingAddLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@/libs/providers';
-import { coal } from '@/libs/theme';
+import { useIntegratedPlatrform } from '@skedular/shared';
+import { coal } from '@skedular/ui';
 import Button from '@mui/material/Button';
 import type { SxProps, Theme } from '@mui/system';
 import { Dayjs } from 'dayjs';

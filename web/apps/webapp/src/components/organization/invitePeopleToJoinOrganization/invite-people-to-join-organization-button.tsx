@@ -1,4 +1,4 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { InvitePeopleIcon } from '@/components/icons';
 import Button from '@mui/material/Button';
 import type { CSSProperties } from '@mui/material/styles';

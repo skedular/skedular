@@ -1,3 +1,4 @@
+export * from './commons/index';
 export { default as EditorActionBar } from './editor-action-bar';
 export { default as GuidedEditorProgress } from './guided-editor-progress';
 export type { GuidedEditorStep } from './guided-editor-progress';
@@ -9,3 +10,6 @@ export { default as SetupSplitLayout } from './setup-split-layout';
 export { default as StackColumn } from './stack-column';
 export { default as StackRow } from './stack-row';
 export { default as StickyReviewRail } from './sticky-review-rail';
+export * from './theme/index';
+export { default as createTheme } from './theme/theme';
+export * from './typography/index';

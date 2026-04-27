@@ -1,10 +1,10 @@
-import { FormFieldLabel, FormStackColumn, StackColumn } from '@/components/commons';
+import { FormFieldLabel, FormStackColumn, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { TaxDetails, taxDetailsSchema } from '@/components/organization/organizationAdmin/organization-admin-shared';
-import { PaletteModeContext } from '@/libs/providers';
-import { keyboardTextFieldDebounceTimeout } from '@/libs/utils';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { keyboardTextFieldDebounceTimeout } from '@skedular/shared';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationAdminTaxDetailsSectionQuery } from '@/queries/__generated__/organizationAdminTaxDetailsSectionQuery.graphql';
 import type { organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation } from '@/queries/__generated__/organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation.graphql';
 import type { organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation } from '@/queries/__generated__/organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation.graphql';

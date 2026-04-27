@@ -1,4 +1,4 @@
-import { BodyIconTypography, CaptionIconTypography, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, SubtitleIconTypography } from '@skedular/ui';
 import Alert from '@mui/material/Alert';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';

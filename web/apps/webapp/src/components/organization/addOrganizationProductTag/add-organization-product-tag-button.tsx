@@ -1,4 +1,4 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { NewIcon } from '@/components/icons';
 import Button from '@mui/material/Button';
 import { memo, useState } from 'react';

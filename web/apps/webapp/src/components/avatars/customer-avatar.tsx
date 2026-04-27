@@ -1,4 +1,4 @@
-import { NameDetails, getCustomerAvatarLetters, getCustomerFullName, stringToColor } from '@/libs/utils';
+import { NameDetails, getCustomerAvatarLetters, getCustomerFullName, stringToColor } from '@skedular/shared';
 import { SxProps } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';

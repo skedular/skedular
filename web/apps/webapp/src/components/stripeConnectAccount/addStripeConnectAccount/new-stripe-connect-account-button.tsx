@@ -1,7 +1,7 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { NewIcon } from '@/components/icons';
 import { getOrganizationStripeConnectAccountAddLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@/libs/providers';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import Button from '@mui/material/Button';
 import { memo } from 'react';
 

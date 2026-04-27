@@ -1,4 +1,4 @@
-import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { getOrganizationBookingsBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -8,9 +8,9 @@ import OrganizationUserManagementList from '@/components/organization/organizati
 import { RelayError, toRootError } from '@/components/relayError';
 import { Search } from '@/components/search';
 import { TeamSelector } from '@/components/team/teamSelector';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultPadding } from '@/libs/theme';
-import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { defaultPadding } from '@skedular/ui';
+import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
 import type { organizationUsers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationMemberRoleMutation.graphql';
 import type { organizationUsers_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationUsersStatusMutation.graphql';
 import type { OrganizationMemberRole, organizationUsers_organizationMembers_query$key } from '@/queries/__generated__/organizationUsers_organizationMembers_query.graphql';

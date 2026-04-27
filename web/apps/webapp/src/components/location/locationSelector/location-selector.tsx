@@ -1,5 +1,5 @@
 import { LocationAvatar } from '@/components/avatars';
-import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
 import { LocationIcon } from '@/components/icons';
 import { DefaultSelect } from '@/components/styled';
 import type { locationSelector_allLocations_query$key } from '@/queries/__generated__/locationSelector_allLocations_query.graphql';

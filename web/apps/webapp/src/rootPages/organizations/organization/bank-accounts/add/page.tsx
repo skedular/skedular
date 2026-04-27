@@ -1,6 +1,6 @@
 import { AddBankAccount } from '@/components/bankAccount/addBankAccount';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@/libs/providers';
+import { useKnownParams } from '@skedular/shared';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 

@@ -1,3 +1,5 @@
+'use client';
+
 import Stack from '@mui/material/Stack';
 import type { CSSProperties } from '@mui/material/styles';
 import type { SxProps, Theme } from '@mui/system';

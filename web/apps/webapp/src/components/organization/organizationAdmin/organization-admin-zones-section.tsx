@@ -1,4 +1,4 @@
-import { PushToRight, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -8,9 +8,9 @@ import { EditOrganizationZoneDialog } from '@/components/organization/editOrgani
 import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
 import { Search } from '@/components/search';
 import { Zone } from '@/components/zone';
-import { PaletteModeContext } from '@/libs/providers';
-import { defaultGridActionPadding } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { defaultGridActionPadding } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationAdminZonesSectionQuery } from '@/queries/__generated__/organizationAdminZonesSectionQuery.graphql';
 import type { organizationAdminZonesSection_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdminZonesSection_addCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdminZonesSection_deleteZonesMutation } from '@/queries/__generated__/organizationAdminZonesSection_deleteZonesMutation.graphql';

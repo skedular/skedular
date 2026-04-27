@@ -1,4 +1,4 @@
-import { GridContainer, SmallIconTypography, StackRow } from '@/components/commons';
+import { GridContainer, SmallIconTypography, StackRow } from '@skedular/ui';
 import { ZoneIcon } from '@/components/icons';
 import { Chip, Tooltip } from '@mui/material';
 import Grid from '@mui/material/Grid';

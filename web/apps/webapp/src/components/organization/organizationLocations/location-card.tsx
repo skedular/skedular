@@ -8,15 +8,15 @@ import {
   StackRow,
   SubtitleIconTypography,
   TwoButtonsDialogActions,
-} from '@/components/commons';
+} from '@skedular/ui';
 import { EllipseMenuIcon, FloorPlanIcon, LocationIcon, ResourceIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationFloorPlansLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
-import { useIntegratedPlatrform } from '@/libs/providers';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { useIntegratedPlatrform } from '@skedular/shared';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { locationCard_addCustomerPreferredLocationMutation } from '@/queries/__generated__/locationCard_addCustomerPreferredLocationMutation.graphql';
 import type { locationCard_deleteLocationMutation } from '@/queries/__generated__/locationCard_deleteLocationMutation.graphql';
 import type { locationCard_LocationDetails$key } from '@/queries/__generated__/locationCard_LocationDetails.graphql';

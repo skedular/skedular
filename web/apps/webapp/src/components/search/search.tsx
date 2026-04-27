@@ -1,6 +1,6 @@
-import { StackRow } from '@/components/commons';
+import { StackRow } from '@skedular/ui';
 import { SearchRoundedIcon } from '@/components/icons';
-import { keyboardSearchDebounceTimeout } from '@/libs/utils';
+import { keyboardSearchDebounceTimeout } from '@skedular/shared';
 import Divider from '@mui/material/Divider';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import type { SxProps, Theme } from '@mui/system';

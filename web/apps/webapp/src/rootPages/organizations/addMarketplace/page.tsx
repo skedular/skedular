@@ -4,8 +4,8 @@ import { errorNotificationOptions, NotificationContent } from '@/components/noti
 import { AddMarketplaceOrganization } from '@/components/organization/addOrganization';
 import { RelayError, toRootError } from '@/components/relayError';
 import { NoOrganizationRootShell } from '@/components/rootShell';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { pageAddMarketplaceOrganization_claimLocationOwnershipMutation } from '@/queries/__generated__/pageAddMarketplaceOrganization_claimLocationOwnershipMutation.graphql';
 import type { pageAddMarketplaceOrganization_completeOnboardingMutation } from '@/queries/__generated__/pageAddMarketplaceOrganization_completeOnboardingMutation.graphql';
 import type { pageAddMarketplaceOrganization_rootQuery } from '@/queries/__generated__/pageAddMarketplaceOrganization_rootQuery.graphql';

@@ -1,4 +1,4 @@
-import { BodyIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
+import { BodyIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
 import {
   AnalyticsIcon,
   BookingIcon,
@@ -26,8 +26,8 @@ import {
   getOrganizationUsersBaseLink,
 } from '@/components/links';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
-import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { coal, defaultPadding, emerald, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@/libs/theme';
+import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { coal, defaultPadding, emerald, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@skedular/ui';
 import type { leftSideNavigationMenuContent_query$key } from '@/queries/__generated__/leftSideNavigationMenuContent_query.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

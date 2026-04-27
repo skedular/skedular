@@ -1,7 +1,7 @@
-import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
+import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
 import { CalendarIcon } from '@/components/icons';
 import { DefaultSelect } from '@/components/styled';
-import { endOfWeek, isInSameMonth, isInSameWeek, isInSameYear, startOfWeek } from '@/libs/utils';
+import { endOfWeek, isInSameMonth, isInSameWeek, isInSameYear, startOfWeek } from '@skedular/shared';
 import Divider from '@mui/material/Divider';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';

@@ -1,4 +1,4 @@
-import { BodyIconTypography } from '@/components/commons';
+import { BodyIconTypography } from '@skedular/ui';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import type { TCountryCode } from 'countries-list';
 import { countries as countriesList, getCountryCode } from 'countries-list';

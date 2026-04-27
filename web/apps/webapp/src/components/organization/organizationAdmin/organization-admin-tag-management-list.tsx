@@ -1,4 +1,4 @@
-import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { EllipseMenuIcon } from '@/components/icons';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';

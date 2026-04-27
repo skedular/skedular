@@ -2,8 +2,8 @@ import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetc
 import { listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import ProductEditorForm from '@/components/product/product-editor-form';
-import { PaletteModeContext } from '@/libs/providers';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import type { editProduct_query$key } from '@/queries/__generated__/editProduct_query.graphql';
 import type {
   Currency,

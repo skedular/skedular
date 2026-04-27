@@ -1,4 +1,4 @@
-import { GridContainer, SmallIconTypography, StackRow } from '@/components/commons';
+import { GridContainer, SmallIconTypography, StackRow } from '@skedular/ui';
 import { ContactPhoneIcon } from '@/components/icons';
 import Grid from '@mui/material/Grid';
 import type { SxProps, Theme } from '@mui/system';

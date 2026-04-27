@@ -1,15 +1,5 @@
 import { NewBankAccountButton } from '@/components/bankAccount/addBankAccount';
-import {
-  BodyIconTypography,
-  FormFieldLabel,
-  FormStackColumn,
-  GridContainer,
-  PushToRight,
-  SectionIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-} from '@/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { BillingIcon, DeleteIcon } from '@/components/icons';
 import { getOrganizationBankAccountBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
@@ -27,9 +17,9 @@ import OrganizationMarketplaceStripeConnectAccountManagementList from '@/compone
 import { ProductTag } from '@/components/productTag';
 import { Search } from '@/components/search';
 import { ExistingStripeConnectAccountButton, NewStripeConnectAccountButton } from '@/components/stripeConnectAccount/addStripeConnectAccount';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultPadding } from '@/libs/theme';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { defaultButtonStyle, defaultGridActionPadding, defaultPadding } from '@skedular/ui';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteProductTagsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductTagsMutation.graphql';

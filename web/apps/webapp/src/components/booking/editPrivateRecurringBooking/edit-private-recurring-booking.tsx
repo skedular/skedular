@@ -1,12 +1,12 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceBookingCategory } from '@/components/booking';
-import { BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
 import { CalendarIcon } from '@/components/icons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext } from '@/libs/providers';
-import { getCustomerFullName, getRelayErrorMessage, isMidnight, keyboardSearchDebounceTimeout, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { getCustomerFullName, getRelayErrorMessage, isMidnight, keyboardSearchDebounceTimeout, toOpeningHoursFromTime, toShortDate } from '@skedular/shared';
 import type { editPrivateRecurringBooking_availableResources_query$key } from '@/queries/__generated__/editPrivateRecurringBooking_availableResources_query.graphql';
 import type { editPrivateRecurringBooking_availableResources_refetchableFragment } from '@/queries/__generated__/editPrivateRecurringBooking_availableResources_refetchableFragment.graphql';
 import type { editPrivateRecurringBooking_customerTeams_query$key } from '@/queries/__generated__/editPrivateRecurringBooking_customerTeams_query.graphql';

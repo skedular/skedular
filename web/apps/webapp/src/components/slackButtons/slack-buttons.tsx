@@ -1,4 +1,4 @@
-import { encodeBase64 } from '@/libs/utils';
+import { encodeBase64 } from '@skedular/shared';
 import { memo } from 'react';
 import { v7 as uuid } from 'uuid';
 

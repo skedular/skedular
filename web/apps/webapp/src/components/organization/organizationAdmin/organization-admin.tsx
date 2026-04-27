@@ -1,10 +1,10 @@
-import { BodyIconTypography, LeadIconTypography, StackColumn } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, StackColumn } from '@skedular/ui';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
 import Box from '@mui/material/Box';
 import { PageHeaderPanel } from '@skedular/ui';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { defaultPadding } from '@/libs/theme';
+import { defaultPadding } from '@skedular/ui';
 import { useSearchParams } from 'next/navigation';
 import OrganizationAdminBillingPaymentSection from './organization-admin-billing-payment-section';
 import OrganizationAdminManageOrganizationSection from './organization-admin-manage-organization-section';

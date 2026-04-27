@@ -1,5 +1,5 @@
 import InvoiceDownloadLinks, { type InvoiceLinkItem } from '@/components/booking/invoice-download-links';
-import { BodyIconTypography, CaptionIconTypography, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, SubtitleIconTypography } from '@skedular/ui';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';

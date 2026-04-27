@@ -1,5 +1,5 @@
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { NewFeedbackDialog } from '@/components/feedback';
 import {
   AddIcon,
@@ -24,8 +24,8 @@ import {
   getSignOutReturnToLink,
 } from '@/components/links';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { PaletteModeContext, SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { getCustomerFullName, localNow, toLongDateTime } from '@/libs/utils';
+import { PaletteModeContext, SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { getCustomerFullName, localNow, toLongDateTime } from '@skedular/shared';
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';

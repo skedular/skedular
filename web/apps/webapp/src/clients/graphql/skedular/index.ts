@@ -1,4 +1,4 @@
-import { isServer } from '@/libs/utils';
+import { isServer } from '@skedular/shared';
 import { createClient } from 'graphql-sse';
 import type { FetchFunction, GraphQLResponse, SubscribeFunction } from 'relay-runtime';
 import { Environment, Network, Observable, RecordSource, Store } from 'relay-runtime';

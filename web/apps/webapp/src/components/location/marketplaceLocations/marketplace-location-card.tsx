@@ -1,10 +1,10 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@skedular/ui';
 import { AreaIcon, CloseIcon, FavouriteIcon, LocationIcon, NotFavouriteIcon, PersonIcon, ShareIcon } from '@/components/icons';
 import { getMarketplaceLocationLink, getSignInLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { emerald } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { emerald } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { marketplaceLocationCard_addCustomerFavouriteLocationMutation } from '@/queries/__generated__/marketplaceLocationCard_addCustomerFavouriteLocationMutation.graphql';
 import type { marketplaceLocationCard_LocationDetails$key } from '@/queries/__generated__/marketplaceLocationCard_LocationDetails.graphql';
 import type { marketplaceLocationCard_query$key } from '@/queries/__generated__/marketplaceLocationCard_query.graphql';

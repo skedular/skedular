@@ -1,13 +1,13 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { MyBookings } from '@/components/booking/myBookings';
-import { GridContainer, StackColumn } from '@/components/commons';
+import { GridContainer, StackColumn } from '@skedular/ui';
 import { WeekRangePicker } from '@/components/datePickers';
 import { GettingStarted } from '@/components/gettingStarted';
 import { Loading } from '@/components/loading';
 import { LocationSelector } from '@/components/location/locationSelector';
 import { RelayError, toRootError } from '@/components/relayError';
 import { TeamSelector } from '@/components/team/teamSelector';
-import { endOfWeek, startOfDay, startOfWeek } from '@/libs/utils';
+import { endOfWeek, startOfDay, startOfWeek } from '@skedular/shared';
 import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
 import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';

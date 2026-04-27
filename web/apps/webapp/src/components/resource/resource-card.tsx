@@ -1,10 +1,10 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
-import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
 import { DeskIcon, OtherResourceIcon, ParkingIcon, RoomIcon } from '@/components/icons';
 import { getOrganizationLocationResourceBaseLink } from '@/components/links';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import type { resourceCard_ResourceDetails$key } from '@/queries/__generated__/resourceCard_ResourceDetails.graphql';
 import type { resourceCard_query$key } from '@/queries/__generated__/resourceCard_query.graphql';
 import Card from '@mui/material/Card';

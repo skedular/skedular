@@ -1,8 +1,8 @@
-import { BodyIconTypography } from '@/components/commons';
+import { BodyIconTypography } from '@skedular/ui';
 import { CollpaseDrawerIcon, SignInIcon, SignUpIcon } from '@/components/icons';
 import { getSignInLink, getSignUpLink } from '@/components/links';
-import { PaletteModeContext } from '@/libs/providers';
-import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@/libs/theme';
+import { PaletteModeContext } from '@skedular/shared';
+import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@skedular/ui';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';

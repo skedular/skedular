@@ -1,8 +1,8 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
 import { UserIcon } from '@/components/icons';
 import { DefaultSelect } from '@/components/styled';
-import { getCustomerFullName } from '@/libs/utils';
+import { getCustomerFullName } from '@skedular/shared';
 import type { organizationUserSelector_organizationMembers_query$key } from '@/queries/__generated__/organizationUserSelector_organizationMembers_query.graphql';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';

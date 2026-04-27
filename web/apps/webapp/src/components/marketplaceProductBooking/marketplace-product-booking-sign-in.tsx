@@ -1,7 +1,7 @@
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import MarketplaceProductSubscribeAuthGate from '@/components/marketplaceProductSubscription/marketplace-product-subscribe-auth-gate';
-import { useKnownParams } from '@/libs/providers';
+import { useKnownParams } from '@skedular/shared';
 import type { marketplaceProductBookingSignIn_rootQuery } from '@/queries/__generated__/marketplaceProductBookingSignIn_rootQuery.graphql';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';

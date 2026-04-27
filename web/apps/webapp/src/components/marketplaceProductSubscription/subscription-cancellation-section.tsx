@@ -1,4 +1,4 @@
-import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import type { SupportedMarketplaceBookingSubscriptionCancellationModeDetails } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-cancellation-mode';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';

@@ -1,10 +1,10 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceProductBookingDetailsLink, getMarketplaceProductLink, getSignInLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel } from '@/components/marketplaceProduct';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { formatPriceForDisplay, getRelayErrorMessage, toShortDate } from '@/libs/utils';
+import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { formatPriceForDisplay, getRelayErrorMessage, toShortDate } from '@skedular/shared';
 import type {
   BookingCategory,
   marketplaceProductBookingForm_addMarketplaceBookingMutation,

@@ -1,4 +1,4 @@
-import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { memo, type JSX } from 'react';

@@ -1,4 +1,4 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, SubtitleIconTypography } from '@skedular/ui';
 import { MarketplaceCancellationPolicyDetails } from '@/components/marketplaceProduct';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';

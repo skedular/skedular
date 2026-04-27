@@ -1,6 +1,6 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { BodyIconTypography } from '@/components/commons';
-import { getCustomerFullName, keyboardSearchDebounceTimeout } from '@/libs/utils';
+import { BodyIconTypography } from '@skedular/ui';
+import { getCustomerFullName, keyboardSearchDebounceTimeout } from '@skedular/shared';
 import type { organizationMemberSelector_query$key } from '@/queries/__generated__/organizationMemberSelector_query.graphql';
 import type { organizationMemberSelector_refetchableFragment } from '@/queries/__generated__/organizationMemberSelector_refetchableFragment.graphql';
 import { Autocomplete } from 'mui-rff';

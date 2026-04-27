@@ -1,4 +1,4 @@
-import { FormFieldLabel } from '@/components/commons';
+import { FormFieldLabel } from '@skedular/ui';
 import { SingleChoiceCountry } from '@/components/forms';
 import { TextField } from 'mui-rff';
 import { memo } from 'react';

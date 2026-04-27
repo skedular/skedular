@@ -1,4 +1,4 @@
-import { StackRow } from '@/components/commons';
+import { StackRow } from '@skedular/ui';
 import { SlackButton } from '@/components/slackButtons';
 import { memo } from 'react';
 

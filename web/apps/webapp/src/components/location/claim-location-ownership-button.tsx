@@ -1,6 +1,6 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { ClaimOwnership } from '@/components/icons';
-import { coal } from '@/libs/theme';
+import { coal } from '@skedular/ui';
 import Button from '@mui/material/Button';
 import type { SxProps, Theme } from '@mui/system';
 import { memo, useEffect, useState } from 'react';

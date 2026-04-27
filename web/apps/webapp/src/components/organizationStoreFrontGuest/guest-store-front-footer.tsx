@@ -1,4 +1,4 @@
-import { BodyIconTypography, GridContainer, LeadIconTypography } from '@/components/commons';
+import { BodyIconTypography, GridContainer, LeadIconTypography } from '@skedular/ui';
 import type { guestStoreFrontFooter_query$key } from '@/queries/__generated__/guestStoreFrontFooter_query.graphql';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';

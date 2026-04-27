@@ -1,4 +1,4 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { NewIcon } from '@/components/icons';
 import type { existingStripeConnectAccountButton_query$key } from '@/queries/__generated__/existingStripeConnectAccountButton_query.graphql';
 import Button from '@mui/material/Button';

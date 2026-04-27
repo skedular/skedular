@@ -8,7 +8,11 @@ This file is the entry point for AI agents working in `web/`.
 web/
   apps/
     webapp/        # Main Next.js customer-facing and operator web app
-    webapphelp/    # Supplementary help/documentation app
+    webapp-spaces/ # Spaces product Next.js app
+    webapp-teams/  # Teams product Next.js app
+  packages/
+    ui/            # @skedular/ui — design system (typography, commons, theme)
+    shared/        # @skedular/shared — shared runtime (providers, hooks, utils)
   infrastructure/ # Shared web infrastructure helpers
   package.json
   pnpm-workspace.yaml
@@ -19,10 +23,15 @@ web/
 
 - **Package manager**: pnpm with workspaces
 - **Build orchestration**: Turborepo (`turbo.json`)
-- **Framework**: Next.js (App Router) in `web/apps/webapp`
+- **Framework**: Next.js 16 (App Router) in `web/apps/`
 - **GraphQL client**: Relay (`react-relay`, generated types under `src/queries/__generated__/`)
-- **UI library**: MUI (Material UI) — but use Skedular typography wrappers, not `@mui/material/Typography` directly
+- **UI library**: MUI v9 — but use Skedular typography wrappers from `@skedular/ui`, not `@mui/material/Typography` directly
 - **Type generation**: OpenAPI → TypeScript via `web/apps/webapp/scripts/generate.sh`
+
+## Package Boundaries
+
+- **`@skedular/ui`** (`web/packages/ui/`): Design system. Contains typography wrappers, layout primitives (StackColumn, StackRow), commons components, theme creation and primitives. Must NEVER import from `@skedular/shared` to avoid circular dependencies.
+- **`@skedular/shared`** (`web/packages/shared/`): Shared runtime. Contains providers (Relay, Theme, PaletteMode, InMsTeams, etc.), hooks (useKnownParams, useIntegratedPlatrform), utils (date, name, relay, constants), cookie-consent, MUI helpers, and image uploaders. MAY import from `@skedular/ui`.
 
 ## Code Generation
 

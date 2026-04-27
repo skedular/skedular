@@ -1,19 +1,10 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceMarketplaceBookingCategory } from '@/components/booking';
 import InvoiceDownloadLinks from '@/components/booking/invoice-download-links';
-import {
-  AppBarWithStackColumn,
-  BodyIconTypography,
-  FormFieldLabel,
-  FormStackColumn,
-  SectionIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-} from '@/components/commons';
+import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext } from '@/libs/providers';
-import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
+import { PaletteModeContext } from '@skedular/shared';
+import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
 import {
   getCustomerFullName,
   getOpeningHoursFromDateTime,
@@ -23,7 +14,7 @@ import {
   toOpeningHoursFromTime,
   toShortDate,
   toShortTime,
-} from '@/libs/utils';
+} from '@skedular/shared';
 import type { editMarketplaceBooking_booking_query$key } from '@/queries/__generated__/editMarketplaceBooking_booking_query.graphql';
 import type { editMarketplaceBooking_booking_refetchableFragment } from '@/queries/__generated__/editMarketplaceBooking_booking_refetchableFragment.graphql';
 import type { editMarketplaceBooking_customerTeams_query$key } from '@/queries/__generated__/editMarketplaceBooking_customerTeams_query.graphql';

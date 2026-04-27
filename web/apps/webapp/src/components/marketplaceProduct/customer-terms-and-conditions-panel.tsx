@@ -1,4 +1,4 @@
-import { BodyIconTypography, CaptionIconTypography, StackColumn } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, StackColumn } from '@skedular/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';

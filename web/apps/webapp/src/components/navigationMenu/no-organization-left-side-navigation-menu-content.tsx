@@ -1,8 +1,8 @@
-import { BodyIconTypography } from '@/components/commons';
+import { BodyIconTypography } from '@skedular/ui';
 import { BillingAndPaymentIcon, CollpaseDrawerIcon, HomeIcon, NotificationsIcon, SettingsIcon } from '@/components/icons';
 import { getBillingAndPaymentLink, getNotificationsLink, getRootLink, getSettingsLink } from '@/components/links';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@/libs/theme';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@skedular/ui';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';

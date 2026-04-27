@@ -1,6 +1,6 @@
-import { BodyIconTypography, CaptionIconTypography, MediumHeadingIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, MediumHeadingIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceLocationFloorPlansLink, getMarketplaceLocationLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@/libs/providers';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import type { guestStoreFrontLocationsStrip_query$data, guestStoreFrontLocationsStrip_query$key } from '@/queries/__generated__/guestStoreFrontLocationsStrip_query.graphql';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';

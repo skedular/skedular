@@ -1,10 +1,10 @@
 import { Address, PhysicalAddress } from '@/components/address';
-import { FormStackColumn, StackColumn } from '@/components/commons';
+import { FormStackColumn, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { physicalAddressSchema, PhysicalAddressDetails } from '@/components/organization/organizationAdmin/organization-admin-shared';
-import { keyboardTextFieldDebounceTimeout } from '@/libs/utils';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { keyboardTextFieldDebounceTimeout } from '@skedular/shared';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationAdminPhysicalAddressSectionQuery } from '@/queries/__generated__/organizationAdminPhysicalAddressSectionQuery.graphql';
 import type { organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation } from '@/queries/__generated__/organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation.graphql';
 import type { organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation } from '@/queries/__generated__/organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation.graphql';
@@ -19,7 +19,7 @@ import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext } from '@skedular/shared';
 
 type Props = {
   organizationCustomDomain: string;

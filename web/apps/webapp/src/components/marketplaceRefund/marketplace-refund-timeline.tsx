@@ -1,4 +1,4 @@
-import { BodyIconTypography, CaptionIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, CaptionIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import Box from '@mui/material/Box';
 import dayjs from 'dayjs';
 import { formatRefundAmount } from './refund-display';

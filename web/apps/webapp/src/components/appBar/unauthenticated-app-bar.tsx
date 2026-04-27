@@ -1,8 +1,8 @@
-import { BodyIconTypography, PushToRight } from '@/components/commons';
+import { BodyIconTypography, PushToRight } from '@skedular/ui';
 import { HamburgerMenuIcon, SystemModeIcon } from '@/components/icons';
 import { getSignInLink, getSignUpLink } from '@/components/links';
 import { UnauthenticatedMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { PaletteModeContext, SelectedPaletteModeContext, UpdatePaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, SelectedPaletteModeContext, UpdatePaletteModeContext } from '@skedular/shared';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import MuiAppBar from '@mui/material/AppBar';

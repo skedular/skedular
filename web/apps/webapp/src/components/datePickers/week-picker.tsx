@@ -1,6 +1,6 @@
-import { SmallIconTypography } from '@/components/commons';
+import { SmallIconTypography } from '@skedular/ui';
 import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, TodayIcon } from '@/components/icons';
-import { endOfWeek, isInSameMonth, isInSameWeek, isInSameYear, startOfWeek } from '@/libs/utils';
+import { endOfWeek, isInSameMonth, isInSameWeek, isInSameYear, startOfWeek } from '@skedular/shared';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';

@@ -1,6 +1,6 @@
 import { RootShell } from '@/components/rootShell';
 import { AddStripeConnectAccount } from '@/components/stripeConnectAccount/addStripeConnectAccount';
-import { useKnownParams } from '@/libs/providers';
+import { useKnownParams } from '@skedular/shared';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 

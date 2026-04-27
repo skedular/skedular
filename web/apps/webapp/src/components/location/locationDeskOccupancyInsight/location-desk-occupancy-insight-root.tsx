@@ -1,6 +1,6 @@
 import { AnalyticsInsightCard } from '@/components/analytics';
 import { RelayError, toRootError } from '@/components/relayError';
-import { startOfDay } from '@/libs/utils';
+import { startOfDay } from '@skedular/shared';
 import type { locationDeskOccupancyInsightRoot_rootQuery } from '@/queries/__generated__/locationDeskOccupancyInsightRoot_rootQuery.graphql';
 import Skeleton from '@mui/material/Skeleton';
 import { memo, useEffect, useState, useTransition } from 'react';

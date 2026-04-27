@@ -1,11 +1,11 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { EllipseMenuIcon, ProductIcon } from '@/components/icons';
 import { getOrganizationProductBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { emerald, flame } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { emerald, flame } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { productCard_activateProductsMutation } from '@/queries/__generated__/productCard_activateProductsMutation.graphql';
 import type { productCard_deactivateProductsMutation } from '@/queries/__generated__/productCard_deactivateProductsMutation.graphql';
 import type { productCard_deleteProductsMutation } from '@/queries/__generated__/productCard_deleteProductsMutation.graphql';

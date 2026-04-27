@@ -1,4 +1,4 @@
-import { PushToRight, StackColumn, StackRow } from '@/components/commons';
+import { PushToRight, StackColumn, StackRow } from '@skedular/ui';
 import { getOrganizationLocationResourceBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -7,9 +7,9 @@ import OrganizationLocationResourceManagementList from '@/components/organizatio
 import { ZoneSelector } from '@/components/organization/zoneSelector';
 import { AddResourceButton } from '@/components/resource/addResource';
 import { Search } from '@/components/search';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultPadding } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { defaultPadding } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationLocationManageResourcesSectionQuery } from '@/queries/__generated__/organizationLocationManageResourcesSectionQuery.graphql';
 import type { organizationLocationManageResourcesSection_activateResourcesMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_activateResourcesMutation.graphql';
 import type { organizationLocationManageResourcesSection_addCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_addCustomerPreferredResourceMutation.graphql';

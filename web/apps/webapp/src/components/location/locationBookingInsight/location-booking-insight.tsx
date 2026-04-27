@@ -1,5 +1,5 @@
 import { AnalyticsDaterangeSelector, AnalyticsInsightCard } from '@/components/analytics';
-import { toDayAndMonthDate } from '@/libs/utils';
+import { toDayAndMonthDate } from '@skedular/shared';
 import type { locationBookingInsight_locationAnalytics_query$key } from '@/queries/__generated__/locationBookingInsight_locationAnalytics_query.graphql';
 import type { locationBookingInsight_query$key } from '@/queries/__generated__/locationBookingInsight_query.graphql';
 import { BarChart } from '@mui/x-charts/BarChart';

@@ -1,4 +1,4 @@
-import { FormFieldLabel } from '@/components/commons';
+import { FormFieldLabel } from '@skedular/ui';
 import { TextField } from 'mui-rff';
 import { useMemo, type ReactNode } from 'react';
 import { FormSpy } from 'react-final-form';

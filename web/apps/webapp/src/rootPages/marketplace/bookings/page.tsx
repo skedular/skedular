@@ -1,4 +1,4 @@
-import { BodyIconTypography, LeadIconTypography } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography } from '@skedular/ui';
 import { getSignInLink } from '@/components/links';
 import { GuestStoreFrontBookings } from '@/components/organizationStoreFrontGuest';
 import { OrganizationStoreFrontRootShell, UnauthenticatedOrganizationStoreFrontRootShell } from '@/components/rootShell';

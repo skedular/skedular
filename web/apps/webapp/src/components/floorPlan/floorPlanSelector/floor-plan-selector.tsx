@@ -1,4 +1,4 @@
-import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
 import { FloorPlanIcon } from '@/components/icons';
 import { DefaultSelect } from '@/components/styled';
 import type { floorPlanSelector_allFloorPlans_query$key } from '@/queries/__generated__/floorPlanSelector_allFloorPlans_query.graphql';

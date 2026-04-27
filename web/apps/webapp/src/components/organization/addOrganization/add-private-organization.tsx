@@ -1,13 +1,13 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, StackColumn, StackRow } from '@/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, StackColumn, StackRow } from '@skedular/ui';
 import { AnalyticsIcon, CalendarIcon, DeleteIcon } from '@/components/icons';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationTermsOfUse } from '@/components/organization';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { PaletteModeContext } from '@/libs/providers';
-import { defaultButtonStyle } from '@/libs/theme';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext } from '@skedular/shared';
+import { defaultButtonStyle } from '@skedular/ui';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { addPrivateOrganization_addOrganizationMutation } from '@/queries/__generated__/addPrivateOrganization_addOrganizationMutation.graphql';
 import type { addPrivateOrganization_query$key } from '@/queries/__generated__/addPrivateOrganization_query.graphql';
 import GroupsIcon from '@mui/icons-material/Groups';

@@ -4,8 +4,8 @@ import { errorNotificationOptions, NotificationContent } from '@/components/noti
 import { AddPrivateOrganization } from '@/components/organization/addOrganization';
 import { RelayError, toRootError } from '@/components/relayError';
 import { NoOrganizationRootShell } from '@/components/rootShell';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { getRelayErrorMessage } from '@/libs/utils';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { pageAddPrivateOrganization_claimLocationOwnershipMutation } from '@/queries/__generated__/pageAddPrivateOrganization_claimLocationOwnershipMutation.graphql';
 import type { pageAddPrivateOrganization_completeOnboardingMutation } from '@/queries/__generated__/pageAddPrivateOrganization_completeOnboardingMutation.graphql';
 import type { pageAddPrivateOrganization_rootQuery } from '@/queries/__generated__/pageAddPrivateOrganization_rootQuery.graphql';
