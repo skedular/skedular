@@ -4,6 +4,7 @@ using Organization.Api.GraphQL.Analytics;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services.Cache;
+
 namespace Organization.Api.Services;
 
 public interface IOrganizationAnalyticsService
@@ -67,8 +68,7 @@ public class OrganizationAnalyticsService(
 
         return new OrganizationAnalytics
         {
-            MemberAttendancePercentage = organizationMemberAttendancePercentages,
-            DailyBookingsTotals = organizationDailyBookingsTotals
+            MemberAttendancePercentage = organizationMemberAttendancePercentages, DailyBookingsTotals = organizationDailyBookingsTotals
         };
     }
 }

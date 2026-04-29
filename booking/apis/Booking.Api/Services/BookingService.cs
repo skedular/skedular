@@ -4,7 +4,6 @@ using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
@@ -107,14 +106,14 @@ public class BookingService(
 
             searchCriteria = searchCriteria with
             {
-                OrganizationId = scopedOrganization.Id,
-                OrganizationCustomDomain = scopedOrganization.CustomDomain
+                OrganizationId = scopedOrganization.Id, OrganizationCustomDomain = scopedOrganization.CustomDomain
             };
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.LocationIds.Count != 0)
         {
-            var locations = await repositoryFactory.LocationRepository.GetActiveByIdsAsync(searchCriteria.LocationIds.Distinct().ToList(), cancellationToken);
+            var locations =
+                await repositoryFactory.LocationRepository.GetActiveByIdsAsync(searchCriteria.LocationIds.Distinct().ToList(), cancellationToken);
 
             foreach (var location in locations)
             {

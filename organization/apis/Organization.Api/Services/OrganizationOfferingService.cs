@@ -76,12 +76,12 @@ public class OrganizationOfferingService(
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
             matchingOffering = await repositoryFactory.OrganizationOfferingRepository
-                .GetCurrentByOrganizationIdAndCodeAsync(organizationId, offeringCode, now, includeDeleted: true, cancellationToken);
+                .GetCurrentByOrganizationIdAndCodeAsync(organizationId, offeringCode, now, true, cancellationToken);
         }
         else if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
         {
             matchingOffering = await repositoryFactory.OrganizationOfferingRepository
-                .GetCurrentByCustomDomainAndCodeAsync(organizationUniqueAlphanumericName, offeringCode, now, includeDeleted: true, cancellationToken);
+                .GetCurrentByCustomDomainAndCodeAsync(organizationUniqueAlphanumericName, offeringCode, now, true, cancellationToken);
         }
         else
         {

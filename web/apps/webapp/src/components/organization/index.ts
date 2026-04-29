@@ -1,5 +1,7 @@
 export { default as MultipleChoicesAmenities } from './multiple-choices-amenities';
 export { default as MultipleChoicesCustomTags } from './multiple-choices-custom-tags';
+export { default as MultipleChoicesMarketplaceBookingPaymentStatuses } from './multiple-choices-marketplace-booking-payment-statuses';
+export { default as MultipleChoicesMarketplaceBookingSubscriptionStatuses } from './multiple-choices-marketplace-booking-subscription-statuses';
 export { default as MultipleChoicesPaymentMethodTypes } from './multiple-choices-payment-method-types';
 export { default as MultipleChoicesProductPricingBillingModes } from './multiple-choices-product-pricing-billing-modes';
 export { default as MultipleChoicesProductTags } from './multiple-choices-product-tags';

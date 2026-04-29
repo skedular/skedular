@@ -1,8 +1,10 @@
 using Api.Shared.Services;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Location.Api.Services;
+using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
+using OrganizationTag = Location.Shared.Models.OrganizationTag;
+using Resource = Location.Shared.Models.Resource;
 
 namespace Location.Api.UnitTests.Services.ResourceServiceTests;
 
@@ -19,17 +21,13 @@ public class AddShould
         ResourceService sut,
         CancellationToken cancellationToken)
     {
-        var existingLocation = new Location.Shared.Database.Entities.Location
+        var existingLocation = new Shared.Database.Entities.Location
         {
-            Id = "location-1",
-            OrganizationId = "org-1",
-            Organization = new Location.Shared.Database.Entities.Organization { Id = "org-1" }
+            Id = "location-1", OrganizationId = "org-1", Organization = new Organization { Id = "org-1" }
         };
-        var resourceToAdd = new Location.Shared.Models.Resource
+        var resourceToAdd = new Resource
         {
-            Name = "Desk A",
-            Location = new Location.Shared.Models.Location { Id = "location-1" },
-            Tags = [new Location.Shared.Models.OrganizationTag { Id = "tag-1" }]
+            Name = "Desk A", Location = new Shared.Models.Location { Id = "location-1" }, Tags = [new OrganizationTag { Id = "tag-1" }]
         };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);

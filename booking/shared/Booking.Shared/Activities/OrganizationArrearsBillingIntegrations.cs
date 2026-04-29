@@ -19,7 +19,6 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using Microsoft.EntityFrameworkCore;
 using QuestPDF.Fluent;
 using Temporalio.Activities;
 using Xero.NetStandard.OAuth2.Api;
@@ -710,10 +709,7 @@ public class OrganizationArrearsBillingIntegrations(
             DueDate = dueDate,
             LineItems = draft.Lines.Select(line => new LineItem
             {
-                Description = line.Description,
-                Quantity = 1,
-                UnitAmount = line.Amount,
-                AccountCode = xeroConnection.DefaultSalesAccountCode
+                Description = line.Description, Quantity = 1, UnitAmount = line.Amount, AccountCode = xeroConnection.DefaultSalesAccountCode
             }).ToList()
         };
     }

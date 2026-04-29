@@ -1,9 +1,12 @@
-using Api.Shared.Services.Offering;
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore.Storage;
+using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Api.Services.Authorization;
+using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
@@ -22,17 +25,17 @@ public class UpdateOfferingShould
         [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
         [Frozen] ITemporalOutboxService temporalOutboxService,
         [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] Organization.Api.Mappers.IMapper mapper,
+        [Frozen] IMapper mapper,
         [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] Enterprise.Shared.Database.IUnitOfWork unitOfWork,
+        [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
-        Enterprise.Shared.Random.IRandomHelper randomHelper,
+        IRandomHelper randomHelper,
         ICustomerService customerService,
         IOrganizationAuthorizationService organizationAuthorizationService,
         CancellationToken cancellationToken)
     {
         var now = new DateTimeOffset(2026, 4, 19, 10, 0, 0, TimeSpan.Zero);
-        var organization = new Organization.Shared.Database.Entities.Organization
+        var organization = new Shared.Database.Entities.Organization
         {
             Id = "org-1",
             Name = "Org 1",
@@ -40,7 +43,7 @@ public class UpdateOfferingShould
             Type = OrganizationTypeConstants.Private,
             OrganizationOfferings = []
         };
-        var matchingOffering = new Organization.Shared.Database.Entities.OrganizationOffering
+        var matchingOffering = new OrganizationOffering
         {
             Id = "offer-1",
             Organization = organization,
@@ -50,7 +53,7 @@ public class UpdateOfferingShould
             AutoRenew = true,
             UnitPrice = 0
         };
-        var mappedOrganization = new Organization.Shared.Models.Organization { Id = organization.Id, Name = organization.Name };
+        var mappedOrganization = new Shared.Models.Organization { Id = organization.Id, Name = organization.Name };
         var stripeUrl = new Uri("https://example.test/authorize");
         var timeProvider = A.Fake<TimeProvider>();
 

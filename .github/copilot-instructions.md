@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2026-04-27
 
 ## Active Technologies
+- C# .NET 10 (backend), TypeScript 6 / React 19 / Next.js 16 App Router (frontend) + HotChocolate (GraphQL), Entity Framework Core, Relay, MUI v9, `mui-rff` Autocomplete, `useSearchParams`/`useRouter` (Next.js) (005-subscription-landing-page-filter)
+- PostgreSQL — no new migrations; filtering via existing indexed `Status` and `MarketplaceBooking.PaymentStatus` columns (005-subscription-landing-page-filter)
 
 - TypeScript (Next.js web apps), Terraform HCL + `next`, `react`, `@skedular/ui`, Terraform AWS/Vercel/Google providers (002-split-ui-products)
 - S3 Terraform backend + DynamoDB locking (per workspace state key) (002-split-ui-products)
@@ -31,10 +33,10 @@ team/
 C# on .NET 10: Follow standard conventions
 
 ## Recent Changes
+- 005-subscription-landing-page-filter: Added C# .NET 10 (backend), TypeScript 6 / React 19 / Next.js 16 App Router (frontend) + HotChocolate (GraphQL), Entity Framework Core, Relay, MUI v9, `mui-rff` Autocomplete, `useSearchParams`/`useRouter` (Next.js)
+- 005-subscription-landing-page-filter: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 
 - 004-modularize-webapp-products: Added TypeScript 6, React 19 + Next.js 16 (App Router), Relay, MUI v9, pnpm workspaces, Turborepo
-- 003-remove-shared-specification: Added C# on .NET 10 + Entity Framework Core, `Enterprise.Shared.Database` repository bases, domain shared repository factories, HotChocolate pagination helpers, `Microsoft.Extensions.Logging`
-- 002-split-ui-products: Added TypeScript (Next.js web apps), Terraform HCL + `next`, `react`, `@skedular/ui`, Terraform AWS/Vercel/Google providers
 
 <!-- MANUAL ADDITIONS START -->
 

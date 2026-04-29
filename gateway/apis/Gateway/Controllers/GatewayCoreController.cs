@@ -14,10 +14,7 @@ public class GatewayCoreController(IVersionService versionService) : GatewayCore
 
         return Task.FromResult<ActionResult<Version>>(new Version
         {
-            Major = version.Major,
-            Minor = version.Minor,
-            Build = version.Build,
-            Revision = version.Revision
+            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
         });
     }
 }

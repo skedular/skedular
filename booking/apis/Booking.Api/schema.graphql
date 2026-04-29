@@ -139,6 +139,11 @@ type MarketplaceBookingDetails {
   id: ID!
 }
 
+type MarketplaceBookingPaymentStatusDetails {
+  type: PaymentStatus!
+  name: String!
+}
+
 type MarketplaceBookingSubscriptionCancellationModeDetails {
   type: MarketplaceBookingSubscriptionCancellationMode!
   name: String!
@@ -370,6 +375,8 @@ type Query {
   bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
   marketplaceBookingSubscriptionCancellationModes: [MarketplaceBookingSubscriptionCancellationModeDetails!]!
+  marketplaceBookingSubscriptionStatuses: [MarketplaceBookingSubscriptionStatusDetails!]!
+  marketplaceBookingPaymentStatuses: [MarketplaceBookingPaymentStatusDetails!]!
   marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails @cost(weight: "10")
   marketplaceBookingSubscriptionById(id: String!): MarketplaceBookingSubscriptionDetails @lookup @internal @cost(weight: "10")
   marketplaceBookingSubscriptions(after: String first: Int before: String last: Int where: MarketplaceBookingSubscriptionWhereInput! orderBy: [MarketplaceBookingSubscriptionOrderInput!]): ConnectionOfMarketplaceBookingSubscriptionEdge! @cost(weight: "10")
@@ -681,6 +688,8 @@ input MarketplaceBookingSubscriptionWhereInput {
   nextRenewalAtLt: DateTime
   nextRenewalAtLte: DateTime
   status: MarketplaceBookingSubscriptionStatus
+  statuses: [MarketplaceBookingSubscriptionStatus!]
+  paymentStatuses: [PaymentStatus!]
   nameContains: String
   organizationId: String
   organizationCustomDomain: String

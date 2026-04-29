@@ -19,7 +19,7 @@ services.AddStripe(configuration);
 service interfaces as singletons (implementation: the matching Stripe SDK service class):
 
 | Stripe resource      | Interfaces registered                                                 |
-| -------------------- | --------------------------------------------------------------------- |
+|----------------------|-----------------------------------------------------------------------|
 | Customer             | `ICreatable`, `IUpdatable`, `IDeletable`, `IListable`, `IRetrievable` |
 | Account              | `ICreatable`, `IUpdatable`, `IDeletable`, `IRetrievable`              |
 | AccountLink          | `ICreatable`                                                          |

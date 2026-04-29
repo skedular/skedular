@@ -1,4 +1,3 @@
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;

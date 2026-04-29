@@ -246,7 +246,9 @@ public class MarketplaceBookingSubscriptionServiceShould
             organizationId,
             null,
             [],
-            customerIds);
+            customerIds,
+            [],
+            []);
 
     private static Organization CreateOrganization(string id, string type, string customerId, string role) =>
         new()

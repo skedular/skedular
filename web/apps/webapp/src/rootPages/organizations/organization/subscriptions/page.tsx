@@ -1,31 +1,26 @@
-import {
-  BodyIconTypography,
-  CollectionToolbar,
-  DefaultDialogTitle,
-  PushToRight,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-  SubtitleIconTypography,
-  TwoButtonsDialogActions,
-} from '@skedular/ui';
 import { getOrganizationBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
+import {
+  isSupportedMarketplaceBookingPaymentStatusForFilter,
+  SupportedMarketplaceBookingPaymentStatusForFilter,
+} from '@/components/marketplaceProductSubscription/marketplace-booking-payment-status';
 import {
   SupportedMarketplaceBookingSubscriptionCancellationMode,
   SupportedMarketplaceBookingSubscriptionCancellationModeDetails,
   toSupportedMarketplaceBookingSubscriptionCancellationModeDetails,
 } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-cancellation-mode';
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
+import {
+  isSupportedMarketplaceBookingSubscriptionStatusForFilter,
+  SupportedMarketplaceBookingSubscriptionStatusForFilter,
+} from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-status';
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { MultipleChoicesMarketplaceBookingPaymentStatuses, MultipleChoicesMarketplaceBookingSubscriptionStatuses } from '@/components/organization';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
-import { defaultGridStyle, defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation.graphql';
@@ -43,17 +38,33 @@ import DialogContentText from '@mui/material/DialogContentText';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
+import LinearProgress from '@mui/material/LinearProgress';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { PageHeaderPanel } from '@skedular/ui';
-import { useRouter } from 'next/navigation';
-import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { getRelayErrorMessage, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  CollectionToolbar,
+  DefaultDialogTitle,
+  defaultGridStyle,
+  defaultPadding,
+  GridContainer,
+  PageHeaderPanel,
+  PushToRight,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  SubtitleIconTypography,
+  TwoButtonsDialogActions,
+} from '@skedular/ui';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { memo, useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import { Form, FormSpy } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
@@ -82,7 +93,9 @@ const clickablePanelSx: SxProps<Theme> = {
 };
 
 const RootQuery = graphql`
-  query pageOrganizationSubscriptions_rootQuery($organizationCustomDomain: String!) {
+  query pageOrganizationSubscriptions_rootQuery($organizationCustomDomain: String!, $statuses: [MarketplaceBookingSubscriptionStatus!], $paymentStatuses: [PaymentStatus!]) {
+    ...multipleChoicesMarketplaceBookingSubscriptionStatuses_query
+    ...multipleChoicesMarketplaceBookingPaymentStatuses_query
     marketplaceBookingSubscriptionCancellationModes {
       type
       name
@@ -94,7 +107,11 @@ const RootQuery = graphql`
       canViewBookings
       canModifyPaymentMethod
     }
-    marketplaceBookingSubscriptions(first: 50, where: { organizationCustomDomain: $organizationCustomDomain }, orderBy: [{ field: NEXT_RENEWAL_AT, direction: ASCENDING }]) {
+    marketplaceBookingSubscriptions(
+      first: 50
+      where: { organizationCustomDomain: $organizationCustomDomain, statuses: $statuses, paymentStatuses: $paymentStatuses }
+      orderBy: [{ field: NEXT_RENEWAL_AT, direction: ASCENDING }]
+    ) {
       totalCount
       edges {
         node {
@@ -218,6 +235,9 @@ type Props = {
   queryReference: PreloadedQuery<pageOrganizationSubscriptions_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationCustomDomain: string;
+  onFiltersChange: (statuses: SupportedMarketplaceBookingSubscriptionStatusForFilter[], paymentStatuses: SupportedMarketplaceBookingPaymentStatusForFilter[]) => void;
+  isLoading: boolean;
+  initialFormValues: { statuses: SupportedMarketplaceBookingSubscriptionStatusForFilter[]; paymentStatuses: SupportedMarketplaceBookingPaymentStatusForFilter[] };
 };
 
 const getCustomerDisplayName = (customer: { name?: string | null; givenName?: string | null; middleName?: string | null; familyName?: string | null }) => {
@@ -225,7 +245,8 @@ const getCustomerDisplayName = (customer: { name?: string | null; givenName?: st
   return structuredName || customer.name || 'Customer';
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, onFiltersChange, isLoading, initialFormValues }: Props) => {
+  const prevFiltersRef = useRef({ statuses: initialFormValues.statuses, paymentStatuses: initialFormValues.paymentStatuses });
   const rootData = usePreloadedQuery<pageOrganizationSubscriptions_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
   const { integratedPlatrform } = useIntegratedPlatrform();
@@ -233,9 +254,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
   const [viewMode, setViewMode] = useState<SubscriptionViewMode>('list');
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedSubscriptionId, setSelectedSubscriptionId] = useState<string | null>(null);
-  const [searchText, setSearchText] = useState('');
-  const [statusFilter, setStatusFilter] = useState('ALL');
-  const [paymentFilter, setPaymentFilter] = useState('ALL');
   const [commitDeleteMarketplaceBookingSubscription, isDeleteMarketplaceBookingSubscriptionInFlight] =
     useMutation<pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation>(graphql`
       mutation pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
@@ -315,32 +333,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
 
     return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
   }, [rootData.marketplaceBookingSubscriptionCancellationModes]);
-  const filteredSubscriptions = useMemo(() => {
-    const normalizedSearch = searchText.trim().toLowerCase();
-
-    return subscriptions.filter((subscription) => {
-      const lifecycleDisplay = toMarketplaceBookingSubscriptionLifecycleDisplay({
-        autoRenew: subscription.autoRenew,
-        cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
-        isCancelled: subscription.status.type === 'CANCELLED',
-        fallbackActiveLabel: subscription.status.name,
-      });
-      const productTitle = subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription';
-      const customerLabel = subscription.involvedCustomers.length > 0 ? getCustomerDisplayName(subscription.involvedCustomers[0]) : 'Customer unavailable';
-      const paymentMethodLabel = subscription.marketplaceBooking.paymentMethod.name ?? '';
-
-      const matchesSearch =
-        normalizedSearch.length === 0 ||
-        productTitle.toLowerCase().includes(normalizedSearch) ||
-        customerLabel.toLowerCase().includes(normalizedSearch) ||
-        paymentMethodLabel.toLowerCase().includes(normalizedSearch);
-
-      const matchesStatus = statusFilter === 'ALL' || lifecycleDisplay.statusLabel === statusFilter;
-      const matchesPayment = paymentFilter === 'ALL' || subscription.marketplaceBooking.paymentStatus.name === paymentFilter;
-
-      return matchesSearch && matchesStatus && matchesPayment;
-    });
-  }, [paymentFilter, searchText, statusFilter, subscriptions]);
+  const filteredSubscriptions = subscriptions;
   const selectedSubscription = useMemo(() => filteredSubscriptions.find((item) => item.id === selectedSubscriptionId) ?? null, [filteredSubscriptions, selectedSubscriptionId]);
   const subscriptionListRows = useMemo<SubscriptionListRow[]>(
     () =>
@@ -374,25 +367,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       }),
     [filteredSubscriptions],
   );
-  const availableStatusFilters = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          subscriptions.map(
-            (subscription) =>
-              toMarketplaceBookingSubscriptionLifecycleDisplay({
-                autoRenew: subscription.autoRenew,
-                cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
-                isCancelled: subscription.status.type === 'CANCELLED',
-                fallbackActiveLabel: subscription.status.name,
-              }).statusLabel,
-          ),
-        ),
-      ),
-    [subscriptions],
-  );
-  const availablePaymentFilters = useMemo(() => Array.from(new Set(subscriptions.map((subscription) => subscription.marketplaceBooking.paymentStatus.name))), [subscriptions]);
-
   const handleBackClick = () => {
     router.push(getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain));
   };
@@ -707,39 +681,44 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       </Box>
     </StackColumn>
   );
-  const pageToolbar =
-    subscriptions.length > 0 ? (
-      <CollectionToolbar
-        filters={
-          <Box
-            sx={{
-              display: 'grid',
-              gap: 1,
-              gridTemplateColumns: { xs: '1fr', md: 'minmax(240px, 1.2fr) repeat(2, minmax(180px, 0.8fr))' },
-            }}
-          >
-            <TextField label="Search subscriptions" value={searchText} onChange={(event) => setSearchText(event.target.value)} size="small" />
-            <TextField select label="Status" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} size="small">
-              <MenuItem value="ALL">All statuses</MenuItem>
-              {availableStatusFilters.map((status) => (
-                <MenuItem key={status} value={status}>
-                  {status}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField select label="Payment" value={paymentFilter} onChange={(event) => setPaymentFilter(event.target.value)} size="small">
-              <MenuItem value="ALL">All payments</MenuItem>
-              {availablePaymentFilters.map((payment) => (
-                <MenuItem key={payment} value={payment}>
-                  {payment}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Box>
-        }
-        actions={<ListGridToggle defaultValue={viewMode === 'list' ? 'list' : 'grid'} onChange={(view) => setViewMode(view === 'list' ? 'list' : 'card')} />}
-      />
-    ) : null;
+  const pageToolbar = (
+    <CollectionToolbar
+      filters={
+        <Form onSubmit={() => {}} initialValues={initialFormValues} subscription={{}}>
+          {() => (
+            <>
+              <FormSpy
+                subscription={{ values: true }}
+                onChange={({ values }) => {
+                  const newStatuses = (((values ?? {}).statuses as string[]) ?? []).filter(isSupportedMarketplaceBookingSubscriptionStatusForFilter);
+                  const newPaymentStatuses = (((values ?? {}).paymentStatuses as string[]) ?? []).filter(isSupportedMarketplaceBookingPaymentStatusForFilter);
+                  const prev = prevFiltersRef.current;
+                  if (
+                    newStatuses.length !== prev.statuses.length ||
+                    newStatuses.some((s, i) => s !== prev.statuses[i]) ||
+                    newPaymentStatuses.length !== prev.paymentStatuses.length ||
+                    newPaymentStatuses.some((s, i) => s !== prev.paymentStatuses[i])
+                  ) {
+                    prevFiltersRef.current = { statuses: newStatuses, paymentStatuses: newPaymentStatuses };
+                    onFiltersChange(newStatuses, newPaymentStatuses);
+                  }
+                }}
+              />
+              <GridContainer spacing={1} sx={{ alignItems: 'center' }}>
+                <Box sx={{ width: 'min(100%, 300px)' }}>
+                  <MultipleChoicesMarketplaceBookingSubscriptionStatuses rootDataRelay={rootData} name="statuses" />
+                </Box>
+                <Box sx={{ width: 'min(100%, 300px)' }}>
+                  <MultipleChoicesMarketplaceBookingPaymentStatuses rootDataRelay={rootData} name="paymentStatuses" />
+                </Box>
+              </GridContainer>
+            </>
+          )}
+        </Form>
+      }
+      actions={<ListGridToggle defaultValue={viewMode === 'list' ? 'list' : 'grid'} onChange={(view) => setViewMode(view === 'list' ? 'list' : 'card')} />}
+    />
+  );
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
@@ -751,6 +730,8 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
           />
 
           {pageToolbar}
+
+          {isLoading && <LinearProgress />}
 
           {!rootData.organizationBookingPermissions.canModifyPaymentMethod ? (
             <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
@@ -1036,23 +1017,40 @@ const MemoRootPage = memo(RootPage);
 const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationSubscriptions_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
-  const [, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   const { organizationCustomDomain } = useKnownParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   if (!organizationCustomDomain) {
     throw new Error('organizationCustomDomain is required');
   }
 
+  const [selectedStatuses, setSelectedStatuses] = useState<SupportedMarketplaceBookingSubscriptionStatusForFilter[]>(
+    () => searchParams.get('statuses')?.split(',').filter(isSupportedMarketplaceBookingSubscriptionStatusForFilter) ?? [],
+  );
+  const [selectedPaymentStatuses, setSelectedPaymentStatuses] = useState<SupportedMarketplaceBookingPaymentStatusForFilter[]>(
+    () => searchParams.get('paymentStatuses')?.split(',').filter(isSupportedMarketplaceBookingPaymentStatusForFilter) ?? [],
+  );
+  const initialFormValues = useMemo(
+    () => ({ statuses: selectedStatuses, paymentStatuses: selectedPaymentStatuses }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
   useEffect(() => {
     loadQuery(
       {
         organizationCustomDomain,
+        statuses: selectedStatuses.length > 0 ? selectedStatuses : undefined,
+        paymentStatuses: selectedPaymentStatuses.length > 0 ? selectedPaymentStatuses : undefined,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain, selectedStatuses, selectedPaymentStatuses]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -1060,13 +1058,43 @@ const RootPageWithRelay = () => {
     });
   };
 
+  const handleFiltersChange = useCallback(
+    (statuses: SupportedMarketplaceBookingSubscriptionStatusForFilter[], paymentStatuses: SupportedMarketplaceBookingPaymentStatusForFilter[]) => {
+      startTransition(() => {
+        setSelectedStatuses(statuses);
+        setSelectedPaymentStatuses(paymentStatuses);
+        const params = new URLSearchParams(searchParams.toString());
+        if (statuses.length > 0) {
+          params.set('statuses', statuses.join(','));
+        } else {
+          params.delete('statuses');
+        }
+        if (paymentStatuses.length > 0) {
+          params.set('paymentStatuses', paymentStatuses.join(','));
+        } else {
+          params.delete('paymentStatuses');
+        }
+        const qs = params.toString();
+        router.replace(qs ? `?${qs}` : pathname);
+      });
+    },
+    [router, searchParams, pathname],
+  );
+
   if (!queryReference) {
     return <Loading />;
   }
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
+      <MemoRootPage
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationCustomDomain={organizationCustomDomain}
+        onFiltersChange={handleFiltersChange}
+        isLoading={isPending}
+        initialFormValues={initialFormValues}
+      />
     </ErrorBoundary>
   );
 };

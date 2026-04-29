@@ -1,6 +1,7 @@
 using Enterprise.Shared.Azure.Configurations;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
+using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
@@ -29,7 +30,7 @@ public class DoesTenantExistShould
 
         var sut = new AzureTenantService(
             new ApplicationConfiguration(),
-            A.Fake<Enterprise.Shared.Database.IDbTransactionBuilder>(),
+            A.Fake<IDbTransactionBuilder>(),
             repositoryFactory,
             context,
             memoryCache,
@@ -66,7 +67,7 @@ public class DoesTenantExistShould
 
         var sut = new AzureTenantService(
             new ApplicationConfiguration(),
-            A.Fake<Enterprise.Shared.Database.IDbTransactionBuilder>(),
+            A.Fake<IDbTransactionBuilder>(),
             repositoryFactory,
             context,
             memoryCache,

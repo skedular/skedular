@@ -5,7 +5,6 @@ using Customer.Shared.Models;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services.Cache;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Organization = Customer.Shared.Database.Entities.Organization;
 using OrganizationMember = Customer.Shared.Database.Entities.OrganizationMember;

@@ -22,7 +22,9 @@ public record MarketplaceBookingSubscriptionSearchCriteria(
     string? OrganizationId,
     string? OrganizationCustomDomain,
     ICollection<string> TeamIds,
-    ICollection<string> CustomerIds);
+    ICollection<string> CustomerIds,
+    ICollection<MarketplaceBookingSubscriptionStatus>? Statuses = null,
+    ICollection<PaymentStatus>? PaymentStatuses = null);
 
 public record MarketplaceBookingSubscriptionAccessScope(
     ICollection<string> OrganizationIds,

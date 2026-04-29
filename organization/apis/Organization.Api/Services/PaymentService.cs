@@ -120,7 +120,7 @@ public class PaymentService(
                     organization.Id,
                     OfferingCode.FreeTierV1,
                     now,
-                    includeDeleted: true,
+                    true,
                     cancellationToken);
 
             if (existingFreeOffering is null)

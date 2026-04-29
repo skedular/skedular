@@ -14,10 +14,7 @@ public class MsTeamsCoreController(IVersionService versionService) : MsTeamsCore
 
         return Task.FromResult<ActionResult<Version>>(new Version
         {
-            Major = version.Major,
-            Minor = version.Minor,
-            Build = version.Build,
-            Revision = version.Revision
+            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
         });
     }
 }

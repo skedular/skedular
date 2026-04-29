@@ -1,0 +1,6 @@
+query MarketplaceBookingPaymentStatuses {
+    marketplaceBookingPaymentStatuses {
+        type
+        name
+    }
+}

@@ -1,7 +1,5 @@
 using Api.Shared.Services;
 using Enterprise.Shared;
-using Enterprise.Shared.Database;
-using Microsoft.EntityFrameworkCore;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
 using Slack.Api.Services;

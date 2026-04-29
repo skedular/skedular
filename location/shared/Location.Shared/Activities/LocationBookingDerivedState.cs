@@ -38,7 +38,7 @@ public class LocationBookingDerivedState(
         var resources = resourceIds.Count == 0
             ? new Dictionary<string, ResourceEntity>()
             : (await repositoryFactory.ResourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync(resourceIds, cancellationToken))
-                .ToDictionary(item => item.Id);
+            .ToDictionary(item => item.Id);
 
         await ReplaceDailyRecordingsAsync(location, bookings, resources, cancellationToken);
 
@@ -74,10 +74,7 @@ public class LocationBookingDerivedState(
 
             _ = repositoryFactory.DbContext.DailyBookingCountRecording.Add(new DailyBookingCountRecording
             {
-                Id = randomHelper.Generate(),
-                Date = groupedBooking.Key,
-                Count = dayBookings.Count,
-                Location = location
+                Id = randomHelper.Generate(), Date = groupedBooking.Key, Count = dayBookings.Count, Location = location
             });
 
             _ = repositoryFactory.DbContext.DailyDeskBookingCountRecording.Add(new DailyDeskBookingCountRecording

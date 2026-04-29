@@ -4,7 +4,6 @@ using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;

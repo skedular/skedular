@@ -6,7 +6,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
-using Microsoft.EntityFrameworkCore;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
@@ -17,10 +16,8 @@ using Organization.Shared.Services.Cache;
 using Organization.Shared.Workflows;
 using Constants = Enterprise.Shared.Constants;
 using Customer = Organization.Shared.Models.Customer;
-using IndustrySubCategory = Organization.Shared.Database.Entities.IndustrySubCategory;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Organization.Shared.Database.Entities.OrganizationOffering;
-using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
 
 namespace Organization.Api.Services;
 

@@ -4,26 +4,33 @@ This file applies to `shared/Api.Shared`.
 
 ## Purpose
 
-`Api.Shared` is the shared event contracts library targeting **netstandard2.0** to enable cross-platform compatibility (.NET Framework, .NET Core, .NET 5+). It defines the core Kafka event abstraction and metadata infrastructure used by all event-driven components across the system.
+`Api.Shared` is the shared event contracts library targeting **netstandard2.0** to enable cross-platform compatibility (
+.NET Framework, .NET Core, .NET 5+). It defines the core Kafka event abstraction and metadata infrastructure used by all
+event-driven components across the system.
 
 ## Portability Rule
 
 - This library targets **netstandard2.0** explicitly; do not add framework-specific dependencies.
 - No references to `System.Reflection.Emit`, platform-specific APIs, or modern .NET-only packages.
 - Dependencies must be compatible with netstandard2.0: `Google.Protobuf` for timestamp support.
-- This ensures `Api.Shared.Clients` and any domain needing to consume events can target netstandard2.0 for broader runtime compatibility.
+- This ensures `Api.Shared.Clients` and any domain needing to consume events can target netstandard2.0 for broader
+  runtime compatibility.
 
 ## Event Contract Ownership
 
 This library owns the read-only Kafka event abstraction:
 
-- **`IEvent`** interface: Base contract for all Kafka events with topic name, retry/dead-letter topic metadata, and correlation ID.
-- **`IEventExtensions`** static extension methods: `GetTopicName()`, `GetRetryTopicName()`, `GetDeadLetterTopicName()`, `GetRetryTopicCount()`, `GetCorrelationId()`.
+- **`IEvent`** interface: Base contract for all Kafka events with topic name, retry/dead-letter topic metadata, and
+  correlation ID.
+- **`IEventExtensions`** static extension methods: `GetTopicName()`, `GetRetryTopicName()`, `GetDeadLetterTopicName()`,
+  `GetRetryTopicCount()`, `GetCorrelationId()`.
 - **`KafkaTopicAttribute`**: Attribute applied to event types specifying topic partition configuration.
 - **`KafkaTopicHelper`**: Reflection-based helper to extract Kafka topic metadata from decorated event types.
-- **`EventMetadataFactory`**: Factory for creating `IEventMetadata<TType>` instances with automatic ID/timestamp/correlation ID generation.
+- **`EventMetadataFactory`**: Factory for creating `IEventMetadata<TType>` instances with automatic
+  ID/timestamp/correlation ID generation.
 
-Do not add kafka-specific producer/consumer logic here; that belongs in `Enterprise.Shared.Kafka` or domain event handlers.
+Do not add kafka-specific producer/consumer logic here; that belongs in `Enterprise.Shared.Kafka` or domain event
+handlers.
 
 ## Default Interface Implementation Rule
 
@@ -34,7 +41,8 @@ Do not add kafka-specific producer/consumer logic here; that belongs in `Enterpr
 ## Correlation ID Rule
 
 - `IEvent.CorrelationId` is nullable (string?).
-- Events may or may not carry correlation context; use `IEventExtensions.GetCorrelationId()` which returns null if not set.
+- Events may or may not carry correlation context; use `IEventExtensions.GetCorrelationId()` which returns null if not
+  set.
 - `EventMetadataFactory` generates a UUID for missing/null correlation IDs automatically.
 
 ## Topic Validation Rule

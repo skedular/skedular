@@ -80,5 +80,18 @@ public static class PaymentStatusExtensions
                 PaymentStatus.NoPaymentRequired => "No Payment Required",
                 _ => throw new ArgumentOutOfRangeException()
             };
+
+        public string ToMarketplaceBookingPaymentStatusName() =>
+            src switch
+            {
+                PaymentStatus.NotSet => "Not set",
+                PaymentStatus.Pending => "Pending",
+                PaymentStatus.Rejected => "Rejected",
+                PaymentStatus.Confirmed => "Confirmed",
+                PaymentStatus.Expired => "Expired",
+                PaymentStatus.RecordNeverCreated => "Record never created",
+                PaymentStatus.NoPaymentRequired => "No payment required",
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+            };
     }
 }

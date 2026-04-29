@@ -4,10 +4,14 @@ using Enterprise.Shared.Random;
 using Marketplace.Api.Mappers;
 using Marketplace.Api.Services;
 using Marketplace.Api.Services.Authorization;
+using Marketplace.Shared.Models;
 using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
 using Marketplace.Shared.Services.Cache;
 using Microsoft.EntityFrameworkCore.Storage;
+using Organization = Marketplace.Shared.Database.Entities.Organization;
+using OrganizationTag = Marketplace.Shared.Database.Entities.OrganizationTag;
+using Product = Marketplace.Shared.Database.Entities.Product;
 
 namespace Marketplace.Api.UnitTests.Services.ProductServiceTests;
 
@@ -34,15 +38,15 @@ public class GetOrganizationTagsShould
         ProductService sut,
         CancellationToken cancellationToken)
     {
-        var customer = new Marketplace.Shared.Models.Customer { Id = "customer-1" };
-        var existingCustomer = new Marketplace.Shared.Database.Entities.Customer { Id = "customer-1" };
-        var organization = new Marketplace.Shared.Database.Entities.Organization { Id = "org-1" };
-        var organizationTag = new Marketplace.Shared.Database.Entities.OrganizationTag { Id = "tag-1", Organization = organization };
-        var productVersion = new Marketplace.Shared.Models.ProductVersion
+        var customer = new Customer { Id = "customer-1" };
+        var existingCustomer = new Shared.Database.Entities.Customer { Id = "customer-1" };
+        var organization = new Organization { Id = "org-1" };
+        var organizationTag = new OrganizationTag { Id = "tag-1", Organization = organization };
+        var productVersion = new ProductVersion
         {
             Type = ProductType.Resource,
             Currency = Currency.Nzd,
-            OrganizationTags = [new Marketplace.Shared.Models.OrganizationTag { Id = "tag-1", Type = OrganizationTagType.Product }],
+            OrganizationTags = [new Shared.Models.OrganizationTag { Id = "tag-1", Type = OrganizationTagType.Product }],
             PricingOptions =
             [
                 new ProductPricing(
@@ -65,9 +69,9 @@ public class GetOrganizationTagsShould
                     [])
             ]
         };
-        var productEntity = new Marketplace.Shared.Database.Entities.Product { Id = "product-1", Organization = organization };
-        var productVersionEntity = new Marketplace.Shared.Database.Entities.ProductVersion { Id = "version-1", Product = productEntity };
-        var mappedProduct = new Marketplace.Shared.Models.Product { Id = "product-1" };
+        var productEntity = new Product { Id = "product-1", Organization = organization };
+        var productVersionEntity = new Shared.Database.Entities.ProductVersion { Id = "version-1", Product = productEntity };
+        var mappedProduct = new Shared.Models.Product { Id = "product-1" };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationTagRepository).Returns(organizationTagRepository);
@@ -84,9 +88,9 @@ public class GetOrganizationTagsShould
                 null,
                 cancellationToken))
             .Returns([organizationTag]);
-        A.CallTo(() => mapper.MapTo(A<Marketplace.Shared.Models.Product>.That.Matches(product => product.Id == "product-1" && product.Inactive), organization))
+        A.CallTo(() => mapper.MapTo(A<Shared.Models.Product>.That.Matches(product => product.Id == "product-1" && product.Inactive), organization))
             .Returns(productEntity);
-        A.CallTo(() => mapper.MapTo(productVersion, productEntity, A<ICollection<Marketplace.Shared.Database.Entities.OrganizationTag>>._))
+        A.CallTo(() => mapper.MapTo(productVersion, productEntity, A<ICollection<OrganizationTag>>._))
             .Returns(productVersionEntity);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => productRepository.Add(productEntity)).Returns(productEntity);
@@ -103,7 +107,7 @@ public class GetOrganizationTagsShould
                 null,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => marketplaceOutboxPublisher.PublishProducts(A<ICollection<Marketplace.Shared.Models.Product>>._, unitOfWork))
+        A.CallTo(() => marketplaceOutboxPublisher.PublishProducts(A<ICollection<Shared.Models.Product>>._, unitOfWork))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => cachedProductService.UpdateByIdAsync("product-1", cancellationToken)).MustHaveHappenedOnceExactly();
     }

@@ -1,10 +1,10 @@
 using Api.Shared.Services;
-using Enterprise.Shared.Database;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
+using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
-using Location.Shared.Services;
 using Location.Shared.Services.Cache;
+using OrganizationTag = Location.Shared.Models.OrganizationTag;
 
 namespace Location.Api.UnitTests.Services.ResourceServiceTests;
 
@@ -23,19 +23,17 @@ public class UpdateShould
         ResourceService sut,
         CancellationToken cancellationToken)
     {
-        var existingLocation = new Location.Shared.Database.Entities.Location
+        var existingLocation = new Shared.Database.Entities.Location
         {
-            Id = "location-1",
-            OrganizationId = "org-1",
-            Organization = new Location.Shared.Database.Entities.Organization { Id = "org-1" }
+            Id = "location-1", OrganizationId = "org-1", Organization = new Organization { Id = "org-1" }
         };
-        var existingResource = new Location.Shared.Database.Entities.Resource { Id = "resource-1", Location = existingLocation };
-        var resourceToUpdate = new Location.Shared.Models.Resource
+        var existingResource = new Resource { Id = "resource-1", Location = existingLocation };
+        var resourceToUpdate = new Shared.Models.Resource
         {
             Id = "resource-1",
             Name = "Desk A",
-            Location = new Location.Shared.Models.Location { Id = "location-1" },
-            Tags = [new Location.Shared.Models.OrganizationTag { Id = "tag-1" }]
+            Location = new Shared.Models.Location { Id = "location-1" },
+            Tags = [new OrganizationTag { Id = "tag-1" }]
         };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);

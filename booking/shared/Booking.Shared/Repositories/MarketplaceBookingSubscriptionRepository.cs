@@ -33,7 +33,7 @@ internal static class MarketplaceBookingSubscriptionExtensions
 {
     extension(IQueryable<MarketplaceBookingSubscription> originalQuery)
     {
-        internal IIncludableQueryable<MarketplaceBookingSubscription, Customer?> AddDependentObjects(bool isTracked, TimeProvider timeProvider)
+        public IIncludableQueryable<MarketplaceBookingSubscription, Customer?> AddDependentObjects(bool isTracked, TimeProvider timeProvider)
         {
             var activeRecurringWindowStart = timeProvider.GetUtcNow().StartOfDay();
 
@@ -90,7 +90,7 @@ internal static class MarketplaceBookingSubscriptionExtensions
                 .Include(query => query.DeletedByCustomer);
         }
 
-        internal IQueryable<MarketplaceBookingSubscription> AddSearchCriteria(
+        public IQueryable<MarketplaceBookingSubscription> AddSearchCriteria(
             MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
             MarketplaceBookingSubscriptionAccessScope? accessScope)
         {
@@ -162,9 +162,20 @@ internal static class MarketplaceBookingSubscriptionExtensions
                     !customer.DeletedAt.HasValue && searchCriteria.CustomerIds.Contains(customer.Id)));
             }
 
-            if (searchCriteria.Status is not null)
+            if ((searchCriteria.Statuses?.Count ?? 0) != 0)
+            {
+                var statusStrings = searchCriteria.Statuses!.Select(s => s.ToMarketplaceBookingSubscriptionStatus()).ToList();
+                originalQuery = originalQuery.Where(item => statusStrings.Contains(item.Status));
+            }
+            else if (searchCriteria.Status is not null)
             {
                 originalQuery = originalQuery.Where(item => item.Status == searchCriteria.Status.Value.ToMarketplaceBookingSubscriptionStatus());
+            }
+
+            if ((searchCriteria.PaymentStatuses?.Count ?? 0) != 0)
+            {
+                var paymentStatusStrings = searchCriteria.PaymentStatuses!.Select(s => s.ToPaymentStatus()).ToList();
+                originalQuery = originalQuery.Where(item => paymentStatusStrings.Contains(item.MarketplaceBooking.PaymentStatus));
             }
 
             if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))

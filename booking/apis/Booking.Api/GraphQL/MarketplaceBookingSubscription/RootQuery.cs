@@ -12,8 +12,13 @@ using HotChocolate.Types;
 
 namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
 
+// Logging contract for this resolver class:
+// LOG-001: LogInformation when a subscription list query is resolved with filter inputs — includes statuses count, paymentStatuses count, and result count.
+// LOG-002: LogWarning when an unrecognised status or payment status value is submitted — includes the unrecognised value.
+// LOG-003: LogInformation when filter option queries (MarketplaceBookingSubscriptionStatuses / MarketplaceBookingPaymentStatuses) resolve successfully — includes option count.
+
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IMapper mapper, ILogger<RootQuery> logger)
 {
     [UseResolverScope]
     public IEnumerable<MarketplaceBookingSubscriptionCancellationModeDetails> MarketplaceBookingSubscriptionCancellationModes() =>
@@ -29,6 +34,43 @@ public class RootQuery(IMapper mapper)
             Name = MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd.ToMarketplaceBookingSubscriptionCancellationModeName()
         }
     ];
+
+    [UseResolverScope]
+    public IEnumerable<MarketplaceBookingSubscriptionStatusDetails> MarketplaceBookingSubscriptionStatuses()
+    {
+        var statuses = new[]
+            {
+                MarketplaceBookingSubscriptionStatus.Active, MarketplaceBookingSubscriptionStatus.Cancelled,
+                MarketplaceBookingSubscriptionStatus.Expired, MarketplaceBookingSubscriptionStatus.RenewalFailed,
+                MarketplaceBookingSubscriptionStatus.Paused
+            }
+            .Select(status => new MarketplaceBookingSubscriptionStatusDetails
+            {
+                Type = status,
+                Name = status.ToMarketplaceBookingSubscriptionStatusName()
+            })
+            .ToList();
+
+        logger.LogInformation("MarketplaceBookingSubscriptionStatuses resolved {Count} subscription status options", statuses.Count);
+
+        return statuses;
+    }
+
+    [UseResolverScope]
+    public IEnumerable<MarketplaceBookingPaymentStatusDetails> MarketplaceBookingPaymentStatuses()
+    {
+        var statuses = new[]
+            {
+                PaymentStatus.NotSet, PaymentStatus.Pending, PaymentStatus.Rejected, PaymentStatus.Confirmed, PaymentStatus.Expired,
+                PaymentStatus.NoPaymentRequired
+            }
+            .Select(status => new MarketplaceBookingPaymentStatusDetails { Type = status, Name = status.ToMarketplaceBookingPaymentStatusName() })
+            .ToList();
+
+        logger.LogInformation("MarketplaceBookingPaymentStatuses resolved {Count} payment status options", statuses.Count);
+
+        return statuses;
+    }
 
     [UseResolverScope]
     public async Task<MarketplaceBookingSubscriptionDetails?> MarketplaceBookingSubscriptionAsync(
@@ -60,6 +102,34 @@ public class RootQuery(IMapper mapper)
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
         where.CustomerIds = where.CustomerIds.RemoveInvalidIds();
 
+        var statuses = where.Statuses.ToSafeCollection();
+        var paymentStatuses = where.PaymentStatuses.ToSafeCollection();
+
+        var definedStatuses = Enum.GetValues<MarketplaceBookingSubscriptionStatus>();
+        var unrecognisedStatuses = statuses.Where(s => !definedStatuses.Contains(s)).ToList();
+        if (unrecognisedStatuses.Count > 0)
+        {
+            logger.LogWarning(
+                "MarketplaceBookingSubscriptionsAsync received {Count} unrecognised subscription status value(s): {Values}",
+                unrecognisedStatuses.Count,
+                string.Join(", ", unrecognisedStatuses));
+        }
+
+        var definedPaymentStatuses = Enum.GetValues<PaymentStatus>();
+        var unrecognisedPaymentStatuses = paymentStatuses.Where(s => !definedPaymentStatuses.Contains(s)).ToList();
+        if (unrecognisedPaymentStatuses.Count > 0)
+        {
+            logger.LogWarning(
+                "MarketplaceBookingSubscriptionsAsync received {Count} unrecognised payment status value(s): {Values}",
+                unrecognisedPaymentStatuses.Count,
+                string.Join(", ", unrecognisedPaymentStatuses));
+        }
+
+        logger.LogInformation(
+            "MarketplaceBookingSubscriptionsAsync queried with {StatusesCount} status filter(s) and {PaymentStatusesCount} payment status filter(s)",
+            statuses.Count,
+            paymentStatuses.Count);
+
         var (paginatedInfo, edges, totalCount) = await marketplaceBookingSubscriptionService.GetPaginatedMarketplaceBookingSubscriptionsAsync(
             new PaginationInputParam(after, first, before, last),
             new MarketplaceBookingSubscriptionSearchCriteria(
@@ -81,10 +151,16 @@ public class RootQuery(IMapper mapper)
                 where.OrganizationId,
                 where.OrganizationCustomDomain,
                 where.TeamIds.ToSafeCollection(),
-                where.CustomerIds.ToSafeCollection()),
+                where.CustomerIds.ToSafeCollection(),
+                statuses,
+                paymentStatuses),
             orderBy.ToSafeCollection().Select(item => new MarketplaceBookingSubscriptionOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
+
+        logger.LogInformation(
+            "MarketplaceBookingSubscriptionsAsync resolved {TotalCount} total subscriptions",
+            totalCount);
 
         return new Connection<MarketplaceBookingSubscriptionEdge>
         {

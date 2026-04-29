@@ -1,0 +1,6 @@
+query MarketplaceBookingSubscriptionStatuses {
+    marketplaceBookingSubscriptionStatuses {
+        type
+        name
+    }
+}

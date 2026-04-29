@@ -9,6 +9,7 @@ namespace Location.Shared.Repositories;
 public interface IDailyDeskCountRecordingRepository : IRepository<DailyDeskCountRecording>
 {
     DailyDeskCountRecording Add(DailyDeskCountRecording dailyDeskCountRecording);
+
     Task<ICollection<DailyDeskCountRecording>> GetByLocationIdsAndDateRangeAsync(
         ICollection<string> locationIds,
         DateTimeOffset from,

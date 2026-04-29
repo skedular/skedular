@@ -17,9 +17,9 @@ This file covers `core/apis/`.
 ## OpenAPI Surface
 
 - REST routes split across three specs in `api-definitions/openapi/skedular/core/`:
-  - `core_v1.yaml` — business operations (version, file services)
-  - `core_graphql_v1.yaml` — GraphQL change notification
-  - `core_workaround_v1.yaml` — workaround/admin/maintenance (currently unused)
+    - `core_v1.yaml` — business operations (version, file services)
+    - `core_graphql_v1.yaml` — GraphQL change notification
+    - `core_workaround_v1.yaml` — workaround/admin/maintenance (currently unused)
 - Declare new routes in the appropriate spec, then regenerate via `bash api-definitions/openapi/generate.sh`.
 - Do not add controller routes outside of the generated controller base.
 

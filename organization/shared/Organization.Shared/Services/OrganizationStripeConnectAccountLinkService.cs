@@ -57,10 +57,7 @@ public class OrganizationStripeConnectAccountLinkService(
 
         var accountRefreshCodeEntity = new OrganizationStripeConnectAccountRefreshCode
         {
-            Id = randomHelper.Generate(),
-            Code = code,
-            RedirectUrl = redirectUrl,
-            OrganizationStripeConnectAccount = accountEntity
+            Id = randomHelper.Generate(), Code = code, RedirectUrl = redirectUrl, OrganizationStripeConnectAccount = accountEntity
         };
 
         _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);

@@ -1,6 +1,5 @@
 using Api.Shared.Services;
 using Enterprise.Shared;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL.Types;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
@@ -437,9 +436,7 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageTeams,
-                Text = Icons.FirstPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageTeams, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.TeamsPage.Pagination.First = null;
@@ -449,9 +446,7 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageTeams,
-                Text = Icons.PreviousPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageTeams, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -464,9 +459,7 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageTeams,
-                Text = Icons.NextPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageTeams, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.TeamsPage.Pagination.First = null;
@@ -476,9 +469,7 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageTeams,
-                Text = Icons.LastPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageTeams, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -549,8 +540,7 @@ public class TeamsPage(
             Label = "Slack update channel".ToPlainText(),
             Element = new ChannelSelectMenu
             {
-                ActionId = TeamActionTypes.SlackUpdateChannel,
-                InitialChannel = teamEntity?.DailyUpdateChannel?.Id
+                ActionId = TeamActionTypes.SlackUpdateChannel, InitialChannel = teamEntity?.DailyUpdateChannel?.Id
             },
             Optional = true
         };

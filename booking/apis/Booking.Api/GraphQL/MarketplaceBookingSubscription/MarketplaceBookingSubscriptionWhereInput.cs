@@ -19,6 +19,8 @@ public class MarketplaceBookingSubscriptionWhereInput
     [GraphQLName("nextRenewalAtLt")] public DateTimeOffset? NextRenewalAtLt { get; set; }
     [GraphQLName("nextRenewalAtLte")] public DateTimeOffset? NextRenewalAtLte { get; set; }
     [GraphQLName("status")] public MarketplaceBookingSubscriptionStatus? Status { get; set; }
+    [GraphQLName("statuses")] public IEnumerable<MarketplaceBookingSubscriptionStatus>? Statuses { get; set; }
+    [GraphQLName("paymentStatuses")] public IEnumerable<PaymentStatus>? PaymentStatuses { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 

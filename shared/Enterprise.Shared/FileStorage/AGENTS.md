@@ -22,7 +22,7 @@ The two endpoint strings are provided by the calling host because endpoint URLs 
 ## What Gets Registered
 
 | Condition                           | `ICdnService` impl     | `IFileService` impl     |
-| ----------------------------------- | ---------------------- | ----------------------- |
+|-------------------------------------|------------------------|-------------------------|
 | `FileStorage:UseFileServer = true`  | `LocalCdnService`      | `LocalFileService`      |
 | `FileStorage:UseFileServer = false` | `CloudflareCdnService` | `CloudflareFileService` |
 

@@ -494,6 +494,11 @@ type MarketplaceBookingDetails {
   totalAmountToDisplay: String!
 }
 
+type MarketplaceBookingPaymentStatusDetails {
+  name: String!
+  type: PaymentStatus!
+}
+
 type MarketplaceBookingSubscriptionCancellationModeDetails {
   name: String!
   type: MarketplaceBookingSubscriptionCancellationMode!
@@ -1333,11 +1338,13 @@ type Query {
   locationTypes: [LocationTypeDetails!]!
   locationVersion: Version!
   marketplaceBookingCategories: [BookingCategoryDetails!]!
+  marketplaceBookingPaymentStatuses: [MarketplaceBookingPaymentStatusDetails!]!
   marketplaceBookingRefundPreview(bookingId: String!): MarketplaceRefundPreviewDetails! @cost(weight: "10")
   marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails @cost(weight: "10")
   marketplaceBookingSubscriptionCancellationModes: [MarketplaceBookingSubscriptionCancellationModeDetails!]!
   marketplaceBookingSubscriptionRefundPreview(subscriptionId: String!): MarketplaceRefundPreviewDetails! @cost(weight: "10")
   marketplaceBookingSubscriptions(after: String before: String first: Int last: Int orderBy: [MarketplaceBookingSubscriptionOrderInput!] where: MarketplaceBookingSubscriptionWhereInput!): ConnectionOfMarketplaceBookingSubscriptionEdge! @cost(weight: "10")
+  marketplaceBookingSubscriptionStatuses: [MarketplaceBookingSubscriptionStatusDetails!]!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
   marketplaceLocations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: MarketplaceLocationWhereInput!): ConnectionOfLocationEdge! @cost(weight: "10")
   marketplaceRefund(id: String!): MarketplaceRefundDetails @cost(weight: "10")
@@ -2404,11 +2411,13 @@ input MarketplaceBookingSubscriptionWhereInput {
   nextRenewalAtLte: DateTime
   organizationCustomDomain: String
   organizationId: String
+  paymentStatuses: [PaymentStatus!]
   startedAtGt: DateTime
   startedAtGte: DateTime
   startedAtLt: DateTime
   startedAtLte: DateTime
   status: MarketplaceBookingSubscriptionStatus
+  statuses: [MarketplaceBookingSubscriptionStatus!]
   teamIds: [String!]
 }
 

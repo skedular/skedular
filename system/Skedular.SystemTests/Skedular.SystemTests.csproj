@@ -26,7 +26,7 @@
 
     <ItemGroup>
         <!-- Test Framework -->
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1"/>
 
         <!-- GraphQL Testing (StrawberryShake) -->
         <PackageReference Include="StrawberryShake.Server" Version="15.1.15"/>

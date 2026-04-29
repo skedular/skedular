@@ -1,6 +1,5 @@
 using Api.Shared.Services.OpenApi.Skedular.Team.Workaround.V1;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Team.Api.Services;
 
 namespace Team.Api.Controllers;

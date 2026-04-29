@@ -1,8 +1,11 @@
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Pagination;
+using Organization = Booking.Shared.Database.Entities.Organization;
+using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.UnitTests.Services.BookingServiceTests;
 
@@ -22,29 +25,25 @@ public class GetTeamsShould
         CancellationToken cancellationToken)
     {
         var searchCriteria = CreateSearchCriteria(["team-1"]);
-        var team = new Booking.Shared.Database.Entities.Team
-        {
-            Id = "team-1",
-            Organization = new Booking.Shared.Database.Entities.Organization { Id = "org-1" }
-        };
-        var organization = new Booking.Shared.Database.Entities.Organization { Id = "org-1" };
+        var team = new Team { Id = "team-1", Organization = new Organization { Id = "org-1" } };
+        var organization = new Organization { Id = "org-1" };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => teamRepository.GetActiveByIdsAsync(
-            A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "team-1" })),
-            cancellationToken))
+                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "team-1" })),
+                cancellationToken))
             .Returns([team]);
         A.CallTo(() => organizationRepository.GetByCustomerIdAsync("customer-1", false, false, cancellationToken)).Returns([organization]);
         A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync("org-1", "customer-1", cancellationToken))
             .Returns(true);
         A.CallTo(() => bookingRepository.GetPaginatedBookingsUntrackedAsync(
                 A<PaginationInputParam>._,
-                A<Booking.Shared.Models.BookingSearchCriteria>._,
-                A<ICollection<Booking.Shared.Models.BookingOrder>>._,
-                A<Booking.Shared.Models.BookingAccessScope>.That.Matches(scope =>
+                A<BookingSearchCriteria>._,
+                A<ICollection<BookingOrder>>._,
+                A<BookingAccessScope>.That.Matches(scope =>
                     scope.OrganizationIds.SequenceEqual(new[] { "org-1" }) &&
                     scope.LocationIds.Count == 0 &&
                     scope.TeamIds.SequenceEqual(new[] { "team-1" })),
@@ -56,12 +55,12 @@ public class GetTeamsShould
 
         result.Item3.ShouldBe(0);
         A.CallTo(() => teamRepository.GetActiveByIdsAsync(
-            A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "team-1" })),
-            cancellationToken))
+                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "team-1" })),
+                cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
 
-    private static Booking.Shared.Models.BookingSearchCriteria CreateSearchCriteria(ICollection<string> teamIds) =>
+    private static BookingSearchCriteria CreateSearchCriteria(ICollection<string> teamIds) =>
         new(
             null,
             null,

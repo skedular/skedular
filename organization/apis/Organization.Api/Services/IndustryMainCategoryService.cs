@@ -19,7 +19,8 @@ public class IndustryMainCategoryService(IRepositoryFactory repositoryFactory, I
             {
                 cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddHours(1);
 
-                var industryMainCategories = await repositoryFactory.IndustryMainCategoryRepository.GetAllActiveWithSubCategoriesAsync(cancellationToken);
+                var industryMainCategories =
+                    await repositoryFactory.IndustryMainCategoryRepository.GetAllActiveWithSubCategoriesAsync(cancellationToken);
 
                 return mapper.MapTo(industryMainCategories).ToList();
             }))!;

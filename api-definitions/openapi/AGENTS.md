@@ -35,4 +35,5 @@ Use `make generate` from the repo root to run all three generation steps in the 
 
 - Change YAML first; regenerate before implementing.
 - Do not add route logic to a controller without a matching YAML declaration.
-- Do not patch generated files under `shared/Api.Shared.Services/OpenApi/` or `shared/Api.Shared.Clients/OpenApi/` by hand.
+- Do not patch generated files under `shared/Api.Shared.Services/OpenApi/` or `shared/Api.Shared.Clients/OpenApi/` by
+  hand.

@@ -46,5 +46,16 @@ public static class MarketplaceBookingSubscriptionStatusExtensions
                 MarketplaceBookingSubscriptionStatus.Paused => MarketplaceBookingSubscriptionStatusConstants.Paused,
                 _ => throw new ArgumentOutOfRangeException()
             };
+
+        public string ToMarketplaceBookingSubscriptionStatusName() =>
+            src switch
+            {
+                MarketplaceBookingSubscriptionStatus.Active => "Active",
+                MarketplaceBookingSubscriptionStatus.Cancelled => "Cancelled",
+                MarketplaceBookingSubscriptionStatus.Expired => "Expired",
+                MarketplaceBookingSubscriptionStatus.RenewalFailed => "Renewal failed",
+                MarketplaceBookingSubscriptionStatus.Paused => "Paused",
+                _ => throw new ArgumentOutOfRangeException()
+            };
     }
 }

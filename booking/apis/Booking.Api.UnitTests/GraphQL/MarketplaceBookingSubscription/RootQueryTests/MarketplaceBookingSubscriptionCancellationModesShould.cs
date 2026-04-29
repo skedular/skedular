@@ -1,6 +1,7 @@
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.MarketplaceBookingSubscription;
 using Booking.Api.Mappers;
+using Microsoft.Extensions.Logging;
 
 namespace Booking.Api.UnitTests.GraphQL.MarketplaceBookingSubscription.RootQueryTests;
 
@@ -10,9 +11,10 @@ public class MarketplaceBookingSubscriptionCancellationModesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Return_All_Available_Cancellation_Modes(
-        IMapper mapper)
+        IMapper mapper,
+        ILogger<RootQuery> logger)
     {
-        var sut = new RootQuery(mapper);
+        var sut = new RootQuery(mapper, logger);
 
         var result = sut.MarketplaceBookingSubscriptionCancellationModes().ToList();
 

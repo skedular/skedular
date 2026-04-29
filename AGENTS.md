@@ -13,21 +13,21 @@ This file applies to the whole repository.
 - Event protobufs live under `api-definitions/events/skedular/*.proto`.
   Changing them requires running `api-definitions/events/generate.sh`.
   That now:
-  - builds `shared/Api.Shared.Clients/Api.Shared.Clients.csproj`, which regenerates protobuf event C# classes into
-    `shared/Api.Shared.Clients/obj`
+    - builds `shared/Api.Shared.Clients/Api.Shared.Clients.csproj`, which regenerates protobuf event C# classes into
+      `shared/Api.Shared.Clients/obj`
 
 - OpenAPI contracts live under `api-definitions/openapi/skedular/*.yaml`.
   Changing them requires running `api-definitions/openapi/generate.sh`, which regenerates:
-  - C# service controller bases under `shared/Api.Shared.Services/OpenApi`
-  - C# API clients under `shared/Api.Shared.Clients/OpenApi`
+    - C# service controller bases under `shared/Api.Shared.Services/OpenApi`
+    - C# API clients under `shared/Api.Shared.Clients/OpenApi`
 
 - GraphQL schema export is driven by `scripts/generate-graphql.sh`.
   It regenerates:
-  - per-API `schema.graphql` files
-  - the composed schema under `api-definitions/graphql/skedular/v1/schema.graphql`
-  - GraphQL init/schema files used by integration/system tests
-  - the server-side GraphQL schema surfaces that web Relay artifacts depend on
-  - the gateway/federation-facing GraphQL outputs that must stay aligned with the APIs
+    - per-API `schema.graphql` files
+    - the composed schema under `api-definitions/graphql/skedular/v1/schema.graphql`
+    - GraphQL init/schema files used by integration/system tests
+    - the server-side GraphQL schema surfaces that web Relay artifacts depend on
+    - the gateway/federation-facing GraphQL outputs that must stay aligned with the APIs
 - Always use `scripts/generate-graphql.sh` for backend GraphQL schema regeneration.
 - Do not run per-API `dotnet run -- schema export ...` commands directly as a substitute for the script.
 
@@ -56,9 +56,9 @@ This file applies to the whole repository.
 
 - `make generate` is the umbrella command.
 - It runs, in order:
-  1. `api-definitions/generate.sh`
-  2. `scripts/generate-graphql.sh`
-  3. `web/apps/webapp/scripts/generate.sh`
+    1. `api-definitions/generate.sh`
+    2. `scripts/generate-graphql.sh`
+    3. `web/apps/webapp/scripts/generate.sh`
 
 ## Agent Rule
 
@@ -106,8 +106,8 @@ This file applies to the whole repository.
   recurring cadence down to the organization billing cycle for recurring invoice export.
 - Invoice due days decide when each generated invoice is payable.
 - For `RepeatingInvoices`, booking must calculate the effective recurring invoice cadence:
-  - if purchase cadence is shorter than or equal to the organization billing cycle, invoice on purchase cadence
-  - if purchase cadence is longer than the organization billing cycle, split it down to the organization billing cycle
+    - if purchase cadence is shorter than or equal to the organization billing cycle, invoice on purchase cadence
+    - if purchase cadence is longer than the organization billing cycle, split it down to the organization billing cycle
 - Do not coerce a short recurring cadence such as a daily pass into a longer org billing cycle template.
 - When a longer recurring cadence is split down to the org billing cycle, split the recurring invoice amount to the
   per-installment amount too instead of reusing the full recurring charge on every repeating invoice.
@@ -119,13 +119,13 @@ This file applies to the whole repository.
 - The same booking-owned accounting-invoice cancellation boundary should be used for one-time marketplace booking
   cancellation too; do not leave one-time booking delete as a payment-workflow-only cleanup path.
 - For marketplace subscription cancellation, booking must propagate that cancellation into billing too:
-  - stop active recurring payment/invoice workflows for the affected recurring booking instances
-  - cancel live Xero repeating invoice templates for those recurring booking instances instead of only freezing local
-    state
+    - stop active recurring payment/invoice workflows for the affected recurring booking instances
+    - cancel live Xero repeating invoice templates for those recurring booking instances instead of only freezing local
+      state
 - `CancelAtPeriodEnd` is different from immediate delete:
-  - immediate delete should stop the subscription now
-  - `CancelAtPeriodEnd` should keep the current cycle active, disable renewal, and transition to `Cancelled` only at
-    the cycle boundary
+    - immediate delete should stop the subscription now
+    - `CancelAtPeriodEnd` should keep the current cycle active, disable renewal, and transition to `Cancelled` only at
+      the cycle boundary
 - Expose that choice explicitly at the API boundary. Do not rely on callers pre-mutating stored subscription state to
   decide whether `DeleteAsync` means immediate cancellation or scheduled period-end cancellation.
 - Do not leave recurring-subscription cancellation as a booking/resource-only cleanup path if billing is still active.
@@ -166,8 +166,8 @@ This file applies to the whole repository.
 - For Xero-backed refunds, prefer credit-note based accounting adjustment flows rather than mutating historical invoice
   meaning in place.
 - Cancellation and refund are related but different:
-  - cancellation stops future service/resource entitlement
-  - refund records the financial reversal decision and downstream accounting action
+    - cancellation stops future service/resource entitlement
+    - refund records the financial reversal decision and downstream accounting action
 - Immediate cancellation does not automatically imply a refund, and a refund can require admin review or downstream
   settlement even when cancellation already succeeded locally.
 - Current implementation direction: if cancellation creates an eligible confirmed-payment refund and the Xero path is
@@ -183,9 +183,9 @@ This file applies to the whole repository.
   separate booking-level refunds for each child instance. Treat the top-level cancellation as the single customer-facing
   refund boundary.
 - Admin override of a refund should preserve:
-  - the policy-derived refund preview
-  - the final approved refund amount
-  - the actor and reason for the override
+    - the policy-derived refund preview
+    - the final approved refund amount
+    - the actor and reason for the override
 - Refund timeline/audit surfaces should be backed by durable refund events such as requested, approved, sent-to-Xero,
   completed, and failed, not only by the latest aggregate timestamps.
 - Manual refund handling should stay inside the same refund aggregate rather than becoming a parallel workflow. Model
@@ -202,9 +202,9 @@ This file applies to the whole repository.
   `BookMarketplaceBookingSubscriptionResources`.
 - That workflow wakes on a daily cadence and runs booking/resource reconciliation for the current subscription cycle.
 - Daily reconciliation currently:
-  1. ensures the current cycle recurring booking exists
-  2. repairs or removes future generated booking instances that no longer match the schedule
-  3. creates any missing future booking days for the current cycle
+    1. ensures the current cycle recurring booking exists
+    2. repairs or removes future generated booking instances that no longer match the schedule
+    3. creates any missing future booking days for the current cycle
 - Renewal is driven from `NextRenewalAt` and the subscription purchase cadence, not from the per-instance booking
   cadence.
 - On renewal, booking shared reloads the current `ProductVersion` and re-matches pricing so the renewed cycle stays
@@ -225,10 +225,10 @@ This file applies to the whole repository.
 ## Enterprise.Shared Auth And Encryption Layout
 
 - In `shared/Enterprise.Shared`, keep the auth/encryption concerns split by responsibility:
-  - `Cookie/` owns `CookieConfiguration` and `ICookieEncryptionService`
-  - `Encryption/` owns `IStringEncryptionAlgorithm` and shared encryption-key primitives
-  - `IdentityProviders/` owns provider-specific token validators and identity-provider configuration
-  - `Security/` owns the request/auth middleware pipeline, gRPC authentication, SAML SSO, and shared token contracts
+    - `Cookie/` owns `CookieConfiguration` and `ICookieEncryptionService`
+    - `Encryption/` owns `IStringEncryptionAlgorithm` and shared encryption-key primitives
+    - `IdentityProviders/` owns provider-specific token validators and identity-provider configuration
+    - `Security/` owns the request/auth middleware pipeline, gRPC authentication, SAML SSO, and shared token contracts
 - Do not move provider implementations back under `Security/` just because they participate in auth flows.
 - Register identity-provider validators through `AddIdentityTokenProviders()`.
 - Register cookie encryption through `AddCookieServices()`.
@@ -261,17 +261,17 @@ This file applies to the whole repository.
 - In unit tests, prefer injected test inputs over fixed local strings unless the test is validating a specific literal
   contract.
 - Order unit-test parameters as:
-  1. frozen/injected constructor dependencies
-  2. `sut`
-  3. random test inputs and expected values
+    1. frozen/injected constructor dependencies
+    2. `sut`
+    3. random test inputs and expected values
 
 ## GraphQL Choice Types
 
 - When exposing a selectable enum-like value to GraphQL clients, do not only expose the raw enum/input value.
 - Follow the existing repo pattern:
-  1. shared model/constants + name mapping
-  2. GraphQL `...Details` type with `type` and `name`
-  3. query field returning the available choices for the UI
+    1. shared model/constants + name mapping
+    2. GraphQL `...Details` type with `type` and `name`
+    3. query field returning the available choices for the UI
 - Prefer driving UI choice controls from those queryable details types instead of hardcoded labels or duplicated enum
   lists.
 

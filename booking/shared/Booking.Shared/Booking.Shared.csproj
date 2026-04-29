@@ -56,6 +56,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>Booking.Shared.UnitTests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
         <EmbeddedResource Include="EmailTemplates/BookingInvoice/template.html"/>
         <EmbeddedResource Include="EmailTemplates/BookingInvoice/template.txt"/>
         <EmbeddedResource Include="EmailTemplates/OrganizationArrearsInvoice/template.html"/>

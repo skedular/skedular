@@ -2,11 +2,12 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Location.Api.Mappers;
 using Location.Api.Services;
-using Location.Api.Services.Authorization;
+using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services;
 using Location.Shared.Services.Cache;
+using Location.Shared.Workflows;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Location.Api.UnitTests.Services.LocationServiceTests;
@@ -34,15 +35,13 @@ public class AddShould
         LocationService sut,
         CancellationToken cancellationToken)
     {
-        var locationToAdd = new Location.Shared.Models.Location
+        var locationToAdd = new Shared.Models.Location
         {
-            Name = "Head Office",
-            Organization = new Location.Shared.Models.Organization { Id = "org-1" },
-            OrganizationTags = [new Location.Shared.Models.OrganizationTag { Id = "tag-1" }]
+            Name = "Head Office", Organization = new Organization { Id = "org-1" }, OrganizationTags = [new OrganizationTag { Id = "tag-1" }]
         };
-        var organizationEntity = new Location.Shared.Database.Entities.Organization { Id = "org-1" };
-        var organizationTagEntity = new Location.Shared.Database.Entities.OrganizationTag { Id = "tag-1", Organization = organizationEntity };
-        var locationEntity = new Location.Shared.Database.Entities.Location
+        var organizationEntity = new Shared.Database.Entities.Organization { Id = "org-1" };
+        var organizationTagEntity = new Shared.Database.Entities.OrganizationTag { Id = "tag-1", Organization = organizationEntity };
+        var locationEntity = new Shared.Database.Entities.Location
         {
             Id = "location-1",
             Name = "Head Office",
@@ -50,19 +49,19 @@ public class AddShould
             Organization = organizationEntity,
             OrganizationTags = [organizationTagEntity]
         };
-        var mappedLocation = new Location.Shared.Models.Location
+        var mappedLocation = new Shared.Models.Location
         {
             Id = "location-1",
             Name = "Head Office",
-            Organization = new Location.Shared.Models.Organization { Id = "org-1" },
-            OrganizationTags = [new Location.Shared.Models.OrganizationTag { Id = "tag-1" }]
+            Organization = new Organization { Id = "org-1" },
+            OrganizationTags = [new OrganizationTag { Id = "tag-1" }]
         };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationTagRepository).Returns(organizationTagRepository);
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => cachedCustomerService.GetNullableAsync(cancellationToken)).Returns((Location.Shared.Database.Entities.Customer?)null);
+        A.CallTo(() => cachedCustomerService.GetNullableAsync(cancellationToken)).Returns(null);
         A.CallTo(() => organizationRepository.UpsertNakedAsync("org-1", cancellationToken)).Returns(organizationEntity);
         A.CallTo(() => randomHelper.Generate()).Returns("location-1");
         A.CallTo(() => organizationTagRepository.GetActiveByIdsForOrganizationAsync(
@@ -71,7 +70,7 @@ public class AddShould
                 null,
                 cancellationToken))
             .Returns([organizationTagEntity]);
-        A.CallTo(() => mapper.MapTo(locationToAdd, organizationEntity, A<ICollection<Location.Shared.Database.Entities.OrganizationTag>>._))
+        A.CallTo(() => mapper.MapTo(locationToAdd, organizationEntity, A<ICollection<Shared.Database.Entities.OrganizationTag>>._))
             .Returns(locationEntity);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => locationRepository.Add(locationEntity)).Returns(locationEntity);
@@ -89,9 +88,9 @@ public class AddShould
                 null,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => locationOutboxPublisher.PublishLocations(A<ICollection<Location.Shared.Models.Location>>._, unitOfWork))
+        A.CallTo(() => locationOutboxPublisher.PublishLocations(A<ICollection<Shared.Models.Location>>._, unitOfWork))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => temporalOutboxService.StartWorkflowLocationDailyAnalytics(A<Location.Shared.Workflows.GenerateLocationDailyAnalyticsInput>._, unitOfWork))
+        A.CallTo(() => temporalOutboxService.StartWorkflowLocationDailyAnalytics(A<GenerateLocationDailyAnalyticsInput>._, unitOfWork))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => cachedLocationService.UpdateByIdAsync("location-1", cancellationToken)).MustHaveHappenedOnceExactly();
     }
