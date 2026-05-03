@@ -15,6 +15,7 @@ using Resource = Location.Shared.Database.Entities.Resource;
 using LocationDesksOccupancyPercentage = Location.Shared.Models.LocationDesksOccupancyPercentage;
 using LocationEdge = Location.Api.GraphQL.Location.LocationEdge;
 using LocationDailyBookingsTotal = Location.Shared.Models.LocationDailyBookingsTotal;
+using ResourceAvailabilitySnapshotReport = Location.Shared.Models.ResourceAvailabilitySnapshotReport;
 using Organization = Location.Shared.Database.Entities.Organization;
 using OrganizationTag = Location.Shared.Models.OrganizationTag;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
@@ -78,7 +79,8 @@ public interface IMapper
         string name,
         IEnumerable<LocationDesksOccupancyPercentage> locationDesksOccupancyPercentage,
         IEnumerable<LocationDailyBookingsTotal> locationDailyBookingsTotal,
-        IEnumerable<LocationRoomsOccupancyPercentage> locationRoomsOccupancyPercentage);
+        IEnumerable<LocationRoomsOccupancyPercentage> locationRoomsOccupancyPercentage,
+        IEnumerable<ResourceAvailabilitySnapshotReport> resourceAvailabilitySnapshots);
 
     Shared.Models.Location MapTo(AddLocationInput src);
     Shared.Models.Location MapTo(UpdateLocationInput src);
@@ -365,7 +367,8 @@ public class Mapper : IMapper
         string name,
         IEnumerable<LocationDesksOccupancyPercentage> locationDesksOccupancyPercentage,
         IEnumerable<LocationDailyBookingsTotal> locationDailyBookingsTotal,
-        IEnumerable<LocationRoomsOccupancyPercentage> locationRoomsOccupancyPercentage) =>
+        IEnumerable<LocationRoomsOccupancyPercentage> locationRoomsOccupancyPercentage,
+        IEnumerable<ResourceAvailabilitySnapshotReport> resourceAvailabilitySnapshots) =>
         new()
         {
             Name = name,
@@ -374,7 +377,19 @@ public class Mapper : IMapper
             DailyBookingsTotals = locationDailyBookingsTotal
                 .Select(item => new GraphQL.Location.LocationDailyBookingsTotal { Date = item.Date, Total = item.Total }),
             RoomsOccupancyPercentage = locationRoomsOccupancyPercentage
-                .Select(item => new RoomsOccupancyPercentage { Date = item.Date, Percentage = item.Percentage })
+                .Select(item => new RoomsOccupancyPercentage { Date = item.Date, Percentage = item.Percentage }),
+            ResourceAvailabilitySnapshots = resourceAvailabilitySnapshots
+                .Select(item => new ResourceAvailabilityDailySnapshot
+                {
+                    Date = item.Date,
+                    ResourceType = item.ResourceType,
+                    AvailableCount = item.AvailableCount,
+                    UnavailableCount = item.UnavailableCount,
+                    BookedCount = item.BookedCount,
+                    AvailableResourceNames = item.AvailableResourceNames,
+                    UnavailableResourceNames = item.UnavailableResourceNames,
+                    BookedResourceNames = item.BookedResourceNames
+                })
         };
 
     public Shared.Models.Location MapTo(AddLocationInput src) =>

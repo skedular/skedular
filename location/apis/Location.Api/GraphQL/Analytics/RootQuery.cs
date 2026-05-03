@@ -45,6 +45,7 @@ public class RootQuery(IMapper mapper)
                     locationAnalytics.Name,
                     locationAnalytics.DesksOccupancyPercentage,
                     locationAnalytics.DailyBookingsTotal,
-                    locationAnalytics.RoomsOccupancyPercentage));
+                    locationAnalytics.RoomsOccupancyPercentage,
+                    locationAnalytics.ResourceAvailabilitySnapshots));
     }
 }

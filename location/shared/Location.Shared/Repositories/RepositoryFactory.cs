@@ -13,6 +13,9 @@ public interface IRepositoryFactory
     ICustomerRepository CustomerRepository { get; }
     IDailyDeskCountRecordingRepository DailyDeskCountRecordingRepository { get; }
     IDailyRoomCountRecordingRepository DailyRoomCountRecordingRepository { get; }
+    IDailyBookingCountRecordingRepository DailyBookingCountRecordingRepository { get; }
+    IDailyDeskBookingCountRecordingRepository DailyDeskBookingCountRecordingRepository { get; }
+    IDailyRoomBookingCountRecordingRepository DailyRoomBookingCountRecordingRepository { get; }
     IResourceRepository ResourceRepository { get; }
     IIdentityRepository IdentityRepository { get; }
     ILocationRepository LocationRepository { get; }
@@ -25,6 +28,7 @@ public interface IRepositoryFactory
     IProductRepository ProductRepository { get; }
     IProductVersionRepository ProductVersionRepository { get; }
     IPrecomputedLocationProductRepository PrecomputedLocationProductRepository { get; }
+    IDailyResourceAvailabilitySnapshotRepository DailyResourceAvailabilitySnapshotRepository { get; }
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepositoryFactory
@@ -37,6 +41,9 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         DailyDeskCountRecordingRepository = new DailyDeskCountRecordingRepository(_dbContext, timeProvider);
         DailyRoomCountRecordingRepository = new DailyRoomCountRecordingRepository(_dbContext, timeProvider);
+        DailyBookingCountRecordingRepository = new DailyBookingCountRecordingRepository(_dbContext, timeProvider);
+        DailyDeskBookingCountRecordingRepository = new DailyDeskBookingCountRecordingRepository(_dbContext, timeProvider);
+        DailyRoomBookingCountRecordingRepository = new DailyRoomBookingCountRecordingRepository(_dbContext, timeProvider);
         ResourceRepository = new ResourceRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
@@ -49,12 +56,16 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
         ProductRepository = new ProductRepository(_dbContext, timeProvider);
         ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
         PrecomputedLocationProductRepository = new PrecomputedLocationProductRepository(_dbContext, timeProvider);
+        DailyResourceAvailabilitySnapshotRepository = new DailyResourceAvailabilitySnapshotRepository(_dbContext, timeProvider);
     }
 
     public ILocationPhysicalAddressRepository LocationPhysicalAddressRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IDailyDeskCountRecordingRepository DailyDeskCountRecordingRepository { get; }
     public IDailyRoomCountRecordingRepository DailyRoomCountRecordingRepository { get; }
+    public IDailyBookingCountRecordingRepository DailyBookingCountRecordingRepository { get; }
+    public IDailyDeskBookingCountRecordingRepository DailyDeskBookingCountRecordingRepository { get; }
+    public IDailyRoomBookingCountRecordingRepository DailyRoomBookingCountRecordingRepository { get; }
     public IResourceRepository ResourceRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public ILocationRepository LocationRepository { get; }
@@ -67,4 +78,5 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
     public IProductRepository ProductRepository { get; }
     public IProductVersionRepository ProductVersionRepository { get; }
     public IPrecomputedLocationProductRepository PrecomputedLocationProductRepository { get; }
+    public IDailyResourceAvailabilitySnapshotRepository DailyResourceAvailabilitySnapshotRepository { get; }
 }

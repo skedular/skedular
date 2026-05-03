@@ -78,6 +78,7 @@ type LocationAnalytics {
   desksOccupancyPercentage: [DesksOccupancyPercentage!]!
   roomsOccupancyPercentage: [RoomsOccupancyPercentage!]!
   dailyBookingsTotals: [LocationDailyBookingsTotal!]!
+  resourceAvailabilitySnapshots: [ResourceAvailabilityDailySnapshot!]!
 }
 
 type LocationDailyBookingsTotal {
@@ -242,6 +243,17 @@ type Query {
   resourceById(id: String!): ResourceDetails @lookup @internal @cost(weight: "10")
   locationVersion: Version!
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
+}
+
+type ResourceAvailabilityDailySnapshot {
+  date: DateTime!
+  resourceType: String!
+  availableCount: Int!
+  unavailableCount: Int!
+  bookedCount: Int!
+  availableResourceNames: [String!]!
+  unavailableResourceNames: [String!]!
+  bookedResourceNames: [String!]!
 }
 
 type ResourceDetails {

@@ -67,55 +67,55 @@
     <Folder Name="/api-definitions/openapi/skedular/">
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/booking/">
-        <File Path="api-definitions/openapi/skedular/booking/booking_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/booking/booking_core_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/booking/booking_graphql_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/booking/booking_stripe_webhook_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/booking/booking_workaround_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/booking/booking_xero_webhook_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/core/">
-        <File Path="api-definitions/openapi/skedular/core/core_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/core/core_core_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/core/core_graphql_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/customer/">
         <File Path="api-definitions/openapi/skedular/customer/customer_graphql_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/customer/customer_stripe_v1.yaml"/>
-        <File Path="api-definitions/openapi/skedular/customer/customer_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/customer/customer_core_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/customer/customer_workaround_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/gateway/">
-        <File Path="api-definitions/openapi/skedular/gateway_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/gateway/gateway_core_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/location/">
-        <File Path="api-definitions/openapi/skedular/location/location_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/location/location_core_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/location/location_graphql_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/location/location_workaround_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/location/location_analytics_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/marketplace/">
-        <File Path="api-definitions/openapi/skedular/marketplace/marketplace_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/marketplace/marketplace_core_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/marketplace/marketplace_graphql_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/marketplace/marketplace_workaround_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/msteams/">
-        <File Path="api-definitions/openapi/skedular/msteams/msteams_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/msteams/msteams_core_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/msteams/msteams_graphql_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/msteams/msteams_workaround_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/organization/">
-        <File Path="api-definitions/openapi/skedular/organization/organization_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/organization/organization_core_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/organization/organization_graphql_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/organization/organization_workaround_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/slack/">
-        <File Path="api-definitions/openapi/skedular/slack/slack_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/slack/slack_core_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/slack/slack_graphql_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/slack/slack_callback_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/slack/slack_workaround_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/skedular/team/">
         <File Path="api-definitions/openapi/skedular/team/team_graphql_v1.yaml"/>
-        <File Path="api-definitions/openapi/skedular/team/team_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/team/team_core_v1.yaml"/>
         <File Path="api-definitions/openapi/skedular/team/team_workaround_v1.yaml"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/templates/"/>
@@ -256,18 +256,15 @@
     <Folder Name="/marketplace/domain/">
         <File Path="marketplace/domain/AGENTS.md"/>
         <Project Path="marketplace/domain/Marketplace.Domain.AppHost/Marketplace.Domain.AppHost.csproj"/>
-        <Project
-                Path="marketplace/domain/Marketplace.Domain.FakeDependencies/Marketplace.Domain.FakeDependencies.csproj"/>
-        <Project
-                Path="marketplace/domain/Marketplace.Domain.IntegrationTests/Marketplace.Domain.IntegrationTests.csproj"/>
+        <Project Path="marketplace/domain/Marketplace.Domain.FakeDependencies/Marketplace.Domain.FakeDependencies.csproj"/>
+        <Project Path="marketplace/domain/Marketplace.Domain.IntegrationTests/Marketplace.Domain.IntegrationTests.csproj"/>
     </Folder>
     <Folder Name="/marketplace/jobs/">
         <Project Path="marketplace/jobs/Marketplace.Jobs.UnitTests/Marketplace.Jobs.UnitTests.csproj"/>
         <Project Path="marketplace/jobs/Marketplace.Jobs/Marketplace.Jobs.csproj"/>
     </Folder>
     <Folder Name="/marketplace/processors/">
-        <Project
-                Path="marketplace/processors/Marketplace.Processors.UnitTests/Marketplace.Processors.UnitTests.csproj"/>
+        <Project Path="marketplace/processors/Marketplace.Processors.UnitTests/Marketplace.Processors.UnitTests.csproj"/>
         <Project Path="marketplace/processors/Marketplace.Processors/Marketplace.Processors.csproj"/>
     </Folder>
     <Folder Name="/marketplace/shared/">
@@ -315,18 +312,15 @@
     <Folder Name="/organization/domain/">
         <File Path="organization/domain/AGENTS.md"/>
         <Project Path="organization/domain/Organization.Domain.AppHost/Organization.Domain.AppHost.csproj"/>
-        <Project
-                Path="organization/domain/Organization.Domain.FakeDependencies/Organization.Domain.FakeDependencies.csproj"/>
-        <Project
-                Path="organization/domain/Organization.Domain.IntegrationTests/Organization.Domain.IntegrationTests.csproj"/>
+        <Project Path="organization/domain/Organization.Domain.FakeDependencies/Organization.Domain.FakeDependencies.csproj"/>
+        <Project Path="organization/domain/Organization.Domain.IntegrationTests/Organization.Domain.IntegrationTests.csproj"/>
     </Folder>
     <Folder Name="/organization/jobs/">
         <Project Path="organization/jobs/Organization.Jobs.UnitTests/Organization.Jobs.UnitTests.csproj"/>
         <Project Path="organization/jobs/Organization.Jobs/Organization.Jobs.csproj"/>
     </Folder>
     <Folder Name="/organization/processors/">
-        <Project
-                Path="organization/processors/Organization.Processors.UnitTests/Organization.Processors.UnitTests.csproj"/>
+        <Project Path="organization/processors/Organization.Processors.UnitTests/Organization.Processors.UnitTests.csproj"/>
         <Project Path="organization/processors/Organization.Processors/Organization.Processors.csproj"/>
     </Folder>
     <Folder Name="/organization/shared/">

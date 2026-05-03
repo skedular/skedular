@@ -10,8 +10,8 @@ public interface IDailyDeskCountRecordingRepository : IRepository<DailyDeskCount
 {
     DailyDeskCountRecording Add(DailyDeskCountRecording dailyDeskCountRecording);
 
-    Task<ICollection<DailyDeskCountRecording>> GetByLocationIdsAndDateRangeAsync(
-        ICollection<string> locationIds,
+    Task<IReadOnlyList<DailyDeskCountRecording>> GetByLocationIdsAndDateRangeAsync(
+        IReadOnlyList<string> locationIds,
         DateTimeOffset from,
         DateTimeOffset until,
         CancellationToken cancellationToken);
@@ -28,17 +28,13 @@ public class DailyDeskCountRecordingRepository(LocationDbContext dbContext, Time
         return DbContext.DailyDeskCountRecording.Add(dailyDeskCountRecording).Entity;
     }
 
-    public async Task<ICollection<DailyDeskCountRecording>> GetByLocationIdsAndDateRangeAsync(
-        ICollection<string> locationIds,
+    public async Task<IReadOnlyList<DailyDeskCountRecording>> GetByLocationIdsAndDateRangeAsync(
+        IReadOnlyList<string> locationIds,
         DateTimeOffset from,
         DateTimeOffset until,
         CancellationToken cancellationToken) =>
         await DbContext.DailyDeskCountRecording
-            .Where(item =>
-                !item.DeletedAt.HasValue &&
-                locationIds.Contains(item.Location.Id) &&
-                item.Date >= from &&
-                item.Date <= until)
+            .Where(item => !item.DeletedAt.HasValue && locationIds.Contains(item.Location.Id) && item.Date >= from && item.Date <= until)
             .OrderBy(item => item.Date)
             .Include(item => item.Location)
             .AsNoTrackingWithIdentityResolution()

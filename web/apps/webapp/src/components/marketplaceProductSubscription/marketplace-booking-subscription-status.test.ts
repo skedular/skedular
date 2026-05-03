@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
-    isSupportedMarketplaceBookingSubscriptionStatusForFilter,
-    toMarketplaceBookingSubscriptionStatusForFilterDetails,
-    type SupportedMarketplaceBookingSubscriptionStatusForFilter,
+  isSupportedMarketplaceBookingSubscriptionStatusForFilter,
+  toMarketplaceBookingSubscriptionStatusForFilterDetails,
+  type SupportedMarketplaceBookingSubscriptionStatusForFilter,
 } from './marketplace-booking-subscription-status';
 
 describe('isSupportedMarketplaceBookingSubscriptionStatusForFilter', () => {

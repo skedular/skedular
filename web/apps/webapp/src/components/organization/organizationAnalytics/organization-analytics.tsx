@@ -1,16 +1,26 @@
-import { BodyIconTypography, GridContainer, LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { LocationBookingInsightRoot } from '@/components/location/locationBookingInsight';
 import { LocationDeskOccupancyInsightRoot } from '@/components/location/locationDeskOccupancyInsight';
+import { LocationResourceAvailabilityInsightRoot } from '@/components/location/locationResourceAvailabilityInsight';
 import { LocationSelector } from '@/components/location/locationSelector';
 import { OrganizationBookingInsightRoot } from '@/components/organization/organizationBookingInsight';
 import { OrganizationMemberAttendancyInsightRoot } from '@/components/organization/organizationMemberAttendancyInsight';
-import { useIntegratedPlatrform } from '@skedular/shared';
-import { defaultPadding } from '@skedular/ui';
 import type { organizationAnalytics_query$key } from '@/queries/__generated__/organizationAnalytics_query.graphql';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import { PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
+import { useIntegratedPlatrform } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  defaultPadding,
+  GridContainer,
+  LeadIconTypography,
+  PageHeaderPanel,
+  SectionIconTypography,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import { useSearchParams } from 'next/navigation';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -137,7 +147,7 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationCu
               overflow: 'hidden',
             }}
           >
-            <SettingsSectionCard title="Location Insights" description="Filter locations and compare booking and desk-occupancy trends for each site.">
+            <SettingsSectionCard title="Location Insights" description="Filter locations and compare booking and resource-occupancy trends for each site.">
               <StackColumn spacing={2}>
                 <StackRow sx={{ justifyContent: 'flex-start' }}>
                   <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
@@ -157,6 +167,9 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationCu
                           </Grid>
                           <Grid>
                             <LocationDeskOccupancyInsightRoot onReloadRequired={onReloadRequired} locationId={location.id} />
+                          </Grid>
+                          <Grid>
+                            <LocationResourceAvailabilityInsightRoot onReloadRequired={onReloadRequired} locationId={location.id} />
                           </Grid>
                         </GridContainer>
                       </StackColumn>

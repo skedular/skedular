@@ -1,13 +1,13 @@
-import { StackColumn } from '@skedular/ui';
-import { startOfDay } from '@skedular/shared';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import type { PickerRangeValue } from '@mui/x-date-pickers/internals';
+import { startOfDay } from '@skedular/shared';
+import { StackColumn } from '@skedular/ui';
 import type { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
 
-export type Period = 'week' | 'month' | '3months' | 'custom';
+export type Period = 'week' | 'month' | '3months' | '6months' | 'custom';
 
 type Props = {
   defaultPeriod: Period;
@@ -27,7 +27,9 @@ const AnalyticsDaterangeSelector = ({ defaultPeriod, defaultCustomFrom, defaultC
           ? until.subtract(1, 'weeks')
           : defaultPeriod === 'month'
             ? until.subtract(1, 'months')
-            : until.subtract(3, 'months'),
+            : defaultPeriod === '3months'
+              ? until.subtract(3, 'months')
+              : until.subtract(6, 'months'),
   );
   const [period, setPeriod] = useState(defaultPeriod === 'custom' && (defaultCustomFrom || !defaultCustomUntil) ? 'month' : defaultPeriod);
   const handlePeriodChange = (event: React.MouseEvent<HTMLElement>, newPeriod: Period) => {
@@ -51,6 +53,12 @@ const AnalyticsDaterangeSelector = ({ defaultPeriod, defaultCustomFrom, defaultC
       case '3months':
         until = start;
         from = start.subtract(3, 'months');
+
+        break;
+
+      case '6months':
+        until = start;
+        from = start.subtract(6, 'months');
 
         break;
     }
@@ -78,6 +86,7 @@ const AnalyticsDaterangeSelector = ({ defaultPeriod, defaultCustomFrom, defaultC
         <ToggleButton value="week">1 Week</ToggleButton>
         <ToggleButton value="month">1 Month</ToggleButton>
         <ToggleButton value="3months">3 Months</ToggleButton>
+        <ToggleButton value="6months">6 Months</ToggleButton>
         <ToggleButton value="custom">Custom</ToggleButton>
       </ToggleButtonGroup>
       {period === 'custom' && (

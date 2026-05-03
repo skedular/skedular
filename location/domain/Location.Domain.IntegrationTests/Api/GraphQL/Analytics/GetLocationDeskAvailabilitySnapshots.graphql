@@ -1,0 +1,15 @@
+query GetLocationResourceAvailabilitySnapshots($from: DateTime!, $until: DateTime!) {
+    locationsAnalytics(from: $from, until: $until) {
+        name
+        resourceAvailabilitySnapshots {
+            date
+            resourceType
+            availableCount
+            unavailableCount
+            bookedCount
+            availableResourceNames
+            unavailableResourceNames
+            bookedResourceNames
+        }
+    }
+}

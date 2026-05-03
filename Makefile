@@ -17,6 +17,8 @@ generate: ## Generate code
 	@./api-definitions/generate.sh
 	@./scripts/generate-graphql.sh
 	@./web/apps/webapp/scripts/generate.sh
+	@./web/apps/webapp-spaces/scripts/generate.sh
+	@./web/apps/webapp-teams/scripts/generate.sh
 
 .PHONY: lint
 lint: ## run golanci-lint locally

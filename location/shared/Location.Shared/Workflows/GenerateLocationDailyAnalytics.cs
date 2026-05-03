@@ -4,7 +4,7 @@ using Temporalio.Workflows;
 
 namespace Location.Shared.Workflows;
 
-public record GenerateLocationDailyAnalyticsInput(string LocationId, DateTimeOffset? GenerationTime);
+public record GenerateLocationDailyAnalyticsInput(string LocationId, DateTimeOffset? GenerationTime, DateTimeOffset? SnapshotDateOverride);
 
 [Workflow]
 public class GenerateLocationDailyAnalytics
@@ -46,6 +46,16 @@ public class GenerateLocationDailyAnalytics
             {
                 break;
             }
+
+            await Workflow.ExecuteActivityAsync(
+                (LocationDailyAnalytics activity) =>
+                    activity.RecordResourceAvailabilitySnapshotForDateAsync(args.LocationId, args.SnapshotDateOverride),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromMinutes(1),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                });
 
             await Workflow.DelayAsync(TimeSpan.FromDays(1), Workflow.CancellationToken);
         } while (true);

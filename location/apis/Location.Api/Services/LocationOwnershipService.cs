@@ -77,7 +77,7 @@ public class LocationOwnershipService(
         if (ownedBySkedularPublicLocationsOrganization)
         {
             temporalOutboxService.StartWorkflowLocationDailyAnalytics(
-                new GenerateLocationDailyAnalyticsInput(location.Id, timeProvider.GetUtcNow().AddDays(1)),
+                new GenerateLocationDailyAnalyticsInput(location.Id, timeProvider.GetUtcNow().AddDays(1), null),
                 repositoryFactory.UnitOfWork);
         }
 

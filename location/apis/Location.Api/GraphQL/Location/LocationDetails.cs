@@ -61,7 +61,8 @@ public class LocationDetails : Node
             locationAnalytics.Name,
             locationAnalytics.DesksOccupancyPercentage,
             locationAnalytics.DailyBookingsTotal,
-            locationAnalytics.RoomsOccupancyPercentage);
+            locationAnalytics.RoomsOccupancyPercentage,
+            locationAnalytics.ResourceAvailabilitySnapshots);
     }
 
     [UseResolverScope]

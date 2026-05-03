@@ -103,6 +103,11 @@ public class LocationBookingDerivedState(
 
     private async Task<List<BookingSnapshot>> GetBookingsAsync(string locationId, CancellationToken cancellationToken)
     {
+        // T008 investigation (2026-04-29): BookingRepository.GetPaginatedBookingsUntrackedAsync
+        // applies .Where(item => !item.DeletedAt.HasValue) unconditionally (line ~147 of BookingRepository.cs).
+        // Cancelled bookings are soft-deleted on the booking side, so they are already excluded by the
+        // server before the gRPC response is sent. No additional client-side cancellation filter is needed here.
+        // The BookingWhereInput.deletedByCustomerId field in the proto is unused for this flow.
         var result = new List<BookingSnapshot>();
         string? after = null;
 

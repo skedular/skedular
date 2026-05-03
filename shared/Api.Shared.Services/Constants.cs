@@ -37,6 +37,7 @@ public static class Constants
 
     public const int MaxLocationNameLength = 2000;
     public const int MaxResourceNameLength = 200;
+    public const int MaxResourceAvailabilityClassificationLength = 32;
 
     public const int MaxTagNameLength = 100;
     public const int MaxTagDescriptionLength = 1000;

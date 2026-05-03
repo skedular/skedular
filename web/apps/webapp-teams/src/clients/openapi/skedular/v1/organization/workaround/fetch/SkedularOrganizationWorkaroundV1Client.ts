@@ -1,0 +1,43 @@
+/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { BaseHttpRequest } from './core/BaseHttpRequest';
+import type { OpenAPIConfig } from './core/OpenAPI';
+import { FetchHttpRequest } from './core/FetchHttpRequest';
+import { AnalyticsService } from './services/AnalyticsService';
+import { AzureTenantService } from './services/AzureTenantService';
+import { OfferingService } from './services/OfferingService';
+import { OrganizationService } from './services/OrganizationService';
+import { V1Service } from './services/V1Service';
+import { WorkaroundService } from './services/WorkaroundService';
+type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
+export class SkedularOrganizationWorkaroundV1Client {
+    public readonly analytics: AnalyticsService;
+    public readonly azureTenant: AzureTenantService;
+    public readonly offering: OfferingService;
+    public readonly organization: OrganizationService;
+    public readonly v1: V1Service;
+    public readonly workaround: WorkaroundService;
+    public readonly request: BaseHttpRequest;
+    constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
+        this.request = new HttpRequest({
+            BASE: config?.BASE ?? 'https://api.skedular.app',
+            VERSION: config?.VERSION ?? '1.0.0',
+            WITH_CREDENTIALS: config?.WITH_CREDENTIALS ?? false,
+            CREDENTIALS: config?.CREDENTIALS ?? 'include',
+            TOKEN: config?.TOKEN,
+            USERNAME: config?.USERNAME,
+            PASSWORD: config?.PASSWORD,
+            HEADERS: config?.HEADERS,
+            ENCODE_PATH: config?.ENCODE_PATH,
+        });
+        this.analytics = new AnalyticsService(this.request);
+        this.azureTenant = new AzureTenantService(this.request);
+        this.offering = new OfferingService(this.request);
+        this.organization = new OrganizationService(this.request);
+        this.v1 = new V1Service(this.request);
+        this.workaround = new WorkaroundService(this.request);
+    }
+}
+

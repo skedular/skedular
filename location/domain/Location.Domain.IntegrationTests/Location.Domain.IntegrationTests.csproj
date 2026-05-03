@@ -80,5 +80,8 @@
         <GraphQL Update="Api/GraphQL/GetVersion.graphql">
             <Generator>MSBuild:GenerateGraphQLCode</Generator>
         </GraphQL>
+        <GraphQL Update="Api/GraphQL/Analytics/GetLocationDeskAvailabilitySnapshots.graphql">
+            <Generator>MSBuild:GenerateGraphQLCode</Generator>
+        </GraphQL>
     </ItemGroup>
 </Project>

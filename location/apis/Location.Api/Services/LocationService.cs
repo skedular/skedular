@@ -160,7 +160,7 @@ public class LocationService(
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
 
         temporalOutboxService.StartWorkflowLocationDailyAnalytics(
-            new GenerateLocationDailyAnalyticsInput(location.Id, timeProvider.GetUtcNow().AddDays(1)),
+            new GenerateLocationDailyAnalyticsInput(location.Id, timeProvider.GetUtcNow().AddDays(1), null),
             repositoryFactory.UnitOfWork);
 
         temporalOutboxService.StartComputeOrganizationLocationsAndProductsRelationships(

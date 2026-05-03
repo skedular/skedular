@@ -1,10 +1,12 @@
 # unityhubio Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-27
+Auto-generated from all feature plans. Last updated: 2026-04-29
 
 ## Active Technologies
 - C# .NET 10 (backend), TypeScript 6 / React 19 / Next.js 16 App Router (frontend) + HotChocolate (GraphQL), Entity Framework Core, Relay, MUI v9, `mui-rff` Autocomplete, `useSearchParams`/`useRouter` (Next.js) (005-subscription-landing-page-filter)
 - PostgreSQL — no new migrations; filtering via existing indexed `Status` and `MarketplaceBooking.PaymentStatus` columns (005-subscription-landing-page-filter)
+- C# on .NET 10 + Temporal (workflows/activities), HotChocolate (GraphQL), Entity Framework Core, gRPC (booking data via `BookingService.BookingServiceClient`), `Enterprise.Shared.Database` repository pattern, `IRepositoryFactory`, `IWorkflowIdService` (006-desk-availability-analytics)
+- PostgreSQL via EF Core — new `DailyDeskAvailabilitySnapshot` table; new migration required in `location/shared/Location.Shared/Database/Migrations/` (006-desk-availability-analytics)
 
 - TypeScript (Next.js web apps), Terraform HCL + `next`, `react`, `@skedular/ui`, Terraform AWS/Vercel/Google providers (002-split-ui-products)
 - S3 Terraform backend + DynamoDB locking (per workspace state key) (002-split-ui-products)
@@ -33,10 +35,10 @@ team/
 C# on .NET 10: Follow standard conventions
 
 ## Recent Changes
+- 006-desk-availability-analytics: Added C# on .NET 10 + Temporal (workflows/activities), HotChocolate (GraphQL), Entity Framework Core, gRPC (booking data via `BookingService.BookingServiceClient`), `Enterprise.Shared.Database` repository pattern, `IRepositoryFactory`, `IWorkflowIdService`
 - 005-subscription-landing-page-filter: Added C# .NET 10 (backend), TypeScript 6 / React 19 / Next.js 16 App Router (frontend) + HotChocolate (GraphQL), Entity Framework Core, Relay, MUI v9, `mui-rff` Autocomplete, `useSearchParams`/`useRouter` (Next.js)
 - 005-subscription-landing-page-filter: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 
-- 004-modularize-webapp-products: Added TypeScript 6, React 19 + Next.js 16 (App Router), Relay, MUI v9, pnpm workspaces, Turborepo
 
 <!-- MANUAL ADDITIONS START -->
 

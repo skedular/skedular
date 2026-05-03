@@ -20,4 +20,12 @@ public class LocationAnalyticsController(IWorkaroundService workaroundService) :
 
         return Ok();
     }
+
+    public override async Task<IActionResult> RegenerateResourceAvailabilitySnapshots(string locationId,
+        RegenerateResourceAvailabilitySnapshotsInput body, CancellationToken cancellationToken = default)
+    {
+        await workaroundService.RegenerateResourceAvailabilitySnapshotsAsync(locationId, body, cancellationToken);
+
+        return Ok();
+    }
 }

@@ -9,6 +9,9 @@ public interface ITemporalService
 {
     Task StartWorkflowGenerateLocationDailyAnalyticsAsync(GenerateLocationDailyAnalyticsInput args, CancellationToken cancellationToken);
 
+    Task StartWorkflowGenerateLocationResourceAvailabilitySnapshotAsync(string locationId, DateTimeOffset snapshotDate,
+        CancellationToken cancellationToken);
+
     Task StartOrSignalWorkflowRecomputeLocationBookingDerivedStateAsync(
         RecomputeLocationBookingDerivedStateInput args,
         CancellationToken cancellationToken);
@@ -30,6 +33,23 @@ public class TemporalService(
             new WorkflowOptions
             {
                 Id = workflowIdService.GenerateLocationDailyAnalytics(args.LocationId),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
+                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+            });
+
+    public async Task StartWorkflowGenerateLocationResourceAvailabilitySnapshotAsync(
+        string locationId,
+        DateTimeOffset snapshotDate,
+        CancellationToken cancellationToken) =>
+        await temporalClient.StartWorkflowAsync(
+            (GenerateLocationDailyAnalytics workflow) => workflow.ExecuteAsync(
+                new GenerateLocationDailyAnalyticsInput(locationId, null, snapshotDate)),
+            new WorkflowOptions
+            {
+                Id = workflowIdService.GenerateLocationResourceAvailabilitySnapshot(locationId, snapshotDate),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,

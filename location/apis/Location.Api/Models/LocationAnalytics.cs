@@ -7,4 +7,5 @@ public record LocationAnalytics(
     string Name,
     ICollection<LocationDesksOccupancyPercentage> DesksOccupancyPercentage,
     ICollection<LocationDailyBookingsTotal> DailyBookingsTotal,
-    ICollection<LocationRoomsOccupancyPercentage> RoomsOccupancyPercentage);
+    ICollection<LocationRoomsOccupancyPercentage> RoomsOccupancyPercentage,
+    ICollection<ResourceAvailabilitySnapshotReport> ResourceAvailabilitySnapshots);

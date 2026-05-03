@@ -52,6 +52,16 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.Analytics.V1
         [System.ComponentModel.Description("regenerate location daily analytics")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateDailyAnalytics(string locationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
+        /// <summary>
+        /// regenerate resource availability snapshots for a location over a date range
+        /// </summary>
+        /// <returns>the status of regenerating resource availability snapshots</returns>
+
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/location/analytics/{locationId}/regenerate-resource-availability-snapshots")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("regenerate resource availability snapshots for a location over a date range")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateResourceAvailabilitySnapshots(string locationId, [Microsoft.AspNetCore.Mvc.FromBody] RegenerateResourceAvailabilitySnapshotsInput body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -72,6 +82,37 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.Analytics.V1
 
         [System.Text.Json.Serialization.JsonPropertyName("instance")]
         public string Instance { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class RegenerateResourceAvailabilitySnapshotsInput
+    {
+
+        /// <summary>
+        /// Start date (inclusive) for snapshot regeneration in UTC
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("from")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.Description("Start date (inclusive) for snapshot regeneration in UTC")]
+        public System.DateTimeOffset From { get; set; } = default!;
+
+        /// <summary>
+        /// End date (inclusive) for snapshot regeneration in UTC
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("until")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.Description("End date (inclusive) for snapshot regeneration in UTC")]
+        public System.DateTimeOffset Until { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 

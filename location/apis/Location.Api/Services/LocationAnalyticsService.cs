@@ -1,11 +1,13 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Pagination;
 using Location.Api.Models;
 using Location.Api.Services.Authorization;
+using Location.Shared.Database.Entities;
 using Location.Shared.Models;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
-using Microsoft.EntityFrameworkCore;
+using Resource = Location.Shared.Database.Entities.Resource;
 
 namespace Location.Api.Services;
 
@@ -43,7 +45,7 @@ public class LocationAnalyticsService(
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken) ?? throw new LocationNotFound();
         if (!await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customerId, cancellationToken))
         {
-            return new LocationAnalytics(locationId, string.Empty, [], [], []);
+            return new LocationAnalytics(locationId, string.Empty, [], [], [], []);
         }
 
         return (await GetAnalyticsAsync(
@@ -98,51 +100,45 @@ public class LocationAnalyticsService(
         DateTimeOffset until,
         CancellationToken cancellationToken)
     {
-        var dailyBookingCounts = await repositoryFactory.DbContext.DailyBookingCountRecording
-            .Where(item =>
-                !item.DeletedAt.HasValue && locationIds.Contains(item.Location.Id) && item.Date >= from && item.Date <= until)
-            .OrderBy(item => item.Date)
-            .Include(item => item.Location)
-            .AsNoTrackingWithIdentityResolution()
-            .ToListAsync(cancellationToken);
-        var dailyDeskBookingCounts = await repositoryFactory.DbContext.DailyDeskBookingCountRecording
-            .Where(item =>
-                !item.DeletedAt.HasValue && locationIds.Contains(item.Location.Id) && item.Date >= from && item.Date <= until)
-            .OrderBy(item => item.Date)
-            .Include(item => item.Location)
-            .AsNoTrackingWithIdentityResolution()
-            .ToListAsync(cancellationToken);
-        var dailyRoomBookingCounts = await repositoryFactory.DbContext.DailyRoomBookingCountRecording
-            .Where(item =>
-                !item.DeletedAt.HasValue && locationIds.Contains(item.Location.Id) && item.Date >= from && item.Date <= until)
-            .OrderBy(item => item.Date)
-            .Include(item => item.Location)
-            .AsNoTrackingWithIdentityResolution()
-            .ToListAsync(cancellationToken);
-
+        var dailyBookingCounts = await repositoryFactory.DailyBookingCountRecordingRepository.GetByLocationIdsAndDateRangeAsync(
+            locationIds,
+            from,
+            until,
+            cancellationToken);
+        var dailyDeskBookingCounts = await repositoryFactory.DailyDeskBookingCountRecordingRepository.GetByLocationIdsAndDateRangeAsync(
+            locationIds,
+            from,
+            until,
+            cancellationToken);
+        var dailyRoomBookingCounts = await repositoryFactory.DailyRoomBookingCountRecordingRepository.GetByLocationIdsAndDateRangeAsync(
+            locationIds,
+            from,
+            until,
+            cancellationToken);
         var dailyDeskCounts = await repositoryFactory.DailyDeskCountRecordingRepository.GetByLocationIdsAndDateRangeAsync(
             locationIds,
             from,
             until,
             cancellationToken);
-
         var dailyRoomCounts = await repositoryFactory.DailyRoomCountRecordingRepository.GetByLocationIdsAndDateRangeAsync(
             locationIds,
             from,
             until,
             cancellationToken);
 
+        var allResourceAvailabilitySnapshots = await repositoryFactory.DailyResourceAvailabilitySnapshotRepository.GetByLocationIdsAndDateRangeAsync(
+            locationIds,
+            from,
+            until,
+            null,
+            cancellationToken);
+
         return locationIds.Select(locationId =>
         {
             var desksOccupancyPercentage = dailyDeskCounts
-                .Where(item => item.Location.Id == locationId)
+                .Where(item => item.Location.Id == locationId && item.Count > 0)
                 .Select(item =>
                 {
-                    if (item.Count == 0)
-                    {
-                        return new LocationDesksOccupancyPercentage { Date = item.Date, Percentage = 0 };
-                    }
-
                     var matchedBookingsCount = dailyDeskBookingCounts
                         .Where(recording => recording.Location.Id == locationId && recording.Date == item.Date)
                         .Select(recording => recording.Count)
@@ -153,19 +149,13 @@ public class LocationAnalyticsService(
 
             var dailyBookingsTotal = dailyBookingCounts
                 .Where(item => item.Location.Id == locationId)
-                .Select(item =>
-                    new LocationDailyBookingsTotal { Date = item.Date, Total = item.Count })
+                .Select(item => new LocationDailyBookingsTotal { Date = item.Date, Total = item.Count })
                 .ToList();
 
             var roomsOccupancyPercentage = dailyRoomCounts
-                .Where(item => item.Location.Id == locationId)
+                .Where(item => item.Location.Id == locationId && item.Count > 0)
                 .Select(item =>
                 {
-                    if (item.Count == 0)
-                    {
-                        return new LocationRoomsOccupancyPercentage { Date = item.Date, Percentage = 0 };
-                    }
-
                     var matchedBookingsCount = dailyRoomBookingCounts
                         .Where(recording => recording.Location.Id == locationId && recording.Date == item.Date)
                         .Select(recording => recording.Count)
@@ -174,12 +164,31 @@ public class LocationAnalyticsService(
                     return new LocationRoomsOccupancyPercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };
                 }).ToList();
 
+            var resourceAvailabilitySnapshots = allResourceAvailabilitySnapshots
+                .Where(item => item.Location.Id == locationId)
+                .GroupBy(item => new { item.Date, ResourceType = DetermineResourceType(item.Resource) })
+                .Where(item => item.Key.ResourceType != null)
+                .Select(item => ResourceAvailabilitySnapshotReport.FromSnapshots(item.Key.Date, item.Key.ResourceType!, item.ToList()))
+                .OrderBy(item => item.Date).ThenBy(r => r.ResourceType)
+                .ToList();
+
             return new LocationAnalytics(
                 locationId,
                 locationNames[locationId],
                 desksOccupancyPercentage,
                 dailyBookingsTotal,
-                roomsOccupancyPercentage);
+                roomsOccupancyPercentage,
+                resourceAvailabilitySnapshots);
         }).ToList();
+
+        static string? DetermineResourceType(Resource resource)
+        {
+            var tagTypes = resource.OrganizationTags.Select(item => item.Type).ToHashSet();
+
+            return tagTypes.Contains(OrganizationTagTypeConstants.ResourceDesk) ? OrganizationTagTypeConstants.ResourceDesk :
+                tagTypes.Contains(OrganizationTagTypeConstants.ResourceRoom) ? OrganizationTagTypeConstants.ResourceRoom :
+                tagTypes.Contains(OrganizationTagTypeConstants.ResourceParking) ? OrganizationTagTypeConstants.ResourceParking :
+                tagTypes.Contains(OrganizationTagTypeConstants.ResourceOthers) ? OrganizationTagTypeConstants.ResourceOthers : null;
+        }
     }
 }

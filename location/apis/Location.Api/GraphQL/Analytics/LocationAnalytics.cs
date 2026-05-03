@@ -15,4 +15,7 @@ public class LocationAnalytics
     public IEnumerable<RoomsOccupancyPercentage> RoomsOccupancyPercentage { get; set; } = [];
 
     [GraphQLName("dailyBookingsTotals")] public IEnumerable<LocationDailyBookingsTotal> DailyBookingsTotals { get; set; } = [];
+
+    [GraphQLName("resourceAvailabilitySnapshots")]
+    public IEnumerable<ResourceAvailabilityDailySnapshot> ResourceAvailabilitySnapshots { get; set; } = [];
 }

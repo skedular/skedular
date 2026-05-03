@@ -9,6 +9,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Random;
 using Flurl;
 using Location.Shared;
 using Location.Shared.Database;
@@ -60,6 +61,7 @@ public class Startup
         var locationApiGrpcChannel = GrpcChannelFactory.Create(locationApiGrpcEndpoint);
 
         services.TryAddSingleton(TimeProvider.System);
+        services.TryAddSingleton<IRandomHelper, RandomHelper>();
         services
             .AddKeyedSingleton("location-api-grpc-channel", locationApiGrpcChannel)
             .AddTestingSharedIntegrationTests()

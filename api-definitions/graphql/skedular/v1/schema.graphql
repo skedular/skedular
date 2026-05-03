@@ -381,6 +381,7 @@ type LocationAnalytics {
   dailyBookingsTotals: [LocationDailyBookingsTotal!]!
   desksOccupancyPercentage: [DesksOccupancyPercentage!]!
   name: String!
+  resourceAvailabilitySnapshots: [ResourceAvailabilityDailySnapshot!]!
   roomsOccupancyPercentage: [RoomsOccupancyPercentage!]!
 }
 
@@ -1454,6 +1455,17 @@ type RemoveCustomerPaymentMethodPayload {
 
 type RemoveOrganizationPaymentMethodPayload {
   clientMutationId: String
+}
+
+type ResourceAvailabilityDailySnapshot {
+  availableCount: Int!
+  availableResourceNames: [String!]!
+  bookedCount: Int!
+  bookedResourceNames: [String!]!
+  date: DateTime!
+  resourceType: String!
+  unavailableCount: Int!
+  unavailableResourceNames: [String!]!
 }
 
 type ResourceDetails {
