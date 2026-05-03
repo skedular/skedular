@@ -27,7 +27,7 @@ public class RecomputeIdempotencyShould
         var options = new DbContextOptionsBuilder<LocationDbContext>()
             .UseInMemoryDatabase(Guid.CreateVersion7().ToString())
             .Options;
-        return new LocationDbContext(options, new CustomDbContextOptions<LocationDbContext> { IsPooled = false });
+        return new TestLocationDbContext(options, new CustomDbContextOptions<LocationDbContext> { IsPooled = false });
     }
 
     private static AsyncUnaryCall<T> CreateGrpcResponse<T>(T response) where T : class =>
@@ -51,13 +51,13 @@ public class RecomputeIdempotencyShould
     {
         // Arrange
         var environment = new ActivityEnvironment();
-        const string locationId = "loc-idempotent";
+        const string LocationId = "loc-idempotent";
         var location = new LocationEntity
         {
-            Id = locationId, Name = "Idempotent Office", OrganizationId = "org-idempotent", Type = LocationTypeConstants.Private
+            Id = LocationId, Name = "Idempotent Office", OrganizationId = "org-idempotent", Type = LocationTypeConstants.Private
         };
 
-        using var dbContext = CreateInMemoryContext();
+        await using var dbContext = CreateInMemoryContext();
 
         var counter = 0;
         A.CallTo(() => randomHelper.Generate()).ReturnsLazily(() => $"id-{++counter}");
@@ -65,7 +65,7 @@ public class RecomputeIdempotencyShould
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(dbContext);
-        A.CallTo(() => locationRepository.GetByIdAsync(locationId, A<CancellationToken>._)).Returns(location);
+        A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
         A.CallTo(() => resourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync(
                 A<IReadOnlyList<string>>._, A<CancellationToken>._))
@@ -95,7 +95,7 @@ public class RecomputeIdempotencyShould
             randomHelper, cachedLocationService);
 
         // Act – first invocation
-        await environment.RunAsync(() => sut.RecomputeAsync(locationId));
+        await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
         var afterFirst = await dbContext.DailyBookingCountRecording.Include(r => r.Location).ToListAsync(TestContext.Current.CancellationToken);
 
         // Reset gRPC call counter to allow the second invocation to re-use the same mock
@@ -107,7 +107,7 @@ public class RecomputeIdempotencyShould
             .Returns(CreateGrpcResponse(bookingResponse));
 
         // Act – second invocation with identical input
-        await environment.RunAsync(() => sut.RecomputeAsync(locationId));
+        await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
         var afterSecond = await dbContext.DailyBookingCountRecording.Include(r => r.Location).ToListAsync(TestContext.Current.CancellationToken);
 
         // Assert – exactly 1 record per day after both invocations (no duplication)
@@ -130,11 +130,11 @@ public class RecomputeIdempotencyShould
     {
         // Arrange
         var environment = new ActivityEnvironment();
-        const string locationId = "loc-desk-idem";
+        const string LocationId = "loc-desk-idem";
         var deskResourceId = "res-desk";
         var location = new LocationEntity
         {
-            Id = locationId, Name = "Desk Office", OrganizationId = "org-desk", Type = LocationTypeConstants.Private
+            Id = LocationId, Name = "Desk Office", OrganizationId = "org-desk", Type = LocationTypeConstants.Private
         };
         var deskResource = new LocationResource
         {
@@ -143,7 +143,7 @@ public class RecomputeIdempotencyShould
             OrganizationTags = [new OrganizationTag { Id = "tag-desk", Type = OrganizationTagTypeConstants.ResourceDesk }]
         };
 
-        using var dbContext = CreateInMemoryContext();
+        await using var dbContext = CreateInMemoryContext();
 
         var counter = 0;
         A.CallTo(() => randomHelper.Generate()).ReturnsLazily(() => $"id-{++counter}");
@@ -151,7 +151,7 @@ public class RecomputeIdempotencyShould
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(dbContext);
-        A.CallTo(() => locationRepository.GetByIdAsync(locationId, A<CancellationToken>._)).Returns(location);
+        A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
         A.CallTo(() => resourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync(
                 A<IReadOnlyList<string>>._, A<CancellationToken>._))
@@ -186,14 +186,14 @@ public class RecomputeIdempotencyShould
             randomHelper, cachedLocationService);
 
         // Act – run twice
-        await environment.RunAsync(() => sut.RecomputeAsync(locationId));
+        await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<Admin_GetPaginatedBookingsInput, BookingConnection>>._,
                 A<string?>._,
                 A<CallOptions>._,
                 A<Admin_GetPaginatedBookingsInput>._))
             .Returns(CreateGrpcResponse(bookingResponse));
-        await environment.RunAsync(() => sut.RecomputeAsync(locationId));
+        await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
 
         // Assert – desk booking count is 1, not 2
         var deskRecordings = await dbContext.DailyDeskBookingCountRecording.Include(r => r.Location)
