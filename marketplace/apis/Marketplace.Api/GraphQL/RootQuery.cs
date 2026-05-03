@@ -15,7 +15,7 @@ public class RootQuery(IVersionService versionService)
     public int DefaultMaxAllowedResourcesLockTimePaidViaCard => Constants.DefaultMaxAllowedResourcesLockTimePaidViaCard;
     public int DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer => Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer;
 
-    public IReadOnlyList<ProductPricingCadenceDetails> ProductPricingCadences =>
+    public IEnumerable<ProductPricingCadenceDetails> ProductPricingCadences =>
     [
         new() { Type = ProductPricingCadence.OneTime, Name = ProductPricingCadence.OneTime.ToProductPricingCadenceName() },
         new() { Type = ProductPricingCadence.PerMinute, Name = ProductPricingCadence.PerMinute.ToProductPricingCadenceName() },
@@ -35,19 +35,19 @@ public class RootQuery(IVersionService versionService)
         new() { Type = ProductPricingCadence.Yearly, Name = ProductPricingCadence.Yearly.ToProductPricingCadenceName() }
     ];
 
-    public IReadOnlyList<ProductPricingBillingModeDetails> ProductPricingBillingModes =>
+    public IEnumerable<ProductPricingBillingModeDetails> ProductPricingBillingModes =>
     [
         new() { Type = ProductPricingBillingMode.Upfront, Name = ProductPricingBillingMode.Upfront.ToProductPricingBillingModeName() },
         new() { Type = ProductPricingBillingMode.InArrears, Name = ProductPricingBillingMode.InArrears.ToProductPricingBillingModeName() }
     ];
 
-    public IReadOnlyList<PaymentMethodTypeDetails> PaymentMethods =>
+    public IEnumerable<PaymentMethodTypeDetails> PaymentMethods =>
     [
         new() { Type = PaymentMethod.Card, Name = PaymentMethod.Card.ToPaymentMethodName() },
         new() { Type = PaymentMethod.BankTransfer, Name = PaymentMethod.BankTransfer.ToPaymentMethodName() }
     ];
 
-    public IReadOnlyList<ProductPricingCancellationTypeDetails> ProductPricingCancellationTypes =>
+    public IEnumerable<ProductPricingCancellationTypeDetails> ProductPricingCancellationTypes =>
     [
         new()
         {
@@ -66,7 +66,7 @@ public class RootQuery(IVersionService versionService)
         }
     ];
 
-    public IReadOnlyList<ProductTypeDetails> ProductTypes =>
+    public IEnumerable<ProductTypeDetails> ProductTypes =>
     [
         new() { Type = ProductType.Resource, Name = ProductType.Resource.ToProductTypeName() },
         new() { Type = ProductType.Event, Name = ProductType.Event.ToProductTypeName() }

@@ -16,10 +16,13 @@ public interface IMarketplaceRefundReadService
     Task<MarketplaceRefundDetails?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<MarketplaceRefundDetails?> GetByMarketplaceBookingIdAsync(string marketplaceBookingId, CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<MarketplaceRefundDetails>> GetByOrganizationCustomDomainAsync(string organizationCustomDomain, IReadOnlyList<string>? statuses,
+    Task<IReadOnlyList<MarketplaceRefundDetails>> GetByOrganizationCustomDomainAsync(
+        string organizationCustomDomain,
+        IReadOnlyList<string>? statuses,
         CancellationToken cancellationToken);
 
-    Task<MarketplaceRefundDetails?> GetByMarketplaceBookingSubscriptionIdAsync(string marketplaceBookingSubscriptionId,
+    Task<MarketplaceRefundDetails?> GetByMarketplaceBookingSubscriptionIdAsync(
+        string marketplaceBookingSubscriptionId,
         CancellationToken cancellationToken);
 }
 

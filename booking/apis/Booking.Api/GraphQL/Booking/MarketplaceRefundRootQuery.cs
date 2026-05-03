@@ -30,15 +30,15 @@ public class MarketplaceRefundRootQuery
         marketplaceRefundReadService.GetByIdAsync(id, cancellationToken);
 
     [UseResolverScope]
-    public Task<IReadOnlyList<MarketplaceRefundDetails>> MarketplaceRefundsAsync(
+    public async Task<IEnumerable<MarketplaceRefundDetails>> MarketplaceRefundsAsync(
         string organizationCustomDomain,
         IReadOnlyList<string>? statuses,
         [Service] IMarketplaceRefundReadService marketplaceRefundReadService,
         CancellationToken cancellationToken) =>
-        marketplaceRefundReadService.GetByOrganizationCustomDomainAsync(organizationCustomDomain, statuses, cancellationToken);
+        await marketplaceRefundReadService.GetByOrganizationCustomDomainAsync(organizationCustomDomain, statuses, cancellationToken);
 
     [UseResolverScope]
-    public IReadOnlyList<MarketplaceRefundStatusDetails> MarketplaceRefundStatuses() =>
+    public IEnumerable<MarketplaceRefundStatusDetails> MarketplaceRefundStatuses() =>
     [
         new()
         {
