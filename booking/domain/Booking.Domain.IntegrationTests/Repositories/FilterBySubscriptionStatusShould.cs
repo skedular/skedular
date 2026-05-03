@@ -24,7 +24,7 @@ public class FilterBySubscriptionStatusShould(
 
         var searchCriteria = new MarketplaceBookingSubscriptionSearchCriteria(
             null, null, null, null, null, null, null, null, null, null, null, null,
-            null, null, null, null, null, [], [], [MarketplaceBookingSubscriptionStatus.Active], []);
+            null, null, null, scenario.Organization.Id, null, [], [], [MarketplaceBookingSubscriptionStatus.Active], []);
 
         var (_, edges, totalCount) = await repositoryFactory.MarketplaceBookingSubscriptionRepository
             .GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
@@ -49,7 +49,7 @@ public class FilterBySubscriptionStatusShould(
 
         var searchCriteria = new MarketplaceBookingSubscriptionSearchCriteria(
             null, null, null, null, null, null, null, null, null, null, null, null,
-            null, null, null, null, null, [], [], [], []);
+            null, null, null, scenario.Organization.Id, null, [], [], [], []);
 
         var (_, _, totalCount) = await repositoryFactory.MarketplaceBookingSubscriptionRepository
             .GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
@@ -73,7 +73,7 @@ public class FilterBySubscriptionStatusShould(
 
         var searchCriteria = new MarketplaceBookingSubscriptionSearchCriteria(
             null, null, null, null, null, null, null, null, null, null, null, null,
-            null, null, null, null, null, [], [],
+            null, null, null, scenario.Organization.Id, null, [], [],
             [MarketplaceBookingSubscriptionStatus.Active, MarketplaceBookingSubscriptionStatus.Cancelled],
             []);
 

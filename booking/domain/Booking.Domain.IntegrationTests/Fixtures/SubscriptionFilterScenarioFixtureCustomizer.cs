@@ -18,7 +18,7 @@ public class SubscriptionFilterScenarioFixtureCustomizer : IFixtureCustomizer
         {
             Id = NewId(),
             Name = "Filter Test Org",
-            CustomDomain = $"filter-{Guid.CreateVersion7():N}"[..13],
+            CustomDomain = $"filter-{Guid.CreateVersion7():N}",
             Type = OrganizationType.Private.ToOrganizationType(),
             BillingCycle = OrganizationBillingCycle.Monthly.ToOrganizationBillingCycle(),
             ContactEmail = "test@filter.test"

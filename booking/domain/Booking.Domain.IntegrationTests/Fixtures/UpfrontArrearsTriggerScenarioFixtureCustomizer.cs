@@ -14,7 +14,7 @@ public class UpfrontArrearsTriggerScenarioFixtureCustomizer : IFixtureCustomizer
         {
             Id = NewId(),
             Name = "Acme Cowork",
-            CustomDomain = $"acme-{Guid.CreateVersion7():N}"[..13],
+            CustomDomain = $"acme-{Guid.CreateVersion7():N}",
             Type = OrganizationType.Private.ToOrganizationType(),
             BillingCycle = OrganizationBillingCycle.Monthly.ToOrganizationBillingCycle(),
             ContactEmail = "billing@acme.test"

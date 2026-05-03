@@ -24,7 +24,7 @@ public class FilterByCombinedStatusAndPaymentStatusShould(
 
         var searchCriteria = new MarketplaceBookingSubscriptionSearchCriteria(
             null, null, null, null, null, null, null, null, null, null, null, null,
-            null, null, null, null, null, [], [],
+            null, null, null, scenario.Organization.Id, null, [], [],
             [MarketplaceBookingSubscriptionStatus.Active],
             [PaymentStatus.Pending]);
 
@@ -52,7 +52,7 @@ public class FilterByCombinedStatusAndPaymentStatusShould(
 
         var searchCriteria = new MarketplaceBookingSubscriptionSearchCriteria(
             null, null, null, null, null, null, null, null, null, null, null, null,
-            null, null, null, null, null, [], [], [], []);
+            null, null, null, scenario.Organization.Id, null, [], [], [], []);
 
         var (_, _, totalCount) = await repositoryFactory.MarketplaceBookingSubscriptionRepository
             .GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
@@ -76,7 +76,7 @@ public class FilterByCombinedStatusAndPaymentStatusShould(
 
         var searchCriteria = new MarketplaceBookingSubscriptionSearchCriteria(
             null, null, null, null, null, null, null, null, null, null, null, null,
-            null, null, null, null, null, [], [],
+            null, null, null, scenario.Organization.Id, null, [], [],
             [MarketplaceBookingSubscriptionStatus.Active],
             []);
 
