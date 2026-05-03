@@ -41,15 +41,6 @@ var bookingInfrastructure = builder
 var bookingApi = builder
     .AddProject<Booking_Api>("bookingapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -62,18 +53,9 @@ var bookingApi = builder
     .WaitForCompletion(bookingInfrastructure)
     .WithGraphQLSchemaEndpoint();
 
-builder
+var bookingProcessors = builder
     .AddProject<Booking_Processors>("bookingprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -85,18 +67,9 @@ builder
     .WaitFor(bookingDatabase)
     .WaitForCompletion(bookingInfrastructure);
 
-builder
+var bookingJobs = builder
     .AddProject<Booking_Jobs>("bookingjobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -128,15 +101,6 @@ var coreInfrastructure = builder
 var coreApi = builder
     .AddProject<Core_Api>("coreapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -149,18 +113,9 @@ var coreApi = builder
     .WaitForCompletion(coreInfrastructure)
     .WithGraphQLSchemaEndpoint();
 
-builder
+var coreProcessors = builder
     .AddProject<Core_Processors>("coreprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -172,18 +127,9 @@ builder
     .WaitFor(coreDatabase)
     .WaitForCompletion(coreInfrastructure);
 
-builder
+var coreJobs = builder
     .AddProject<Core_Jobs>("corejobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -215,15 +161,6 @@ var customerInfrastructure = builder
 var customerApi = builder
     .AddProject<Customer_Api>("customerapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -236,18 +173,9 @@ var customerApi = builder
     .WaitForCompletion(customerInfrastructure)
     .WithGraphQLSchemaEndpoint();
 
-builder
+var customerProcessors = builder
     .AddProject<Customer_Processors>("customerprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -259,18 +187,9 @@ builder
     .WaitFor(customerDatabase)
     .WaitForCompletion(customerInfrastructure);
 
-builder
+var customerJobs = builder
     .AddProject<Customer_Jobs>("customerjobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -302,15 +221,6 @@ var locationInfrastructure = builder
 var locationApi = builder
     .AddProject<Location_Api>("locationapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -323,18 +233,9 @@ var locationApi = builder
     .WaitForCompletion(locationInfrastructure)
     .WithGraphQLSchemaEndpoint();
 
-builder
+var locationProcessors = builder
     .AddProject<Location_Processors>("locationprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -346,18 +247,9 @@ builder
     .WaitFor(locationDatabase)
     .WaitForCompletion(locationInfrastructure);
 
-builder
+var locationJobs = builder
     .AddProject<Location_Jobs>("locationjobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -389,15 +281,6 @@ var marketplaceInfrastructure = builder
 var marketplaceApi = builder
     .AddProject<Marketplace_Api>("marketplaceapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -410,18 +293,9 @@ var marketplaceApi = builder
     .WaitForCompletion(marketplaceInfrastructure)
     .WithGraphQLSchemaEndpoint();
 
-builder
+var marketplaceProcessors = builder
     .AddProject<Marketplace_Processors>("marketplaceprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -433,18 +307,9 @@ builder
     .WaitFor(marketplaceDatabase)
     .WaitForCompletion(marketplaceInfrastructure);
 
-builder
+var marketplaceJobs = builder
     .AddProject<Marketplace_Jobs>("marketplacejobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -476,15 +341,6 @@ var msteamsInfrastructure = builder
 var msteamsApi = builder
     .AddProject<MsTeams_Api>("msteamsapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -497,18 +353,9 @@ var msteamsApi = builder
     .WaitForCompletion(msteamsInfrastructure)
     .WithGraphQLSchemaEndpoint();
 
-builder
+var msteamsProcessors = builder
     .AddProject<MsTeams_Processors>("msteamsprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -520,18 +367,9 @@ builder
     .WaitFor(msteamsDatabase)
     .WaitForCompletion(msteamsInfrastructure);
 
-builder
+var msteamsJobs = builder
     .AddProject<MsTeams_Jobs>("msteamsjobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -563,15 +401,6 @@ var organizationInfrastructure = builder
 var organizationApi = builder
     .AddProject<Organization_Api>("organizationapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -584,18 +413,9 @@ var organizationApi = builder
     .WaitForCompletion(organizationInfrastructure)
     .WithGraphQLSchemaEndpoint();
 
-builder
+var organizationProcessors = builder
     .AddProject<Organization_Processors>("organizationprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -607,18 +427,9 @@ builder
     .WaitFor(organizationDatabase)
     .WaitForCompletion(organizationInfrastructure);
 
-builder
+var organizationJobs = builder
     .AddProject<Organization_Jobs>("organizationjobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -650,15 +461,6 @@ var slackInfrastructure = builder
 var slackApi = builder
     .AddProject<Slack_Api>("slackapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -671,18 +473,9 @@ var slackApi = builder
     .WaitForCompletion(slackInfrastructure)
     .WithGraphQLSchemaEndpoint();
 
-builder
+var slackProcessors = builder
     .AddProject<Slack_Processors>("slackprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -694,18 +487,9 @@ builder
     .WaitFor(slackDatabase)
     .WaitForCompletion(slackInfrastructure);
 
-builder
+var slackJobs = builder
     .AddProject<Slack_Jobs>("slackjobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -737,15 +521,6 @@ var teamInfrastructure = builder
 var teamApi = builder
     .AddProject<Team_Api>("teamapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -758,18 +533,9 @@ var teamApi = builder
     .WaitForCompletion(teamInfrastructure)
     .WithGraphQLSchemaEndpoint();
 
-builder
+var teamProcessors = builder
     .AddProject<Team_Processors>("teamprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -781,18 +547,9 @@ builder
     .WaitFor(teamDatabase)
     .WaitForCompletion(teamInfrastructure);
 
-builder
+var teamJobs = builder
     .AddProject<Team_Jobs>("teamjobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
-    .WithEnvironment("Core__GrpcUrl", "http://coreapi")
-    .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
-    .WithEnvironment("Location__GrpcUrl", "http://locationapi")
-    .WithEnvironment("Marketplace__GrpcUrl", "http://marketplaceapi")
-    .WithEnvironment("MsTeams__GrpcUrl", "http://msteamsapi")
-    .WithEnvironment("Organization__GrpcUrl", "http://organizationapi")
-    .WithEnvironment("Slack__GrpcUrl", "http://slackapi")
-    .WithEnvironment("Team__GrpcUrl", "http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -838,4 +595,39 @@ _ = builder
     .WithReference(teamApi)
     .WaitFor(teamApi);
 
+foreach (var project in new[]
+         {
+             bookingApi, bookingProcessors, bookingJobs, coreApi, coreProcessors, coreJobs, customerApi, customerProcessors, customerJobs,
+             locationApi, locationProcessors, locationJobs, marketplaceApi, marketplaceProcessors, marketplaceJobs, msteamsApi, msteamsProcessors,
+             msteamsJobs, organizationApi, organizationProcessors, organizationJobs, slackApi, slackProcessors, slackJobs, teamApi,
+             teamProcessors, teamJobs
+         })
+{
+    ConfigureGrpcUrls(project, bookingApi, coreApi, customerApi, locationApi, marketplaceApi, msteamsApi, organizationApi, slackApi, teamApi);
+}
+
 await builder.Build().RunAsync();
+
+static void ConfigureGrpcUrls(
+    IResourceBuilder<ProjectResource> project,
+    IResourceBuilder<ProjectResource> bookingApi,
+    IResourceBuilder<ProjectResource> coreApi,
+    IResourceBuilder<ProjectResource> customerApi,
+    IResourceBuilder<ProjectResource> locationApi,
+    IResourceBuilder<ProjectResource> marketplaceApi,
+    IResourceBuilder<ProjectResource> msteamsApi,
+    IResourceBuilder<ProjectResource> organizationApi,
+    IResourceBuilder<ProjectResource> slackApi,
+    IResourceBuilder<ProjectResource> teamApi)
+{
+    project
+        .WithEnvironment("Booking__GrpcUrl", bookingApi.GetEndpoint("http"))
+        .WithEnvironment("Core__GrpcUrl", coreApi.GetEndpoint("http"))
+        .WithEnvironment("Customer__GrpcUrl", customerApi.GetEndpoint("http"))
+        .WithEnvironment("Location__GrpcUrl", locationApi.GetEndpoint("http"))
+        .WithEnvironment("Marketplace__GrpcUrl", marketplaceApi.GetEndpoint("http"))
+        .WithEnvironment("MsTeams__GrpcUrl", msteamsApi.GetEndpoint("http"))
+        .WithEnvironment("Organization__GrpcUrl", organizationApi.GetEndpoint("http"))
+        .WithEnvironment("Slack__GrpcUrl", slackApi.GetEndpoint("http"))
+        .WithEnvironment("Team__GrpcUrl", teamApi.GetEndpoint("http"));
+}
