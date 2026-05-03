@@ -62,6 +62,12 @@ public class LocationAnalyticsService(
         IEnumerable<LocationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
+        var customer = await cachedCustomerService.GetNullableAsync(cancellationToken);
+        if (customer is null)
+        {
+            return [];
+        }
+
         var locations = await locationService.GetPaginatedLocationsAsync(
             new PaginationInputParam(null, null, null, null),
             searchCriteria,
@@ -74,7 +80,7 @@ public class LocationAnalyticsService(
             return [];
         }
 
-        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var customerId = customer.Id;
         foreach (var item in locations.Item2)
         {
             var location = await repositoryFactory.LocationRepository.GetByIdAsync(item.Node.Id, cancellationToken) ?? throw new LocationNotFound();

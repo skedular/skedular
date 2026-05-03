@@ -20,30 +20,40 @@ public class LocationDeskAvailabilityAnalyticsShould(
     ///     Seeds an organization + location + N snapshot records directly in the DB
     ///     so that we have known data to query against.
     /// </summary>
-    private async Task<(string orgId, string locationId)> SeedSnapshotDataAsync(
-        int dayCount,
-        CancellationToken cancellationToken)
+    private async Task SeedSnapshotDataAsync(int dayCount, CancellationToken cancellationToken)
     {
         var orgId = await Nanoid.GenerateAsync();
         var locationId = await Nanoid.GenerateAsync();
         var now = timeProvider.GetUtcNow();
 
-        repositoryFactory.DbContext.Organization.Add(new Organization { Id = orgId, CreatedAt = now });
-        repositoryFactory.DbContext.Location.Add(new LocationEntity
+        var organization = new Organization { Id = orgId, CreatedAt = now };
+        var location = new LocationEntity
         {
             Id = locationId,
             Name = "Analytics Integration Test Location",
             OrganizationId = orgId,
             Type = LocationTypeConstants.Private,
             CreatedAt = now
-        });
+        };
+        repositoryFactory.DbContext.Organization.Add(organization);
+        repositoryFactory.DbContext.Location.Add(location);
 
         for (var d = 0; d < dayCount; d++)
         {
             var snapshotDate = now.StartOfDay().AddDays(-d);
             var resourceId = await Nanoid.GenerateAsync();
-            var deskTag = new OrganizationTag { Id = await Nanoid.GenerateAsync(), Type = OrganizationTagTypeConstants.ResourceDesk, CreatedAt = now };
-            var resource = new Resource { Id = resourceId, Name = $"Desk {d + 1:D2}", CreatedAt = now, OrganizationTags = [deskTag] };
+            var deskTag = new OrganizationTag
+            {
+                Id = await Nanoid.GenerateAsync(), Type = OrganizationTagTypeConstants.ResourceDesk, CreatedAt = now, Organization = organization
+            };
+            var resource = new Resource
+            {
+                Id = resourceId,
+                Name = $"Desk {d + 1:D2}",
+                CreatedAt = now,
+                Location = location,
+                OrganizationTags = [deskTag]
+            };
             repositoryFactory.DbContext.Resource.Add(resource);
             repositoryFactory.DbContext.DailyResourceAvailabilitySnapshot.Add(new DailyResourceAvailabilitySnapshot
             {
@@ -58,7 +68,6 @@ public class LocationDeskAvailabilityAnalyticsShould(
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        return (orgId, locationId);
     }
 
     [Theory]
