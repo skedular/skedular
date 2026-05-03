@@ -10,7 +10,7 @@ dotnet tool restore
 # Always clean fusion package artifacts to ensure fresh generation.
 # Note: schema-settings.json is intentionally preserved — it carries the
 # subgraph name + clientName that the gateway uses for runtime URL routing.
-find "${BASE_DIR}" -type f -name "*.fsp" -o -name "*.fgp" | xargs rm -f 2>/dev/null || true
+find "${BASE_DIR}" -type f -name "*.fsp" -o -name "*.far" | xargs rm -f 2>/dev/null || true
 find "${BASE_DIR}" -type f -name "schema.graphqls" \
     \( -path "*/apis/*" \) \
     -delete 2>/dev/null || true
