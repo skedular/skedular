@@ -1,6 +1,7 @@
 namespace Enterprise.Shared.GraphQL.Types;
 
 [GraphQLName("PageInfo")]
+[Shareable]
 public class PageInfo
 {
     [GraphQLName("hasNextPage")] public bool HasNextPage { get; set; }

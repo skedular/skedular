@@ -7,6 +7,7 @@ await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), CancellationToken.None);
 
 var builder = DistributedApplication.CreateBuilder(args);
+builder.AddGraphQLOrchestrator();
 var kafka = builder.AddKafka("kafka").WithKafkaUI();
 var postgres = builder.AddPostgres("postgres").WithImage("postgis/postgis", "16-3.4").WithPgAdmin();
 var temporal = builder.AddTemporalServerContainer("temporal");
@@ -58,7 +59,8 @@ var bookingApi = builder
     .WaitFor(temporal)
     .WaitFor(redis)
     .WaitFor(bookingDatabase)
-    .WaitForCompletion(bookingInfrastructure);
+    .WaitForCompletion(bookingInfrastructure)
+    .WithGraphQLSchemaEndpoint();
 
 builder
     .AddProject<Booking_Processors>("bookingprocessors")
@@ -144,7 +146,8 @@ var coreApi = builder
     .WaitFor(temporal)
     .WaitFor(redis)
     .WaitFor(coreDatabase)
-    .WaitForCompletion(coreInfrastructure);
+    .WaitForCompletion(coreInfrastructure)
+    .WithGraphQLSchemaEndpoint();
 
 builder
     .AddProject<Core_Processors>("coreprocessors")
@@ -230,7 +233,8 @@ var customerApi = builder
     .WaitFor(temporal)
     .WaitFor(redis)
     .WaitFor(customerDatabase)
-    .WaitForCompletion(customerInfrastructure);
+    .WaitForCompletion(customerInfrastructure)
+    .WithGraphQLSchemaEndpoint();
 
 builder
     .AddProject<Customer_Processors>("customerprocessors")
@@ -316,7 +320,8 @@ var locationApi = builder
     .WaitFor(temporal)
     .WaitFor(redis)
     .WaitFor(locationDatabase)
-    .WaitForCompletion(locationInfrastructure);
+    .WaitForCompletion(locationInfrastructure)
+    .WithGraphQLSchemaEndpoint();
 
 builder
     .AddProject<Location_Processors>("locationprocessors")
@@ -402,7 +407,8 @@ var marketplaceApi = builder
     .WaitFor(temporal)
     .WaitFor(redis)
     .WaitFor(marketplaceDatabase)
-    .WaitForCompletion(marketplaceInfrastructure);
+    .WaitForCompletion(marketplaceInfrastructure)
+    .WithGraphQLSchemaEndpoint();
 
 builder
     .AddProject<Marketplace_Processors>("marketplaceprocessors")
@@ -488,7 +494,8 @@ var msteamsApi = builder
     .WaitFor(temporal)
     .WaitFor(redis)
     .WaitFor(msteamsDatabase)
-    .WaitForCompletion(msteamsInfrastructure);
+    .WaitForCompletion(msteamsInfrastructure)
+    .WithGraphQLSchemaEndpoint();
 
 builder
     .AddProject<MsTeams_Processors>("msteamsprocessors")
@@ -574,7 +581,8 @@ var organizationApi = builder
     .WaitFor(temporal)
     .WaitFor(redis)
     .WaitFor(organizationDatabase)
-    .WaitForCompletion(organizationInfrastructure);
+    .WaitForCompletion(organizationInfrastructure)
+    .WithGraphQLSchemaEndpoint();
 
 builder
     .AddProject<Organization_Processors>("organizationprocessors")
@@ -660,7 +668,8 @@ var slackApi = builder
     .WaitFor(temporal)
     .WaitFor(redis)
     .WaitFor(slackDatabase)
-    .WaitForCompletion(slackInfrastructure);
+    .WaitForCompletion(slackInfrastructure)
+    .WithGraphQLSchemaEndpoint();
 
 builder
     .AddProject<Slack_Processors>("slackprocessors")
@@ -746,7 +755,8 @@ var teamApi = builder
     .WaitFor(temporal)
     .WaitFor(redis)
     .WaitFor(teamDatabase)
-    .WaitForCompletion(teamInfrastructure);
+    .WaitForCompletion(teamInfrastructure)
+    .WithGraphQLSchemaEndpoint();
 
 builder
     .AddProject<Team_Processors>("teamprocessors")
@@ -798,15 +808,6 @@ builder
 _ = builder
     .AddProject<Gateway>("gateway")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
-    .WithEnvironment("Subgraphs__Booking__Uri", "https+http://bookingapi/v1/graphql")
-    .WithEnvironment("Subgraphs__Core__Uri", "https+http://coreapi/v1/graphql")
-    .WithEnvironment("Subgraphs__Customer__Uri", "https+http://customerapi/v1/graphql")
-    .WithEnvironment("Subgraphs__Location__Uri", "https+http://locationapi/v1/graphql")
-    .WithEnvironment("Subgraphs__Marketplace__Uri", "https+http://marketplaceapi/v1/graphql")
-    .WithEnvironment("Subgraphs__MsTeams__Uri", "https+http://msteamsapi/v1/graphql")
-    .WithEnvironment("Subgraphs__Organization__Uri", "https+http://organizationapi/v1/graphql")
-    .WithEnvironment("Subgraphs__Slack__Uri", "https+http://slackapi/v1/graphql")
-    .WithEnvironment("Subgraphs__Team__Uri", "https+http://teamapi/v1/graphql")
     .WithEnvironment("ReverseProxy__Clusters__booking__Destinations__destination1__Address", "https+http://bookingapi")
     .WithEnvironment("ReverseProxy__Clusters__core__Destinations__destination1__Address", "https+http://coreapi")
     .WithEnvironment("ReverseProxy__Clusters__customer__Destinations__destination1__Address", "https+http://customerapi")
@@ -817,6 +818,7 @@ _ = builder
     .WithEnvironment("ReverseProxy__Clusters__slack__Destinations__destination1__Address", "https+http://slackapi")
     .WithEnvironment("ReverseProxy__Clusters__team__Destinations__destination1__Address", "https+http://teamapi")
     .WithHttpHealthCheck(Constants.ReadinessPath)
+    .WithGraphQLSchemaComposition()
     .WithReference(bookingApi)
     .WaitFor(bookingApi)
     .WithReference(coreApi)

@@ -32,7 +32,7 @@ public class Program
             .AddSso()
             .AddSecurity()
             .WithPooledPostgreSqlDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb", true)
-            .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
+            .AddGraphql(configuration, "organization-api", requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddXeroServices(configuration)

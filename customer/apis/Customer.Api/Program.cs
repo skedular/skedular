@@ -31,7 +31,7 @@ public class Program
             .AddSso()
             .AddSecurity()
             .WithPooledPostgreSqlDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb", true)
-            .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
+            .AddGraphql(configuration, "customer-api", requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddDomainSharedServices()

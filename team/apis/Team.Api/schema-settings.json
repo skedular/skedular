@@ -1,0 +1,9 @@
+{
+  "name": "team-api",
+  "transports": {
+    "http": {
+      "url": "http://placeholder/v1/graphql",
+      "clientName": "subgraph-team"
+    }
+  }
+}

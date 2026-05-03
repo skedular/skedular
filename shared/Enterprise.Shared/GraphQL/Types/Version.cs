@@ -1,6 +1,7 @@
 namespace Enterprise.Shared.GraphQL.Types;
 
 [GraphQLName("Version")]
+[Shareable]
 public class Version
 {
     [GraphQLName("major")] public int Major { get; set; }

@@ -33,13 +33,13 @@
 
     <ItemGroup>
         <!-- gRPC -->
-        <PackageReference Include="Grpc.Net.Client" Version="2.76.0"/>
+        <PackageReference Include="Grpc.Net.Client" Version="2.80.0"/>
 
         <!-- Test Framework -->
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1"/>
 
         <!-- GraphQL Testing (StrawberryShake) -->
-        <PackageReference Include="StrawberryShake.Server" Version="15.1.15"/>
+        <PackageReference Include="StrawberryShake.Server" Version="16.0.0"/>
 
         <!-- Code Coverage -->
         <PackageReference Include="coverlet.collector" Version="10.0.0">

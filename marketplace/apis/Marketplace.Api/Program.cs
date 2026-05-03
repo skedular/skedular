@@ -29,7 +29,7 @@ public class Program
             .AddSso()
             .AddSecurity()
             .WithPooledPostgreSqlDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb", true)
-            .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
+            .AddGraphql(configuration, "marketplace-api", requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddDomainSharedServices()

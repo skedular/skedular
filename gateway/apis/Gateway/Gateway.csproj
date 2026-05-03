@@ -31,7 +31,7 @@
 
     <ItemGroup>
         <!-- GraphQL Federation -->
-        <PackageReference Include="HotChocolate.Fusion" Version="15.1.15"/>
+        <PackageReference Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0"/>
 
         <!-- Reverse Proxy -->
         <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0"/>
@@ -39,7 +39,10 @@
 
     <ItemGroup>
         <EmbeddedResource Include="appsettings.json"/>
-        <EmbeddedResource Include="gateway.fgp"/>
+        <Content Include="gateway.far" Condition="Exists('gateway.far')">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>

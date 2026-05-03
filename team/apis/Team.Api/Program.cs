@@ -30,7 +30,7 @@ public class Program
             .AddSso()
             .AddSecurity()
             .WithPooledPostgreSqlDbContextFactory<TeamDbContext>(configuration, environment, "teamdb", true)
-            .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
+            .AddGraphql(configuration, "team-api", requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddDomainSharedServices()

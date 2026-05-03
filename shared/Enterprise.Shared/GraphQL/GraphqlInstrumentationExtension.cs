@@ -12,15 +12,6 @@ public static class GraphqlInstrumentationExtension
         ///     Used to display only the necessary spans in OpenTelemetry tracing
         /// </summary>
         public IRequestExecutorBuilder AddCustomGraphqlInstrumentation() =>
-            builder.AddInstrumentation(options =>
-            {
-                options.Scopes = ActivityScopes.ExecuteHttpRequest |
-                                 ActivityScopes.FormatHttpResponse |
-                                 ActivityScopes.ExecuteRequest |
-                                 ActivityScopes.ParseDocument |
-                                 ActivityScopes.AnalyzeComplexity |
-                                 ActivityScopes.CoerceVariables |
-                                 ActivityScopes.ResolveFieldValue;
-            });
+            builder.AddInstrumentation(options => options.Scopes = ActivityScopes.All);
     }
 }

@@ -4,6 +4,7 @@ using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
+using HotChocolate.Types.Composite;
 using Team.Api.GraphQL.Member;
 using Team.Api.Mappers;
 using Team.Api.Services;
@@ -12,6 +13,7 @@ using Team.Shared.Models;
 namespace Team.Api.GraphQL.Team;
 
 [GraphQLName("TeamDetails")]
+[Shareable]
 public class TeamDetails : Node
 {
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;

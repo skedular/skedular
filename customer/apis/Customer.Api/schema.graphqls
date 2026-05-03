@@ -3,6 +3,67 @@ schema {
   mutation: Mutation
 }
 
+type Query {
+  personalInformationVisibilityTypes: [PersonalInformationVisibilityDetails!]!
+  me: CustomerDetails! @cost(weight: "10")
+  customer(id: String!): CustomerDetails @cost(weight: "10")
+  customerById(id: String!): CustomerDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+  customerVersion: Version!
+  customersByPreferredLocation(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: CustomersByPreferredLocationWhereInput!
+    orderBy: [CustomerOrderInput!]
+  ): ConnectionOfCustomerEdge! @cost(weight: "10")
+}
+
+type Mutation {
+  addMyBillingDetails(input: AddMyBillingDetailsInput!): CustomerPayload!
+    @cost(weight: "10")
+  updateMyBillingDetails(input: UpdateMyBillingDetailsInput!): CustomerPayload!
+    @cost(weight: "10")
+  updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload!
+    @cost(weight: "10")
+  updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload!
+    @cost(weight: "10")
+  submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload!
+    @cost(weight: "10")
+  addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload!
+    @cost(weight: "10")
+  removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload!
+    @cost(weight: "10")
+  completeOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload!
+    @cost(weight: "10")
+  addCustomerPreferredLocation(input: AddCustomerPreferredLocationInput!): CustomerPayload!
+    @cost(weight: "10")
+  removeCustomerPreferredLocation(input: RemoveCustomerPreferredLocationInput!): CustomerPayload!
+    @cost(weight: "10")
+  setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload!
+    @cost(weight: "10")
+  clearCustomerDefaultOrganization(
+    input: ClearCustomerDefaultOrganizationInput!
+  ): CustomerPayload! @cost(weight: "10")
+  addCustomerPreferredOrganizationTag(
+    input: AddCustomerPreferredOrganizationTagInput!
+  ): CustomerPayload! @cost(weight: "10")
+  removeCustomerPreferredOrganizationTag(
+    input: RemoveCustomerPreferredOrganizationTagInput!
+  ): CustomerPayload! @cost(weight: "10")
+  addCustomerPreferredResource(input: AddCustomerPreferredResourceInput!): CustomerPayload!
+    @cost(weight: "10")
+  removeCustomerPreferredResource(input: RemoveCustomerPreferredResourceInput!): CustomerPayload!
+    @cost(weight: "10")
+  addCustomerFavouriteLocation(input: AddCustomerFavouriteLocationInput!): CustomerPayload!
+    @cost(weight: "10")
+  removeCustomerFavouriteLocation(input: RemoveCustomerFavouriteLocationInput!): CustomerPayload!
+    @cost(weight: "10")
+}
+
 type AddCustomerPaymentMethodIntentPayload {
   clientMutationId: String
   publishedKeys: String!
@@ -36,7 +97,7 @@ type CustomerBillingDetails {
   id: ID!
 }
 
-type CustomerDetails {
+type CustomerDetails @shareable {
   organization: OrganizationDetails
   preferredLocations: [LocationDetails!]!
   preferredResources: [ResourceDetails!]!
@@ -101,44 +162,23 @@ type CustomerPaymentMethod {
   id: ID!
 }
 
-type LocationDetails {
+type LocationDetails @shareable {
   id: ID!
 }
 
-type Mutation {
-  addMyBillingDetails(input: AddMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
-  updateMyBillingDetails(input: UpdateMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
-  updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
-  updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
-  submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload! @cost(weight: "10")
-  addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
-  removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload! @cost(weight: "10")
-  completeOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload! @cost(weight: "10")
-  addCustomerPreferredLocation(input: AddCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
-  removeCustomerPreferredLocation(input: RemoveCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
-  setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
-  clearCustomerDefaultOrganization(input: ClearCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
-  addCustomerPreferredOrganizationTag(input: AddCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
-  removeCustomerPreferredOrganizationTag(input: RemoveCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
-  addCustomerPreferredResource(input: AddCustomerPreferredResourceInput!): CustomerPayload! @cost(weight: "10")
-  removeCustomerPreferredResource(input: RemoveCustomerPreferredResourceInput!): CustomerPayload! @cost(weight: "10")
-  addCustomerFavouriteLocation(input: AddCustomerFavouriteLocationInput!): CustomerPayload! @cost(weight: "10")
-  removeCustomerFavouriteLocation(input: RemoveCustomerFavouriteLocationInput!): CustomerPayload! @cost(weight: "10")
-}
-
-type OrganizationDetails {
+type OrganizationDetails @shareable {
   customDomain: String
   id: ID!
 }
 
-type OrganizationTagDetails {
+type OrganizationTagDetails @shareable {
   name: String!
   type: OrganizationTagType
   color: String
   id: ID!
 }
 
-type PageInfo {
+type PageInfo @shareable {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
@@ -150,20 +190,11 @@ type PersonalInformationVisibilityDetails {
   name: String!
 }
 
-type Query {
-  personalInformationVisibilityTypes: [PersonalInformationVisibilityDetails!]!
-  me: CustomerDetails! @cost(weight: "10")
-  customer(id: String!): CustomerDetails @cost(weight: "10")
-  customerById(id: String!): CustomerDetails @lookup @internal @cost(weight: "10")
-  customerVersion: Version!
-  customersByPreferredLocation(after: String first: Int before: String last: Int where: CustomersByPreferredLocationWhereInput! orderBy: [CustomerOrderInput!]): ConnectionOfCustomerEdge! @cost(weight: "10")
-}
-
 type RemoveCustomerPaymentMethodPayload {
   clientMutationId: String
 }
 
-type ResourceDetails {
+type ResourceDetails @shareable {
   id: ID!
 }
 
@@ -172,7 +203,7 @@ type SubmitCustomerFeedbackPayload {
   clientMutationId: String
 }
 
-type Version {
+type Version @shareable {
   major: Int!
   minor: Int!
   build: Int!
@@ -533,15 +564,29 @@ enum PersonalInformationVisibility {
   REDACTED
 }
 
+"The `DateTime` scalar type represents a date and time with time zone offset information."
+scalar DateTime
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
-directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+directive @cost(
+  "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
+  weight: String!
+) on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | ENUM
+  | INPUT_FIELD_DEFINITION
 
-directive @internal on FIELD_DEFINITION
+directive @internal on OBJECT | FIELD_DEFINITION
 
+"""
+The @lookup directive is used within a source schema to specify output fields
+that can be used by the distributed GraphQL executor to resolve an entity by
+a stable key.
+"""
 directive @lookup on FIELD_DEFINITION
 
-"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
-directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
-
-"The `DateTime` scalar represents an ISO-8601 compliant date time type."
-scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+directive @shareable repeatable on OBJECT | FIELD_DEFINITION

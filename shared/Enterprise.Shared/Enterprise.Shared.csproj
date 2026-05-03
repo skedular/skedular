@@ -53,18 +53,17 @@
 
         <!-- gRPC / Protobuf -->
         <PackageReference Include="Google.Protobuf" Version="3.34.1"/>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.76.0"/>
-        <PackageReference Include="Grpc.Net.Client" Version="2.76.0"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.80.0"/>
+        <PackageReference Include="Grpc.Net.Client" Version="2.80.0"/>
 
         <!-- GraphQL (HotChocolate) -->
-        <PackageReference Include="HotChocolate" Version="15.1.15"/>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.15"/>
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="15.1.15"/>
-        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="15.1.15"/>
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.1.15"/>
-        <PackageReference Include="HotChocolate.Diagnostics" Version="15.1.15"/>
-        <PackageReference Include="HotChocolate.Fusion.SourceSchema" Version="15.1.15"/>
-        <PackageReference Include="HotChocolate.Subscriptions.Redis" Version="15.1.15"/>
+        <PackageReference Include="HotChocolate" Version="16.0.0"/>
+        <PackageReference Include="HotChocolate.AspNetCore" Version="16.0.0"/>
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="16.0.0"/>
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="16.0.0"/>
+        <PackageReference Include="HotChocolate.Diagnostics" Version="16.0.0"/>
+        <PackageReference Include="HotChocolate.Subscriptions.Redis" Version="16.0.0"/>
 
         <!-- ASP.NET Core -->
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.7"/>
@@ -96,8 +95,8 @@
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.5.0"/>
 
         <!-- Microsoft Identity / Graph -->
-        <PackageReference Include="Microsoft.Graph" Version="5.104.0"/>
-        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.8.0"/>
+        <PackageReference Include="Microsoft.Graph" Version="5.105.0"/>
+        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.9.0"/>
 
         <!-- OpenTelemetry -->
         <PackageReference Include="OpenTelemetry.Api" Version="1.15.3"/>
@@ -124,13 +123,13 @@
         <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1"/>
 
         <!-- Temporal Workflows -->
-        <PackageReference Include="Temporalio" Version="1.13.0"/>
-        <PackageReference Include="Temporalio.Extensions.Hosting" Version="1.13.0"/>
+        <PackageReference Include="Temporalio" Version="1.14.0"/>
+        <PackageReference Include="Temporalio.Extensions.Hosting" Version="1.14.0"/>
 
         <!-- Authentication / Security -->
-        <PackageReference Include="Google.Apis.Auth" Version="1.73.0"/>
+        <PackageReference Include="Google.Apis.Auth" Version="1.74.0"/>
         <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.7"/>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0"/>
         <PackageReference Include="WorkOS.net" Version="3.1.0"/>
 
         <!-- Payments / Accounting -->

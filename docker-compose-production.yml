@@ -298,15 +298,15 @@ services:
       Kafka__SchemaRegistry__UseLatestVersion: false
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
-      Subgraphs__Booking__Url: http://localhost:10300/v1/graphql
-      Subgraphs__Customer__Url: http://localhost:10000/v1/graphql
-      Subgraphs__Location__Url: http://localhost:10600/v1/graphql
-      Subgraphs__Marketplace__Url: http://localhost:11000/v1/graphql
-      Subgraphs__MsTeams__Url: http://localhost:10900/v1/graphql
-      Subgraphs__Organization__Url: http://localhost:10200/v1/graphql
-      Subgraphs__Slack__Url: http://localhost:10700/v1/graphql
-      Subgraphs__Team__Url: http://localhost:10500/v1/graphql
-      Subgraphs__Core__Url: http://localhost:11100/v1/graphql
+      Subgraphs__booking-api__Url: http://localhost:10300/v1/graphql
+      Subgraphs__customer-api__Url: http://localhost:10000/v1/graphql
+      Subgraphs__location-api__Url: http://localhost:10600/v1/graphql
+      Subgraphs__marketplace-api__Url: http://localhost:11000/v1/graphql
+      Subgraphs__msteams-api__Url: http://localhost:10900/v1/graphql
+      Subgraphs__organization-api__Url: http://localhost:10200/v1/graphql
+      Subgraphs__slack-api__Url: http://localhost:10700/v1/graphql
+      Subgraphs__team-api__Url: http://localhost:10500/v1/graphql
+      Subgraphs__core-api__Url: http://localhost:11100/v1/graphql
       Booking__ApiKey: ${STAGING_SKEDULAR_BOOKING_APIKEY}
       Booking__GrpcUrl: http://staging-apis-01:10302
       Customer__ApiKey: ${STAGING_SKEDULAR_CUSTOMER_APIKEY}
@@ -362,8 +362,8 @@ services:
       Stripe__OAuthClientId: ${STAGING_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
-      Graphql__AllowQueryPlan: false
-      Graphql__IncludeDebugInfo: false
+      Graphql__CollectOperationPlanTelemetry: false
+      Graphql__AllowErrorHandlingModeOverride: false
     healthcheck:
       test:
         [
@@ -735,14 +735,15 @@ services:
       Kafka__SchemaRegistry__UseLatestVersion: false
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
-      Subgraphs__Booking__Url: http://localhost:10300/v1/graphql
-      Subgraphs__Customer__Url: http://localhost:10000/v1/graphql
-      Subgraphs__Location__Url: http://localhost:10600/v1/graphql
-      Subgraphs__Marketplace__Url: http://localhost:11000/v1/graphql
-      Subgraphs__MsTeams__Url: http://localhost:10900/v1/graphql
-      Subgraphs__Organization__Url: http://localhost:10200/v1/graphql
-      Subgraphs__Team__Url: http://localhost:10500/v1/graphql
-      Subgraphs__Core__Url: http://localhost:11100/v1/graphql
+      Subgraphs__booking-api__Url: http://localhost:10300/v1/graphql
+      Subgraphs__customer-api__Url: http://localhost:10000/v1/graphql
+      Subgraphs__location-api__Url: http://localhost:10600/v1/graphql
+      Subgraphs__marketplace-api__Url: http://localhost:11000/v1/graphql
+      Subgraphs__msteams-api__Url: http://localhost:10900/v1/graphql
+      Subgraphs__organization-api__Url: http://localhost:10200/v1/graphql
+      Subgraphs__slack-api__Url: http://localhost:10700/v1/graphql
+      Subgraphs__team-api__Url: http://localhost:10500/v1/graphql
+      Subgraphs__core-api__Url: http://localhost:11100/v1/graphql
       Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
       Booking__GrpcUrl: http://prod-apis-01:10302
       Customer__ApiKey: ${PRODUCTION_SKEDULAR_CUSTOMER_APIKEY}
@@ -798,8 +799,8 @@ services:
       Stripe__OAuthClientId: ${PRODUCTION_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
-      Graphql__AllowQueryPlan: false
-      Graphql__IncludeDebugInfo: false
+      Graphql__CollectOperationPlanTelemetry: false
+      Graphql__AllowErrorHandlingModeOverride: false
     healthcheck:
       test:
         [

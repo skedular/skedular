@@ -52,8 +52,7 @@ cd "$BASE_DIR"
 dotnet tool update jetbrains.resharper.globaltools
 dotnet tool update dotnet-ef
 dotnet tool update dotnet-outdated-tool
-dotnet tool update hotchocolate.fusion.commandline
-dotnet tool update gitversion.tool
+dotnet tool update chillicream.nitro.commandline
 dotnet tool update strawberryshake.tools
 
 for unit_test_tool_dir in "${UNIT_TEST_TOOL_DIRS[@]}"; do

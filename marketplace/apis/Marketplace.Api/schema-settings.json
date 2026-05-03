@@ -1,0 +1,9 @@
+{
+  "name": "marketplace-api",
+  "transports": {
+    "http": {
+      "url": "http://placeholder/v1/graphql",
+      "clientName": "subgraph-marketplace"
+    }
+  }
+}

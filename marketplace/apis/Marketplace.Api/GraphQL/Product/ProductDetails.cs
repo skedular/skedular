@@ -1,10 +1,12 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
+using HotChocolate.Types.Composite;
 
 namespace Marketplace.Api.GraphQL.Product;
 
 [GraphQLName("ProductDetails")]
+[Shareable]
 public class ProductDetails : Node
 {
     [GraphQLName("inactive")] public bool Inactive { get; set; }

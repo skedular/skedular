@@ -8,8 +8,9 @@ public class GraphqlConfig
     public bool NitroEnabled { get; set; }
     public bool DisableTelemetry { get; set; }
     public bool IntrospectionEnabled { get; set; }
-    public bool AllowQueryPlan { get; set; }
-    public bool IncludeDebugInfo { get; set; }
+    public bool CollectOperationPlanTelemetry { get; set; }
+    public bool AllowErrorHandlingModeOverride { get; set; }
+    public TimeSpan? ExecutionTimeout { get; set; }
     public bool IncludeExceptionDetails { get; set; }
     public string Path { get; set; } = string.Empty;
 }

@@ -1,5 +1,8 @@
+using HotChocolate.Types.Composite;
+
 namespace Api.Shared.Services.Models;
 
+[Shareable]
 public record ProductPricing(
     string Id,
     int Index,

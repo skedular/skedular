@@ -4,6 +4,147 @@ schema {
   subscription: Subscription
 }
 
+type Query {
+  marketplaceBookingRefundPreview(bookingId: String!): MarketplaceRefundPreviewDetails!
+    @cost(weight: "10")
+  marketplaceBookingSubscriptionRefundPreview(subscriptionId: String!): MarketplaceRefundPreviewDetails!
+    @cost(weight: "10")
+  marketplaceRefund(id: String!): MarketplaceRefundDetails @cost(weight: "10")
+  marketplaceRefunds(organizationCustomDomain: String!, statuses: [String!]): [MarketplaceRefundDetails!]!
+    @cost(weight: "10")
+  marketplaceRefundStatuses: [MarketplaceRefundStatusDetails!]!
+  bookingCategories: [BookingCategoryDetails!]!
+  marketplaceBookingCategories: [BookingCategoryDetails!]!
+  booking(id: String!): BookingDetails @cost(weight: "10")
+  bookingById(id: String!): BookingDetails @lookup @internal @cost(weight: "10")
+  bookings(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: BookingWhereInput!
+    orderBy: [BookingOrderInput!]
+  ): ConnectionOfBookingEdge! @cost(weight: "10")
+  allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
+  marketplaceBookingSubscriptionCancellationModes: [MarketplaceBookingSubscriptionCancellationModeDetails!]!
+  marketplaceBookingSubscriptionStatuses: [MarketplaceBookingSubscriptionStatusDetails!]!
+  marketplaceBookingPaymentStatuses: [MarketplaceBookingPaymentStatusDetails!]!
+  marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails
+    @cost(weight: "10")
+  marketplaceBookingSubscriptionById(id: String!): MarketplaceBookingSubscriptionDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+  marketplaceBookingSubscriptions(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: MarketplaceBookingSubscriptionWhereInput!
+    orderBy: [MarketplaceBookingSubscriptionOrderInput!]
+  ): ConnectionOfMarketplaceBookingSubscriptionEdge! @cost(weight: "10")
+  allMarketplaceBookingSubscriptions(
+    where: MarketplaceBookingSubscriptionWhereInput!
+  ): [MarketplaceBookingSubscriptionDetails!]! @cost(weight: "10")
+  paymentMethodTypes: [PaymentMethodTypeDetails!]!
+  paymentStatuses: [PaymentStatusDetails!]!
+  organizationBookingPermissions(
+    organizationId: String
+    organizationCustomDomain: String
+  ): OrganizationBookingPermissions! @cost(weight: "10")
+  teamBookingPermissions(teamId: String!): TeamBookingPermissions!
+    @cost(weight: "10")
+  recurringBooking(id: String!): RecurringBookingDetails @cost(weight: "10")
+  recurringBookingById(id: String!): RecurringBookingDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+  recurringBookings(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: RecurringBookingWhereInput!
+    orderBy: [RecurringBookingOrderInput!]
+  ): ConnectionOfRecurringBookingEdge! @cost(weight: "10")
+  allRecurringBookings(where: RecurringBookingWhereInput!): [RecurringBookingDetails!]!
+    @cost(weight: "10")
+  availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]!
+    @cost(weight: "10")
+  availableResourcesCount(where: AvailableResourcesCountWhereInput!): Int!
+    @cost(weight: "10")
+  organizationResourcesAvailability(
+    where: OrganizationAvailableResourcesWhereInput!
+  ): OrganizationAvailableResources! @cost(weight: "10")
+  bookingVersion: Version!
+  bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
+}
+
+type Mutation {
+  markMarketplaceRefundPendingAccounting(
+    input: MarkMarketplaceRefundPendingAccountingInput!
+  ): MarketplaceRefundPayload! @cost(weight: "10")
+  completeMarketplaceRefund(input: CompleteMarketplaceRefundInput!): MarketplaceRefundPayload!
+    @cost(weight: "10")
+  markMarketplaceRefundManualRequired(
+    input: MarkMarketplaceRefundManualRequiredInput!
+  ): MarketplaceRefundPayload! @cost(weight: "10")
+  markMarketplaceRefundManualCompleted(
+    input: MarkMarketplaceRefundManualCompletedInput!
+  ): MarketplaceRefundPayload! @cost(weight: "10")
+  failMarketplaceRefund(input: FailMarketplaceRefundInput!): MarketplaceRefundPayload!
+    @cost(weight: "10")
+  processMarketplaceRefundInXero(input: ProcessMarketplaceRefundInXeroInput!): MarketplaceRefundPayload!
+    @cost(weight: "10")
+  addPrivateBooking(input: AddPrivateBookingInput!): BookingPayload!
+    @cost(weight: "10")
+  updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload!
+    @cost(weight: "10")
+  deletePrivateBooking(input: DeletePrivateBookingInput!): BookingPayload!
+    @cost(weight: "10")
+  addMarketplaceBooking(input: AddMarketplaceBookingInput!): BookingPayload!
+    @cost(weight: "10")
+  updateMarketplaceBooking(input: UpdateMarketplaceBookingInput!): BookingPayload!
+    @cost(weight: "10")
+  deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload!
+    @cost(weight: "10")
+  addMarketplaceBookingSubscription(
+    input: AddMarketplaceBookingSubscriptionInput!
+  ): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
+  deleteMarketplaceBookingSubscription(
+    input: DeleteMarketplaceBookingSubscriptionInput!
+  ): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
+  confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload!
+    @cost(weight: "10")
+  rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload!
+    @cost(weight: "10")
+  makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload!
+    @cost(weight: "10")
+  confirmRecurringBookingPayment(input: ConfirmRecurringBookingPaymentInput!): RecurringBookingPayload!
+    @cost(weight: "10")
+  rejectRecurringBookingPayment(input: RejectRecurringBookingPaymentInput!): RecurringBookingPayload!
+    @cost(weight: "10")
+  makeRecurringBookingPaymentNotRequired(
+    input: MakeRecurringBookingPaymentNotRequiredInput!
+  ): RecurringBookingPayload! @cost(weight: "10")
+  addPrivateRecurringBooking(input: AddPrivateRecurringBookingInput!): RecurringBookingPayload!
+    @cost(weight: "10")
+  updatePrivateRecurringBooking(input: UpdatePrivateRecurringBookingInput!): RecurringBookingPayload!
+    @cost(weight: "10")
+  deletePrivateRecurringBooking(input: DeletePrivateRecurringBookingInput!): RecurringBookingPayload!
+    @cost(weight: "10")
+}
+
+type Subscription {
+  booking(id: String!): BookingDetails!
+  marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails!
+}
+
+type Booking_LocationDetails {
+  uniqueId: String!
+  name: String!
+}
+
 type BookingCategoryDetails {
   category: BookingCategory!
   name: String!
@@ -66,11 +207,6 @@ type BookingResourceDetails {
   location: Booking_LocationDetails
 }
 
-type Booking_LocationDetails {
-  uniqueId: String!
-  name: String!
-}
-
 type ConnectionOfBookingEdge {
   pageInfo: PageInfo!
   edges: [BookingEdge!]!
@@ -89,12 +225,12 @@ type ConnectionOfRecurringBookingEdge {
   totalCount: Int!
 }
 
-type CurrencyDetails {
+type CurrencyDetails @shareable {
   type: Currency!
   name: String!
 }
 
-type CustomerDetails {
+type CustomerDetails @shareable {
   id: ID!
 }
 
@@ -103,7 +239,7 @@ type DayOfWeekDetails {
   name: String!
 }
 
-type ListingMetadata {
+type ListingMetadata @shareable {
   about: String
   title: String
   subTitle: String
@@ -254,32 +390,6 @@ type MarketplaceRefundStatusDetails {
   name: String!
 }
 
-type Mutation {
-  markMarketplaceRefundPendingAccounting(input: MarkMarketplaceRefundPendingAccountingInput!): MarketplaceRefundPayload! @cost(weight: "10")
-  completeMarketplaceRefund(input: CompleteMarketplaceRefundInput!): MarketplaceRefundPayload! @cost(weight: "10")
-  markMarketplaceRefundManualRequired(input: MarkMarketplaceRefundManualRequiredInput!): MarketplaceRefundPayload! @cost(weight: "10")
-  markMarketplaceRefundManualCompleted(input: MarkMarketplaceRefundManualCompletedInput!): MarketplaceRefundPayload! @cost(weight: "10")
-  failMarketplaceRefund(input: FailMarketplaceRefundInput!): MarketplaceRefundPayload! @cost(weight: "10")
-  processMarketplaceRefundInXero(input: ProcessMarketplaceRefundInXeroInput!): MarketplaceRefundPayload! @cost(weight: "10")
-  addPrivateBooking(input: AddPrivateBookingInput!): BookingPayload! @cost(weight: "10")
-  updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload! @cost(weight: "10")
-  deletePrivateBooking(input: DeletePrivateBookingInput!): BookingPayload! @cost(weight: "10")
-  addMarketplaceBooking(input: AddMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
-  updateMarketplaceBooking(input: UpdateMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
-  deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
-  addMarketplaceBookingSubscription(input: AddMarketplaceBookingSubscriptionInput!): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
-  deleteMarketplaceBookingSubscription(input: DeleteMarketplaceBookingSubscriptionInput!): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
-  confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
-  rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload! @cost(weight: "10")
-  makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload! @cost(weight: "10")
-  confirmRecurringBookingPayment(input: ConfirmRecurringBookingPaymentInput!): RecurringBookingPayload! @cost(weight: "10")
-  rejectRecurringBookingPayment(input: RejectRecurringBookingPaymentInput!): RecurringBookingPayload! @cost(weight: "10")
-  makeRecurringBookingPaymentNotRequired(input: MakeRecurringBookingPaymentNotRequiredInput!): RecurringBookingPayload! @cost(weight: "10")
-  addPrivateRecurringBooking(input: AddPrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
-  updatePrivateRecurringBooking(input: UpdatePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
-  deletePrivateRecurringBooking(input: DeletePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
-}
-
 type OrganizationArrearsInvoiceDetails {
   invoiceNumber: String!
   invoiceUrl: String!
@@ -304,26 +414,26 @@ type OrganizationBookingPermissions {
   canModifyPaymentMethod: Boolean!
 }
 
-type OrganizationDetails {
+type OrganizationDetails @shareable {
   customDomain: String
   id: ID!
 }
 
-type OrganizationTagDetails {
+type OrganizationTagDetails @shareable {
   name: String!
   type: OrganizationTagType
   color: String
   id: ID!
 }
 
-type PageInfo {
+type PageInfo @shareable {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
   endCursor: String
 }
 
-type PaymentMethodTypeDetails {
+type PaymentMethodTypeDetails @shareable {
   type: PaymentMethod!
   name: String!
 }
@@ -333,7 +443,7 @@ type PaymentStatusDetails {
   name: String!
 }
 
-type ProductPricing {
+type ProductPricing @shareable {
   id: String!
   index: Int!
   listingMetadata: ListingMetadata!
@@ -353,47 +463,13 @@ type ProductPricing {
   cancellationRefundRules: [ProductPricingCancellationRefundRule!]!
 }
 
-type ProductPricingCancellationRefundRule {
+type ProductPricingCancellationRefundRule @shareable {
   minutesBefore: Int!
   refundPercentage: Int!
 }
 
-type ProductVersionDetails {
+type ProductVersionDetails @shareable {
   id: ID!
-}
-
-type Query {
-  marketplaceBookingRefundPreview(bookingId: String!): MarketplaceRefundPreviewDetails! @cost(weight: "10")
-  marketplaceBookingSubscriptionRefundPreview(subscriptionId: String!): MarketplaceRefundPreviewDetails! @cost(weight: "10")
-  marketplaceRefund(id: String!): MarketplaceRefundDetails @cost(weight: "10")
-  marketplaceRefunds(organizationCustomDomain: String! statuses: [String!]): [MarketplaceRefundDetails!]! @cost(weight: "10")
-  marketplaceRefundStatuses: [MarketplaceRefundStatusDetails!]!
-  bookingCategories: [BookingCategoryDetails!]!
-  marketplaceBookingCategories: [BookingCategoryDetails!]!
-  booking(id: String!): BookingDetails @cost(weight: "10")
-  bookingById(id: String!): BookingDetails @lookup @internal @cost(weight: "10")
-  bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
-  allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
-  marketplaceBookingSubscriptionCancellationModes: [MarketplaceBookingSubscriptionCancellationModeDetails!]!
-  marketplaceBookingSubscriptionStatuses: [MarketplaceBookingSubscriptionStatusDetails!]!
-  marketplaceBookingPaymentStatuses: [MarketplaceBookingPaymentStatusDetails!]!
-  marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails @cost(weight: "10")
-  marketplaceBookingSubscriptionById(id: String!): MarketplaceBookingSubscriptionDetails @lookup @internal @cost(weight: "10")
-  marketplaceBookingSubscriptions(after: String first: Int before: String last: Int where: MarketplaceBookingSubscriptionWhereInput! orderBy: [MarketplaceBookingSubscriptionOrderInput!]): ConnectionOfMarketplaceBookingSubscriptionEdge! @cost(weight: "10")
-  allMarketplaceBookingSubscriptions(where: MarketplaceBookingSubscriptionWhereInput!): [MarketplaceBookingSubscriptionDetails!]! @cost(weight: "10")
-  paymentMethodTypes: [PaymentMethodTypeDetails!]!
-  paymentStatuses: [PaymentStatusDetails!]!
-  organizationBookingPermissions(organizationId: String organizationCustomDomain: String): OrganizationBookingPermissions! @cost(weight: "10")
-  teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
-  recurringBooking(id: String!): RecurringBookingDetails @cost(weight: "10")
-  recurringBookingById(id: String!): RecurringBookingDetails @lookup @internal @cost(weight: "10")
-  recurringBookings(after: String first: Int before: String last: Int where: RecurringBookingWhereInput! orderBy: [RecurringBookingOrderInput!]): ConnectionOfRecurringBookingEdge! @cost(weight: "10")
-  allRecurringBookings(where: RecurringBookingWhereInput!): [RecurringBookingDetails!]! @cost(weight: "10")
-  availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
-  availableResourcesCount(where: AvailableResourcesCountWhereInput!): Int! @cost(weight: "10")
-  organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
-  bookingVersion: Version!
-  bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
 type RecurringBookingDetails {
@@ -432,7 +508,7 @@ type RecurringBookingPayload {
   recurringBooking: RecurringBookingDetails!
 }
 
-type ResourceDetails {
+type ResourceDetails @shareable {
   name: String!
   inactive: Boolean!
   requireBookingApproval: Boolean!
@@ -446,22 +522,17 @@ type ResourceDetails {
   id: ID!
 }
 
-type Subscription {
-  booking(id: String!): BookingDetails!
-  marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails!
-}
-
 type TeamBookingPermissions {
   canAddBooking: Boolean!
   canUpdateBooking: Boolean!
   canDeleteBooking: Boolean!
 }
 
-type TeamDetails {
+type TeamDetails @shareable {
   id: ID!
 }
 
-type Version {
+type Version @shareable {
   major: Int!
   minor: Int!
   build: Int!
@@ -650,25 +721,6 @@ input MakeRecurringBookingPaymentNotRequiredInput {
   clientMutationId: String
 }
 
-input MarkMarketplaceRefundManualCompletedInput {
-  clientMutationId: String
-  id: String!
-  reason: String
-}
-
-input MarkMarketplaceRefundManualRequiredInput {
-  clientMutationId: String
-  id: String!
-  reason: String
-}
-
-input MarkMarketplaceRefundPendingAccountingInput {
-  id: String!
-  refundAmount: Decimal
-  reason: String
-  clientMutationId: String
-}
-
 input MarketplaceBookingSubscriptionOrderInput {
   direction: OrderDirection!
   field: MarketplaceBookingSubscriptionOrderField!
@@ -696,6 +748,25 @@ input MarketplaceBookingSubscriptionWhereInput {
   teamIds: [String!]
   customerIds: [String!]
   includeMineOnly: Boolean
+}
+
+input MarkMarketplaceRefundManualCompletedInput {
+  clientMutationId: String
+  id: String!
+  reason: String
+}
+
+input MarkMarketplaceRefundManualRequiredInput {
+  clientMutationId: String
+  id: String!
+  reason: String
+}
+
+input MarkMarketplaceRefundPendingAccountingInput {
+  id: String!
+  refundAmount: Decimal
+  reason: String
+  clientMutationId: String
 }
 
 input OrganizationAvailableResourcesWhereInput {
@@ -1098,18 +1169,33 @@ enum RecurringBookingOrderField {
   CHANNEL
 }
 
+"The `DateTime` scalar type represents a date and time with time zone offset information."
+scalar DateTime
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+
+"The `Decimal` scalar type represents a decimal floating-point number with high precision."
+scalar Decimal
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/decimal.html")
+
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
-directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+directive @cost(
+  "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
+  weight: String!
+) on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | ENUM
+  | INPUT_FIELD_DEFINITION
 
-directive @internal on FIELD_DEFINITION
+directive @internal on OBJECT | FIELD_DEFINITION
 
+"""
+The @lookup directive is used within a source schema to specify output fields
+that can be used by the distributed GraphQL executor to resolve an entity by
+a stable key.
+"""
 directive @lookup on FIELD_DEFINITION
 
-"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
-directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
-
-"The `DateTime` scalar represents an ISO-8601 compliant date time type."
-scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
-
-"The `Decimal` scalar type represents a decimal floating-point number."
-scalar Decimal
+directive @shareable repeatable on OBJECT | FIELD_DEFINITION

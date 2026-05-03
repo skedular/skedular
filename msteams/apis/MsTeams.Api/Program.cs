@@ -29,7 +29,7 @@ public class Program
             .AddRedis(configuration, "redis")
             .AddSso()
             .AddSecurity()
-            .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
+            .AddGraphql(configuration, "msteams-api", requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .WithPooledPostgreSqlDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb", true)
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()

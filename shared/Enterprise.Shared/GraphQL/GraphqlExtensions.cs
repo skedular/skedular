@@ -1,6 +1,5 @@
 ﻿using Enterprise.Shared.Configurations;
 using Enterprise.Shared.GraphQL.Configurations;
-using HotChocolate.AspNetCore;
 using HotChocolate.Execution.Configuration;
 using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Builder;
@@ -17,33 +16,43 @@ public static class GraphqlExtensions
     {
         public IServiceCollection AddGraphql(
             IConfiguration configuration,
+            string schemaName,
             Action<IRequestExecutorBuilder> configure,
-            bool useRedisSubscriptions = true)
+            bool useRedisSubscriptions = true,
+            bool useAuthorization = false)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(schemaName);
+
             var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
             ArgumentNullException.ThrowIfNull(graphqlConfig);
-
-            var builder = services
-                .AddErrorFilter<GraphqlErrorFilter>()
-                .AddGraphQLServer()
-                .AddCostAnalyzer()
-                .InitializeOnStartup()
-                .DisableIntrospection(!graphqlConfig.IntrospectionEnabled)
-                .AddCustomGraphqlInstrumentation();
 
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
             ArgumentNullException.ThrowIfNull(applicationConfiguration);
 
-            var subscriptionOptions =
-                new SubscriptionOptions { TopicPrefix = $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:" };
+            // Record this schema so MapGraphqlEndpoints can map it onto an HTTP route later.
+            services.AddSingleton(new GraphqlSchemaRegistration(schemaName, graphqlConfig.Path));
+
+            var builder = services
+                .AddErrorFilter<GraphqlErrorFilter>()
+                .AddGraphQLServer(schemaName);
+
+            if (useAuthorization)
+            {
+                builder = builder.AddAuthorization();
+            }
+
+            builder = builder
+                .AddCostAnalyzer()
+                .DisableIntrospection(!graphqlConfig.IntrospectionEnabled)
+                .AddCustomGraphqlInstrumentation();
+
+            var subscriptionOptions = new SubscriptionOptions { TopicPrefix = $"{applicationConfiguration.Environment}:{schemaName}:" };
 
             builder = useRedisSubscriptions
                 ? builder.AddRedisSubscriptions(subscriptionOptions)
                 : builder.AddInMemorySubscriptions(subscriptionOptions);
 
             configure(builder);
-
-            builder.InitializeOnStartup();
 
             if (!graphqlConfig.DisableTelemetry)
             {
@@ -64,23 +73,23 @@ public static class GraphqlExtensions
                 return;
             }
 
-            var pathString = graphqlConfig.Path;
-            if (string.IsNullOrWhiteSpace(pathString))
+            var registrations = endpoints.ServiceProvider.GetServices<GraphqlSchemaRegistration>();
+            foreach (var registration in registrations)
             {
-                return;
-            }
-
-            endpoints
-                .MapGraphQL(pathString)
-                .WithOptions(new GraphQLServerOptions
+                if (string.IsNullOrWhiteSpace(registration.Path))
                 {
-                    Tool =
+                    continue;
+                }
+
+                endpoints
+                    .MapGraphQL(registration.Path, registration.SchemaName)
+                    .WithOptions(graphQlServerOptions =>
                     {
-                        IncludeCookies = graphqlConfig.IncludeCookies,
-                        Enable = graphqlConfig.NitroEnabled,
-                        DisableTelemetry = graphqlConfig.DisableTelemetry
-                    }
-                });
+                        graphQlServerOptions.Tool.IncludeCookies = graphqlConfig.IncludeCookies;
+                        graphQlServerOptions.Tool.Enable = graphqlConfig.NitroEnabled;
+                        graphQlServerOptions.Tool.DisableTelemetry = graphqlConfig.DisableTelemetry;
+                    });
+            }
         }
     }
 }

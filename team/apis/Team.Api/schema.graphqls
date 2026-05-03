@@ -3,13 +3,78 @@ schema {
   mutation: Mutation
 }
 
-type CdnFile {
+type Query {
+  teamInvitationStatuses: [TeamInvitationStatusDetails!]!
+  pendingTeamInvitationsCount: Int! @cost(weight: "10")
+  myInvitationsToJoinTeams(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: MyInvitationsToJoinTeamsWhereInput
+    orderBy: [JoinTeamInvitationOrderInput!]
+  ): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
+  teamMemberRoles: [TeamMemberRoleDetails!]!
+  teamMemberStatuses: [TeamMemberStatusDetails!]!
+  teamVersion: Version!
+  teamCustomerRecordSynced: Boolean! @cost(weight: "10")
+  team(id: String!): TeamDetails @cost(weight: "10")
+  teamById(id: String!): TeamDetails @lookup @internal @cost(weight: "10")
+  teams(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: TeamWhereInput
+    orderBy: [TeamOrderInput!]
+  ): ConnectionOfTeamEdge! @cost(weight: "10")
+  customerTeams(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: CustomerTeamWhereInput
+    orderBy: [TeamOrderInput!]
+  ): ConnectionOfTeamEdge! @cost(weight: "10")
+  myTeams(organizationId: String, organizationCustomDomain: String): [TeamDetails!]!
+    @cost(weight: "10")
+}
+
+type Mutation {
+  inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload!
+    @cost(weight: "10")
+  acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): InvitationToJoinTeamPayload!
+    @cost(weight: "10")
+  rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): InvitationToJoinTeamPayload!
+    @cost(weight: "10")
+  cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): InvitationToJoinTeamPayload!
+    @cost(weight: "10")
+  updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload!
+    @cost(weight: "10")
+  addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload!
+    @cost(weight: "10")
+  removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload!
+    @cost(weight: "10")
+  changeTeamMemberRole(input: ChangeTeamMemberRoleInput!): TeamMemberDetailsPayload!
+    @cost(weight: "10")
+  changeTeamMembersStatus(input: ChangeTeamMembersStatusInput!): TeamMembersDetailsPayload!
+    @cost(weight: "10")
+  removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload!
+    @cost(weight: "10")
+  addTeam(input: AddTeamInput!): TeamPayload! @cost(weight: "10")
+  updateTeam(input: UpdateTeamInput!): TeamPayload! @cost(weight: "10")
+  deleteTeam(input: DeleteTeamInput!): TeamPayload! @cost(weight: "10")
+  updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload!
+    @cost(weight: "10")
+}
+
+type CdnFile @shareable {
   url: String!
   height: Int
   width: Int
 }
 
-type CdnImageFile {
+type CdnImageFile @shareable {
   original: CdnFile
   thumbnail: CdnFile
 }
@@ -32,13 +97,18 @@ type ConnectionOfTeamMemberEdge {
   totalCount: Int!
 }
 
-type CustomerDetails {
+type CustomerDetails @shareable {
   id: ID!
 }
 
 type InvitationToJoinTeamPayload {
   clientMutationId: String
   inviteCustomerToJoinTeam: InviteCustomerToJoinTeamDetails!
+}
+
+type InviteCustomersToJoinTeamPayload {
+  clientMutationId: String
+  invitesCustomersToJoinTeam: [InviteCustomerToJoinTeamDetails!]!
 }
 
 type InviteCustomerToJoinTeamDetails {
@@ -51,63 +121,33 @@ type InviteCustomerToJoinTeamDetails {
   id: ID!
 }
 
-type InviteCustomersToJoinTeamPayload {
-  clientMutationId: String
-  invitesCustomersToJoinTeam: [InviteCustomerToJoinTeamDetails!]!
-}
-
-type LocationDetails {
+type LocationDetails @shareable {
   id: ID!
 }
 
-type Mutation {
-  inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload! @cost(weight: "10")
-  acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
-  rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
-  cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
-  updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload! @cost(weight: "10")
-  addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
-  removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
-  changeTeamMemberRole(input: ChangeTeamMemberRoleInput!): TeamMemberDetailsPayload! @cost(weight: "10")
-  changeTeamMembersStatus(input: ChangeTeamMembersStatusInput!): TeamMembersDetailsPayload! @cost(weight: "10")
-  removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload! @cost(weight: "10")
-  addTeam(input: AddTeamInput!): TeamPayload! @cost(weight: "10")
-  updateTeam(input: UpdateTeamInput!): TeamPayload! @cost(weight: "10")
-  deleteTeam(input: DeleteTeamInput!): TeamPayload! @cost(weight: "10")
-  updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload! @cost(weight: "10")
-}
-
-type OrganizationDetails {
+type OrganizationDetails @shareable {
   customDomain: String
   id: ID!
 }
 
-type PageInfo {
+type PageInfo @shareable {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
   endCursor: String
 }
 
-type Query {
-  teamInvitationStatuses: [TeamInvitationStatusDetails!]!
-  pendingTeamInvitationsCount: Int! @cost(weight: "10")
-  myInvitationsToJoinTeams(after: String first: Int before: String last: Int where: MyInvitationsToJoinTeamsWhereInput orderBy: [JoinTeamInvitationOrderInput!]): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
-  teamMemberRoles: [TeamMemberRoleDetails!]!
-  teamMemberStatuses: [TeamMemberStatusDetails!]!
-  teamVersion: Version!
-  teamCustomerRecordSynced: Boolean! @cost(weight: "10")
-  team(id: String!): TeamDetails @cost(weight: "10")
-  teamById(id: String!): TeamDetails @lookup @internal @cost(weight: "10")
-  teams(after: String first: Int before: String last: Int where: TeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
-  customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
-  myTeams(organizationId: String organizationCustomDomain: String): [TeamDetails!]! @cost(weight: "10")
-}
-
-type TeamDetails {
+type TeamDetails @shareable {
   organization: OrganizationDetails!
   primaryLocation: LocationDetails
-  members(after: String first: Int before: String last: Int where: TeamMemberWhereInput orderBy: [TeamMemberOrderInput!]): ConnectionOfTeamMemberEdge! @cost(weight: "10")
+  members(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: TeamMemberWhereInput
+    orderBy: [TeamMemberOrderInput!]
+  ): ConnectionOfTeamMemberEdge! @cost(weight: "10")
   name: String!
   about: String
   timezone: String
@@ -161,14 +201,14 @@ type TeamMemberRoleDetails {
   name: String!
 }
 
-type TeamMemberStatusDetails {
-  type: TeamMemberStatus!
-  name: String!
-}
-
 type TeamMembersDetailsPayload {
   clientMutationId: String
   members: [TeamMemberDetails!]!
+}
+
+type TeamMemberStatusDetails {
+  type: TeamMemberStatus!
+  name: String!
 }
 
 type TeamOrganizationMemberDetails {
@@ -181,7 +221,7 @@ type TeamPayload {
   team: TeamDetails!
 }
 
-type Version {
+type Version @shareable {
   major: Int!
   minor: Int!
   build: Int!
@@ -383,8 +423,24 @@ enum TeamOrderField {
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
-directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+directive @cost(
+  "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
+  weight: String!
+) on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | ENUM
+  | INPUT_FIELD_DEFINITION
 
-directive @internal on FIELD_DEFINITION
+directive @internal on OBJECT | FIELD_DEFINITION
 
+"""
+The @lookup directive is used within a source schema to specify output fields
+that can be used by the distributed GraphQL executor to resolve an entity by
+a stable key.
+"""
 directive @lookup on FIELD_DEFINITION
+
+directive @shareable repeatable on OBJECT | FIELD_DEFINITION

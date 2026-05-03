@@ -1,9 +1,11 @@
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
+using HotChocolate.Types.Composite;
 
 namespace Booking.Api.GraphQL.Booking;
 
 [GraphQLName("ResourceDetails")]
+[Shareable]
 public class ResourceDetails : Node
 {
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;

@@ -3,6 +3,220 @@ schema {
   mutation: Mutation
 }
 
+type Query {
+  isAzureTenantInstalled: Boolean! @cost(weight: "10")
+  azureTenantAdminConsentUrl: String! @cost(weight: "10")
+  azureTenantOrganization: OrganizationDetails @cost(weight: "10")
+  organizationBankAccount(id: String!): OrganizationBankAccountDetails
+    @cost(weight: "10")
+  organizationBankAccountById(id: String!): OrganizationBankAccountDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+  organizationBankAccounts(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: OrganizationBankAccountWhereInput!
+    orderBy: [OrganizationBankAccountOrderInput!]
+  ): ConnectionOfOrganizationBankAccountEdge! @cost(weight: "10")
+  organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
+  pendingOrganizationInvitationsCount: Int! @cost(weight: "10")
+  myInvitationsToJoinOrganizations(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: MyInvitationsToJoinOrganizationsWhereInput!
+    orderBy: [JoinOrganizationInvitationOrderInput!]
+  ): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
+  organizationMemberRoles: [OrganizationMemberRoleDetails!]!
+  organizationMemberStatuses: [OrganizationMemberStatusDetails!]!
+  organizationOffering(code: String!): OrganizationOfferingDetails!
+  organizationTypes: [OrganizationTypeDetails!]!
+  organizationBillingCycles: [OrganizationBillingCycleDetails!]!
+  organizationXeroBillingModes: [OrganizationXeroBillingModeDetails!]!
+  organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
+  activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
+  organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]!
+    @cost(weight: "10")
+  organization(id: String, customDomain: String): OrganizationDetails
+    @cost(weight: "10")
+  organizationPublic(id: String, customDomain: String): OrganizationPublicDetails
+    @cost(weight: "10")
+  organizationById(id: String!): OrganizationDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+  organizations(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: OrganizationWhereInput!
+    orderBy: [OrganizationOrderInput!]
+  ): ConnectionOfOrganizationEdge! @cost(weight: "10")
+  myOrganizations: [MyOrganizationDetails!]! @cost(weight: "10")
+  organizationVersion: Version!
+  bookingSlotSizeInMinutes: Int!
+  resourceTypes: [OrganizationTagTypeDetails!]!
+  locationSpaceTypes: [OrganizationTagTypeDetails!]!
+  emailsToShowLatestCapabilities: [String!]!
+  emailsToIgnoreObservability: [String!]!
+  organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails
+    @cost(weight: "10")
+  organizationStripeConnectAccountById(id: String!): OrganizationStripeConnectAccountDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+  organizationStripeConnectAccounts(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: OrganizationStripeConnectAccountWhereInput!
+    orderBy: [OrganizationStripeConnectAccountOrderInput!]
+  ): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")
+  deskResourceType: OrganizationTagType!
+  roomResourceType: OrganizationTagType!
+  parkingResourceType: OrganizationTagType!
+  otherResourceType: OrganizationTagType!
+  customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
+  customTagById(id: String!): OrganizationTagDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+  zone(id: String!): OrganizationTagDetails @cost(weight: "10")
+  zoneById(id: String!): OrganizationTagDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+  productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
+  productTagById(id: String!): OrganizationTagDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+}
+
+type Mutation {
+  addOrganizationBankAccount(input: AddOrganizationBankAccountInput!): OrganizationBankAccountPayload!
+    @cost(weight: "10")
+  updateOrganizationBankAccount(input: UpdateOrganizationBankAccountInput!): OrganizationBankAccountPayload!
+    @cost(weight: "10")
+  deleteOrganizationBankAccount(input: DeleteOrganizationBankAccountInput!): OrganizationBankAccountPayload!
+    @cost(weight: "10")
+  deleteOrganizationBankAccounts(input: DeleteOrganizationBankAccountsInput!): OrganizationBankAccountsPayload!
+    @cost(weight: "10")
+  setOrganizationBankAccountAsDefault(
+    input: SetOrganizationBankAccountAsDefaultInput!
+  ): OrganizationBankAccountPayload! @cost(weight: "10")
+  addOrganizationBillingDetails(input: AddOrganizationBillingDetailsInput!): OrganizationPayload!
+    @cost(weight: "10")
+  updateOrganizationBillingDetails(
+    input: UpdateOrganizationBillingDetailsInput!
+  ): OrganizationPayload! @cost(weight: "10")
+  inviteCustomersToJoinOrganization(
+    input: InviteCustomersToJoinOrganizationInput!
+  ): InvitationsToJoinOrganizationPayload! @cost(weight: "10")
+  acceptInvitationToJoinOrganization(
+    input: AcceptInvitationToJoinOrganizationInput!
+  ): InvitationToJoinOrganizationPayload! @cost(weight: "10")
+  rejectInvitationToJoinOrganization(
+    input: RejectInvitationToJoinOrganizationInput!
+  ): InvitationToJoinOrganizationPayload! @cost(weight: "10")
+  cancelInvitationToJoinOrganization(
+    input: CancelInvitationToJoinOrganizationInput!
+  ): InvitationToJoinOrganizationPayload! @cost(weight: "10")
+  changeOrganizationMemberRole(input: ChangeOrganizationMemberRoleInput!): OrganizationMemberDetailsPayload!
+    @cost(weight: "10")
+  changeOrganizationMembersStatus(input: ChangeOrganizationMembersStatusInput!): OrganizationMembersDetailsPayload!
+    @cost(weight: "10")
+  removeOrganizationMembers(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload!
+    @cost(weight: "10")
+  completeOrganizationMemberOnboarding(
+    input: CompleteOrganizationMemberOnboardingInput!
+  ): OrganizationMemberPayload! @cost(weight: "10")
+  updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload!
+    @cost(weight: "10")
+  cancelOrganizationOffering(input: CancelOrganizationOfferingInput!): CancelOrganizationOfferingPayload!
+    @cost(weight: "10")
+  addOrganization(input: AddOrganizationInput!): OrganizationPayload!
+    @cost(weight: "10")
+  updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload!
+    @cost(weight: "10")
+  deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload!
+    @cost(weight: "10")
+  updateOrganizationMarketplaceListingMetadata(
+    input: UpdateOrganizationMarketplaceListingMetadataInput!
+  ): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationBillingSettings(
+    input: UpdateOrganizationBillingSettingsInput!
+  ): OrganizationPayload! @cost(weight: "10")
+  addOrganizationPaymentMethodIntent(
+    input: AddOrganizationPaymentMethodIntentInput!
+  ): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
+  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload!
+    @cost(weight: "10")
+  addOrganizationPhysicalAddress(input: AddOrganizationPhysicalAddressInput!): OrganizationPayload!
+    @cost(weight: "10")
+  updateOrganizationPhysicalAddress(
+    input: UpdateOrganizationPhysicalAddressInput!
+  ): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload!
+    @cost(weight: "10")
+  removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationPayload!
+    @cost(weight: "10")
+  addOrganizationStripeConnectAccount(
+    input: AddOrganizationStripeConnectAccountInput!
+  ): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
+  updateOrganizationStripeConnectAccount(
+    input: UpdateOrganizationStripeConnectAccountInput!
+  ): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
+  deleteOrganizationStripeConnectAccount(
+    input: DeleteOrganizationStripeConnectAccountInput!
+  ): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
+  deleteOrganizationStripeConnectAccounts(
+    input: DeleteOrganizationStripeConnectAccountsInput!
+  ): OrganizationStripeConnectAccountsPayload! @cost(weight: "10")
+  setOrganizationStripeConnectAccountAsDefault(
+    input: SetOrganizationStripeConnectAccountAsDefaultInput!
+  ): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
+  addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload!
+    @cost(weight: "10")
+  updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload!
+    @cost(weight: "10")
+  deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload!
+    @cost(weight: "10")
+  deleteCustomTags(input: DeleteCustomTagsInput!): OrganizationTagsPayload!
+    @cost(weight: "10")
+  addZone(input: AddZoneInput!): OrganizationTagPayload! @cost(weight: "10")
+  updateZone(input: UpdateZoneInput!): OrganizationTagPayload!
+    @cost(weight: "10")
+  deleteZone(input: DeleteZoneInput!): OrganizationTagPayload!
+    @cost(weight: "10")
+  deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload!
+    @cost(weight: "10")
+  addProductTag(input: AddProductTagInput!): OrganizationTagPayload!
+    @cost(weight: "10")
+  updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload!
+    @cost(weight: "10")
+  deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload!
+    @cost(weight: "10")
+  deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload!
+    @cost(weight: "10")
+  updateOrganizationTaxDetails(input: UpdateOrganizationTaxDetailsInput!): OrganizationPayload!
+    @cost(weight: "10")
+  removeOrganizationTaxDetails(input: RemoveOrganizationTaxDetailsInput!): OrganizationPayload!
+    @cost(weight: "10")
+  updateOrganizationXeroConnection(
+    input: UpdateOrganizationXeroConnectionInput!
+  ): OrganizationPayload! @cost(weight: "10")
+  disconnectOrganizationXeroConnection(
+    input: DisconnectOrganizationXeroConnectionInput!
+  ): OrganizationPayload! @cost(weight: "10")
+}
+
 type AddOrganizationPaymentMethodIntentPayload {
   clientMutationId: String
   publishedKeys: String!
@@ -13,13 +227,13 @@ type CancelOrganizationOfferingPayload {
   clientMutationId: String
 }
 
-type CdnFile {
+type CdnFile @shareable {
   url: String!
   height: Int
   width: Int
 }
 
-type CdnImageFile {
+type CdnImageFile @shareable {
   original: CdnFile
   thumbnail: CdnFile
 }
@@ -60,18 +274,18 @@ type ConnectionOfOrganizationTagEdge {
   totalCount: Int!
 }
 
-type CustomerDetails {
+type CustomerDetails @shareable {
   id: ID!
-}
-
-type InvitationToJoinOrganizationPayload {
-  clientMutationId: String
-  inviteCustomerToJoinOrganization: InviteCustomerToJoinOrganizationDetails!
 }
 
 type InvitationsToJoinOrganizationPayload {
   clientMutationId: String
   invitesCustomersToJoinOrganization: [InviteCustomerToJoinOrganizationDetails!]!
+}
+
+type InvitationToJoinOrganizationPayload {
+  clientMutationId: String
+  inviteCustomerToJoinOrganization: InviteCustomerToJoinOrganizationDetails!
 }
 
 type InviteCustomerToJoinOrganizationDetails {
@@ -84,63 +298,11 @@ type InviteCustomerToJoinOrganizationDetails {
   id: ID!
 }
 
-type ListingMetadata {
+type ListingMetadata @shareable {
   about: String
   title: String
   subTitle: String
   includedFeatures: [String!]
-}
-
-type Mutation {
-  addOrganizationBankAccount(input: AddOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
-  updateOrganizationBankAccount(input: UpdateOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
-  deleteOrganizationBankAccount(input: DeleteOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
-  deleteOrganizationBankAccounts(input: DeleteOrganizationBankAccountsInput!): OrganizationBankAccountsPayload! @cost(weight: "10")
-  setOrganizationBankAccountAsDefault(input: SetOrganizationBankAccountAsDefaultInput!): OrganizationBankAccountPayload! @cost(weight: "10")
-  addOrganizationBillingDetails(input: AddOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
-  updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
-  inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InvitationsToJoinOrganizationPayload! @cost(weight: "10")
-  acceptInvitationToJoinOrganization(input: AcceptInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
-  rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
-  cancelInvitationToJoinOrganization(input: CancelInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
-  changeOrganizationMemberRole(input: ChangeOrganizationMemberRoleInput!): OrganizationMemberDetailsPayload! @cost(weight: "10")
-  changeOrganizationMembersStatus(input: ChangeOrganizationMembersStatusInput!): OrganizationMembersDetailsPayload! @cost(weight: "10")
-  removeOrganizationMembers(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload! @cost(weight: "10")
-  completeOrganizationMemberOnboarding(input: CompleteOrganizationMemberOnboardingInput!): OrganizationMemberPayload! @cost(weight: "10")
-  updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload! @cost(weight: "10")
-  cancelOrganizationOffering(input: CancelOrganizationOfferingInput!): CancelOrganizationOfferingPayload! @cost(weight: "10")
-  addOrganization(input: AddOrganizationInput!): OrganizationPayload! @cost(weight: "10")
-  updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload! @cost(weight: "10")
-  deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload! @cost(weight: "10")
-  updateOrganizationMarketplaceListingMetadata(input: UpdateOrganizationMarketplaceListingMetadataInput!): OrganizationPayload! @cost(weight: "10")
-  updateOrganizationBillingSettings(input: UpdateOrganizationBillingSettingsInput!): OrganizationPayload! @cost(weight: "10")
-  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
-  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
-  addOrganizationPhysicalAddress(input: AddOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
-  updateOrganizationPhysicalAddress(input: UpdateOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
-  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
-  removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
-  addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
-  updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
-  deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
-  deleteOrganizationStripeConnectAccounts(input: DeleteOrganizationStripeConnectAccountsInput!): OrganizationStripeConnectAccountsPayload! @cost(weight: "10")
-  setOrganizationStripeConnectAccountAsDefault(input: SetOrganizationStripeConnectAccountAsDefaultInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
-  addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
-  updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
-  deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
-  deleteCustomTags(input: DeleteCustomTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
-  addZone(input: AddZoneInput!): OrganizationTagPayload! @cost(weight: "10")
-  updateZone(input: UpdateZoneInput!): OrganizationTagPayload! @cost(weight: "10")
-  deleteZone(input: DeleteZoneInput!): OrganizationTagPayload! @cost(weight: "10")
-  deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload! @cost(weight: "10")
-  addProductTag(input: AddProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
-  updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
-  deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
-  deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
-  updateOrganizationTaxDetails(input: UpdateOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
-  removeOrganizationTaxDetails(input: RemoveOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
-  updateOrganizationXeroConnection(input: UpdateOrganizationXeroConnectionInput!): OrganizationPayload! @cost(weight: "10")
-  disconnectOrganizationXeroConnection(input: DisconnectOrganizationXeroConnectionInput!): OrganizationPayload! @cost(weight: "10")
 }
 
 type MyOrganizationDetails {
@@ -235,12 +397,41 @@ type OrganizationDailyBookingsTotal {
   total: Int!
 }
 
-type OrganizationDetails {
-  members(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput orderBy: [OrganizationMemberOrderInput!]): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
-  customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
-  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
-  productTags(after: String first: Int before: String last: Int where: ProductTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
-  analytics(from: DateTime! until: DateTime!): OrganizationAnalytics! @cost(weight: "10")
+type OrganizationDetails @shareable {
+  members(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: OrganizationMemberWhereInput
+    orderBy: [OrganizationMemberOrderInput!]
+  ): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
+  customTags(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: CustomTagOrganizationTagWhereInput
+    orderBy: [OrganizationTagOrderInput!]
+  ): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  zones(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: ZoneOrganizationTagWhereInput
+    orderBy: [OrganizationTagOrderInput!]
+  ): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  productTags(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: ProductTagOrganizationTagWhereInput
+    orderBy: [OrganizationTagOrderInput!]
+  ): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  analytics(from: DateTime!, until: DateTime!): OrganizationAnalytics!
+    @cost(weight: "10")
   isSsoTokenValid: Boolean! @cost(weight: "10")
   ssoLoginUrl(redirectUrl: String!): String! @cost(weight: "10")
   customDomain: String
@@ -341,14 +532,14 @@ type OrganizationMemberRoleDetails {
   name: String!
 }
 
-type OrganizationMemberStatusDetails {
-  type: OrganizationMemberStatus!
-  name: String!
-}
-
 type OrganizationMembersDetailsPayload {
   clientMutationId: String
   members: [OrganizationMemberDetails!]!
+}
+
+type OrganizationMemberStatusDetails {
+  type: OrganizationMemberStatus!
+  name: String!
 }
 
 type OrganizationOfferingDetails {
@@ -401,8 +592,22 @@ type OrganizationPhysicalAddressDetails {
 }
 
 type OrganizationPublicDetails {
-  customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
-  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  customTags(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: CustomTagOrganizationTagWhereInput
+    orderBy: [OrganizationTagOrderInput!]
+  ): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  zones(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: ZoneOrganizationTagWhereInput
+    orderBy: [OrganizationTagOrderInput!]
+  ): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   uniqueId: String!
   customDomain: String
   name: String!
@@ -468,7 +673,7 @@ type OrganizationStripeConnectAccountsPayload {
   organizationStripeConnectAccounts: [OrganizationStripeConnectAccountDetails!]!
 }
 
-type OrganizationTagDetails {
+type OrganizationTagDetails @shareable {
   name: String!
   description: String
   type: OrganizationTagType!
@@ -486,14 +691,14 @@ type OrganizationTagPayload {
   organizationTag: OrganizationTagDetails!
 }
 
-type OrganizationTagTypeDetails {
-  type: OrganizationTagType!
-  name: String!
-}
-
 type OrganizationTagsPayload {
   clientMutationId: String
   organizationTags: [OrganizationTagDetails!]!
+}
+
+type OrganizationTagTypeDetails {
+  type: OrganizationTagType!
+  name: String!
 }
 
 type OrganizationTaxDetails {
@@ -540,56 +745,11 @@ type OrganizationXeroConnection {
   id: ID!
 }
 
-type PageInfo {
+type PageInfo @shareable {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
   endCursor: String
-}
-
-type Query {
-  isAzureTenantInstalled: Boolean! @cost(weight: "10")
-  azureTenantAdminConsentUrl: String! @cost(weight: "10")
-  azureTenantOrganization: OrganizationDetails @cost(weight: "10")
-  organizationBankAccount(id: String!): OrganizationBankAccountDetails @cost(weight: "10")
-  organizationBankAccountById(id: String!): OrganizationBankAccountDetails @lookup @internal @cost(weight: "10")
-  organizationBankAccounts(after: String first: Int before: String last: Int where: OrganizationBankAccountWhereInput! orderBy: [OrganizationBankAccountOrderInput!]): ConnectionOfOrganizationBankAccountEdge! @cost(weight: "10")
-  organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
-  pendingOrganizationInvitationsCount: Int! @cost(weight: "10")
-  myInvitationsToJoinOrganizations(after: String first: Int before: String last: Int where: MyInvitationsToJoinOrganizationsWhereInput! orderBy: [JoinOrganizationInvitationOrderInput!]): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
-  organizationMemberRoles: [OrganizationMemberRoleDetails!]!
-  organizationMemberStatuses: [OrganizationMemberStatusDetails!]!
-  organizationOffering(code: String!): OrganizationOfferingDetails!
-  organizationTypes: [OrganizationTypeDetails!]!
-  organizationBillingCycles: [OrganizationBillingCycleDetails!]!
-  organizationXeroBillingModes: [OrganizationXeroBillingModeDetails!]!
-  organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
-  activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
-  organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
-  organization(id: String customDomain: String): OrganizationDetails @cost(weight: "10")
-  organizationPublic(id: String customDomain: String): OrganizationPublicDetails @cost(weight: "10")
-  organizationById(id: String!): OrganizationDetails @lookup @internal @cost(weight: "10")
-  organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): ConnectionOfOrganizationEdge! @cost(weight: "10")
-  myOrganizations: [MyOrganizationDetails!]! @cost(weight: "10")
-  organizationVersion: Version!
-  bookingSlotSizeInMinutes: Int!
-  resourceTypes: [OrganizationTagTypeDetails!]!
-  locationSpaceTypes: [OrganizationTagTypeDetails!]!
-  emailsToShowLatestCapabilities: [String!]!
-  emailsToIgnoreObservability: [String!]!
-  organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
-  organizationStripeConnectAccountById(id: String!): OrganizationStripeConnectAccountDetails @lookup @internal @cost(weight: "10")
-  organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")
-  deskResourceType: OrganizationTagType!
-  roomResourceType: OrganizationTagType!
-  parkingResourceType: OrganizationTagType!
-  otherResourceType: OrganizationTagType!
-  customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  customTagById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
-  zone(id: String!): OrganizationTagDetails @cost(weight: "10")
-  zoneById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
-  productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  productTagById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
 }
 
 type RemoveOrganizationPaymentMethodPayload {
@@ -600,7 +760,7 @@ type UpdateOrganizationOfferingPayload {
   clientMutationId: String
 }
 
-type Version {
+type Version @shareable {
   major: Int!
   minor: Int!
   build: Int!
@@ -1362,18 +1522,33 @@ enum OrganizationXeroBillingMode {
   REPEATING_INVOICES
 }
 
+"The `DateTime` scalar type represents a date and time with time zone offset information."
+scalar DateTime
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+
+"The `Decimal` scalar type represents a decimal floating-point number with high precision."
+scalar Decimal
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/decimal.html")
+
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
-directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+directive @cost(
+  "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
+  weight: String!
+) on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | ENUM
+  | INPUT_FIELD_DEFINITION
 
-directive @internal on FIELD_DEFINITION
+directive @internal on OBJECT | FIELD_DEFINITION
 
+"""
+The @lookup directive is used within a source schema to specify output fields
+that can be used by the distributed GraphQL executor to resolve an entity by
+a stable key.
+"""
 directive @lookup on FIELD_DEFINITION
 
-"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
-directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
-
-"The `DateTime` scalar represents an ISO-8601 compliant date time type."
-scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
-
-"The `Decimal` scalar type represents a decimal floating-point number."
-scalar Decimal
+directive @shareable repeatable on OBJECT | FIELD_DEFINITION

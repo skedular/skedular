@@ -1,10 +1,12 @@
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
+using HotChocolate.Types.Composite;
 using Location.Api.GraphQL.Location;
 
 namespace Location.Api.GraphQL.Resource;
 
 [GraphQLName("ResourceDetails")]
+[Shareable]
 public class ResourceDetails : Node
 {
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;

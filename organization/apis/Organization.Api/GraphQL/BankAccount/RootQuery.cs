@@ -2,8 +2,8 @@
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
-using HotChocolate.Fusion.SourceSchema.Types;
 using HotChocolate.Types;
+using HotChocolate.Types.Composite;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Shared.Models;

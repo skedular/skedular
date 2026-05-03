@@ -73,7 +73,7 @@ flowchart TB
     subgraph GatewayLayer["Gateway"]
         direction TB
         JWTMw["JWT Validation\n(Enterprise.Shared security middleware)"]
-        GqlFusion["HotChocolate Fusion\n(reads gateway.fgp at startup)"]
+        GqlFusion["HotChocolate Fusion\n(reads gateway.far at startup)"]
         YARPProxy["YARP Reverse Proxy\n(routes by path prefix)"]
         SDRewriter["ServiceDiscoveryConfigurationRewriter\n(resolves Aspire names → real URLs)"]
         McpSrv["MCP Server"]
@@ -81,7 +81,7 @@ flowchart TB
         JWTMw --> GqlFusion
         JWTMw --> YARPProxy
         JWTMw --> McpSrv
-        GqlFusion --> SDRewriter
+        GqlFusion --> RewriteHandler["RewriteHostHandler\n(rewrites host to subgraph URL)"]
     end
 
     subgraph DomainSubgraphs["Domain API Subgraphs"]
@@ -108,24 +108,24 @@ flowchart LR
     subgraph SchemaGeneration["Schema Generation  (offline / CI)"]
         direction TB
         ProtoGen["api-definitions/generate.sh\n(OpenAPI + protobuf)"]
-        GqlScript["scripts/generate-graphql.sh\n(per-domain schema export\n+ fusion compose)"]
-        FgpFile["gateway/apis/Gateway/gateway.fgp\n(compiled fusion package)"]
+        GqlScript["scripts/generate-graphql.sh\n(per-domain schema export\n+ nitro fusion compose)"]
+        FarFile["gateway/apis/Gateway/gateway.far\n(compiled fusion archive)"]
 
         ProtoGen --> GqlScript
-        GqlScript --> FgpFile
+        GqlScript --> FarFile
     end
 
     subgraph GatewayRuntime["Gateway Runtime"]
         direction TB
-        EmbeddedFgp["gateway.fgp embedded\nin Gateway assembly"]
-        FusionServer["AddFusionGatewayServer()\n.ConfigureFromFile(fgp)"]
-        SDRw["ServiceDiscoveryConfigurationRewriter\nrewrites subgraph endpoint URIs\nfrom appsettings Subgraphs config"]
+        FarFileRT["gateway.far loaded\nfrom filesystem at startup"]
+        FusionServer["AddGraphQLGatewayServer()\n.AddFileSystemConfiguration(gateway.far)"]
+        RewriteHnd["RewriteHostHandler\nrewrites subgraph endpoint URLs\nfrom appsettings Subgraphs config"]
 
-        EmbeddedFgp --> FusionServer
-        FusionServer --> SDRw
+        FarFileRT --> FusionServer
+        FusionServer --> RewriteHnd
     end
 
-    subgraph Subgraphs["Subgraph APIs (each exports schema.graphql)"]
+    subgraph Subgraphs["Subgraph APIs (each exports schema.graphqls)"]
         B["Booking"]
         Co["Core"]
         Cu["Customer"]
@@ -261,18 +261,18 @@ endpoints, enabling both local Aspire dev and production deployments to share th
 
 ## Schema Regeneration Workflow
 
-Any change to a domain GraphQL schema requires regenerating the composed fusion schema and the embedded `.fgp` file.
+Any change to a domain GraphQL schema requires regenerating the composed fusion schema and the `.far` file.
 
 ```mermaid
 flowchart TD
     A["Change domain GraphQL type or field\n(e.g. add query, mutation, subscription)"] --> B["Run scripts/generate-graphql.sh"]
-    B --> C["Per-domain schema.graphql files regenerated\n(dotnet run -- schema export per API)"]
-    C --> D["gateway.fgp recompiled\n(HotChocolate Fusion compose)"]
+    B --> C["Per-domain schema.graphqls files regenerated\n(dotnet run -- schema export per API)"]
+    C --> D["gateway.far recompiled\n(dotnet nitro fusion compose)"]
     D --> E["web/apps/webapp/scripts/generate.sh\n(Relay artifact regeneration)"]
-    E --> F["Commit all changed generated files\n(schema.graphql · gateway.fgp · Relay artifacts)"]
+    E --> F["Commit all changed generated files\n(schema.graphqls · gateway.far · Relay artifacts)"]
 ```
 
-> **Do not hand-edit** `gateway.fgp`, per-domain `schema.graphql` files, or
+> **Do not hand-edit** `gateway.far`, per-domain `schema.graphqls` files, or
 > `api-definitions/graphql/skedular/v1/schema.graphql`. Always use `scripts/generate-graphql.sh`
 > (or `make generate` for the full regeneration pipeline).
 
@@ -285,14 +285,13 @@ The full pipeline via `make generate` runs:
 
 ## Reading Guide
 
-| You want to understand… | Start here |
-|---|---|
-| Gateway startup and Fusion wiring | `gateway/apis/Gateway/Program.cs` |
-| YARP route and cluster configuration | `gateway/apis/Gateway/appsettings.json` → `ReverseProxy` section |
-| Subgraph URL configuration | `gateway/apis/Gateway/appsettings.json` → `Subgraphs` section |
-| How subgraph URIs are resolved at runtime | `gateway/apis/Gateway/ServiceDiscoveryConfigurationRewriter.cs` |
-| Subgraph configuration model | `gateway/apis/Gateway/Configurations/SubgraphsConfigurations.cs` |
-| Auth context propagation to subgraphs | `gateway/apis/Gateway/Extensions.cs` → `RequestContextPropagationHandler` |
-| GraphQL Fusion schema regeneration | `scripts/generate-graphql.sh` |
-| Full regeneration pipeline | `Makefile` → `make generate` |
-| Compiled fusion schema package | `gateway/apis/Gateway/gateway.fgp` (binary; regenerate, do not edit) |
+| You want to understand…                    | Start here                                                           |
+| ------------------------------------------ | -------------------------------------------------------------------- |
+| Gateway startup and Fusion wiring          | `gateway/apis/Gateway/Program.cs`                                    |
+| YARP route and cluster configuration       | `gateway/apis/Gateway/appsettings.json` → `ReverseProxy` section     |
+| Subgraph URL configuration                 | `gateway/apis/Gateway/appsettings.json` → `Subgraphs` section        |
+| How subgraph URLs are rewritten at runtime | `shared/Enterprise.Shared/GraphQL/Handlers/RewriteHostHandler.cs`    |
+| Subgraph configuration model               | `gateway/apis/Gateway/Configurations/SubgraphsConfigurations.cs`     |
+| GraphQL Fusion schema regeneration         | `scripts/generate-graphql.sh`                                        |
+| Full regeneration pipeline                 | `Makefile` → `make generate`                                         |
+| Compiled fusion schema archive             | `gateway/apis/Gateway/gateway.far` (binary; regenerate, do not edit) |

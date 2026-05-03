@@ -3,18 +3,116 @@ schema {
   mutation: Mutation
 }
 
+type Query {
+  locationsAnalytics(
+    from: DateTime!
+    until: DateTime!
+    where: LocationWhereInput
+    orderBy: [LocationOrderInput!]
+  ): [LocationAnalytics!]! @cost(weight: "10")
+  floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
+  floorPlanById(id: String!): FloorPlanDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+  floorPlans(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: FloorPlanWhereInput!
+    orderBy: [FloorPlanOrderInput!]
+  ): ConnectionOfFloorPlanEdge! @cost(weight: "10")
+  locationTypes: [LocationTypeDetails!]!
+  location(id: String!): LocationDetails @cost(weight: "10")
+  locationById(id: String!): LocationDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+  locations(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: LocationWhereInput!
+    orderBy: [LocationOrderInput!]
+  ): ConnectionOfLocationEdge! @cost(weight: "10")
+  marketplaceLocations(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: MarketplaceLocationWhereInput!
+    orderBy: [LocationOrderInput!]
+  ): ConnectionOfLocationEdge! @cost(weight: "10")
+  myLocations(organizationId: String, organizationCustomDomain: String): [LocationDetails!]
+    @cost(weight: "10")
+  resource(id: String!): ResourceDetails @cost(weight: "10")
+  resourceById(id: String!): ResourceDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+  locationVersion: Version!
+  locationCustomerRecordSynced: Boolean! @cost(weight: "10")
+}
+
+type Mutation {
+  toggleContactedViaEmail(input: ToggleContactedViaEmailInput!): LocationPayload!
+    @cost(weight: "10")
+  toggleContactedViaCall(input: ToggleContactedViaCallInput!): LocationPayload!
+    @cost(weight: "10")
+  toggleContactedViaSms(input: ToggleContactedViaSmsInput!): LocationPayload!
+    @cost(weight: "10")
+  toggleContactedViaWhatsapp(input: ToggleContactedViaWhatsappInput!): LocationPayload!
+    @cost(weight: "10")
+  addFloorPlan(input: AddFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
+  updateFloorPlan(input: UpdateFloorPlanInput!): FloorPlanPayload!
+    @cost(weight: "10")
+  deleteFloorPlan(input: DeleteFloorPlanInput!): FloorPlanPayload!
+    @cost(weight: "10")
+  updateResourcePositions(input: UpdateResourcePositionsInput!): FloorPlanPayload!
+    @cost(weight: "10")
+  addLocation(input: AddLocationInput!): LocationPayload! @cost(weight: "10")
+  updateLocation(input: UpdateLocationInput!): LocationPayload!
+    @cost(weight: "10")
+  deleteLocation(input: DeleteLocationInput!): LocationPayload!
+    @cost(weight: "10")
+  updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload!
+    @cost(weight: "10")
+  claimLocationOwnership(input: ClaimLocationOwnershipInput!): LocationPayload!
+    @cost(weight: "10")
+  addLocationPhysicalAddress(input: AddLocationPhysicalAddressInput!): LocationPayload!
+    @cost(weight: "10")
+  updateLocationPhysicalAddress(input: UpdateLocationPhysicalAddressInput!): LocationPayload!
+    @cost(weight: "10")
+  addResource(input: AddResourceInput!): ResourcePayload! @cost(weight: "10")
+  updateResource(input: UpdateResourceInput!): ResourcePayload!
+    @cost(weight: "10")
+  deleteResource(input: DeleteResourceInput!): ResourcePayload!
+    @cost(weight: "10")
+  deleteResources(input: DeleteResourcesInput!): ResourcesPayload!
+    @cost(weight: "10")
+  activateResources(input: ActivateResourcesInput!): ResourcesPayload!
+    @cost(weight: "10")
+  deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload!
+    @cost(weight: "10")
+  updateLocationResourceAvailableHours(
+    input: UpdateLocationResourceAvailableHoursInput!
+  ): ResourcePayload! @cost(weight: "10")
+}
+
 type AreaRange {
   fromInSqm: String!
   toInSqm: String!
 }
 
-type CdnFile {
+type CdnFile @shareable {
   url: String!
   height: Int
   width: Int
 }
 
-type CdnImageFile {
+type CdnImageFile @shareable {
   original: CdnFile
   thumbnail: CdnFile
 }
@@ -66,7 +164,7 @@ type FloorPlanPayload {
   floorPlan: FloorPlanDetails!
 }
 
-type ListingMetadata {
+type ListingMetadata @shareable {
   about: String
   title: String
   subTitle: String
@@ -89,8 +187,16 @@ type LocationDailyBookingsTotal {
 type LocationDetails {
   organization: OrganizationDetails!
   products: [ProductDetails!]!
-  analytics(from: DateTime! until: DateTime!): LocationAnalytics! @cost(weight: "10")
-  resources(after: String first: Int before: String last: Int where: ResourceWhereInput orderBy: [ResourceOrderInput!]): ConnectionOfResourceEdge! @cost(weight: "10")
+  analytics(from: DateTime!, until: DateTime!): LocationAnalytics!
+    @cost(weight: "10")
+  resources(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: ResourceWhereInput
+    orderBy: [ResourceOrderInput!]
+  ): ConnectionOfResourceEdge! @cost(weight: "10")
   name: String!
   timezone: String
   type: LocationTypeDetails!
@@ -162,31 +268,6 @@ type LocationTypeDetails {
   name: String!
 }
 
-type Mutation {
-  toggleContactedViaEmail(input: ToggleContactedViaEmailInput!): LocationPayload! @cost(weight: "10")
-  toggleContactedViaCall(input: ToggleContactedViaCallInput!): LocationPayload! @cost(weight: "10")
-  toggleContactedViaSms(input: ToggleContactedViaSmsInput!): LocationPayload! @cost(weight: "10")
-  toggleContactedViaWhatsapp(input: ToggleContactedViaWhatsappInput!): LocationPayload! @cost(weight: "10")
-  addFloorPlan(input: AddFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
-  updateFloorPlan(input: UpdateFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
-  deleteFloorPlan(input: DeleteFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
-  updateResourcePositions(input: UpdateResourcePositionsInput!): FloorPlanPayload! @cost(weight: "10")
-  addLocation(input: AddLocationInput!): LocationPayload! @cost(weight: "10")
-  updateLocation(input: UpdateLocationInput!): LocationPayload! @cost(weight: "10")
-  deleteLocation(input: DeleteLocationInput!): LocationPayload! @cost(weight: "10")
-  updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload! @cost(weight: "10")
-  claimLocationOwnership(input: ClaimLocationOwnershipInput!): LocationPayload! @cost(weight: "10")
-  addLocationPhysicalAddress(input: AddLocationPhysicalAddressInput!): LocationPayload! @cost(weight: "10")
-  updateLocationPhysicalAddress(input: UpdateLocationPhysicalAddressInput!): LocationPayload! @cost(weight: "10")
-  addResource(input: AddResourceInput!): ResourcePayload! @cost(weight: "10")
-  updateResource(input: UpdateResourceInput!): ResourcePayload! @cost(weight: "10")
-  deleteResource(input: DeleteResourceInput!): ResourcePayload! @cost(weight: "10")
-  deleteResources(input: DeleteResourcesInput!): ResourcesPayload! @cost(weight: "10")
-  activateResources(input: ActivateResourcesInput!): ResourcesPayload! @cost(weight: "10")
-  deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload! @cost(weight: "10")
-  updateLocationResourceAvailableHours(input: UpdateLocationResourceAvailableHoursInput!): ResourcePayload! @cost(weight: "10")
-}
-
 type OpeningHours {
   weekOpeningHours: WeekOpeningHours!
   closedDates: [DateTime!]!
@@ -200,19 +281,19 @@ type OpeningHoursDetails {
   until: String
 }
 
-type OrganizationDetails {
+type OrganizationDetails @shareable {
   customDomain: String
   id: ID!
 }
 
-type OrganizationTagDetails {
+type OrganizationTagDetails @shareable {
   name: String!
   type: OrganizationTagType
   color: String
   id: ID!
 }
 
-type PageInfo {
+type PageInfo @shareable {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
@@ -224,25 +305,8 @@ type PeopleCapacity {
   to: String!
 }
 
-type ProductDetails {
+type ProductDetails @shareable {
   id: ID!
-}
-
-type Query {
-  locationsAnalytics(from: DateTime! until: DateTime! where: LocationWhereInput orderBy: [LocationOrderInput!]): [LocationAnalytics!]! @cost(weight: "10")
-  floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
-  floorPlanById(id: String!): FloorPlanDetails @lookup @internal @cost(weight: "10")
-  floorPlans(after: String first: Int before: String last: Int where: FloorPlanWhereInput! orderBy: [FloorPlanOrderInput!]): ConnectionOfFloorPlanEdge! @cost(weight: "10")
-  locationTypes: [LocationTypeDetails!]!
-  location(id: String!): LocationDetails @cost(weight: "10")
-  locationById(id: String!): LocationDetails @lookup @internal @cost(weight: "10")
-  locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
-  marketplaceLocations(after: String first: Int before: String last: Int where: MarketplaceLocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
-  myLocations(organizationId: String organizationCustomDomain: String): [LocationDetails!] @cost(weight: "10")
-  resource(id: String!): ResourceDetails @cost(weight: "10")
-  resourceById(id: String!): ResourceDetails @lookup @internal @cost(weight: "10")
-  locationVersion: Version!
-  locationCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
 type ResourceAvailabilityDailySnapshot {
@@ -256,7 +320,7 @@ type ResourceAvailabilityDailySnapshot {
   bookedResourceNames: [String!]!
 }
 
-type ResourceDetails {
+type ResourceDetails @shareable {
   name: String!
   inactive: Boolean!
   requireBookingApproval: Boolean!
@@ -303,7 +367,7 @@ type VariedDateOpeningHours {
   openingHoursDetails: OpeningHoursDetails!
 }
 
-type Version {
+type Version @shareable {
   major: Int!
   minor: Int!
   build: Int!
@@ -852,15 +916,29 @@ enum ResourceOrderField {
   NAME
 }
 
+"The `DateTime` scalar type represents a date and time with time zone offset information."
+scalar DateTime
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
-directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+directive @cost(
+  "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
+  weight: String!
+) on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | ENUM
+  | INPUT_FIELD_DEFINITION
 
-directive @internal on FIELD_DEFINITION
+directive @internal on OBJECT | FIELD_DEFINITION
 
+"""
+The @lookup directive is used within a source schema to specify output fields
+that can be used by the distributed GraphQL executor to resolve an entity by
+a stable key.
+"""
 directive @lookup on FIELD_DEFINITION
 
-"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
-directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
-
-"The `DateTime` scalar represents an ISO-8601 compliant date time type."
-scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+directive @shareable repeatable on OBJECT | FIELD_DEFINITION

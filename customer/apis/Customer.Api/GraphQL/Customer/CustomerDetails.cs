@@ -6,11 +6,13 @@ using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
+using HotChocolate.Types.Composite;
 using CustomerBillingDetails = Customer.Api.GraphQL.Billing.CustomerBillingDetails;
 
 namespace Customer.Api.GraphQL.Customer;
 
 [GraphQLName("CustomerDetails")]
+[Shareable]
 public class CustomerDetails : Node
 {
     [GraphQLName("createdAt")] public DateTimeOffset CreatedAt { get; set; }

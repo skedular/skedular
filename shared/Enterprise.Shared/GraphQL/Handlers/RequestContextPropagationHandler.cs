@@ -31,12 +31,6 @@ public class RequestContextPropagationHandler(IHttpContextAccessor httpContextAc
                 {
                     httpRequestMessage.Headers.Add("X-Correlation-Id", correlationIdHeader.ToString());
                 }
-
-                var ssoCookiesHeader = httpRequest.Headers[Constants.OrganizationSsoCookieHeader];
-                if (!string.IsNullOrWhiteSpace(ssoCookiesHeader))
-                {
-                    httpRequestMessage.Headers.Add(Constants.OrganizationSsoCookieHeader, ssoCookiesHeader.ToString());
-                }
             }
 
             outboundRequestSnapshot = await BuildRequestSnapshotAsync(httpRequestMessage, cancellationToken);

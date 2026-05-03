@@ -3,13 +3,52 @@ schema {
   mutation: Mutation
 }
 
-type CdnFile {
+type Query {
+  product(id: String!): ProductDetails @cost(weight: "10")
+  productById(id: String!): ProductDetails @lookup @internal @cost(weight: "10")
+  productVersion(id: String!): ProductVersionDetails @cost(weight: "10")
+  productVersionById(id: String!): ProductVersionDetails
+    @lookup
+    @internal
+    @cost(weight: "10")
+  products(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: ProductWhereInput!
+    orderBy: [ProductOrderInput!]
+  ): ConnectionOfProductEdge! @cost(weight: "10")
+  marketplaceVersion: Version!
+  marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
+  currencies: [CurrencyDetails!]!
+  defaultMaxAllowedResourcesLockTimePaidViaCard: Int!
+  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  productPricingCadences: [ProductPricingCadenceDetails!]!
+  productPricingBillingModes: [ProductPricingBillingModeDetails!]!
+  paymentMethods: [PaymentMethodTypeDetails!]!
+  productPricingCancellationTypes: [ProductPricingCancellationTypeDetails!]!
+  productTypes: [ProductTypeDetails!]!
+}
+
+type Mutation {
+  addProduct(input: AddProductInput!): ProductPayload! @cost(weight: "10")
+  updateProduct(input: UpdateProductInput!): ProductPayload! @cost(weight: "10")
+  deleteProducts(input: DeleteProductsInput!): ProductsPayload!
+    @cost(weight: "10")
+  activateProducts(input: ActivateProductsInput!): ProductsPayload!
+    @cost(weight: "10")
+  deactivateProducts(input: DeactivateProductsInput!): ProductsPayload!
+    @cost(weight: "10")
+}
+
+type CdnFile @shareable {
   url: String!
   height: Int
   width: Int
 }
 
-type CdnImageFile {
+type CdnImageFile @shareable {
   original: CdnFile
   thumbnail: CdnFile
 }
@@ -20,12 +59,12 @@ type ConnectionOfProductEdge {
   totalCount: Int!
 }
 
-type CurrencyDetails {
+type CurrencyDetails @shareable {
   type: Currency!
   name: String!
 }
 
-type ListingMetadata {
+type ListingMetadata @shareable {
   about: String
   title: String
   subTitle: String
@@ -41,34 +80,26 @@ type Marketplace_OrganizationDetails {
   logoUrl: String
 }
 
-type Mutation {
-  addProduct(input: AddProductInput!): ProductPayload! @cost(weight: "10")
-  updateProduct(input: UpdateProductInput!): ProductPayload! @cost(weight: "10")
-  deleteProducts(input: DeleteProductsInput!): ProductsPayload! @cost(weight: "10")
-  activateProducts(input: ActivateProductsInput!): ProductsPayload! @cost(weight: "10")
-  deactivateProducts(input: DeactivateProductsInput!): ProductsPayload! @cost(weight: "10")
-}
-
-type OrganizationTagDetails {
+type OrganizationTagDetails @shareable {
   name: String!
   type: OrganizationTagType
   color: String
   id: ID!
 }
 
-type PageInfo {
+type PageInfo @shareable {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
   endCursor: String
 }
 
-type PaymentMethodTypeDetails {
+type PaymentMethodTypeDetails @shareable {
   type: PaymentMethod!
   name: String!
 }
 
-type ProductDetails {
+type ProductDetails @shareable {
   inactive: Boolean!
   type: ProductTypeDetails!
   currency: CurrencyDetails!
@@ -92,7 +123,7 @@ type ProductPayload {
   product: ProductDetails!
 }
 
-type ProductPricing {
+type ProductPricing @shareable {
   id: String!
   index: Int!
   listingMetadata: ListingMetadata!
@@ -122,7 +153,7 @@ type ProductPricingCadenceDetails {
   name: String!
 }
 
-type ProductPricingCancellationRefundRule {
+type ProductPricingCancellationRefundRule @shareable {
   minutesBefore: Int!
   refundPercentage: Int!
 }
@@ -132,12 +163,17 @@ type ProductPricingCancellationTypeDetails {
   name: String!
 }
 
+type ProductsPayload {
+  clientMutationId: String
+  products: [ProductDetails!]!
+}
+
 type ProductTypeDetails {
   type: ProductType!
   name: String!
 }
 
-type ProductVersionDetails {
+type ProductVersionDetails @shareable {
   inactive: Boolean!
   listingMetadata: ListingMetadata!
   type: ProductTypeDetails!
@@ -149,30 +185,7 @@ type ProductVersionDetails {
   id: ID!
 }
 
-type ProductsPayload {
-  clientMutationId: String
-  products: [ProductDetails!]!
-}
-
-type Query {
-  product(id: String!): ProductDetails @cost(weight: "10")
-  productById(id: String!): ProductDetails @lookup @internal @cost(weight: "10")
-  productVersion(id: String!): ProductVersionDetails @cost(weight: "10")
-  productVersionById(id: String!): ProductVersionDetails @lookup @internal @cost(weight: "10")
-  products(after: String first: Int before: String last: Int where: ProductWhereInput! orderBy: [ProductOrderInput!]): ConnectionOfProductEdge! @cost(weight: "10")
-  marketplaceVersion: Version!
-  marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
-  currencies: [CurrencyDetails!]!
-  defaultMaxAllowedResourcesLockTimePaidViaCard: Int!
-  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  productPricingCadences: [ProductPricingCadenceDetails!]!
-  productPricingBillingModes: [ProductPricingBillingModeDetails!]!
-  paymentMethods: [PaymentMethodTypeDetails!]!
-  productPricingCancellationTypes: [ProductPricingCancellationTypeDetails!]!
-  productTypes: [ProductTypeDetails!]!
-}
-
-type Version {
+type Version @shareable {
   major: Int!
   minor: Int!
   build: Int!
@@ -502,12 +515,29 @@ enum ProductType {
   EVENT
 }
 
+"The `Decimal` scalar type represents a decimal floating-point number with high precision."
+scalar Decimal
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/decimal.html")
+
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
-directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+directive @cost(
+  "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
+  weight: String!
+) on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | ENUM
+  | INPUT_FIELD_DEFINITION
 
-directive @internal on FIELD_DEFINITION
+directive @internal on OBJECT | FIELD_DEFINITION
 
+"""
+The @lookup directive is used within a source schema to specify output fields
+that can be used by the distributed GraphQL executor to resolve an entity by
+a stable key.
+"""
 directive @lookup on FIELD_DEFINITION
 
-"The `Decimal` scalar type represents a decimal floating-point number."
-scalar Decimal
+directive @shareable repeatable on OBJECT | FIELD_DEFINITION

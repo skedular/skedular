@@ -1,12 +1,12 @@
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using Enterprise.Shared.Metrics;
+using HotChocolate.Execution;
 using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.GraphQL;
 
-public class GraphqlErrorFilter(IOpenTelemetryInstrumentation meters, ILogger<GraphqlErrorFilter> logger)
-    : IErrorFilter, ITaggable<string>
+public class GraphqlErrorFilter(IOpenTelemetryInstrumentation meters, ILogger<GraphqlErrorFilter> logger) : IErrorFilter
 {
     private readonly Counter<long> _graphqlExceptionsCounter = meters.GetCounterByName<long>(MetricNames.GraphqlExceptionsCounter);
 
@@ -25,5 +25,5 @@ public class GraphqlErrorFilter(IOpenTelemetryInstrumentation meters, ILogger<Gr
         return error;
     }
 
-    public TagList GetTags(string errorTypeName) => new() { { "error-type", errorTypeName } };
+    private static TagList GetTags(string errorTypeName) => new() { { "error-type", errorTypeName } };
 }

@@ -1,6 +1,6 @@
 using HotChocolate;
-using HotChocolate.Fusion.SourceSchema.Types;
 using HotChocolate.Types;
+using HotChocolate.Types.Composite;
 using Location.Api.Mappers;
 using Location.Api.Services;
 

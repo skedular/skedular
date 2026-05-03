@@ -2,8 +2,8 @@ using Api.Shared.Services.Models;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using HotChocolate;
-using HotChocolate.Fusion.SourceSchema.Types;
 using HotChocolate.Types;
+using HotChocolate.Types.Composite;
 
 namespace Customer.Api.GraphQL.Customer;
 

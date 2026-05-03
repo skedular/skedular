@@ -7,8 +7,8 @@ using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Sanitization;
 using HotChocolate;
-using HotChocolate.Fusion.SourceSchema.Types;
 using HotChocolate.Types;
+using HotChocolate.Types.Composite;
 
 namespace Booking.Api.GraphQL.Booking;
 

@@ -4,6 +4,7 @@ using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
+using HotChocolate.Types.Composite;
 using Organization.Api.GraphQL.Analytics;
 using Organization.Api.GraphQL.Member;
 using Organization.Api.GraphQL.Offering;
@@ -20,6 +21,7 @@ using OrganizationTaxDetails = Organization.Api.GraphQL.TaxDetails.OrganizationT
 namespace Organization.Api.GraphQL.Organization;
 
 [GraphQLName("OrganizationDetails")]
+[Shareable]
 public class OrganizationDetails : Node
 {
     [GraphQLName("customDomain")] public string? CustomDomain { get; set; }
