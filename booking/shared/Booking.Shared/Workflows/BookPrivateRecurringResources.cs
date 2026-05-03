@@ -6,7 +6,7 @@ namespace Booking.Shared.Workflows;
 
 public record BookPrivateRecurringResourcesInput(string RecurringBookingId);
 
-public record BookPrivateRecurringResourcesState(ICollection<bool> UpdateQueue, bool RecurringBookingDeleted);
+public record BookPrivateRecurringResourcesState(IReadOnlyList<bool> UpdateQueue, bool RecurringBookingDeleted);
 
 public record PrivateRecurringBookingUpdatedArgs(string RecurringBookingId);
 

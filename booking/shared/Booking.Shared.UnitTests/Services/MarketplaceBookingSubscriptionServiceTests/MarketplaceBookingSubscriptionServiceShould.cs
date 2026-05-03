@@ -44,7 +44,7 @@ public class MarketplaceBookingSubscriptionServiceShould
 
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
-        A.CallTo(() => customerRepository.GetByIdsAsync(A<ICollection<string>>.That.Contains("customer-1"), true, cancellationToken))
+        A.CallTo(() => customerRepository.GetByIdsAsync(A<IReadOnlyList<string>>.That.Contains("customer-1"), true, cancellationToken))
             .Returns([customer]);
         A.CallTo(() => productVersionRepository.GetByIdAsync("product-version-1", cancellationToken))
             .Returns(productVersion);
@@ -345,7 +345,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         DateTimeOffset startedAt,
         DateTimeOffset? nextRenewalAt,
         ProductPricingCancellationPolicyType cancellationPolicyType,
-        ICollection<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
+        IReadOnlyList<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
         new()
         {
             Id = "subscription-1",

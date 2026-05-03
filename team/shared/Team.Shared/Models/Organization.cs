@@ -11,8 +11,8 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public Offering? Offering { get; set; }
     public OrganizationType Type { get; set; }
     public bool? IsOwnershipVerified { get; set; }
-    public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<Team> Teams { get; set; } = [];
-    public ICollection<Location> Locations { get; set; } = [];
+    public IReadOnlyList<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public IReadOnlyList<Team> Teams { get; set; } = [];
+    public IReadOnlyList<Location> Locations { get; set; } = [];
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
 }

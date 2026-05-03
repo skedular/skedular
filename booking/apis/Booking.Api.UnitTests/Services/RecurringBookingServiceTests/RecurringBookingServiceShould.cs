@@ -68,7 +68,7 @@ public class RecurringBookingServiceShould
         A.CallTo(() => cachedRecurringBookingService.GetByIdAsync(booking.Id, cancellationToken)).Returns(booking);
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "org-1" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "org-1" })),
                 null,
                 false,
                 false,
@@ -109,7 +109,7 @@ public class RecurringBookingServiceShould
                     criteria.OrganizationId == null &&
                     criteria.OrganizationCustomDomain == null &&
                     criteria.CustomerIds.SequenceEqual(searchCriteria.CustomerIds)),
-                A<ICollection<RecurringBookingOrder>>._,
+                A<IReadOnlyList<RecurringBookingOrder>>._,
                 A<RecurringBookingAccessScope>.That.Matches(scope =>
                     scope.OrganizationIds.SequenceEqual(new[] { "org-1" }) &&
                     scope.TeamIds.Count == 0),
@@ -149,7 +149,7 @@ public class RecurringBookingServiceShould
             sut.GetPaginatedRecurringBookingsAsync(new PaginationInputParam(null, null, null, null), searchCriteria, [], false, cancellationToken));
     }
 
-    private static RecurringBookingSearchCriteria CreateSearchCriteria(ICollection<string> customerIds, string? organizationId = null) =>
+    private static RecurringBookingSearchCriteria CreateSearchCriteria(IReadOnlyList<string> customerIds, string? organizationId = null) =>
         new(
             null,
             null,

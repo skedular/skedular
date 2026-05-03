@@ -7,13 +7,13 @@ namespace Testing.Shared.Database.TestSupport;
 public class ParentEntity : EntityBase
 {
     public string? Name { get; set; }
-    public ICollection<SpecEntity> Children { get; set; } = [];
+    public IReadOnlyList<SpecEntity> Children { get; set; } = [];
 }
 
 public class OwnerEntity : EntityBase
 {
     public string? Name { get; set; }
-    public ICollection<SpecEntity> OwnedEntities { get; set; } = [];
+    public IReadOnlyList<SpecEntity> OwnedEntities { get; set; } = [];
 }
 
 public class SpecEntity : EntityBaseWithDeleted

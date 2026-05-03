@@ -7,13 +7,13 @@ namespace Organization.Api.Services;
 
 public interface IIndustryMainCategoryService
 {
-    Task<ICollection<IndustryMainCategory>> GetAllAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<IndustryMainCategory>> GetAllAsync(CancellationToken cancellationToken);
 }
 
 public class IndustryMainCategoryService(IRepositoryFactory repositoryFactory, IMapper mapper, IMemoryCache memoryCache, TimeProvider timeProvider)
     : IIndustryMainCategoryService
 {
-    public async Task<ICollection<IndustryMainCategory>> GetAllAsync(CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<IndustryMainCategory>> GetAllAsync(CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync("organization-industry-main-categories",
             async cacheEntry =>
             {

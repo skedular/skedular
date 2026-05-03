@@ -191,7 +191,7 @@ public class LocationResourceService(
         };
     }
 
-    private void Cache(ICollection<Resource> resources)
+    private void Cache(IReadOnlyList<Resource> resources)
     {
         foreach (var resource in resources)
         {

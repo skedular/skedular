@@ -345,7 +345,7 @@ public class TeamService(
         return result;
     }
 
-    private void Cache(ICollection<Team> teams)
+    private void Cache(IReadOnlyList<Team> teams)
     {
         foreach (var team in teams)
         {

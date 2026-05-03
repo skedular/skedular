@@ -49,25 +49,25 @@ public interface IMapper
     Shared.Database.Entities.Location MapTo(
         Shared.Models.Location src,
         Organization organization,
-        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
+        IReadOnlyList<Shared.Database.Entities.OrganizationTag> organizationTags);
 
     Shared.Database.Entities.Location MergeTo(
         Shared.Models.Location src,
         Shared.Database.Entities.Location dest,
-        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
+        IReadOnlyList<Shared.Database.Entities.OrganizationTag> organizationTags);
 
     Shared.Models.Resource MapTo(Resource src);
 
     Resource MapTo(
         Shared.Models.Resource src,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
+        IReadOnlyList<Shared.Database.Entities.OrganizationTag> organizationTags);
 
     Resource MergeTo(
         Shared.Models.Resource src,
         Resource dest,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
+        IReadOnlyList<Shared.Database.Entities.OrganizationTag> organizationTags);
 
     Shared.Models.Resource MapTo(Resource src, Shared.Models.Location location);
     LocationDetails? MapTo(Shared.Models.Location? src);
@@ -104,13 +104,13 @@ public interface IMapper
     Shared.Database.Entities.FloorPlan MapTo(
         FloorPlan src,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.ResourcePosition>? resourcePositions);
+        IReadOnlyList<Shared.Database.Entities.ResourcePosition>? resourcePositions);
 
     Shared.Database.Entities.FloorPlan MergeTo(
         FloorPlan src,
         Shared.Database.Entities.FloorPlan dest,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.ResourcePosition>? resourcePositions);
+        IReadOnlyList<Shared.Database.Entities.ResourcePosition>? resourcePositions);
 
     FloorPlan MapTo(Shared.Database.Entities.FloorPlan src);
     FloorPlan MapTo(AddFloorPlanInput src);
@@ -175,7 +175,7 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Location MapTo(
         Shared.Models.Location src,
         Organization organization,
-        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags) =>
+        IReadOnlyList<Shared.Database.Entities.OrganizationTag> organizationTags) =>
         new()
         {
             Id = src.Id,
@@ -184,10 +184,10 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             Type = src.Type.ToLocationType(),
             ExtraMetadata = src.ExtraMetadata,
-            FeatureImages = src.FeatureImages,
+            FeatureImages = src.FeatureImages.ToList(),
             OpeningHours = src.OpeningHours,
             Organization = organization,
-            OrganizationTags = organizationTags,
+            OrganizationTags = organizationTags.ToList(),
             UniqueClaimCode = src.UniqueClaimCode,
             ContactedViaEmail = src.ContactedViaEmail,
             ContactedViaSms = src.ContactedViaSms,
@@ -198,7 +198,7 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Location MergeTo(
         Shared.Models.Location src,
         Shared.Database.Entities.Location dest,
-        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags)
+        IReadOnlyList<Shared.Database.Entities.OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -206,9 +206,9 @@ public class Mapper : IMapper
         dest.Timezone = src.Timezone;
         dest.Type = src.Type.ToLocationType();
         dest.ExtraMetadata = src.ExtraMetadata;
-        dest.FeatureImages = src.FeatureImages;
+        dest.FeatureImages = src.FeatureImages.ToList();
         dest.OpeningHours = src.OpeningHours;
-        dest.OrganizationTags = organizationTags;
+        dest.OrganizationTags = organizationTags.ToList();
         dest.UniqueClaimCode = src.UniqueClaimCode;
         dest.ContactedViaEmail = src.ContactedViaEmail;
         dest.ContactedViaSms = src.ContactedViaSms;
@@ -273,14 +273,14 @@ public class Mapper : IMapper
     public Resource MapTo(
         Shared.Models.Resource src,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags) =>
+        IReadOnlyList<Shared.Database.Entities.OrganizationTag> organizationTags) =>
         MergeTo(src, new Resource(), location, organizationTags);
 
     public Resource MergeTo(
         Shared.Models.Resource src,
         Resource dest,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags)
+        IReadOnlyList<Shared.Database.Entities.OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -290,7 +290,7 @@ public class Mapper : IMapper
         dest.Capacity = src.Capacity;
         dest.IsAvailableHoursOverridden = src.IsAvailableHoursOverridden;
         dest.AvailableHours = src.AvailableHours;
-        dest.OrganizationTags = organizationTags;
+        dest.OrganizationTags = organizationTags.ToList();
         dest.Location = location;
         return dest;
     }
@@ -642,14 +642,14 @@ public class Mapper : IMapper
     public Shared.Database.Entities.FloorPlan MapTo(
         FloorPlan src,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.ResourcePosition>? resourcePositions) =>
+        IReadOnlyList<Shared.Database.Entities.ResourcePosition>? resourcePositions) =>
         MergeTo(src, new Shared.Database.Entities.FloorPlan(), location, resourcePositions);
 
     public Shared.Database.Entities.FloorPlan MergeTo(
         FloorPlan src,
         Shared.Database.Entities.FloorPlan dest,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.ResourcePosition>? resourcePositions)
+        IReadOnlyList<Shared.Database.Entities.ResourcePosition>? resourcePositions)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -658,7 +658,7 @@ public class Mapper : IMapper
 
         if (resourcePositions is not null)
         {
-            dest.ResourcePositions = resourcePositions;
+            dest.ResourcePositions = resourcePositions.ToList();
         }
 
         return dest;

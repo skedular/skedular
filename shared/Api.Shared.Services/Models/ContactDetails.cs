@@ -1,3 +1,3 @@
 namespace Api.Shared.Services.Models;
 
-public record ContactDetails(ICollection<string>? ContactPeople, ICollection<string>? ContactEmails, ICollection<string>? ContactPhones);
+public record ContactDetails(IReadOnlyList<string>? ContactPeople, IReadOnlyList<string>? ContactEmails, IReadOnlyList<string>? ContactPhones);

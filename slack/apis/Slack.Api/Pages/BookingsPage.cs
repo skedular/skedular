@@ -365,7 +365,7 @@ public class BookingsPage(
         var bookings = bookingConnection.Edges.Select(item => item.Node).ToList();
         var myBookings = response.Last().Edges.Select(item => item.Node).ToList();
 
-        ICollection<Block>[] blocks =
+        IReadOnlyList<Block>[] blocks =
         [
             GetTitle(),
             GetToolbar(commonPageContext.PageContext, workspaceMember.Timezone),
@@ -406,12 +406,12 @@ public class BookingsPage(
             .RegisterBlockActionHandler<ButtonAction, BookingsPage>(PreviousPageBookings)
             .RegisterBlockActionHandler<CheckboxGroupAction, BookingsPage>(IncludeMyBookingsOnly);
 
-    private static ICollection<Block> GetTitle() =>
+    private static IReadOnlyList<Block> GetTitle() =>
     [
         new SectionBlock { Text = "*Bookings*".ToMarkdown() }
     ];
 
-    private ICollection<Block> GetToolbar(PageContext pageContext, string timezone)
+    private IReadOnlyList<Block> GetToolbar(PageContext pageContext, string timezone)
     {
         var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, timezone);
         var addBookingButton = bookingComponents.GetAddBookingButton(pageContext);

@@ -6,7 +6,7 @@ using Temporalio.Workflows;
 
 namespace Booking.Shared.Workflows;
 
-public record PayBookingViaCardInput(string BookingId, DateTimeOffset ExpiryDate, ICollection<string> InvoiceEmailList);
+public record PayBookingViaCardInput(string BookingId, DateTimeOffset ExpiryDate, IReadOnlyList<string> InvoiceEmailList);
 
 public record PayBookingViaCardState(string? PaymentStatus, bool BookingDeleted);
 

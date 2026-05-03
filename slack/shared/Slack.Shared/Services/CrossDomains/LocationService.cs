@@ -15,7 +15,7 @@ namespace Slack.Shared.Services.CrossDomains;
 
 public interface ILocationService
 {
-    Task<ICollection<Location>> AdminGetAllLocationsAsync(string organizationId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Location>> AdminGetAllLocationsAsync(string organizationId, CancellationToken cancellationToken);
     Task<Location> AdminGetAsync(string locationId, CancellationToken cancellationToken);
     Task<Location> AdminAddAsync(Location location, CancellationToken cancellationToken);
     Task<Location> GetAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken);
@@ -44,7 +44,7 @@ public class LocationService(
 {
     private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
 
-    public async Task<ICollection<Location>> AdminGetAllLocationsAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Location>> AdminGetAllLocationsAsync(string organizationId, CancellationToken cancellationToken)
     {
         var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
         {
@@ -231,7 +231,7 @@ public class LocationService(
         return result;
     }
 
-    private void Cache(ICollection<Location> locations)
+    private void Cache(IReadOnlyList<Location> locations)
     {
         foreach (var location in locations)
         {

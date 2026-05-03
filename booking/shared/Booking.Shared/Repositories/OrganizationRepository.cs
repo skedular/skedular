@@ -13,7 +13,7 @@ public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
 
-    Task<ICollection<Organization>> GetByCustomerIdAsync(
+    Task<IReadOnlyList<Organization>> GetByCustomerIdAsync(
         string customerId,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
@@ -33,9 +33,9 @@ public interface IOrganizationRepository : IRepository<Organization>
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Organization>> GetByIdsOrCustomDomainsAsync(
-        ICollection<string>? ids,
-        ICollection<string>? customDomains,
+    Task<IReadOnlyList<Organization>> GetByIdsOrCustomDomainsAsync(
+        IReadOnlyList<string>? ids,
+        IReadOnlyList<string>? customDomains,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
@@ -44,11 +44,11 @@ public interface IOrganizationRepository : IRepository<Organization>
     Organization Remove(Organization organization);
 }
 
-internal static class OrganizationExtensions
+public static class OrganizationExtensions
 {
     extension(IQueryable<Organization> originalQuery)
     {
-        internal IIncludableQueryable<Organization, IEnumerable<Customer>> AddDependentObjects(
+        public IIncludableQueryable<Organization, IEnumerable<Customer>> AddDependentObjects(
             bool isTracked,
             bool includeDeletedOrganizationMembers,
             bool includeDeletedOrganizationTags) =>
@@ -76,7 +76,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
         return (await GetByIdOrCustomDomainAsync(id, null, true, true, cancellationToken))!;
     }
 
-    public async Task<ICollection<Organization>> GetByCustomerIdAsync(
+    public async Task<IReadOnlyList<Organization>> GetByCustomerIdAsync(
         string customerId,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
@@ -139,9 +139,9 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
         throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
-    public async Task<ICollection<Organization>> GetByIdsOrCustomDomainsAsync(
-        ICollection<string>? ids,
-        ICollection<string>? customDomains,
+    public async Task<IReadOnlyList<Organization>> GetByIdsOrCustomDomainsAsync(
+        IReadOnlyList<string>? ids,
+        IReadOnlyList<string>? customDomains,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken)

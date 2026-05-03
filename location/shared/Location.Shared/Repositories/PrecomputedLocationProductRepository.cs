@@ -9,16 +9,16 @@ namespace Location.Shared.Repositories;
 
 public interface IPrecomputedLocationProductRepository : IRepository<PrecomputedLocationProduct>
 {
-    Task<ICollection<PrecomputedLocationProduct>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<PrecomputedLocationProduct>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
     PrecomputedLocationProduct Add(PrecomputedLocationProduct precomputedLocationProduct);
-    void RemoveRange(ICollection<PrecomputedLocationProduct> precomputedLocationProducts);
+    void RemoveRange(IReadOnlyList<PrecomputedLocationProduct> precomputedLocationProducts);
 }
 
-internal static class PrecomputedLocationProductExtensions
+public static class PrecomputedLocationProductExtensions
 {
     extension(IQueryable<PrecomputedLocationProduct> originalQuery)
     {
-        internal IIncludableQueryable<PrecomputedLocationProduct, Product> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<PrecomputedLocationProduct, Product> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Organization)
             .Include(query => query.Location)
@@ -33,7 +33,8 @@ internal static class PrecomputedLocationProductExtensions
 public class PrecomputedLocationProductRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, PrecomputedLocationProduct>(dbContext, timeProvider), IPrecomputedLocationProductRepository
 {
-    public async Task<ICollection<PrecomputedLocationProduct>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<PrecomputedLocationProduct>>
+        GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.PrecomputedLocationProduct
             .Where(query => query.Organization.Id == organizationId)
             .AddDependentObjects(true)
@@ -46,6 +47,6 @@ public class PrecomputedLocationProductRepository(LocationDbContext dbContext, T
         return DbContext.PrecomputedLocationProduct.Add(precomputedLocationProduct).Entity;
     }
 
-    public void RemoveRange(ICollection<PrecomputedLocationProduct> precomputedLocationProducts) =>
+    public void RemoveRange(IReadOnlyList<PrecomputedLocationProduct> precomputedLocationProducts) =>
         DbContext.PrecomputedLocationProduct.RemoveRange(precomputedLocationProducts);
 }

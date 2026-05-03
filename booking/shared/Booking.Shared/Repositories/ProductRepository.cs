@@ -17,11 +17,11 @@ public interface IProductRepository : IRepository<Product>
     Product Remove(Product product);
 }
 
-internal static class ProductExtensions
+public static class ProductExtensions
 {
     extension(IQueryable<Product> originalQuery)
     {
-        internal IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects() =>
+        public IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects() =>
             originalQuery
                 .Include(query => query.Organization)
                 .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))

@@ -189,7 +189,7 @@ public class CreateBookingCancellationRefundAsyncShould
         string marketplaceBookingId,
         DateTimeOffset from,
         ProductPricingCancellationPolicyType cancellationPolicyType,
-        ICollection<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
+        IReadOnlyList<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
         new()
         {
             Id = "booking-1",
@@ -208,7 +208,7 @@ public class CreateBookingCancellationRefundAsyncShould
 
     private static ProductPricing CreatePricing(
         ProductPricingCancellationPolicyType cancellationPolicyType,
-        ICollection<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
+        IReadOnlyList<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
         new(
             "pricing-1",
             0,

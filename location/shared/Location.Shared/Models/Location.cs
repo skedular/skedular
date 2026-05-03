@@ -9,7 +9,7 @@ public class Location : ModelBaseWithDeleted
     public string? Timezone { get; set; }
     public LocationType Type { get; set; }
     public OpeningHours? OpeningHours { get; set; }
-    public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
+    public IReadOnlyList<CdnImageFile> FeatureImages { get; set; } = [];
     public LocationExtraMetadata? ExtraMetadata { get; set; }
     public string? UniqueClaimCode { get; set; }
     public bool ContactedViaEmail { get; set; }
@@ -19,32 +19,32 @@ public class Location : ModelBaseWithDeleted
     public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
 
     public Organization Organization { get; set; } = new();
-    public ICollection<Resource> Resources { get; set; } = [];
-    public ICollection<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];
-    public ICollection<DailyRoomCountRecording> DailyRoomCountRecordings { get; set; } = [];
-    public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
+    public IReadOnlyList<Resource> Resources { get; set; } = [];
+    public IReadOnlyList<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];
+    public IReadOnlyList<DailyRoomCountRecording> DailyRoomCountRecordings { get; set; } = [];
+    public IReadOnlyList<OrganizationTag> OrganizationTags { get; set; } = [];
 
-    public ICollection<OrganizationTag> CustomTags =>
+    public IReadOnlyList<OrganizationTag> CustomTags =>
         Resources
             .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom))
             .GroupBy(item => item.Id)
             .Select(group => group.First())
             .ToList();
 
-    public ICollection<OrganizationTag> Zones =>
+    public IReadOnlyList<OrganizationTag> Zones =>
         Resources.SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone))
             .GroupBy(item => item.Id)
             .Select(group => group.First())
             .ToList();
 
-    public ICollection<OrganizationTag> SpaceTypes =>
+    public IReadOnlyList<OrganizationTag> SpaceTypes =>
         OrganizationTags.Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => item.Type == tagType)).ToList();
 
-    public ICollection<OrganizationTag> Amenities =>
+    public IReadOnlyList<OrganizationTag> Amenities =>
         OrganizationTags.Where(item => OrganizationTagTypeConstants.Amenities.Any(tagType => item.Type == tagType)).ToList();
 
-    public ICollection<FloorPlan> FloorPlans { get; set; } = [];
+    public IReadOnlyList<FloorPlan> FloorPlans { get; set; } = [];
     public LocationPhysicalAddress? PhysicalAddress { get; set; }
     public Permissions Permissions { get; set; } = new();
-    public ICollection<PrecomputedLocationProduct> PrecomputedLocationProducts { get; set; } = [];
+    public IReadOnlyList<PrecomputedLocationProduct> PrecomputedLocationProducts { get; set; } = [];
 }

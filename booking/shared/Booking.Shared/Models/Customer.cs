@@ -5,28 +5,28 @@ namespace Booking.Shared.Models;
 
 public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
 {
-    public ICollection<Identity> Identities { get; set; } = [];
-    public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<TeamMember> TeamMembers { get; set; } = [];
+    public IReadOnlyList<Identity> Identities { get; set; } = [];
+    public IReadOnlyList<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public IReadOnlyList<TeamMember> TeamMembers { get; set; } = [];
     public Organization? DefaultOrganization { get; set; }
-    public ICollection<Location> PreferredLocations { get; set; } = [];
-    public ICollection<Resource> PreferredResources { get; set; } = [];
-    public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
-    public ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
-    public ICollection<Booking> InvolvedBookings { get; set; } = [];
-    public ICollection<RecurringBooking> InvolvedRecurringBooking { get; set; } = [];
-    public ICollection<MarketplaceBooking> PaidMarketplaceBookings { get; set; } = [];
-    public ICollection<Booking> CreatedBookings { get; set; } = [];
-    public ICollection<Booking> LastModifiedBookings { get; set; } = [];
-    public ICollection<Booking> DeletedBookings { get; set; } = [];
-    public ICollection<RecurringBooking> CreatedRecurringBookings { get; set; } = [];
-    public ICollection<RecurringBooking> LastModifiedRecurringBookings { get; set; } = [];
-    public ICollection<RecurringBooking> DeletedRecurringBookings { get; set; } = [];
-    public ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
-    public ICollection<MarketplaceBookingSubscription> CreatedMarketplaceBookingSubscriptions { get; set; } = [];
-    public ICollection<MarketplaceBookingSubscription> LastModifiedMarketplaceBookingSubscriptions { get; set; } = [];
-    public ICollection<MarketplaceBookingSubscription> DeletedMarketplaceBookingSubscriptions { get; set; } = [];
-    public ICollection<MarketplaceBookingSubscription> InvolvedMarketplaceBookingSubscription { get; set; } = [];
+    public IReadOnlyList<Location> PreferredLocations { get; set; } = [];
+    public IReadOnlyList<Resource> PreferredResources { get; set; } = [];
+    public IReadOnlyList<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
+    public IReadOnlyList<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
+    public IReadOnlyList<Booking> InvolvedBookings { get; set; } = [];
+    public IReadOnlyList<RecurringBooking> InvolvedRecurringBooking { get; set; } = [];
+    public IReadOnlyList<MarketplaceBooking> PaidMarketplaceBookings { get; set; } = [];
+    public IReadOnlyList<Booking> CreatedBookings { get; set; } = [];
+    public IReadOnlyList<Booking> LastModifiedBookings { get; set; } = [];
+    public IReadOnlyList<Booking> DeletedBookings { get; set; } = [];
+    public IReadOnlyList<RecurringBooking> CreatedRecurringBookings { get; set; } = [];
+    public IReadOnlyList<RecurringBooking> LastModifiedRecurringBookings { get; set; } = [];
+    public IReadOnlyList<RecurringBooking> DeletedRecurringBookings { get; set; } = [];
+    public IReadOnlyList<StripeCustomer> StripeCustomers { get; set; } = [];
+    public IReadOnlyList<MarketplaceBookingSubscription> CreatedMarketplaceBookingSubscriptions { get; set; } = [];
+    public IReadOnlyList<MarketplaceBookingSubscription> LastModifiedMarketplaceBookingSubscriptions { get; set; } = [];
+    public IReadOnlyList<MarketplaceBookingSubscription> DeletedMarketplaceBookingSubscriptions { get; set; } = [];
+    public IReadOnlyList<MarketplaceBookingSubscription> InvolvedMarketplaceBookingSubscription { get; set; } = [];
     public string DisplayableName => this.ToDisplayableName();
     public CustomerType? Type { get; set; }
     public string? Designation { get; set; }

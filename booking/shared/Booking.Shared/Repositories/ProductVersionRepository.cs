@@ -14,11 +14,11 @@ public interface IProductVersionRepository : IRepository<ProductVersion>
     ProductVersion Update(ProductVersion product);
 }
 
-internal static class ProductVersionExtensions
+public static class ProductVersionExtensions
 {
     extension(IQueryable<ProductVersion> originalQuery)
     {
-        internal IIncludableQueryable<ProductVersion, StripePrice?> AddDependentObjects() =>
+        public IIncludableQueryable<ProductVersion, StripePrice?> AddDependentObjects() =>
             originalQuery
                 .AsSingleQuery()
                 .Include(query => query.Product)

@@ -4,7 +4,7 @@ using Temporalio.Workflows;
 
 namespace Booking.Shared.Workflows;
 
-public record GenerateInitialArrearsRecurringBookingInvoiceInput(string RecurringBookingId, ICollection<string> InvoiceEmailList);
+public record GenerateInitialArrearsRecurringBookingInvoiceInput(string RecurringBookingId, IReadOnlyList<string> InvoiceEmailList);
 
 [Workflow]
 public class GenerateInitialArrearsRecurringBookingInvoice

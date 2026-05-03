@@ -11,6 +11,6 @@ public class OrganizationOffering : ModelBaseWithDeleted
     public bool AutoRenew { get; set; }
     public int UnitPrice { get; set; }
     public Organization Organization { get; set; } = new();
-    public ICollection<OrganizationOfferingActiveMember> OrganizationOfferingActiveMembers { get; set; } = [];
+    public IReadOnlyList<OrganizationOfferingActiveMember> OrganizationOfferingActiveMembers { get; set; } = [];
     public OrganizationStripePaymentIntent? OrganizationStripePaymentIntent { get; set; }
 }

@@ -14,16 +14,16 @@ public interface IPrivateRecurringBookingService
     Task<RecurringBooking> AddAsync(
         RecurringBooking recurringBooking,
         Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         CancellationToken cancellationToken);
 
     Task<RecurringBooking> UpdateAsync(
         RecurringBooking recurringBooking,
         Database.Entities.RecurringBooking existingRecurringBooking,
         Customer lastModifiedByCustomer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         CancellationToken cancellationToken);
 
     Task<RecurringBooking> DeleteAsync(
@@ -41,8 +41,8 @@ public class PrivateRecurringBookingService(
     public async Task<RecurringBooking> AddAsync(
         RecurringBooking recurringBooking,
         Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         CancellationToken cancellationToken)
     {
         var customerIds = recurringBooking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
@@ -93,8 +93,8 @@ public class PrivateRecurringBookingService(
         RecurringBooking recurringBooking,
         Database.Entities.RecurringBooking existingRecurringBooking,
         Customer lastModifiedByCustomer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         CancellationToken cancellationToken)
     {
         if (existingRecurringBooking.Channel.ToBookingChannel() != BookingChannel.Private)

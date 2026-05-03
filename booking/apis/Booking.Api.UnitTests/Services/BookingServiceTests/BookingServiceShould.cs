@@ -67,7 +67,7 @@ public class BookingServiceShould
         A.CallTo(() => cachedBookingService.GetByIdAsync(booking.Id, cancellationToken)).Returns(booking);
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "org-1" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "org-1" })),
                 null,
                 false,
                 false,
@@ -108,7 +108,7 @@ public class BookingServiceShould
                     criteria.OrganizationId == null &&
                     criteria.OrganizationCustomDomain == null &&
                     criteria.CustomerIds.SequenceEqual(searchCriteria.CustomerIds)),
-                A<ICollection<BookingOrder>>._,
+                A<IReadOnlyList<BookingOrder>>._,
                 A<BookingAccessScope>.That.Matches(scope =>
                     scope.OrganizationIds.SequenceEqual(new[] { "org-1" }) &&
                     scope.LocationIds.Count == 0 &&
@@ -171,7 +171,7 @@ public class BookingServiceShould
                     criteria.OrganizationId == null &&
                     criteria.OrganizationCustomDomain == null &&
                     criteria.CustomerIds.SequenceEqual(searchCriteria.CustomerIds)),
-                A<ICollection<BookingOrder>>._,
+                A<IReadOnlyList<BookingOrder>>._,
                 A<BookingAccessScope>.That.Matches(scope =>
                     scope.OrganizationIds.SequenceEqual(new[] { "org-1" }) &&
                     scope.LocationIds.Count == 0 &&
@@ -185,7 +185,7 @@ public class BookingServiceShould
         result.Item3.ShouldBe(0);
     }
 
-    private static BookingSearchCriteria CreateSearchCriteria(ICollection<string> customerIds, string? organizationId = null) =>
+    private static BookingSearchCriteria CreateSearchCriteria(IReadOnlyList<string> customerIds, string? organizationId = null) =>
         new(
             null,
             null,

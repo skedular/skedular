@@ -17,5 +17,5 @@ public class OrganizationStripePaymentMethod : ModelBaseWithDeleted
     public string? CardLastFourDigit { get; set; }
 
     public Organization? Organization { get; set; }
-    public ICollection<OrganizationStripePaymentIntent> OrganizationStripePaymentIntents { get; set; } = [];
+    public IReadOnlyList<OrganizationStripePaymentIntent> OrganizationStripePaymentIntents { get; set; } = [];
 }

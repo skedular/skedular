@@ -27,7 +27,7 @@ public interface IMapper
         Shared.Database.Entities.Location dest,
         Shared.Database.Entities.Organization organization);
 
-    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities);
+    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, IReadOnlyList<Identity> identities);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
 
@@ -58,7 +58,7 @@ public class Mapper : IMapper
     {
         var customer = src.Data.Customer;
         var deletedAt = customer.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         return new Customer
         {
@@ -85,7 +85,7 @@ public class Mapper : IMapper
     {
         var organizationAfterState = src.Data.Organization;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         var organization = new Organization
         {
@@ -153,7 +153,7 @@ public class Mapper : IMapper
     {
         var location = src.Data.Location;
         var deletedAt = location.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         return new Location
         {
@@ -175,7 +175,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities)
+    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, IReadOnlyList<Identity> identities)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -183,7 +183,7 @@ public class Mapper : IMapper
         dest.MiddleName = src.MiddleName;
         dest.FamilyName = src.FamilyName;
         dest.Type = src.Type.ToNullableCustomerType();
-        dest.Identities = identities;
+        dest.Identities = identities.ToList();
         return dest;
     }
 

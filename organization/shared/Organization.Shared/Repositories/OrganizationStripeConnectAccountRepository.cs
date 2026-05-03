@@ -15,30 +15,30 @@ public interface IOrganizationStripeConnectAccountRepository : IRepository<Organ
 {
     Task<OrganizationStripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount?> GetByStripeAccountIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<OrganizationStripeConnectAccount>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<OrganizationStripeConnectAccount>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     OrganizationStripeConnectAccount Add(OrganizationStripeConnectAccount stripeConnectAccount);
     OrganizationStripeConnectAccount Update(OrganizationStripeConnectAccount stripeConnectAccount);
     OrganizationStripeConnectAccount Remove(OrganizationStripeConnectAccount stripeConnectAccount);
-    void RemoveRange(ICollection<OrganizationStripeConnectAccount> organizationStripeConnectAccounts);
+    void RemoveRange(IReadOnlyList<OrganizationStripeConnectAccount> organizationStripeConnectAccounts);
 
-    Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
-        ICollection<OrganizationStripeConnectAccountOrder> orderByFields,
+        IReadOnlyList<OrganizationStripeConnectAccountOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
-internal static class OrganizationStripeConnectAccountExtensions
+public static class OrganizationStripeConnectAccountExtensions
 {
     extension(IQueryable<OrganizationStripeConnectAccount> originalQuery)
     {
-        internal IIncludableQueryable<OrganizationStripeConnectAccount, Database.Entities.Organization> AddDependentObjects() =>
+        public IIncludableQueryable<OrganizationStripeConnectAccount, Database.Entities.Organization> AddDependentObjects() =>
             originalQuery
                 .AsSingleQuery()
                 .Include(query => query.OrganizationStripeConnectAccountAuthorization)
                 .Include(query => query.Organization);
 
-        internal IQueryable<OrganizationStripeConnectAccount> AddSearchCriteria(OrganizationStripeConnectAccountSearchCriteria searchCriteria)
+        public IQueryable<OrganizationStripeConnectAccount> AddSearchCriteria(OrganizationStripeConnectAccountSearchCriteria searchCriteria)
         {
             if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
             {
@@ -87,7 +87,8 @@ public class OrganizationStripeConnectAccountRepository(OrganizationDbContext db
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.StripeAccountId == id, cancellationToken);
 
-    public async Task<ICollection<OrganizationStripeConnectAccount>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<OrganizationStripeConnectAccount>>
+        GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken) =>
         await DbContext.OrganizationStripeConnectAccount.Where(query => ids.Contains(query.Id)).AddDependentObjects().ToListAsync(cancellationToken);
 
     public OrganizationStripeConnectAccount Add(OrganizationStripeConnectAccount stripeConnectAccount)
@@ -111,17 +112,17 @@ public class OrganizationStripeConnectAccountRepository(OrganizationDbContext db
         return DbContext.OrganizationStripeConnectAccount.Update(stripeConnectAccount).Entity;
     }
 
-    public void RemoveRange(ICollection<OrganizationStripeConnectAccount> organizationStripeConnectAccounts)
+    public void RemoveRange(IReadOnlyList<OrganizationStripeConnectAccount> organizationStripeConnectAccounts)
     {
         var now = TimeProvider.GetUtcNow();
         organizationStripeConnectAccounts.ForEach(organizationStripeConnectAccount => organizationStripeConnectAccount.DeletedAt = now);
         DbContext.OrganizationStripeConnectAccount.UpdateRange(organizationStripeConnectAccounts);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
-        ICollection<OrganizationStripeConnectAccountOrder> orderByFields,
+        IReadOnlyList<OrganizationStripeConnectAccountOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.OrganizationStripeConnectAccount
             .AddSearchCriteria(searchCriteria)
@@ -129,7 +130,7 @@ public class OrganizationStripeConnectAccountRepository(OrganizationDbContext db
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
     private static List<KeysetPaginationField<OrganizationStripeConnectAccount>> GetPaginationFields(
-        ICollection<OrganizationStripeConnectAccountOrder> orderByFields)
+        IReadOnlyList<OrganizationStripeConnectAccountOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

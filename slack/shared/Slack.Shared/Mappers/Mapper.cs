@@ -47,7 +47,7 @@ public interface IMapper
     Workspace MergeToEntity(SlackNet.Team src, Workspace dest);
     Admin_AddIdentityInput MapToAddIdentityInput(WorkspaceMember src, string customerId);
     Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId);
-    Admin_AddInput MapTo(WorkspaceMember src, string customerId, string defaultOrganizationId, ICollection<string> preferredLocationIds);
+    Admin_AddInput MapTo(WorkspaceMember src, string customerId, string defaultOrganizationId, IReadOnlyList<string> preferredLocationIds);
     Customer? MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer? src);
     Organization MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization src);
     Location MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Location src);
@@ -213,7 +213,7 @@ public class Mapper : IMapper
     public Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
 
-    public Admin_AddInput MapTo(WorkspaceMember src, string customerId, string defaultOrganizationId, ICollection<string> preferredLocationIds)
+    public Admin_AddInput MapTo(WorkspaceMember src, string customerId, string defaultOrganizationId, IReadOnlyList<string> preferredLocationIds)
     {
         var input = new Admin_AddInput
         {

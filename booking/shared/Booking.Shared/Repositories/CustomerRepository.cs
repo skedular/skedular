@@ -16,16 +16,16 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<Customer?> GetMinimalByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
-    Task<ICollection<Customer>> GetByIdsAsync(ICollection<string> ids, bool includeActiveItemsOnly, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Customer>> GetByIdsAsync(IReadOnlyList<string> ids, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Customer Update(Customer customer);
     Customer Remove(Customer customer);
 }
 
-internal static class CustomerExtensions
+public static class CustomerExtensions
 {
     extension(IQueryable<Customer> originalQuery)
     {
-        internal IIncludableQueryable<Customer, Organization?> AddDependentObjects(bool isTracked, bool includeActiveItemsOnly) =>
+        public IIncludableQueryable<Customer, Organization?> AddDependentObjects(bool isTracked, bool includeActiveItemsOnly) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Identities)
             .Include(query => query.DefaultOrganization)
@@ -84,8 +84,8 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
                 query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);
 
-    public async Task<ICollection<Customer>> GetByIdsAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<Customer>> GetByIdsAsync(
+        IReadOnlyList<string> ids,
         bool includeActiveItemsOnly,
         CancellationToken cancellationToken) =>
         await DbContext.Customer

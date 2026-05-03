@@ -13,8 +13,8 @@ public interface IWorkspaceChannelRepository : IRepository<WorkspaceChannel>
     WorkspaceChannel Add(WorkspaceChannel workspaceChannel);
     WorkspaceChannel Update(WorkspaceChannel workspaceChannel);
     WorkspaceChannel Remove(WorkspaceChannel workspaceChannel);
-    void RemoveRange(ICollection<WorkspaceChannel> workspaceChannels);
-    Task<ICollection<WorkspaceChannel>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken);
+    void RemoveRange(IReadOnlyList<WorkspaceChannel> workspaceChannels);
+    Task<IReadOnlyList<WorkspaceChannel>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken);
 }
 
 public class WorkspaceChannelRepository(SlackDbContext dbContext, TimeProvider timeProvider)
@@ -46,14 +46,14 @@ public class WorkspaceChannelRepository(SlackDbContext dbContext, TimeProvider t
         return DbContext.WorkspaceChannel.Update(workspaceChannel).Entity;
     }
 
-    public void RemoveRange(ICollection<WorkspaceChannel> workspaceChannels)
+    public void RemoveRange(IReadOnlyList<WorkspaceChannel> workspaceChannels)
     {
         var now = TimeProvider.GetUtcNow();
         workspaceChannels.ForEach(workspaceChannel => workspaceChannel.DeletedAt = now);
         DbContext.WorkspaceChannel.UpdateRange(workspaceChannels);
     }
 
-    public async Task<ICollection<WorkspaceChannel>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<WorkspaceChannel>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken) =>
         await DbContext.WorkspaceChannel
             .Where(query => query.Workspace.Id == workspaceId)
             .ToListAsync(cancellationToken);

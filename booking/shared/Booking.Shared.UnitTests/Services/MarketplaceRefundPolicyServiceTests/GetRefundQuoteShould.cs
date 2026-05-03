@@ -87,7 +87,7 @@ public class GetRefundQuoteShould
 
     private static ProductPricing CreatePricing(
         ProductPricingCancellationPolicyType cancellationPolicyType,
-        ICollection<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
+        IReadOnlyList<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
         new(
             "pricing-1",
             0,

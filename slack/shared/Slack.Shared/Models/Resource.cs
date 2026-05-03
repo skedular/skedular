@@ -12,8 +12,8 @@ public class Resource : ReplicatedModelBase
 
     public ResourceType ResourceType { get; set; } = new();
     public Location? Location { get; set; }
-    public ICollection<OrganizationCustomTag> CustomTags { get; set; } = [];
-    public ICollection<OrganizationZone> Zones { get; set; } = [];
-    public ICollection<OrganizationProductTag> ProductTags { get; set; } = [];
-    public ICollection<Customer> PreferredByCustomers { get; set; } = [];
+    public IReadOnlyList<OrganizationCustomTag> CustomTags { get; set; } = [];
+    public IReadOnlyList<OrganizationZone> Zones { get; set; } = [];
+    public IReadOnlyList<OrganizationProductTag> ProductTags { get; set; } = [];
+    public IReadOnlyList<Customer> PreferredByCustomers { get; set; } = [];
 }

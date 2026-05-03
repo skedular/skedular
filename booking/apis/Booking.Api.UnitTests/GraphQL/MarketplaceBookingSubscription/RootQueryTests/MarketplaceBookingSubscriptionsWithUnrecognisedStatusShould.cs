@@ -25,7 +25,7 @@ public class MarketplaceBookingSubscriptionsWithUnrecognisedStatusShould
         A.CallTo(() => marketplaceBookingSubscriptionService.GetPaginatedMarketplaceBookingSubscriptionsAsync(
                 A<PaginationInputParam>._,
                 A<MarketplaceBookingSubscriptionSearchCriteria>._,
-                A<ICollection<MarketplaceBookingSubscriptionOrder>>._,
+                A<IReadOnlyList<MarketplaceBookingSubscriptionOrder>>._,
                 A<bool>._,
                 cancellationToken))
             .Returns((new PaginatedInfo(false, false, null, null), [], 0));
@@ -58,7 +58,7 @@ public class MarketplaceBookingSubscriptionsWithUnrecognisedStatusShould
         A.CallTo(() => marketplaceBookingSubscriptionService.GetPaginatedMarketplaceBookingSubscriptionsAsync(
                 A<PaginationInputParam>._,
                 A<MarketplaceBookingSubscriptionSearchCriteria>._,
-                A<ICollection<MarketplaceBookingSubscriptionOrder>>._,
+                A<IReadOnlyList<MarketplaceBookingSubscriptionOrder>>._,
                 A<bool>._,
                 cancellationToken))
             .Returns((new PaginatedInfo(false, false, null, null), [], 0));

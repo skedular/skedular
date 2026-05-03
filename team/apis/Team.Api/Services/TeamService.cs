@@ -21,15 +21,15 @@ public interface ITeamService
     Task<Shared.Models.Team> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Team?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
 
-    Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(
+    Task<IReadOnlyList<Shared.Models.Team>> GetMyTeamsAsync(
         string? organizationId,
         string? organizationCustomDomain,
         CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Team>>, int)> GetPaginatedTeamsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Team>>, int)> GetPaginatedTeamsAsync(
         PaginationInputParam paginationInputParam,
         TeamSearchCriteria searchCriteria,
-        ICollection<TeamOrder> orderByFields,
+        IReadOnlyList<TeamOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -251,10 +251,10 @@ public class TeamService(
         return await EnrichTeamAsync(customerId, team, cancellationToken);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Team>>, int)> GetPaginatedTeamsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Team>>, int)> GetPaginatedTeamsAsync(
         PaginationInputParam paginationInputParam,
         TeamSearchCriteria searchCriteria,
-        ICollection<TeamOrder> orderByFields,
+        IReadOnlyList<TeamOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
@@ -323,7 +323,7 @@ public class TeamService(
         return (paginatedInfo, mappedTeams, totalCount);
     }
 
-    public async Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(
+    public async Task<IReadOnlyList<Shared.Models.Team>> GetMyTeamsAsync(
         string? organizationId,
         string? organizationCustomDomain,
         CancellationToken cancellationToken)

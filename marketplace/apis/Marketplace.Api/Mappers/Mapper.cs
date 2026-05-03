@@ -28,7 +28,7 @@ public interface IMapper
     Shared.Database.Entities.ProductVersion MapTo(
         ProductVersion src,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags);
+        IReadOnlyList<OrganizationTag> productTags);
 }
 
 public class Mapper : IMapper
@@ -74,7 +74,7 @@ public class Mapper : IMapper
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = MapTo(src.OrganizationTags).ToList(),
-            PricingOptions = src.PricingOptions,
+            PricingOptions = src.PricingOptions.ToList(),
             Product = new Product { Id = product.Id, Inactive = product.Inactive, Organization = MapTo(product.Organization) }
         };
 
@@ -187,7 +187,7 @@ public class Mapper : IMapper
     public Shared.Database.Entities.ProductVersion MapTo(
         ProductVersion src,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags) =>
+        IReadOnlyList<OrganizationTag> productTags) =>
         MergeTo(src, new Shared.Database.Entities.ProductVersion(), product, productTags);
 
     private static OrganizationDetails MapTo(Shared.Models.Organization src) => new()
@@ -229,16 +229,16 @@ public class Mapper : IMapper
         ProductVersion src,
         Shared.Database.Entities.ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> organizationTags)
+        IReadOnlyList<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.ListingMetadata = src.ListingMetadata;
         dest.Type = src.Type.ToProductType();
         dest.Currency = src.Currency.ToCurrency();
-        dest.FeatureImages = src.FeatureImages;
-        dest.OrganizationTags = organizationTags;
+        dest.FeatureImages = src.FeatureImages.ToList();
+        dest.OrganizationTags = organizationTags.ToList();
         dest.Product = product;
-        dest.PricingOptions = src.PricingOptions;
+        dest.PricingOptions = src.PricingOptions.ToList();
         return dest;
     }
 

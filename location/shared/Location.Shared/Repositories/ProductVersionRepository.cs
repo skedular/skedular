@@ -11,15 +11,15 @@ public interface IProductVersionRepository : IRepository<ProductVersion>
 {
     Task<ProductVersion> UpsertNakedAsync(string id, Product? product, CancellationToken cancellationToken);
     Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<ProductVersion>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<ProductVersion>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken);
     ProductVersion Update(ProductVersion product);
 }
 
-internal static class ProductVersionExtensions
+public static class ProductVersionExtensions
 {
     extension(IQueryable<ProductVersion> originalQuery)
     {
-        internal IIncludableQueryable<ProductVersion, IEnumerable<OrganizationTag>> AddDependentObjects() =>
+        public IIncludableQueryable<ProductVersion, IEnumerable<OrganizationTag>> AddDependentObjects() =>
             originalQuery
                 .AsSingleQuery()
                 .Include(query => query.Product)
@@ -43,7 +43,7 @@ public class ProductVersionRepository(LocationDbContext dbContext, TimeProvider 
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<ProductVersion>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<ProductVersion>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken) =>
         await DbContext.ProductVersion
             .Where(query => ids.Contains(query.Id))
             .AddDependentObjects()

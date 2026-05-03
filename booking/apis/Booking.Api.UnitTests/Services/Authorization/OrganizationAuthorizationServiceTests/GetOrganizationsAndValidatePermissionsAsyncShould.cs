@@ -32,7 +32,7 @@ public class GetOrganizationsAndValidatePermissionsAsyncShould
         string organizationId,
         CancellationToken cancellationToken)
     {
-        ICollection<string> organizationIds = [organizationId];
+        IReadOnlyList<string> organizationIds = [organizationId];
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(organizationIds, null, false, false, cancellationToken)).Returns([]);
@@ -54,7 +54,7 @@ public class GetOrganizationsAndValidatePermissionsAsyncShould
         string organizationId,
         CancellationToken cancellationToken)
     {
-        ICollection<string> organizationIds = [organizationId];
+        IReadOnlyList<string> organizationIds = [organizationId];
         var organization = new OrganizationEntity { Id = organizationId, Type = OrganizationTypeConstants.Marketplace };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -81,7 +81,7 @@ public class GetOrganizationsAndValidatePermissionsAsyncShould
         string organizationId,
         CancellationToken cancellationToken)
     {
-        ICollection<string> organizationIds = [organizationId];
+        IReadOnlyList<string> organizationIds = [organizationId];
         var organization = new OrganizationEntity { Id = organizationId, Type = OrganizationTypeConstants.Marketplace };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);

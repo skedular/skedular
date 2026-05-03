@@ -19,16 +19,16 @@ namespace Team.Api.Services;
 
 public interface IInvitationService
 {
-    Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(string teamId, ICollection<string> emails, CancellationToken cancellationToken);
+    Task<IReadOnlyList<JoinInvitation>> InviteMembersByEmailsAsync(string teamId, IReadOnlyList<string> emails, CancellationToken cancellationToken);
     Task<JoinInvitation> AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task<JoinInvitation> RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task<JoinInvitation> CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
-        ICollection<JoinTeamInvitationOrder> orderByFields,
+        IReadOnlyList<JoinTeamInvitationOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -45,9 +45,9 @@ public class InvitationService(
     ICachedTeamService cachedTeamService,
     ILogger<InvitationService> logger) : IInvitationService
 {
-    public async Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
+    public async Task<IReadOnlyList<JoinInvitation>> InviteMembersByEmailsAsync(
         string teamId,
-        ICollection<string> emails,
+        IReadOnlyList<string> emails,
         CancellationToken cancellationToken)
     {
         if (emails.Count == 0)
@@ -233,10 +233,10 @@ public class InvitationService(
         return count;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
-        ICollection<JoinTeamInvitationOrder> orderByFields,
+        IReadOnlyList<JoinTeamInvitationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);

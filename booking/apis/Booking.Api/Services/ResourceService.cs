@@ -10,15 +10,15 @@ namespace Booking.Api.Services;
 
 public interface IResourceService
 {
-    Task<ICollection<Resource>> GetAvailableResourcesAsync(
+    Task<IReadOnlyList<Resource>> GetAvailableResourcesAsync(
         string? organizationId,
         string? organizationCustomDomain,
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> customTagIds,
-        ICollection<string> zoneIds,
-        ICollection<string> resourceIdsToInclude,
+        IReadOnlyList<string> customTagIds,
+        IReadOnlyList<string> zoneIds,
+        IReadOnlyList<string> resourceIdsToInclude,
         string? productId,
         CancellationToken cancellationToken);
 
@@ -26,11 +26,11 @@ public interface IResourceService
         string? organizationId,
         string? organizationCustomDomain,
         string? locationId,
-        ICollection<string> resourceIds,
+        IReadOnlyList<string> resourceIds,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> customTagIds,
-        ICollection<string> zoneIds,
+        IReadOnlyList<string> customTagIds,
+        IReadOnlyList<string> zoneIds,
         string? productId,
         CancellationToken cancellationToken);
 
@@ -48,15 +48,15 @@ public class ResourceService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IMapper mapper) : IResourceService
 {
-    public async Task<ICollection<Resource>> GetAvailableResourcesAsync(
+    public async Task<IReadOnlyList<Resource>> GetAvailableResourcesAsync(
         string? organizationId,
         string? organizationCustomDomain,
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> customTagIds,
-        ICollection<string> zoneIds,
-        ICollection<string> resourceIdsToInclude,
+        IReadOnlyList<string> customTagIds,
+        IReadOnlyList<string> zoneIds,
+        IReadOnlyList<string> resourceIdsToInclude,
         string? productId,
         CancellationToken cancellationToken)
     {
@@ -76,7 +76,7 @@ public class ResourceService(
             }
         }
 
-        ICollection<string> productRelatedTags = [];
+        IReadOnlyList<string> productRelatedTags = [];
         if (!string.IsNullOrWhiteSpace(productId))
         {
             var product = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken) ?? throw new ProductNotFound();
@@ -162,11 +162,11 @@ public class ResourceService(
         string? organizationId,
         string? organizationCustomDomain,
         string? locationId,
-        ICollection<string> resourceIds,
+        IReadOnlyList<string> resourceIds,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> customTagIds,
-        ICollection<string> zoneIds,
+        IReadOnlyList<string> customTagIds,
+        IReadOnlyList<string> zoneIds,
         string? productId,
         CancellationToken cancellationToken)
     {
@@ -186,7 +186,7 @@ public class ResourceService(
             }
         }
 
-        ICollection<string> productRelatedTags = [];
+        IReadOnlyList<string> productRelatedTags = [];
         if (!string.IsNullOrWhiteSpace(productId))
         {
             var product = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken) ?? throw new ProductNotFound();

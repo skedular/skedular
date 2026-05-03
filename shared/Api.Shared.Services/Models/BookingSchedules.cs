@@ -2,4 +2,4 @@
 
 public record BookingSchedule(DateTimeOffset From, DateTimeOffset Until);
 
-public record BookingSchedules(ICollection<BookingSchedule> Schedules);
+public record BookingSchedules(IReadOnlyList<BookingSchedule> Schedules);

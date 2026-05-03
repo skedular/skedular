@@ -5,26 +5,26 @@ namespace Booking.Shared.Services;
 
 public interface IOrganizationArrearsBillingPlannerService
 {
-    ICollection<ArrearsInvoiceDraft> BuildInvoiceDrafts(
+    IReadOnlyList<ArrearsInvoiceDraft> BuildInvoiceDrafts(
         BillingPeriod billingPeriod,
         OrganizationBillingCycle billingCycle,
-        ICollection<Models.Booking> bookings,
-        ICollection<string>? excludedSegmentKeys = null);
+        IReadOnlyList<Models.Booking> bookings,
+        IReadOnlyList<string>? excludedSegmentKeys = null);
 
     ArrearsInvoiceDraft? BuildInitialRecurringInvoiceDraft(
         RecurringBooking recurringBooking,
         OrganizationBillingCycle billingCycle,
-        ICollection<string>? excludedSegmentKeys = null);
+        IReadOnlyList<string>? excludedSegmentKeys = null);
 }
 
 public class OrganizationArrearsBillingPlannerService(IOrganizationArrearsChargeSegmentService organizationArrearsChargeSegmentService)
     : IOrganizationArrearsBillingPlannerService
 {
-    public ICollection<ArrearsInvoiceDraft> BuildInvoiceDrafts(
+    public IReadOnlyList<ArrearsInvoiceDraft> BuildInvoiceDrafts(
         BillingPeriod billingPeriod,
         OrganizationBillingCycle billingCycle,
-        ICollection<Models.Booking> bookings,
-        ICollection<string>? excludedSegmentKeys = null) =>
+        IReadOnlyList<Models.Booking> bookings,
+        IReadOnlyList<string>? excludedSegmentKeys = null) =>
         bookings
             .SelectMany(item => organizationArrearsChargeSegmentService.BuildChargeSegments(item, billingCycle))
             // Workflow state keeps segment keys that were already invoiced so retries/manual reruns
@@ -52,7 +52,7 @@ public class OrganizationArrearsBillingPlannerService(IOrganizationArrearsCharge
     public ArrearsInvoiceDraft? BuildInitialRecurringInvoiceDraft(
         RecurringBooking recurringBooking,
         OrganizationBillingCycle billingCycle,
-        ICollection<string>? excludedSegmentKeys = null) =>
+        IReadOnlyList<string>? excludedSegmentKeys = null) =>
         organizationArrearsChargeSegmentService.BuildInitialRecurringChargeSegments(recurringBooking, billingCycle)
             .Where(item => excludedSegmentKeys is null || !excludedSegmentKeys.Contains(item.SegmentKey))
             .OrderBy(item => item.EarnedAt)

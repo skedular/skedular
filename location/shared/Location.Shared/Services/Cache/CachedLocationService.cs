@@ -9,7 +9,7 @@ public interface ICachedLocationService
 {
     ValueTask<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask UpdateAsync(ICollection<Database.Entities.Location> locations, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(IReadOnlyList<Database.Entities.Location> locations, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -43,7 +43,7 @@ public class CachedLocationService(ApplicationConfiguration applicationConfigura
             cancellationToken: cancellationToken);
     }
 
-    public async ValueTask UpdateAsync(ICollection<Database.Entities.Location> locations, CancellationToken cancellationToken)
+    public async ValueTask UpdateAsync(IReadOnlyList<Database.Entities.Location> locations, CancellationToken cancellationToken)
     {
         foreach (var item in locations)
         {

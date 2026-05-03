@@ -14,8 +14,8 @@ public interface ITeamAuthorizationService
     ValueTask<bool> CanDeleteBookingAsync(Team team, string customerId, CancellationToken cancellationToken);
     ValueTask<TeamPermissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken);
 
-    Task<ICollection<Team>> GetBookingInvolvedTeamAndValidatePermissionsAsync(
-        ICollection<string> ids,
+    Task<IReadOnlyList<Team>> GetBookingInvolvedTeamAndValidatePermissionsAsync(
+        IReadOnlyList<string> ids,
         string customerId,
         bool existing,
         CancellationToken cancellationToken);
@@ -60,8 +60,8 @@ public class TeamAuthorizationService(
         };
     }
 
-    public async Task<ICollection<Team>> GetBookingInvolvedTeamAndValidatePermissionsAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<Team>> GetBookingInvolvedTeamAndValidatePermissionsAsync(
+        IReadOnlyList<string> ids,
         string customerId,
         bool existing,
         CancellationToken cancellationToken)

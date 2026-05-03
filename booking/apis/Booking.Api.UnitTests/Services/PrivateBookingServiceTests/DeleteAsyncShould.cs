@@ -69,7 +69,7 @@ public class DeleteAsyncShould
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken)).Returns(customer);
         A.CallTo(() => bookingRepository.GetByIdAsync(bookingId, cancellationToken)).Returns(booking);
-        A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(A<ICollection<string>>._, null, false, false, cancellationToken))
+        A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(A<IReadOnlyList<string>>._, null, false, false, cancellationToken))
             .Returns([organization]);
         A.CallTo(() => organizationAuthorizationService.CanDeleteBookingAsync("org-1", customer.Id, cancellationToken)).Returns(false);
 

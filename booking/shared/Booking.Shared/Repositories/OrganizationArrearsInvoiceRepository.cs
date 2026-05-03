@@ -10,13 +10,13 @@ public interface IOrganizationArrearsInvoiceRepository : IRepository<Organizatio
 {
     OrganizationArrearsInvoice Add(OrganizationArrearsInvoice organizationArrearsInvoice);
     Task<OrganizationArrearsInvoice?> GetByIdWithLinesAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<OrganizationArrearsInvoice>> GetByBookingIdUntrackedAsync(string bookingId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<OrganizationArrearsInvoice>> GetByBookingIdUntrackedAsync(string bookingId, CancellationToken cancellationToken);
 
-    Task<ICollection<OrganizationArrearsInvoice>> GetByMarketplaceBookingSubscriptionIdUntrackedAsync(
+    Task<IReadOnlyList<OrganizationArrearsInvoice>> GetByMarketplaceBookingSubscriptionIdUntrackedAsync(
         string marketplaceBookingSubscriptionId,
         CancellationToken cancellationToken);
 
-    Task<ICollection<string>> GetProcessedSegmentKeysAsync(
+    Task<IReadOnlyList<string>> GetProcessedSegmentKeysAsync(
         string organizationId,
         DateTimeOffset startInclusive,
         DateTimeOffset endExclusive,
@@ -64,7 +64,8 @@ public class OrganizationArrearsInvoiceRepository(BookingDbContext dbContext, Ti
             .Include(query => query.Lines)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<OrganizationArrearsInvoice>> GetByBookingIdUntrackedAsync(string bookingId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<OrganizationArrearsInvoice>>
+        GetByBookingIdUntrackedAsync(string bookingId, CancellationToken cancellationToken) =>
         await DbContext.OrganizationArrearsInvoice
             .AsNoTracking()
             .Include(query => query.Organization)
@@ -73,7 +74,7 @@ public class OrganizationArrearsInvoiceRepository(BookingDbContext dbContext, Ti
             .OrderByDescending(query => query.CreatedAt)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<OrganizationArrearsInvoice>> GetByMarketplaceBookingSubscriptionIdUntrackedAsync(
+    public async Task<IReadOnlyList<OrganizationArrearsInvoice>> GetByMarketplaceBookingSubscriptionIdUntrackedAsync(
         string marketplaceBookingSubscriptionId,
         CancellationToken cancellationToken) =>
         await DbContext.OrganizationArrearsInvoice
@@ -90,7 +91,7 @@ public class OrganizationArrearsInvoiceRepository(BookingDbContext dbContext, Ti
             .OrderByDescending(query => query.CreatedAt)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<string>> GetProcessedSegmentKeysAsync(
+    public async Task<IReadOnlyList<string>> GetProcessedSegmentKeysAsync(
         string organizationId,
         DateTimeOffset startInclusive,
         DateTimeOffset endExclusive,

@@ -120,7 +120,7 @@ public class LocationSubscriber(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task<(Location, ICollection<string>)> RebuildResourcesAsync(
+    private async Task<(Location, IReadOnlyList<string>)> RebuildResourcesAsync(
         Shared.Models.Location location,
         Location existingLocation,
         Organization? organization,

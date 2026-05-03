@@ -88,7 +88,7 @@ public class ConfirmPaymentAsyncShould
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingRepository.Update(marketplaceBooking)).MustHaveHappenedOnceExactly();
         A.CallTo(() => bookingOutboxPublisher.PublishBookings(
-                A<ICollection<Shared.Models.Booking>>.That.Matches(items => items.Count == 1 && items.Single().Id == bookingId),
+                A<IReadOnlyList<Shared.Models.Booking>>.That.Matches(items => items.Count == 1 && items.Single().Id == bookingId),
                 unitOfWork))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();

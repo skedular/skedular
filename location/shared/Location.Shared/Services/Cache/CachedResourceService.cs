@@ -10,7 +10,7 @@ public interface ICachedResourceService
 {
     ValueTask<Resource?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask UpdateAsync(ICollection<Resource> resources, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(IReadOnlyList<Resource> resources, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -44,7 +44,7 @@ public class CachedResourceService(ApplicationConfiguration applicationConfigura
             cancellationToken: cancellationToken);
     }
 
-    public async ValueTask UpdateAsync(ICollection<Resource> resources, CancellationToken cancellationToken)
+    public async ValueTask UpdateAsync(IReadOnlyList<Resource> resources, CancellationToken cancellationToken)
     {
         foreach (var item in resources)
         {

@@ -11,7 +11,7 @@ public interface ICachedCustomerService
 {
     ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
     ValueTask<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
-    ValueTask RemoveAsync(ICollection<Customer> customers, CancellationToken cancellationToken);
+    ValueTask RemoveAsync(IReadOnlyList<Customer> customers, CancellationToken cancellationToken);
 }
 
 public class CachedCustomerService(
@@ -42,7 +42,7 @@ public class CachedCustomerService(
         }
     }
 
-    public async ValueTask RemoveAsync(ICollection<Customer> customers, CancellationToken cancellationToken)
+    public async ValueTask RemoveAsync(IReadOnlyList<Customer> customers, CancellationToken cancellationToken)
     {
         foreach (var item in customers)
         {

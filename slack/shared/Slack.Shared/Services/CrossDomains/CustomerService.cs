@@ -18,7 +18,7 @@ public interface ICustomerService
         WorkspaceMember workspaceMember,
         string customerId,
         string defaultOrganizationId,
-        ICollection<string> preferredLocationIds,
+        IReadOnlyList<string> preferredLocationIds,
         CancellationToken cancellationToken);
 
     Task<Customer> AdminAddIdentityAsync(WorkspaceMember workspaceMember, string customerId, CancellationToken cancellationToken);
@@ -97,7 +97,7 @@ public class CustomerService(
         WorkspaceMember workspaceMember,
         string customerId,
         string defaultOrganizationId,
-        ICollection<string> preferredLocationIds,
+        IReadOnlyList<string> preferredLocationIds,
         CancellationToken cancellationToken)
     {
         var customer = mapper.MapTo(
@@ -305,7 +305,7 @@ public class CustomerService(
         return customer;
     }
 
-    private void Cache(ICollection<Customer> customers)
+    private void Cache(IReadOnlyList<Customer> customers)
     {
         foreach (var customer in customers)
         {

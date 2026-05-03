@@ -32,12 +32,12 @@ public interface IMapper
 
     Shared.Database.Entities.Customer MapToEntity(
         Shared.Models.Customer src,
-        ICollection<Identity> identities,
+        IReadOnlyList<Identity> identities,
         Shared.Database.Entities.Organization? defaultOrganization,
-        ICollection<Shared.Database.Entities.Location> preferredLocations,
-        ICollection<Resource> preferredResources,
-        ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags,
-        ICollection<Shared.Database.Entities.Location> favouriteLocations);
+        IReadOnlyList<Shared.Database.Entities.Location> preferredLocations,
+        IReadOnlyList<Resource> preferredResources,
+        IReadOnlyList<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags,
+        IReadOnlyList<Shared.Database.Entities.Location> favouriteLocations);
 
     IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src);
     CustomerFeedback MapTo(Shared.Database.Entities.CustomerFeedback src);
@@ -492,12 +492,12 @@ public class Mapper : IMapper
 
     public Shared.Database.Entities.Customer MapToEntity(
         Shared.Models.Customer src,
-        ICollection<Identity> identities,
+        IReadOnlyList<Identity> identities,
         Shared.Database.Entities.Organization? defaultOrganization,
-        ICollection<Shared.Database.Entities.Location> preferredLocations,
-        ICollection<Resource> preferredResources,
-        ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags,
-        ICollection<Shared.Database.Entities.Location> favouriteLocations) =>
+        IReadOnlyList<Shared.Database.Entities.Location> preferredLocations,
+        IReadOnlyList<Resource> preferredResources,
+        IReadOnlyList<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags,
+        IReadOnlyList<Shared.Database.Entities.Location> favouriteLocations) =>
         new()
         {
             Id = src.Id,
@@ -518,12 +518,12 @@ public class Mapper : IMapper
             Locale = src.Locale,
             PhoneNumber = src.PhoneNumber,
             IsOnboardingDone = src.IsOnboardingDone,
-            Identities = identities,
+            Identities = identities.ToList(),
             DefaultOrganization = defaultOrganization,
-            PreferredLocations = preferredLocations,
-            PreferredResources = preferredResources,
-            PreferredOrganizationTags = preferredOrganizationTags,
-            FavouriteLocations = favouriteLocations,
+            PreferredLocations = preferredLocations.ToList(),
+            PreferredResources = preferredResources.ToList(),
+            PreferredOrganizationTags = preferredOrganizationTags.ToList(),
+            FavouriteLocations = favouriteLocations.ToList(),
             PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility(),
             Type = src.Type.ToCustomerType()
         };

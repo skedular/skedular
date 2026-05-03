@@ -15,11 +15,11 @@ public interface ILocationPhysicalAddressRepository : IRepository<LocationPhysic
     LocationPhysicalAddress Remove(LocationPhysicalAddress address);
 }
 
-internal static class LocationPhysicalAddressExtensions
+public static class LocationPhysicalAddressExtensions
 {
     extension(IQueryable<LocationPhysicalAddress> originalQuery)
     {
-        internal IIncludableQueryable<LocationPhysicalAddress, Database.Entities.Location> AddDependentObjects() =>
+        public IIncludableQueryable<LocationPhysicalAddress, Database.Entities.Location> AddDependentObjects() =>
             originalQuery
                 .AsSingleQuery()
                 .Include(query => query.Location);

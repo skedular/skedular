@@ -119,7 +119,7 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
         DateTimeOffset startedAt,
         DateTimeOffset? nextRenewalAt,
         ProductPricingCancellationPolicyType cancellationPolicyType,
-        ICollection<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
+        IReadOnlyList<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
         new()
         {
             Id = "subscription-1",
@@ -158,7 +158,7 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
 
     private static ProductPricing CreatePricing(
         ProductPricingCancellationPolicyType cancellationPolicyType,
-        ICollection<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
+        IReadOnlyList<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
         new(
             "pricing-1",
             0,

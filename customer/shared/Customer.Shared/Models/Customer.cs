@@ -8,15 +8,15 @@ public class Customer : ModelBaseWithDeleted, ICustomerPersonalDetails
     public bool IsOnboardingDone { get; set; }
     public bool HasAttachedPaymentMethod => StripePaymentMethods.Count != 0;
 
-    public ICollection<Identity> Identities { get; set; } = [];
-    public ICollection<CustomerFeedback> CustomerFeedbacks { get; set; } = [];
+    public IReadOnlyList<Identity> Identities { get; set; } = [];
+    public IReadOnlyList<CustomerFeedback> CustomerFeedbacks { get; set; } = [];
     public Organization? DefaultOrganization { get; set; }
-    public ICollection<Location> PreferredLocations { get; set; } = [];
-    public ICollection<Resource> PreferredResources { get; set; } = [];
-    public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
-    public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
-    public ICollection<Location> FavouriteLocations { get; set; } = [];
+    public IReadOnlyList<Location> PreferredLocations { get; set; } = [];
+    public IReadOnlyList<Resource> PreferredResources { get; set; } = [];
+    public IReadOnlyList<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
+    public IReadOnlyList<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public IReadOnlyList<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
+    public IReadOnlyList<Location> FavouriteLocations { get; set; } = [];
     public StripeCustomer? StripeCustomer { get; set; }
     public CustomerBillingDetails? BillingDetails { get; set; }
     public string DisplayableName => this.ToDisplayableName();

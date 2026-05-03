@@ -46,8 +46,8 @@ public class BookingsPage(PaginationContext pagination, DateRange bookingsDateRa
 {
     public PaginationContext Pagination { get; } = pagination;
     public DateRange BookingsDateRange { get; } = bookingsDateRange;
-    public ICollection<string> LocationIds { get; set; } = [];
-    public ICollection<string> TeamIds { get; set; } = [];
+    public IReadOnlyList<string> LocationIds { get; set; } = [];
+    public IReadOnlyList<string> TeamIds { get; set; } = [];
     public bool IncludeMyBookingsOnly { get; set; } = includeMyBookingsOnly;
 }
 

@@ -68,7 +68,7 @@ public class GetBookingCancellationPreviewAsyncShould
     private static Database.Entities.Booking CreateBooking(
         DateTimeOffset from,
         ProductPricingCancellationPolicyType cancellationPolicyType,
-        ICollection<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
+        IReadOnlyList<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
         new()
         {
             Id = "booking-1",
@@ -87,7 +87,7 @@ public class GetBookingCancellationPreviewAsyncShould
 
     private static ProductPricing CreatePricing(
         ProductPricingCancellationPolicyType cancellationPolicyType,
-        ICollection<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
+        IReadOnlyList<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
         new(
             "pricing-1",
             0,

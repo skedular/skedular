@@ -14,29 +14,29 @@ namespace Organization.Shared.Repositories;
 public interface IOrganizationBankAccountRepository : IRepository<OrganizationBankAccount>
 {
     Task<OrganizationBankAccount?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<OrganizationBankAccount>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<OrganizationBankAccount>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     OrganizationBankAccount Add(OrganizationBankAccount stripeConnectAccount);
     OrganizationBankAccount Update(OrganizationBankAccount stripeConnectAccount);
     OrganizationBankAccount Remove(OrganizationBankAccount stripeConnectAccount);
-    void RemoveRange(ICollection<OrganizationBankAccount> organizationBankAccounts);
+    void RemoveRange(IReadOnlyList<OrganizationBankAccount> organizationBankAccounts);
 
-    Task<(PaginatedInfo, ICollection<Edge<OrganizationBankAccount>>, int)> GetPaginatedBankAccountsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationBankAccount>>, int)> GetPaginatedBankAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationBankAccountSearchCriteria searchCriteria,
-        ICollection<OrganizationBankAccountOrder> orderByFields,
+        IReadOnlyList<OrganizationBankAccountOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
-internal static class OrganizationBankAccountExtensions
+public static class OrganizationBankAccountExtensions
 {
     extension(IQueryable<OrganizationBankAccount> originalQuery)
     {
-        internal IIncludableQueryable<OrganizationBankAccount, Database.Entities.Organization> AddDependentObjects() =>
+        public IIncludableQueryable<OrganizationBankAccount, Database.Entities.Organization> AddDependentObjects() =>
             originalQuery
                 .AsSingleQuery()
                 .Include(query => query.Organization);
 
-        internal IQueryable<OrganizationBankAccount> AddSearchCriteria(OrganizationBankAccountSearchCriteria searchCriteria)
+        public IQueryable<OrganizationBankAccount> AddSearchCriteria(OrganizationBankAccountSearchCriteria searchCriteria)
         {
             if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
             {
@@ -58,7 +58,7 @@ internal static class OrganizationBankAccountExtensions
             return originalQuery;
         }
 
-        internal IQueryable<OrganizationBankAccount> AddSortingOrders(ICollection<OrganizationBankAccountOrder> orderByFields)
+        public IQueryable<OrganizationBankAccount> AddSortingOrders(IReadOnlyList<OrganizationBankAccountOrder> orderByFields)
         {
             if (orderByFields.Count == 0)
             {
@@ -92,7 +92,7 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<OrganizationBankAccount>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<OrganizationBankAccount>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken) =>
         await DbContext.OrganizationBankAccount.Where(query => ids.Contains(query.Id)).AddDependentObjects().ToListAsync(cancellationToken);
 
     public OrganizationBankAccount Add(OrganizationBankAccount stripeConnectAccount)
@@ -116,17 +116,17 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
         return DbContext.OrganizationBankAccount.Update(stripeConnectAccount).Entity;
     }
 
-    public void RemoveRange(ICollection<OrganizationBankAccount> organizationBankAccounts)
+    public void RemoveRange(IReadOnlyList<OrganizationBankAccount> organizationBankAccounts)
     {
         var now = TimeProvider.GetUtcNow();
         organizationBankAccounts.ForEach(organizationBankAccount => organizationBankAccount.DeletedAt = now);
         DbContext.OrganizationBankAccount.UpdateRange(organizationBankAccounts);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<OrganizationBankAccount>>, int)> GetPaginatedBankAccountsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationBankAccount>>, int)> GetPaginatedBankAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationBankAccountSearchCriteria searchCriteria,
-        ICollection<OrganizationBankAccountOrder> orderByFields,
+        IReadOnlyList<OrganizationBankAccountOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.OrganizationBankAccount
             .AddSearchCriteria(searchCriteria)
@@ -134,7 +134,7 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
     private static List<KeysetPaginationField<OrganizationBankAccount>> GetPaginationFields(
-        ICollection<OrganizationBankAccountOrder> orderByFields)
+        IReadOnlyList<OrganizationBankAccountOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

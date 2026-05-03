@@ -11,28 +11,28 @@ public interface ILocationRepository : IRepository<Location>
 {
     Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
     Task<Location?> GetByIdAsync(string id, bool includeDeletedResources, CancellationToken cancellationToken);
-    Task<ICollection<Location>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Location>> GetActiveByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
 
-    Task<ICollection<Location>> GetAllWithActiveOrganizationAsync(
+    Task<IReadOnlyList<Location>> GetAllWithActiveOrganizationAsync(
         bool includeDeletedResources,
         bool includeInactiveResources,
-        ICollection<string> productTagIds,
+        IReadOnlyList<string> productTagIds,
         CancellationToken cancellationToken);
 
     Location Update(Location location);
     Location Remove(Location location);
-    Task<ICollection<Location>> GetByCustomerIdAsync(string customerId, bool includeDeletedResources, CancellationToken cancellationToken);
-    Task<ICollection<Location>> GetByOrganizationIdAsync(string organizationId, bool includeDeletedResources, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Location>> GetByCustomerIdAsync(string customerId, bool includeDeletedResources, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Location>> GetByOrganizationIdAsync(string organizationId, bool includeDeletedResources, CancellationToken cancellationToken);
 }
 
-internal static class LocationExtensions
+public static class LocationExtensions
 {
     extension(IQueryable<Location> originalQuery)
     {
-        internal IIncludableQueryable<Location, IEnumerable<OrganizationTag>> AddDependentObjects(
+        public IIncludableQueryable<Location, IEnumerable<OrganizationTag>> AddDependentObjects(
             bool includeDeletedResource,
             bool includeInactiveResource,
-            ICollection<string> productTagIds) =>
+            IReadOnlyList<string> productTagIds) =>
             originalQuery
                 .Include(query => query.Resources.Where(resource =>
                     (includeDeletedResource || (!resource.DeletedAt.HasValue && (includeInactiveResource || !resource.Inactive))) &&
@@ -76,7 +76,7 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
     ///     This lightweight authorization lookup replaces the heavier specification path and intentionally loads only the organization data needed by
     ///     booking access checks.
     /// </remarks>
-    public async Task<ICollection<Location>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Location>> GetActiveByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -90,10 +90,10 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<ICollection<Location>> GetAllWithActiveOrganizationAsync(
+    public async Task<IReadOnlyList<Location>> GetAllWithActiveOrganizationAsync(
         bool includeDeletedResources,
         bool includeInactiveResources,
-        ICollection<string> productTagIds,
+        IReadOnlyList<string> productTagIds,
         CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => !query.DeletedAt.HasValue && (query.Organization == null || !query.Organization.DeletedAt.HasValue))
@@ -119,7 +119,7 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
         return DbContext.Location.Update(location).Entity;
     }
 
-    public async Task<ICollection<Location>> GetByCustomerIdAsync(
+    public async Task<IReadOnlyList<Location>> GetByCustomerIdAsync(
         string customerId,
         bool includeDeletedResources,
         CancellationToken cancellationToken) =>
@@ -131,7 +131,7 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
             .AddDependentObjects(includeDeletedResources, false, [])
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<Location>> GetByOrganizationIdAsync(
+    public async Task<IReadOnlyList<Location>> GetByOrganizationIdAsync(
         string organizationId,
         bool includeDeletedResources,
         CancellationToken cancellationToken) =>

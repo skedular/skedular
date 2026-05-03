@@ -14,7 +14,7 @@ public interface IPaymentService
     Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, CancellationToken cancellationToken);
     Task<string> AddPaymentMethodIntentAsync(CancellationToken cancellationToken);
     Task RemovePaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken);
-    Task<ICollection<StripePaymentMethod>> GetPaymentMethodsAsync(string requestedCustomerId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<StripePaymentMethod>> GetPaymentMethodsAsync(string requestedCustomerId, CancellationToken cancellationToken);
     Task<bool> HasAttachedPaymentMethodAsync(string requestedCustomerId, CancellationToken cancellationToken);
 }
 
@@ -76,7 +76,7 @@ public class PaymentService(
         await transaction.CommitAsync(cancellationToken);
     }
 
-    public async Task<ICollection<StripePaymentMethod>> GetPaymentMethodsAsync(string requestedCustomerId, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<StripePaymentMethod>> GetPaymentMethodsAsync(string requestedCustomerId, CancellationToken cancellationToken)
     {
         var (_, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
         if (customerEntity.Id != requestedCustomerId)

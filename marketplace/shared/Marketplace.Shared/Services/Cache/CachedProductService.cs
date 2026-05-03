@@ -10,7 +10,7 @@ public interface ICachedProductService
 {
     ValueTask<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask UpdateAsync(ICollection<Product> products, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(IReadOnlyList<Product> products, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -44,7 +44,7 @@ public class CachedProductService(ApplicationConfiguration applicationConfigurat
             cancellationToken: cancellationToken);
     }
 
-    public async ValueTask UpdateAsync(ICollection<Product> products, CancellationToken cancellationToken)
+    public async ValueTask UpdateAsync(IReadOnlyList<Product> products, CancellationToken cancellationToken)
     {
         foreach (var item in products)
         {

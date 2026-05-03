@@ -73,7 +73,7 @@ public class OrganizationService(
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
 
-    private void Cache(ICollection<Organization> organizations)
+    private void Cache(IReadOnlyList<Organization> organizations)
     {
         foreach (var organization in organizations)
         {

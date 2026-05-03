@@ -324,8 +324,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
             await marketplaceBookingService.AddAsync(
                 booking,
                 recurringBooking.InvolvedCustomers.First(),
-                recurringBooking.InvolvedOrganizations,
-                recurringBooking.InvolvedTeams,
+                recurringBooking.InvolvedOrganizations.ToList(),
+                recurringBooking.InvolvedTeams.ToList(),
                 recurringBooking,
                 cancellationToken);
         }
@@ -333,10 +333,10 @@ public class MarketplaceBookingSubscriptionIntegrations(
         return !reconciliationPlan.HasMoreRequiredBookingDays;
     }
 
-    private async Task<ICollection<string>> ResolvePreferredResourceIdsAsync(
+    private async Task<IReadOnlyList<string>> ResolvePreferredResourceIdsAsync(
         MarketplaceBookingSubscription subscription,
         RecurringBooking recurringBooking,
-        ICollection<Database.Entities.Booking> existingBookingsToRefresh,
+        IReadOnlyList<Database.Entities.Booking> existingBookingsToRefresh,
         CancellationToken cancellationToken)
     {
         // Prefer the latest resources already assigned in the current cycle first.
@@ -380,7 +380,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
         return [];
     }
 
-    private static ICollection<string> ResolveRequiredResourceIds(MarketplaceBookingSubscription subscription) =>
+    private static IReadOnlyList<string> ResolveRequiredResourceIds(MarketplaceBookingSubscription subscription) =>
         subscription.RequestedResources
             .Select(item => item.Id)
             .Distinct()
@@ -628,7 +628,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
             }
 
             var renewedProductPricing =
-                productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions, subscription.MarketplaceBooking.ProductPricing);
+                productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions.ToList(),
+                    subscription.MarketplaceBooking.ProductPricing);
             if (renewedProductPricing is null || !renewedProductPricing.SupportsSubscriptionAutoRenewal)
             {
                 if (subscription.Status.ToMarketplaceBookingSubscriptionStatus() != MarketplaceBookingSubscriptionStatus.RenewalFailed)

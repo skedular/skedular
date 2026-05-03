@@ -33,7 +33,7 @@ public class MarketplaceBookingServiceShould
             MarketplaceBooking = new MarketplaceBooking { ProductVersion = new ProductVersion { Id = "product-version-1" } }
         };
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
-        A.CallTo(() => customerRepository.GetByIdsAsync(A<ICollection<string>>.That.Contains("customer-1"), true, cancellationToken))
+        A.CallTo(() => customerRepository.GetByIdsAsync(A<IReadOnlyList<string>>.That.Contains("customer-1"), true, cancellationToken))
             .Returns([]);
 
         // Act & Assert
@@ -60,7 +60,7 @@ public class MarketplaceBookingServiceShould
             MarketplaceBooking = new MarketplaceBooking { ProductVersion = new ProductVersion { Id = "product-version-1" } }
         };
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
-        A.CallTo(() => customerRepository.GetByIdsAsync(A<ICollection<string>>.That.Contains("customer-1"), true, cancellationToken))
+        A.CallTo(() => customerRepository.GetByIdsAsync(A<IReadOnlyList<string>>.That.Contains("customer-1"), true, cancellationToken))
             .Returns([new Customer { Id = "customer-1" }]);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
         A.CallTo(() => productVersionRepository.GetByIdAsync("product-version-1", cancellationToken))
@@ -389,17 +389,17 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
-        A.CallTo(() => customerRepository.GetByIdsAsync(A<ICollection<string>>.That.Contains("customer-1"), true, cancellationToken))
+        A.CallTo(() => customerRepository.GetByIdsAsync(A<IReadOnlyList<string>>.That.Contains("customer-1"), true, cancellationToken))
             .Returns([lastModifiedByCustomer]);
         A.CallTo(() => productVersionRepository.GetByIdAsync("product-version-1", cancellationToken)).Returns(productVersion);
         A.CallTo(() => mapper.MergeTo(
                 booking,
                 existingBooking,
-                A<ICollection<Customer>>._,
-                A<ICollection<Organization>>._,
-                A<ICollection<Location>>.That.Matches(locations => locations.Count == 0),
-                A<ICollection<Team>>._,
-                A<ICollection<Resource>>.That.Matches(resources => resources.Count == 1 && resources.First().Id == "resource-1"),
+                A<IReadOnlyList<Customer>>._,
+                A<IReadOnlyList<Organization>>._,
+                A<IReadOnlyList<Location>>.That.Matches(locations => locations.Count == 0),
+                A<IReadOnlyList<Team>>._,
+                A<IReadOnlyList<Resource>>.That.Matches(resources => resources.Count == 1 && resources.First().Id == "resource-1"),
                 existingBooking.CreatedByCustomer,
                 lastModifiedByCustomer,
                 null,
@@ -420,7 +420,7 @@ public class MarketplaceBookingServiceShould
         DateTimeOffset from,
         bool isPaymentRequired,
         ProductPricingCancellationPolicyType cancellationPolicyType,
-        ICollection<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
+        IReadOnlyList<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
         new()
         {
             Id = "booking-1",

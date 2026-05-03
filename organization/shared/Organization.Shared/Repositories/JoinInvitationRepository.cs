@@ -14,10 +14,10 @@ namespace Organization.Shared.Repositories;
 
 public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 {
-    Task<int> PendingInvitationsCountAsync(string inviteeId, ICollection<string> customerEmails, CancellationToken cancellationToken);
+    Task<int> PendingInvitationsCountAsync(string inviteeId, IReadOnlyList<string> customerEmails, CancellationToken cancellationToken);
     Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
-    Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationCustomDomainAsync(
+    Task<IReadOnlyList<JoinInvitation>> GetByOrganizationIdOrOrganizationCustomDomainAsync(
         string? organizationId,
         string? organizationCustomDomain,
         InvitationStatus status,
@@ -26,29 +26,29 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
     JoinInvitation Add(JoinInvitation joinInvitation);
     JoinInvitation Update(JoinInvitation joinInvitation);
 
-    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
-        ICollection<JoinOrganizationInvitationOrder> orderByFields,
+        IReadOnlyList<JoinOrganizationInvitationOrder> orderByFields,
         CancellationToken cancellationToken);
 
-    Task<ICollection<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
-        ICollection<string> emails,
+    Task<IReadOnlyList<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
+        IReadOnlyList<string> emails,
         CancellationToken cancellationToken);
 }
 
-internal static class JoinInvitationExtensions
+public static class JoinInvitationExtensions
 {
     extension(IQueryable<JoinInvitation> originalQuery)
     {
-        internal IIncludableQueryable<JoinInvitation, Customer?> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<JoinInvitation, Customer?> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .AsSingleQuery()
             .Include(query => query.Organization)
             .Include(query => query.CreatedBy)
             .Include(query => query.Invitee);
 
-        internal IQueryable<JoinInvitation> AddSearchCriteria(JoinInvitationSearchCriteria searchCriteria)
+        public IQueryable<JoinInvitation> AddSearchCriteria(JoinInvitationSearchCriteria searchCriteria)
         {
             if (!string.IsNullOrWhiteSpace(searchCriteria.InviteeId) ||
                 (searchCriteria.CustomerEmails != null && searchCriteria.CustomerEmails.Count != 0))
@@ -78,7 +78,8 @@ internal static class JoinInvitationExtensions
 public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<OrganizationDbContext, JoinInvitation>(dbContext, timeProvider), IJoinInvitationRepository
 {
-    public async Task<int> PendingInvitationsCountAsync(string inviteeId, ICollection<string> customerEmails, CancellationToken cancellationToken) =>
+    public async Task<int> PendingInvitationsCountAsync(string inviteeId, IReadOnlyList<string> customerEmails,
+        CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation.CountAsync(
             query => query.Status == InvitationStatusConstants.Pending && ((query.Invitee != null && query.Invitee.Id == inviteeId) ||
                                                                            (query.Email != null && customerEmails.Contains(query.Email))),
@@ -89,7 +90,7 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
             .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationCustomDomainAsync(
+    public async Task<IReadOnlyList<JoinInvitation>> GetByOrganizationIdOrOrganizationCustomDomainAsync(
         string? organizationId,
         string? organizationCustomDomain,
         InvitationStatus status,
@@ -129,18 +130,18 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
         return DbContext.JoinInvitation.Update(joinInvitation).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
-        ICollection<JoinOrganizationInvitationOrder> orderByFields,
+        IReadOnlyList<JoinOrganizationInvitationOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    public async Task<ICollection<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
-        ICollection<string> emails,
+    public async Task<IReadOnlyList<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
+        IReadOnlyList<string> emails,
         CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
             .Where(query =>
@@ -149,7 +150,7 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
                 emails.Any(email => query.Email != null && EF.Functions.ILike(query.Email, email)))
             .ToListAsync(cancellationToken);
 
-    private static List<KeysetPaginationField<JoinInvitation>> GetPaginationFields(ICollection<JoinOrganizationInvitationOrder> orderByFields)
+    private static List<KeysetPaginationField<JoinInvitation>> GetPaginationFields(IReadOnlyList<JoinOrganizationInvitationOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

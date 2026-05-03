@@ -18,24 +18,24 @@ public interface IFloorPlanRepository : IRepository<FloorPlan>
     void Update(FloorPlan floorPlan);
     void Remove(FloorPlan floorPlan);
 
-    Task<(PaginatedInfo, ICollection<Edge<FloorPlan>>, int )> GetPaginatedFloorPlansAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int )> GetPaginatedFloorPlansAsync(
         PaginationInputParam paginationInputParam,
         FloorPlanSearchCriteria searchCriteria,
-        ICollection<FloorPlanOrder> orderByFields,
+        IReadOnlyList<FloorPlanOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
-internal static class FloorPlanExtensions
+public static class FloorPlanExtensions
 {
     extension(IQueryable<FloorPlan> originalQuery)
     {
-        internal IIncludableQueryable<FloorPlan, Resource> AddDependentObjects() =>
+        public IIncludableQueryable<FloorPlan, Resource> AddDependentObjects() =>
             originalQuery
                 .Include(query => query.Location)
                 .Include(query => query.ResourcePositions)
                 .ThenInclude(query => query.Resource);
 
-        internal IQueryable<FloorPlan> AddSearchCriteria(FloorPlanSearchCriteria searchCriteria)
+        public IQueryable<FloorPlan> AddSearchCriteria(FloorPlanSearchCriteria searchCriteria)
         {
             originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
 
@@ -78,17 +78,17 @@ public class FloorPlanRepository(LocationDbContext dbContext, TimeProvider timeP
         DbContext.FloorPlan.Update(floorPlan);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<FloorPlan>>, int)> GetPaginatedFloorPlansAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int)> GetPaginatedFloorPlansAsync(
         PaginationInputParam paginationInputParam,
         FloorPlanSearchCriteria searchCriteria,
-        ICollection<FloorPlanOrder> orderByFields,
+        IReadOnlyList<FloorPlanOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.FloorPlan
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects()
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<FloorPlan>> GetPaginationFields(ICollection<FloorPlanOrder> orderByFields)
+    private static List<KeysetPaginationField<FloorPlan>> GetPaginationFields(IReadOnlyList<FloorPlanOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

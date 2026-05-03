@@ -16,7 +16,7 @@ public class BookingResourceSlotsHelperServiceShould
         IBookingRepository bookingRepository)
     {
         // Arrange
-        ICollection<ResourceBookingSlot>? updatedSlots = null;
+        IReadOnlyList<ResourceBookingSlot>? updatedSlots = null;
         var customer1 = new Customer { Id = "customer-1" };
         var customer2 = new Customer { Id = "customer-2" };
         var slot1 = new ResourceBookingSlot { Id = "slot-1", Customers = [customer1] };
@@ -25,8 +25,8 @@ public class BookingResourceSlotsHelperServiceShould
 
         A.CallTo(() => repositoryFactory.ResourceBookingSlotRepository).Returns(resourceBookingSlotRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
-        A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<ICollection<ResourceBookingSlot>>._))
-            .Invokes((ICollection<ResourceBookingSlot> slots) => updatedSlots = slots.ToList());
+        A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<IReadOnlyList<ResourceBookingSlot>>._))
+            .Invokes((IReadOnlyList<ResourceBookingSlot> slots) => updatedSlots = slots.ToList());
 
         // Act
         sut.RemoveAllSlotsFromBooking(booking);
@@ -38,7 +38,7 @@ public class BookingResourceSlotsHelperServiceShould
         updatedSlots.ShouldNotBeNull();
         updatedSlots.ShouldContain(slot1);
         updatedSlots.ShouldContain(slot2);
-        A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<ICollection<ResourceBookingSlot>>._)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<IReadOnlyList<ResourceBookingSlot>>._)).MustHaveHappenedOnceExactly();
         A.CallTo(() => bookingRepository.Update(booking)).MustHaveHappenedOnceExactly();
     }
 
@@ -61,7 +61,7 @@ public class BookingResourceSlotsHelperServiceShould
 
         // Assert
         booking.ResourceBookingSlots.ShouldBeEmpty();
-        A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<ICollection<ResourceBookingSlot>>._)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<IReadOnlyList<ResourceBookingSlot>>._)).MustHaveHappenedOnceExactly();
         A.CallTo(() => bookingRepository.Update(booking)).MustHaveHappenedOnceExactly();
     }
 }

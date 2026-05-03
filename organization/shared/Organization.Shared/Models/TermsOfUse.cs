@@ -6,5 +6,5 @@ public class TermsOfUse : ModelBaseWithDeleted
 {
     public bool Active { get; set; }
     public string Terms { get; set; } = string.Empty;
-    public ICollection<Organization> Organizations { get; set; } = [];
+    public IReadOnlyList<Organization> Organizations { get; set; } = [];
 }

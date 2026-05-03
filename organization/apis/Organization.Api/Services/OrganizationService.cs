@@ -41,12 +41,12 @@ public interface IOrganizationService
     Task<Shared.Models.Organization?> GetByIdOrCustomDomainPublicAsync(string? id, string? customDomain, CancellationToken cancellationToken);
     Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken);
     Task<Shared.Models.Organization?> GetByXeroTenantIdAsync(string tenantId, CancellationToken cancellationToken);
-    Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationSearchCriteria searchCriteria,
-        ICollection<OrganizationOrder> orderByFields,
+        IReadOnlyList<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Organization> UpdateMarketplaceListingMetadataAsync(
@@ -328,7 +328,7 @@ public class OrganizationService(
             : mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
     }
 
-    public async Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken)
     {
         var verifiableToken = context.GetVerifiableToken();
         if (string.IsNullOrWhiteSpace(verifiableToken))
@@ -342,10 +342,10 @@ public class OrganizationService(
         return mapper.MapTo(myOrganizations).ToList();
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationSearchCriteria searchCriteria,
-        ICollection<OrganizationOrder> orderByFields,
+        IReadOnlyList<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);

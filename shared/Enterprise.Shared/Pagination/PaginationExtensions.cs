@@ -31,7 +31,7 @@ public sealed record KeysetCursorPayload(string Id, IReadOnlyDictionary<string, 
 
 public static class PaginationExtensions
 {
-    public static IQueryable<T> ApplyOrdering<T>(this IQueryable<T> query, ICollection<KeysetPaginationField<T>> fields)
+    public static IQueryable<T> ApplyOrdering<T>(this IQueryable<T> query, IReadOnlyList<KeysetPaginationField<T>> fields)
     {
         ArgumentNullException.ThrowIfNull(fields);
         if (fields.Count == 0)
@@ -48,10 +48,10 @@ public static class PaginationExtensions
         return orderedQuery!;
     }
 
-    public static async Task<(PaginatedInfo, ICollection<Edge<T>>, int)> ToPaginatedAsync<T>(
+    public static async Task<(PaginatedInfo, IReadOnlyList<Edge<T>>, int)> ToPaginatedAsync<T>(
         this IQueryable<T> query,
         PaginationInputParam paginationInputParam,
-        ICollection<KeysetPaginationField<T>> fields,
+        IReadOnlyList<KeysetPaginationField<T>> fields,
         CancellationToken cancellationToken) where T : EntityBase
     {
         var totalCount = await query.CountAsync(cancellationToken);
@@ -308,7 +308,7 @@ public static class PaginationExtensions
     private static Expression ReplaceParameter(Expression expression, ParameterExpression source, ParameterExpression target) =>
         new ReplaceParameterVisitor(source, target).Visit(expression);
 
-    private static List<KeysetPaginationField<T>> AddStableIdField<T>(ICollection<KeysetPaginationField<T>> fields) where T : EntityBase
+    private static List<KeysetPaginationField<T>> AddStableIdField<T>(IReadOnlyList<KeysetPaginationField<T>> fields) where T : EntityBase
     {
         if (fields.Any(field => field.CursorKey == nameof(EntityBase.Id)))
         {

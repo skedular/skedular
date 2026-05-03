@@ -9,15 +9,15 @@ namespace Slack.Api.Components;
 
 public interface ILocationComponents
 {
-    Task<ICollection<IActionElement>> GetAddLocationButtonAsync(
+    Task<IReadOnlyList<IActionElement>> GetAddLocationButtonAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Block>> GetLocationCardsAsync(
+    Task<IReadOnlyList<Block>> GetLocationCardsAsync(
         WorkspaceMember workspaceMember,
-        ICollection<Location> locations,
+        IReadOnlyList<Location> locations,
         PageContext pageContext,
         CancellationToken cancellationToken);
 }
@@ -28,7 +28,7 @@ public class LocationComponents(
     ILocationPermissionsService locationPermissionsService)
     : ILocationComponents
 {
-    public async Task<ICollection<IActionElement>> GetAddLocationButtonAsync(
+    public async Task<IReadOnlyList<IActionElement>> GetAddLocationButtonAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
@@ -49,9 +49,9 @@ public class LocationComponents(
         ];
     }
 
-    public async Task<ICollection<Block>> GetLocationCardsAsync(
+    public async Task<IReadOnlyList<Block>> GetLocationCardsAsync(
         WorkspaceMember workspaceMember,
-        ICollection<Location> locations,
+        IReadOnlyList<Location> locations,
         PageContext pageContext,
         CancellationToken cancellationToken)
     {

@@ -27,15 +27,15 @@ public interface ILocationService
     Task<Shared.Models.Location> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Location?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
 
-    Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(
+    Task<IReadOnlyList<Shared.Models.Location>> GetMyLocationsAsync(
         string? organizationId,
         string? organizationCustomDomain,
         CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
-        ICollection<LocationOrder> orderByFields,
+        IReadOnlyList<LocationOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
@@ -260,10 +260,10 @@ public class LocationService(
         return await EnrichLocationAsync(customer, location, cancellationToken);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
-        ICollection<LocationOrder> orderByFields,
+        IReadOnlyList<LocationOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
@@ -298,7 +298,7 @@ public class LocationService(
         return (paginatedInfo, mappedLocations, totalCount);
     }
 
-    public async Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(
+    public async Task<IReadOnlyList<Shared.Models.Location>> GetMyLocationsAsync(
         string? organizationId,
         string? organizationCustomDomain,
         CancellationToken cancellationToken)

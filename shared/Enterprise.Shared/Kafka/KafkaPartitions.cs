@@ -3,7 +3,7 @@ using Serilog;
 
 namespace Enterprise.Shared.Kafka;
 
-internal static class KafkaPartitions
+public static class KafkaPartitions
 {
     public static event EventHandler<TopicPartitionOffset[]>? PartitionsRevoked;
     public static event EventHandler<TopicPartition[]>? PartitionsAssigned;

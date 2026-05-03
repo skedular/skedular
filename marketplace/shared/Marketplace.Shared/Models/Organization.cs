@@ -13,8 +13,8 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public Offering? Offering { get; set; }
     public OrganizationType Type { get; set; }
     public bool? IsOwnershipVerified { get; set; }
-    public ICollection<OrganizationTag> Tags { get; set; } = [];
-    public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<Product> Products { get; set; } = [];
+    public IReadOnlyList<OrganizationTag> Tags { get; set; } = [];
+    public IReadOnlyList<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public IReadOnlyList<Product> Products { get; set; } = [];
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
 }

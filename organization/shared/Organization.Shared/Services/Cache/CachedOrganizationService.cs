@@ -9,11 +9,11 @@ public interface ICachedOrganizationService
 {
     ValueTask<Database.Entities.Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 
-    ValueTask<ICollection<Database.Entities.Organization>>
+    ValueTask<IReadOnlyList<Database.Entities.Organization>>
         GetMyOrganizationsByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
 
     ValueTask UpdateByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
-    ValueTask RemoveMyOrganizationsByCustomerIdsAsync(ICollection<string> customerIds, CancellationToken cancellationToken);
+    ValueTask RemoveMyOrganizationsByCustomerIdsAsync(IReadOnlyList<string> customerIds, CancellationToken cancellationToken);
     ValueTask RemoveByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 }
 
@@ -87,7 +87,7 @@ public class CachedOrganizationService(
         }
     }
 
-    public async ValueTask<ICollection<Database.Entities.Organization>> GetMyOrganizationsByCustomerIdAsync(
+    public async ValueTask<IReadOnlyList<Database.Entities.Organization>> GetMyOrganizationsByCustomerIdAsync(
         string customerId,
         CancellationToken cancellationToken)
     {
@@ -100,7 +100,7 @@ public class CachedOrganizationService(
             cancellationToken: cancellationToken);
     }
 
-    public async ValueTask RemoveMyOrganizationsByCustomerIdsAsync(ICollection<string> customerIds, CancellationToken cancellationToken)
+    public async ValueTask RemoveMyOrganizationsByCustomerIdsAsync(IReadOnlyList<string> customerIds, CancellationToken cancellationToken)
     {
         foreach (var customerId in customerIds.Where(customerId => !string.IsNullOrWhiteSpace(customerId)).Distinct())
         {

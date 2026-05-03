@@ -66,7 +66,7 @@ public record WeekOpeningHours(
 
 public record OpeningHours(
     WeekOpeningHours WeekOpeningHours,
-    ICollection<DateTimeOffset> ClosedDates,
+    IReadOnlyList<DateTimeOffset> ClosedDates,
     Dictionary<DateTimeOffset, OpeningHoursDetails> DatesWithVariedOpeningHours)
 {
     public static readonly OpeningHours Default = new(WeekOpeningHours.Default, [], []);

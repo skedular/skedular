@@ -199,7 +199,7 @@ public class OrganizationZoneService(
         return result;
     }
 
-    private void Cache(ICollection<OrganizationZone> organizationZones)
+    private void Cache(IReadOnlyList<OrganizationZone> organizationZones)
     {
         foreach (var organizationZone in organizationZones)
         {

@@ -16,11 +16,11 @@ public interface IOrganizationPhysicalAddressRepository : IRepository<Organizati
     OrganizationPhysicalAddress Remove(OrganizationPhysicalAddress address);
 }
 
-internal static class OrganizationPhysicalAddressExtensions
+public static class OrganizationPhysicalAddressExtensions
 {
     extension(IQueryable<OrganizationPhysicalAddress> originalQuery)
     {
-        internal IIncludableQueryable<OrganizationPhysicalAddress, Database.Entities.Organization> AddDependentObjects() =>
+        public IIncludableQueryable<OrganizationPhysicalAddress, Database.Entities.Organization> AddDependentObjects() =>
             originalQuery
                 .AsSingleQuery()
                 .Include(query => query.Organization);
@@ -56,7 +56,7 @@ public class OrganizationPhysicalAddressRepository(OrganizationDbContext dbConte
         return DbContext.OrganizationPhysicalAddress.Update(address).Entity;
     }
 
-    public void RemoveRange(ICollection<OrganizationPhysicalAddress> organizationBankAccounts)
+    public void RemoveRange(IReadOnlyList<OrganizationPhysicalAddress> organizationBankAccounts)
     {
         var now = TimeProvider.GetUtcNow();
         organizationBankAccounts.ForEach(organizationBankAccount => organizationBankAccount.DeletedAt = now);

@@ -28,7 +28,7 @@ public class StripeProductPricingService(
 
         foreach (var pricing in pricingOptions)
         {
-            var stripeProductEntity = productVersionHelperService.FindMatchingPricing(productVersion.StripeProducts, pricing);
+            var stripeProductEntity = productVersionHelperService.FindMatchingPricing(productVersion.StripeProducts.ToList(), pricing);
             if (stripeProductEntity is null)
             {
                 var productId = randomHelper.Generate();

@@ -9,9 +9,9 @@ namespace Booking.Shared.Repositories;
 public interface IMarketplaceRefundEventRepository : IRepository<MarketplaceRefundEvent>
 {
     MarketplaceRefundEvent Add(MarketplaceRefundEvent marketplaceRefundEvent);
-    Task<ICollection<MarketplaceRefundEvent>> GetByMarketplaceRefundIdAsync(string marketplaceRefundId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<MarketplaceRefundEvent>> GetByMarketplaceRefundIdAsync(string marketplaceRefundId, CancellationToken cancellationToken);
 
-    Task<ICollection<MarketplaceRefundEvent>> GetByMarketplaceRefundIdsAsync(ICollection<string> marketplaceRefundIds,
+    Task<IReadOnlyList<MarketplaceRefundEvent>> GetByMarketplaceRefundIdsAsync(IReadOnlyList<string> marketplaceRefundIds,
         CancellationToken cancellationToken);
 }
 
@@ -24,7 +24,7 @@ public class MarketplaceRefundEventRepository(BookingDbContext dbContext, TimePr
         return DbContext.MarketplaceRefundEvent.Add(marketplaceRefundEvent).Entity;
     }
 
-    public async Task<ICollection<MarketplaceRefundEvent>> GetByMarketplaceRefundIdAsync(
+    public async Task<IReadOnlyList<MarketplaceRefundEvent>> GetByMarketplaceRefundIdAsync(
         string marketplaceRefundId,
         CancellationToken cancellationToken) =>
         await DbContext.MarketplaceRefundEvent
@@ -34,8 +34,8 @@ public class MarketplaceRefundEventRepository(BookingDbContext dbContext, TimePr
             .ThenBy(item => item.CreatedAt)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<MarketplaceRefundEvent>> GetByMarketplaceRefundIdsAsync(
-        ICollection<string> marketplaceRefundIds,
+    public async Task<IReadOnlyList<MarketplaceRefundEvent>> GetByMarketplaceRefundIdsAsync(
+        IReadOnlyList<string> marketplaceRefundIds,
         CancellationToken cancellationToken)
     {
         if (marketplaceRefundIds.Count == 0)

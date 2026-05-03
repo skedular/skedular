@@ -52,7 +52,7 @@ public class DeleteShould
         var result = await sut.DeleteAsync("team-1", cancellationToken);
 
         result.Id.ShouldBe("team-1");
-        A.CallTo(() => teamOutboxPublisher.PublishTeams(A<ICollection<Shared.Models.Team>>._, unitOfWork))
+        A.CallTo(() => teamOutboxPublisher.PublishTeams(A<IReadOnlyList<Shared.Models.Team>>._, unitOfWork))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => cachedTeamService.RemoveByIdAsync("team-1", cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(logger)

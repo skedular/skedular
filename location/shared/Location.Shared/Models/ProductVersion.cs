@@ -7,9 +7,9 @@ public class ProductVersion : ModelBase
 {
     public ProductType Type { get; set; }
     public Product Product { get; set; } = new();
-    public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
-    public ICollection<OrganizationTag> ProductTags => OrganizationTags.Where(item => item.Type == OrganizationTagType.Product).ToList();
+    public IReadOnlyList<OrganizationTag> OrganizationTags { get; set; } = [];
+    public IReadOnlyList<OrganizationTag> ProductTags => OrganizationTags.Where(item => item.Type == OrganizationTagType.Product).ToList();
 
-    public ICollection<OrganizationTag> Amenities =>
+    public IReadOnlyList<OrganizationTag> Amenities =>
         OrganizationTags.Where(item => OrganizationTagTypeConstants.Amenities.Any(tagType => item.Type == tagType)).ToList();
 }

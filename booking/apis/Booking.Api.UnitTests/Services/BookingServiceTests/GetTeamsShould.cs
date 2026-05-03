@@ -33,7 +33,7 @@ public class GetTeamsShould
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => teamRepository.GetActiveByIdsAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "team-1" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "team-1" })),
                 cancellationToken))
             .Returns([team]);
         A.CallTo(() => organizationRepository.GetByCustomerIdAsync("customer-1", false, false, cancellationToken)).Returns([organization]);
@@ -42,7 +42,7 @@ public class GetTeamsShould
         A.CallTo(() => bookingRepository.GetPaginatedBookingsUntrackedAsync(
                 A<PaginationInputParam>._,
                 A<BookingSearchCriteria>._,
-                A<ICollection<BookingOrder>>._,
+                A<IReadOnlyList<BookingOrder>>._,
                 A<BookingAccessScope>.That.Matches(scope =>
                     scope.OrganizationIds.SequenceEqual(new[] { "org-1" }) &&
                     scope.LocationIds.Count == 0 &&
@@ -55,12 +55,12 @@ public class GetTeamsShould
 
         result.Item3.ShouldBe(0);
         A.CallTo(() => teamRepository.GetActiveByIdsAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "team-1" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "team-1" })),
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
 
-    private static BookingSearchCriteria CreateSearchCriteria(ICollection<string> teamIds) =>
+    private static BookingSearchCriteria CreateSearchCriteria(IReadOnlyList<string> teamIds) =>
         new(
             null,
             null,

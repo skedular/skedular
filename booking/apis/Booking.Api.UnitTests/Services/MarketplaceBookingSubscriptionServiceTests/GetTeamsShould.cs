@@ -33,7 +33,7 @@ public class GetTeamsShould
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => teamRepository.GetActiveByIdsAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "team-1" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "team-1" })),
                 cancellationToken))
             .Returns([team]);
         A.CallTo(() => organizationRepository.GetByCustomerIdAsync("customer-1", false, false, cancellationToken)).Returns([organization]);
@@ -42,7 +42,7 @@ public class GetTeamsShould
         A.CallTo(() => marketplaceBookingSubscriptionRepository.GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
                 A<PaginationInputParam>._,
                 A<MarketplaceBookingSubscriptionSearchCriteria>._,
-                A<ICollection<MarketplaceBookingSubscriptionOrder>>._,
+                A<IReadOnlyList<MarketplaceBookingSubscriptionOrder>>._,
                 A<MarketplaceBookingSubscriptionAccessScope>.That.Matches(scope =>
                     scope.OrganizationIds.SequenceEqual(new[] { "org-1" }) &&
                     scope.TeamIds.SequenceEqual(new[] { "team-1" })),
@@ -58,12 +58,12 @@ public class GetTeamsShould
 
         result.Item3.ShouldBe(0);
         A.CallTo(() => teamRepository.GetActiveByIdsAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "team-1" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "team-1" })),
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
 
-    private static MarketplaceBookingSubscriptionSearchCriteria CreateSearchCriteria(ICollection<string> teamIds) =>
+    private static MarketplaceBookingSubscriptionSearchCriteria CreateSearchCriteria(IReadOnlyList<string> teamIds) =>
         new(
             null,
             null,

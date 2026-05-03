@@ -12,20 +12,20 @@ namespace Slack.Api.Components;
 public interface IBookingComponents
 {
     Block GetOnlyShowMyBookingCheckbox(string actionId, bool initialValue);
-    ICollection<IActionElement> GetAddBookingButton(PageContext pageContext);
+    IReadOnlyList<IActionElement> GetAddBookingButton(PageContext pageContext);
 
-    Task<ICollection<Block>> GetBookingCardsAsync(
+    Task<IReadOnlyList<Block>> GetBookingCardsAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
-        ICollection<Booking> bookings,
-        ICollection<Booking> myBookings,
+        IReadOnlyList<Booking> bookings,
+        IReadOnlyList<Booking> myBookings,
         PageContext pageContext,
         CancellationToken cancellationToken);
 
-    public ICollection<Block> GetBookingCard(
+    public IReadOnlyList<Block> GetBookingCard(
         Workspace workspace,
         Booking booking,
-        ICollection<Booking> myBookings,
+        IReadOnlyList<Booking> myBookings,
         string loggedInCustomerId,
         bool includeActionButtons,
         PageContext pageContext);
@@ -54,7 +54,7 @@ public class BookingComponents(
         };
     }
 
-    public ICollection<IActionElement> GetAddBookingButton(PageContext pageContext)
+    public IReadOnlyList<IActionElement> GetAddBookingButton(PageContext pageContext)
     {
         pageContext = pageContext.Clone();
         var context = new AddBookingContext(pageContext, null, null, null).Serialize();
@@ -65,11 +65,11 @@ public class BookingComponents(
         ];
     }
 
-    public async Task<ICollection<Block>> GetBookingCardsAsync(
+    public async Task<IReadOnlyList<Block>> GetBookingCardsAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
-        ICollection<Booking> bookings,
-        ICollection<Booking> myBookings,
+        IReadOnlyList<Booking> bookings,
+        IReadOnlyList<Booking> myBookings,
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
@@ -84,10 +84,10 @@ public class BookingComponents(
         return blocks.SkipLast(1).ToList();
     }
 
-    public ICollection<Block> GetBookingCard(
+    public IReadOnlyList<Block> GetBookingCard(
         Workspace workspace,
         Booking booking,
-        ICollection<Booking> myBookings,
+        IReadOnlyList<Booking> myBookings,
         string loggedInCustomerId,
         bool includeActionButtons,
         PageContext pageContext)

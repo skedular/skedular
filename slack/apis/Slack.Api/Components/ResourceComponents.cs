@@ -9,23 +9,23 @@ namespace Slack.Api.Components;
 
 public interface IResourceComponents
 {
-    Task<ICollection<IActionElement>> GetAddResourceButtonAsync(
+    Task<IReadOnlyList<IActionElement>> GetAddResourceButtonAsync(
         string locationId,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Block>> GetResourceCardsAsync(
+    Task<IReadOnlyList<Block>> GetResourceCardsAsync(
         string locationId,
         WorkspaceMember workspaceMember,
-        ICollection<Resource> resources,
+        IReadOnlyList<Resource> resources,
         PageContext pageContext,
         CancellationToken cancellationToken);
 }
 
 public class ResourceComponents(ICustomerService customerService, ILocationPermissionsService locationPermissionsService) : IResourceComponents
 {
-    public async Task<ICollection<IActionElement>> GetAddResourceButtonAsync(
+    public async Task<IReadOnlyList<IActionElement>> GetAddResourceButtonAsync(
         string locationId,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
@@ -46,10 +46,10 @@ public class ResourceComponents(ICustomerService customerService, ILocationPermi
         ];
     }
 
-    public async Task<ICollection<Block>> GetResourceCardsAsync(
+    public async Task<IReadOnlyList<Block>> GetResourceCardsAsync(
         string locationId,
         WorkspaceMember workspaceMember,
-        ICollection<Resource> resources,
+        IReadOnlyList<Resource> resources,
         PageContext pageContext,
         CancellationToken cancellationToken)
     {

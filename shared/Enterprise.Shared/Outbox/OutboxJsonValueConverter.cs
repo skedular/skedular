@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Enterprise.Shared.Outbox;
 
-internal static class OutboxJsonValueConverter
+public static class OutboxJsonValueConverter
 {
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
 

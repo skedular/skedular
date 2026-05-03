@@ -14,10 +14,10 @@ public interface IRecurringBookingService
 {
     Task<RecurringBooking> GetByIdAsync(string id, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsAsync(
         PaginationInputParam paginationInputParam,
         RecurringBookingSearchCriteria searchCriteria,
-        ICollection<RecurringBookingOrder> orderByFields,
+        IReadOnlyList<RecurringBookingOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
@@ -42,10 +42,10 @@ public class RecurringBookingService(
         return sharedMapper.MapTo(booking);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsAsync(
         PaginationInputParam paginationInputParam,
         RecurringBookingSearchCriteria searchCriteria,
-        ICollection<RecurringBookingOrder> orderByFields,
+        IReadOnlyList<RecurringBookingOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {

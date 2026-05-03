@@ -11,16 +11,16 @@ public interface IAzureTenantRepository : IRepository<AzureTenant>
 {
     Task<AzureTenant?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<bool> ExistsActiveByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<AzureTenant>> GetAllAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<AzureTenant>> GetAllAsync(CancellationToken cancellationToken);
     AzureTenant Add(AzureTenant azureTenant);
     AzureTenant Update(AzureTenant azureTenant);
 }
 
-internal static class AzureTenantExtensions
+public static class AzureTenantExtensions
 {
     extension(IQueryable<AzureTenant> originalQuery)
     {
-        internal IIncludableQueryable<AzureTenant, ICollection<AzureTenantMember>> AddDependentObjects() =>
+        public IIncludableQueryable<AzureTenant, ICollection<AzureTenantMember>> AddDependentObjects() =>
             originalQuery
                 .Include(query => query.Organization)
                 .ThenInclude(query => query.OrganizationMembers)
@@ -49,7 +49,7 @@ public class AzureTenantRepository(OrganizationDbContext dbContext, TimeProvider
     public async Task<bool> ExistsActiveByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.AzureTenant.AnyAsync(query => !query.DeletedAt.HasValue && query.Id == id, cancellationToken);
 
-    public async Task<ICollection<AzureTenant>> GetAllAsync(CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<AzureTenant>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.AzureTenant
             .Where(query => !query.DeletedAt.HasValue)
             .AddDependentObjects()

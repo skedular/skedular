@@ -29,11 +29,11 @@ public interface IOrganizationRepository : IRepository<Organization>
     Organization Remove(Organization location);
 }
 
-internal static class OrganizationExtensions
+public static class OrganizationExtensions
 {
     extension(IQueryable<Organization> originalQuery)
     {
-        internal IIncludableQueryable<Organization, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked,
+        public IIncludableQueryable<Organization, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked,
             bool includeDeletedOrganizationMembers,
             bool includeDeletedOrganizationTags) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())

@@ -33,7 +33,7 @@ public class BookingResourceSlotsHelperService(IRepositoryFactory repositoryFact
             slot.Customers.Clear();
         }
 
-        repositoryFactory.ResourceBookingSlotRepository.UpdateRange(booking.ResourceBookingSlots);
+        repositoryFactory.ResourceBookingSlotRepository.UpdateRange(booking.ResourceBookingSlots.ToList());
         booking.ResourceBookingSlots.Clear();
         repositoryFactory.BookingRepository.Update(booking);
     }

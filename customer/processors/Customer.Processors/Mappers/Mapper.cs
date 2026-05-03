@@ -63,7 +63,7 @@ public class Mapper : IMapper
     {
         var organizationAfterState = src.Data.Organization;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         var organization = new Organization
         {
@@ -132,7 +132,7 @@ public class Mapper : IMapper
     {
         var locationAfterState = src.Data.Location;
         var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         var location = new Location
         {

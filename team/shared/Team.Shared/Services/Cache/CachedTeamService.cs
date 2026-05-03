@@ -10,7 +10,7 @@ public interface ICachedTeamService
 {
     ValueTask<Database.Entities.Team?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask UpdateAsync(ICollection<Database.Entities.Team> teams, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(IReadOnlyList<Database.Entities.Team> teams, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -51,7 +51,7 @@ public class CachedTeamService(
         logger.LogDebug("Cache refresh for team {TeamId}", id);
     }
 
-    public async ValueTask UpdateAsync(ICollection<Database.Entities.Team> teams, CancellationToken cancellationToken)
+    public async ValueTask UpdateAsync(IReadOnlyList<Database.Entities.Team> teams, CancellationToken cancellationToken)
     {
         foreach (var item in teams)
         {

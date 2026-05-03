@@ -19,12 +19,12 @@ public record RecurringBookingSearchCriteria(
     bool? IncludeFutureBookingsOnly,
     string? OrganizationId,
     string? OrganizationCustomDomain,
-    ICollection<string> TeamIds,
-    ICollection<string> CustomerIds);
+    IReadOnlyList<string> TeamIds,
+    IReadOnlyList<string> CustomerIds);
 
 public record RecurringBookingAccessScope(
-    ICollection<string> OrganizationIds,
-    ICollection<string> TeamIds);
+    IReadOnlyList<string> OrganizationIds,
+    IReadOnlyList<string> TeamIds);
 
 public record RecurringBookingOrder(OrderDirection Direction, RecurringBookingOrderField Field);
 

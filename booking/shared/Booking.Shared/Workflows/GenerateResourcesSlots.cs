@@ -4,7 +4,7 @@ using Temporalio.Workflows;
 
 namespace Booking.Shared.Workflows;
 
-public record GenerateResourcesSlotsInput(ICollection<string> ResourceIds);
+public record GenerateResourcesSlotsInput(IReadOnlyList<string> ResourceIds);
 
 [Workflow]
 public class GenerateResourcesSlots

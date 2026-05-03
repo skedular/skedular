@@ -14,7 +14,7 @@ namespace Organization.Shared.Repositories;
 public interface ITagRepository : IRepository<Tag>
 {
     Task<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Tag>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Tag>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
 
     Task<bool> ExistsActiveWithNameAsync(
         string organizationId,
@@ -25,26 +25,26 @@ public interface ITagRepository : IRepository<Tag>
 
     Tag Add(Tag tag);
     Tag Update(Tag tag);
-    void RemoveRange(ICollection<Tag> tags);
+    void RemoveRange(IReadOnlyList<Tag> tags);
     Tag Remove(Tag tag);
 
-    Task<(PaginatedInfo, ICollection<Edge<Tag>>, int)> GetPaginatedTagsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
-        ICollection<TagOrder> orderByFields,
+        IReadOnlyList<TagOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
-internal static class TagExtensions
+public static class TagExtensions
 {
     extension(IQueryable<Tag> originalQuery)
     {
-        internal IIncludableQueryable<Tag, Database.Entities.Organization> AddDependentObjects() =>
+        public IIncludableQueryable<Tag, Database.Entities.Organization> AddDependentObjects() =>
             originalQuery
                 .AsSingleQuery()
                 .Include(query => query.Organization);
 
-        internal IQueryable<Tag> AddSearchCriteria(TagSearchCriteria searchCriteria)
+        public IQueryable<Tag> AddSearchCriteria(TagSearchCriteria searchCriteria)
         {
             if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
             {
@@ -81,7 +81,7 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
     public async Task<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Tag.AddDependentObjects().FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Tag>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Tag>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Tag.Where(query => ids.Contains(query.Id)).AddDependentObjects().ToListAsync(cancellationToken);
 
     /// <summary>
@@ -119,7 +119,7 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
         return DbContext.Tag.Add(tag).Entity;
     }
 
-    public void RemoveRange(ICollection<Tag> tags)
+    public void RemoveRange(IReadOnlyList<Tag> tags)
     {
         var now = TimeProvider.GetUtcNow();
         tags.ForEach(tag => tag.DeletedAt = now);
@@ -140,17 +140,17 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
         return DbContext.Tag.Update(tag).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Tag>>, int)> GetPaginatedTagsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
-        ICollection<TagOrder> orderByFields,
+        IReadOnlyList<TagOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Tag
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects()
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Tag>> GetPaginationFields(ICollection<TagOrder> orderByFields)
+    private static List<KeysetPaginationField<Tag>> GetPaginationFields(IReadOnlyList<TagOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

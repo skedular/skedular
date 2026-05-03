@@ -81,7 +81,7 @@ public class CancelledBookingsExcludedShould
         A.CallTo(() => locationRepository.GetByIdAsync(locationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
         A.CallTo(() => resourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync(
-                A<ICollection<string>>._, A<CancellationToken>._))
+                A<IReadOnlyList<string>>._, A<CancellationToken>._))
             .Returns(Array.Empty<LocationResource>());
 
         var day1 = new DateTimeOffset(2026, 4, 1, 9, 0, 0, TimeSpan.Zero);
@@ -143,7 +143,7 @@ public class CancelledBookingsExcludedShould
         A.CallTo(() => locationRepository.GetByIdAsync(locationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
         A.CallTo(() => resourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync(
-                A<ICollection<string>>._, A<CancellationToken>._))
+                A<IReadOnlyList<string>>._, A<CancellationToken>._))
             .Returns(Array.Empty<LocationResource>());
 
         var emptyResponse = new BookingConnection { PageInfo = new PageInfo { HasNextPage = false, EndCursor = string.Empty } };

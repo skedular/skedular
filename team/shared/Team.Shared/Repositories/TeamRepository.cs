@@ -14,30 +14,30 @@ public interface ITeamRepository : IRepository<Database.Entities.Team>
 {
     Task<Database.Entities.Team?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Database.Entities.Team?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Database.Entities.Team>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Database.Entities.Team>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Team>> GetByCustomerIdUntrackedAsync(
+    Task<IReadOnlyList<Database.Entities.Team>> GetByCustomerIdUntrackedAsync(
         string customerId,
         string? organizationId,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Team>> GetAllUntrackedAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<Database.Entities.Team>> GetAllUntrackedAsync(CancellationToken cancellationToken);
     Database.Entities.Team Add(Database.Entities.Team team);
     Database.Entities.Team Update(Database.Entities.Team team);
     Database.Entities.Team Remove(Database.Entities.Team team);
 
-    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Team>>, int)> GetPaginatedTeamsUntrackedAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Team>>, int)> GetPaginatedTeamsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         TeamSearchCriteria searchCriteria,
-        ICollection<TeamOrder> orderByFields,
+        IReadOnlyList<TeamOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
-internal static class TeamExtensions
+public static class TeamExtensions
 {
     extension(IQueryable<Database.Entities.Team> originalQuery)
     {
-        internal IIncludableQueryable<Database.Entities.Team, Customer> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<Database.Entities.Team, Customer> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.PrimaryLocation)
             .Include(query => query.Organization)
@@ -53,7 +53,7 @@ internal static class TeamExtensions
             .ThenInclude(query => query.OrganizationMember)
             .ThenInclude(query => query!.Customer);
 
-        internal IQueryable<Database.Entities.Team> AddSearchCriteria(TeamSearchCriteria searchCriteria)
+        public IQueryable<Database.Entities.Team> AddSearchCriteria(TeamSearchCriteria searchCriteria)
         {
             originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
 
@@ -104,13 +104,13 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
             .AddDependentObjects(false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Team>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Database.Entities.Team>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Team
             .Where(query => ids.Contains(query.Id))
             .AddDependentObjects(true)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Team>> GetByCustomerIdUntrackedAsync(
+    public async Task<IReadOnlyList<Database.Entities.Team>> GetByCustomerIdUntrackedAsync(
         string customerId,
         string? organizationId,
         CancellationToken cancellationToken)
@@ -126,7 +126,7 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<ICollection<Database.Entities.Team>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Database.Entities.Team>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
         await DbContext.Team
             .Where(query => !query.DeletedAt.HasValue)
             .AddDependentObjects(false)
@@ -153,17 +153,17 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
         return DbContext.Team.Update(team).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Team>>, int)> GetPaginatedTeamsUntrackedAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Team>>, int)> GetPaginatedTeamsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         TeamSearchCriteria searchCriteria,
-        ICollection<TeamOrder> orderByFields,
+        IReadOnlyList<TeamOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Team
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Database.Entities.Team>> GetPaginationFields(ICollection<TeamOrder> orderByFields)
+    private static List<KeysetPaginationField<Database.Entities.Team>> GetPaginationFields(IReadOnlyList<TeamOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

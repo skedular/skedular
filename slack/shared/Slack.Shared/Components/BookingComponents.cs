@@ -6,12 +6,12 @@ namespace Slack.Shared.Components;
 
 public interface IBookingComponents
 {
-    public ICollection<Block> GetResourcesLines(Booking booking);
+    public IReadOnlyList<Block> GetResourcesLines(Booking booking);
 }
 
 public class BookingComponents : IBookingComponents
 {
-    public ICollection<Block> GetResourcesLines(Booking booking)
+    public IReadOnlyList<Block> GetResourcesLines(Booking booking)
     {
         if (booking.Resources.Count == 0)
         {

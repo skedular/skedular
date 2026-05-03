@@ -16,7 +16,7 @@ public interface IMarketplaceRefundReadService
     Task<MarketplaceRefundDetails?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<MarketplaceRefundDetails?> GetByMarketplaceBookingIdAsync(string marketplaceBookingId, CancellationToken cancellationToken);
 
-    Task<ICollection<MarketplaceRefundDetails>> GetByOrganizationCustomDomainAsync(string organizationCustomDomain, ICollection<string>? statuses,
+    Task<IReadOnlyList<MarketplaceRefundDetails>> GetByOrganizationCustomDomainAsync(string organizationCustomDomain, IReadOnlyList<string>? statuses,
         CancellationToken cancellationToken);
 
     Task<MarketplaceRefundDetails?> GetByMarketplaceBookingSubscriptionIdAsync(string marketplaceBookingSubscriptionId,
@@ -71,9 +71,9 @@ public class MarketplaceRefundReadService(
         return refund is null ? null : await MapWithAccessControlAsync(refund, cancellationToken);
     }
 
-    public async Task<ICollection<MarketplaceRefundDetails>> GetByOrganizationCustomDomainAsync(
+    public async Task<IReadOnlyList<MarketplaceRefundDetails>> GetByOrganizationCustomDomainAsync(
         string organizationCustomDomain,
-        ICollection<string>? statuses,
+        IReadOnlyList<string>? statuses,
         CancellationToken cancellationToken)
     {
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
@@ -98,7 +98,7 @@ public class MarketplaceRefundReadService(
         var refundEvents = await repositoryFactory.MarketplaceRefundEventRepository.GetByMarketplaceRefundIdsAsync(refundIds, cancellationToken);
         var refundEventsByRefundId = refundEvents
             .GroupBy(item => item.MarketplaceRefundId)
-            .ToDictionary(item => item.Key, item => (ICollection<MarketplaceRefundEvent>)item.ToList());
+            .ToDictionary(item => item.Key, item => (IReadOnlyList<MarketplaceRefundEvent>)item.ToList());
         var actorsById = await GetActorsByIdAsync(refunds, refundEvents, cancellationToken);
         var availabilityTasks = refunds.ToDictionary(
             item => item.Id,
@@ -141,7 +141,7 @@ public class MarketplaceRefundReadService(
 
     private MarketplaceRefundDetails MapToDetails(
         MarketplaceRefund refund,
-        ICollection<MarketplaceRefundEvent> refundEvents,
+        IReadOnlyList<MarketplaceRefundEvent> refundEvents,
         IReadOnlyDictionary<string, string> actorsById,
         XeroRefundProcessingAvailability availability)
     {
@@ -158,7 +158,7 @@ public class MarketplaceRefundReadService(
                 ? actorName
                 : null;
             return mappedEvent;
-        }).ToList();
+        });
         result.RequestedByCustomerName = refund.RequestedByCustomerId is not null &&
                                          actorsById.TryGetValue(refund.RequestedByCustomerId, out var requestedByCustomerName)
             ? requestedByCustomerName
@@ -169,8 +169,8 @@ public class MarketplaceRefundReadService(
     }
 
     private async Task<IReadOnlyDictionary<string, string>> GetActorsByIdAsync(
-        ICollection<MarketplaceRefund> refunds,
-        ICollection<MarketplaceRefundEvent> refundEvents,
+        IReadOnlyList<MarketplaceRefund> refunds,
+        IReadOnlyList<MarketplaceRefundEvent> refundEvents,
         CancellationToken cancellationToken)
     {
         var actorIds = refundEvents

@@ -38,7 +38,7 @@ public record ArrearsInvoiceDraft(
     string CustomerId,
     Currency Currency,
     BillingPeriod BillingPeriod,
-    ICollection<ArrearsInvoiceDraftLine> Lines)
+    IReadOnlyList<ArrearsInvoiceDraftLine> Lines)
 {
     public decimal TotalAmount => Lines.Sum(item => item.Amount).RoundedDecimal();
 }

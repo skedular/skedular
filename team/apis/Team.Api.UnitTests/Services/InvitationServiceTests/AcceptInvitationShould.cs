@@ -71,7 +71,7 @@ public class AcceptInvitationShould
         result.Id.ShouldBe("inv-1");
         A.CallTo(() => temporalOutboxService.SignalWorkflowInviteToJoinInvitationStatusChanged("inv-1", unitOfWork))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => teamOutboxPublisher.PublishTeams(A<ICollection<Shared.Models.Team>>._, unitOfWork))
+        A.CallTo(() => teamOutboxPublisher.PublishTeams(A<IReadOnlyList<Shared.Models.Team>>._, unitOfWork))
             .MustHaveHappenedOnceExactly();
         A.CallTo(logger)
             .Where(call =>

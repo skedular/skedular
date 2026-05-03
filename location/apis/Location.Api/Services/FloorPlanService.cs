@@ -22,13 +22,13 @@ public interface IFloorPlanService
 
     Task<FloorPlan> UpdateResourcePositionsAsync(
         string floorPlanId,
-        ICollection<ResourcePosition> resourcePositions,
+        IReadOnlyList<ResourcePosition> resourcePositions,
         CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<FloorPlan>>, int )> GetPaginatedFloorPlansAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int )> GetPaginatedFloorPlansAsync(
         PaginationInputParam paginationInputParam,
         FloorPlanSearchCriteria searchCriteria,
-        ICollection<FloorPlanOrder> orderByFields,
+        IReadOnlyList<FloorPlanOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -94,7 +94,7 @@ public class FloorPlanService(
         }
 
         var resourcePositions = floorPlan.ResourcePositions;
-        ICollection<Resource> resources = [];
+        IReadOnlyList<Resource> resources = [];
         if (updateResourcePositions)
         {
             resources = resourcePositions.Count == 0
@@ -186,7 +186,7 @@ public class FloorPlanService(
 
     public async Task<FloorPlan> UpdateResourcePositionsAsync(
         string floorPlanId,
-        ICollection<ResourcePosition> resourcePositions,
+        IReadOnlyList<ResourcePosition> resourcePositions,
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
@@ -260,10 +260,10 @@ public class FloorPlanService(
         return mapper.MapTo(existingFloorPlan);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<FloorPlan>>, int)> GetPaginatedFloorPlansAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int)> GetPaginatedFloorPlansAsync(
         PaginationInputParam paginationInputParam,
         FloorPlanSearchCriteria searchCriteria,
-        ICollection<FloorPlanOrder> orderByFields,
+        IReadOnlyList<FloorPlanOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.LocationId);
@@ -295,9 +295,9 @@ public class FloorPlanService(
         Shared.Database.Entities.Location existingLocation,
         CancellationToken cancellationToken)
     {
-        ICollection<Shared.Database.Entities.ResourcePosition> resourcePositionToRemove = [];
-        ICollection<Shared.Database.Entities.ResourcePosition> updatedResourcePosition = [];
-        ICollection<Shared.Database.Entities.ResourcePosition> addedResourcePosition = [];
+        IReadOnlyList<Shared.Database.Entities.ResourcePosition> resourcePositionToRemove = [];
+        IReadOnlyList<Shared.Database.Entities.ResourcePosition> updatedResourcePosition = [];
+        IReadOnlyList<Shared.Database.Entities.ResourcePosition> addedResourcePosition = [];
 
         if (updateResourcePositions)
         {

@@ -17,35 +17,35 @@ public interface IOrganizationRepository : IRepository<Database.Entities.Organiz
 {
     Task<Database.Entities.Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Organization>> GetByIdsOrCustomDomainsAsync(
-        ICollection<string>? ids,
-        ICollection<string>? customDomains,
+    Task<IReadOnlyList<Database.Entities.Organization>> GetByIdsOrCustomDomainsAsync(
+        IReadOnlyList<string>? ids,
+        IReadOnlyList<string>? customDomains,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Organization>> GetMinimalOrganizationByCustomerIdUntrackedAsync(
+    Task<IReadOnlyList<Database.Entities.Organization>> GetMinimalOrganizationByCustomerIdUntrackedAsync(
         string customerId,
         CancellationToken cancellationToken);
 
     Task<Database.Entities.Organization?> GetByAzureTenantIdUntrackedAsync(string azureTenantId, CancellationToken cancellationToken);
     Task<Database.Entities.Organization?> GetByXeroTenantIdUntrackedAsync(string tenantId, CancellationToken cancellationToken);
-    Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken);
-    Task<ICollection<Database.Entities.Organization>> GetAllUntrackedAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<Database.Entities.Organization>> GetAllUntrackedAsync(CancellationToken cancellationToken);
     Database.Entities.Organization Add(Database.Entities.Organization organization);
     Database.Entities.Organization Update(Database.Entities.Organization organization);
     Database.Entities.Organization Remove(Database.Entities.Organization organization);
 
-    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Organization>>, int)> GetPaginatedOrganizationsUntrackedAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Organization>>, int)> GetPaginatedOrganizationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         OrganizationSearchCriteria searchCriteria,
-        ICollection<OrganizationOrder> orderByFields,
+        IReadOnlyList<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
-internal static class OrganizationExtensions
+public static class OrganizationExtensions
 {
     extension(IQueryable<Database.Entities.Organization> originalQuery)
     {
-        internal IIncludableQueryable<Database.Entities.Organization, OrganizationStripePaymentMethod> AddDependentObjects(bool isTracked,
+        public IIncludableQueryable<Database.Entities.Organization, OrganizationStripePaymentMethod> AddDependentObjects(bool isTracked,
             bool includeAllOfferings)
         {
             var updatedQuery = (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
@@ -96,7 +96,7 @@ internal static class OrganizationExtensions
                     .ThenInclude(query => query!.OrganizationStripePaymentMethod);
         }
 
-        internal IQueryable<Database.Entities.Organization> AddSearchCriteria(OrganizationSearchCriteria searchCriteria)
+        public IQueryable<Database.Entities.Organization> AddSearchCriteria(OrganizationSearchCriteria searchCriteria)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.CustomerId);
 
@@ -157,9 +157,9 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         throw new OrganizationLookupRequiresIdOrCustomDomainException();
     }
 
-    public async Task<ICollection<Database.Entities.Organization>> GetByIdsOrCustomDomainsAsync(
-        ICollection<string>? ids,
-        ICollection<string>? customDomains,
+    public async Task<IReadOnlyList<Database.Entities.Organization>> GetByIdsOrCustomDomainsAsync(
+        IReadOnlyList<string>? ids,
+        IReadOnlyList<string>? customDomains,
         CancellationToken cancellationToken)
     {
         if (ids is not null && ids.RemoveInvalidIds().Any() && customDomains is not null && customDomains.RemoveInvalidIds().Any())
@@ -196,7 +196,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         throw new OrganizationLookupRequiresIdsOrCustomDomainsException();
     }
 
-    public async Task<ICollection<Database.Entities.Organization>> GetMinimalOrganizationByCustomerIdUntrackedAsync(
+    public async Task<IReadOnlyList<Database.Entities.Organization>> GetMinimalOrganizationByCustomerIdUntrackedAsync(
         string customerId,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
@@ -221,13 +221,13 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
                     query.OrganizationXeroConnection.TenantId == tenantId,
                 cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query => !query.DeletedAt.HasValue)
             .AddDependentObjects(true, false)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Organization>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Database.Entities.Organization>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query => !query.DeletedAt.HasValue)
             .AddDependentObjects(false, false)
@@ -240,17 +240,17 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         return DbContext.Organization.Update(organization).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Organization>>, int)> GetPaginatedOrganizationsUntrackedAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Organization>>, int)> GetPaginatedOrganizationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         OrganizationSearchCriteria searchCriteria,
-        ICollection<OrganizationOrder> orderByFields,
+        IReadOnlyList<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false, false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Database.Entities.Organization>> GetPaginationFields(ICollection<OrganizationOrder> orderByFields)
+    private static List<KeysetPaginationField<Database.Entities.Organization>> GetPaginationFields(IReadOnlyList<OrganizationOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

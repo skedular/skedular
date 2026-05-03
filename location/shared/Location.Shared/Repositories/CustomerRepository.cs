@@ -19,11 +19,11 @@ public interface ICustomerRepository : IRepository<Customer>
     Customer Remove(Customer customer);
 }
 
-internal static class CustomerExtensions
+public static class CustomerExtensions
 {
     extension(IQueryable<Customer> originalQuery)
     {
-        internal IIncludableQueryable<Customer, Organization> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<Customer, Organization> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Identities)
             .Include(query => query.OrganizationMembers)

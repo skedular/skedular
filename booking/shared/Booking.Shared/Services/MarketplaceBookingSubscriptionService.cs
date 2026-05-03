@@ -21,8 +21,8 @@ public interface IMarketplaceBookingSubscriptionService
     Task<MarketplaceBookingSubscription> AddAsync(
         MarketplaceBookingSubscription subscription,
         Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         CancellationToken cancellationToken);
 
     Task<MarketplaceBookingSubscription> DeleteAsync(
@@ -51,8 +51,8 @@ public class MarketplaceBookingSubscriptionService(
     public async Task<MarketplaceBookingSubscription> AddAsync(
         MarketplaceBookingSubscription subscription,
         Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         CancellationToken cancellationToken)
     {
         var customerIds = subscription.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
@@ -89,7 +89,7 @@ public class MarketplaceBookingSubscriptionService(
         ArgumentNullException.ThrowIfNull(productVersion.PricingOptions);
 
         marketplaceBooking.ProductPricing =
-            productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions, marketplaceBooking.ProductPricing) ??
+            productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions.ToList(), marketplaceBooking.ProductPricing) ??
             throw new ProductPricingNotFound();
         marketplaceBooking.Currency ??= productVersion.Currency.ToNullableCurrency();
         await EnsureRequestedResourceCanBeBookedAsync(subscription, productVersion, marketplaceBooking, marketplaceBookingOpeningHoursService,
@@ -223,7 +223,7 @@ public class MarketplaceBookingSubscriptionService(
     }
 
     private static List<Organization> MergeOrganizationsWithProductOwner(
-        ICollection<Organization> organizations,
+        IReadOnlyList<Organization> organizations,
         ProductVersion productVersion)
     {
         ArgumentNullException.ThrowIfNull(productVersion.Product);

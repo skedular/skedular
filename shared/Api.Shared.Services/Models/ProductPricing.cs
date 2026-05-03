@@ -9,7 +9,7 @@ public record ProductPricing(
     decimal Price,
     bool IsTaxInclusive,
     bool SupportsSubscriptionAutoRenewal,
-    ICollection<PaymentMethod> AcceptedPaymentMethods,
+    IReadOnlyList<PaymentMethod> AcceptedPaymentMethods,
     ProductPricingBillingMode BillingMode,
     int? MinDurationMinutes,
     int? MaxDurationMinutes,
@@ -17,7 +17,7 @@ public record ProductPricing(
     int MaxAllowedResourcesLockTimePaidViaBankTransfer,
     int NumberOfResourcesToBook,
     ProductPricingCancellationPolicyType CancellationPolicyType,
-    ICollection<ProductPricingCancellationRefundRule> CancellationRefundRules)
+    IReadOnlyList<ProductPricingCancellationRefundRule> CancellationRefundRules)
 {
     public static ProductPricing Empty(string id) =>
         new(

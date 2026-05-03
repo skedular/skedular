@@ -34,7 +34,7 @@ public class MarketplaceRefundDetails
     [GraphQLName("lastProcessedAt")] public DateTimeOffset? LastProcessedAt { get; set; }
     [GraphQLName("lastError")] public string? LastError { get; set; }
     [GraphQLName("canProcessInXero")] public bool CanProcessInXero { get; set; }
-    [GraphQLName("events")] public ICollection<MarketplaceRefundEventDetails> Events { get; set; } = [];
+    [GraphQLName("events")] public IEnumerable<MarketplaceRefundEventDetails> Events { get; set; } = [];
     [GraphQLName("requestedByCustomerId")] public string? RequestedByCustomerId { get; set; }
 
     [GraphQLName("requestedByCustomerName")]

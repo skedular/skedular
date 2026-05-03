@@ -5,11 +5,11 @@ namespace Team.Shared.Models;
 
 public class Customer : ReplicatedModelBaseWithDeleted
 {
-    public ICollection<Identity> Identities { get; set; } = [];
-    public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<TeamMember> TeamMembers { get; set; } = [];
-    public ICollection<JoinInvitation> JoinInvitationsCreatedBy { get; set; } = [];
-    public ICollection<JoinInvitation> JoinInvitationsInvitee { get; set; } = [];
+    public IReadOnlyList<Identity> Identities { get; set; } = [];
+    public IReadOnlyList<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public IReadOnlyList<TeamMember> TeamMembers { get; set; } = [];
+    public IReadOnlyList<JoinInvitation> JoinInvitationsCreatedBy { get; set; } = [];
+    public IReadOnlyList<JoinInvitation> JoinInvitationsInvitee { get; set; } = [];
     public string? Name { get; set; }
     public string? GivenName { get; set; }
     public string? MiddleName { get; set; }

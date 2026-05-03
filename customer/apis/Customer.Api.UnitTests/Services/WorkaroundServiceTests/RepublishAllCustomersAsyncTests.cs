@@ -32,7 +32,7 @@ public class RepublishAllCustomersAsyncTests
         [Frozen] IMapper mapper,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
-        ICollection<Shared.Database.Entities.Customer> customerEntities,
+        IReadOnlyList<Shared.Database.Entities.Customer> customerEntities,
         CancellationToken cancellationToken)
     {
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -52,8 +52,8 @@ public class RepublishAllCustomersAsyncTests
         [Frozen] IMapper mapper,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
-        ICollection<Shared.Database.Entities.Customer> customerEntities,
-        ICollection<Shared.Models.Customer> customers,
+        IReadOnlyList<Shared.Database.Entities.Customer> customerEntities,
+        IReadOnlyList<Shared.Models.Customer> customers,
         CancellationToken cancellationToken)
     {
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -65,7 +65,8 @@ public class RepublishAllCustomersAsyncTests
         await sut.RepublishAllCustomersAsync(cancellationToken);
 
         A.CallTo(() => customerPublisher.PublishCustomersAsync(
-                A<ICollection<Shared.Models.Customer>>.That.Matches(items => items.Count == customerEntities.Count && customers.Any(items.Contains)),
+                A<IReadOnlyList<Shared.Models.Customer>>.That.Matches(items =>
+                    items.Count == customerEntities.Count && customers.Any(items.Contains)),
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
     }

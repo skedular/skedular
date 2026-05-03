@@ -184,7 +184,7 @@ public class SettingsPage(
 
         commonPageContext.PageContext.CurrentPageType = PageType.Settings;
 
-        ICollection<Block>[] blocks =
+        IReadOnlyList<Block>[] blocks =
         [
             GetTitle(),
             await GetToolbarAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
@@ -211,12 +211,12 @@ public class SettingsPage(
             .RegisterBlockActionHandler<CheckboxGroupAction, SettingsPage>(AutomaticallyUpdateProfileStatus)
             .RegisterBlockActionHandler<ChannelSelectAction, SettingsPage>(UpdateOrganizationSlackUpdateChannel);
 
-    private static ICollection<Block> GetTitle() =>
+    private static IReadOnlyList<Block> GetTitle() =>
     [
         new SectionBlock { Text = "*Settings*".ToMarkdown() }
     ];
 
-    private async Task<ICollection<Block>> GetToolbarAsync(
+    private async Task<IReadOnlyList<Block>> GetToolbarAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
@@ -242,7 +242,7 @@ public class SettingsPage(
         ];
     }
 
-    private static ICollection<Block> GetWorkspaceMemberSettings(WorkspaceMember workspaceMember)
+    private static IReadOnlyList<Block> GetWorkspaceMemberSettings(WorkspaceMember workspaceMember)
     {
         var title = new SectionBlock { Text = "*Personal settings*".ToMarkdown() };
         var automaticallyUpdateProfileStatusOption = new Option
@@ -272,7 +272,7 @@ public class SettingsPage(
         ];
     }
 
-    private static ICollection<Block> GetOrganizationSettings(Workspace workspace)
+    private static IReadOnlyList<Block> GetOrganizationSettings(Workspace workspace)
     {
         var title = new SectionBlock { Text = "*Organization settings*".ToMarkdown() };
         var slackUpdateChannelTitle = new SectionBlock { Text = "*Slack update channel*".ToMarkdown() };

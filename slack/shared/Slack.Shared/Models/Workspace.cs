@@ -18,6 +18,6 @@ public class Workspace : ModelBaseWithDeleted
     public string AuthedUserAccessToken { get; set; } = string.Empty;
     public string AuthedRefreshToken { get; set; } = string.Empty;
     public Organization Organization { get; set; } = new();
-    public ICollection<WorkspaceChannel> Channels { get; set; } = [];
-    public ICollection<WorkspaceMember> WorkspaceMembers { get; set; } = [];
+    public IReadOnlyList<WorkspaceChannel> Channels { get; set; } = [];
+    public IReadOnlyList<WorkspaceMember> WorkspaceMembers { get; set; } = [];
 }

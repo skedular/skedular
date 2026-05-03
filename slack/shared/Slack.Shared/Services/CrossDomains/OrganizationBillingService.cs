@@ -68,7 +68,7 @@ public class OrganizationBillingService(
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
 
-    private void Cache(ICollection<OrganizationBillingDetails> organizationBillingDetails)
+    private void Cache(IReadOnlyList<OrganizationBillingDetails> organizationBillingDetails)
     {
         foreach (var item in organizationBillingDetails)
         {

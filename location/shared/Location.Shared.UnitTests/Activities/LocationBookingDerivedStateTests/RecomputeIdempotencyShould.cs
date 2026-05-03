@@ -68,7 +68,7 @@ public class RecomputeIdempotencyShould
         A.CallTo(() => locationRepository.GetByIdAsync(locationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
         A.CallTo(() => resourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync(
-                A<ICollection<string>>._, A<CancellationToken>._))
+                A<IReadOnlyList<string>>._, A<CancellationToken>._))
             .Returns(Array.Empty<LocationResource>());
 
         var day = new DateTimeOffset(2026, 4, 15, 10, 0, 0, TimeSpan.Zero);
@@ -154,7 +154,7 @@ public class RecomputeIdempotencyShould
         A.CallTo(() => locationRepository.GetByIdAsync(locationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
         A.CallTo(() => resourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync(
-                A<ICollection<string>>._, A<CancellationToken>._))
+                A<IReadOnlyList<string>>._, A<CancellationToken>._))
             .Returns(new[] { deskResource });
 
         var day = new DateTimeOffset(2026, 4, 15, 10, 0, 0, TimeSpan.Zero);

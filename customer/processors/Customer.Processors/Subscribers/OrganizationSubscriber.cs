@@ -93,7 +93,7 @@ public class OrganizationSubscriber(
             existingOrganization.Id, existingOrganization.OrganizationMembers,
             cancellationToken);
         customers = customers.Concat(await UpdateCustomerDefaultOrganizationAsync(existingOrganization, cancellationToken)).ToList();
-        repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
+        repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers.ToList());
         existingOrganization.CustomDomain = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -146,7 +146,7 @@ public class OrganizationSubscriber(
         return existingOrganization;
     }
 
-    private async Task<ICollection<Shared.Database.Entities.Customer>> UpdateOrganizationMembersDefaultOrganizationAsync(
+    private async Task<IReadOnlyList<Shared.Database.Entities.Customer>> UpdateOrganizationMembersDefaultOrganizationAsync(
         string organizationId,
         IEnumerable<OrganizationMember> organizationMembersToRemove,
         CancellationToken cancellationToken)
@@ -198,7 +198,7 @@ public class OrganizationSubscriber(
         return customers;
     }
 
-    private async Task<ICollection<Shared.Database.Entities.Customer>> UpdateCustomerDefaultOrganizationAsync(
+    private async Task<IReadOnlyList<Shared.Database.Entities.Customer>> UpdateCustomerDefaultOrganizationAsync(
         Organization organization,
         CancellationToken cancellationToken)
     {

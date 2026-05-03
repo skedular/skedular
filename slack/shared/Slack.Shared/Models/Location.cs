@@ -9,7 +9,7 @@ public class Location : ReplicatedModelBaseWithDeleted
     public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
     public string? Timezone { get; set; }
     public LocationType? Type { get; set; }
-    public ICollection<Resource> Resources { get; set; } = [];
+    public IReadOnlyList<Resource> Resources { get; set; } = [];
     public Organization? Organization { get; set; }
     public DateTimeOffset? SlackChannelDailyUpdateLastSentAt { get; set; }
     public WorkspaceChannel? DailyUpdateChannel { get; set; }

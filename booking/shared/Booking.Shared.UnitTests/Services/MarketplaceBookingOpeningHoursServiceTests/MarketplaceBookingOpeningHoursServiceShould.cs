@@ -51,9 +51,9 @@ public class MarketplaceBookingOpeningHoursServiceShould
                 location.Id,
                 bookingDay.ToDateTimeOffset(new TimeSpan(10, 0, 0)),
                 bookingDay.ToDateTimeOffset(new TimeSpan(14, 0, 0)),
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([resource]);
 
@@ -113,9 +113,9 @@ public class MarketplaceBookingOpeningHoursServiceShould
                 location.Id,
                 bookingDay.ToDateTimeOffset(new TimeSpan(8, 0, 0)),
                 bookingDay.ToDateTimeOffset(new TimeSpan(17, 0, 0)),
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([resource]);
 
@@ -242,9 +242,9 @@ public class MarketplaceBookingOpeningHoursServiceShould
                 location.Id,
                 bookingDay.ToDateTimeOffset(new TimeSpan(10, 0, 0)),
                 bookingDay.ToDateTimeOffset(new TimeSpan(14, 0, 0)),
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([firstResource, secondResource]);
 
@@ -326,9 +326,9 @@ public class MarketplaceBookingOpeningHoursServiceShould
                 location.Id,
                 bookingDay.ToDateTimeOffset(new TimeSpan(8, 0, 0)),
                 bookingDay.ToDateTimeOffset(new TimeSpan(17, 0, 0)),
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([otherResource, preferredResource]);
 

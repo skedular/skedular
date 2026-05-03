@@ -249,10 +249,10 @@ public class MarketplaceRefundNotificationService(
                     ? $"Accounting follow-up: review the current refund status for this {details.EntityLabel} in the admin panel."
                     : string.Empty);
 
-    private static ICollection<string> ResolveInternalEmails(
+    private static IReadOnlyList<string> ResolveInternalEmails(
         Organization organization,
         string? customerEmail,
-        ICollection<string> organizationSpecificEmails)
+        IReadOnlyList<string> organizationSpecificEmails)
     {
         var emails = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 

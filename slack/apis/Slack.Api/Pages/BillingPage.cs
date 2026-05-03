@@ -35,7 +35,7 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
 
         commonPageContext.PageContext.CurrentPageType = PageType.Billing;
 
-        ICollection<Block>[] blocks =
+        IReadOnlyList<Block>[] blocks =
         [
             GetTitle(),
             GetToolbar(commonPageContext.PageContext, workspaceMember.Timezone)
@@ -56,12 +56,12 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
 
     public static void RegisterHandlers(AspNetSlackServiceConfiguration options) { }
 
-    private static ICollection<Block> GetTitle() =>
+    private static IReadOnlyList<Block> GetTitle() =>
     [
         new SectionBlock { Text = "*Billing*".ToMarkdown() }
     ];
 
-    private ICollection<Block> GetToolbar(PageContext pageContext, string timezone)
+    private IReadOnlyList<Block> GetToolbar(PageContext pageContext, string timezone)
     {
         var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, timezone);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);

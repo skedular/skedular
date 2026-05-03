@@ -14,6 +14,6 @@ public class Resource : ModelBaseWithDeleted
     public OpeningHours? AvailableHours { get; set; }
 
     public Location Location { get; set; } = new();
-    public ICollection<OrganizationTag> Tags { get; set; } = [];
+    public IReadOnlyList<OrganizationTag> Tags { get; set; } = [];
     public ResourcePosition? ResourcePosition { get; set; }
 }

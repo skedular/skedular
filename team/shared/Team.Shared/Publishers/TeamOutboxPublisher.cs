@@ -13,7 +13,7 @@ namespace Team.Shared.Publishers;
 
 public interface ITeamOutboxPublisher
 {
-    void PublishTeams(ICollection<Models.Team> teams, IUnitOfWork unitOfWork);
+    void PublishTeams(IReadOnlyList<Models.Team> teams, IUnitOfWork unitOfWork);
 }
 
 public class TeamOutboxPublisher(
@@ -23,7 +23,7 @@ public class TeamOutboxPublisher(
     IKafkaOutboxEventPublisher<Key, Event> publisher,
     ILogger<TeamOutboxPublisher> logger) : ITeamOutboxPublisher
 {
-    public void PublishTeams(ICollection<Models.Team> teams, IUnitOfWork unitOfWork)
+    public void PublishTeams(IReadOnlyList<Models.Team> teams, IUnitOfWork unitOfWork)
     {
         foreach (var team in teams)
         {

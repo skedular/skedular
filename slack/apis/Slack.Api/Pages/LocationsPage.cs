@@ -433,7 +433,7 @@ public class LocationsPage(
                 commonPageContext.PageContext,
                 cancellationToken));
 
-        ICollection<Block>[] blocks =
+        IReadOnlyList<Block>[] blocks =
         [
             GetTitle(),
             asyncBlocks[0],
@@ -464,12 +464,12 @@ public class LocationsPage(
             .RegisterBlockActionHandler<ButtonAction, LocationsPage>(LocationActionTypes.AddAsPreferredLocation)
             .RegisterBlockActionHandler<ButtonAction, LocationsPage>(LocationActionTypes.RemovePreferredLocation);
 
-    private static ICollection<Block> GetTitle() =>
+    private static IReadOnlyList<Block> GetTitle() =>
     [
         new SectionBlock { Text = "*Locations*".ToMarkdown() }
     ];
 
-    private async Task<ICollection<Block>> GetToolbarAsync(
+    private async Task<IReadOnlyList<Block>> GetToolbarAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,

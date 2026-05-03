@@ -9,9 +9,9 @@ using Constants = Booking.Shared.GraphQL.Constants;
 
 namespace Booking.Shared.Activities;
 
-public record GenerateAndSendInvoiceInput(string BookingId, ICollection<string> InvoiceEmailList);
+public record GenerateAndSendInvoiceInput(string BookingId, IReadOnlyList<string> InvoiceEmailList);
 
-public record GenerateAndSendRecurringInvoiceInput(string RecurringBookingId, ICollection<string> InvoiceEmailList);
+public record GenerateAndSendRecurringInvoiceInput(string RecurringBookingId, IReadOnlyList<string> InvoiceEmailList);
 
 public record SyncAccountingInvoiceStateInput(
     string OrganizationId,

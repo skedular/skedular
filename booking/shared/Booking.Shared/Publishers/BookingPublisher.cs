@@ -11,7 +11,7 @@ namespace Booking.Shared.Publishers;
 
 public interface IBookingPublisher
 {
-    Task PublishBookingsAsync(ICollection<Models.Booking> bookings, CancellationToken cancellationToken);
+    Task PublishBookingsAsync(IReadOnlyList<Models.Booking> bookings, CancellationToken cancellationToken);
 }
 
 public class BookingPublisher(
@@ -21,7 +21,7 @@ public class BookingPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : IBookingPublisher
 {
-    public async Task PublishBookingsAsync(ICollection<Models.Booking> bookings, CancellationToken cancellationToken) =>
+    public async Task PublishBookingsAsync(IReadOnlyList<Models.Booking> bookings, CancellationToken cancellationToken) =>
         await Task.WhenAll(bookings.Select(booking => publisher.PublishAsync(
             new Key { BookingId = booking.Id },
             new Event

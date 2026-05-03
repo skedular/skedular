@@ -41,7 +41,7 @@ public interface IMapper
     Shared.Models.Team MapTo(UpdateTeamInput src);
     Shared.Models.Team MapTo(UpdateTeamAndTeamMembersInput src);
     TeamMember MapTo(AddTeamMemberInput src);
-    ICollection<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src);
+    IReadOnlyList<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src);
     JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
     global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team MapToGrpcResponse(Shared.Models.Team src);
     Shared.Models.Team MapTo(AddInput src);
@@ -107,7 +107,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.About = src.About;
         dest.Timezone = src.Timezone;
-        dest.FeatureImages = src.FeatureImages;
+        dest.FeatureImages = src.FeatureImages.ToList();
         dest.Organization = organization;
         dest.PrimaryLocation = primaryLocation;
         return dest;
@@ -220,7 +220,7 @@ public class Mapper : IMapper
         return teamMember;
     }
 
-    public ICollection<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src) =>
+    public IReadOnlyList<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src) =>
         src.CustomerIds
             .Select(item => new TeamMember { Customer = new Customer { Id = item } })
             .Concat(src.OrganizationMemberIds.Select(item => new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))

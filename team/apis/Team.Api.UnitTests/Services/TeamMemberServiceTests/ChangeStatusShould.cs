@@ -49,8 +49,8 @@ public class ChangeStatusShould
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
-        A.CallTo(() => teamMemberRepository.GetByIdsAsync(A<ICollection<string>>._, cancellationToken)).Returns([teamMember]);
-        A.CallTo(() => teamRepository.GetByIdsAsync(A<ICollection<string>>._, cancellationToken)).Returns([team]);
+        A.CallTo(() => teamMemberRepository.GetByIdsAsync(A<IReadOnlyList<string>>._, cancellationToken)).Returns([teamMember]);
+        A.CallTo(() => teamRepository.GetByIdsAsync(A<IReadOnlyList<string>>._, cancellationToken)).Returns([team]);
         A.CallTo(() => teamAuthorizationService.CanModifyAsync(team, "customer-1", cancellationToken)).Returns(new ValueTask<bool>(true));
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => mapper.MapTo(team)).Returns(mappedTeam);
@@ -61,7 +61,7 @@ public class ChangeStatusShould
         var result = await sut.ChangeStatusAsync(["member-1"], TeamMemberStatus.Inactive, cancellationToken);
 
         result.Count.ShouldBe(1);
-        A.CallTo(() => teamOutboxPublisher.PublishTeams(A<ICollection<Shared.Models.Team>>._, unitOfWork)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => teamOutboxPublisher.PublishTeams(A<IReadOnlyList<Shared.Models.Team>>._, unitOfWork)).MustHaveHappenedOnceExactly();
         A.CallTo(logger)
             .Where(call =>
                 call.Method.Name == nameof(ILogger.Log) &&

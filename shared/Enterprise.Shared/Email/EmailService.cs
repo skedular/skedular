@@ -11,9 +11,9 @@ public interface IEmailService
         string templateId,
         string templateData,
         string sender,
-        ICollection<string> toAddresses,
-        ICollection<string> ccAddresses,
-        ICollection<string> bccAddresses,
+        IReadOnlyList<string> toAddresses,
+        IReadOnlyList<string> ccAddresses,
+        IReadOnlyList<string> bccAddresses,
         CancellationToken cancellationToken);
 
     Task SendRawEmailAsync(
@@ -21,10 +21,10 @@ public interface IEmailService
         string bodyText,
         string bodyHtml,
         string sender,
-        ICollection<string> toAddresses,
-        ICollection<string> ccAddresses,
-        ICollection<string> bccAddresses,
-        ICollection<EmailAttachment> emailAttachments,
+        IReadOnlyList<string> toAddresses,
+        IReadOnlyList<string> ccAddresses,
+        IReadOnlyList<string> bccAddresses,
+        IReadOnlyList<EmailAttachment> emailAttachments,
         CancellationToken cancellationToken);
 }
 
@@ -34,9 +34,9 @@ public class EmailService(ILogger<EmailService> logger) : IEmailService
         string templateId,
         string templateData,
         string sender,
-        ICollection<string> toAddresses,
-        ICollection<string> ccAddresses,
-        ICollection<string> bccAddresses,
+        IReadOnlyList<string> toAddresses,
+        IReadOnlyList<string> ccAddresses,
+        IReadOnlyList<string> bccAddresses,
         CancellationToken cancellationToken)
     {
         logger.LogInformation(
@@ -67,10 +67,10 @@ public class EmailService(ILogger<EmailService> logger) : IEmailService
         string bodyText,
         string bodyHtml,
         string sender,
-        ICollection<string> toAddresses,
-        ICollection<string> ccAddresses,
-        ICollection<string> bccAddresses,
-        ICollection<EmailAttachment> emailAttachments,
+        IReadOnlyList<string> toAddresses,
+        IReadOnlyList<string> ccAddresses,
+        IReadOnlyList<string> bccAddresses,
+        IReadOnlyList<EmailAttachment> emailAttachments,
         CancellationToken cancellationToken)
     {
         logger.LogInformation(

@@ -70,7 +70,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => cachedMarketplaceBookingSubscriptionService.GetByIdAsync(subscription.Id, cancellationToken)).Returns(subscription);
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "org-1" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "org-1" })),
                 null,
                 false,
                 false,
@@ -111,7 +111,7 @@ public class MarketplaceBookingSubscriptionServiceShould
                     criteria.OrganizationId == null &&
                     criteria.OrganizationCustomDomain == null &&
                     criteria.CustomerIds.SequenceEqual(searchCriteria.CustomerIds)),
-                A<ICollection<MarketplaceBookingSubscriptionOrder>>._,
+                A<IReadOnlyList<MarketplaceBookingSubscriptionOrder>>._,
                 A<MarketplaceBookingSubscriptionAccessScope>.That.Matches(scope =>
                     scope.OrganizationIds.SequenceEqual(new[] { "org-1" }) &&
                     scope.TeamIds.Count == 0),
@@ -225,7 +225,7 @@ public class MarketplaceBookingSubscriptionServiceShould
     }
 
     private static MarketplaceBookingSubscriptionSearchCriteria CreateSearchCriteria(
-        ICollection<string> customerIds,
+        IReadOnlyList<string> customerIds,
         string? organizationId = null) =>
         new(
             null,

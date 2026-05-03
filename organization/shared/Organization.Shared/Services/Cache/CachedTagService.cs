@@ -10,7 +10,7 @@ public interface ICachedTagService
 {
     ValueTask<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask UpdateAsync(ICollection<Tag> tags, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(IReadOnlyList<Tag> tags, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -44,7 +44,7 @@ public class CachedTagService(ApplicationConfiguration applicationConfiguration,
             cancellationToken: cancellationToken);
     }
 
-    public async ValueTask UpdateAsync(ICollection<Tag> tags, CancellationToken cancellationToken)
+    public async ValueTask UpdateAsync(IReadOnlyList<Tag> tags, CancellationToken cancellationToken)
     {
         foreach (var item in tags)
         {

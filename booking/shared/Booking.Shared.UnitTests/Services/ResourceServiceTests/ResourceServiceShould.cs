@@ -48,9 +48,9 @@ public class ResourceServiceShould
                 null,
                 from,
                 until,
-                A<ICollection<string>>.That.IsSameSequenceAs(resourceIds),
-                A<ICollection<string>>.That.IsSameSequenceAs(tagIds),
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>.That.IsSameSequenceAs(resourceIds),
+                A<IReadOnlyList<string>>.That.IsSameSequenceAs(tagIds),
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns(availableResources);
 
@@ -85,9 +85,9 @@ public class ResourceServiceShould
                 null,
                 from,
                 until,
-                A<ICollection<string>>.That.IsSameSequenceAs(resourceIds),
-                A<ICollection<string>>.That.IsSameSequenceAs(tagIds),
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>.That.IsSameSequenceAs(resourceIds),
+                A<IReadOnlyList<string>>.That.IsSameSequenceAs(tagIds),
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns(availableResources);
 
@@ -121,9 +121,9 @@ public class ResourceServiceShould
                 null,
                 from,
                 until,
-                A<ICollection<string>>.That.IsSameSequenceAs(resourceIds),
-                A<ICollection<string>>.That.IsSameSequenceAs(tagIds),
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>.That.IsSameSequenceAs(resourceIds),
+                A<IReadOnlyList<string>>.That.IsSameSequenceAs(tagIds),
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns(availableResources);
 

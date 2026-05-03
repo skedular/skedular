@@ -8,7 +8,7 @@ using Temporalio.Activities;
 
 namespace Booking.Shared.Activities;
 
-public record ExecuteAllLocationResourcesSlotGenerationWorkflowsResponse(bool ShallContinue, ICollection<string> ResourceIds);
+public record ExecuteAllLocationResourcesSlotGenerationWorkflowsResponse(bool ShallContinue, IReadOnlyList<string> ResourceIds);
 
 public class LocationResourceSlot(
     IRepositoryFactory repositoryFactory,

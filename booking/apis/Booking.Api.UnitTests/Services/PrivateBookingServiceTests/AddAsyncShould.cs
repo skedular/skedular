@@ -40,9 +40,9 @@ public class AddAsyncShould
         var booking = new Shared.Models.Booking { InvolvedCustomers = [new Customer { Id = "customer-1" }] };
         var customer = new CustomerEntity { Id = "customer-1" };
         var expected = new Shared.Models.Booking { Id = generatedBookingId };
-        ICollection<string> emptyIds = [];
-        ICollection<Organization> emptyOrganizations = [];
-        ICollection<Team> emptyTeams = [];
+        IReadOnlyList<string> emptyIds = [];
+        IReadOnlyList<Organization> emptyOrganizations = [];
+        IReadOnlyList<Team> emptyTeams = [];
 
         A.CallTo(() => context.GetVerifiableToken()).Returns(verifiableToken);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -56,8 +56,8 @@ public class AddAsyncShould
         A.CallTo(() => sharedPrivateBookingService.AddAsync(
                 A<Shared.Models.Booking>.That.Matches(model => model.Id == generatedBookingId),
                 A<CustomerEntity>.That.Matches(model => model.Id == customer.Id),
-                A<ICollection<Organization>>.That.Matches(items => items.Count == 0),
-                A<ICollection<Team>>.That.Matches(items => items.Count == 0),
+                A<IReadOnlyList<Organization>>.That.Matches(items => items.Count == 0),
+                A<IReadOnlyList<Team>>.That.Matches(items => items.Count == 0),
                 null,
                 cancellationToken))
             .Returns(expected);

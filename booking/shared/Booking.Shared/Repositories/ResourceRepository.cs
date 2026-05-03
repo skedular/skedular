@@ -11,20 +11,20 @@ public interface IResourceRepository : IRepository<Resource>
 {
     Task<Resource> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken);
     Task<Resource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
-    Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Resource>> GetByIdsAsync(IReadOnlyList<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Resource Add(Resource resource);
     Resource Update(Resource resource);
-    void RemoveRange(ICollection<Resource> resources);
-    Task<ICollection<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
+    void RemoveRange(IReadOnlyList<Resource> resources);
+    Task<IReadOnlyList<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
 
-    Task<ICollection<Resource>> GetAvailableResourcesAsync(
+    Task<IReadOnlyList<Resource>> GetAvailableResourcesAsync(
         string? organizationId,
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> resourceIds,
-        ICollection<string> tagIds,
-        ICollection<string> tagTypes,
+        IReadOnlyList<string> resourceIds,
+        IReadOnlyList<string> tagIds,
+        IReadOnlyList<string> tagTypes,
         CancellationToken cancellationToken);
 
     Task<int> GetAvailableResourcesCountAsync(
@@ -32,9 +32,9 @@ public interface IResourceRepository : IRepository<Resource>
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> resourceIds,
-        ICollection<string> tagIds,
-        ICollection<string> tagTypes,
+        IReadOnlyList<string> resourceIds,
+        IReadOnlyList<string> tagIds,
+        IReadOnlyList<string> tagTypes,
         CancellationToken cancellationToken);
 }
 
@@ -48,8 +48,8 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
         return (await GetByIdAsync(id, false, cancellationToken))!;
     }
 
-    public async Task<ICollection<Resource>> GetByIdsAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<Resource>> GetByIdsAsync(
+        IReadOnlyList<string> ids,
         bool includeAllRelatedEntities,
         CancellationToken cancellationToken) =>
         includeAllRelatedEntities
@@ -72,7 +72,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
         return DbContext.Resource.Add(resource).Entity;
     }
 
-    public void RemoveRange(ICollection<Resource> resources)
+    public void RemoveRange(IReadOnlyList<Resource> resources)
     {
         var now = TimeProvider.GetUtcNow();
         resources.ForEach(resource => resource.DeletedAt = now);
@@ -98,20 +98,20 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                 .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
         await DbContext.Resource
             .Where(query => query.Location != null && query.Location.Id == locationId)
             .Include(query => query.OrganizationTags)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<Resource>> GetAvailableResourcesAsync(
+    public async Task<IReadOnlyList<Resource>> GetAvailableResourcesAsync(
         string? organizationId,
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> resourceIds,
-        ICollection<string> tagIds,
-        ICollection<string> tagTypes,
+        IReadOnlyList<string> resourceIds,
+        IReadOnlyList<string> tagIds,
+        IReadOnlyList<string> tagTypes,
         CancellationToken cancellationToken)
     {
         var availableResourceIds =
@@ -136,20 +136,20 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> resourceIds,
-        ICollection<string> tagIds,
-        ICollection<string> tagTypes,
+        IReadOnlyList<string> resourceIds,
+        IReadOnlyList<string> tagIds,
+        IReadOnlyList<string> tagTypes,
         CancellationToken cancellationToken) =>
         (await GetAvailableResourceIdsAsync(organizationId, locationId, from, until, resourceIds, tagIds, tagTypes, cancellationToken)).Count;
 
-    private async Task<ICollection<string>> GetAvailableResourceIdsAsync(
+    private async Task<IReadOnlyList<string>> GetAvailableResourceIdsAsync(
         string? organizationId,
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> resourceIds,
-        ICollection<string> tagIds,
-        ICollection<string> tagTypes,
+        IReadOnlyList<string> resourceIds,
+        IReadOnlyList<string> tagIds,
+        IReadOnlyList<string> tagTypes,
         CancellationToken cancellationToken)
     {
         var slots = await DbContext.ResourceBookingSlot

@@ -11,7 +11,7 @@ public static class Extensions
 {
     extension(IServiceCollection services)
     {
-        public IMcpServerBuilder AddMcpServer(IConfiguration configuration, ICollection<Type> types)
+        public IMcpServerBuilder AddMcpServer(IConfiguration configuration, IReadOnlyList<Type> types)
         {
             var mcpConfig = configuration.GetSection(McpConfig.Key).Get<McpConfig>();
             ArgumentNullException.ThrowIfNull(mcpConfig);

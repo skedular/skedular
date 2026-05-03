@@ -9,15 +9,15 @@ namespace Slack.Api.Components;
 
 public interface ITeamComponents
 {
-    Task<ICollection<IActionElement>> GetAddTeamButtonAsync(
+    Task<IReadOnlyList<IActionElement>> GetAddTeamButtonAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Block>> GetTeamCardsAsync(
+    Task<IReadOnlyList<Block>> GetTeamCardsAsync(
         WorkspaceMember workspaceMember,
-        ICollection<Team> teams,
+        IReadOnlyList<Team> teams,
         PageContext pageContext,
         CancellationToken cancellationToken);
 }
@@ -25,7 +25,7 @@ public interface ITeamComponents
 public class TeamComponents(IOrganizationPermissionsService organizationPermissionsService, ITeamPermissionsService teamPermissionsService)
     : ITeamComponents
 {
-    public async Task<ICollection<IActionElement>> GetAddTeamButtonAsync(
+    public async Task<IReadOnlyList<IActionElement>> GetAddTeamButtonAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
@@ -46,9 +46,9 @@ public class TeamComponents(IOrganizationPermissionsService organizationPermissi
         ];
     }
 
-    public async Task<ICollection<Block>> GetTeamCardsAsync(
+    public async Task<IReadOnlyList<Block>> GetTeamCardsAsync(
         WorkspaceMember workspaceMember,
-        ICollection<Team> teams,
+        IReadOnlyList<Team> teams,
         PageContext pageContext,
         CancellationToken cancellationToken)
     {

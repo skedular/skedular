@@ -21,7 +21,7 @@ public interface IWorkspaceMemberService
 {
     Task ReSyncWorkspaceMembersAsync(string workspaceId, CancellationToken cancellationToken);
     Task UpdateWorkspaceMemberProfileStatusAsync(string workspaceMemberId, CancellationToken cancellationToken);
-    string GetMentionedCustomerNameInSlackFormat(Workspace workspace, ICollection<string> identities, Customer customer);
+    string GetMentionedCustomerNameInSlackFormat(Workspace workspace, IReadOnlyList<string> identities, Customer customer);
 }
 
 public class WorkspaceMemberService(
@@ -178,7 +178,7 @@ public class WorkspaceMemberService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public string GetMentionedCustomerNameInSlackFormat(Workspace workspace, ICollection<string> identities, Customer customer)
+    public string GetMentionedCustomerNameInSlackFormat(Workspace workspace, IReadOnlyList<string> identities, Customer customer)
     {
         var workspaceMember = workspace.WorkspaceMembers.FirstOrDefault(item => identities.Contains(item.Id));
         return workspaceMember is null ? customer.DisplayableName : $"<@{workspaceMember.Id}>";

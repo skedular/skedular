@@ -10,8 +10,8 @@ public interface ILocationRepository : IRepository<Location>
 {
     Task<Location> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Location>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<ICollection<Location>> GetDueForDailyUpdateAsync(DateTimeOffset now, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Location>> GetActiveByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Location>> GetDueForDailyUpdateAsync(DateTimeOffset now, CancellationToken cancellationToken);
     Location Add(Location location);
     Location Update(Location location);
     Location Remove(Location location);
@@ -34,7 +34,7 @@ public class LocationRepository(SlackDbContext dbContext, TimeProvider timeProvi
     /// <remarks>
     ///     This repository-owned lookup replaced the shared specification used by Slack actions when they validate a set of active locations.
     /// </remarks>
-    public async Task<ICollection<Location>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Location>> GetActiveByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -56,7 +56,7 @@ public class LocationRepository(SlackDbContext dbContext, TimeProvider timeProvi
     /// <remarks>
     ///     This keeps the daily-update scheduling criteria in the repository so jobs can fetch only locations that are ready for another Slack update.
     /// </remarks>
-    public async Task<ICollection<Location>> GetDueForDailyUpdateAsync(DateTimeOffset now, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Location>> GetDueForDailyUpdateAsync(DateTimeOffset now, CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query =>
                 !query.DeletedAt.HasValue &&

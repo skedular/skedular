@@ -7,6 +7,6 @@ public record LocationExtraMetadata(
     AreaRange? AreaRange,
     PeopleCapacity? PeopleCapacity,
     string? Website,
-    ICollection<string>? RelatedImageLinks,
-    ICollection<string>? RelatedVideoLinks,
-    ICollection<string>? OtherLinks);
+    IReadOnlyList<string>? RelatedImageLinks,
+    IReadOnlyList<string>? RelatedVideoLinks,
+    IReadOnlyList<string>? OtherLinks);

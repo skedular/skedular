@@ -4,5 +4,5 @@ namespace Organization.Api.Models;
 
 public record OrganizationAnalytics(
     string Id,
-    ICollection<OrganizationMemberAttendancePercentage> MemberAttendancePercentage,
-    ICollection<OrganizationDailyBookingsTotal> DailyBookingsTotal);
+    IReadOnlyList<OrganizationMemberAttendancePercentage> MemberAttendancePercentage,
+    IReadOnlyList<OrganizationDailyBookingsTotal> DailyBookingsTotal);

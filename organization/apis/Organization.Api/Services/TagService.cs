@@ -19,12 +19,12 @@ public interface ITagService
     Task<Tag> AddAsync(Tag tag, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Tag> UpdateAsync(Tag tag, CancellationToken cancellationToken);
     Task<Tag> DeleteAsync(string tagId, CancellationToken cancellationToken);
-    Task<ICollection<Tag>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Tag>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Tag>>, int)> GetPaginatedTagsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
-        ICollection<TagOrder> orderByFields,
+        IReadOnlyList<TagOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
@@ -182,7 +182,7 @@ public class TagService(
         return deletedTag;
     }
 
-    public async Task<ICollection<Tag>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Tag>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -229,10 +229,10 @@ public class TagService(
         return deletedTags;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Tag>>, int)> GetPaginatedTagsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
-        ICollection<TagOrder> orderByFields,
+        IReadOnlyList<TagOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {

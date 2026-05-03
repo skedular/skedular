@@ -18,12 +18,12 @@ namespace Booking.Api.Services;
 public interface IMarketplaceBookingSubscriptionService
 {
     Task<MarketplaceBookingSubscription> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string id, CancellationToken cancellationToken);
+    Task<IReadOnlyList<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string id, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(
         PaginationInputParam paginationInputParam,
         MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
-        ICollection<MarketplaceBookingSubscriptionOrder> orderByFields,
+        IReadOnlyList<MarketplaceBookingSubscriptionOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
@@ -62,7 +62,7 @@ public class MarketplaceBookingSubscriptionService(
         return sharedMapper.MapTo(subscription);
     }
 
-    public async Task<ICollection<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string id, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -77,10 +77,10 @@ public class MarketplaceBookingSubscriptionService(
         return invoices.Select(sharedMapper.MapTo).ToList();
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(
         PaginationInputParam paginationInputParam,
         MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
-        ICollection<MarketplaceBookingSubscriptionOrder> orderByFields,
+        IReadOnlyList<MarketplaceBookingSubscriptionOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {

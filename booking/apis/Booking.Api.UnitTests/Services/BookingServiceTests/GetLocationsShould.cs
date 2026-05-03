@@ -33,7 +33,7 @@ public class GetLocationsShould
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => locationRepository.GetActiveByIdsAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "location-1" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "location-1" })),
                 cancellationToken))
             .Returns([location]);
         A.CallTo(() => organizationRepository.GetByCustomerIdAsync("customer-1", false, false, cancellationToken)).Returns([organization]);
@@ -42,7 +42,7 @@ public class GetLocationsShould
         A.CallTo(() => bookingRepository.GetPaginatedBookingsUntrackedAsync(
                 A<PaginationInputParam>._,
                 A<BookingSearchCriteria>._,
-                A<ICollection<BookingOrder>>._,
+                A<IReadOnlyList<BookingOrder>>._,
                 A<BookingAccessScope>.That.Matches(scope =>
                     scope.OrganizationIds.SequenceEqual(new[] { "org-1" }) &&
                     scope.LocationIds.SequenceEqual(new[] { "location-1" }) &&
@@ -55,14 +55,14 @@ public class GetLocationsShould
 
         result.Item3.ShouldBe(0);
         A.CallTo(() => locationRepository.GetActiveByIdsAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "location-1" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "location-1" })),
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
 
     private static BookingSearchCriteria CreateSearchCriteria(
-        ICollection<string> locationIds,
-        ICollection<string> teamIds) =>
+        IReadOnlyList<string> locationIds,
+        IReadOnlyList<string> teamIds) =>
         new(
             null,
             null,

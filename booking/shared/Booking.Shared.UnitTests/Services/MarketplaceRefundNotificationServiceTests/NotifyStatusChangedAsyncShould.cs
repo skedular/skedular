@@ -74,10 +74,10 @@ public class NotifyStatusChangedAsyncShould
                 A<string>.That.Contains("refund has been approved locally"),
                 A<string>._,
                 A<string>.That.Contains("Acme Coworking"),
-                A<ICollection<string>>.That.Matches(items => items.Count == 1 && items.Contains("jamie@example.com")),
-                A<ICollection<string>>.That.Matches(items => items.Count == 0),
-                A<ICollection<string>>.That.Matches(items => items.Count == 0),
-                A<ICollection<EmailAttachment>>.That.Matches(items => items.Count == 0),
+                A<IReadOnlyList<string>>.That.Matches(items => items.Count == 1 && items.Contains("jamie@example.com")),
+                A<IReadOnlyList<string>>.That.Matches(items => items.Count == 0),
+                A<IReadOnlyList<string>>.That.Matches(items => items.Count == 0),
+                A<IReadOnlyList<EmailAttachment>>.That.Matches(items => items.Count == 0),
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => emailService.SendRawEmailAsync(
@@ -85,13 +85,13 @@ public class NotifyStatusChangedAsyncShould
                 A<string>.That.Contains("queued for accounting processing"),
                 A<string>._,
                 A<string>.That.Contains("Acme Coworking"),
-                A<ICollection<string>>.That.Matches(items =>
+                A<IReadOnlyList<string>>.That.Matches(items =>
                     items.Count == 2 &&
                     items.Contains("ops@acme.test") &&
                     items.Contains("owner@acme.test")),
-                A<ICollection<string>>.That.Matches(items => items.Count == 0),
-                A<ICollection<string>>.That.Matches(items => items.Count == 0),
-                A<ICollection<EmailAttachment>>.That.Matches(items => items.Count == 0),
+                A<IReadOnlyList<string>>.That.Matches(items => items.Count == 0),
+                A<IReadOnlyList<string>>.That.Matches(items => items.Count == 0),
+                A<IReadOnlyList<EmailAttachment>>.That.Matches(items => items.Count == 0),
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
@@ -129,10 +129,10 @@ public class NotifyStatusChangedAsyncShould
                 A<string>._,
                 A<string>._,
                 A<string>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<EmailAttachment>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<EmailAttachment>>._,
                 cancellationToken))
             .MustNotHaveHappened();
     }
@@ -200,10 +200,10 @@ public class NotifyStatusChangedAsyncShould
                 A<string>.That.Contains("completed through Xero"),
                 A<string>._,
                 A<string>.That.Contains("Acme Coworking"),
-                A<ICollection<string>>.That.Matches(items => items.Count == 1 && items.Contains("jamie@example.com")),
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<EmailAttachment>>._,
+                A<IReadOnlyList<string>>.That.Matches(items => items.Count == 1 && items.Contains("jamie@example.com")),
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<EmailAttachment>>._,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => emailService.SendRawEmailAsync(
@@ -211,10 +211,10 @@ public class NotifyStatusChangedAsyncShould
                 A<string>.That.Contains("completed through Xero"),
                 A<string>._,
                 A<string>.That.Contains("Acme Coworking"),
-                A<ICollection<string>>.That.Matches(items => items.Count == 1 && items.Contains("owner2@acme.test")),
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<EmailAttachment>>._,
+                A<IReadOnlyList<string>>.That.Matches(items => items.Count == 1 && items.Contains("owner2@acme.test")),
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<EmailAttachment>>._,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
@@ -275,10 +275,10 @@ public class NotifyStatusChangedAsyncShould
                 A<string>.That.Contains("manual follow-up"),
                 A<string>._,
                 A<string>.That.Contains("Acme Coworking"),
-                A<ICollection<string>>.That.Matches(items => items.Count == 1 && items.Contains("jamie@example.com")),
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<EmailAttachment>>._,
+                A<IReadOnlyList<string>>.That.Matches(items => items.Count == 1 && items.Contains("jamie@example.com")),
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<EmailAttachment>>._,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
@@ -331,11 +331,11 @@ public class NotifyStatusChangedAsyncShould
                 A<string>.That.Contains("manual follow-up"),
                 A<string>._,
                 A<string>.That.Contains("Acme Coworking"),
-                A<ICollection<string>>.That.Matches(items =>
+                A<IReadOnlyList<string>>.That.Matches(items =>
                     items.Count == 2 && items.Contains("ops@acme.test") && items.Contains("finance@acme.test")),
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<EmailAttachment>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<EmailAttachment>>._,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
     }

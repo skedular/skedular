@@ -33,7 +33,7 @@ public class MarketplaceEventResourceServiceShould
         A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(
                 false,
                 false,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([location]);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
@@ -41,9 +41,9 @@ public class MarketplaceEventResourceServiceShould
                 null,
                 from,
                 until,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([firstResource, secondResource]);
 
@@ -76,7 +76,7 @@ public class MarketplaceEventResourceServiceShould
         A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(
                 false,
                 false,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([location]);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
@@ -84,9 +84,9 @@ public class MarketplaceEventResourceServiceShould
                 null,
                 from,
                 until,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([firstResource]);
 
@@ -120,7 +120,7 @@ public class MarketplaceEventResourceServiceShould
         A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(
                 false,
                 false,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([firstLocation, secondLocation]);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
@@ -128,9 +128,9 @@ public class MarketplaceEventResourceServiceShould
                 null,
                 from,
                 until,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([firstResource, secondResource]);
 

@@ -5,7 +5,7 @@ namespace Location.Api.Models;
 public record LocationAnalytics(
     string Id,
     string Name,
-    ICollection<LocationDesksOccupancyPercentage> DesksOccupancyPercentage,
-    ICollection<LocationDailyBookingsTotal> DailyBookingsTotal,
-    ICollection<LocationRoomsOccupancyPercentage> RoomsOccupancyPercentage,
-    ICollection<ResourceAvailabilitySnapshotReport> ResourceAvailabilitySnapshots);
+    IReadOnlyList<LocationDesksOccupancyPercentage> DesksOccupancyPercentage,
+    IReadOnlyList<LocationDailyBookingsTotal> DailyBookingsTotal,
+    IReadOnlyList<LocationRoomsOccupancyPercentage> RoomsOccupancyPercentage,
+    IReadOnlyList<ResourceAvailabilitySnapshotReport> ResourceAvailabilitySnapshots);

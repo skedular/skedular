@@ -202,7 +202,7 @@ public class OrganizationTagService(
         return result;
     }
 
-    private void Cache(ICollection<OrganizationTag> organizationTags)
+    private void Cache(IReadOnlyList<OrganizationTag> organizationTags)
     {
         foreach (var organizationTag in organizationTags)
         {

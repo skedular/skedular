@@ -558,7 +558,7 @@ public static class Extensions
 
     extension<T>(IEnumerable<T>? list)
     {
-        public ICollection<T> ToSafeCollection() => list is null ? [] : list.ToList();
+        public IReadOnlyList<T> ToSafeCollection() => list is null ? [] : list.ToList();
     }
 
     extension<T>(IEnumerable<T> list)

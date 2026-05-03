@@ -106,7 +106,7 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
     private static MarketplaceBookingSubscription CreateSubscription(
         DateTimeOffset startedAt,
         OrganizationBillingCycle organizationBillingCycle,
-        ICollection<RecurringBooking> recurringBookings) =>
+        IReadOnlyList<RecurringBooking> recurringBookings) =>
         new()
         {
             Id = "subscription-1",

@@ -6,6 +6,6 @@ namespace Core.Shared.Models;
 public class Customer : ReplicatedModelBaseWithDeleted
 {
     public CustomerType? Type { get; set; }
-    public ICollection<Identity> Identities { get; set; } = [];
-    public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public IReadOnlyList<Identity> Identities { get; set; } = [];
+    public IReadOnlyList<OrganizationMember> OrganizationMembers { get; set; } = [];
 }

@@ -8,9 +8,9 @@ public class Location : ReplicatedModelBaseWithDeleted
     public string Name { get; set; } = string.Empty;
     public LocationType Type { get; set; }
     public OpeningHours? OpeningHours { get; set; }
-    public ICollection<Resource> Resources { get; set; } = [];
+    public IReadOnlyList<Resource> Resources { get; set; } = [];
     public Organization? Organization { get; set; }
-    public ICollection<Customer> DefaultedByCustomers { get; set; } = [];
-    public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
-    public ICollection<Booking> InvolvedBookings { get; set; } = [];
+    public IReadOnlyList<Customer> DefaultedByCustomers { get; set; } = [];
+    public IReadOnlyList<OrganizationTag> OrganizationTags { get; set; } = [];
+    public IReadOnlyList<Booking> InvolvedBookings { get; set; } = [];
 }

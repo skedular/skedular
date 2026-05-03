@@ -38,9 +38,9 @@ public class PickResourceBasedOnCustomerPreferencesAsyncShould
                 "loc-1",
                 from,
                 until,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([]);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
@@ -48,9 +48,9 @@ public class PickResourceBasedOnCustomerPreferencesAsyncShould
                 "loc-2",
                 from,
                 until,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([resource]);
 
@@ -98,9 +98,9 @@ public class PickResourceBasedOnCustomerPreferencesAsyncShould
                 "loc-1",
                 from,
                 until,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([]);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
@@ -108,9 +108,9 @@ public class PickResourceBasedOnCustomerPreferencesAsyncShould
                 "loc-2",
                 from,
                 until,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
-                A<ICollection<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
                 cancellationToken))
             .Returns([resource]);
 

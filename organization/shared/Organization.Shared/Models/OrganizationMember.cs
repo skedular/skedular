@@ -10,5 +10,5 @@ public class OrganizationMember : ModelBaseWithDeleted
     public bool? IsOrganizationOnboardingDone { get; set; }
     public Organization Organization { get; set; } = new();
     public Customer Customer { get; set; } = new();
-    public ICollection<OrganizationOfferingActiveMember> OrganizationOfferingActiveMembers { get; set; } = [];
+    public IReadOnlyList<OrganizationOfferingActiveMember> OrganizationOfferingActiveMembers { get; set; } = [];
 }

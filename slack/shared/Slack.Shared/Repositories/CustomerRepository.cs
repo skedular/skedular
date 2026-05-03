@@ -13,16 +13,16 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
-    Task<ICollection<Customer>> GetByIdsUntrackedAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Customer>> GetByIdsUntrackedAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Customer Update(Customer customer);
     Customer Remove(Customer customer);
 }
 
-internal static class CustomerExtensions
+public static class CustomerExtensions
 {
     extension(IQueryable<Customer> originalQuery)
     {
-        internal IIncludableQueryable<Customer, ICollection<Identity>> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<Customer, ICollection<Identity>> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .AsSingleQuery()
             .Include(query => query.Identities);
@@ -59,7 +59,7 @@ public class CustomerRepository(SlackDbContext dbContext, TimeProvider timeProvi
                 cancellationToken);
 
 
-    public async Task<ICollection<Customer>> GetByIdsUntrackedAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Customer>> GetByIdsUntrackedAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Customer
             .Where(query => !query.DeletedAt.HasValue && ids.Contains(query.Id))
             .AddDependentObjects(false)

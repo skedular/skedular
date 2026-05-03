@@ -7,7 +7,7 @@ public record JoinInvitationSearchCriteria(
     string? OrganizationCustomDomain,
     InvitationStatus? Status,
     string? InviteeId,
-    ICollection<string>? CustomerEmails);
+    IReadOnlyList<string>? CustomerEmails);
 
 public record JoinOrganizationInvitationOrder(OrderDirection Direction, JoinOrganizationInvitationOrderField Field);
 

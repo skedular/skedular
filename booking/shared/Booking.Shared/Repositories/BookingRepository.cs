@@ -15,25 +15,25 @@ namespace Booking.Shared.Repositories;
 public interface IBookingRepository : IRepository<Database.Entities.Booking>
 {
     Task<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Database.Entities.Booking>> GetByIdsMinimalAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<ICollection<Database.Entities.Booking>> GetByIdsWithValidMarketplaceAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsMinimalAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsWithValidMarketplaceAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<Database.Entities.Booking?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Booking>> GetByRecurringBookingIdAsync(
+    Task<IReadOnlyList<Database.Entities.Booking>> GetByRecurringBookingIdAsync(
         string recurringBookingId,
         DateTimeOffset from,
         DateTimeOffset? until,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Booking>> GetByRecurringBookingIdUntrackedAsync(
+    Task<IReadOnlyList<Database.Entities.Booking>> GetByRecurringBookingIdUntrackedAsync(
         string recurringBookingId,
         DateTimeOffset from,
         DateTimeOffset? until,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Booking>> GetAllUntrackedAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<Database.Entities.Booking>> GetAllUntrackedAsync(CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Booking>> GetInArrearsByOrganizationBeforeAsync(
+    Task<IReadOnlyList<Database.Entities.Booking>> GetInArrearsByOrganizationBeforeAsync(
         string organizationId,
         DateTimeOffset startInclusive,
         DateTimeOffset endExclusive,
@@ -43,19 +43,19 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
     Database.Entities.Booking Update(Database.Entities.Booking booking);
     Database.Entities.Booking Remove(Database.Entities.Booking booking);
 
-    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Booking>>, int)> GetPaginatedBookingsUntrackedAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Booking>>, int)> GetPaginatedBookingsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
-        ICollection<BookingOrder> orderByFields,
+        IReadOnlyList<BookingOrder> orderByFields,
         BookingAccessScope? accessScope,
         CancellationToken cancellationToken);
 }
 
-internal static class BookingExtensions
+public static class BookingExtensions
 {
     extension(IQueryable<Database.Entities.Booking> originalQuery)
     {
-        internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddSingleBookingMinimumDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddSingleBookingMinimumDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.InvolvedCustomers)
             .Include(query => query.InvolvedOrganizations)
@@ -92,7 +92,7 @@ internal static class BookingExtensions
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession);
 
-        internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddSingleBookingDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddSingleBookingDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
             .ThenInclude(query => query.Customers)
@@ -139,7 +139,7 @@ internal static class BookingExtensions
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession);
 
-        internal IQueryable<Database.Entities.Booking> AddSearchCriteria(
+        public IQueryable<Database.Entities.Booking> AddSearchCriteria(
             BookingSearchCriteria searchCriteria,
             TimeProvider timeProvider,
             BookingAccessScope? accessScope)
@@ -290,13 +290,14 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
             .AddSingleBookingDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Booking>> GetByIdsMinimalAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Database.Entities.Booking>>
+        GetByIdsMinimalAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Booking
             .Where(query => ids.Contains(query.Id))
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Booking>> GetByIdsWithValidMarketplaceAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsWithValidMarketplaceAsync(
+        IReadOnlyList<string> ids,
         CancellationToken cancellationToken) =>
         await DbContext.Booking
             .Where(query => ids.Contains(query.Id) && !query.DeletedAt.HasValue && query.MarketplaceBooking != null)
@@ -309,7 +310,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
             .AddSingleBookingMinimumDependentObjects(false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Booking>> GetByRecurringBookingIdAsync(string recurringBookingId, DateTimeOffset from,
+    public async Task<IReadOnlyList<Database.Entities.Booking>> GetByRecurringBookingIdAsync(string recurringBookingId, DateTimeOffset from,
         DateTimeOffset? until, CancellationToken cancellationToken) =>
         await DbContext.Booking
             .Where(query => !query.DeletedAt.HasValue &&
@@ -319,7 +320,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
             .AddSingleBookingDependentObjects(true)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Booking>> GetByRecurringBookingIdUntrackedAsync(
+    public async Task<IReadOnlyList<Database.Entities.Booking>> GetByRecurringBookingIdUntrackedAsync(
         string recurringBookingId,
         DateTimeOffset from,
         DateTimeOffset? until,
@@ -332,12 +333,12 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
             .AddSingleBookingDependentObjects(false)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Booking>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Database.Entities.Booking>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
         await DbContext.Booking
             .AddSingleBookingDependentObjects(false)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Booking>> GetInArrearsByOrganizationBeforeAsync(
+    public async Task<IReadOnlyList<Database.Entities.Booking>> GetInArrearsByOrganizationBeforeAsync(
         string organizationId,
         DateTimeOffset startInclusive,
         DateTimeOffset endExclusive,
@@ -374,10 +375,10 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         return DbContext.Booking.Update(booking).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Booking>>, int)> GetPaginatedBookingsUntrackedAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Booking>>, int)> GetPaginatedBookingsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
-        ICollection<BookingOrder> orderByFields,
+        IReadOnlyList<BookingOrder> orderByFields,
         BookingAccessScope? accessScope,
         CancellationToken cancellationToken) =>
         await DbContext.Booking
@@ -385,7 +386,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
             .AddSingleBookingMinimumDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Database.Entities.Booking>> GetPaginationFields(ICollection<BookingOrder> orderByFields)
+    private static List<KeysetPaginationField<Database.Entities.Booking>> GetPaginationFields(IReadOnlyList<BookingOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

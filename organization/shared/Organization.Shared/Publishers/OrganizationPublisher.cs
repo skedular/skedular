@@ -11,7 +11,7 @@ namespace Organization.Shared.Publishers;
 
 public interface IOrganizationPublisher
 {
-    Task PublishOrganizationsAsync(ICollection<Models.Organization> organizations, CancellationToken cancellationToken);
+    Task PublishOrganizationsAsync(IReadOnlyList<Models.Organization> organizations, CancellationToken cancellationToken);
 }
 
 public class OrganizationPublisher(
@@ -21,7 +21,7 @@ public class OrganizationPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : IOrganizationPublisher
 {
-    public async Task PublishOrganizationsAsync(ICollection<Models.Organization> organizations,
+    public async Task PublishOrganizationsAsync(IReadOnlyList<Models.Organization> organizations,
         CancellationToken cancellationToken) =>
         await Task.WhenAll(organizations.Select(organization => publisher.PublishAsync(
             new Key { OrganizationId = organization.Id },

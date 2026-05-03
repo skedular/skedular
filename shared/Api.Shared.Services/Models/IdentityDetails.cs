@@ -10,7 +10,7 @@ public static class IdentityDetailsExtensions
 {
     extension(IEnumerable<string?> src)
     {
-        public ICollection<string> ToEmails() =>
+        public IReadOnlyList<string> ToEmails() =>
             src
                 .Where(item => !string.IsNullOrWhiteSpace(item))
                 .Select(item => item!.ToLowerInvariant())
@@ -20,7 +20,7 @@ public static class IdentityDetailsExtensions
 
     extension<T>(IEnumerable<T> src) where T : IIdentityDetails
     {
-        public ICollection<string> ToEmails() => src.Select(item => item.Email).ToEmails();
+        public IReadOnlyList<string> ToEmails() => src.Select(item => item.Email).ToEmails();
 
         public string ToStringEmails() => string.Join(',', src.ToEmails());
         public string? ToFirstEmail() => src.ToEmails().FirstOrDefault();

@@ -42,12 +42,12 @@ public interface IBookingService
         int? last,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Resource>> GetAvailableResourcesAsync(
+    Task<IReadOnlyList<Resource>> GetAvailableResourcesAsync(
         string workspaceMemberId,
         string organizationId,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> resourceIdsToInclude,
+        IReadOnlyList<string> resourceIdsToInclude,
         CancellationToken cancellationToken);
 }
 
@@ -312,12 +312,12 @@ public class BookingService(
         return result;
     }
 
-    public async Task<ICollection<Resource>> GetAvailableResourcesAsync(
+    public async Task<IReadOnlyList<Resource>> GetAvailableResourcesAsync(
         string workspaceMemberId,
         string organizationId,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> resourceIdsToInclude,
+        IReadOnlyList<string> resourceIdsToInclude,
         CancellationToken cancellationToken)
     {
         var getAvailableResourcesInput = new GetAvailableResourcesInput
@@ -338,7 +338,7 @@ public class BookingService(
                 .Select(item => locationResourceService.GetAsync(workspaceMemberId, item, cancellationToken)));
     }
 
-    private void Cache(ICollection<Booking> bookings)
+    private void Cache(IReadOnlyList<Booking> bookings)
     {
         foreach (var booking in bookings)
         {

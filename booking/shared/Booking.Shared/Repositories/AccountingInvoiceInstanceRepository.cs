@@ -11,9 +11,9 @@ public interface IAccountingInvoiceInstanceRepository : IRepository<AccountingIn
     AccountingInvoiceInstance Add(AccountingInvoiceInstance accountingInvoiceInstance);
     AccountingInvoiceInstance Update(AccountingInvoiceInstance accountingInvoiceInstance);
 
-    Task<ICollection<AccountingInvoiceInstance>> GetByProviderAndExternalInvoiceIdsAsync(
+    Task<IReadOnlyList<AccountingInvoiceInstance>> GetByProviderAndExternalInvoiceIdsAsync(
         string provider,
-        ICollection<string> externalInvoiceIds,
+        IReadOnlyList<string> externalInvoiceIds,
         CancellationToken cancellationToken);
 
     Task<AccountingInvoiceInstance?> GetByProviderAndExternalInvoiceIdAsync(
@@ -25,7 +25,7 @@ public interface IAccountingInvoiceInstanceRepository : IRepository<AccountingIn
         string accountingInvoiceExportLinkId,
         CancellationToken cancellationToken);
 
-    Task<ICollection<AccountingInvoiceInstance>> GetByAccountingInvoiceExportLinkIdAsync(
+    Task<IReadOnlyList<AccountingInvoiceInstance>> GetByAccountingInvoiceExportLinkIdAsync(
         string accountingInvoiceExportLinkId,
         CancellationToken cancellationToken);
 }
@@ -47,9 +47,9 @@ public class AccountingInvoiceInstanceRepository(BookingDbContext dbContext, Tim
         return DbContext.AccountingInvoiceInstance.Update(accountingInvoiceInstance).Entity;
     }
 
-    public async Task<ICollection<AccountingInvoiceInstance>> GetByProviderAndExternalInvoiceIdsAsync(
+    public async Task<IReadOnlyList<AccountingInvoiceInstance>> GetByProviderAndExternalInvoiceIdsAsync(
         string provider,
-        ICollection<string> externalInvoiceIds,
+        IReadOnlyList<string> externalInvoiceIds,
         CancellationToken cancellationToken)
     {
         if (externalInvoiceIds.Count == 0)
@@ -83,7 +83,7 @@ public class AccountingInvoiceInstanceRepository(BookingDbContext dbContext, Tim
             .OrderByDescending(query => query.CreatedAt)
             .FirstOrDefaultAsync(cancellationToken);
 
-    public async Task<ICollection<AccountingInvoiceInstance>> GetByAccountingInvoiceExportLinkIdAsync(
+    public async Task<IReadOnlyList<AccountingInvoiceInstance>> GetByAccountingInvoiceExportLinkIdAsync(
         string accountingInvoiceExportLinkId,
         CancellationToken cancellationToken) =>
         await DbContext.AccountingInvoiceInstance

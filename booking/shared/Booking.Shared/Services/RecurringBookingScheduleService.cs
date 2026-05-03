@@ -5,9 +5,9 @@ using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 namespace Booking.Shared.Services;
 
 public record RecurringBookingReconciliationPlan(
-    ICollection<DateOnly> RequiredBookingDays,
-    ICollection<DateOnly> MissingBookingDays,
-    ICollection<Database.Entities.Booking> BookingsToRemove,
+    IReadOnlyList<DateOnly> RequiredBookingDays,
+    IReadOnlyList<DateOnly> MissingBookingDays,
+    IReadOnlyList<Database.Entities.Booking> BookingsToRemove,
     bool HasMoreRequiredBookingDays);
 
 /// <summary>
@@ -22,7 +22,7 @@ public interface IRecurringBookingScheduleService
         RecurringBooking recurringBooking,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<Database.Entities.Booking> existingBookings);
+        IReadOnlyList<Database.Entities.Booking> existingBookings);
 }
 
 /// <summary>
@@ -34,7 +34,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
         RecurringBooking recurringBooking,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<Database.Entities.Booking> existingBookings)
+        IReadOnlyList<Database.Entities.Booking> existingBookings)
     {
         // Compute required days in the requested planning horizon.
         var requiredBookingDaysResponse = GetRequiredBookingDays(recurringBooking, from, until);
@@ -82,7 +82,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
         }
 
         return new RecurringBookingReconciliationPlan(
-            requiredBookingDays,
+            requiredBookingDays.ToList(),
             missingBookingDays,
             bookingsToRemove,
             requiredBookingDaysResponse.HasMoreRequiredBookingDays);
@@ -151,7 +151,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
                 byWeekDays.Add(recurrenceStart.DayOfWeek);
             }
 
-            var dayInMonth = ResolveDayInMonthBySetPosition(date.Year, date.Month, byWeekDays, recurringBooking.BySetPosition.Value);
+            var dayInMonth = ResolveDayInMonthBySetPosition(date.Year, date.Month, byWeekDays.ToList(), recurringBooking.BySetPosition.Value);
 
             return dayInMonth.HasValue && date.Day == dayInMonth.Value;
         }
@@ -180,7 +180,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
         }
     }
 
-    private static int? ResolveDayInMonthBySetPosition(int year, int month, ICollection<DayOfWeek> byWeekDays, int bySetPosition)
+    private static int? ResolveDayInMonthBySetPosition(int year, int month, IReadOnlyList<DayOfWeek> byWeekDays, int bySetPosition)
     {
         // Invalid selector inputs.
         if (bySetPosition == 0 || byWeekDays.Count == 0)
@@ -259,7 +259,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
     /// <summary>
     ///     Calculates required calendar days in the current window and whether valid days still exist after this window.
     /// </summary>
-    public (ICollection<DateOnly> Days, bool HasMoreRequiredBookingDays) GetRequiredBookingDays(
+    public (IReadOnlyList<DateOnly> Days, bool HasMoreRequiredBookingDays) GetRequiredBookingDays(
         RecurringBooking recurringBooking,
         DateTimeOffset from,
         DateTimeOffset until)
@@ -321,6 +321,6 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
             recurringBookingEndType,
             occurrenceLimit);
 
-        return (days, hasMoreRequiredBookingDays);
+        return (days.ToList(), hasMoreRequiredBookingDays);
     }
 }

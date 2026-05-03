@@ -66,7 +66,7 @@ public class ZeroCapacityOccupancyOmittedShould
             .Returns([deskDay1, deskDay2]);
 
         A.CallTo(() => roomCountRepository.GetByLocationIdsAndDateRangeAsync(
-                A<ICollection<string>>.That.Contains(LocationId), from, until, A<CancellationToken>._))
+                A<IReadOnlyList<string>>.That.Contains(LocationId), from, until, A<CancellationToken>._))
             .Returns(Array.Empty<DailyRoomCountRecording>());
 
         A.CallTo(() => snapshotRepository.GetByLocationIdAndDateRangeAsync(

@@ -12,15 +12,15 @@ public interface IOrganizationTagRepository : IRepository<OrganizationTag>
     Task<OrganizationTag> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
     Task<OrganizationTag?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
-    Task<ICollection<OrganizationTag>> GetActiveByIdsForOrganizationAsync(
-        ICollection<string> ids,
+    Task<IReadOnlyList<OrganizationTag>> GetActiveByIdsForOrganizationAsync(
+        IReadOnlyList<string> ids,
         string? organizationId,
         string? organizationCustomDomain,
         CancellationToken cancellationToken);
 
     OrganizationTag Add(OrganizationTag organizationTag);
     OrganizationTag Update(OrganizationTag organizationTag);
-    void RemoveRange(ICollection<OrganizationTag> organizationTags);
+    void RemoveRange(IReadOnlyList<OrganizationTag> organizationTags);
 }
 
 public class OrganizationTagRepository(LocationDbContext dbContext, TimeProvider timeProvider)
@@ -40,7 +40,7 @@ public class OrganizationTagRepository(LocationDbContext dbContext, TimeProvider
         return DbContext.OrganizationTag.Add(organizationTag).Entity;
     }
 
-    public void RemoveRange(ICollection<OrganizationTag> organizationTags)
+    public void RemoveRange(IReadOnlyList<OrganizationTag> organizationTags)
     {
         var now = TimeProvider.GetUtcNow();
         organizationTags.ForEach(organizationTag => organizationTag.DeletedAt = now);
@@ -72,8 +72,8 @@ public class OrganizationTagRepository(LocationDbContext dbContext, TimeProvider
     ///     This repository-owned query replaces specification composition for location and resource validation flows while keeping organization ownership
     ///     checks at the data boundary.
     /// </remarks>
-    public async Task<ICollection<OrganizationTag>> GetActiveByIdsForOrganizationAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<OrganizationTag>> GetActiveByIdsForOrganizationAsync(
+        IReadOnlyList<string> ids,
         string? organizationId,
         string? organizationCustomDomain,
         CancellationToken cancellationToken)

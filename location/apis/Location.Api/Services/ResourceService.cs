@@ -20,15 +20,15 @@ public interface IResourceService
     Task<Resource> AddAsync(Resource resource, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Resource> UpdateAsync(Resource resource, CancellationToken cancellationToken);
     Task<Resource> DeleteAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Resource>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<ICollection<Resource>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<ICollection<Resource>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Resource>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Resource>> ActivateAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Resource>> DeactivateAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<Resource> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
         ResourceSearchCriteria searchCriteria,
-        ICollection<ResourceOrder> orderByFields,
+        IReadOnlyList<ResourceOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -190,7 +190,7 @@ public class ResourceService(
         return deletedResource;
     }
 
-    public async Task<ICollection<Resource>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Resource>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -245,7 +245,7 @@ public class ResourceService(
         return deletedResources;
     }
 
-    public async Task<ICollection<Resource>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Resource>> ActivateAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -304,7 +304,7 @@ public class ResourceService(
         return updatedResources;
     }
 
-    public async Task<ICollection<Resource>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Resource>> DeactivateAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -390,10 +390,10 @@ public class ResourceService(
         return mapper.MapTo(resource);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
         ResourceSearchCriteria searchCriteria,
-        ICollection<ResourceOrder> orderByFields,
+        IReadOnlyList<ResourceOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var existingLocation = await cachedLocationService.GetByIdAsync(searchCriteria.LocationId, cancellationToken) ?? throw new LocationNotFound();

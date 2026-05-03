@@ -217,7 +217,7 @@ public class OrganizationCustomTagService(
         return result;
     }
 
-    private void Cache(ICollection<OrganizationCustomTag> organizationCustomTags)
+    private void Cache(IReadOnlyList<OrganizationCustomTag> organizationCustomTags)
     {
         foreach (var organizationCustomTag in organizationCustomTags)
         {

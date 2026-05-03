@@ -233,7 +233,7 @@ public class AddBookingButtonHandler(
 
     public Task HandleClose(ViewClosed viewClosed) => Task.CompletedTask;
 
-    private async Task<ICollection<Block>> GetOrganizationMemberBlockAsync(
+    private async Task<IReadOnlyList<Block>> GetOrganizationMemberBlockAsync(
         AddBookingContext context,
         Customer customer,
         CancellationToken cancellationToken)
@@ -278,7 +278,7 @@ public class AddBookingButtonHandler(
         ];
     }
 
-    private async Task<ICollection<Block>> GetTeamBlockAsync(
+    private async Task<IReadOnlyList<Block>> GetTeamBlockAsync(
         WorkspaceMember workspaceMember,
         AddBookingContext context,
         CancellationToken cancellationToken)

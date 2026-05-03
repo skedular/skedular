@@ -13,7 +13,7 @@ public class WorkspaceChannel : ModelBaseWithDeleted
     public bool IsShared { get; set; }
     public bool IsMember { get; set; }
     public Workspace Workspace { get; set; } = new();
-    public ICollection<Organization> OrganizationDailyUpdateChannels { get; set; } = [];
-    public ICollection<Location> LocationDailyUpdateChannels { get; set; } = [];
-    public ICollection<Team> TeamDailyUpdateChannels { get; set; } = [];
+    public IReadOnlyList<Organization> OrganizationDailyUpdateChannels { get; set; } = [];
+    public IReadOnlyList<Location> LocationDailyUpdateChannels { get; set; } = [];
+    public IReadOnlyList<Team> TeamDailyUpdateChannels { get; set; } = [];
 }

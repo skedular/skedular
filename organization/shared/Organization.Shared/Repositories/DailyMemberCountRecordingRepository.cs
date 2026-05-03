@@ -8,7 +8,7 @@ namespace Organization.Shared.Repositories;
 
 public interface IDailyMemberCountRecordingRepository : IRepository<DailyMemberCountRecording>
 {
-    Task<ICollection<DailyMemberCountRecording>> GetByOrganizationIdAndDateRangeAsync(
+    Task<IReadOnlyList<DailyMemberCountRecording>> GetByOrganizationIdAndDateRangeAsync(
         string organizationId,
         DateTimeOffset from,
         DateTimeOffset until,
@@ -33,7 +33,7 @@ public class DailyMemberCountRecordingRepository(OrganizationDbContext dbContext
     ///     This range query keeps analytics-specific filtering inside the repository and preserves the earlier untracked behavior for read-only chart
     ///     generation.
     /// </remarks>
-    public async Task<ICollection<DailyMemberCountRecording>> GetByOrganizationIdAndDateRangeAsync(
+    public async Task<IReadOnlyList<DailyMemberCountRecording>> GetByOrganizationIdAndDateRangeAsync(
         string organizationId,
         DateTimeOffset from,
         DateTimeOffset until,

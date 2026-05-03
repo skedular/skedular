@@ -17,16 +17,16 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer?> GetMinimalByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
-    Task<ICollection<Customer>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Customer>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Customer Update(Customer customer);
     Customer Remove(Customer customer);
 }
 
-internal static class CustomerExtensions
+public static class CustomerExtensions
 {
     extension(IQueryable<Customer> originalQuery)
     {
-        internal IIncludableQueryable<Customer, Database.Entities.Team?> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<Customer, Database.Entities.Team?> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Identities)
             .Include(query => query.OrganizationMembers)
@@ -95,7 +95,7 @@ public class CustomerRepository(TeamDbContext dbContext, TimeProvider timeProvid
                     query.Identities.Any(identity => identity.Email != null && EF.Functions.ILike(identity.Email, email)),
                 cancellationToken);
 
-    public async Task<ICollection<Customer>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Customer>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Customer
             .Where(query => ids.Contains(query.Id))
             .AddDependentObjects(true)

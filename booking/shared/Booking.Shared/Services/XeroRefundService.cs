@@ -534,7 +534,7 @@ public class XeroRefundService(
 
     private static AccountingInvoiceInstance? ResolveMatchingInvoiceInstance(
         RecurringBookingEntity recurringBooking,
-        ICollection<AccountingInvoiceInstance> accountingInvoiceInstances)
+        IReadOnlyList<AccountingInvoiceInstance> accountingInvoiceInstances)
     {
         var marketplaceBooking = recurringBooking.MarketplaceBooking;
         if (marketplaceBooking is null || accountingInvoiceInstances.Count == 0)

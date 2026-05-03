@@ -14,9 +14,9 @@ public class Resource : ReplicatedModelBaseWithDeleted
     public OpeningHours? AvailableHours { get; set; }
 
     public Location? Location { get; set; }
-    public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
-    public ICollection<Customer> PreferredByCustomers { get; set; } = [];
-    public ICollection<Booking> InvolvedBookings { get; set; } = [];
-    public ICollection<RecurringBooking> RequestedByRecurringBookings { get; set; } = [];
-    public ICollection<MarketplaceBookingSubscription> RequestedByMarketplaceBookingSubscriptions { get; set; } = [];
+    public IReadOnlyList<OrganizationTag> OrganizationTags { get; set; } = [];
+    public IReadOnlyList<Customer> PreferredByCustomers { get; set; } = [];
+    public IReadOnlyList<Booking> InvolvedBookings { get; set; } = [];
+    public IReadOnlyList<RecurringBooking> RequestedByRecurringBookings { get; set; } = [];
+    public IReadOnlyList<MarketplaceBookingSubscription> RequestedByMarketplaceBookingSubscriptions { get; set; } = [];
 }

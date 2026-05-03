@@ -12,21 +12,21 @@ public interface IWorkspaceMemberRepository : IRepository<WorkspaceMember>
 {
     Task<WorkspaceMember?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
-    Task<ICollection<WorkspaceMember>> GetForAutomaticProfileStatusUpdateAsync(
+    Task<IReadOnlyList<WorkspaceMember>> GetForAutomaticProfileStatusUpdateAsync(
         DateTimeOffset now,
         CancellationToken cancellationToken);
 
     WorkspaceMember Add(WorkspaceMember workspaceMember);
     WorkspaceMember Update(WorkspaceMember workspaceMember);
-    void RemoveRange(ICollection<WorkspaceMember> workspaceMembers);
-    Task<ICollection<WorkspaceMember>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken);
+    void RemoveRange(IReadOnlyList<WorkspaceMember> workspaceMembers);
+    Task<IReadOnlyList<WorkspaceMember>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken);
 }
 
-internal static class WorkspaceMemberExtensions
+public static class WorkspaceMemberExtensions
 {
     extension(IQueryable<WorkspaceMember> originalQuery)
     {
-        internal IIncludableQueryable<WorkspaceMember, Organization> AddDependentObjects() =>
+        public IIncludableQueryable<WorkspaceMember, Organization> AddDependentObjects() =>
             originalQuery
                 .Include(query => query.Workspace)
                 .ThenInclude(query => query.Organization);
@@ -50,7 +50,7 @@ public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider ti
     /// <remarks>
     ///     This query replaced the shared specification used by the profile-status job and keeps the Slack capability checks close to the data they filter.
     /// </remarks>
-    public async Task<ICollection<WorkspaceMember>> GetForAutomaticProfileStatusUpdateAsync(
+    public async Task<IReadOnlyList<WorkspaceMember>> GetForAutomaticProfileStatusUpdateAsync(
         DateTimeOffset now,
         CancellationToken cancellationToken) =>
         await DbContext.WorkspaceMember
@@ -80,14 +80,14 @@ public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider ti
         return DbContext.WorkspaceMember.Update(workspaceMember).Entity;
     }
 
-    public void RemoveRange(ICollection<WorkspaceMember> workspaceMembers)
+    public void RemoveRange(IReadOnlyList<WorkspaceMember> workspaceMembers)
     {
         var now = TimeProvider.GetUtcNow();
         workspaceMembers.ForEach(workspaceMember => workspaceMember.DeletedAt = now);
         DbContext.WorkspaceMember.UpdateRange(workspaceMembers);
     }
 
-    public async Task<ICollection<WorkspaceMember>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<WorkspaceMember>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken) =>
         await DbContext.WorkspaceMember
             .Where(query => query.Workspace.Id == workspaceId)
             .ToListAsync(cancellationToken);

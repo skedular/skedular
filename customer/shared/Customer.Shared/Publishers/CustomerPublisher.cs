@@ -11,7 +11,7 @@ namespace Customer.Shared.Publishers;
 
 public interface ICustomerPublisher
 {
-    Task PublishCustomersAsync(ICollection<Models.Customer> customers, CancellationToken cancellationToken);
+    Task PublishCustomersAsync(IReadOnlyList<Models.Customer> customers, CancellationToken cancellationToken);
 }
 
 public class CustomerPublisher(
@@ -21,7 +21,7 @@ public class CustomerPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : ICustomerPublisher
 {
-    public async Task PublishCustomersAsync(ICollection<Models.Customer> customers, CancellationToken cancellationToken) =>
+    public async Task PublishCustomersAsync(IReadOnlyList<Models.Customer> customers, CancellationToken cancellationToken) =>
         await Task.WhenAll(customers.Select(customer => publisher.PublishAsync(
             new Key { CustomerId = customer.Id },
             new Event

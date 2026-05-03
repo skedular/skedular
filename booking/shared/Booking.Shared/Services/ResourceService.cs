@@ -19,11 +19,11 @@ public interface IResourceService
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>A collection of available resources.</returns>
     /// <exception cref="ResourceNotAvailable">Thrown when not all requested resources are available.</exception>
-    Task<ICollection<Resource>> GetResourceEntitiesAndValidateAvailabilityAsync(
+    Task<IReadOnlyList<Resource>> GetResourceEntitiesAndValidateAvailabilityAsync(
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> resourceIds,
-        ICollection<string> tagIds,
+        IReadOnlyList<string> resourceIds,
+        IReadOnlyList<string> tagIds,
         CancellationToken cancellationToken);
 }
 
@@ -42,11 +42,11 @@ public class ResourceService(IRepositoryFactory repositoryFactory) : IResourceSe
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>A collection of available resources.</returns>
     /// <exception cref="ResourceNotAvailable">Thrown when not all requested resources are available.</exception>
-    public async Task<ICollection<Resource>> GetResourceEntitiesAndValidateAvailabilityAsync(
+    public async Task<IReadOnlyList<Resource>> GetResourceEntitiesAndValidateAvailabilityAsync(
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> resourceIds,
-        ICollection<string> tagIds,
+        IReadOnlyList<string> resourceIds,
+        IReadOnlyList<string> tagIds,
         CancellationToken cancellationToken)
     {
         if (resourceIds.Count == 0)

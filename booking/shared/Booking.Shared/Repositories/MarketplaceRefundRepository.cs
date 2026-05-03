@@ -23,9 +23,9 @@ public interface IMarketplaceRefundRepository : IRepository<MarketplaceRefund>
         string localEntityId,
         CancellationToken cancellationToken);
 
-    Task<ICollection<MarketplaceRefund>> GetByOrganizationIdAsync(
+    Task<IReadOnlyList<MarketplaceRefund>> GetByOrganizationIdAsync(
         string organizationId,
-        ICollection<string>? statuses,
+        IReadOnlyList<string>? statuses,
         CancellationToken cancellationToken);
 }
 
@@ -69,9 +69,9 @@ public class MarketplaceRefundRepository(BookingDbContext dbContext, TimeProvide
                 query.LocalEntityId == localEntityId,
             cancellationToken);
 
-    public async Task<ICollection<MarketplaceRefund>> GetByOrganizationIdAsync(
+    public async Task<IReadOnlyList<MarketplaceRefund>> GetByOrganizationIdAsync(
         string organizationId,
-        ICollection<string>? statuses,
+        IReadOnlyList<string>? statuses,
         CancellationToken cancellationToken)
     {
         var query = DbContext.MarketplaceRefund.Where(item => item.OrganizationId == organizationId);

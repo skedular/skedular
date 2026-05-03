@@ -13,8 +13,8 @@ public interface IResourceRepository : IRepository<Resource>
     Task<Resource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Resource Add(Resource resource);
     Resource Update(Resource resource);
-    void RemoveRange(ICollection<Resource> resources);
-    Task<ICollection<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
+    void RemoveRange(IReadOnlyList<Resource> resources);
+    Task<IReadOnlyList<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
 }
 
 public class ResourceRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
@@ -34,7 +34,7 @@ public class ResourceRepository(CustomerDbContext dbContext, TimeProvider timePr
         return DbContext.Resource.Add(resource).Entity;
     }
 
-    public void RemoveRange(ICollection<Resource> resources)
+    public void RemoveRange(IReadOnlyList<Resource> resources)
     {
         var now = TimeProvider.GetUtcNow();
         resources.ForEach(resource => resource.DeletedAt = now);
@@ -58,7 +58,7 @@ public class ResourceRepository(CustomerDbContext dbContext, TimeProvider timePr
                 .Include(query => query.Location)
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
         await DbContext.Resource
             .Include(query => query.Location)
             .Where(query => query.Location != null && query.Location.Id == locationId)

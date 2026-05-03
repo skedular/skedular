@@ -24,7 +24,7 @@ public interface IMarketplaceBookingPreferenceService
     /// <param name="cancellationToken">Cancellation token for the operation.</param>
     /// <returns>A collection of selected resources.</returns>
     /// <exception cref="NoResourceAvailable">Thrown when insufficient resources are available.</exception>
-    Task<ICollection<Resource>> PickResourceBasedOnCustomerPreferencesAsync(
+    Task<IReadOnlyList<Resource>> PickResourceBasedOnCustomerPreferencesAsync(
         Customer? customer,
         DateTimeOffset from,
         DateTimeOffset until,
@@ -51,7 +51,7 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
     /// <param name="cancellationToken">Cancellation token for the operation.</param>
     /// <returns>A collection of selected resources.</returns>
     /// <exception cref="NoResourceAvailable">Thrown when insufficient resources are available.</exception>
-    public async Task<ICollection<Resource>> PickResourceBasedOnCustomerPreferencesAsync(
+    public async Task<IReadOnlyList<Resource>> PickResourceBasedOnCustomerPreferencesAsync(
         Customer? customer,
         DateTimeOffset from,
         DateTimeOffset until,
@@ -59,7 +59,7 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
         int numberOfResourcesToBook,
         CancellationToken cancellationToken)
     {
-        var availableResources = await GetAvailableResourcesAsync(from, until, productVersion.OrganizationTags, cancellationToken);
+        var availableResources = await GetAvailableResourcesAsync(from, until, productVersion.OrganizationTags.ToList(), cancellationToken);
         if (availableResources.Count < numberOfResourcesToBook)
         {
             throw new NoResourceAvailable();
@@ -134,10 +134,10 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
     /// <param name="organizationTags">The organization tags to filter resources by.</param>
     /// <param name="cancellationToken">Cancellation token for the operation.</param>
     /// <returns>A collection of available resources.</returns>
-    private async Task<ICollection<Resource>> GetAvailableResourcesAsync(
+    private async Task<IReadOnlyList<Resource>> GetAvailableResourcesAsync(
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<OrganizationTag> organizationTags,
+        IReadOnlyList<OrganizationTag> organizationTags,
         CancellationToken cancellationToken) =>
         await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
             null,

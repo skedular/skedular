@@ -12,18 +12,18 @@ public interface ITeamRepository : IRepository<Team>
     Task<Team> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
     Task<Team?> GetByIdAsync(string id, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
     Task<Team?> GetByIdUntrackedAsync(string id, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
-    Task<ICollection<Team>> GetByIdsAsync(ICollection<string> ids, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
-    Task<ICollection<Team>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Team>> GetByIdsAsync(IReadOnlyList<string> ids, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Team>> GetActiveByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Team Update(Team team);
     Team Remove(Team team);
-    Task<ICollection<Team>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Team>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
 }
 
-internal static class TeamExtensions
+public static class TeamExtensions
 {
     extension(IQueryable<Team> originalQuery)
     {
-        internal IIncludableQueryable<Team, Customer> AddDependentObjects(
+        public IIncludableQueryable<Team, Customer> AddDependentObjects(
             bool isTracked,
             bool includeDeletedTeamMembers) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
@@ -56,8 +56,8 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
             .AddDependentObjects(false, includeDeletedTeamMembers)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Team>> GetByIdsAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<Team>> GetByIdsAsync(
+        IReadOnlyList<string> ids,
         bool includeDeletedTeamMembers,
         CancellationToken cancellationToken) =>
         await DbContext.Team
@@ -75,7 +75,7 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
     ///     This lightweight authorization lookup replaces the heavier specification path and intentionally loads only the organization data needed by
     ///     booking access checks.
     /// </remarks>
-    public async Task<ICollection<Team>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Team>> GetActiveByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -103,7 +103,7 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
         return DbContext.Team.Update(team).Entity;
     }
 
-    public async Task<ICollection<Team>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Team>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
         await DbContext.Team
             .Where(query => !query.DeletedAt.HasValue && query.Organization != null && !query.Organization.DeletedAt.HasValue &&
                             query.Organization.OrganizationMembers.Any(organizationMember =>

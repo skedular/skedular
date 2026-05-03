@@ -11,16 +11,16 @@ public interface IProductRepository : IRepository<Product>
 {
     Task<Product> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
     Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Product>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Product>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
     Product Update(Product product);
     Product Remove(Product product);
 }
 
-internal static class ProductExtensions
+public static class ProductExtensions
 {
     extension(IQueryable<Product> originalQuery)
     {
-        internal IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects() =>
+        public IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects() =>
             originalQuery
                 .Include(query => query.Organization)
                 .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
@@ -46,7 +46,7 @@ public class ProductRepository(LocationDbContext dbContext, TimeProvider timePro
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Product>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Product>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.Product
             .Where(query => !query.DeletedAt.HasValue && query.Organization.Id == organizationId)
             .AddDependentObjects()

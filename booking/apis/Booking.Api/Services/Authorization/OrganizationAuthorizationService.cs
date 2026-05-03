@@ -22,9 +22,9 @@ public interface IOrganizationAuthorizationService
         string? organizationCustomDomain,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Organization>> GetOrganizationsAndValidatePermissionsAsync(
-        ICollection<string> ids,
-        ICollection<string> customDomains,
+    Task<IReadOnlyList<Organization>> GetOrganizationsAndValidatePermissionsAsync(
+        IReadOnlyList<string> ids,
+        IReadOnlyList<string> customDomains,
         string customerId,
         bool existing,
         CancellationToken cancellationToken);
@@ -168,9 +168,9 @@ public class OrganizationAuthorizationService(
         };
     }
 
-    public async Task<ICollection<Organization>> GetOrganizationsAndValidatePermissionsAsync(
-        ICollection<string> ids,
-        ICollection<string> customDomains,
+    public async Task<IReadOnlyList<Organization>> GetOrganizationsAndValidatePermissionsAsync(
+        IReadOnlyList<string> ids,
+        IReadOnlyList<string> customDomains,
         string customerId,
         bool existing,
         CancellationToken cancellationToken)

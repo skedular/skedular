@@ -16,14 +16,14 @@ public interface IOrganizationBankAccountService
     Task<OrganizationBankAccount> AddAsync(OrganizationBankAccount organizationBankAccount, CancellationToken cancellationToken);
     Task<OrganizationBankAccount> UpdateAsync(OrganizationBankAccount organizationBankAccount, CancellationToken cancellationToken);
     Task<OrganizationBankAccount> DeleteAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<OrganizationBankAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<OrganizationBankAccount>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<OrganizationBankAccount> SetAsDefaultAsync(string id, CancellationToken cancellationToken);
     Task<OrganizationBankAccount> GetByIdAsync(string id, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<OrganizationBankAccount>>, int)> GetPaginatedAccountsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationBankAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationBankAccountSearchCriteria searchCriteria,
-        ICollection<OrganizationBankAccountOrder> orderByFields,
+        IReadOnlyList<OrganizationBankAccountOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
@@ -115,7 +115,7 @@ public class OrganizationBankAccountService(
         return deletedResource;
     }
 
-    public async Task<ICollection<OrganizationBankAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<OrganizationBankAccount>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -203,10 +203,10 @@ public class OrganizationBankAccountService(
         return mapper.MapTo(existingOrganizationBankAccount);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<OrganizationBankAccount>>, int)> GetPaginatedAccountsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationBankAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationBankAccountSearchCriteria searchCriteria,
-        ICollection<OrganizationBankAccountOrder> orderByFields,
+        IReadOnlyList<OrganizationBankAccountOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {

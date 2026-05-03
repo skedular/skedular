@@ -166,7 +166,7 @@ public class RecurringBookingPaymentServiceShould
             },
             InvolvedOrganizations = [organization]
         };
-        ICollection<BookingEntity> relatedBookings = new List<BookingEntity> { new() { Id = "booking-1" }, new() { Id = "booking-2" } };
+        IReadOnlyList<BookingEntity> relatedBookings = new List<BookingEntity> { new() { Id = "booking-1" }, new() { Id = "booking-2" } };
         var mappedRecurringBooking = new RecurringBooking { Id = recurringBooking.Id };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(customer.Id);

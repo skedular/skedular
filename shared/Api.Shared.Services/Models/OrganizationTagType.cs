@@ -351,7 +351,7 @@ public static class OrganizationTagTypeConstants
     public const string AmenitySpecializedToolsEquipment = "AMENITY_SPECIALIZED_TOOLS_EQUIPMENT";
     public const string AmenitySafetyComplianceKit = "AMENITY_SAFETY_COMPLIANCE_KIT";
 
-    public static readonly ICollection<OrganizationTagType> ResourceTypes =
+    public static readonly IReadOnlyList<OrganizationTagType> ResourceTypes =
     [
         OrganizationTagType.ResourceDesk,
         OrganizationTagType.ResourceRoom,
@@ -359,7 +359,7 @@ public static class OrganizationTagTypeConstants
         OrganizationTagType.ResourceOthers
     ];
 
-    public static readonly ICollection<OrganizationTagType> LocationSpaceTypes =
+    public static readonly IReadOnlyList<OrganizationTagType> LocationSpaceTypes =
     [
         OrganizationTagType.LocationSpaceTypeCarParkSpace,
         OrganizationTagType.LocationSpaceTypeEventSpace,
@@ -373,7 +373,7 @@ public static class OrganizationTagTypeConstants
         OrganizationTagType.LocationSpaceTypeOthers
     ];
 
-    public static readonly ICollection<OrganizationTagType> Amenities =
+    public static readonly IReadOnlyList<OrganizationTagType> Amenities =
     [
         OrganizationTagType.AmenityHighSpeedWifi,
         OrganizationTagType.AmenityDedicatedVlan,

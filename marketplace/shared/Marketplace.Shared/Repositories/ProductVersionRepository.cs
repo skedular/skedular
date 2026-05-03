@@ -13,11 +13,11 @@ public interface IProductVersionRepository : IRepository<ProductVersion>
     ProductVersion Add(ProductVersion productVersion);
 }
 
-internal static class ProductVersionExtensions
+public static class ProductVersionExtensions
 {
     extension(IQueryable<ProductVersion> originalQuery)
     {
-        internal IIncludableQueryable<ProductVersion, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<ProductVersion, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .AsSingleQuery()
             .Include(query => query.Product)

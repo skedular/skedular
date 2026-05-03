@@ -16,14 +16,14 @@ public class MarketplaceBookingSubscription : ModelBaseWithDeleted
     public bool AutoRenew { get; set; }
     public bool CancelAtPeriodEnd { get; set; }
     public MarketplaceBooking MarketplaceBooking { get; set; } = new();
-    public ICollection<Customer> InvolvedCustomers { get; set; } = [];
-    public ICollection<Organization> InvolvedOrganizations { get; set; } = [];
-    public ICollection<Team> InvolvedTeams { get; set; } = [];
-    public ICollection<Resource> RequestedResources { get; set; } = [];
+    public IReadOnlyList<Customer> InvolvedCustomers { get; set; } = [];
+    public IReadOnlyList<Organization> InvolvedOrganizations { get; set; } = [];
+    public IReadOnlyList<Team> InvolvedTeams { get; set; } = [];
+    public IReadOnlyList<Resource> RequestedResources { get; set; } = [];
     public Customer? CreatedByCustomer { get; set; }
     public Customer? LastModifiedByCustomer { get; set; }
     public Customer? DeletedByCustomer { get; set; }
-    public ICollection<RecurringBooking> RecurringBookings { get; set; } = [];
+    public IReadOnlyList<RecurringBooking> RecurringBookings { get; set; } = [];
 
     public MarketplaceBookingPaymentProjection? ResolveCurrentBillingWindowPaymentProjection(DateTimeOffset now)
     {
@@ -104,7 +104,7 @@ public class MarketplaceBookingSubscription : ModelBaseWithDeleted
         };
     }
 
-    private static PaymentStatus ResolveAggregatedPaymentStatus(ICollection<MarketplaceBooking> marketplaceBookings)
+    private static PaymentStatus ResolveAggregatedPaymentStatus(IReadOnlyList<MarketplaceBooking> marketplaceBookings)
     {
         var paymentRequiredBookings = marketplaceBookings.Where(item => item.IsPaymentRequired).ToList();
         if (paymentRequiredBookings.Count == 0)

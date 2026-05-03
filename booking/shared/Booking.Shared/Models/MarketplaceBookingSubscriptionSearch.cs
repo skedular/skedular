@@ -21,14 +21,14 @@ public record MarketplaceBookingSubscriptionSearchCriteria(
     bool? IncludeMineOnly,
     string? OrganizationId,
     string? OrganizationCustomDomain,
-    ICollection<string> TeamIds,
-    ICollection<string> CustomerIds,
-    ICollection<MarketplaceBookingSubscriptionStatus>? Statuses = null,
-    ICollection<PaymentStatus>? PaymentStatuses = null);
+    IReadOnlyList<string> TeamIds,
+    IReadOnlyList<string> CustomerIds,
+    IReadOnlyList<MarketplaceBookingSubscriptionStatus>? Statuses = null,
+    IReadOnlyList<PaymentStatus>? PaymentStatuses = null);
 
 public record MarketplaceBookingSubscriptionAccessScope(
-    ICollection<string> OrganizationIds,
-    ICollection<string> TeamIds);
+    IReadOnlyList<string> OrganizationIds,
+    IReadOnlyList<string> TeamIds);
 
 public record MarketplaceBookingSubscriptionOrder(OrderDirection Direction, MarketplaceBookingSubscriptionOrderField Field);
 

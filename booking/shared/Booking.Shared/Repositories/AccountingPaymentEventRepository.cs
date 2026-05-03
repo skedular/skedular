@@ -17,7 +17,7 @@ public interface IAccountingPaymentEventRepository : IRepository<AccountingPayme
         string externalPaymentId,
         CancellationToken cancellationToken);
 
-    Task<ICollection<AccountingPaymentEvent>> GetUnprocessedByProviderAndExternalInvoiceIdAsync(
+    Task<IReadOnlyList<AccountingPaymentEvent>> GetUnprocessedByProviderAndExternalInvoiceIdAsync(
         string organizationId,
         string provider,
         string externalInvoiceId,
@@ -53,7 +53,7 @@ public class AccountingPaymentEventRepository(BookingDbContext dbContext, TimePr
                 query.ExternalPaymentId == externalPaymentId,
             cancellationToken);
 
-    public async Task<ICollection<AccountingPaymentEvent>> GetUnprocessedByProviderAndExternalInvoiceIdAsync(
+    public async Task<IReadOnlyList<AccountingPaymentEvent>> GetUnprocessedByProviderAndExternalInvoiceIdAsync(
         string organizationId,
         string provider,
         string externalInvoiceId,

@@ -16,27 +16,27 @@ public class Organization : ModelBaseWithDeleted
     public bool HasAttachedPaymentMethod => OrganizationStripePaymentMethods.Count != 0;
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
-    public ICollection<string> RefundNotificationEmails { get; set; } = [];
+    public IReadOnlyList<string> RefundNotificationEmails { get; set; } = [];
     public bool? IsOwnershipVerified { get; set; }
     public Uri StripeAuthorizeExistingConnectAccountUrl { get; set; } = Constants.EmptyUri;
-    public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
+    public IReadOnlyList<CdnImageFile> FeatureImages { get; set; } = [];
     public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
     public ListingMetadata MarketplaceListingMetadata { get; set; } = ListingMetadata.Empty;
 
-    public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public IReadOnlyList<OrganizationMember> OrganizationMembers { get; set; } = [];
     public TermsOfUse? TermsOfUse { get; set; }
-    public ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
-    public ICollection<DailyMemberCountRecording> DailyMemberCountRecordings { get; set; } = [];
-    public ICollection<IndustrySubCategory> IndustrySubCategories { get; set; } = [];
-    public ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
-    public ICollection<AzureTenant> AzureTenants { get; set; } = [];
-    public ICollection<Tag> Tags { get; set; } = [];
+    public IReadOnlyList<OrganizationOffering> OrganizationOfferings { get; set; } = [];
+    public IReadOnlyList<DailyMemberCountRecording> DailyMemberCountRecordings { get; set; } = [];
+    public IReadOnlyList<IndustrySubCategory> IndustrySubCategories { get; set; } = [];
+    public IReadOnlyList<JoinInvitation> JoinInvitations { get; set; } = [];
+    public IReadOnlyList<AzureTenant> AzureTenants { get; set; } = [];
+    public IReadOnlyList<Tag> Tags { get; set; } = [];
     public OrganizationSsoSettings? OrganizationSsoSettings { get; set; }
-    public ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
+    public IReadOnlyList<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
     public OrganizationStripeCustomer? OrganizationStripeCustomer { get; set; }
     public OrganizationBillingDetails? BillingDetails { get; set; }
-    public ICollection<OrganizationStripeConnectAccount> OrganizationStripeConnectAccounts { get; set; } = [];
-    public ICollection<OrganizationBankAccount> OrganizationBankAccounts { get; set; } = [];
+    public IReadOnlyList<OrganizationStripeConnectAccount> OrganizationStripeConnectAccounts { get; set; } = [];
+    public IReadOnlyList<OrganizationBankAccount> OrganizationBankAccounts { get; set; } = [];
     public OrganizationTaxDetails? OrganizationTaxDetails { get; set; }
     public OrganizationXeroConnection? OrganizationXeroConnection { get; set; }
     public OrganizationPhysicalAddress? PhysicalAddress { get; set; }

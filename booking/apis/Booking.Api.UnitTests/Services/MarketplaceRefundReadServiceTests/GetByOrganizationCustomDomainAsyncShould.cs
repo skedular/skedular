@@ -48,13 +48,14 @@ public class GetByOrganizationCustomDomainAsyncShould
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundEventRepository).Returns(marketplaceRefundEventRepository);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
-        A.CallTo(() => marketplaceRefundRepository.GetByOrganizationIdAsync("org-1", A<ICollection<string>?>._, cancellationToken)).Returns([refund]);
+        A.CallTo(() => marketplaceRefundRepository.GetByOrganizationIdAsync("org-1", A<IReadOnlyList<string>?>._, cancellationToken))
+            .Returns([refund]);
         A.CallTo(() => marketplaceRefundEventRepository.GetByMarketplaceRefundIdsAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.Count == 1 && ids.Contains("refund-1")),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 1 && ids.Contains("refund-1")),
                 cancellationToken))
             .Returns([refundEvent]);
         A.CallTo(() => customerRepository.GetByIdsAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.Count == 2 && ids.Contains("actor-1") && ids.Contains("requester-1")), true,
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 2 && ids.Contains("actor-1") && ids.Contains("requester-1")), true,
                 cancellationToken))
             .Returns(customers);
         A.CallTo(() => mapper.MapTo(refund)).Returns(mappedRefund);

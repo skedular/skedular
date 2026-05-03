@@ -13,18 +13,18 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public OrganizationBillingCycle BillingCycle { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
-    public ICollection<string> RefundNotificationEmails { get; set; } = [];
+    public IReadOnlyList<string> RefundNotificationEmails { get; set; } = [];
     public bool? IsOwnershipVerified { get; set; }
-    public ICollection<OrganizationTag> Tags { get; set; } = [];
-    public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<Location> Locations { get; set; } = [];
-    public ICollection<Team> Teams { get; set; } = [];
-    public ICollection<Customer> DefaultedByCustomers { get; set; } = [];
+    public IReadOnlyList<OrganizationTag> Tags { get; set; } = [];
+    public IReadOnlyList<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public IReadOnlyList<Location> Locations { get; set; } = [];
+    public IReadOnlyList<Team> Teams { get; set; } = [];
+    public IReadOnlyList<Customer> DefaultedByCustomers { get; set; } = [];
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
-    public ICollection<Product> Products { get; set; } = [];
-    public ICollection<Booking> InvolvedBookings { get; set; } = [];
-    public ICollection<RecurringBooking> InvolvedRecurringBooking { get; set; } = [];
-    public ICollection<MarketplaceBooking> PaidMarketplaceBookings { get; set; } = [];
-    public ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
-    public ICollection<OrganizationInvoiceCounter> OrganizationInvoiceCounters { get; set; } = [];
+    public IReadOnlyList<Product> Products { get; set; } = [];
+    public IReadOnlyList<Booking> InvolvedBookings { get; set; } = [];
+    public IReadOnlyList<RecurringBooking> InvolvedRecurringBooking { get; set; } = [];
+    public IReadOnlyList<MarketplaceBooking> PaidMarketplaceBookings { get; set; } = [];
+    public IReadOnlyList<StripeCustomer> StripeCustomers { get; set; } = [];
+    public IReadOnlyList<OrganizationInvoiceCounter> OrganizationInvoiceCounters { get; set; } = [];
 }

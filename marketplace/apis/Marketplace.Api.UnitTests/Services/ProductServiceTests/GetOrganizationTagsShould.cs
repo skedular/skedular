@@ -83,14 +83,14 @@ public class GetOrganizationTagsShould
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, cancellationToken)).Returns(organization);
         A.CallTo(() => organizationAuthorizationService.CanModifyProductAsync("org-1", "customer-1", cancellationToken)).Returns(true);
         A.CallTo(() => organizationTagRepository.GetActiveByIdsForOrganizationAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "tag-1" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "tag-1" })),
                 "org-1",
                 null,
                 cancellationToken))
             .Returns([organizationTag]);
         A.CallTo(() => mapper.MapTo(A<Shared.Models.Product>.That.Matches(product => product.Id == "product-1" && product.Inactive), organization))
             .Returns(productEntity);
-        A.CallTo(() => mapper.MapTo(productVersion, productEntity, A<ICollection<OrganizationTag>>._))
+        A.CallTo(() => mapper.MapTo(productVersion, productEntity, A<IReadOnlyList<OrganizationTag>>._))
             .Returns(productVersionEntity);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => productRepository.Add(productEntity)).Returns(productEntity);
@@ -102,12 +102,12 @@ public class GetOrganizationTagsShould
 
         result.Id.ShouldBe("product-1");
         A.CallTo(() => organizationTagRepository.GetActiveByIdsForOrganizationAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "tag-1" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "tag-1" })),
                 "org-1",
                 null,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => marketplaceOutboxPublisher.PublishProducts(A<ICollection<Shared.Models.Product>>._, unitOfWork))
+        A.CallTo(() => marketplaceOutboxPublisher.PublishProducts(A<IReadOnlyList<Shared.Models.Product>>._, unitOfWork))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => cachedProductService.UpdateByIdAsync("product-1", cancellationToken)).MustHaveHappenedOnceExactly();
     }

@@ -381,7 +381,7 @@ public class CustomTagsPage(
             commonPageContext.PageContext,
             cancellationToken));
 
-        ICollection<Block>[] blocks =
+        IReadOnlyList<Block>[] blocks =
         [
             GetTitle(),
             asyncBlocks[0],
@@ -412,12 +412,12 @@ public class CustomTagsPage(
             .RegisterBlockActionHandler<ButtonAction, CustomTagsPage>(CustomTagActionTypes.SetPreferredCustomTag)
             .RegisterBlockActionHandler<ButtonAction, CustomTagsPage>(CustomTagActionTypes.RemovePreferredCustomTag);
 
-    private static ICollection<Block> GetTitle() =>
+    private static IReadOnlyList<Block> GetTitle() =>
     [
         new SectionBlock { Text = "*Tags*".ToMarkdown() }
     ];
 
-    private async Task<ICollection<Block>> GetToolbarAsync(
+    private async Task<IReadOnlyList<Block>> GetToolbarAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,

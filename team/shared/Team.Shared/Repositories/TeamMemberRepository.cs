@@ -15,28 +15,28 @@ namespace Team.Shared.Repositories;
 public interface ITeamMemberRepository : IRepository<TeamMember>
 {
     Task<TeamMember?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<TeamMember>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<TeamMember>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     TeamMember Add(TeamMember teamMember);
-    void AddRange(ICollection<TeamMember> teamMembers);
+    void AddRange(IReadOnlyList<TeamMember> teamMembers);
     TeamMember Update(TeamMember teamMember);
     TeamMember Remove(TeamMember teamMember);
-    void RemoveRange(ICollection<TeamMember> teamMembers);
+    void RemoveRange(IReadOnlyList<TeamMember> teamMembers);
 
-    Task<(PaginatedInfo, ICollection<Edge<TeamMember>>, int)> GetPaginatedTeamMembersUntrackedAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<TeamMember>>, int)> GetPaginatedTeamMembersUntrackedAsync(
         PaginationInputParam paginationInputParam,
         TeamMemberSearchCriteria searchCriteria,
-        ICollection<TeamMemberOrder> orderByFields,
+        IReadOnlyList<TeamMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 
-    Task<ICollection<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken);
     Task<TeamMember?> GetByTeamIdAndOrganizationMemberIdAsync(string teamId, string organizationMemberId, CancellationToken cancellationToken);
 }
 
-internal static class TeamMemberExtensions
+public static class TeamMemberExtensions
 {
     extension(IQueryable<TeamMember> originalQuery)
     {
-        internal IIncludableQueryable<TeamMember, ICollection<Identity>> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<TeamMember, ICollection<Identity>> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Team)
             .Include(query => query.Customer)
@@ -47,7 +47,7 @@ internal static class TeamMemberExtensions
             .ThenInclude(query => query!.Customer)
             .ThenInclude(query => query.Identities);
 
-        internal IQueryable<TeamMember> AddSearchCriteria(TeamMemberSearchCriteria searchCriteria)
+        public IQueryable<TeamMember> AddSearchCriteria(TeamMemberSearchCriteria searchCriteria)
         {
             originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue && item.Team.Id == searchCriteria.TeamId);
 
@@ -77,8 +77,8 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
             .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<TeamMember>> GetByIdsAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<TeamMember>> GetByIdsAsync(
+        IReadOnlyList<string> ids,
         CancellationToken cancellationToken) =>
         await DbContext.TeamMember
             .Where(query => ids.Contains(query.Id))
@@ -92,7 +92,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
         return DbContext.TeamMember.Add(teamMember).Entity;
     }
 
-    public void AddRange(ICollection<TeamMember> teamMembers)
+    public void AddRange(IReadOnlyList<TeamMember> teamMembers)
     {
         var now = TimeProvider.GetUtcNow();
         teamMembers.ForEach(teamMember => teamMember.CreatedAt = now);
@@ -106,7 +106,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
         return DbContext.TeamMember.Update(teamMember).Entity;
     }
 
-    public void RemoveRange(ICollection<TeamMember> teamMembers)
+    public void RemoveRange(IReadOnlyList<TeamMember> teamMembers)
     {
         var now = TimeProvider.GetUtcNow();
         teamMembers.ForEach(teamMember => teamMember.DeletedAt = now);
@@ -120,18 +120,18 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
         return DbContext.TeamMember.Update(teamMember).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<TeamMember>>, int)>
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<TeamMember>>, int)>
         GetPaginatedTeamMembersUntrackedAsync(
             PaginationInputParam paginationInputParam,
             TeamMemberSearchCriteria searchCriteria,
-            ICollection<TeamMemberOrder> orderByFields,
+            IReadOnlyList<TeamMemberOrder> orderByFields,
             CancellationToken cancellationToken) =>
         await DbContext.TeamMember
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    public async Task<ICollection<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken) =>
         await DbContext.TeamMember
             .Where(query => query.Team.Id == teamId)
             .AddDependentObjects(true)
@@ -149,7 +149,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
                          query.OrganizationMember.Id == organizationMemberId,
                 cancellationToken);
 
-    private static List<KeysetPaginationField<TeamMember>> GetPaginationFields(ICollection<TeamMemberOrder> orderByFields)
+    private static List<KeysetPaginationField<TeamMember>> GetPaginationFields(IReadOnlyList<TeamMemberOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

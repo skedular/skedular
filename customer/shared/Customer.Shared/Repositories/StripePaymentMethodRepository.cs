@@ -10,16 +10,16 @@ namespace Customer.Shared.Repositories;
 public interface IStripePaymentMethodRepository : IRepository<StripePaymentMethod>
 {
     Task<StripePaymentMethod?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<StripePaymentMethod>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<StripePaymentMethod>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
     void Add(StripePaymentMethod stripePaymentMethod);
     void Remove(StripePaymentMethod stripePaymentMethod);
 }
 
-internal static class StripePaymentMethodExtensions
+public static class StripePaymentMethodExtensions
 {
     extension(IQueryable<StripePaymentMethod> originalQuery)
     {
-        internal IIncludableQueryable<StripePaymentMethod, ICollection<Identity>> AddDependentObjects() =>
+        public IIncludableQueryable<StripePaymentMethod, ICollection<Identity>> AddDependentObjects() =>
             originalQuery
                 .AsSingleQuery()
                 .Include(query => query.Customer)
@@ -35,7 +35,7 @@ public class StripePaymentMethodRepository(CustomerDbContext dbContext, TimeProv
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<StripePaymentMethod>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<StripePaymentMethod>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
         await DbContext.StripePaymentMethod
             .Where(query => !query.DeletedAt.HasValue && query.Customer.Id == customerId)
             .AddDependentObjects()

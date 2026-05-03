@@ -11,7 +11,7 @@ namespace Booking.Shared.Services;
 /// <param name="From">The start time of the booking window.</param>
 /// <param name="Until">The end time of the booking window.</param>
 /// <param name="Resources">The collection of resources assigned to this booking plan.</param>
-public record MarketplaceBookingDailyPlan(DateTimeOffset From, DateTimeOffset Until, ICollection<Resource> Resources);
+public record MarketplaceBookingDailyPlan(DateTimeOffset From, DateTimeOffset Until, IReadOnlyList<Resource> Resources);
 
 /// <summary>
 ///     Service for managing marketplace booking opening hours and resolving daily booking plans.
@@ -40,8 +40,8 @@ public interface IMarketplaceBookingOpeningHoursService
         ProductPricing pricing,
         DateOnly bookingDay,
         int requiredResourceCount,
-        ICollection<string> requiredResourceIds,
-        ICollection<string> preferredResourceIds,
+        IReadOnlyList<string> requiredResourceIds,
+        IReadOnlyList<string> preferredResourceIds,
         string? preferredLocationId,
         CancellationToken cancellationToken);
 
@@ -91,8 +91,8 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
         ProductPricing pricing,
         DateOnly bookingDay,
         int requiredResourceCount,
-        ICollection<string> requiredResourceIds,
-        ICollection<string> preferredResourceIds,
+        IReadOnlyList<string> requiredResourceIds,
+        IReadOnlyList<string> preferredResourceIds,
         string? preferredLocationId,
         CancellationToken cancellationToken)
     {
@@ -299,9 +299,9 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
     /// <param name="preferredResourceIds">Collection of preferred resource IDs from the booking request.</param>
     /// <returns>An ordered enumerable of resources.</returns>
     private static IEnumerable<Resource> OrderResources(
-        ICollection<Resource> resources,
+        IReadOnlyList<Resource> resources,
         Customer? customer,
-        ICollection<string> preferredResourceIds)
+        IReadOnlyList<string> preferredResourceIds)
     {
         var preferredGeneratedResourceIds = preferredResourceIds.ToHashSet();
         if (customer is null)

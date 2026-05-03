@@ -34,7 +34,7 @@ public class DeleteAsyncShould
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);
         A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken)).Returns(customer);
         A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBookingId, cancellationToken)).Returns(recurringBooking);
-        A.CallTo(() => teamRepository.GetByIdsAsync(A<ICollection<string>>._, false, cancellationToken)).Returns([team]);
+        A.CallTo(() => teamRepository.GetByIdsAsync(A<IReadOnlyList<string>>._, false, cancellationToken)).Returns([team]);
         A.CallTo(() => teamAuthorizationService.CanDeleteBookingAsync(team, customer.Id, cancellationToken)).Returns(false);
 
         await Should.ThrowAsync<UnauthorizedAccessException>(() => sut.DeleteAsync(recurringBookingId, cancellationToken));

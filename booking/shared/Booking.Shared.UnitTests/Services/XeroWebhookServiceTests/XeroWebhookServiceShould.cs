@@ -77,7 +77,7 @@ public class XeroWebhookServiceShould
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndExternalInvoiceIdsAsync(
                 AccountingProviderConstants.Xero,
-                A<ICollection<string>>.That.Matches(ids => ids.Count == 1 && ids.Contains("invoice-1")),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 1 && ids.Contains("invoice-1")),
                 cancellationToken))
             .Returns([link]);
 
@@ -131,7 +131,7 @@ public class XeroWebhookServiceShould
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndExternalInvoiceIdsAsync(
                 AccountingProviderConstants.Xero,
-                A<ICollection<string>>.That.Matches(ids => ids.Count == 1 && ids.Contains("invoice-1")),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 1 && ids.Contains("invoice-1")),
                 cancellationToken))
             .Returns([link]);
 
@@ -221,7 +221,7 @@ public class XeroWebhookServiceShould
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndExternalInvoiceIdsAsync(
                 AccountingProviderConstants.Xero,
-                A<ICollection<string>>.That.Matches(ids => ids.Count == 1 && ids.Contains(generatedInvoiceId.ToString())),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 1 && ids.Contains(generatedInvoiceId.ToString())),
                 cancellationToken))
             .Returns([]);
         A.CallTo(() => callInvoker.AsyncUnaryCall(
@@ -246,7 +246,7 @@ public class XeroWebhookServiceShould
         A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(A.Fake<AccountingApi>());
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndExternalInvoiceIdsAsync(
                 AccountingProviderConstants.Xero,
-                A<ICollection<string>>.That.Matches(ids => ids.Count == 1 && ids.Contains(repeatingTemplateId.ToString())),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 1 && ids.Contains(repeatingTemplateId.ToString())),
                 cancellationToken))
             .Returns([repeatingLink]);
 
@@ -348,7 +348,7 @@ public class XeroWebhookServiceShould
         A.CallTo(() => repositoryFactory.AccountingInvoiceInstanceRepository).Returns(accountingInvoiceInstanceRepository);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndExternalInvoiceIdsAsync(
                 AccountingProviderConstants.Xero,
-                A<ICollection<string>>.That.Matches(ids =>
+                A<IReadOnlyList<string>>.That.Matches(ids =>
                     ids.Count == 2 &&
                     ids.Contains(generatedInvoiceId.ToString()) &&
                     ids.Contains(repeatingTemplateId.ToString())),
@@ -356,7 +356,7 @@ public class XeroWebhookServiceShould
             .Returns([repeatingLink]);
         A.CallTo(() => accountingInvoiceInstanceRepository.GetByProviderAndExternalInvoiceIdsAsync(
                 AccountingProviderConstants.Xero,
-                A<ICollection<string>>.That.Matches(ids =>
+                A<IReadOnlyList<string>>.That.Matches(ids =>
                     ids.Count == 2 &&
                     ids.Contains(generatedInvoiceId.ToString()) &&
                     ids.Contains(repeatingTemplateId.ToString())),

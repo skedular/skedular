@@ -7,7 +7,7 @@ public record TeamSearchCriteria(
     string? OrganizationCustomDomain,
     string? CustomerId,
     string? NameContains,
-    ICollection<string> PrimaryLocationIds);
+    IReadOnlyList<string> PrimaryLocationIds);
 
 public record TeamOrder(OrderDirection Direction, TeamOrderField Field);
 

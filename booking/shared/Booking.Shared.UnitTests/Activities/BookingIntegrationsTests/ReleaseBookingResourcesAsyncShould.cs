@@ -75,7 +75,7 @@ public class ReleaseBookingResourcesAsyncShould
         A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(booking, environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => bookingOutboxPublisher.PublishBookings(A<ICollection<Shared.Models.Booking>>._, unitOfWork)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => bookingOutboxPublisher.PublishBookings(A<IReadOnlyList<Shared.Models.Booking>>._, unitOfWork)).MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingRepository.Update(booking.MarketplaceBooking)).MustHaveHappened();
         A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedTwiceExactly();
         A.CallTo(() => transaction.CommitAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();

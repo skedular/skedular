@@ -6,12 +6,12 @@ namespace Organization.Shared.Services;
 
 public interface IOrganizationDefaultValuesProvider
 {
-    ICollection<Tag> GetDefaultTags(Database.Entities.Organization organizationEntity);
+    IReadOnlyList<Tag> GetDefaultTags(Database.Entities.Organization organizationEntity);
 }
 
 public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOrganizationDefaultValuesProvider
 {
-    public ICollection<Tag> GetDefaultTags(Database.Entities.Organization organizationEntity) =>
+    public IReadOnlyList<Tag> GetDefaultTags(Database.Entities.Organization organizationEntity) =>
         GetResourceTags(organizationEntity)
             .Concat(GetLocationSpaceTypeTags(organizationEntity))
             .Concat(GetAmenitiesTags(organizationEntity))

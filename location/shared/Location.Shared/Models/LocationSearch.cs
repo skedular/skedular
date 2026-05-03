@@ -6,16 +6,16 @@ namespace Location.Shared.Models;
 public record LocationSearchCriteria(
     string? OrganizationId,
     string? OrganizationCustomDomain,
-    ICollection<string> LocationIds,
+    IReadOnlyList<string> LocationIds,
     string? NameContains,
-    ICollection<string> TagIds,
+    IReadOnlyList<string> TagIds,
     string? CustomerId,
-    ICollection<LocationType> Types,
+    IReadOnlyList<LocationType> Types,
     Polygon? SearchBoundaries,
     bool? NotContactedYet,
     OrganizationTagType? ResourceType,
     bool? FilterThoseWithUnverifiedOrganization,
-    ICollection<string> ProductIds);
+    IReadOnlyList<string> ProductIds);
 
 public record LocationOrder(OrderDirection Direction, LocationOrderField Field);
 

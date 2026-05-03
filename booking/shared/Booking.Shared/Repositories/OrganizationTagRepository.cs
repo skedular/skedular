@@ -13,7 +13,7 @@ public interface IOrganizationTagRepository : IRepository<OrganizationTag>
     Task<OrganizationTag?> GetByIdAsync(string id, CancellationToken cancellationToken);
     OrganizationTag Add(OrganizationTag organizationTag);
     OrganizationTag Update(OrganizationTag organizationTag);
-    void RemoveRange(ICollection<OrganizationTag> organizationTags);
+    void RemoveRange(IReadOnlyList<OrganizationTag> organizationTags);
 }
 
 public class OrganizationTagRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -39,7 +39,7 @@ public class OrganizationTagRepository(BookingDbContext dbContext, TimeProvider 
         return DbContext.OrganizationTag.Add(organizationTag).Entity;
     }
 
-    public void RemoveRange(ICollection<OrganizationTag> organizationTags)
+    public void RemoveRange(IReadOnlyList<OrganizationTag> organizationTags)
     {
         var now = TimeProvider.GetUtcNow();
         organizationTags.ForEach(organizationTag => organizationTag.DeletedAt = now);

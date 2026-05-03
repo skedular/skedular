@@ -14,11 +14,11 @@ public interface IOrganizationStripePaymentMethodRepository : IRepository<Organi
     void Remove(OrganizationStripePaymentMethod organizationStripePaymentMethod);
 }
 
-internal static class StripePaymentMethodExtensions
+public static class StripePaymentMethodExtensions
 {
     extension(IQueryable<OrganizationStripePaymentMethod> originalQuery)
     {
-        internal IIncludableQueryable<OrganizationStripePaymentMethod, Database.Entities.Organization> AddDependentObjects() =>
+        public IIncludableQueryable<OrganizationStripePaymentMethod, Database.Entities.Organization> AddDependentObjects() =>
             originalQuery
                 .AsSingleQuery()
                 .Include(query => query.Organization);

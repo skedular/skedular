@@ -11,8 +11,8 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 {
     OrganizationMember Add(OrganizationMember organizationMember);
     OrganizationMember Update(OrganizationMember organizationMember);
-    void RemoveRange(ICollection<OrganizationMember> organizationMembers);
-    Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
+    void RemoveRange(IReadOnlyList<OrganizationMember> organizationMembers);
+    Task<IReadOnlyList<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 public class OrganizationMemberRepository(SlackDbContext dbContext, TimeProvider timeProvider)
@@ -25,7 +25,7 @@ public class OrganizationMemberRepository(SlackDbContext dbContext, TimeProvider
         return DbContext.OrganizationMember.Add(organizationMember).Entity;
     }
 
-    public void RemoveRange(ICollection<OrganizationMember> organizationMembers)
+    public void RemoveRange(IReadOnlyList<OrganizationMember> organizationMembers)
     {
         var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);
@@ -39,7 +39,7 @@ public class OrganizationMemberRepository(SlackDbContext dbContext, TimeProvider
         return DbContext.OrganizationMember.Update(organizationMember).Entity;
     }
 
-    public async Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
             .Where(query => query.Organization.Id == organizationId)
             .AsSingleQuery()

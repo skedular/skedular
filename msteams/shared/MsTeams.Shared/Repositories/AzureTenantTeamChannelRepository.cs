@@ -10,7 +10,7 @@ public interface IAzureTenantTeamChannelRepository : IRepository<AzureTenantTeam
 {
     AzureTenantTeamChannel Add(AzureTenantTeamChannel azureTenantTeamChannel);
     AzureTenantTeamChannel Update(AzureTenantTeamChannel azureTenantTeamChannel);
-    void RemoveRange(ICollection<AzureTenantTeamChannel> tenantMembers);
+    void RemoveRange(IReadOnlyList<AzureTenantTeamChannel> tenantMembers);
 }
 
 public class AzureTenantTeamChannelRepository(MsTeamsDbContext dbContext, TimeProvider timeProvider)
@@ -31,7 +31,7 @@ public class AzureTenantTeamChannelRepository(MsTeamsDbContext dbContext, TimePr
         return DbContext.AzureTenantTeamChannel.Update(azureTenantTeamChannel).Entity;
     }
 
-    public void RemoveRange(ICollection<AzureTenantTeamChannel> tenantMembers)
+    public void RemoveRange(IReadOnlyList<AzureTenantTeamChannel> tenantMembers)
     {
         var now = TimeProvider.GetUtcNow();
         tenantMembers.ForEach(teamMember => teamMember.DeletedAt = now);

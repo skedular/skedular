@@ -15,7 +15,7 @@ public class FilterByStatusesShould
             .AsQueryable();
 
     private static MarketplaceBookingSubscriptionSearchCriteria CriteriaWith(
-        ICollection<MarketplaceBookingSubscriptionStatus> statuses) =>
+        IReadOnlyList<MarketplaceBookingSubscriptionStatus> statuses) =>
         new(
             null,
             null,

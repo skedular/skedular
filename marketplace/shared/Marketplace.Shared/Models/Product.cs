@@ -6,5 +6,5 @@ public class Product : ModelBaseWithDeleted
 {
     public bool Inactive { get; set; }
     public Organization Organization { get; set; } = new();
-    public ICollection<ProductVersion> ProductVersions { get; set; } = [];
+    public IReadOnlyList<ProductVersion> ProductVersions { get; set; } = [];
 }

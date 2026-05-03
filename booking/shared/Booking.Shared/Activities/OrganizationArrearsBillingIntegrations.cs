@@ -714,7 +714,7 @@ public class OrganizationArrearsBillingIntegrations(
         };
     }
 
-    private async Task<bool> ResolveArrearsTaxInclusiveAsync(ICollection<string> bookingIds, CancellationToken cancellationToken)
+    private async Task<bool> ResolveArrearsTaxInclusiveAsync(IReadOnlyList<string> bookingIds, CancellationToken cancellationToken)
     {
         var bookings = await repositoryFactory.BookingRepository.GetByIdsWithValidMarketplaceAsync(bookingIds, cancellationToken);
         var taxInclusiveValues = bookings

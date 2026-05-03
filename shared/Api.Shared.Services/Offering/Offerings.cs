@@ -21,7 +21,7 @@ public enum OfferingCode
 
 public static class Offerings
 {
-    public static readonly ICollection<OfferingCode> AllOfferings =
+    public static readonly IReadOnlyList<OfferingCode> AllOfferings =
     [
         OfferingCode.PayAsYouGoV1,
         OfferingCode.EnterpriseCustomV1

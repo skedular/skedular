@@ -28,10 +28,10 @@ public interface ICustomerService
     Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByEmailAsync(string email, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Customer>>, int)> GetPaginatedCustomersAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Customer>>, int)> GetPaginatedCustomersAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
-        ICollection<CustomerOrder> orderByFields,
+        IReadOnlyList<CustomerOrder> orderByFields,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Customer> AddAsync(Shared.Models.Customer customer, bool sendNewCustomerJoinedEmail, CancellationToken cancellationToken);
@@ -125,10 +125,10 @@ public class CustomerService(
         return customer is null ? (false, null) : (true, mapper.MapTo(customer));
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Customer>>, int)> GetPaginatedCustomersAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Customer>>, int)> GetPaginatedCustomersAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
-        ICollection<CustomerOrder> orderByFields,
+        IReadOnlyList<CustomerOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.CustomerRepository.GetPaginatedCustomersUntrackedAsync(

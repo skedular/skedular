@@ -14,10 +14,10 @@ public record BookingSearchCriteria(
     string? NotesContains,
     string? NameContains,
     BookingCategory? Category,
-    ICollection<PaymentStatus> PaymentStatuses,
+    IReadOnlyList<PaymentStatus> PaymentStatuses,
     bool? IncludeMineOnly,
     bool? IncludeFutureBookingsOnly,
     string? OrganizationId,
-    ICollection<string> LocationIds,
-    ICollection<string> TeamIds,
-    ICollection<string> CustomerIds);
+    IReadOnlyList<string> LocationIds,
+    IReadOnlyList<string> TeamIds,
+    IReadOnlyList<string> CustomerIds);

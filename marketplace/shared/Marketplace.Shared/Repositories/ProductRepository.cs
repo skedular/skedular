@@ -17,25 +17,25 @@ public interface IProductRepository : IRepository<Product>
 {
     Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Product?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Product>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<ICollection<Product>> GetAllByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
-    Task<ICollection<Product>> GetAllUntrackedAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<Product>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Product>> GetAllByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Product>> GetAllUntrackedAsync(CancellationToken cancellationToken);
     Product Add(Product product);
     Product Update(Product product);
-    void RemoveRange(ICollection<Product> products);
+    void RemoveRange(IReadOnlyList<Product> products);
 
-    Task<(PaginatedInfo, ICollection<Edge<Product>>, int )> GetPaginatedProductsUntrackedAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int )> GetPaginatedProductsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
-        ICollection<ProductOrder> orderByFields,
+        IReadOnlyList<ProductOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
-internal static class ProductExtensions
+public static class ProductExtensions
 {
     extension(IQueryable<Product> originalQuery)
     {
-        internal IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Organization)
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
@@ -44,7 +44,7 @@ internal static class ProductExtensions
             .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt).Take(1))
             .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
-        internal IQueryable<Product> AddSearchCriteria(ProductSearchCriteria searchCriteria)
+        public IQueryable<Product> AddSearchCriteria(ProductSearchCriteria searchCriteria)
         {
             originalQuery = originalQuery.Where(item =>
                 !item.DeletedAt.HasValue && item.Organization.Type == OrganizationTypeConstants.Marketplace &&
@@ -86,19 +86,19 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
             .AddDependentObjects(false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Product>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Product>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Product
             .Where(query => ids.Contains(query.Id))
             .AddDependentObjects(true)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<Product>> GetAllByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Product>> GetAllByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.Product
             .Where(query => !query.DeletedAt.HasValue && query.Organization.Id == organizationId)
             .AddDependentObjects(true)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<Product>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Product>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
         await DbContext.Product
             .Where(query => !query.DeletedAt.HasValue)
             .AddDependentObjects(false)
@@ -118,22 +118,22 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
         return DbContext.Product.Update(product).Entity;
     }
 
-    public void RemoveRange(ICollection<Product> products)
+    public void RemoveRange(IReadOnlyList<Product> products)
     {
         var now = TimeProvider.GetUtcNow();
         products.ForEach(product => product.DeletedAt = now);
         DbContext.Product.UpdateRange(products);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Product>>, int)> GetPaginatedProductsUntrackedAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int)> GetPaginatedProductsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
-        ICollection<ProductOrder> orderByFields,
+        IReadOnlyList<ProductOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Product
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Product>> GetPaginationFields(ICollection<ProductOrder> orderByFields) => [];
+    private static List<KeysetPaginationField<Product>> GetPaginationFields(IReadOnlyList<ProductOrder> orderByFields) => [];
 }

@@ -14,11 +14,11 @@ public interface IMarketplaceBookingRepository : IRepository<MarketplaceBooking>
     MarketplaceBooking Update(MarketplaceBooking marketplaceBooking);
 }
 
-internal static class MarketplaceBookingExtensions
+public static class MarketplaceBookingExtensions
 {
     extension(IQueryable<MarketplaceBooking> originalQuery)
     {
-        internal IIncludableQueryable<MarketplaceBooking, StripeCheckoutSession?> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<MarketplaceBooking, StripeCheckoutSession?> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.RecurringBooking)
             .Include(query => query.PaidByCustomer)

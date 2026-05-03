@@ -12,6 +12,7 @@ using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
 using Constants = Booking.Shared.GraphQL.Constants;
+using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
 
 namespace Booking.Shared.Services;
 
@@ -34,8 +35,8 @@ public interface IMarketplaceBookingService
     Task<Models.Booking> AddAsync(
         Models.Booking booking,
         Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         RecurringBooking? recurringBooking,
         CancellationToken cancellationToken);
 
@@ -55,8 +56,8 @@ public interface IMarketplaceBookingService
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
         Customer lastModifiedByCustomer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         RecurringBooking? recurringBooking,
         bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken);
@@ -67,6 +68,7 @@ public interface IMarketplaceBookingService
     /// <param name="existingBooking">The existing booking entity to delete.</param>
     /// <param name="deletedByCustomer">The customer performing the deletion.</param>
     /// <param name="ignoreCancellationPolicy">Whether operator permissions should bypass the customer cancellation window.</param>
+    /// <param name="createRefund"></param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>The deleted booking model.</returns>
     Task<Models.Booking> DeleteAsync(
@@ -129,8 +131,8 @@ public class MarketplaceBookingService(
     public async Task<Models.Booking> AddAsync(
         Models.Booking booking,
         Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         RecurringBooking? recurringBooking,
         CancellationToken cancellationToken)
     {
@@ -156,7 +158,7 @@ public class MarketplaceBookingService(
         ArgumentNullException.ThrowIfNull(productVersion.PricingOptions);
 
         marketplaceBooking.ProductPricing =
-            (productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions!, marketplaceBooking.ProductPricing) ??
+            (productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions!.ToList(), marketplaceBooking.ProductPricing) ??
              throw new ProductPricingNotFound()) with
             {
                 BookingCadence = marketplaceBooking.ProductPricing.BookingCadence
@@ -177,7 +179,7 @@ public class MarketplaceBookingService(
         var isEventProduct = productVersion.Type == ProductTypeConstants.Event;
         NormalizeEventQuantity(isEventProduct, marketplaceBooking);
         var requestedResourceCount = ResolveRequestedResourceCount(isEventProduct, marketplaceBooking);
-        ICollection<Resource> resources = [];
+        IReadOnlyList<Resource> resources = [];
         if (!isEventProduct)
         {
             resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
@@ -328,8 +330,8 @@ public class MarketplaceBookingService(
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
         Customer lastModifiedByCustomer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         RecurringBooking? recurringBooking,
         bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken)
@@ -383,7 +385,7 @@ public class MarketplaceBookingService(
         NormalizeEventQuantity(isEventProduct, marketplaceBooking);
         var requestedResourceCount = ResolveRequestedResourceCount(isEventProduct, marketplaceBooking);
 
-        ICollection<Resource> resources;
+        IReadOnlyList<Resource> resources;
 
         // For non-customized recurring instances, the scheduler can request a best-effort rebooking.
         // In that mode we first try resources provided on the booking model, and only if none are
@@ -500,6 +502,7 @@ public class MarketplaceBookingService(
     /// <param name="existingBooking">The existing booking entity to delete.</param>
     /// <param name="deletedByCustomer">The customer performing the deletion.</param>
     /// <param name="ignoreCancellationPolicy">Whether operator permissions should bypass the customer cancellation window.</param>
+    /// <param name="createRefund"></param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>The deleted booking model.</returns>
     /// <exception cref="BookingIsNotMarketplace">Thrown when the booking is not a marketplace booking.</exception>
@@ -677,16 +680,13 @@ public class MarketplaceBookingService(
             ProductPricingCadence.HalfDay or
             ProductPricingCadence.Daily;
 
-    private static int ResolveRequestedResourceCount(ProductVersion productVersion, MarketplaceBooking marketplaceBooking) =>
-        ResolveRequestedResourceCount(productVersion.Type == ProductTypeConstants.Event, marketplaceBooking);
-
-    private static int ResolveRequestedResourceCount(bool isEventProduct, Models.MarketplaceBooking marketplaceBooking) =>
-        isEventProduct ? 0 : marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
-
     private static int ResolveRequestedResourceCount(bool isEventProduct, MarketplaceBooking marketplaceBooking) =>
         isEventProduct ? 0 : marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
 
-    private static void NormalizeEventQuantity(bool isEventProduct, Models.MarketplaceBooking? marketplaceBooking)
+    private static int ResolveRequestedResourceCount(bool isEventProduct, Database.Entities.MarketplaceBooking marketplaceBooking) =>
+        isEventProduct ? 0 : marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
+
+    private static void NormalizeEventQuantity(bool isEventProduct, MarketplaceBooking? marketplaceBooking)
     {
         if (isEventProduct && marketplaceBooking is not null)
         {
@@ -694,7 +694,7 @@ public class MarketplaceBookingService(
         }
     }
 
-    private static void NormalizeEventQuantity(bool isEventProduct, MarketplaceBooking marketplaceBooking)
+    private static void NormalizeEventQuantity(bool isEventProduct, Database.Entities.MarketplaceBooking marketplaceBooking)
     {
         if (isEventProduct)
         {
@@ -750,7 +750,7 @@ public class MarketplaceBookingService(
     /// </summary>
     /// <param name="resources">The resources to convert.</param>
     /// <returns>A list of unique locations from the resources.</returns>
-    private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>
+    private static List<Location> ResourcesToLocations(IReadOnlyList<Resource> resources) =>
         resources
             .Where(item => item.Location is not null)
             .Select(item => item.Location)
@@ -766,7 +766,7 @@ public class MarketplaceBookingService(
     /// <param name="productVersion">The product version containing the product owner.</param>
     /// <returns>A list of unique organizations including the product owner.</returns>
     private static List<Organization> MergeOrganizationsWithProductOwner(
-        ICollection<Organization> organizations,
+        IReadOnlyList<Organization> organizations,
         ProductVersion productVersion)
     {
         ArgumentNullException.ThrowIfNull(productVersion.Product);

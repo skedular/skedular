@@ -20,7 +20,7 @@ public class FilterByPaymentStatusesShould
             .AsQueryable();
 
     private static MarketplaceBookingSubscriptionSearchCriteria CriteriaWith(
-        ICollection<PaymentStatus> paymentStatuses) =>
+        IReadOnlyList<PaymentStatus> paymentStatuses) =>
         new(
             null,
             null,

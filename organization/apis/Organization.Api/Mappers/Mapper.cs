@@ -76,12 +76,12 @@ public interface IMapper
     Shared.Database.Entities.Organization MapTo(
         Shared.Models.Organization src,
         TermsOfUse termsOfUse,
-        ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories);
+        IReadOnlyList<Shared.Database.Entities.IndustrySubCategory> industrySubCategories);
 
     Shared.Database.Entities.Organization MergeTo(
         Shared.Models.Organization src,
         Shared.Database.Entities.Organization dest,
-        ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories);
+        IReadOnlyList<Shared.Database.Entities.IndustrySubCategory> industrySubCategories);
 
     Shared.Models.TermsOfUse? MapTo(TermsOfUse? src);
     Customer? MapTo(Shared.Database.Entities.Customer? src);
@@ -320,7 +320,7 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Organization MapTo(
         Shared.Models.Organization src,
         TermsOfUse termsOfUse,
-        ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories) =>
+        IReadOnlyList<Shared.Database.Entities.IndustrySubCategory> industrySubCategories) =>
         new()
         {
             Id = src.Id,
@@ -337,17 +337,17 @@ public class Mapper : IMapper
             InvoiceDueInDays = src.InvoiceDueInDays,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            RefundNotificationEmails = src.RefundNotificationEmails,
+            RefundNotificationEmails = src.RefundNotificationEmails.ToList(),
             IsOwnershipVerified = src.IsOwnershipVerified,
-            FeatureImages = src.FeatureImages,
+            FeatureImages = src.FeatureImages.ToList(),
             TermsOfUse = termsOfUse,
-            IndustrySubCategories = industrySubCategories
+            IndustrySubCategories = industrySubCategories.ToList()
         };
 
     public Shared.Database.Entities.Organization MergeTo(
         Shared.Models.Organization src,
         Shared.Database.Entities.Organization dest,
-        ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories)
+        IReadOnlyList<Shared.Database.Entities.IndustrySubCategory> industrySubCategories)
     {
         dest.Id = src.Id;
         dest.CustomDomain = src.CustomDomain;
@@ -363,10 +363,10 @@ public class Mapper : IMapper
         dest.InvoiceDueInDays = src.InvoiceDueInDays;
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
-        dest.RefundNotificationEmails = src.RefundNotificationEmails;
+        dest.RefundNotificationEmails = src.RefundNotificationEmails.ToList();
         dest.IsOwnershipVerified = src.IsOwnershipVerified;
-        dest.FeatureImages = src.FeatureImages;
-        dest.IndustrySubCategories = industrySubCategories;
+        dest.FeatureImages = src.FeatureImages.ToList();
+        dest.IndustrySubCategories = industrySubCategories.ToList();
         return dest;
     }
 

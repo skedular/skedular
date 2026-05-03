@@ -102,7 +102,7 @@ public class SnapshotGroupingShould
             .Returns([]);
 
         A.CallTo(() => roomCountRepository.GetByLocationIdsAndDateRangeAsync(
-                A<ICollection<string>>._, from, until, A<CancellationToken>._))
+                A<IReadOnlyList<string>>._, from, until, A<CancellationToken>._))
             .Returns(Array.Empty<RoomCountRecordingEntity>());
 
         A.CallTo(() => snapshotRepository.GetByLocationIdAndDateRangeAsync(
@@ -164,7 +164,7 @@ public class SnapshotGroupingShould
         A.CallTo(() => deskCountRepository.GetByLocationIdsAndDateRangeAsync(A<IReadOnlyList<string>>._, from, until, A<CancellationToken>._))
             .Returns([]);
 
-        A.CallTo(() => roomCountRepository.GetByLocationIdsAndDateRangeAsync(A<ICollection<string>>._, from, until, A<CancellationToken>._))
+        A.CallTo(() => roomCountRepository.GetByLocationIdsAndDateRangeAsync(A<IReadOnlyList<string>>._, from, until, A<CancellationToken>._))
             .Returns(Array.Empty<RoomCountRecordingEntity>());
 
         A.CallTo(() => snapshotRepository.GetByLocationIdAndDateRangeAsync(LocationId, from, until, A<string?>._, A<CancellationToken>._))

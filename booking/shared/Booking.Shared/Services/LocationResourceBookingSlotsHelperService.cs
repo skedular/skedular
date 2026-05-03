@@ -24,7 +24,7 @@ public interface ILocationResourceBookingSlotsHelperService
     /// </summary>
     /// <param name="resource">The resource for which to create booking slots.</param>
     /// <returns>A collection of available resource booking slots.</returns>
-    ICollection<ResourceBookingSlot> CreateAllAvailableSlots(Resource resource);
+    IReadOnlyList<ResourceBookingSlot> CreateAllAvailableSlots(Resource resource);
 }
 
 /// <summary>
@@ -46,7 +46,7 @@ public class LocationResourceBookingSlotsHelperService(IRandomHelper randomHelpe
     /// </summary>
     /// <param name="resource">The resource for which to create booking slots.</param>
     /// <returns>A collection of available resource booking slots.</returns>
-    public ICollection<ResourceBookingSlot> CreateAllAvailableSlots(Resource resource)
+    public IReadOnlyList<ResourceBookingSlot> CreateAllAvailableSlots(Resource resource)
     {
         var startPeriod = GetStartPeriod();
         var endPeriod = startPeriod.AddDays(14).AddYears(1).AddMonths(2);

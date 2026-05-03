@@ -30,5 +30,5 @@ public class WorkOS
     public Uri? JwksUri { get; set; }
     public string? Issuer { get; set; }
     public string? ApiKey { get; set; }
-    public ICollection<Uri> OtherIssuers { get; set; } = [];
+    public IReadOnlyList<Uri> OtherIssuers { get; set; } = [];
 }

@@ -21,11 +21,11 @@ public interface IOrganizationRepository : IRepository<Organization>
     Organization Remove(Organization organization);
 }
 
-internal static class OrganizationExtensions
+public static class OrganizationExtensions
 {
     extension(IQueryable<Organization> originalQuery)
     {
-        internal IIncludableQueryable<Organization, WorkspaceChannel?> AddDependentObjects() =>
+        public IIncludableQueryable<Organization, WorkspaceChannel?> AddDependentObjects() =>
             originalQuery
                 .Include(query => query.OrganizationSsoSettings)
                 .Include(query => query.Workspaces)

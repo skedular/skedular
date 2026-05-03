@@ -9,5 +9,5 @@ public class OrganizationMember : ReplicatedModelBaseWithDeleted
     public OrganizationMemberStatus Status { get; set; }
     public Organization Organization { get; set; } = new();
     public Customer Customer { get; set; } = new();
-    public ICollection<TeamMember> TeamMembers { get; set; } = [];
+    public IReadOnlyList<TeamMember> TeamMembers { get; set; } = [];
 }

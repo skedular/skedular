@@ -10,8 +10,8 @@ public interface ITeamRepository : IRepository<Team>
 {
     Task<Team> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Team?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Team>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<ICollection<Team>> GetDueForDailyUpdateAsync(DateTimeOffset now, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Team>> GetActiveByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Team>> GetDueForDailyUpdateAsync(DateTimeOffset now, CancellationToken cancellationToken);
     Team Add(Team team);
     Team Update(Team team);
     Team Remove(Team team);
@@ -34,7 +34,7 @@ public class TeamRepository(SlackDbContext dbContext, TimeProvider timeProvider)
     /// <remarks>
     ///     This repository-owned lookup replaced the shared specification used by Slack actions when they validate a set of active teams.
     /// </remarks>
-    public async Task<ICollection<Team>> GetActiveByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Team>> GetActiveByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -56,7 +56,7 @@ public class TeamRepository(SlackDbContext dbContext, TimeProvider timeProvider)
     /// <remarks>
     ///     This keeps the daily-update scheduling criteria in the repository so jobs can fetch only teams that are ready for another Slack update.
     /// </remarks>
-    public async Task<ICollection<Team>> GetDueForDailyUpdateAsync(DateTimeOffset now, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Team>> GetDueForDailyUpdateAsync(DateTimeOffset now, CancellationToken cancellationToken) =>
         await DbContext.Team
             .Where(query =>
                 !query.DeletedAt.HasValue &&

@@ -6,13 +6,13 @@ namespace Booking.Shared.Services;
 
 public interface IOrganizationArrearsChargeSegmentService
 {
-    ICollection<ArrearsChargeSegment> BuildChargeSegments(Models.Booking booking, OrganizationBillingCycle billingCycle);
-    ICollection<ArrearsChargeSegment> BuildInitialRecurringChargeSegments(RecurringBooking recurringBooking, OrganizationBillingCycle billingCycle);
+    IReadOnlyList<ArrearsChargeSegment> BuildChargeSegments(Models.Booking booking, OrganizationBillingCycle billingCycle);
+    IReadOnlyList<ArrearsChargeSegment> BuildInitialRecurringChargeSegments(RecurringBooking recurringBooking, OrganizationBillingCycle billingCycle);
 }
 
 public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsChargeSegmentService
 {
-    public ICollection<ArrearsChargeSegment> BuildChargeSegments(Models.Booking booking, OrganizationBillingCycle billingCycle)
+    public IReadOnlyList<ArrearsChargeSegment> BuildChargeSegments(Models.Booking booking, OrganizationBillingCycle billingCycle)
     {
         var marketplaceBooking = booking.MarketplaceBooking;
         if (marketplaceBooking is null || marketplaceBooking.BillingMode != ProductPricingBillingMode.InArrears)
@@ -38,7 +38,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
             : [BuildSingleChargeSegment(booking, organizationId, customerId, currency)];
     }
 
-    public ICollection<ArrearsChargeSegment> BuildInitialRecurringChargeSegments(
+    public IReadOnlyList<ArrearsChargeSegment> BuildInitialRecurringChargeSegments(
         RecurringBooking recurringBooking,
         OrganizationBillingCycle billingCycle)
     {
@@ -88,7 +88,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
             BuildDescription(booking));
     }
 
-    private static ICollection<ArrearsChargeSegment> BuildInstallmentsByBillingCycle(
+    private static IReadOnlyList<ArrearsChargeSegment> BuildInstallmentsByBillingCycle(
         Models.Booking booking,
         string organizationId,
         string customerId,
@@ -147,7 +147,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
             BuildDescription(recurringBooking, servicePeriod));
     }
 
-    private static ICollection<ArrearsChargeSegment> BuildRecurringInstallmentsByBillingCycle(
+    private static IReadOnlyList<ArrearsChargeSegment> BuildRecurringInstallmentsByBillingCycle(
         RecurringBooking recurringBooking,
         string organizationId,
         string customerId,

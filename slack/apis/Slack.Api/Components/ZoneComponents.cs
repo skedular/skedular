@@ -9,23 +9,23 @@ namespace Slack.Api.Components;
 
 public interface IZoneComponents
 {
-    Task<ICollection<IActionElement>> GetAddZoneButtonAsync(
+    Task<IReadOnlyList<IActionElement>> GetAddZoneButtonAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Block>> GetZoneCardsAsync(
+    Task<IReadOnlyList<Block>> GetZoneCardsAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
-        ICollection<OrganizationZone> zones,
+        IReadOnlyList<OrganizationZone> zones,
         PageContext pageContext,
         CancellationToken cancellationToken);
 }
 
 public class ZoneComponents(ICustomerService customerService, IOrganizationPermissionsService organizationPermissionsService) : IZoneComponents
 {
-    public async Task<ICollection<IActionElement>> GetAddZoneButtonAsync(
+    public async Task<IReadOnlyList<IActionElement>> GetAddZoneButtonAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
@@ -46,10 +46,10 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationPermi
         ];
     }
 
-    public async Task<ICollection<Block>> GetZoneCardsAsync(
+    public async Task<IReadOnlyList<Block>> GetZoneCardsAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
-        ICollection<OrganizationZone> zones,
+        IReadOnlyList<OrganizationZone> zones,
         PageContext pageContext,
         CancellationToken cancellationToken)
     {

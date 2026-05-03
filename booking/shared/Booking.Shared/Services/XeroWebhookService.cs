@@ -92,7 +92,7 @@ public class XeroWebhookService(
         }
     }
 
-    private async Task<ICollection<XeroWebhookSyncTarget>> GetSyncTargetsAsync(string payloadJson, CancellationToken cancellationToken)
+    private async Task<IReadOnlyList<XeroWebhookSyncTarget>> GetSyncTargetsAsync(string payloadJson, CancellationToken cancellationToken)
     {
         using var document = JsonDocument.Parse(payloadJson);
         if (!document.RootElement.TryGetProperty("events", out var eventsElement) || eventsElement.ValueKind != JsonValueKind.Array)

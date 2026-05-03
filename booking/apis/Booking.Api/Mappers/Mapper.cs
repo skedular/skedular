@@ -559,7 +559,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
 
     private static OrganizationTagDetails MapTo(OrganizationTag src) => new() { Id = src.Id, Name = src.Name, Type = src.Type, Color = src.Color };
 
-    private static IEnumerable<BookingResourceDetails> MapTo(ICollection<ResourceCustomersPair> src, ICollection<Resource> involvedResources) =>
+    private static IEnumerable<BookingResourceDetails> MapTo(IReadOnlyList<ResourceCustomersPair> src, IReadOnlyList<Resource> involvedResources) =>
         src.Count == 0 ? involvedResources.Select(MapTo) : src.Select(item => MapTo(item.Resource, item.Customers));
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule> MapToGrpcResponse(

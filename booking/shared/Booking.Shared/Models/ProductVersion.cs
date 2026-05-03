@@ -7,15 +7,15 @@ public class ProductVersion : ModelBase
 {
     public ProductType Type { get; set; }
     public Currency Currency { get; set; }
-    public ICollection<ProductPricing> PricingOptions { get; set; } = [];
+    public IReadOnlyList<ProductPricing> PricingOptions { get; set; } = [];
     public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
     public Product Product { get; set; } = new();
-    public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
-    public ICollection<OrganizationTag> ProductTags => OrganizationTags.Where(item => item.Type == OrganizationTagType.Product).ToList();
+    public IReadOnlyList<OrganizationTag> OrganizationTags { get; set; } = [];
+    public IReadOnlyList<OrganizationTag> ProductTags => OrganizationTags.Where(item => item.Type == OrganizationTagType.Product).ToList();
 
-    public ICollection<OrganizationTag> Amenities =>
+    public IReadOnlyList<OrganizationTag> Amenities =>
         OrganizationTags.Where(item => OrganizationTagTypeConstants.Amenities.Any(tagType => item.Type == tagType)).ToList();
 
-    public ICollection<StripeProduct> StripeProducts { get; set; } = [];
-    public ICollection<MarketplaceBookingSubscription> MarketplaceBookingSubscriptions { get; set; } = [];
+    public IReadOnlyList<StripeProduct> StripeProducts { get; set; } = [];
+    public IReadOnlyList<MarketplaceBookingSubscription> MarketplaceBookingSubscriptions { get; set; } = [];
 }

@@ -6,6 +6,6 @@ public class AzureTenant : ModelBaseWithDeleted
 {
     public string? Name { get; set; }
     public string InstalledByUserId { get; set; } = string.Empty;
-    public ICollection<AzureTenantMember> AzureTenantMembers { get; set; } = [];
+    public IReadOnlyList<AzureTenantMember> AzureTenantMembers { get; set; } = [];
     public Organization Organization { get; set; } = new();
 }

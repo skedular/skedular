@@ -3,7 +3,6 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared.Pagination;
 using Location.Api.Models;
 using Location.Api.Services.Authorization;
-using Location.Shared.Database.Entities;
 using Location.Shared.Models;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
@@ -19,11 +18,11 @@ public interface ILocationAnalyticsService
         DateTimeOffset until,
         CancellationToken cancellationToken);
 
-    Task<ICollection<LocationAnalytics>> GetAnalyticsAsync(
+    Task<IReadOnlyList<LocationAnalytics>> GetAnalyticsAsync(
         DateTimeOffset from,
         DateTimeOffset until,
         LocationSearchCriteria searchCriteria,
-        ICollection<LocationOrder> orderByFields,
+        IReadOnlyList<LocationOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -56,11 +55,11 @@ public class LocationAnalyticsService(
             cancellationToken)).First();
     }
 
-    public async Task<ICollection<LocationAnalytics>> GetAnalyticsAsync(
+    public async Task<IReadOnlyList<LocationAnalytics>> GetAnalyticsAsync(
         DateTimeOffset from,
         DateTimeOffset until,
         LocationSearchCriteria searchCriteria,
-        ICollection<LocationOrder> orderByFields,
+        IReadOnlyList<LocationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var locations = await locationService.GetPaginatedLocationsAsync(
@@ -93,7 +92,7 @@ public class LocationAnalyticsService(
             cancellationToken);
     }
 
-    private async Task<ICollection<LocationAnalytics>> GetAnalyticsAsync(
+    private async Task<IReadOnlyList<LocationAnalytics>> GetAnalyticsAsync(
         List<string> locationIds,
         Dictionary<string, string> locationNames,
         DateTimeOffset from,

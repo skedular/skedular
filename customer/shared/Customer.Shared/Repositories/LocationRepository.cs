@@ -15,11 +15,11 @@ public interface ILocationRepository : IRepository<Location>
     Location Remove(Location location);
 }
 
-internal static class LocationExtensions
+public static class LocationExtensions
 {
     extension(IQueryable<Location> originalQuery)
     {
-        internal IIncludableQueryable<Location, ICollection<Database.Entities.Customer>> AddDependentObjects(bool includeDeletedLocationMembers) =>
+        public IIncludableQueryable<Location, ICollection<Database.Entities.Customer>> AddDependentObjects(bool includeDeletedLocationMembers) =>
             originalQuery
                 .Include(query => query.Resources)
                 .Include(query => query.Organization)

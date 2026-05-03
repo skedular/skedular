@@ -382,7 +382,8 @@ public class OrganizationXeroConnectionService(
         }
     }
 
-    private Uri BuildMarketplaceSetupUri(string organizationCustomDomain, ICollection<XeroTenantOption>? tenantOptions = null, string? message = null)
+    private Uri BuildMarketplaceSetupUri(string organizationCustomDomain, IReadOnlyList<XeroTenantOption>? tenantOptions = null,
+        string? message = null)
     {
         var setupUrl = Url.Combine(
                 applicationConfiguration.WebAppBaseDomain.ToString(),
@@ -456,7 +457,7 @@ public class OrganizationXeroConnectionService(
         return xeroTokenEncryptionService.Decrypt(refreshResult.AccessTokenEncrypted);
     }
 
-    private static TenantConnectionSelection SelectTenantConnection(string? existingTenantId, ICollection<Connection> connections)
+    private static TenantConnectionSelection SelectTenantConnection(string? existingTenantId, IReadOnlyList<Connection> connections)
     {
         var organizationConnections = connections
             .Where(item => string.Equals(item.TenantType, "ORGANISATION", StringComparison.OrdinalIgnoreCase))
@@ -497,5 +498,5 @@ public class OrganizationXeroConnectionService(
         // ReSharper disable once NotAccessedPositionalProperty.Local
         string TenantName);
 
-    private sealed record TenantConnectionSelection(Connection? Connection, ICollection<XeroTenantOption> TenantOptions);
+    private sealed record TenantConnectionSelection(Connection? Connection, IReadOnlyList<XeroTenantOption> TenantOptions);
 }

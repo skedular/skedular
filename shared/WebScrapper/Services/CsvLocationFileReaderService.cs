@@ -7,12 +7,12 @@ namespace WebScrapper.Services;
 
 public interface ICsvLocationFileReaderService
 {
-    ICollection<Location> ReadLocations();
+    IReadOnlyList<Location> ReadLocations();
 }
 
 public class CsvLocationFileReaderService : ICsvLocationFileReaderService
 {
-    public ICollection<Location> ReadLocations()
+    public IReadOnlyList<Location> ReadLocations()
     {
         using var reader = new StreamReader("/Users/morteza/Downloads/locations-output.csv");
         using var csv = new CsvReader(

@@ -19,9 +19,9 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
     Task<OrganizationMember?> GetByIdWithCustomerAsync(string id, CancellationToken cancellationToken);
     OrganizationMember Add(OrganizationMember organizationMember);
     OrganizationMember Update(OrganizationMember organizationMember);
-    void RemoveRange(ICollection<OrganizationMember> organizationMembers);
+    void RemoveRange(IReadOnlyList<OrganizationMember> organizationMembers);
 
-    Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(
+    Task<IReadOnlyList<OrganizationMember>> GetByOrganizationIdAsync(
         string organizationId,
         CancellationToken cancellationToken);
 }
@@ -65,7 +65,7 @@ public class OrganizationMemberRepository(CustomerDbContext dbContext, TimeProvi
         return DbContext.OrganizationMember.Add(organizationMember).Entity;
     }
 
-    public void RemoveRange(ICollection<OrganizationMember> organizationMembers)
+    public void RemoveRange(IReadOnlyList<OrganizationMember> organizationMembers)
     {
         var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);
@@ -79,7 +79,7 @@ public class OrganizationMemberRepository(CustomerDbContext dbContext, TimeProvi
         return DbContext.OrganizationMember.Update(organizationMember).Entity;
     }
 
-    public async Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(
+    public async Task<IReadOnlyList<OrganizationMember>> GetByOrganizationIdAsync(
         string organizationId,
         CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember

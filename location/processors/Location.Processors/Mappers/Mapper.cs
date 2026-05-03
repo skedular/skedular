@@ -23,7 +23,7 @@ public interface IMapper
 {
     Customer MapTo(Event src);
     Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src);
-    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities);
+    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, IReadOnlyList<Identity> identities);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
 
@@ -55,13 +55,13 @@ public interface IMapper
         Product src,
         Shared.Database.Entities.Product dest,
         Shared.Database.Entities.Organization organization,
-        ICollection<ProductVersion> productVersions);
+        IReadOnlyList<ProductVersion> productVersions);
 
     ProductVersion MergeToEntity(
         Shared.Models.ProductVersion src,
         ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> organizationTags);
+        IReadOnlyList<OrganizationTag> organizationTags);
 }
 
 public class Mapper : IMapper
@@ -70,7 +70,7 @@ public class Mapper : IMapper
     {
         var customer = src.Data.Customer;
         var deletedAt = customer.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         return new Customer
         {
@@ -93,7 +93,7 @@ public class Mapper : IMapper
     {
         var organizationAfterState = src.Data.Organization;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         var organization = new Organization
         {
@@ -168,11 +168,11 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities)
+    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, IReadOnlyList<Identity> identities)
     {
         dest.Id = src.Id;
         dest.Type = src.Type.ToNullableCustomerType();
-        dest.Identities = identities;
+        dest.Identities = identities.ToList();
         return dest;
     }
 
@@ -262,7 +262,7 @@ public class Mapper : IMapper
     {
         var productAfterState = src.Data.Product;
         var deletedAt = productAfterState.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         var product = new Product
         {
@@ -282,13 +282,13 @@ public class Mapper : IMapper
         Product src,
         Shared.Database.Entities.Product dest,
         Shared.Database.Entities.Organization organization,
-        ICollection<ProductVersion> productVersions)
+        IReadOnlyList<ProductVersion> productVersions)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Inactive = src.Inactive;
         dest.Organization = organization;
-        dest.ProductVersions = productVersions;
+        dest.ProductVersions = productVersions.ToList();
         return dest;
     }
 
@@ -296,12 +296,12 @@ public class Mapper : IMapper
         Shared.Models.ProductVersion src,
         ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> organizationTags)
+        IReadOnlyList<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.Type = src.Type.ToProductType();
         dest.Product = product;
-        dest.OrganizationTags = organizationTags;
+        dest.OrganizationTags = organizationTags.ToList();
         return dest;
     }
 

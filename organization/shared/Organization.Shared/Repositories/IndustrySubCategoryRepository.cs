@@ -8,8 +8,8 @@ namespace Organization.Shared.Repositories;
 
 public interface IIndustrySubCategoryRepository : IRepository<IndustrySubCategory>
 {
-    Task<ICollection<IndustrySubCategory>> GetByIdsWithMainCategoryAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<ICollection<IndustrySubCategory>> GetActiveByIdsWithMainCategoryAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<IndustrySubCategory>> GetByIdsWithMainCategoryAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<IndustrySubCategory>> GetActiveByIdsWithMainCategoryAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
 }
 
 public class IndustrySubCategoryRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
@@ -26,8 +26,8 @@ public class IndustrySubCategoryRepository(OrganizationDbContext dbContext, Time
     ///     This repository lookup replaces the specification-based variant used when callers need the selected subcategories and their parent category in
     ///     one roundtrip.
     /// </remarks>
-    public async Task<ICollection<IndustrySubCategory>> GetByIdsWithMainCategoryAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<IndustrySubCategory>> GetByIdsWithMainCategoryAsync(
+        IReadOnlyList<string> ids,
         CancellationToken cancellationToken) =>
         await DbContext.IndustrySubCategory
             .Where(query => ids.Contains(query.Id))
@@ -44,8 +44,8 @@ public class IndustrySubCategoryRepository(OrganizationDbContext dbContext, Time
     ///     This active-only form is used by update flows so deleted subcategories are filtered inside the repository without reintroducing shared query
     ///     composition.
     /// </remarks>
-    public async Task<ICollection<IndustrySubCategory>> GetActiveByIdsWithMainCategoryAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<IndustrySubCategory>> GetActiveByIdsWithMainCategoryAsync(
+        IReadOnlyList<string> ids,
         CancellationToken cancellationToken) =>
         await DbContext.IndustrySubCategory
             .Where(query => !query.DeletedAt.HasValue && ids.Contains(query.Id))

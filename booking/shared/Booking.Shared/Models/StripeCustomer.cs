@@ -8,5 +8,5 @@ public class StripeCustomer : ModelBaseWithDeleted
     public string StripeAccountId { get; set; } = string.Empty;
     public Organization? Organization { get; set; }
     public Customer? Customer { get; set; }
-    public ICollection<StripeCheckoutSession> StripeCheckoutSessions { get; set; } = [];
+    public IReadOnlyList<StripeCheckoutSession> StripeCheckoutSessions { get; set; } = [];
 }

@@ -12,7 +12,7 @@ namespace Team.Shared.Publishers;
 
 public interface ITeamPublisher
 {
-    Task PublishTeamsAsync(ICollection<Models.Team> teams, CancellationToken cancellationToken);
+    Task PublishTeamsAsync(IReadOnlyList<Models.Team> teams, CancellationToken cancellationToken);
 }
 
 public class TeamPublisher(
@@ -23,7 +23,7 @@ public class TeamPublisher(
     ILogger<TeamPublisher> logger)
     : ITeamPublisher
 {
-    public async Task PublishTeamsAsync(ICollection<Models.Team> teams, CancellationToken cancellationToken)
+    public async Task PublishTeamsAsync(IReadOnlyList<Models.Team> teams, CancellationToken cancellationToken)
     {
         await Task.WhenAll(teams.Select(team => publisher.PublishAsync(
             new Key { TeamId = team.Id },

@@ -19,22 +19,22 @@ public interface ICustomerRepository : IRepository<Database.Entities.Customer>
     Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<Database.Entities.Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
     Task<Database.Entities.Customer?> GetByEmailUntrackedAsync(string email, CancellationToken cancellationToken);
-    Task<ICollection<Database.Entities.Customer>> GetAllUntrackedAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<Database.Entities.Customer>> GetAllUntrackedAsync(CancellationToken cancellationToken);
     Database.Entities.Customer Add(Database.Entities.Customer customer);
     Database.Entities.Customer Update(Database.Entities.Customer customer);
 
-    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersUntrackedAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersUntrackedAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
-        ICollection<CustomerOrder> orderByFields,
+        IReadOnlyList<CustomerOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
-internal static class CustomerExtensions
+public static class CustomerExtensions
 {
     extension(IQueryable<Database.Entities.Customer> originalQuery)
     {
-        internal IIncludableQueryable<Database.Entities.Customer, Organization?> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<Database.Entities.Customer, Organization?> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Identities)
             .Include(query => query.BillingDetails)
@@ -51,7 +51,7 @@ internal static class CustomerExtensions
             .Include(query => query.FavouriteLocations)
             .ThenInclude(query => query.Organization);
 
-        internal IQueryable<Database.Entities.Customer> AddSearchCriteria(CustomerSearchCriteria searchCriteria)
+        public IQueryable<Database.Entities.Customer> AddSearchCriteria(CustomerSearchCriteria searchCriteria)
         {
             originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
 
@@ -130,7 +130,7 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                     query.Identities.Any(identity => identity.Email != null && EF.Functions.ILike(identity.Email, email)),
                 cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Customer>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Database.Entities.Customer>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
         await DbContext.Customer
             .AddDependentObjects(false)
             .Where(query => !query.DeletedAt.HasValue)
@@ -151,17 +151,17 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
         return DbContext.Customer.Update(customer).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersUntrackedAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersUntrackedAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
-        ICollection<CustomerOrder> orderByFields,
+        IReadOnlyList<CustomerOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Customer
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Database.Entities.Customer>> GetPaginationFields(ICollection<CustomerOrder> orderByFields)
+    private static List<KeysetPaginationField<Database.Entities.Customer>> GetPaginationFields(IReadOnlyList<CustomerOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

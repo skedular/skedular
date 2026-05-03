@@ -3,7 +3,7 @@ using Enterprise.Shared.Models;
 
 namespace Booking.Shared.Models;
 
-public record ResourceCustomersPair(Resource Resource, ICollection<Customer> Customers);
+public record ResourceCustomersPair(Resource Resource, IReadOnlyList<Customer> Customers);
 
 public class Booking : ModelBaseWithDeleted
 {
@@ -12,21 +12,21 @@ public class Booking : ModelBaseWithDeleted
     public string? Notes { get; set; }
     public BookingCategory Category { get; set; }
     public BookingChannel Channel { get; set; }
-    public ICollection<BookingSchedule> Schedules { get; set; } = [];
+    public IReadOnlyList<BookingSchedule> Schedules { get; set; } = [];
     public MarketplaceBooking? MarketplaceBooking { get; set; }
-    public ICollection<ResourceCustomersPair> Resources { get; set; } = [];
-    public ICollection<Customer> InvolvedCustomers { get; set; } = [];
-    public ICollection<Organization> InvolvedOrganizations { get; set; } = [];
-    public ICollection<Location> InvolvedLocations { get; set; } = [];
-    public ICollection<Team> InvolvedTeams { get; set; } = [];
-    public ICollection<Resource> InvolvedResources { get; set; } = [];
+    public IReadOnlyList<ResourceCustomersPair> Resources { get; set; } = [];
+    public IReadOnlyList<Customer> InvolvedCustomers { get; set; } = [];
+    public IReadOnlyList<Organization> InvolvedOrganizations { get; set; } = [];
+    public IReadOnlyList<Location> InvolvedLocations { get; set; } = [];
+    public IReadOnlyList<Team> InvolvedTeams { get; set; } = [];
+    public IReadOnlyList<Resource> InvolvedResources { get; set; } = [];
     public Customer? CreatedByCustomer { get; set; }
     public Customer? LastModifiedByCustomer { get; set; }
     public Customer? DeletedByCustomer { get; set; }
     public RecurringBooking? RecurringBooking { get; set; }
     public bool? HasRecurringInstanceOverrides { get; set; }
 
-    public ICollection<ResourceBookingSlot> ResourceBookingSlots
+    public IReadOnlyList<ResourceBookingSlot> ResourceBookingSlots
     {
         set
         {

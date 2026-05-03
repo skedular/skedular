@@ -43,7 +43,7 @@ public class SsoContextEnricherMiddleware(
             return;
         }
 
-        var ssoCookies = JsonSerializer.Deserialize<ICollection<OrganizationSsoCookie>>(decodedSsoCookies);
+        var ssoCookies = JsonSerializer.Deserialize<IReadOnlyList<OrganizationSsoCookie>>(decodedSsoCookies);
         ArgumentNullException.ThrowIfNull(ssoCookies);
 
         foreach (var cookie in ssoCookies.Where(item => item.Name.StartsWith(Constants.OrganizationSsoCookiePrefix)))

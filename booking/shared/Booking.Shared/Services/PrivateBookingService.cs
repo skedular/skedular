@@ -16,8 +16,8 @@ public interface IPrivateBookingService
     Task<Models.Booking> AddAsync(
         Models.Booking booking,
         Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         RecurringBooking? recurringBooking,
         CancellationToken cancellationToken);
 
@@ -25,8 +25,8 @@ public interface IPrivateBookingService
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
         Customer? lastModifiedByCustomer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         RecurringBooking? recurringBooking,
         bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken);
@@ -53,8 +53,8 @@ public class PrivateBookingService(
     public async Task<Models.Booking> AddAsync(
         Models.Booking booking,
         Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         RecurringBooking? recurringBooking,
         CancellationToken cancellationToken)
     {
@@ -137,8 +137,8 @@ public class PrivateBookingService(
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
         Customer? lastModifiedByCustomer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
+        IReadOnlyList<Organization> organizations,
+        IReadOnlyList<Team> teams,
         RecurringBooking? recurringBooking,
         bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken)
@@ -166,7 +166,7 @@ public class PrivateBookingService(
         /********************************************************************************************************************/
 
         var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
-        ICollection<Resource> resources;
+        IReadOnlyList<Resource> resources;
 
         // For non-customized recurring instances, the scheduler can request a best-effort rebooking.
         // In that mode we first try resources provided on the booking model, and only if none are
@@ -309,7 +309,7 @@ public class PrivateBookingService(
         }
     }
 
-    private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>
+    private static List<Location> ResourcesToLocations(IReadOnlyList<Resource> resources) =>
         resources
             .Where(item => item.Location is not null)
             .Select(item => item.Location)

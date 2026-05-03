@@ -13,8 +13,8 @@ public interface ICachedCustomerService : ICustomerHelper
     ValueTask<Database.Entities.Customer?> GetNullableAsync(CancellationToken cancellationToken);
     ValueTask<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask<Database.Entities.Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
-    ValueTask UpdateAsync(ICollection<Database.Entities.Customer> customers, CancellationToken cancellationToken);
-    ValueTask RemoveAsync(ICollection<Database.Entities.Customer> customers, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(IReadOnlyList<Database.Entities.Customer> customers, CancellationToken cancellationToken);
+    ValueTask RemoveAsync(IReadOnlyList<Database.Entities.Customer> customers, CancellationToken cancellationToken);
 }
 
 public class CachedCustomerService(
@@ -93,7 +93,7 @@ public class CachedCustomerService(
         }
     }
 
-    public async ValueTask UpdateAsync(ICollection<Database.Entities.Customer> customers, CancellationToken cancellationToken)
+    public async ValueTask UpdateAsync(IReadOnlyList<Database.Entities.Customer> customers, CancellationToken cancellationToken)
     {
         foreach (var item in customers)
         {
@@ -118,7 +118,7 @@ public class CachedCustomerService(
         }
     }
 
-    public async ValueTask RemoveAsync(ICollection<Database.Entities.Customer> customers, CancellationToken cancellationToken)
+    public async ValueTask RemoveAsync(IReadOnlyList<Database.Entities.Customer> customers, CancellationToken cancellationToken)
     {
         foreach (var item in customers)
         {

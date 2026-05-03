@@ -16,30 +16,30 @@ namespace Organization.Shared.Repositories;
 public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 {
     Task<OrganizationMember?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<OrganizationMember>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<OrganizationMember>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     OrganizationMember Add(OrganizationMember organizationMember);
-    void AddRange(ICollection<OrganizationMember> organizationMembers);
+    void AddRange(IReadOnlyList<OrganizationMember> organizationMembers);
     OrganizationMember Update(OrganizationMember organizationMember);
-    void RemoveRange(ICollection<OrganizationMember> organizationMembers);
+    void RemoveRange(IReadOnlyList<OrganizationMember> organizationMembers);
 
-    Task<(PaginatedInfo, ICollection<Edge<OrganizationMember>>, int)> GetPaginatedOrganizationMembersAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationMember>>, int)> GetPaginatedOrganizationMembersAsync(
         PaginationInputParam paginationInputParam,
         OrganizationMemberSearchCriteria searchCriteria,
-        ICollection<OrganizationMemberOrder> orderByFields,
+        IReadOnlyList<OrganizationMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
-internal static class OrganizationMemberExtensions
+public static class OrganizationMemberExtensions
 {
     extension(IQueryable<OrganizationMember> originalQuery)
     {
-        internal IIncludableQueryable<OrganizationMember, ICollection<Identity>> AddDependentObjects() =>
+        public IIncludableQueryable<OrganizationMember, ICollection<Identity>> AddDependentObjects() =>
             originalQuery
                 .Include(query => query.Organization)
                 .Include(query => query.Customer)
                 .ThenInclude(query => query.Identities);
 
-        internal IQueryable<OrganizationMember> AddSearchCriteria(OrganizationMemberSearchCriteria searchCriteria)
+        public IQueryable<OrganizationMember> AddSearchCriteria(OrganizationMemberSearchCriteria searchCriteria)
         {
             if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
             {
@@ -84,8 +84,8 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<OrganizationMember>> GetByIdsAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<OrganizationMember>> GetByIdsAsync(
+        IReadOnlyList<string> ids,
         CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
             .Where(query => ids.Contains(query.Id))
@@ -99,14 +99,14 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
         return DbContext.OrganizationMember.Add(organizationMember).Entity;
     }
 
-    public void AddRange(ICollection<OrganizationMember> organizationMembers)
+    public void AddRange(IReadOnlyList<OrganizationMember> organizationMembers)
     {
         var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.CreatedAt = now);
         DbContext.OrganizationMember.AddRange(organizationMembers);
     }
 
-    public void RemoveRange(ICollection<OrganizationMember> organizationMembers)
+    public void RemoveRange(IReadOnlyList<OrganizationMember> organizationMembers)
     {
         var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);
@@ -120,18 +120,18 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
         return DbContext.OrganizationMember.Update(organizationMember).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<OrganizationMember>>, int)>
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationMember>>, int)>
         GetPaginatedOrganizationMembersAsync(
             PaginationInputParam paginationInputParam,
             OrganizationMemberSearchCriteria searchCriteria,
-            ICollection<OrganizationMemberOrder> orderByFields,
+            IReadOnlyList<OrganizationMemberOrder> orderByFields,
             CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects()
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<OrganizationMember>> GetPaginationFields(ICollection<OrganizationMemberOrder> orderByFields)
+    private static List<KeysetPaginationField<OrganizationMember>> GetPaginationFields(IReadOnlyList<OrganizationMemberOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

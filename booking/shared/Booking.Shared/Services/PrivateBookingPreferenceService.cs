@@ -6,23 +6,23 @@ namespace Booking.Shared.Services;
 
 public interface IPrivateBookingPreferenceService
 {
-    Task<(ICollection<Organization>, ICollection<Resource>)> PickResourceBasedOnCustomerPreferencesAsync(
+    Task<(IReadOnlyList<Organization>, IReadOnlyList<Resource>)> PickResourceBasedOnCustomerPreferencesAsync(
         Customer customer,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> involvedOrganizationIds,
-        ICollection<string> involvedOrganizationCustomDomains,
+        IReadOnlyList<string> involvedOrganizationIds,
+        IReadOnlyList<string> involvedOrganizationCustomDomains,
         CancellationToken cancellationToken);
 }
 
 public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactory) : IPrivateBookingPreferenceService
 {
-    public async Task<(ICollection<Organization>, ICollection<Resource>)> PickResourceBasedOnCustomerPreferencesAsync(
+    public async Task<(IReadOnlyList<Organization>, IReadOnlyList<Resource>)> PickResourceBasedOnCustomerPreferencesAsync(
         Customer customer,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> involvedOrganizationIds,
-        ICollection<string> involvedOrganizationCustomDomains,
+        IReadOnlyList<string> involvedOrganizationIds,
+        IReadOnlyList<string> involvedOrganizationCustomDomains,
         CancellationToken cancellationToken)
     {
         var (organization, locations) = await ResolveOrganizationAndLocationAsync(
@@ -105,7 +105,7 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
             organizationEntity.Id));
     }
 
-    private async Task<ICollection<Resource>> GetAvailableDeskResourcesAsync(
+    private async Task<IReadOnlyList<Resource>> GetAvailableDeskResourcesAsync(
         DateTimeOffset from,
         DateTimeOffset until,
         string locationId,
@@ -120,9 +120,9 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
             [OrganizationTagTypeConstants.ResourceDesk],
             cancellationToken);
 
-    private static ICollection<Resource> SelectResourcesByCustomerPreferences(
+    private static IReadOnlyList<Resource> SelectResourcesByCustomerPreferences(
         Customer customer,
-        ICollection<Resource> availableResources)
+        IReadOnlyList<Resource> availableResources)
     {
         var selectedResource = FindByPreferredResource(customer, availableResources) ??
                                FindByPreferredTagType(customer, availableResources, OrganizationTagTypeConstants.Zone) ??
@@ -142,7 +142,7 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
         return availableResources.FirstOrDefault(item => preferredResourceIds.Contains(item.Id));
     }
 
-    private static Resource? FindByPreferredTagType(Customer customer, ICollection<Resource> availableResources, string tagType)
+    private static Resource? FindByPreferredTagType(Customer customer, IReadOnlyList<Resource> availableResources, string tagType)
     {
         var preferredTagIds = customer.PreferredOrganizationTags
             .Where(tag => tag.Type == tagType)
@@ -168,6 +168,6 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
             .ToList();
     }
 
-    private static ICollection<Organization> ToOrganizations(Organization? organizationEntity) =>
+    private static IReadOnlyList<Organization> ToOrganizations(Organization? organizationEntity) =>
         organizationEntity is null ? [] : [organizationEntity];
 }

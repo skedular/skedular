@@ -41,7 +41,7 @@ public class RepublishCustomerAsyncShould
         await sut.RepublishCustomerAsync(customerId, cancellationToken);
 
         A.CallTo(() => mapper.MapTo(A<Shared.Database.Entities.Customer>._)).MustNotHaveHappened();
-        A.CallTo(() => customerPublisher.PublishCustomersAsync(A<ICollection<Shared.Models.Customer>>._, A<CancellationToken>._))
+        A.CallTo(() => customerPublisher.PublishCustomersAsync(A<IReadOnlyList<Shared.Models.Customer>>._, A<CancellationToken>._))
             .MustNotHaveHappened();
     }
 
@@ -86,7 +86,7 @@ public class RepublishCustomerAsyncShould
         await sut.RepublishCustomerAsync(customerId, cancellationToken);
 
         A.CallTo(() => customerPublisher.PublishCustomersAsync(
-                A<ICollection<Shared.Models.Customer>>.That.Matches(items => items.Count == 1 && items.Single() == customer),
+                A<IReadOnlyList<Shared.Models.Customer>>.That.Matches(items => items.Count == 1 && items.Single() == customer),
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
     }

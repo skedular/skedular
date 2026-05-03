@@ -1,6 +1,7 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Booking.Shared.Services;
+using Enterprise.Shared;
 using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Shared.UnitTests.Services.RecurringBookingScheduleServiceTests;
@@ -108,7 +109,7 @@ public class GetReconciliationPlanShould
         string endType,
         DateTimeOffset startDate,
         int interval,
-        ICollection<string>? byWeekDays = null,
+        IReadOnlyList<string>? byWeekDays = null,
         int? byMonthDay = null,
         int? bySetPosition = null,
         DateTimeOffset? endDate = null,
@@ -125,7 +126,7 @@ public class GetReconciliationPlanShould
             Interval = interval,
             ByMonthDay = byMonthDay,
             BySetPosition = bySetPosition,
-            ByWeekDays = byWeekDays ?? [],
+            ByWeekDays = byWeekDays.ToSafeCollection().ToList(),
             EndDate = endDate,
             OccurrenceCount = occurrenceCount,
             SkippedDates = []

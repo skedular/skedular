@@ -20,7 +20,7 @@ public interface IMarketplaceEventResourceService
     /// <param name="cancellationToken">Cancellation token for the operation.</param>
     /// <returns>A collection containing the full matching available resource set.</returns>
     /// <exception cref="NoResourceAvailable">Thrown when the full event resource set cannot be booked.</exception>
-    Task<ICollection<Resource>> PickEventResourcesAsync(
+    Task<IReadOnlyList<Resource>> PickEventResourcesAsync(
         DateTimeOffset from,
         DateTimeOffset until,
         ProductVersion productVersion,
@@ -32,7 +32,7 @@ public interface IMarketplaceEventResourceService
 /// </summary>
 public class MarketplaceEventResourceService(IRepositoryFactory repositoryFactory) : IMarketplaceEventResourceService
 {
-    public async Task<ICollection<Resource>> PickEventResourcesAsync(
+    public async Task<IReadOnlyList<Resource>> PickEventResourcesAsync(
         DateTimeOffset from,
         DateTimeOffset until,
         ProductVersion productVersion,

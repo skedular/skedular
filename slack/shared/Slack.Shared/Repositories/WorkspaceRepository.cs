@@ -12,16 +12,16 @@ public interface IWorkspaceRepository : IRepository<Workspace>
     Task<Workspace?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Workspace?> GetByWorkspaceMemberIdAsync(string workspaceMemberId, CancellationToken cancellationToken);
     Task<Workspace?> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
-    Task<ICollection<Workspace>> GetAllAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<Workspace>> GetAllAsync(CancellationToken cancellationToken);
     Workspace Add(Workspace workspace);
     Workspace Update(Workspace workspace);
 }
 
-internal static class WorkspaceExtensions
+public static class WorkspaceExtensions
 {
     extension(IQueryable<Workspace> originalQuery)
     {
-        internal IIncludableQueryable<Workspace, ICollection<WorkspaceMember>> AddDependentObjects() =>
+        public IIncludableQueryable<Workspace, ICollection<WorkspaceMember>> AddDependentObjects() =>
             originalQuery
                 .Include(query => query.Organization)
                 .ThenInclude(query => query.OrganizationMembers)
@@ -59,7 +59,7 @@ public class WorkspaceRepository(SlackDbContext dbContext, TimeProvider timeProv
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Organization.Id == organizationId, cancellationToken);
 
-    public async Task<ICollection<Workspace>> GetAllAsync(CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Workspace>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Workspace
             .Where(query => !query.DeletedAt.HasValue)
             .AddDependentObjects()

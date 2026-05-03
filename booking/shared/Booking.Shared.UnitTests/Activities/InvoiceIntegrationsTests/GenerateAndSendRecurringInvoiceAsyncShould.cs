@@ -58,7 +58,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         {
             Id = productVersionId, Product = new Product { Organization = new Organization { Id = organizationId } }
         };
-        var relatedBookings = (ICollection<BookingEntity>)new List<BookingEntity> { new() { Id = relatedBookingId } };
+        var relatedBookings = (IReadOnlyList<BookingEntity>)new List<BookingEntity> { new() { Id = relatedBookingId } };
 
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
@@ -146,7 +146,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         {
             Id = productVersionId, Product = new Product { Organization = new Organization { Id = organizationId } }
         };
-        var relatedBookings = (ICollection<BookingEntity>)new List<BookingEntity> { new() { Id = relatedBookingId } };
+        var relatedBookings = (IReadOnlyList<BookingEntity>)new List<BookingEntity> { new() { Id = relatedBookingId } };
 
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);

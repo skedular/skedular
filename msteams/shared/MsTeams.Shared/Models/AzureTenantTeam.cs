@@ -8,5 +8,5 @@ public class AzureTenantTeam : ReplicatedModelBaseWithDeleted
     public string? Description { get; set; }
     public string? WebUrl { get; set; }
     public AzureTenant AzureTenant { get; set; } = new();
-    public ICollection<AzureTenantTeamChannel> AzureTenantTeamChannels { get; set; } = [];
+    public IReadOnlyList<AzureTenantTeamChannel> AzureTenantTeamChannels { get; set; } = [];
 }

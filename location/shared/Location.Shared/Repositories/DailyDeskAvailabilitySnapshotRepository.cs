@@ -19,7 +19,7 @@ public interface IDailyResourceAvailabilitySnapshotRepository : IRepository<Dail
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<DailyResourceAvailabilitySnapshot>> GetByLocationIdsAndDateRangeAsync(
-        ICollection<string> locationIds,
+        IReadOnlyList<string> locationIds,
         DateTimeOffset from,
         DateTimeOffset until,
         string? resourceType,
@@ -66,7 +66,7 @@ public class DailyResourceAvailabilitySnapshotRepository(LocationDbContext dbCon
             .ToListAsync(cancellationToken);
 
     public async Task<IReadOnlyList<DailyResourceAvailabilitySnapshot>> GetByLocationIdsAndDateRangeAsync(
-        ICollection<string> locationIds,
+        IReadOnlyList<string> locationIds,
         DateTimeOffset from,
         DateTimeOffset until,
         string? resourceType,

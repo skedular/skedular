@@ -10,9 +10,9 @@ public class Booking : ModelBase
     public string? Notes { get; set; }
     public BookingCategory Category { get; set; }
     public BookingChannel Channel { get; set; }
-    public ICollection<Resource> Resources { get; set; } = [];
-    public ICollection<Customer> InvolvedCustomers { get; set; } = [];
-    public ICollection<Organization> InvolvedOrganizations { get; set; } = [];
-    public ICollection<Location> InvolvedLocations { get; set; } = [];
-    public ICollection<Team> InvolvedTeams { get; set; } = [];
+    public IReadOnlyList<Resource> Resources { get; set; } = [];
+    public IReadOnlyList<Customer> InvolvedCustomers { get; set; } = [];
+    public IReadOnlyList<Organization> InvolvedOrganizations { get; set; } = [];
+    public IReadOnlyList<Location> InvolvedLocations { get; set; } = [];
+    public IReadOnlyList<Team> InvolvedTeams { get; set; } = [];
 }

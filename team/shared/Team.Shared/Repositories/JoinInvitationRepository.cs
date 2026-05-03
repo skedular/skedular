@@ -14,34 +14,34 @@ namespace Team.Shared.Repositories;
 
 public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 {
-    Task<int> PendingInvitationsCountAsync(string inviteeId, ICollection<string> customerEmails, CancellationToken cancellationToken);
+    Task<int> PendingInvitationsCountAsync(string inviteeId, IReadOnlyList<string> customerEmails, CancellationToken cancellationToken);
     Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<JoinInvitation>> GetByTeamIdAsync(string teamId, InvitationStatus status, CancellationToken cancellationToken);
+    Task<IReadOnlyList<JoinInvitation>> GetByTeamIdAsync(string teamId, InvitationStatus status, CancellationToken cancellationToken);
     JoinInvitation Add(JoinInvitation joinInvitation);
     JoinInvitation Update(JoinInvitation joinInvitation);
 
-    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
-        ICollection<JoinTeamInvitationOrder> orderByFields,
+        IReadOnlyList<JoinTeamInvitationOrder> orderByFields,
         CancellationToken cancellationToken);
 
-    Task<ICollection<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
-        ICollection<string> emails,
+    Task<IReadOnlyList<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
+        IReadOnlyList<string> emails,
         CancellationToken cancellationToken);
 }
 
-internal static class JoinInvitationExtensions
+public static class JoinInvitationExtensions
 {
     extension(IQueryable<JoinInvitation> originalQuery)
     {
-        internal IIncludableQueryable<JoinInvitation, Customer?> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<JoinInvitation, Customer?> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Team)
             .Include(query => query.CreatedBy)
             .Include(query => query.Invitee);
 
-        internal IQueryable<JoinInvitation> AddSearchCriteria(JoinInvitationSearchCriteria searchCriteria)
+        public IQueryable<JoinInvitation> AddSearchCriteria(JoinInvitationSearchCriteria searchCriteria)
         {
             if (!string.IsNullOrWhiteSpace(searchCriteria.InviteeId))
             {
@@ -74,7 +74,8 @@ internal static class JoinInvitationExtensions
 public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<TeamDbContext, JoinInvitation>(dbContext, timeProvider), IJoinInvitationRepository
 {
-    public async Task<int> PendingInvitationsCountAsync(string inviteeId, ICollection<string> customerEmails, CancellationToken cancellationToken) =>
+    public async Task<int> PendingInvitationsCountAsync(string inviteeId, IReadOnlyList<string> customerEmails,
+        CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation.CountAsync(
             query => query.Status == InvitationStatusConstants.Pending && ((query.Invitee != null && query.Invitee.Id == inviteeId) ||
                                                                            (query.Email != null && customerEmails.Contains(query.Email))),
@@ -85,7 +86,7 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
             .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<JoinInvitation>> GetByTeamIdAsync(string teamId, InvitationStatus status, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<JoinInvitation>> GetByTeamIdAsync(string teamId, InvitationStatus status, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
             .Where(query => query.Team.Id == teamId && query.Status == status.ToInvitationStatus())
             .AddDependentObjects(true)
@@ -105,18 +106,18 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
         return DbContext.JoinInvitation.Update(joinInvitation).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
-        ICollection<JoinTeamInvitationOrder> orderByFields,
+        IReadOnlyList<JoinTeamInvitationOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    public async Task<ICollection<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
-        ICollection<string> emails,
+    public async Task<IReadOnlyList<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
+        IReadOnlyList<string> emails,
         CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
             .Where(query =>
@@ -125,7 +126,7 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
                 emails.Any(email => query.Email != null && EF.Functions.ILike(query.Email, email)))
             .ToListAsync(cancellationToken);
 
-    private static List<KeysetPaginationField<JoinInvitation>> GetPaginationFields(ICollection<JoinTeamInvitationOrder> orderByFields)
+    private static List<KeysetPaginationField<JoinInvitation>> GetPaginationFields(IReadOnlyList<JoinTeamInvitationOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

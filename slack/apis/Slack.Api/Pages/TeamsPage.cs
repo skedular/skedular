@@ -359,7 +359,7 @@ public class TeamsPage(
             GetToolbarAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
             teamComponents.GetTeamCardsAsync(workspaceMember, teams, commonPageContext.PageContext, cancellationToken));
 
-        ICollection<Block>[] blocks =
+        IReadOnlyList<Block>[] blocks =
         [
             GetTitle(),
             asyncBlocks[0],
@@ -388,9 +388,9 @@ public class TeamsPage(
             .RegisterBlockActionHandler<ButtonAction, TeamsPage>(NextPageTeams)
             .RegisterBlockActionHandler<ButtonAction, TeamsPage>(PreviousPageTeams);
 
-    private static ICollection<Block> GetTitle() => [new SectionBlock { Text = "*Teams*".ToMarkdown() }];
+    private static IReadOnlyList<Block> GetTitle() => [new SectionBlock { Text = "*Teams*".ToMarkdown() }];
 
-    private async Task<ICollection<Block>> GetToolbarAsync(
+    private async Task<IReadOnlyList<Block>> GetToolbarAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,

@@ -24,6 +24,6 @@ public class OrganizationStripeConnectAccount : ModelBaseWithDeleted
     public string OnboardingUrl { get; set; } = string.Empty;
 
     public Organization Organization { get; set; } = new();
-    public ICollection<OrganizationStripeConnectAccountRefreshCode> OrganizationStripeConnectAccountRefreshCodes { get; set; } = [];
+    public IReadOnlyList<OrganizationStripeConnectAccountRefreshCode> OrganizationStripeConnectAccountRefreshCodes { get; set; } = [];
     public OrganizationStripeConnectAccountAuthorization? OrganizationStripeConnectAccountAuthorization { get; set; }
 }

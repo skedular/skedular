@@ -15,33 +15,33 @@ namespace Location.Shared.Repositories;
 public interface IResourceRepository : IRepository<Resource>
 {
     Task<Resource?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<ICollection<Resource>> GetByIdsWithOrganizationTagsUntrackedAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Resource>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Resource>> GetByIdsWithOrganizationTagsUntrackedAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<bool> ExistsActiveWithNameAsync(string locationId, string name, string? excludeId, CancellationToken cancellationToken);
     Resource Add(Resource resource);
     Resource Update(Resource resource);
-    void RemoveRange(ICollection<Resource> resources);
+    void RemoveRange(IReadOnlyList<Resource> resources);
     Resource Remove(Resource resource);
 
-    Task<(PaginatedInfo, ICollection<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
         ResourceSearchCriteria searchCriteria,
-        ICollection<ResourceOrder> orderByFields,
+        IReadOnlyList<ResourceOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
-internal static class ResourceExtensions
+public static class ResourceExtensions
 {
     extension(IQueryable<Resource> originalQuery)
     {
-        internal IIncludableQueryable<Resource, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<Resource, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Location)
             .Include(query => query.ResourcePosition)
             .ThenInclude(query => query!.FloorPlan)
             .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
-        internal IQueryable<Resource> AddSearchCriteria(ResourceSearchCriteria searchCriteria)
+        public IQueryable<Resource> AddSearchCriteria(ResourceSearchCriteria searchCriteria)
         {
             originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue && item.Location.Id == searchCriteria.LocationId);
 
@@ -77,7 +77,7 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
             .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<Resource>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Resource
             .Where(query => ids.Contains(query.Id))
             .AddDependentObjects(true)
@@ -93,8 +93,8 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
     ///     This focused read was added for derived-state rebuilding so that workflow only pays for organization tags instead of the full resource include
     ///     graph.
     /// </remarks>
-    public async Task<ICollection<Resource>> GetByIdsWithOrganizationTagsUntrackedAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<Resource>> GetByIdsWithOrganizationTagsUntrackedAsync(
+        IReadOnlyList<string> ids,
         CancellationToken cancellationToken) =>
         await DbContext.Resource
             .Where(query => ids.Contains(query.Id))
@@ -134,7 +134,7 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
         return DbContext.Resource.Add(resource).Entity;
     }
 
-    public void RemoveRange(ICollection<Resource> resources)
+    public void RemoveRange(IReadOnlyList<Resource> resources)
     {
         var now = TimeProvider.GetUtcNow();
         resources.ForEach(resource => resource.DeletedAt = now);
@@ -155,17 +155,17 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
         return DbContext.Resource.Update(resource).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
         ResourceSearchCriteria searchCriteria,
-        ICollection<ResourceOrder> orderByFields,
+        IReadOnlyList<ResourceOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Resource
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Resource>> GetPaginationFields(ICollection<ResourceOrder> orderByFields)
+    private static List<KeysetPaginationField<Resource>> GetPaginationFields(IReadOnlyList<ResourceOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

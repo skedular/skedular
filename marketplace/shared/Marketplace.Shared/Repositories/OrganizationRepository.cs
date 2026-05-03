@@ -18,20 +18,20 @@ public interface IOrganizationRepository : IRepository<Organization>
         string? customDomain,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Organization>> GetByIdsOrCustomDomainsAsync(
-        ICollection<string>? ids,
-        ICollection<string>? customDomains,
+    Task<IReadOnlyList<Organization>> GetByIdsOrCustomDomainsAsync(
+        IReadOnlyList<string>? ids,
+        IReadOnlyList<string>? customDomains,
         CancellationToken cancellationToken);
 
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
 }
 
-internal static class OrganizationExtensions
+public static class OrganizationExtensions
 {
     extension(IQueryable<Organization> originalQuery)
     {
-        internal IIncludableQueryable<Organization, IEnumerable<Identity>> AddDependentObjects() =>
+        public IIncludableQueryable<Organization, IEnumerable<Identity>> AddDependentObjects() =>
             originalQuery
                 .Include(query => query.OrganizationSsoSettings)
                 .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
@@ -75,9 +75,9 @@ public class OrganizationRepository(MarketplaceDbContext dbContext, TimeProvider
         throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
-    public async Task<ICollection<Organization>> GetByIdsOrCustomDomainsAsync(
-        ICollection<string>? ids,
-        ICollection<string>? customDomains,
+    public async Task<IReadOnlyList<Organization>> GetByIdsOrCustomDomainsAsync(
+        IReadOnlyList<string>? ids,
+        IReadOnlyList<string>? customDomains,
         CancellationToken cancellationToken)
     {
         if (ids is not null && ids.RemoveInvalidIds().Any() && customDomains is not null && customDomains.RemoveInvalidIds().Any())

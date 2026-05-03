@@ -19,7 +19,7 @@ public interface IMapper
     Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
         Shared.Database.Entities.Customer dest,
-        ICollection<Shared.Database.Entities.Identity> identities);
+        IReadOnlyList<Shared.Database.Entities.Identity> identities);
 
     Shared.Database.Entities.Identity MapToEntity(Identity src, Shared.Database.Entities.Customer? customer);
 
@@ -38,7 +38,7 @@ public class Mapper : IMapper
     {
         var customer = src.Data.Customer;
         var deletedAt = customer.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         return new Customer
         {
@@ -72,7 +72,7 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
         Shared.Database.Entities.Customer dest,
-        ICollection<Shared.Database.Entities.Identity> identities)
+        IReadOnlyList<Shared.Database.Entities.Identity> identities)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -88,7 +88,7 @@ public class Mapper : IMapper
         dest.PhotoUrl512 = src.PhotoUrl512;
         dest.PhoneNumber = src.PhoneNumber;
         dest.Type = src.Type.ToNullableCustomerType();
-        dest.Identities = identities;
+        dest.Identities = identities.ToList();
         return dest;
     }
 

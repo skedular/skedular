@@ -65,12 +65,12 @@ public class AddShould
         A.CallTo(() => organizationRepository.UpsertNakedAsync("org-1", cancellationToken)).Returns(organizationEntity);
         A.CallTo(() => randomHelper.Generate()).Returns("location-1");
         A.CallTo(() => organizationTagRepository.GetActiveByIdsForOrganizationAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.Count == 1 && ids.Single() == "tag-1"),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 1 && ids.Single() == "tag-1"),
                 "org-1",
                 null,
                 cancellationToken))
             .Returns([organizationTagEntity]);
-        A.CallTo(() => mapper.MapTo(locationToAdd, organizationEntity, A<ICollection<Shared.Database.Entities.OrganizationTag>>._))
+        A.CallTo(() => mapper.MapTo(locationToAdd, organizationEntity, A<IReadOnlyList<Shared.Database.Entities.OrganizationTag>>._))
             .Returns(locationEntity);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => locationRepository.Add(locationEntity)).Returns(locationEntity);
@@ -83,12 +83,12 @@ public class AddShould
 
         result.Id.ShouldBe("location-1");
         A.CallTo(() => organizationTagRepository.GetActiveByIdsForOrganizationAsync(
-                A<ICollection<string>>.That.Matches(ids => ids.Count == 1 && ids.Single() == "tag-1"),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 1 && ids.Single() == "tag-1"),
                 "org-1",
                 null,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => locationOutboxPublisher.PublishLocations(A<ICollection<Shared.Models.Location>>._, unitOfWork))
+        A.CallTo(() => locationOutboxPublisher.PublishLocations(A<IReadOnlyList<Shared.Models.Location>>._, unitOfWork))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => temporalOutboxService.StartWorkflowLocationDailyAnalytics(A<GenerateLocationDailyAnalyticsInput>._, unitOfWork))
             .MustHaveHappenedOnceExactly();

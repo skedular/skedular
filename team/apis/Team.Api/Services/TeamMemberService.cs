@@ -17,25 +17,25 @@ namespace Team.Api.Services;
 
 public interface ITeamMemberService
 {
-    Task<(PaginatedInfo, ICollection<Edge<TeamMember>>, int)> GetPaginatedMembersAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<TeamMember>>, int)> GetPaginatedMembersAsync(
         PaginationInputParam paginationInputParam,
         TeamMemberSearchCriteria searchCriteria,
-        ICollection<TeamMemberOrder> orderByFields,
+        IReadOnlyList<TeamMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 
     Task<TeamMember> ChangeRoleAsync(string id, TeamMemberRole memberRole, CancellationToken cancellationToken);
-    Task<ICollection<TeamMember>> ChangeStatusAsync(ICollection<string> ids, TeamMemberStatus status, CancellationToken cancellationToken);
-    Task<Shared.Models.Team> UpdateMembersAsync(string teamId, ICollection<TeamMember> members, CancellationToken cancellationToken);
+    Task<IReadOnlyList<TeamMember>> ChangeStatusAsync(IReadOnlyList<string> ids, TeamMemberStatus status, CancellationToken cancellationToken);
+    Task<Shared.Models.Team> UpdateMembersAsync(string teamId, IReadOnlyList<TeamMember> members, CancellationToken cancellationToken);
 
     public Task<List<Shared.Database.Entities.TeamMember>> BuildMembersAsync(
-        ICollection<TeamMember> members,
+        IReadOnlyList<TeamMember> members,
         Shared.Database.Entities.Team existingTeam,
         string customerId,
         Organization? organization,
         CancellationToken cancellationToken);
 
     Task<TeamMember> RemoveAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<TeamMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<TeamMember>> RemoveAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<TeamMember> AddAsync(string teamId, TeamMember member, CancellationToken cancellationToken);
 }
 
@@ -53,10 +53,10 @@ public class TeamMemberService(
     TimeProvider timeProvider,
     ILogger<TeamMemberService> logger) : ITeamMemberService
 {
-    public async Task<(PaginatedInfo, ICollection<Edge<TeamMember>>, int)> GetPaginatedMembersAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<TeamMember>>, int)> GetPaginatedMembersAsync(
         PaginationInputParam paginationInputParam,
         TeamMemberSearchCriteria searchCriteria,
-        ICollection<TeamMemberOrder> orderByFields,
+        IReadOnlyList<TeamMemberOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
@@ -122,8 +122,8 @@ public class TeamMemberService(
         return mapper.MapTo(teamMember, mapper.MapTo(team));
     }
 
-    public async Task<ICollection<TeamMember>> ChangeStatusAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<TeamMember>> ChangeStatusAsync(
+        IReadOnlyList<string> ids,
         TeamMemberStatus status,
         CancellationToken cancellationToken)
     {
@@ -174,7 +174,7 @@ public class TeamMemberService(
             .ToList();
     }
 
-    public async Task<Shared.Models.Team> UpdateMembersAsync(string teamId, ICollection<TeamMember> members, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Team> UpdateMembersAsync(string teamId, IReadOnlyList<TeamMember> members, CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
@@ -231,7 +231,7 @@ public class TeamMemberService(
     }
 
     public async Task<List<Shared.Database.Entities.TeamMember>> BuildMembersAsync(
-        ICollection<TeamMember> members,
+        IReadOnlyList<TeamMember> members,
         Shared.Database.Entities.Team existingTeam,
         string customerId,
         Organization? organization,
@@ -326,7 +326,7 @@ public class TeamMemberService(
         return mapper.MapTo(existingTeamMember);
     }
 
-    public async Task<ICollection<TeamMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<TeamMember>> RemoveAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var distinctTeamMemberIds = ids.Distinct().ToList();

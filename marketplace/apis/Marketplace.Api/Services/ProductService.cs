@@ -23,15 +23,15 @@ public interface IProductService
         CancellationToken cancellationToken);
 
     Task<Product> UpdateAsync(string id, ProductVersion productVersion, CancellationToken cancellationToken);
-    Task<ICollection<Product>> DeleteAsync(ICollection<string> productIds, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Product>> DeleteAsync(IReadOnlyList<string> productIds, CancellationToken cancellationToken);
     Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Product>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<ICollection<Product>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Product>> ActivateAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Product>> DeactivateAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Product>>, int)> GetPaginatedProductsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int)> GetPaginatedProductsAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
-        ICollection<ProductOrder> orderByFields,
+        IReadOnlyList<ProductOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -137,7 +137,7 @@ public class ProductService(
         return await UpdateInternalAsync(productVersion, existingProduct, customer, cancellationToken);
     }
 
-    public async Task<ICollection<Product>> DeleteAsync(ICollection<string> productIds, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Product>> DeleteAsync(IReadOnlyList<string> productIds, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingProducts = await repositoryFactory.ProductRepository.GetByIdsAsync(productIds, cancellationToken) ?? throw new ProductNotFound();
@@ -175,7 +175,7 @@ public class ProductService(
         return existingProduct is null ? null : mapper.MapTo(existingProduct);
     }
 
-    public async Task<ICollection<Product>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Product>> ActivateAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -222,7 +222,7 @@ public class ProductService(
         return updatedProducts;
     }
 
-    public async Task<ICollection<Product>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Product>> DeactivateAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -269,10 +269,10 @@ public class ProductService(
         return updatedProducts;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Product>>, int)> GetPaginatedProductsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int)> GetPaginatedProductsAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
-        ICollection<ProductOrder> orderByFields,
+        IReadOnlyList<ProductOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.ProductRepository.GetPaginatedProductsUntrackedAsync(
@@ -323,7 +323,7 @@ public class ProductService(
         return product;
     }
 
-    private static void Validate(ProductType productType, ICollection<ProductPricing> options)
+    private static void Validate(ProductType productType, IReadOnlyList<ProductPricing> options)
     {
         foreach (var option in options)
         {

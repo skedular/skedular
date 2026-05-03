@@ -34,15 +34,15 @@ public interface IOrganizationStripeConnectAccountService
 
     Task<OrganizationStripeConnectAccount> UpdateAsync(string id, string nickname, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount> DeleteAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<OrganizationStripeConnectAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<OrganizationStripeConnectAccount>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<string> GetNewOnboardingUrlAsync(string code, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount> SetAsDefaultAsync(string id, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
-        ICollection<OrganizationStripeConnectAccountOrder> orderByFields,
+        IReadOnlyList<OrganizationStripeConnectAccountOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
@@ -188,7 +188,7 @@ public class OrganizationStripeConnectAccountService(
         return deletedAccount;
     }
 
-    public async Task<ICollection<OrganizationStripeConnectAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<OrganizationStripeConnectAccount>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -309,10 +309,10 @@ public class OrganizationStripeConnectAccountService(
         return mappedAccount;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
-        ICollection<OrganizationStripeConnectAccountOrder> orderByFields,
+        IReadOnlyList<OrganizationStripeConnectAccountOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {

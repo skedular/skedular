@@ -388,7 +388,7 @@ public class ResourcesPage(
                 commonPageContext.PageContext,
                 cancellationToken));
 
-        ICollection<Block>[] blocks =
+        IReadOnlyList<Block>[] blocks =
         [
             GetTitle(),
             asyncBlocks[0],
@@ -419,12 +419,12 @@ public class ResourcesPage(
             .RegisterBlockActionHandler<ButtonAction, ResourcesPage>(ResourceActionTypes.SetPreferredResource)
             .RegisterBlockActionHandler<ButtonAction, ResourcesPage>(ResourceActionTypes.RemovePreferredResource);
 
-    private static ICollection<Block> GetTitle() =>
+    private static IReadOnlyList<Block> GetTitle() =>
     [
         new SectionBlock { Text = "*Resources*".ToMarkdown() }
     ];
 
-    private async Task<ICollection<Block>> GetToolbarAsync(
+    private async Task<IReadOnlyList<Block>> GetToolbarAsync(
         string locationId,
         WorkspaceMember workspaceMember,
         PageContext pageContext,

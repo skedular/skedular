@@ -16,20 +16,20 @@ public record BookingSearchCriteria(
     string? NameContains,
     BookingCategory? Category,
     BookingChannel? Channel,
-    ICollection<PaymentStatus> PaymentStatuses,
+    IReadOnlyList<PaymentStatus> PaymentStatuses,
     bool? IncludeMineOnly,
     bool? IncludeFutureBookingsOnly,
     string? OrganizationId,
     string? OrganizationCustomDomain,
-    ICollection<string> LocationIds,
-    ICollection<string> TeamIds,
-    ICollection<string> CustomerIds,
-    ICollection<string> RecurringBookingIds);
+    IReadOnlyList<string> LocationIds,
+    IReadOnlyList<string> TeamIds,
+    IReadOnlyList<string> CustomerIds,
+    IReadOnlyList<string> RecurringBookingIds);
 
 public record BookingAccessScope(
-    ICollection<string> OrganizationIds,
-    ICollection<string> LocationIds,
-    ICollection<string> TeamIds);
+    IReadOnlyList<string> OrganizationIds,
+    IReadOnlyList<string> LocationIds,
+    IReadOnlyList<string> TeamIds);
 
 public record BookingOrder(OrderDirection Direction, BookingOrderField Field);
 

@@ -9,16 +9,16 @@ namespace Slack.Api.Components;
 
 public interface ICustomTagComponents
 {
-    Task<ICollection<IActionElement>> GetAddCustomTagButtonAsync(
+    Task<IReadOnlyList<IActionElement>> GetAddCustomTagButtonAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Block>> GetCustomTagCardsAsync(
+    Task<IReadOnlyList<Block>> GetCustomTagCardsAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
-        ICollection<OrganizationCustomTag> customTags,
+        IReadOnlyList<OrganizationCustomTag> customTags,
         PageContext pageContext,
         CancellationToken cancellationToken);
 }
@@ -26,7 +26,7 @@ public interface ICustomTagComponents
 public class CustomTagComponents(ICustomerService customerService, IOrganizationPermissionsService organizationPermissionsService)
     : ICustomTagComponents
 {
-    public async Task<ICollection<IActionElement>> GetAddCustomTagButtonAsync(
+    public async Task<IReadOnlyList<IActionElement>> GetAddCustomTagButtonAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
@@ -47,10 +47,10 @@ public class CustomTagComponents(ICustomerService customerService, IOrganization
         ];
     }
 
-    public async Task<ICollection<Block>> GetCustomTagCardsAsync(
+    public async Task<IReadOnlyList<Block>> GetCustomTagCardsAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
-        ICollection<OrganizationCustomTag> customTags,
+        IReadOnlyList<OrganizationCustomTag> customTags,
         PageContext pageContext,
         CancellationToken cancellationToken)
     {

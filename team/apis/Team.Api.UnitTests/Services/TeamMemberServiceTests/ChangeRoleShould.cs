@@ -64,7 +64,7 @@ public class ChangeRoleShould
         var result = await sut.ChangeRoleAsync("member-1", TeamMemberRole.Administrator, cancellationToken);
 
         result.Id.ShouldBe("member-1");
-        A.CallTo(() => teamOutboxPublisher.PublishTeams(A<ICollection<Shared.Models.Team>>._, unitOfWork)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => teamOutboxPublisher.PublishTeams(A<IReadOnlyList<Shared.Models.Team>>._, unitOfWork)).MustHaveHappenedOnceExactly();
         A.CallTo(logger)
             .Where(call =>
                 call.Method.Name == nameof(ILogger.Log) &&

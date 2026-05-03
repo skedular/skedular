@@ -8,7 +8,7 @@ namespace Organization.Shared.Repositories;
 
 public interface IIndustryMainCategoryRepository : IRepository<IndustryMainCategory>
 {
-    Task<ICollection<IndustryMainCategory>> GetAllActiveWithSubCategoriesAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<IndustryMainCategory>> GetAllActiveWithSubCategoriesAsync(CancellationToken cancellationToken);
 }
 
 public class IndustryMainCategoryRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
@@ -24,7 +24,7 @@ public class IndustryMainCategoryRepository(OrganizationDbContext dbContext, Tim
     ///     This keeps the category and subcategory read inside the repository and preserves the original untracked behavior that existed before the shared
     ///     specification was removed.
     /// </remarks>
-    public async Task<ICollection<IndustryMainCategory>> GetAllActiveWithSubCategoriesAsync(CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<IndustryMainCategory>> GetAllActiveWithSubCategoriesAsync(CancellationToken cancellationToken) =>
         await DbContext.IndustryMainCategory
             .AsNoTrackingWithIdentityResolution()
             .Where(query => !query.DeletedAt.HasValue)

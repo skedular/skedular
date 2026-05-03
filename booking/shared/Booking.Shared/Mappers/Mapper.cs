@@ -34,11 +34,11 @@ public interface IMapper
 
     Database.Entities.Booking MapTo(
         Models.Booking src,
-        ICollection<Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Location> involvedLocations,
-        ICollection<Team> involvedTeams,
-        ICollection<Database.Entities.Resource> resources,
+        IReadOnlyList<Customer> involvedCustomers,
+        IReadOnlyList<Organization> involvedOrganizations,
+        IReadOnlyList<Location> involvedLocations,
+        IReadOnlyList<Team> involvedTeams,
+        IReadOnlyList<Database.Entities.Resource> resources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -48,11 +48,11 @@ public interface IMapper
     Database.Entities.Booking MergeTo(
         Models.Booking src,
         Database.Entities.Booking dest,
-        ICollection<Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Location> involvedLocations,
-        ICollection<Team> involvedTeams,
-        ICollection<Database.Entities.Resource> resources,
+        IReadOnlyList<Customer> involvedCustomers,
+        IReadOnlyList<Organization> involvedOrganizations,
+        IReadOnlyList<Location> involvedLocations,
+        IReadOnlyList<Team> involvedTeams,
+        IReadOnlyList<Database.Entities.Resource> resources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -61,10 +61,10 @@ public interface IMapper
 
     Database.Entities.RecurringBooking MapTo(
         RecurringBooking src,
-        ICollection<Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Team> involvedTeams,
-        ICollection<Database.Entities.Resource> requestedResources,
+        IReadOnlyList<Customer> involvedCustomers,
+        IReadOnlyList<Organization> involvedOrganizations,
+        IReadOnlyList<Team> involvedTeams,
+        IReadOnlyList<Database.Entities.Resource> requestedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -73,10 +73,10 @@ public interface IMapper
     Database.Entities.RecurringBooking MergeTo(
         RecurringBooking src,
         Database.Entities.RecurringBooking dest,
-        ICollection<Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Team> involvedTeams,
-        ICollection<Database.Entities.Resource> requestedResources,
+        IReadOnlyList<Customer> involvedCustomers,
+        IReadOnlyList<Organization> involvedOrganizations,
+        IReadOnlyList<Team> involvedTeams,
+        IReadOnlyList<Database.Entities.Resource> requestedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -91,10 +91,10 @@ public interface IMapper
 
     Database.Entities.MarketplaceBookingSubscription MapTo(
         MarketplaceBookingSubscription src,
-        ICollection<Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Team> involvedTeams,
-        ICollection<Database.Entities.Resource> requestedResources,
+        IReadOnlyList<Customer> involvedCustomers,
+        IReadOnlyList<Organization> involvedOrganizations,
+        IReadOnlyList<Team> involvedTeams,
+        IReadOnlyList<Database.Entities.Resource> requestedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -228,7 +228,7 @@ public class Mapper(TimeProvider timeProvider) : IMapper
             Notes = src.Notes,
             Category = src.Category.ToBookingCategory(),
             Channel = src.Channel.ToBookingChannel(),
-            Schedules = src.Schedules,
+            Schedules = src.Schedules.ToList(),
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
@@ -279,7 +279,7 @@ public class Mapper(TimeProvider timeProvider) : IMapper
             StartDate = src.StartDate,
             EndDate = src.EndDate,
             OccurrenceCount = src.OccurrenceCount,
-            SkippedDates = src.SkippedDates,
+            SkippedDates = src.SkippedDates.ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
@@ -391,11 +391,11 @@ public class Mapper(TimeProvider timeProvider) : IMapper
 
     public Database.Entities.Booking MapTo(
         Models.Booking src,
-        ICollection<Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Location> involvedLocations,
-        ICollection<Team> involvedTeams,
-        ICollection<Database.Entities.Resource> resources,
+        IReadOnlyList<Customer> involvedCustomers,
+        IReadOnlyList<Organization> involvedOrganizations,
+        IReadOnlyList<Location> involvedLocations,
+        IReadOnlyList<Team> involvedTeams,
+        IReadOnlyList<Database.Entities.Resource> resources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -418,7 +418,7 @@ public class Mapper(TimeProvider timeProvider) : IMapper
 
         booking.From = src.From;
         booking.Until = src.Until;
-        booking.Schedules = src.Schedules;
+        booking.Schedules = src.Schedules.ToList();
 
         return booking;
     }
@@ -426,11 +426,11 @@ public class Mapper(TimeProvider timeProvider) : IMapper
     public Database.Entities.Booking MergeTo(
         Models.Booking src,
         Database.Entities.Booking dest,
-        ICollection<Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Location> involvedLocations,
-        ICollection<Team> involvedTeams,
-        ICollection<Database.Entities.Resource> resources,
+        IReadOnlyList<Customer> involvedCustomers,
+        IReadOnlyList<Organization> involvedOrganizations,
+        IReadOnlyList<Location> involvedLocations,
+        IReadOnlyList<Team> involvedTeams,
+        IReadOnlyList<Database.Entities.Resource> resources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -443,17 +443,17 @@ public class Mapper(TimeProvider timeProvider) : IMapper
         {
             dest.From = src.From;
             dest.Until = src.Until;
-            dest.Schedules = src.Schedules;
+            dest.Schedules = src.Schedules.ToList();
         }
 
         dest.Notes = src.Notes;
         dest.Category = src.Category.ToBookingCategory();
         dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
-        dest.InvolvedCustomers = involvedCustomers;
-        dest.InvolvedOrganizations = involvedOrganizations;
-        dest.InvolvedLocations = involvedLocations;
-        dest.InvolvedTeams = involvedTeams;
-        dest.InvolvedResources = resources;
+        dest.InvolvedCustomers = involvedCustomers.ToList();
+        dest.InvolvedOrganizations = involvedOrganizations.ToList();
+        dest.InvolvedLocations = involvedLocations.ToList();
+        dest.InvolvedTeams = involvedTeams.ToList();
+        dest.InvolvedResources = resources.ToList();
 
         if (createdByCustomer is not null)
         {
@@ -478,10 +478,10 @@ public class Mapper(TimeProvider timeProvider) : IMapper
 
     public Database.Entities.RecurringBooking MapTo(
         RecurringBooking src,
-        ICollection<Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Team> involvedTeams,
-        ICollection<Database.Entities.Resource> requestedResources,
+        IReadOnlyList<Customer> involvedCustomers,
+        IReadOnlyList<Organization> involvedOrganizations,
+        IReadOnlyList<Team> involvedTeams,
+        IReadOnlyList<Database.Entities.Resource> requestedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -501,10 +501,10 @@ public class Mapper(TimeProvider timeProvider) : IMapper
     public Database.Entities.RecurringBooking MergeTo(
         RecurringBooking src,
         Database.Entities.RecurringBooking dest,
-        ICollection<Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Team> involvedTeams,
-        ICollection<Database.Entities.Resource> requestedResources,
+        IReadOnlyList<Customer> involvedCustomers,
+        IReadOnlyList<Organization> involvedOrganizations,
+        IReadOnlyList<Team> involvedTeams,
+        IReadOnlyList<Database.Entities.Resource> requestedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -523,11 +523,11 @@ public class Mapper(TimeProvider timeProvider) : IMapper
         dest.StartDate = src.StartDate;
         dest.EndDate = src.EndDate;
         dest.OccurrenceCount = src.OccurrenceCount;
-        dest.SkippedDates = src.SkippedDates;
-        dest.InvolvedCustomers = involvedCustomers;
-        dest.InvolvedOrganizations = involvedOrganizations;
-        dest.InvolvedTeams = involvedTeams;
-        dest.RequestedResources = requestedResources;
+        dest.SkippedDates = src.SkippedDates.ToList();
+        dest.InvolvedCustomers = involvedCustomers.ToList();
+        dest.InvolvedOrganizations = involvedOrganizations.ToList();
+        dest.InvolvedTeams = involvedTeams.ToList();
+        dest.RequestedResources = requestedResources.ToList();
         dest.CreatedByCustomer = createdByCustomer;
         dest.LastModifiedByCustomer = lastModifiedByCustomer;
         dest.DeletedByCustomer = deletedByCustomer;
@@ -551,10 +551,10 @@ public class Mapper(TimeProvider timeProvider) : IMapper
 
     public Database.Entities.MarketplaceBookingSubscription MapTo(
         MarketplaceBookingSubscription src,
-        ICollection<Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Team> involvedTeams,
-        ICollection<Database.Entities.Resource> involvedResources,
+        IReadOnlyList<Customer> involvedCustomers,
+        IReadOnlyList<Organization> involvedOrganizations,
+        IReadOnlyList<Team> involvedTeams,
+        IReadOnlyList<Database.Entities.Resource> involvedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -676,7 +676,7 @@ public class Mapper(TimeProvider timeProvider) : IMapper
             StartDate = src.StartDate,
             EndDate = src.EndDate,
             OccurrenceCount = src.OccurrenceCount,
-            SkippedDates = src.SkippedDates,
+            SkippedDates = src.SkippedDates.ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
@@ -739,7 +739,7 @@ public class Mapper(TimeProvider timeProvider) : IMapper
         dest.InvoiceUrl = src.InvoiceUrl;
         dest.InvoiceNumber = src.InvoiceNumber;
         dest.CheckoutReturnUrl = src.CheckoutReturnUrl;
-        dest.InvoiceEmailList = src.InvoiceEmailList;
+        dest.InvoiceEmailList = src.InvoiceEmailList.ToList();
         dest.BillingMode = src.BillingMode.ToProductPricingBillingMode();
         dest.PaymentExpiry = src.PaymentExpiry;
         return dest;
@@ -748,10 +748,10 @@ public class Mapper(TimeProvider timeProvider) : IMapper
     private static Database.Entities.MarketplaceBookingSubscription MergeTo(
         MarketplaceBookingSubscription src,
         Database.Entities.MarketplaceBookingSubscription dest,
-        ICollection<Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Team> involvedTeams,
-        ICollection<Database.Entities.Resource> requestedResources,
+        IReadOnlyList<Customer> involvedCustomers,
+        IReadOnlyList<Organization> involvedOrganizations,
+        IReadOnlyList<Team> involvedTeams,
+        IReadOnlyList<Database.Entities.Resource> requestedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -765,10 +765,10 @@ public class Mapper(TimeProvider timeProvider) : IMapper
         dest.Status = src.Status.ToMarketplaceBookingSubscriptionStatus();
         dest.AutoRenew = src.AutoRenew;
         dest.CancelAtPeriodEnd = src.CancelAtPeriodEnd;
-        dest.InvolvedCustomers = involvedCustomers;
-        dest.InvolvedOrganizations = involvedOrganizations;
-        dest.InvolvedTeams = involvedTeams;
-        dest.RequestedResources = requestedResources;
+        dest.InvolvedCustomers = involvedCustomers.ToList();
+        dest.InvolvedOrganizations = involvedOrganizations.ToList();
+        dest.InvolvedTeams = involvedTeams.ToList();
+        dest.RequestedResources = requestedResources.ToList();
         dest.CreatedByCustomer = createdByCustomer;
         dest.LastModifiedByCustomer = lastModifiedByCustomer;
         dest.DeletedByCustomer = deletedByCustomer;

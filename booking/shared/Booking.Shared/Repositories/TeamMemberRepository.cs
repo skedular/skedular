@@ -11,8 +11,8 @@ public interface ITeamMemberRepository : IRepository<TeamMember>
 {
     TeamMember Add(TeamMember teamMember);
     TeamMember Update(TeamMember teamMember);
-    void RemoveRange(ICollection<TeamMember> teamMembers);
-    Task<ICollection<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken);
+    void RemoveRange(IReadOnlyList<TeamMember> teamMembers);
+    Task<IReadOnlyList<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken);
 }
 
 public class TeamMemberRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -25,7 +25,7 @@ public class TeamMemberRepository(BookingDbContext dbContext, TimeProvider timeP
         return DbContext.TeamMember.Add(teamMember).Entity;
     }
 
-    public void RemoveRange(ICollection<TeamMember> teamMembers)
+    public void RemoveRange(IReadOnlyList<TeamMember> teamMembers)
     {
         var now = TimeProvider.GetUtcNow();
         teamMembers.ForEach(teamMember => teamMember.DeletedAt = now);
@@ -39,7 +39,7 @@ public class TeamMemberRepository(BookingDbContext dbContext, TimeProvider timeP
         return DbContext.TeamMember.Update(teamMember).Entity;
     }
 
-    public async Task<ICollection<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken) =>
         await DbContext.TeamMember
             .Where(query => query.Team.Id == teamId)
             .AsSingleQuery()

@@ -21,19 +21,19 @@ public interface IRecurringBookingRepository : IRepository<RecurringBooking>
     RecurringBooking Update(RecurringBooking recurringBooking);
     RecurringBooking Remove(RecurringBooking recurringBooking);
 
-    Task<(PaginatedInfo, ICollection<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsUntrackedAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         RecurringBookingSearchCriteria searchCriteria,
-        ICollection<RecurringBookingOrder> orderByFields,
+        IReadOnlyList<RecurringBookingOrder> orderByFields,
         RecurringBookingAccessScope? accessScope,
         CancellationToken cancellationToken);
 }
 
-internal static class RecurringBookingExtensions
+public static class RecurringBookingExtensions
 {
     extension(IQueryable<RecurringBooking> originalQuery)
     {
-        internal IIncludableQueryable<RecurringBooking, Customer?> AddDependentObjects(bool isTracked) =>
+        public IIncludableQueryable<RecurringBooking, Customer?> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.MarketplaceBookingSubscription)
             .Include(query => query.MarketplaceBooking)
@@ -50,7 +50,7 @@ internal static class RecurringBookingExtensions
             .Include(query => query.LastModifiedByCustomer)
             .Include(query => query.DeletedByCustomer);
 
-        internal IQueryable<RecurringBooking> AddSearchCriteria(
+        public IQueryable<RecurringBooking> AddSearchCriteria(
             RecurringBookingSearchCriteria searchCriteria,
             TimeProvider timeProvider,
             RecurringBookingAccessScope? accessScope)
@@ -200,10 +200,10 @@ public class RecurringBookingRepository(BookingDbContext dbContext, TimeProvider
         return DbContext.RecurringBooking.Update(recurringBooking).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsUntrackedAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         RecurringBookingSearchCriteria searchCriteria,
-        ICollection<RecurringBookingOrder> orderByFields,
+        IReadOnlyList<RecurringBookingOrder> orderByFields,
         RecurringBookingAccessScope? accessScope,
         CancellationToken cancellationToken) =>
         await DbContext.RecurringBooking
@@ -211,7 +211,7 @@ public class RecurringBookingRepository(BookingDbContext dbContext, TimeProvider
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<RecurringBooking>> GetPaginationFields(ICollection<RecurringBookingOrder> orderByFields)
+    private static List<KeysetPaginationField<RecurringBooking>> GetPaginationFields(IReadOnlyList<RecurringBookingOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

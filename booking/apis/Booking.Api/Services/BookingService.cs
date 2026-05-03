@@ -13,12 +13,12 @@ namespace Booking.Api.Services;
 public interface IBookingService
 {
     Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string bookingId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string bookingId, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
-        ICollection<BookingOrder> orderByFields,
+        IReadOnlyList<BookingOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
@@ -43,7 +43,7 @@ public class BookingService(
         return sharedMapper.MapTo(booking);
     }
 
-    public async Task<ICollection<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string bookingId, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string bookingId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(bookingId);
 
@@ -55,10 +55,10 @@ public class BookingService(
         return invoices.Select(sharedMapper.MapTo).ToList();
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
-        ICollection<BookingOrder> orderByFields,
+        IReadOnlyList<BookingOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {

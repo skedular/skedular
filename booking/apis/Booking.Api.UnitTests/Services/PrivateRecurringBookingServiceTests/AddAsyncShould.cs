@@ -40,9 +40,9 @@ public class AddAsyncShould
         var recurringBooking = new RecurringBooking { InvolvedCustomers = [new Customer { Id = "customer-1" }] };
         var customer = new CustomerEntity { Id = "customer-1" };
         var expected = new RecurringBooking { Id = generatedRecurringBookingId };
-        ICollection<string> emptyIds = [];
-        ICollection<Organization> emptyOrganizations = [];
-        ICollection<Team> emptyTeams = [];
+        IReadOnlyList<string> emptyIds = [];
+        IReadOnlyList<Organization> emptyOrganizations = [];
+        IReadOnlyList<Team> emptyTeams = [];
 
         A.CallTo(() => context.GetVerifiableToken()).Returns(verifiableToken);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -56,8 +56,8 @@ public class AddAsyncShould
         A.CallTo(() => sharedPrivateRecurringBookingService.AddAsync(
                 A<RecurringBooking>.That.Matches(model => model.Id == generatedRecurringBookingId),
                 A<CustomerEntity>.That.Matches(model => model.Id == customer.Id),
-                A<ICollection<Organization>>.That.Matches(items => items.Count == 0),
-                A<ICollection<Team>>.That.Matches(items => items.Count == 0),
+                A<IReadOnlyList<Organization>>.That.Matches(items => items.Count == 0),
+                A<IReadOnlyList<Team>>.That.Matches(items => items.Count == 0),
                 cancellationToken))
             .Returns(expected);
 

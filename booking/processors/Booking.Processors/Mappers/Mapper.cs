@@ -43,19 +43,19 @@ public interface IMapper
         Product src,
         Shared.Database.Entities.Product dest,
         Shared.Database.Entities.Organization organization,
-        ICollection<Shared.Database.Entities.ProductVersion> productVersions);
+        IReadOnlyList<Shared.Database.Entities.ProductVersion> productVersions);
 
     Shared.Database.Entities.ProductVersion MergeToEntity(
         ProductVersion src,
         Shared.Database.Entities.ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> organizationTags);
+        IReadOnlyList<OrganizationTag> organizationTags);
 
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
         Shared.Database.Entities.Organization organization,
-        ICollection<OrganizationTag> organizationTags);
+        IReadOnlyList<OrganizationTag> organizationTags);
 
     Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest, Shared.Database.Entities.Organization organization);
     OrganizationMember MapToEntity(Shared.Models.OrganizationMember src, Shared.Database.Entities.Organization organization, Customer customer);
@@ -68,22 +68,22 @@ public interface IMapper
 
     TeamMember MapToEntity(Shared.Models.TeamMember src, Shared.Database.Entities.Team organization, Customer customer);
     TeamMember MergeToEntity(Shared.Models.TeamMember src, TeamMember dest, Shared.Database.Entities.Team team, Customer customer);
-    Resource MapToEntity(Shared.Models.Resource src, Shared.Database.Entities.Location location, ICollection<OrganizationTag> organizationTags);
+    Resource MapToEntity(Shared.Models.Resource src, Shared.Database.Entities.Location location, IReadOnlyList<OrganizationTag> organizationTags);
 
     Resource MergeToEntity(
         Shared.Models.Resource src,
         Resource dest,
         Shared.Database.Entities.Location? location,
-        ICollection<OrganizationTag> organizationTags);
+        IReadOnlyList<OrganizationTag> organizationTags);
 
     Customer MergeToEntity(
         Shared.Models.Customer src,
         Customer dest,
-        ICollection<Identity> identities,
+        IReadOnlyList<Identity> identities,
         Shared.Database.Entities.Organization? defaultOrganization,
-        ICollection<Shared.Database.Entities.Location> preferredLocations,
-        ICollection<Resource> preferredResources,
-        ICollection<OrganizationTag> preferredOrganizationTags);
+        IReadOnlyList<Shared.Database.Entities.Location> preferredLocations,
+        IReadOnlyList<Resource> preferredResources,
+        IReadOnlyList<OrganizationTag> preferredOrganizationTags);
 
     Identity MapToEntity(Shared.Models.Identity src, Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Customer? customer);
@@ -103,7 +103,7 @@ public class Mapper : IMapper
     {
         var customer = src.Data.Customer;
         var deletedAt = customer.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         return new Shared.Models.Customer
         {
@@ -151,7 +151,7 @@ public class Mapper : IMapper
     {
         var organizationAfterState = src.Data.Organization;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         var organization = new Organization
         {
@@ -240,7 +240,7 @@ public class Mapper : IMapper
     {
         var locationAfterState = src.Data.Location;
         var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         var location = new Location
         {
@@ -289,7 +289,7 @@ public class Mapper : IMapper
     {
         var teamAfterState = src.Data.Team;
         var deletedAt = teamAfterState.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         var team = new Team
         {
@@ -332,7 +332,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
-        dest.RefundNotificationEmails = src.RefundNotificationEmails;
+        dest.RefundNotificationEmails = src.RefundNotificationEmails.ToList();
         dest.IsOwnershipVerified = src.IsOwnershipVerified;
         dest.LogoUrl = src.LogoUrl;
         dest.Offering = src.Offering;
@@ -345,7 +345,7 @@ public class Mapper : IMapper
     {
         var productAfterState = src.Data.Product;
         var deletedAt = productAfterState.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+        var eventRaisedAt = src.Metadata.Time.ToDateTimeOffset();
 
         var product = new Product
         {
@@ -364,12 +364,12 @@ public class Mapper : IMapper
         Product src,
         Shared.Database.Entities.Product dest,
         Shared.Database.Entities.Organization organization,
-        ICollection<Shared.Database.Entities.ProductVersion> productVersions)
+        IReadOnlyList<Shared.Database.Entities.ProductVersion> productVersions)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Organization = organization;
-        dest.ProductVersions = productVersions;
+        dest.ProductVersions = productVersions.ToList();
         return dest;
     }
 
@@ -377,15 +377,15 @@ public class Mapper : IMapper
         ProductVersion src,
         Shared.Database.Entities.ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> organizationTags)
+        IReadOnlyList<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.Type = src.Type.ToProductType();
         dest.Currency = src.Currency.ToCurrency();
         dest.ListingMetadata = src.ListingMetadata;
         dest.Product = product;
-        dest.OrganizationTags = organizationTags;
-        dest.PricingOptions = src.PricingOptions;
+        dest.OrganizationTags = organizationTags.ToList();
+        dest.PricingOptions = src.PricingOptions.ToList();
         return dest;
     }
 
@@ -393,7 +393,7 @@ public class Mapper : IMapper
         Location src,
         Shared.Database.Entities.Location dest,
         Shared.Database.Entities.Organization organization,
-        ICollection<OrganizationTag> organizationTags)
+        IReadOnlyList<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -401,7 +401,7 @@ public class Mapper : IMapper
         dest.Type = src.Type.ToLocationType();
         dest.OpeningHours = src.OpeningHours;
         dest.Organization = organization;
-        dest.OrganizationTags = organizationTags;
+        dest.OrganizationTags = organizationTags.ToList();
         return dest;
     }
 
@@ -457,14 +457,14 @@ public class Mapper : IMapper
     public Resource MapToEntity(
         Shared.Models.Resource src,
         Shared.Database.Entities.Location location,
-        ICollection<OrganizationTag> organizationTags) =>
+        IReadOnlyList<OrganizationTag> organizationTags) =>
         MergeToEntity(src, new Resource(), location, organizationTags);
 
     public Resource MergeToEntity(
         Shared.Models.Resource src,
         Resource dest,
         Shared.Database.Entities.Location? location,
-        ICollection<OrganizationTag> organizationTags)
+        IReadOnlyList<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -476,18 +476,18 @@ public class Mapper : IMapper
         dest.IsAvailableHoursOverridden = src.IsAvailableHoursOverridden;
         dest.AvailableHours = src.AvailableHours;
         dest.Location = location;
-        dest.OrganizationTags = organizationTags;
+        dest.OrganizationTags = organizationTags.ToList();
         return dest;
     }
 
     public Customer MergeToEntity(
         Shared.Models.Customer src,
         Customer dest,
-        ICollection<Identity> identities,
+        IReadOnlyList<Identity> identities,
         Shared.Database.Entities.Organization? defaultOrganization,
-        ICollection<Shared.Database.Entities.Location> preferredLocations,
-        ICollection<Resource> preferredResources,
-        ICollection<OrganizationTag> preferredOrganizationTags)
+        IReadOnlyList<Shared.Database.Entities.Location> preferredLocations,
+        IReadOnlyList<Resource> preferredResources,
+        IReadOnlyList<OrganizationTag> preferredOrganizationTags)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -507,11 +507,11 @@ public class Mapper : IMapper
         dest.PhotoUrl512 = src.PhotoUrl512;
         dest.PhoneNumber = src.PhoneNumber;
         dest.Type = src.Type.ToNullableCustomerType();
-        dest.Identities = identities;
+        dest.Identities = identities.ToList();
         dest.DefaultOrganization = defaultOrganization;
-        dest.PreferredLocations = preferredLocations;
-        dest.PreferredResources = preferredResources;
-        dest.PreferredOrganizationTags = preferredOrganizationTags;
+        dest.PreferredLocations = preferredLocations.ToList();
+        dest.PreferredResources = preferredResources.ToList();
+        dest.PreferredOrganizationTags = preferredOrganizationTags.ToList();
         return dest;
     }
 

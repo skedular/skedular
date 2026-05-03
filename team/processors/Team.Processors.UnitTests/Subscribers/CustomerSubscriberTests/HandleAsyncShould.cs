@@ -40,7 +40,7 @@ public class HandleAsyncShould
         var result = await sut.HandleAsync(A.Fake<EventContext>(), new Key(), @event, cancellationToken);
 
         result.ShouldBe(EventSubscriberResults.Success);
-        A.CallTo(() => cachedCustomerService.RemoveAsync(A<ICollection<Shared.Database.Entities.Customer>>._, cancellationToken))
+        A.CallTo(() => cachedCustomerService.RemoveAsync(A<IReadOnlyList<Shared.Database.Entities.Customer>>._, cancellationToken))
             .MustNotHaveHappened();
         A.CallTo(logger)
             .Where(call => call.Method.Name == nameof(ILogger.Log) && call.GetArgument<LogLevel>(0) == LogLevel.Information)
@@ -77,7 +77,7 @@ public class HandleAsyncShould
 
         result.ShouldBe(EventSubscriberResults.Success);
         A.CallTo(() => cachedCustomerService.RemoveAsync(
-                A<ICollection<Shared.Database.Entities.Customer>>.That.Matches(items => items.Count == 1 && items.First().Id == "customer-1"),
+                A<IReadOnlyList<Shared.Database.Entities.Customer>>.That.Matches(items => items.Count == 1 && items.First().Id == "customer-1"),
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
         A.CallTo(logger)

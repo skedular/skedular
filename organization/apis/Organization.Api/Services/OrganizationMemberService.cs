@@ -14,20 +14,20 @@ namespace Organization.Api.Services;
 
 public interface IOrganizationMemberService
 {
-    Task<(PaginatedInfo, ICollection<Edge<OrganizationMember>>, int)> GetPaginatedOrganizationMembersAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationMember>>, int)> GetPaginatedOrganizationMembersAsync(
         PaginationInputParam paginationInputParam,
         OrganizationMemberSearchCriteria searchCriteria,
-        ICollection<OrganizationMemberOrder> orderByFields,
+        IReadOnlyList<OrganizationMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 
     Task<OrganizationMember> ChangeRoleAsync(string organizationMemberId, OrganizationMemberRole memberRole, CancellationToken cancellationToken);
 
-    Task<ICollection<OrganizationMember>> ChangeStatusAsync(
-        ICollection<string> ids,
+    Task<IReadOnlyList<OrganizationMember>> ChangeStatusAsync(
+        IReadOnlyList<string> ids,
         OrganizationMemberStatus status,
         CancellationToken cancellationToken);
 
-    Task<ICollection<OrganizationMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<OrganizationMember>> RemoveAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> AdminAddMemberAsync(string organizationId, OrganizationMember member, CancellationToken cancellationToken);
     Task CompleteOrganizationMemberOnboardingAsync(string? organizationId, string? organizationCustomDomain, CancellationToken cancellationToken);
 }
@@ -43,10 +43,10 @@ public class OrganizationMemberService(
     IMapper mapper,
     ICachedOrganizationService cachedOrganizationService) : IOrganizationMemberService
 {
-    public async Task<(PaginatedInfo, ICollection<Edge<OrganizationMember>>, int)> GetPaginatedOrganizationMembersAsync(
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationMember>>, int)> GetPaginatedOrganizationMembersAsync(
         PaginationInputParam paginationInputParam,
         OrganizationMemberSearchCriteria searchCriteria,
-        ICollection<OrganizationMemberOrder> orderByFields,
+        IReadOnlyList<OrganizationMemberOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
@@ -137,8 +137,8 @@ public class OrganizationMemberService(
             mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)));
     }
 
-    public async Task<ICollection<OrganizationMember>> ChangeStatusAsync(
-        ICollection<string> ids,
+    public async Task<IReadOnlyList<OrganizationMember>> ChangeStatusAsync(
+        IReadOnlyList<string> ids,
         OrganizationMemberStatus status,
         CancellationToken cancellationToken)
     {
@@ -212,7 +212,7 @@ public class OrganizationMemberService(
             .ToList();
     }
 
-    public async Task<ICollection<OrganizationMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<OrganizationMember>> RemoveAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var distinctOrganizationMemberIds = ids.Distinct().ToList();

@@ -113,7 +113,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 recurringBooking,
                 A<DateTimeOffset>._,
                 A<DateTimeOffset>._,
-                A<ICollection<Database.Entities.Booking>>._))
+                A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
 
         var result = await environment.RunAsync(() =>
@@ -196,7 +196,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 recurringBooking,
                 A<DateTimeOffset>._,
                 A<DateTimeOffset>._,
-                A<ICollection<Database.Entities.Booking>>._))
+                A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
 
         _ = await environment.RunAsync(() =>
@@ -292,7 +292,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 recurringBookingFromSubscription,
                 A<DateTimeOffset>._,
                 A<DateTimeOffset>._,
-                A<ICollection<Database.Entities.Booking>>._))
+                A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
 
         _ = await environment.RunAsync(() =>
@@ -380,7 +380,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 recurringBooking,
                 A<DateTimeOffset>._,
                 A<DateTimeOffset>._,
-                A<ICollection<Database.Entities.Booking>>._))
+                A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
 
         _ = await environment.RunAsync(() =>
@@ -447,7 +447,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 recurringBooking,
                 A<DateTimeOffset>._,
                 A<DateTimeOffset>._,
-                A<ICollection<Database.Entities.Booking>>._))
+                A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [new DateOnly(2026, 3, 20)], [], false));
 
         await Should.ThrowAsync<MarketplaceEventProductRecurringBookingNotSupported>(async () =>
@@ -513,7 +513,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 recurringBooking,
                 A<DateTimeOffset>._,
                 A<DateTimeOffset>._,
-                A<ICollection<Database.Entities.Booking>>._))
+                A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
 
         var result = await environment.RunAsync(() =>
@@ -584,7 +584,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 recurringBooking,
                 A<DateTimeOffset>._,
                 A<DateTimeOffset>._,
-                A<ICollection<Database.Entities.Booking>>._))
+                A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
 
         var result = await environment.RunAsync(() =>
@@ -734,7 +734,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
             .Returns(subscription);
         A.CallTo(() => productVersionRepository.GetByIdAsync("pv-1", environment.CancellationTokenSource.Token)).Returns(renewedProductVersion);
-        A.CallTo(() => productVersionHelperService.FindMatchingPricing(renewedProductVersion.PricingOptions!,
+        A.CallTo(() => productVersionHelperService.FindMatchingPricing(renewedProductVersion.PricingOptions!.ToList(),
                 subscription.MarketplaceBooking.ProductPricing))
             .Returns(subscription.MarketplaceBooking.ProductPricing);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(subscription)).Returns(subscription);
@@ -753,13 +753,13 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<RecurringBooking>.That.Matches(item => item.Id == "rb-prev"),
                 A<DateTimeOffset>._,
                 A<DateTimeOffset>._,
-                A<ICollection<Database.Entities.Booking>>._))
+                A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
         A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
                 A<RecurringBooking>.That.Matches(item => item.Id == "rb-current"),
                 A<DateTimeOffset>._,
                 A<DateTimeOffset>._,
-                A<ICollection<Database.Entities.Booking>>._))
+                A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [new DateOnly(2026, 3, 17)], [], false));
         A.CallTo(() => marketplaceBookingOpeningHoursService.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.Daily)).Returns(true);
         A.CallTo(() => marketplaceBookingOpeningHoursService.TryResolveDailyPlanAsync(
@@ -768,8 +768,8 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<ProductPricing>._,
                 new DateOnly(2026, 3, 17),
                 1,
-                A<ICollection<string>>.That.Matches(ids => ids.Count == 0),
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "res-7" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 0),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "res-7" })),
                 null,
                 environment.CancellationTokenSource.Token))
             .Returns(new MarketplaceBookingDailyPlan(
@@ -785,8 +785,8 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => marketplaceBookingService.AddAsync(
                 A<Shared.Models.Booking>._,
                 A<Customer>._,
-                A<ICollection<Organization>>._,
-                A<ICollection<Team>>._,
+                A<IReadOnlyList<Organization>>._,
+                A<IReadOnlyList<Team>>._,
                 A<RecurringBooking>._,
                 environment.CancellationTokenSource.Token))
             .Returns(new Shared.Models.Booking { Id = "booking-new" });
@@ -801,8 +801,8 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<ProductPricing>._,
                 new DateOnly(2026, 3, 17),
                 1,
-                A<ICollection<string>>.That.Matches(ids => ids.Count == 0),
-                A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "res-7" })),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 0),
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "res-7" })),
                 null,
                 environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();

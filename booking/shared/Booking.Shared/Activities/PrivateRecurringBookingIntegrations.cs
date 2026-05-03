@@ -79,8 +79,8 @@ public class PrivateRecurringBookingIntegrations(
                 expectedBooking,
                 existingBooking,
                 updatedByCustomer,
-                recurringBooking.InvolvedOrganizations,
-                recurringBooking.InvolvedTeams,
+                recurringBooking.InvolvedOrganizations.ToList(),
+                recurringBooking.InvolvedTeams.ToList(),
                 recurringBooking,
                 true,
                 cancellationToken);
@@ -97,8 +97,8 @@ public class PrivateRecurringBookingIntegrations(
             await privateBookingService.AddAsync(
                 booking,
                 recurringBooking.InvolvedCustomers.First(),
-                recurringBooking.InvolvedOrganizations,
-                recurringBooking.InvolvedTeams,
+                recurringBooking.InvolvedOrganizations.ToList(),
+                recurringBooking.InvolvedTeams.ToList(),
                 recurringBooking,
                 cancellationToken);
         }

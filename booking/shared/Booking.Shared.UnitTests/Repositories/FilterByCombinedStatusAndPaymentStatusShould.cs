@@ -35,8 +35,8 @@ public class FilterByCombinedStatusAndPaymentStatusShould
         }.AsQueryable();
 
     private static MarketplaceBookingSubscriptionSearchCriteria CriteriaWith(
-        ICollection<MarketplaceBookingSubscriptionStatus> statuses,
-        ICollection<PaymentStatus> paymentStatuses) =>
+        IReadOnlyList<MarketplaceBookingSubscriptionStatus> statuses,
+        IReadOnlyList<PaymentStatus> paymentStatuses) =>
         new(
             null,
             null,

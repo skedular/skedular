@@ -17,7 +17,7 @@ public interface IOrganizationRepository : IRepository<Organization>
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
 }
@@ -72,7 +72,7 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
         throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
-    public async Task<ICollection<Organization>> GetByCustomerIdAsync(
+    public async Task<IReadOnlyList<Organization>> GetByCustomerIdAsync(
         string customerId,
         CancellationToken cancellationToken) =>
         await DbContext.Organization

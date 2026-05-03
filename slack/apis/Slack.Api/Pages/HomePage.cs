@@ -691,12 +691,12 @@ public class HomePage(
             ((int?)null).ToNullInt(),
             cancellationToken);
 
-    private static ICollection<Block> GetTitle() =>
+    private static IReadOnlyList<Block> GetTitle() =>
     [
         new SectionBlock { Text = "*Welcome to Skedular*".ToMarkdown() }
     ];
 
-    private ICollection<Block> GetToolbar(PageContext pageContext)
+    private IReadOnlyList<Block> GetToolbar(PageContext pageContext)
     {
         var backButton = commonComponents.GetBackButton(pageContext);
         var addBookingButton = bookingComponents.GetAddBookingButton(pageContext);
@@ -719,9 +719,9 @@ public class HomePage(
         return [new ActionsBlock { Elements = backButton.Concat(addBookingButton).Concat(feedbackButton).Append(actionMenus).ToList() }];
     }
 
-    private async Task<ICollection<Block>> GetBookingCalendarSettingBlocksAsync(
+    private async Task<IReadOnlyList<Block>> GetBookingCalendarSettingBlocksAsync(
         WorkspaceMember workspaceMember,
-        ICollection<Booking> myBookings,
+        IReadOnlyList<Booking> myBookings,
         PageContext pageContext,
         CancellationToken cancellationToken)
     {

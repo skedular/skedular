@@ -10,8 +10,8 @@ public interface IDailyRoomCountRecordingRepository : IRepository<DailyRoomCount
 {
     DailyRoomCountRecording Add(DailyRoomCountRecording dailyRoomCountRecording);
 
-    Task<ICollection<DailyRoomCountRecording>> GetByLocationIdsAndDateRangeAsync(
-        ICollection<string> locationIds,
+    Task<IReadOnlyList<DailyRoomCountRecording>> GetByLocationIdsAndDateRangeAsync(
+        IReadOnlyList<string> locationIds,
         DateTimeOffset from,
         DateTimeOffset until,
         CancellationToken cancellationToken);
@@ -28,8 +28,8 @@ public class DailyRoomCountRecordingRepository(LocationDbContext dbContext, Time
         return DbContext.DailyRoomCountRecording.Add(dailyRoomCountRecording).Entity;
     }
 
-    public async Task<ICollection<DailyRoomCountRecording>> GetByLocationIdsAndDateRangeAsync(
-        ICollection<string> locationIds,
+    public async Task<IReadOnlyList<DailyRoomCountRecording>> GetByLocationIdsAndDateRangeAsync(
+        IReadOnlyList<string> locationIds,
         DateTimeOffset from,
         DateTimeOffset until,
         CancellationToken cancellationToken) =>

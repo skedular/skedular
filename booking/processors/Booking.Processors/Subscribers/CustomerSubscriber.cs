@@ -99,7 +99,7 @@ public class CustomerSubscriber(
             mapper.MergeToEntity(
                 customer,
                 existingCustomer,
-                existingCustomer.Identities,
+                existingCustomer.Identities.ToList(),
                 defaultOrganization,
                 preferredLocations,
                 preferredResources,
