@@ -28,7 +28,7 @@ public class MarketplaceBookingSubscriptionsWithStatusFilterShould
         A.CallTo(() => marketplaceBookingSubscriptionRepository.GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
                 A<PaginationInputParam>._,
                 A<MarketplaceBookingSubscriptionSearchCriteria>.That.Matches(c =>
-                    c.Statuses.Contains(MarketplaceBookingSubscriptionStatus.Active)),
+                    c.Statuses != null && c.Statuses.Contains(MarketplaceBookingSubscriptionStatus.Active)),
                 A<IReadOnlyList<MarketplaceBookingSubscriptionOrder>>._,
                 A<MarketplaceBookingSubscriptionAccessScope?>._,
                 cancellationToken))
@@ -45,7 +45,7 @@ public class MarketplaceBookingSubscriptionsWithStatusFilterShould
         A.CallTo(() => marketplaceBookingSubscriptionRepository.GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
                 A<PaginationInputParam>._,
                 A<MarketplaceBookingSubscriptionSearchCriteria>.That.Matches(c =>
-                    c.Statuses.Contains(MarketplaceBookingSubscriptionStatus.Active)),
+                    c.Statuses != null && c.Statuses.Contains(MarketplaceBookingSubscriptionStatus.Active)),
                 A<IReadOnlyList<MarketplaceBookingSubscriptionOrder>>._,
                 A<MarketplaceBookingSubscriptionAccessScope?>._,
                 cancellationToken))
@@ -68,7 +68,7 @@ public class MarketplaceBookingSubscriptionsWithStatusFilterShould
             .Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
                 A<PaginationInputParam>._,
-                A<MarketplaceBookingSubscriptionSearchCriteria>.That.Matches(c => c.Statuses.Count == 0),
+                A<MarketplaceBookingSubscriptionSearchCriteria>.That.Matches(c => c.Statuses == null || c.Statuses.Count == 0),
                 A<IReadOnlyList<MarketplaceBookingSubscriptionOrder>>._,
                 A<MarketplaceBookingSubscriptionAccessScope?>._,
                 cancellationToken))
@@ -84,7 +84,7 @@ public class MarketplaceBookingSubscriptionsWithStatusFilterShould
         result.Item3.ShouldBe(0);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
                 A<PaginationInputParam>._,
-                A<MarketplaceBookingSubscriptionSearchCriteria>.That.Matches(c => c.Statuses.Count == 0),
+                A<MarketplaceBookingSubscriptionSearchCriteria>.That.Matches(c => c.Statuses == null || c.Statuses.Count == 0),
                 A<IReadOnlyList<MarketplaceBookingSubscriptionOrder>>._,
                 A<MarketplaceBookingSubscriptionAccessScope?>._,
                 cancellationToken))

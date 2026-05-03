@@ -165,7 +165,7 @@ public class LocationDailyAnalytics(
         // Warn about resources carrying more than one resource-type tag (multi-typed resources).
         foreach (var (resource, primaryType) in typedResources)
         {
-            var resourceTypeTagCount = resource.OrganizationTags.Count(item => resourceTypeTagTypes.Contains(item.Type));
+            var resourceTypeTagCount = resource.OrganizationTags.Count(item => item.Type is not null && resourceTypeTagTypes.Contains(item.Type));
             if (resourceTypeTagCount > 1)
             {
                 logger.LogWarning(
