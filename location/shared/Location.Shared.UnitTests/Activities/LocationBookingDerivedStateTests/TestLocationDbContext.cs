@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Location.Shared.UnitTests.Activities.LocationBookingDerivedStateTests;
 
-// The InMemory provider cannot map complex types (e.g. CdnImageFile, OpeningHours) that
+// The InMemory provider cannot map complex types (e.g., CdnImageFile, OpeningHours) that
 // production stores as PostgreSQL `jsonb` columns through Npgsql's automatic serialization.
 // This test-only context applies a JSON string converter to every property declared as
 // `jsonb` so the model validates under the InMemory provider used by these unit tests.

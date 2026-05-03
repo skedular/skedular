@@ -93,7 +93,7 @@ public class EditBookingButtonHandler(
             Label = "Notes".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = NotesKey, Placeholder = "e.g. I will be there from 9am", Multiline = true, InitialValue = booking.Notes
+                ActionId = NotesKey, Placeholder = "e.g., I will be there from 9am", Multiline = true, InitialValue = booking.Notes
             },
             Optional = true
         };

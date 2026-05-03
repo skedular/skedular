@@ -15,15 +15,13 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
+        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>(true);
         var services = builder.Services;
         var configuration = builder.Configuration;
 
         services.AddTransient<RequestContextPropagationHandler>();
 
-        var subgraphsConfigurations = configuration
-                                          .GetSection(SubgraphsConfigurations.Key)
-                                          .Get<SubgraphsConfigurations>()
+        var subgraphsConfigurations = configuration.GetSection(SubgraphsConfigurations.Key).Get<SubgraphsConfigurations>()
                                       ?? new SubgraphsConfigurations();
 
         foreach (var (name, subgraph) in subgraphsConfigurations)
@@ -35,7 +33,7 @@ public class Program
 
             var targetUrl = subgraph.Url;
             services
-                .AddHttpClient(subgraph.ClientName, options => options.Timeout = TimeSpan.FromMinutes(1))
+                .AddHttpClient(subgraph.ClientName)
                 .AddHttpMessageHandler(_ => new RewriteHostHandler(targetUrl))
                 .AddHttpMessageHandler<RequestContextPropagationHandler>();
         }

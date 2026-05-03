@@ -38,7 +38,7 @@ public static class Extensions
         ///     <see cref="ITemporalSignalOutboxWorkflowExecutor" /> for writing workflow start and signal
         ///     entries to the outbox table atomically within a unit of work transaction.
         ///     Already called by <c>AddTemporalWorker()</c> — only call this manually when a Temporal
-        ///     worker is not hosted but the outbox writers are still needed (e.g. a pure API service).
+        ///     worker is not hosted but the outbox writers are still needed (e.g., a pure API service).
         /// </summary>
         public IServiceCollection AddTemporalOutboxService() =>
             services

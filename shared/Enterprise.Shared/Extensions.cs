@@ -168,8 +168,7 @@ public static class Extensions
         ///     <see cref="Email.IEmailService" />, <see cref="TimeProvider" />),
         ///     and the "self" liveness health check.
         /// </summary>
-        public WebApplicationBuilder AddCoreServices<TProgram>(bool enableHttpResilience = false)
-            where TProgram : class
+        public WebApplicationBuilder AddCoreServices<TProgram>(bool enableHttpResilience = false) where TProgram : class
         {
             var services = builder.Services;
             var configuration = builder.Configuration;
@@ -191,6 +190,15 @@ public static class Extensions
                 .AddServiceDiscovery()
                 .ConfigureHttpClientDefaults(httpClientBuilder =>
                 {
+                    // Recycle pooled HTTP connections before Kestrel's default keep-alive timeout (~120s)
+                    // to prevent stale-connection races that surface as TaskCanceledException /
+                    // IOException("Unable to read data from the transport connection") under parallel load
+                    // (notably HotChocolate Fusion subgraph fan-out post v16).
+                    httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+                    {
+                        PooledConnectionLifetime = TimeSpan.FromSeconds(90), PooledConnectionIdleTimeout = TimeSpan.FromSeconds(55)
+                    });
+
                     if (enableHttpResilience)
                     {
                         httpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = Timeout.InfiniteTimeSpan);
@@ -358,8 +366,7 @@ public static class Extensions
         ///     (validation failures → 422, parse failures → 400).
         ///     Also registers EndpointsApiExplorer and SwaggerGen. In development mode, an NSwag document is added.
         /// </summary>
-        public WebApplicationBuilder AddApiControllers<TProgram>()
-            where TProgram : class
+        public WebApplicationBuilder AddApiControllers<TProgram>() where TProgram : class
         {
             var services = builder.Services;
 
@@ -454,8 +461,7 @@ public static class Extensions
         ///     See <see cref="Logging.SerilogExtensions.UseSerilogCustom" /> for details on enrichers,
         ///     sinks, and health-check log filtering.
         /// </summary>
-        public WebApplicationBuilder AddSerilogLogging<TProgram>()
-            where TProgram : class
+        public WebApplicationBuilder AddSerilogLogging<TProgram>() where TProgram : class
         {
             var services = builder.Services;
             var appName = GetAppName<TProgram>(builder.Environment);
@@ -478,12 +484,11 @@ public static class Extensions
         ///     in the expected order.
         ///     <para>
         ///         External consumers of Enterprise.Shared should compose only the modules they need
-        ///         rather than calling this method, so that unused infrastructure (e.g. HybridCache when
+        ///         rather than calling this method, so that unused infrastructure (e.g., HybridCache when
         ///         Redis is not available, or MVC controllers for a minimal-API service) is not registered.
         ///     </para>
         /// </summary>
-        public WebApplicationBuilder AddDefaultServices<TProgram>(bool enableHttpResilience = false)
-            where TProgram : class =>
+        public WebApplicationBuilder AddDefaultServices<TProgram>(bool enableHttpResilience = false) where TProgram : class =>
             builder
                 .AddCoreServices<TProgram>(enableHttpResilience)
                 .AddIdentityTokenProviders()
