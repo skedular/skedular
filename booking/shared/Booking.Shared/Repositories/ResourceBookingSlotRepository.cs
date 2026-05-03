@@ -1,6 +1,5 @@
 ﻿using Booking.Shared.Database;
 using Booking.Shared.Database.Entities;
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +20,11 @@ public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvi
     public void AddRange(IEnumerable<ResourceBookingSlot> resourceBookingSlots)
     {
         var now = TimeProvider.GetUtcNow();
-        resourceBookingSlots.ForEach(identity => identity.CreatedAt = now);
-        DbContext.ResourceBookingSlot.AddRange(resourceBookingSlots);
+        DbContext.ResourceBookingSlot.AddRange(resourceBookingSlots.Select(item =>
+        {
+            item.CreatedAt = now;
+            return item;
+        }));
     }
 
     public void Update(ResourceBookingSlot resourceBookingSlot)
@@ -35,8 +37,11 @@ public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvi
     public void UpdateRange(IEnumerable<ResourceBookingSlot> resourceBookingSlots)
     {
         var now = TimeProvider.GetUtcNow();
-        resourceBookingSlots.ForEach(item => item.ModifiedAt = now);
-        DbContext.ResourceBookingSlot.UpdateRange(resourceBookingSlots);
+        DbContext.ResourceBookingSlot.UpdateRange(resourceBookingSlots.Select(item =>
+        {
+            item.ModifiedAt = now;
+            return item;
+        }));
     }
 
     public async Task<IReadOnlyList<ResourceBookingSlot>> GetByResourceIdAsync(

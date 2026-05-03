@@ -9,11 +9,11 @@ public class BookingResourceSlotsHelperServiceShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void RemoveAllSlotsFromBooking_Clears_Customers_From_All_Slots_And_Removes_Slots_From_Booking(
+    public void Clears_Customers_From_All_Slots_And_Removes_Slots_From_Booking(
         [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IBookingRepository bookingRepository,
         BookingResourceSlotsHelperService sut,
-        IResourceBookingSlotRepository resourceBookingSlotRepository,
-        IBookingRepository bookingRepository)
+        IResourceBookingSlotRepository resourceBookingSlotRepository)
     {
         // Arrange
         IReadOnlyList<ResourceBookingSlot>? updatedSlots = null;
@@ -25,8 +25,8 @@ public class BookingResourceSlotsHelperServiceShould
 
         A.CallTo(() => repositoryFactory.ResourceBookingSlotRepository).Returns(resourceBookingSlotRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
-        A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<IReadOnlyList<ResourceBookingSlot>>._))
-            .Invokes((IReadOnlyList<ResourceBookingSlot> slots) => updatedSlots = slots.ToList());
+        A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<IEnumerable<ResourceBookingSlot>>._))
+            .Invokes((IEnumerable<ResourceBookingSlot> slots) => updatedSlots = slots.ToList());
 
         // Act
         sut.RemoveAllSlotsFromBooking(booking);
@@ -38,17 +38,17 @@ public class BookingResourceSlotsHelperServiceShould
         updatedSlots.ShouldNotBeNull();
         updatedSlots.ShouldContain(slot1);
         updatedSlots.ShouldContain(slot2);
-        A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<IReadOnlyList<ResourceBookingSlot>>._)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<IEnumerable<ResourceBookingSlot>>._)).MustHaveHappenedOnceExactly();
         A.CallTo(() => bookingRepository.Update(booking)).MustHaveHappenedOnceExactly();
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public void RemoveAllSlotsFromBooking_Handles_Empty_Slots_Collection(
+    public void Handles_Empty_Slots_Collection(
         [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IBookingRepository bookingRepository,
         BookingResourceSlotsHelperService sut,
-        IResourceBookingSlotRepository resourceBookingSlotRepository,
-        IBookingRepository bookingRepository)
+        IResourceBookingSlotRepository resourceBookingSlotRepository)
     {
         // Arrange
         var booking = new Database.Entities.Booking { Id = "booking-1", ResourceBookingSlots = [] };
@@ -61,7 +61,7 @@ public class BookingResourceSlotsHelperServiceShould
 
         // Assert
         booking.ResourceBookingSlots.ShouldBeEmpty();
-        A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<IReadOnlyList<ResourceBookingSlot>>._)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<IEnumerable<ResourceBookingSlot>>._)).MustHaveHappenedOnceExactly();
         A.CallTo(() => bookingRepository.Update(booking)).MustHaveHappenedOnceExactly();
     }
 }

@@ -9,9 +9,7 @@ public class LocationResourceBookingSlotsHelperServiceShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void GetStartPeriod_Returns_14_Days_Ago_From_Current_Day(
-        [Frozen] TimeProvider timeProvider,
-        LocationResourceBookingSlotsHelperService sut)
+    public void GetStartPeriod_Returns_14_Days_Ago_From_Current_Day([Frozen] TimeProvider timeProvider, LocationResourceBookingSlotsHelperService sut)
     {
         // Arrange
         var currentTime = DateTimeOffset.UtcNow;

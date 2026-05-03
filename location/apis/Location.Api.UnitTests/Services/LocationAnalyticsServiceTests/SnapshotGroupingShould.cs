@@ -105,12 +105,15 @@ public class SnapshotGroupingShould
                 A<IReadOnlyList<string>>._, from, until, A<CancellationToken>._))
             .Returns(Array.Empty<RoomCountRecordingEntity>());
 
-        A.CallTo(() => snapshotRepository.GetByLocationIdAndDateRangeAsync(
-                LocationId, from, until, A<string?>._, A<CancellationToken>._))
+        A.CallTo(() => snapshotRepository.GetByLocationIdsAndDateRangeAsync(
+                A<IReadOnlyList<string>>._,
+                from,
+                until,
+                A<string?>._,
+                A<CancellationToken>._))
             .Returns(snapshots);
 
-        var sut = new LocationAnalyticsService(
-            repositoryFactory, locationService, cachedCustomerService, organizationAuthorizationService);
+        var sut = new LocationAnalyticsService(repositoryFactory, locationService, cachedCustomerService, organizationAuthorizationService);
 
         // Act
         var result = await sut.GetAnalyticsAsync(LocationId, from, until, cancellationToken);
@@ -170,8 +173,7 @@ public class SnapshotGroupingShould
         A.CallTo(() => snapshotRepository.GetByLocationIdAndDateRangeAsync(LocationId, from, until, A<string?>._, A<CancellationToken>._))
             .Returns([]);
 
-        var sut = new LocationAnalyticsService(
-            repositoryFactory, locationService, cachedCustomerService, organizationAuthorizationService);
+        var sut = new LocationAnalyticsService(repositoryFactory, locationService, cachedCustomerService, organizationAuthorizationService);
 
         // Act
         var result = await sut.GetAnalyticsAsync(LocationId, from, until, cancellationToken);

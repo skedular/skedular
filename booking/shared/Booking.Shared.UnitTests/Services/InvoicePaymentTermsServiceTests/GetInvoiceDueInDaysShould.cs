@@ -7,9 +7,7 @@ public class GetInvoiceDueInDaysShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void Return_Organization_Value_When_Positive(
-        InvoicePaymentTermsService sut,
-        int invoiceDueInDays)
+    public void Return_Organization_Value_When_Positive(InvoicePaymentTermsService sut, int invoiceDueInDays)
     {
         invoiceDueInDays = Math.Abs(invoiceDueInDays % 365) + 1;
 
@@ -20,8 +18,7 @@ public class GetInvoiceDueInDaysShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Return_Default_Value_When_Organization_Value_Is_Not_Positive(
-        InvoicePaymentTermsService sut)
+    public void Return_Default_Value_When_Organization_Value_Is_Not_Positive(InvoicePaymentTermsService sut)
     {
         var result = sut.GetInvoiceDueInDays(0);
 

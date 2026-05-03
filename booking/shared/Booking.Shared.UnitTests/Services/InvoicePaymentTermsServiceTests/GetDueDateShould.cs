@@ -7,10 +7,7 @@ public class GetDueDateShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void Add_Organization_Due_Days_To_Invoice_Date(
-        InvoicePaymentTermsService sut,
-        DateTimeOffset invoiceDate,
-        int invoiceDueInDays)
+    public void Add_Organization_Due_Days_To_Invoice_Date(InvoicePaymentTermsService sut, DateTimeOffset invoiceDate, int invoiceDueInDays)
     {
         invoiceDueInDays = Math.Abs(invoiceDueInDays % 365) + 1;
 
@@ -21,15 +18,10 @@ public class GetDueDateShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Fall_Back_To_Default_Due_Days_When_Organization_Value_Is_Not_Positive(
-        InvoicePaymentTermsService sut,
-        DateTimeOffset invoiceDate)
+    public void Fall_Back_To_Default_Due_Days_When_Organization_Value_Is_Not_Positive(InvoicePaymentTermsService sut, DateTimeOffset invoiceDate)
     {
         var result = sut.GetDueDate(invoiceDate, 0);
 
-        result.ShouldBe(
-            new DateTimeOffset(
-                invoiceDate.UtcDateTime.Date.AddDays(InvoicePaymentTermsService.DefaultInvoiceDueInDays),
-                TimeSpan.Zero));
+        result.ShouldBe(new DateTimeOffset(invoiceDate.UtcDateTime.Date.AddDays(InvoicePaymentTermsService.DefaultInvoiceDueInDays), TimeSpan.Zero));
     }
 }
