@@ -1,3 +1,4 @@
+using System.Reflection;
 using Api.Shared.Services;
 using Customer.Shared;
 using Customer.Shared.Activities;
@@ -43,7 +44,11 @@ public class Program
             .AddJobs()
             .AddServices()
             .AddStripe(configuration)
-            .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")
+            .AddTemporalWorker(
+                configuration,
+                typeof(Program).Assembly.GetName().Name!,
+                (Attribute.GetCustomAttribute(typeof(Program).Assembly, typeof(System.Reflection.AssemblyInformationalVersionAttribute)) as System.Reflection.AssemblyInformationalVersionAttribute)?.InformationalVersion ?? "0.0.0",
+                "temporal")
             .AddWorkflow<SubmitCustomerFeedback>()
             .AddWorkflow<AddCustomerStripePaymentMethod>()
             .AddWorkflow<NewCustomerJoined>()

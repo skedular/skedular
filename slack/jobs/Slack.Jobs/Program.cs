@@ -1,3 +1,4 @@
+using System.Reflection;
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
@@ -43,7 +44,11 @@ public class Program
             .AddServices()
             .AddSlack(configuration, _ => { })
             .AddSharedCrossDomainClients(configuration)
-            .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")
+            .AddTemporalWorker(
+                configuration,
+                typeof(Program).Assembly.GetName().Name!,
+                (Attribute.GetCustomAttribute(typeof(Program).Assembly, typeof(System.Reflection.AssemblyInformationalVersionAttribute)) as System.Reflection.AssemblyInformationalVersionAttribute)?.InformationalVersion ?? "0.0.0",
+                "temporal")
             .AddWorkflow<NewSlackWorkspaceJoined>()
             .AddWorkflow<ReSyncSlackWorkspace>()
             .AddScopedActivities<EmailIntegrations>()

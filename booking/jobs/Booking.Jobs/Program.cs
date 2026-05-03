@@ -1,3 +1,4 @@
+using System.Reflection;
 using Api.Shared.Services;
 using Booking.Shared;
 using Booking.Shared.Activities;
@@ -47,7 +48,11 @@ public class Program
             .AddSharedCrossDomainClients(configuration)
             .AddInDomainClients(configuration)
             .AddStripe(configuration)
-            .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")
+            .AddTemporalWorker(
+                configuration,
+                typeof(Program).Assembly.GetName().Name!,
+                (Attribute.GetCustomAttribute(typeof(Program).Assembly, typeof(System.Reflection.AssemblyInformationalVersionAttribute)) as System.Reflection.AssemblyInformationalVersionAttribute)?.InformationalVersion ?? "0.0.0",
+                "temporal")
             .AddWorkflow<BookMarketplaceBookingSubscriptionResources>()
             .AddWorkflow<BookPrivateRecurringResources>()
             .AddWorkflow<GenerateInitialArrearsBookingInvoice>()
