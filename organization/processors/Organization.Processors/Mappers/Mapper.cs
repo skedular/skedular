@@ -19,7 +19,7 @@ public interface IMapper
     Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
         Shared.Database.Entities.Customer dest,
-        IReadOnlyList<Shared.Database.Entities.Identity> identities);
+        IEnumerable<Shared.Database.Entities.Identity> identities);
 
     Shared.Database.Entities.Identity MapToEntity(Identity src, Shared.Database.Entities.Customer? customer);
 
@@ -72,7 +72,7 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
         Shared.Database.Entities.Customer dest,
-        IReadOnlyList<Shared.Database.Entities.Identity> identities)
+        IEnumerable<Shared.Database.Entities.Identity> identities)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;

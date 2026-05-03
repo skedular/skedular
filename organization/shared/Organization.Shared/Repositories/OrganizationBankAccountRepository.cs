@@ -18,12 +18,12 @@ public interface IOrganizationBankAccountRepository : IRepository<OrganizationBa
     OrganizationBankAccount Add(OrganizationBankAccount stripeConnectAccount);
     OrganizationBankAccount Update(OrganizationBankAccount stripeConnectAccount);
     OrganizationBankAccount Remove(OrganizationBankAccount stripeConnectAccount);
-    void RemoveRange(IReadOnlyList<OrganizationBankAccount> organizationBankAccounts);
+    void RemoveRange(IEnumerable<OrganizationBankAccount> organizationBankAccounts);
 
     Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationBankAccount>>, int)> GetPaginatedBankAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationBankAccountSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationBankAccountOrder> orderByFields,
+        IEnumerable<OrganizationBankAccountOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -58,9 +58,9 @@ public static class OrganizationBankAccountExtensions
             return originalQuery;
         }
 
-        public IQueryable<OrganizationBankAccount> AddSortingOrders(IReadOnlyList<OrganizationBankAccountOrder> orderByFields)
+        public IQueryable<OrganizationBankAccount> AddSortingOrders(IEnumerable<OrganizationBankAccountOrder> orderByFields)
         {
-            if (orderByFields.Count == 0)
+            if (!orderByFields.Any())
             {
                 return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
             }
@@ -116,7 +116,7 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
         return DbContext.OrganizationBankAccount.Update(stripeConnectAccount).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<OrganizationBankAccount> organizationBankAccounts)
+    public void RemoveRange(IEnumerable<OrganizationBankAccount> organizationBankAccounts)
     {
         var now = TimeProvider.GetUtcNow();
         organizationBankAccounts.ForEach(organizationBankAccount => organizationBankAccount.DeletedAt = now);
@@ -126,7 +126,7 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationBankAccount>>, int)> GetPaginatedBankAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationBankAccountSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationBankAccountOrder> orderByFields,
+        IEnumerable<OrganizationBankAccountOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.OrganizationBankAccount
             .AddSearchCriteria(searchCriteria)
@@ -134,9 +134,9 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
     private static List<KeysetPaginationField<OrganizationBankAccount>> GetPaginationFields(
-        IReadOnlyList<OrganizationBankAccountOrder> orderByFields)
+        IEnumerable<OrganizationBankAccountOrder> orderByFields)
     {
-        if (orderByFields.Count == 0)
+        if (!orderByFields.Any())
         {
             return
             [

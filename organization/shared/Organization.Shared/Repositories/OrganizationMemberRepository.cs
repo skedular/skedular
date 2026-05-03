@@ -18,14 +18,14 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
     Task<OrganizationMember?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<OrganizationMember>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     OrganizationMember Add(OrganizationMember organizationMember);
-    void AddRange(IReadOnlyList<OrganizationMember> organizationMembers);
+    void AddRange(IEnumerable<OrganizationMember> organizationMembers);
     OrganizationMember Update(OrganizationMember organizationMember);
-    void RemoveRange(IReadOnlyList<OrganizationMember> organizationMembers);
+    void RemoveRange(IEnumerable<OrganizationMember> organizationMembers);
 
     Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationMember>>, int)> GetPaginatedOrganizationMembersAsync(
         PaginationInputParam paginationInputParam,
         OrganizationMemberSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationMemberOrder> orderByFields,
+        IEnumerable<OrganizationMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -99,14 +99,14 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
         return DbContext.OrganizationMember.Add(organizationMember).Entity;
     }
 
-    public void AddRange(IReadOnlyList<OrganizationMember> organizationMembers)
+    public void AddRange(IEnumerable<OrganizationMember> organizationMembers)
     {
         var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.CreatedAt = now);
         DbContext.OrganizationMember.AddRange(organizationMembers);
     }
 
-    public void RemoveRange(IReadOnlyList<OrganizationMember> organizationMembers)
+    public void RemoveRange(IEnumerable<OrganizationMember> organizationMembers)
     {
         var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);
@@ -124,16 +124,16 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
         GetPaginatedOrganizationMembersAsync(
             PaginationInputParam paginationInputParam,
             OrganizationMemberSearchCriteria searchCriteria,
-            IReadOnlyList<OrganizationMemberOrder> orderByFields,
+            IEnumerable<OrganizationMemberOrder> orderByFields,
             CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects()
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<OrganizationMember>> GetPaginationFields(IReadOnlyList<OrganizationMemberOrder> orderByFields)
+    private static List<KeysetPaginationField<OrganizationMember>> GetPaginationFields(IEnumerable<OrganizationMemberOrder> orderByFields)
     {
-        if (orderByFields.Count == 0)
+        if (!orderByFields.Any())
         {
             return
             [

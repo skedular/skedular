@@ -22,12 +22,12 @@ public interface IProductRepository : IRepository<Product>
     Task<IReadOnlyList<Product>> GetAllUntrackedAsync(CancellationToken cancellationToken);
     Product Add(Product product);
     Product Update(Product product);
-    void RemoveRange(IReadOnlyList<Product> products);
+    void RemoveRange(IEnumerable<Product> products);
 
     Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int )> GetPaginatedProductsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
-        IReadOnlyList<ProductOrder> orderByFields,
+        IEnumerable<ProductOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -118,7 +118,7 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
         return DbContext.Product.Update(product).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<Product> products)
+    public void RemoveRange(IEnumerable<Product> products)
     {
         var now = TimeProvider.GetUtcNow();
         products.ForEach(product => product.DeletedAt = now);
@@ -128,12 +128,12 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int)> GetPaginatedProductsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
-        IReadOnlyList<ProductOrder> orderByFields,
+        IEnumerable<ProductOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Product
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Product>> GetPaginationFields(IReadOnlyList<ProductOrder> orderByFields) => [];
+    private static List<KeysetPaginationField<Product>> GetPaginationFields(IEnumerable<ProductOrder> orderByFields) => [];
 }

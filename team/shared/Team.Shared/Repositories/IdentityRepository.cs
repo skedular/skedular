@@ -9,7 +9,7 @@ namespace Team.Shared.Repositories;
 public interface IIdentityRepository : IRepository<Identity>
 {
     Identity Add(Identity identity);
-    void AddRange(IReadOnlyList<Identity> identities);
+    void AddRange(IEnumerable<Identity> identities);
     Identity Update(Identity identity);
     void RemoveRange(IEnumerable<Identity> identities);
 }
@@ -24,7 +24,7 @@ public class IdentityRepository(TeamDbContext dbContext, TimeProvider timeProvid
         return DbContext.Identity.Add(identity).Entity;
     }
 
-    public void AddRange(IReadOnlyList<Identity> identities)
+    public void AddRange(IEnumerable<Identity> identities)
     {
         var now = TimeProvider.GetUtcNow();
         identities.ForEach(identity => identity.CreatedAt = now);

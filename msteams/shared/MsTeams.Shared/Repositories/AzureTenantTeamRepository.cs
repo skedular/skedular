@@ -10,7 +10,7 @@ public interface IAzureTenantTeamRepository : IRepository<AzureTenantTeam>
 {
     AzureTenantTeam Add(AzureTenantTeam azureTenantTeam);
     AzureTenantTeam Update(AzureTenantTeam azureTenantTeam);
-    void RemoveRange(IReadOnlyList<AzureTenantTeam> tenantMembers);
+    void RemoveRange(IEnumerable<AzureTenantTeam> tenantMembers);
 }
 
 public class AzureTenantTeamRepository(MsTeamsDbContext dbContext, TimeProvider timeProvider)
@@ -30,7 +30,7 @@ public class AzureTenantTeamRepository(MsTeamsDbContext dbContext, TimeProvider 
         return DbContext.AzureTenantTeam.Update(azureTenantTeam).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<AzureTenantTeam> tenantMembers)
+    public void RemoveRange(IEnumerable<AzureTenantTeam> tenantMembers)
     {
         var now = TimeProvider.GetUtcNow();
         tenantMembers.ForEach(teamMember => teamMember.DeletedAt = now);

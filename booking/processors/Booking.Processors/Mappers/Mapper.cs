@@ -43,19 +43,19 @@ public interface IMapper
         Product src,
         Shared.Database.Entities.Product dest,
         Shared.Database.Entities.Organization organization,
-        IReadOnlyList<Shared.Database.Entities.ProductVersion> productVersions);
+        IEnumerable<Shared.Database.Entities.ProductVersion> productVersions);
 
     Shared.Database.Entities.ProductVersion MergeToEntity(
         ProductVersion src,
         Shared.Database.Entities.ProductVersion dest,
         Shared.Database.Entities.Product product,
-        IReadOnlyList<OrganizationTag> organizationTags);
+        IEnumerable<OrganizationTag> organizationTags);
 
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
         Shared.Database.Entities.Organization organization,
-        IReadOnlyList<OrganizationTag> organizationTags);
+        IEnumerable<OrganizationTag> organizationTags);
 
     Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest, Shared.Database.Entities.Organization organization);
     OrganizationMember MapToEntity(Shared.Models.OrganizationMember src, Shared.Database.Entities.Organization organization, Customer customer);
@@ -68,22 +68,22 @@ public interface IMapper
 
     TeamMember MapToEntity(Shared.Models.TeamMember src, Shared.Database.Entities.Team organization, Customer customer);
     TeamMember MergeToEntity(Shared.Models.TeamMember src, TeamMember dest, Shared.Database.Entities.Team team, Customer customer);
-    Resource MapToEntity(Shared.Models.Resource src, Shared.Database.Entities.Location location, IReadOnlyList<OrganizationTag> organizationTags);
+    Resource MapToEntity(Shared.Models.Resource src, Shared.Database.Entities.Location location, IEnumerable<OrganizationTag> organizationTags);
 
     Resource MergeToEntity(
         Shared.Models.Resource src,
         Resource dest,
         Shared.Database.Entities.Location? location,
-        IReadOnlyList<OrganizationTag> organizationTags);
+        IEnumerable<OrganizationTag> organizationTags);
 
     Customer MergeToEntity(
         Shared.Models.Customer src,
         Customer dest,
-        IReadOnlyList<Identity> identities,
+        IEnumerable<Identity> identities,
         Shared.Database.Entities.Organization? defaultOrganization,
         IReadOnlyList<Shared.Database.Entities.Location> preferredLocations,
         IReadOnlyList<Resource> preferredResources,
-        IReadOnlyList<OrganizationTag> preferredOrganizationTags);
+        IEnumerable<OrganizationTag> preferredOrganizationTags);
 
     Identity MapToEntity(Shared.Models.Identity src, Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Customer? customer);
@@ -364,7 +364,7 @@ public class Mapper : IMapper
         Product src,
         Shared.Database.Entities.Product dest,
         Shared.Database.Entities.Organization organization,
-        IReadOnlyList<Shared.Database.Entities.ProductVersion> productVersions)
+        IEnumerable<Shared.Database.Entities.ProductVersion> productVersions)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -377,7 +377,7 @@ public class Mapper : IMapper
         ProductVersion src,
         Shared.Database.Entities.ProductVersion dest,
         Shared.Database.Entities.Product product,
-        IReadOnlyList<OrganizationTag> organizationTags)
+        IEnumerable<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.Type = src.Type.ToProductType();
@@ -393,7 +393,7 @@ public class Mapper : IMapper
         Location src,
         Shared.Database.Entities.Location dest,
         Shared.Database.Entities.Organization organization,
-        IReadOnlyList<OrganizationTag> organizationTags)
+        IEnumerable<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -457,14 +457,14 @@ public class Mapper : IMapper
     public Resource MapToEntity(
         Shared.Models.Resource src,
         Shared.Database.Entities.Location location,
-        IReadOnlyList<OrganizationTag> organizationTags) =>
+        IEnumerable<OrganizationTag> organizationTags) =>
         MergeToEntity(src, new Resource(), location, organizationTags);
 
     public Resource MergeToEntity(
         Shared.Models.Resource src,
         Resource dest,
         Shared.Database.Entities.Location? location,
-        IReadOnlyList<OrganizationTag> organizationTags)
+        IEnumerable<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -483,11 +483,11 @@ public class Mapper : IMapper
     public Customer MergeToEntity(
         Shared.Models.Customer src,
         Customer dest,
-        IReadOnlyList<Identity> identities,
+        IEnumerable<Identity> identities,
         Shared.Database.Entities.Organization? defaultOrganization,
         IReadOnlyList<Shared.Database.Entities.Location> preferredLocations,
         IReadOnlyList<Resource> preferredResources,
-        IReadOnlyList<OrganizationTag> preferredOrganizationTags)
+        IEnumerable<OrganizationTag> preferredOrganizationTags)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;

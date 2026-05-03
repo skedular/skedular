@@ -20,13 +20,13 @@ public interface IResourceRepository : IRepository<Resource>
     Task<bool> ExistsActiveWithNameAsync(string locationId, string name, string? excludeId, CancellationToken cancellationToken);
     Resource Add(Resource resource);
     Resource Update(Resource resource);
-    void RemoveRange(IReadOnlyList<Resource> resources);
+    void RemoveRange(IEnumerable<Resource> resources);
     Resource Remove(Resource resource);
 
     Task<(PaginatedInfo, IReadOnlyList<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
         ResourceSearchCriteria searchCriteria,
-        IReadOnlyList<ResourceOrder> orderByFields,
+        IEnumerable<ResourceOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -134,7 +134,7 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
         return DbContext.Resource.Add(resource).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<Resource> resources)
+    public void RemoveRange(IEnumerable<Resource> resources)
     {
         var now = TimeProvider.GetUtcNow();
         resources.ForEach(resource => resource.DeletedAt = now);
@@ -158,16 +158,16 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
         ResourceSearchCriteria searchCriteria,
-        IReadOnlyList<ResourceOrder> orderByFields,
+        IEnumerable<ResourceOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Resource
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Resource>> GetPaginationFields(IReadOnlyList<ResourceOrder> orderByFields)
+    private static List<KeysetPaginationField<Resource>> GetPaginationFields(IEnumerable<ResourceOrder> orderByFields)
     {
-        if (orderByFields.Count == 0)
+        if (!orderByFields.Any())
         {
             return
             [

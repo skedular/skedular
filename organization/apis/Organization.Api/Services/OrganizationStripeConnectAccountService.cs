@@ -42,7 +42,7 @@ public interface IOrganizationStripeConnectAccountService
     Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationStripeConnectAccountOrder> orderByFields,
+        IEnumerable<OrganizationStripeConnectAccountOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
@@ -312,7 +312,7 @@ public class OrganizationStripeConnectAccountService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationStripeConnectAccountOrder> orderByFields,
+        IEnumerable<OrganizationStripeConnectAccountOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {

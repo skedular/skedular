@@ -101,7 +101,7 @@ public class RootQuery(IMapper mapper)
         var (paginatedInfo, edges, totalCount) = await organizationService.GetPaginatedOrganizationsAsync(
             new PaginationInputParam(after, first, before, last),
             new OrganizationSearchCriteria(where.NameContains, null),
-            orderBy.ToSafeCollection().Select(item => new OrganizationOrder(item.Direction, item.Field)).ToList(),
+            orderBy.ToSafeCollection().Select(item => new OrganizationOrder(item.Direction, item.Field)),
             cancellationToken);
 
         return new Connection<OrganizationEdge>

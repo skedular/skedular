@@ -11,7 +11,7 @@ public interface ITeamMemberRepository : IRepository<TeamMember>
 {
     TeamMember Add(TeamMember teamMember);
     TeamMember Update(TeamMember teamMember);
-    void RemoveRange(IReadOnlyList<TeamMember> teamMembers);
+    void RemoveRange(IEnumerable<TeamMember> teamMembers);
     Task<IReadOnlyList<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken);
 }
 
@@ -25,7 +25,7 @@ public class TeamMemberRepository(BookingDbContext dbContext, TimeProvider timeP
         return DbContext.TeamMember.Add(teamMember).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<TeamMember> teamMembers)
+    public void RemoveRange(IEnumerable<TeamMember> teamMembers)
     {
         var now = TimeProvider.GetUtcNow();
         teamMembers.ForEach(teamMember => teamMember.DeletedAt = now);

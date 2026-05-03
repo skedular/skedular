@@ -20,7 +20,7 @@ public interface IOrganizationTagRepository : IRepository<OrganizationTag>
 
     OrganizationTag Add(OrganizationTag organizationTag);
     OrganizationTag Update(OrganizationTag organizationTag);
-    void RemoveRange(IReadOnlyList<OrganizationTag> organizationTags);
+    void RemoveRange(IEnumerable<OrganizationTag> organizationTags);
 }
 
 public class OrganizationTagRepository(MarketplaceDbContext dbContext, TimeProvider timeProvider)
@@ -94,7 +94,7 @@ public class OrganizationTagRepository(MarketplaceDbContext dbContext, TimeProvi
         return DbContext.OrganizationTag.Add(organizationTag).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<OrganizationTag> organizationTags)
+    public void RemoveRange(IEnumerable<OrganizationTag> organizationTags)
     {
         var now = TimeProvider.GetUtcNow();
         organizationTags.ForEach(organizationTag => organizationTag.DeletedAt = now);

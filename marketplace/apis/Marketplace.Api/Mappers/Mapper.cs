@@ -28,7 +28,7 @@ public interface IMapper
     Shared.Database.Entities.ProductVersion MapTo(
         ProductVersion src,
         Shared.Database.Entities.Product product,
-        IReadOnlyList<OrganizationTag> productTags);
+        IEnumerable<OrganizationTag> productTags);
 }
 
 public class Mapper : IMapper
@@ -187,7 +187,7 @@ public class Mapper : IMapper
     public Shared.Database.Entities.ProductVersion MapTo(
         ProductVersion src,
         Shared.Database.Entities.Product product,
-        IReadOnlyList<OrganizationTag> productTags) =>
+        IEnumerable<OrganizationTag> productTags) =>
         MergeTo(src, new Shared.Database.Entities.ProductVersion(), product, productTags);
 
     private static OrganizationDetails MapTo(Shared.Models.Organization src) => new()
@@ -229,7 +229,7 @@ public class Mapper : IMapper
         ProductVersion src,
         Shared.Database.Entities.ProductVersion dest,
         Shared.Database.Entities.Product product,
-        IReadOnlyList<OrganizationTag> organizationTags)
+        IEnumerable<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.ListingMetadata = src.ListingMetadata;

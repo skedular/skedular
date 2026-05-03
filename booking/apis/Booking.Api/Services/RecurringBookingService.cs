@@ -17,7 +17,7 @@ public interface IRecurringBookingService
     Task<(PaginatedInfo, IReadOnlyList<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsAsync(
         PaginationInputParam paginationInputParam,
         RecurringBookingSearchCriteria searchCriteria,
-        IReadOnlyList<RecurringBookingOrder> orderByFields,
+        IEnumerable<RecurringBookingOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
@@ -45,7 +45,7 @@ public class RecurringBookingService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsAsync(
         PaginationInputParam paginationInputParam,
         RecurringBookingSearchCriteria searchCriteria,
-        IReadOnlyList<RecurringBookingOrder> orderByFields,
+        IEnumerable<RecurringBookingOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {

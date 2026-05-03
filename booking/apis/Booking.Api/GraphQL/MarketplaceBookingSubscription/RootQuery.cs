@@ -46,8 +46,7 @@ public class RootQuery(IMapper mapper, ILogger<RootQuery> logger)
             }
             .Select(status => new MarketplaceBookingSubscriptionStatusDetails
             {
-                Type = status,
-                Name = status.ToMarketplaceBookingSubscriptionStatusName()
+                Type = status, Name = status.ToMarketplaceBookingSubscriptionStatusName()
             })
             .ToList();
 
@@ -154,7 +153,7 @@ public class RootQuery(IMapper mapper, ILogger<RootQuery> logger)
                 where.CustomerIds.ToSafeCollection(),
                 statuses,
                 paymentStatuses),
-            orderBy.ToSafeCollection().Select(item => new MarketplaceBookingSubscriptionOrder(item.Direction, item.Field)).ToList(),
+            orderBy.ToSafeCollection().Select(item => new MarketplaceBookingSubscriptionOrder(item.Direction, item.Field)),
             false,
             cancellationToken);
 

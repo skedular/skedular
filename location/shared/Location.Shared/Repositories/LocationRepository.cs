@@ -35,7 +35,7 @@ public interface ILocationRepository : IRepository<Database.Entities.Location>
     Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Location>>, int)> GetPaginatedLocationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
-        IReadOnlyList<LocationOrder> orderByFields,
+        IEnumerable<LocationOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -260,16 +260,16 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Location>>, int)> GetPaginatedLocationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
-        IReadOnlyList<LocationOrder> orderByFields,
+        IEnumerable<LocationOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Location
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false, false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Database.Entities.Location>> GetPaginationFields(IReadOnlyList<LocationOrder> orderByFields)
+    private static List<KeysetPaginationField<Database.Entities.Location>> GetPaginationFields(IEnumerable<LocationOrder> orderByFields)
     {
-        if (orderByFields.Count == 0)
+        if (!orderByFields.Any())
         {
             return
             [

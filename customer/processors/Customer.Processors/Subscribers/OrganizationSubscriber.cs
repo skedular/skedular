@@ -93,7 +93,7 @@ public class OrganizationSubscriber(
             existingOrganization.Id, existingOrganization.OrganizationMembers,
             cancellationToken);
         customers = customers.Concat(await UpdateCustomerDefaultOrganizationAsync(existingOrganization, cancellationToken)).ToList();
-        repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers.ToList());
+        repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
         existingOrganization.CustomDomain = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

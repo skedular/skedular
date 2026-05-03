@@ -23,7 +23,7 @@ public interface IOrganizationBankAccountService
     Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationBankAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationBankAccountSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationBankAccountOrder> orderByFields,
+        IEnumerable<OrganizationBankAccountOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
@@ -206,7 +206,7 @@ public class OrganizationBankAccountService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationBankAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationBankAccountSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationBankAccountOrder> orderByFields,
+        IEnumerable<OrganizationBankAccountOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {

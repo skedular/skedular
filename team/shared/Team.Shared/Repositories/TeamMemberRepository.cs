@@ -17,15 +17,15 @@ public interface ITeamMemberRepository : IRepository<TeamMember>
     Task<TeamMember?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<TeamMember>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     TeamMember Add(TeamMember teamMember);
-    void AddRange(IReadOnlyList<TeamMember> teamMembers);
+    void AddRange(IEnumerable<TeamMember> teamMembers);
     TeamMember Update(TeamMember teamMember);
     TeamMember Remove(TeamMember teamMember);
-    void RemoveRange(IReadOnlyList<TeamMember> teamMembers);
+    void RemoveRange(IEnumerable<TeamMember> teamMembers);
 
     Task<(PaginatedInfo, IReadOnlyList<Edge<TeamMember>>, int)> GetPaginatedTeamMembersUntrackedAsync(
         PaginationInputParam paginationInputParam,
         TeamMemberSearchCriteria searchCriteria,
-        IReadOnlyList<TeamMemberOrder> orderByFields,
+        IEnumerable<TeamMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken);
@@ -92,7 +92,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
         return DbContext.TeamMember.Add(teamMember).Entity;
     }
 
-    public void AddRange(IReadOnlyList<TeamMember> teamMembers)
+    public void AddRange(IEnumerable<TeamMember> teamMembers)
     {
         var now = TimeProvider.GetUtcNow();
         teamMembers.ForEach(teamMember => teamMember.CreatedAt = now);
@@ -106,7 +106,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
         return DbContext.TeamMember.Update(teamMember).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<TeamMember> teamMembers)
+    public void RemoveRange(IEnumerable<TeamMember> teamMembers)
     {
         var now = TimeProvider.GetUtcNow();
         teamMembers.ForEach(teamMember => teamMember.DeletedAt = now);
@@ -124,7 +124,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
         GetPaginatedTeamMembersUntrackedAsync(
             PaginationInputParam paginationInputParam,
             TeamMemberSearchCriteria searchCriteria,
-            IReadOnlyList<TeamMemberOrder> orderByFields,
+            IEnumerable<TeamMemberOrder> orderByFields,
             CancellationToken cancellationToken) =>
         await DbContext.TeamMember
             .AddSearchCriteria(searchCriteria)
@@ -149,9 +149,9 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
                          query.OrganizationMember.Id == organizationMemberId,
                 cancellationToken);
 
-    private static List<KeysetPaginationField<TeamMember>> GetPaginationFields(IReadOnlyList<TeamMemberOrder> orderByFields)
+    private static List<KeysetPaginationField<TeamMember>> GetPaginationFields(IEnumerable<TeamMemberOrder> orderByFields)
     {
-        if (orderByFields.Count == 0)
+        if (!orderByFields.Any())
         {
             return
             [

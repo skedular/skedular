@@ -17,7 +17,7 @@ public interface IOrganizationMemberService
     Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationMember>>, int)> GetPaginatedOrganizationMembersAsync(
         PaginationInputParam paginationInputParam,
         OrganizationMemberSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationMemberOrder> orderByFields,
+        IEnumerable<OrganizationMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 
     Task<OrganizationMember> ChangeRoleAsync(string organizationMemberId, OrganizationMemberRole memberRole, CancellationToken cancellationToken);
@@ -46,7 +46,7 @@ public class OrganizationMemberService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationMember>>, int)> GetPaginatedOrganizationMembersAsync(
         PaginationInputParam paginationInputParam,
         OrganizationMemberSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationMemberOrder> orderByFields,
+        IEnumerable<OrganizationMemberOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);

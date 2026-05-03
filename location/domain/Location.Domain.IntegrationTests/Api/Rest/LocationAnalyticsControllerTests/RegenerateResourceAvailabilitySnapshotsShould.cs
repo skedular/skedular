@@ -17,8 +17,8 @@ public class RegenerateResourceAvailabilitySnapshotsShould(
 {
     private async Task<string> SeedLocationAsync(CancellationToken cancellationToken)
     {
-        var orgId = Nanoid.Generate();
-        var locationId = Nanoid.Generate();
+        var orgId = await Nanoid.GenerateAsync();
+        var locationId = await Nanoid.GenerateAsync();
         var now = timeProvider.GetUtcNow();
 
         repositoryFactory.DbContext.Organization.Add(new Organization { Id = orgId, CreatedAt = now });
@@ -63,7 +63,7 @@ public class RegenerateResourceAvailabilitySnapshotsShould(
 
         // Should silently succeed (not error) when the location does not exist
         await locationAnalyticsClient.RegenerateResourceAvailabilitySnapshotsAsync(
-            Nanoid.Generate(),
+            await Nanoid.GenerateAsync(),
             new RegenerateResourceAvailabilitySnapshotsInput { From = now.AddDays(-1).StartOfDay(), Until = now.StartOfDay() },
             cancellationToken);
     }

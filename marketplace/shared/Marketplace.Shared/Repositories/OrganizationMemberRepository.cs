@@ -11,7 +11,7 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 {
     OrganizationMember Add(OrganizationMember organizationMember);
     OrganizationMember Update(OrganizationMember organizationMember);
-    void RemoveRange(IReadOnlyList<OrganizationMember> organizationMembers);
+    void RemoveRange(IEnumerable<OrganizationMember> organizationMembers);
     Task<IReadOnlyList<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
 }
 
@@ -25,7 +25,7 @@ public class OrganizationMemberRepository(MarketplaceDbContext dbContext, TimePr
         return DbContext.OrganizationMember.Add(organizationMember).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<OrganizationMember> organizationMembers)
+    public void RemoveRange(IEnumerable<OrganizationMember> organizationMembers)
     {
         var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);

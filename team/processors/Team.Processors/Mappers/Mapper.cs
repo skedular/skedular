@@ -27,7 +27,7 @@ public interface IMapper
         Shared.Database.Entities.Location dest,
         Shared.Database.Entities.Organization organization);
 
-    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, IReadOnlyList<Identity> identities);
+    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, IEnumerable<Identity> identities);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
 
@@ -175,7 +175,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, IReadOnlyList<Identity> identities)
+    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, IEnumerable<Identity> identities)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;

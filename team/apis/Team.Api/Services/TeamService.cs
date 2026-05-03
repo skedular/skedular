@@ -29,7 +29,7 @@ public interface ITeamService
     Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Team>>, int)> GetPaginatedTeamsAsync(
         PaginationInputParam paginationInputParam,
         TeamSearchCriteria searchCriteria,
-        IReadOnlyList<TeamOrder> orderByFields,
+        IEnumerable<TeamOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -254,7 +254,7 @@ public class TeamService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Team>>, int)> GetPaginatedTeamsAsync(
         PaginationInputParam paginationInputParam,
         TeamSearchCriteria searchCriteria,
-        IReadOnlyList<TeamOrder> orderByFields,
+        IEnumerable<TeamOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);

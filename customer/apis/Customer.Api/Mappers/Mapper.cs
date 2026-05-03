@@ -32,7 +32,7 @@ public interface IMapper
 
     Shared.Database.Entities.Customer MapToEntity(
         Shared.Models.Customer src,
-        IReadOnlyList<Identity> identities,
+        IEnumerable<Identity> identities,
         Shared.Database.Entities.Organization? defaultOrganization,
         IReadOnlyList<Shared.Database.Entities.Location> preferredLocations,
         IReadOnlyList<Resource> preferredResources,
@@ -492,7 +492,7 @@ public class Mapper : IMapper
 
     public Shared.Database.Entities.Customer MapToEntity(
         Shared.Models.Customer src,
-        IReadOnlyList<Identity> identities,
+        IEnumerable<Identity> identities,
         Shared.Database.Entities.Organization? defaultOrganization,
         IReadOnlyList<Shared.Database.Entities.Location> preferredLocations,
         IReadOnlyList<Resource> preferredResources,

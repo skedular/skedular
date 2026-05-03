@@ -14,7 +14,7 @@ public interface IResourceRepository : IRepository<Resource>
     Task<IReadOnlyList<Resource>> GetByIdsAsync(IReadOnlyList<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Resource Add(Resource resource);
     Resource Update(Resource resource);
-    void RemoveRange(IReadOnlyList<Resource> resources);
+    void RemoveRange(IEnumerable<Resource> resources);
     Task<IReadOnlyList<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<Resource>> GetAvailableResourcesAsync(
@@ -72,7 +72,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
         return DbContext.Resource.Add(resource).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<Resource> resources)
+    public void RemoveRange(IEnumerable<Resource> resources)
     {
         var now = TimeProvider.GetUtcNow();
         resources.ForEach(resource => resource.DeletedAt = now);

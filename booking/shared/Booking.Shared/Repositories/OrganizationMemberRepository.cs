@@ -13,7 +13,7 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
     Task<IReadOnlyList<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
     OrganizationMember Add(OrganizationMember organizationMember);
     OrganizationMember Update(OrganizationMember organizationMember);
-    void RemoveRange(IReadOnlyList<OrganizationMember> organizationMembers);
+    void RemoveRange(IEnumerable<OrganizationMember> organizationMembers);
 }
 
 public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -43,7 +43,7 @@ public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvid
         return DbContext.OrganizationMember.Add(organizationMember).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<OrganizationMember> organizationMembers)
+    public void RemoveRange(IEnumerable<OrganizationMember> organizationMembers)
     {
         var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);

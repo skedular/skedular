@@ -11,7 +11,7 @@ public interface IAzureTenantMemberRepository : IRepository<AzureTenantMember>
 {
     AzureTenantMember Add(AzureTenantMember azureTenantMember);
     AzureTenantMember Update(AzureTenantMember azureTenantMember);
-    void RemoveRange(IReadOnlyList<AzureTenantMember> tenantMembers);
+    void RemoveRange(IEnumerable<AzureTenantMember> tenantMembers);
 
     Task<IReadOnlyList<AzureTenantMember>> GetByTenantIdAsync(
         string tenantId,
@@ -35,7 +35,7 @@ public class AzureTenantMemberRepository(OrganizationDbContext dbContext, TimePr
         return DbContext.AzureTenantMember.Update(azureTenantMember).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<AzureTenantMember> tenantMembers)
+    public void RemoveRange(IEnumerable<AzureTenantMember> tenantMembers)
     {
         var now = TimeProvider.GetUtcNow();
         tenantMembers.ForEach(teamMember => teamMember.DeletedAt = now);

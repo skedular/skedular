@@ -65,7 +65,7 @@ public class CustomerSubscriber(
     {
         _ = RebuildIdentities(customer, existingCustomer);
         existingCustomer =
-            repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities.ToList()));
+            repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 

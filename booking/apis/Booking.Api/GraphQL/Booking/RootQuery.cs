@@ -99,7 +99,7 @@ public class RootQuery(IMapper mapper)
                 where.TeamIds.ToSafeCollection(),
                 where.CustomerIds.ToSafeCollection(),
                 where.RecurringBookingIds.ToSafeCollection()),
-            orderBy.ToSafeCollection().Select(item => new BookingOrder(item.Direction, item.Field)).ToList(),
+            orderBy.ToSafeCollection().Select(item => new BookingOrder(item.Direction, item.Field)),
             false,
             cancellationToken);
 

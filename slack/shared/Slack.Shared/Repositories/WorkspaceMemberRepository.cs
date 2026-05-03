@@ -18,7 +18,7 @@ public interface IWorkspaceMemberRepository : IRepository<WorkspaceMember>
 
     WorkspaceMember Add(WorkspaceMember workspaceMember);
     WorkspaceMember Update(WorkspaceMember workspaceMember);
-    void RemoveRange(IReadOnlyList<WorkspaceMember> workspaceMembers);
+    void RemoveRange(IEnumerable<WorkspaceMember> workspaceMembers);
     Task<IReadOnlyList<WorkspaceMember>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken);
 }
 
@@ -80,7 +80,7 @@ public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider ti
         return DbContext.WorkspaceMember.Update(workspaceMember).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<WorkspaceMember> workspaceMembers)
+    public void RemoveRange(IEnumerable<WorkspaceMember> workspaceMembers)
     {
         var now = TimeProvider.GetUtcNow();
         workspaceMembers.ForEach(workspaceMember => workspaceMember.DeletedAt = now);

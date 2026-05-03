@@ -26,7 +26,7 @@ public interface ICustomerRepository : IRepository<Database.Entities.Customer>
     Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersUntrackedAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
-        IReadOnlyList<CustomerOrder> orderByFields,
+        IEnumerable<CustomerOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -154,16 +154,16 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersUntrackedAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
-        IReadOnlyList<CustomerOrder> orderByFields,
+        IEnumerable<CustomerOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Customer
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Database.Entities.Customer>> GetPaginationFields(IReadOnlyList<CustomerOrder> orderByFields)
+    private static List<KeysetPaginationField<Database.Entities.Customer>> GetPaginationFields(IEnumerable<CustomerOrder> orderByFields)
     {
-        if (orderByFields.Count == 0)
+        if (!orderByFields.Any())
         {
             return
             [

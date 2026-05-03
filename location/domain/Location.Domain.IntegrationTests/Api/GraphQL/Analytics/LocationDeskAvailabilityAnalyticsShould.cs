@@ -24,8 +24,8 @@ public class LocationDeskAvailabilityAnalyticsShould(
         int dayCount,
         CancellationToken cancellationToken)
     {
-        var orgId = Nanoid.Generate();
-        var locationId = Nanoid.Generate();
+        var orgId = await Nanoid.GenerateAsync();
+        var locationId = await Nanoid.GenerateAsync();
         var now = timeProvider.GetUtcNow();
 
         repositoryFactory.DbContext.Organization.Add(new Organization { Id = orgId, CreatedAt = now });
@@ -41,13 +41,13 @@ public class LocationDeskAvailabilityAnalyticsShould(
         for (var d = 0; d < dayCount; d++)
         {
             var snapshotDate = now.StartOfDay().AddDays(-d);
-            var resourceId = Nanoid.Generate();
-            var deskTag = new OrganizationTag { Id = Nanoid.Generate(), Type = OrganizationTagTypeConstants.ResourceDesk, CreatedAt = now };
+            var resourceId = await Nanoid.GenerateAsync();
+            var deskTag = new OrganizationTag { Id = await Nanoid.GenerateAsync(), Type = OrganizationTagTypeConstants.ResourceDesk, CreatedAt = now };
             var resource = new Resource { Id = resourceId, Name = $"Desk {d + 1:D2}", CreatedAt = now, OrganizationTags = [deskTag] };
             repositoryFactory.DbContext.Resource.Add(resource);
             repositoryFactory.DbContext.DailyResourceAvailabilitySnapshot.Add(new DailyResourceAvailabilitySnapshot
             {
-                Id = Nanoid.Generate(),
+                Id = await Nanoid.GenerateAsync(),
                 LocationId = locationId,
                 ResourceId = resourceId,
                 Resource = resource,

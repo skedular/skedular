@@ -45,9 +45,9 @@ public class RecordDeskAvailabilitySnapshotShould(
 
     private async Task<string> SeedLocationWithDesksAsync(int deskCount, CancellationToken cancellationToken)
     {
-        var orgId = Nanoid.Generate();
-        var locationId = Nanoid.Generate();
-        var deskTagId = Nanoid.Generate();
+        var orgId = await Nanoid.GenerateAsync();
+        var locationId = await Nanoid.GenerateAsync();
+        var deskTagId = await Nanoid.GenerateAsync();
         var now = timeProvider.GetUtcNow();
 
         var org = new Organization { Id = orgId, CreatedAt = now };
@@ -68,7 +68,7 @@ public class RecordDeskAvailabilitySnapshotShould(
 
         for (var i = 0; i < deskCount; i++)
         {
-            var resource = new LocationResource { Id = Nanoid.Generate(), Name = $"Desk {i + 1:D2}", Location = location, CreatedAt = now };
+            var resource = new LocationResource { Id = await Nanoid.GenerateAsync(), Name = $"Desk {i + 1:D2}", Location = location, CreatedAt = now };
             resource.OrganizationTags.Add(deskTag);
             repositoryFactory.DbContext.Resource.Add(resource);
         }

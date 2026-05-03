@@ -36,7 +36,7 @@ public class RootQuery(IMapper mapper)
                 where?.ResourceType,
                 null,
                 []),
-            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
+            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)),
             cancellationToken);
 
         return locationsAnalytics

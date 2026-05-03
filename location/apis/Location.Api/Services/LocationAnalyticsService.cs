@@ -22,7 +22,7 @@ public interface ILocationAnalyticsService
         DateTimeOffset from,
         DateTimeOffset until,
         LocationSearchCriteria searchCriteria,
-        IReadOnlyList<LocationOrder> orderByFields,
+        IEnumerable<LocationOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -59,7 +59,7 @@ public class LocationAnalyticsService(
         DateTimeOffset from,
         DateTimeOffset until,
         LocationSearchCriteria searchCriteria,
-        IReadOnlyList<LocationOrder> orderByFields,
+        IEnumerable<LocationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var locations = await locationService.GetPaginatedLocationsAsync(

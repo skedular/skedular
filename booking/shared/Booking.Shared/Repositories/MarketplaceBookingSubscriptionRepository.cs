@@ -24,7 +24,7 @@ public interface IMarketplaceBookingSubscriptionRepository : IRepository<Marketp
     Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
-        IReadOnlyList<MarketplaceBookingSubscriptionOrder> orderByFields,
+        IEnumerable<MarketplaceBookingSubscriptionOrder> orderByFields,
         MarketplaceBookingSubscriptionAccessScope? accessScope,
         CancellationToken cancellationToken);
 }
@@ -264,7 +264,7 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
         GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
             PaginationInputParam paginationInputParam,
             MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
-            IReadOnlyList<MarketplaceBookingSubscriptionOrder> orderByFields,
+            IEnumerable<MarketplaceBookingSubscriptionOrder> orderByFields,
             MarketplaceBookingSubscriptionAccessScope? accessScope,
             CancellationToken cancellationToken) =>
         await DbContext.MarketplaceBookingSubscription
@@ -273,9 +273,9 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
     private static List<KeysetPaginationField<MarketplaceBookingSubscription>> GetPaginationFields(
-        IReadOnlyList<MarketplaceBookingSubscriptionOrder> orderByFields)
+        IEnumerable<MarketplaceBookingSubscriptionOrder> orderByFields)
     {
-        if (orderByFields.Count == 0)
+        if (!orderByFields.Any())
         {
             return
             [

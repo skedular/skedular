@@ -87,7 +87,7 @@ public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMappe
             .Where(item => !productVersions.Select(productVersion => productVersion.Id).Contains(item.Id)).ToList();
 
         _ = repositoryFactory.ProductRepository.Update(
-            mapper.MergeToEntity(product, existingProduct, organization, untouchedProductVersions.Concat(productVersions).ToList()));
+            mapper.MergeToEntity(product, existingProduct, organization, untouchedProductVersions.Concat(productVersions)));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

@@ -47,7 +47,7 @@ public class RootQuery(IMapper mapper)
                 where.OrganizationCustomDomain,
                 where.NameContains,
                 where.OnboardingCompleted),
-            orderBy.ToSafeCollection().Select(item => new OrganizationStripeConnectAccountOrder(item.Direction, item.Field)).ToList(),
+            orderBy.ToSafeCollection().Select(item => new OrganizationStripeConnectAccountOrder(item.Direction, item.Field)),
             false,
             cancellationToken);
 

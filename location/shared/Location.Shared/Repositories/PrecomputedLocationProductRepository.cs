@@ -11,7 +11,7 @@ public interface IPrecomputedLocationProductRepository : IRepository<Precomputed
 {
     Task<IReadOnlyList<PrecomputedLocationProduct>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
     PrecomputedLocationProduct Add(PrecomputedLocationProduct precomputedLocationProduct);
-    void RemoveRange(IReadOnlyList<PrecomputedLocationProduct> precomputedLocationProducts);
+    void RemoveRange(IEnumerable<PrecomputedLocationProduct> precomputedLocationProducts);
 }
 
 public static class PrecomputedLocationProductExtensions
@@ -47,6 +47,6 @@ public class PrecomputedLocationProductRepository(LocationDbContext dbContext, T
         return DbContext.PrecomputedLocationProduct.Add(precomputedLocationProduct).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<PrecomputedLocationProduct> precomputedLocationProducts) =>
+    public void RemoveRange(IEnumerable<PrecomputedLocationProduct> precomputedLocationProducts) =>
         DbContext.PrecomputedLocationProduct.RemoveRange(precomputedLocationProducts);
 }

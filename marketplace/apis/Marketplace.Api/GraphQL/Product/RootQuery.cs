@@ -60,7 +60,7 @@ public class RootQuery(IMapper mapper)
                 where.OrganizationCustomDomains.ToSafeCollection(),
                 where.ProductIds.ToSafeCollection(),
                 where.IncludeInactive),
-            orderBy.ToSafeCollection().Select(item => new ProductOrder(item.Direction, item.Field)).ToList(),
+            orderBy.ToSafeCollection().Select(item => new ProductOrder(item.Direction, item.Field)),
             cancellationToken);
 
         return new Connection<ProductEdge>

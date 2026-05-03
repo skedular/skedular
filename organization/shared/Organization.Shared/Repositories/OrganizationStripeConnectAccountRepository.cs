@@ -19,12 +19,12 @@ public interface IOrganizationStripeConnectAccountRepository : IRepository<Organ
     OrganizationStripeConnectAccount Add(OrganizationStripeConnectAccount stripeConnectAccount);
     OrganizationStripeConnectAccount Update(OrganizationStripeConnectAccount stripeConnectAccount);
     OrganizationStripeConnectAccount Remove(OrganizationStripeConnectAccount stripeConnectAccount);
-    void RemoveRange(IReadOnlyList<OrganizationStripeConnectAccount> organizationStripeConnectAccounts);
+    void RemoveRange(IEnumerable<OrganizationStripeConnectAccount> organizationStripeConnectAccounts);
 
     Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationStripeConnectAccountOrder> orderByFields,
+        IEnumerable<OrganizationStripeConnectAccountOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -112,7 +112,7 @@ public class OrganizationStripeConnectAccountRepository(OrganizationDbContext db
         return DbContext.OrganizationStripeConnectAccount.Update(stripeConnectAccount).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<OrganizationStripeConnectAccount> organizationStripeConnectAccounts)
+    public void RemoveRange(IEnumerable<OrganizationStripeConnectAccount> organizationStripeConnectAccounts)
     {
         var now = TimeProvider.GetUtcNow();
         organizationStripeConnectAccounts.ForEach(organizationStripeConnectAccount => organizationStripeConnectAccount.DeletedAt = now);
@@ -122,7 +122,7 @@ public class OrganizationStripeConnectAccountRepository(OrganizationDbContext db
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationStripeConnectAccountOrder> orderByFields,
+        IEnumerable<OrganizationStripeConnectAccountOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.OrganizationStripeConnectAccount
             .AddSearchCriteria(searchCriteria)
@@ -130,9 +130,9 @@ public class OrganizationStripeConnectAccountRepository(OrganizationDbContext db
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
     private static List<KeysetPaginationField<OrganizationStripeConnectAccount>> GetPaginationFields(
-        IReadOnlyList<OrganizationStripeConnectAccountOrder> orderByFields)
+        IEnumerable<OrganizationStripeConnectAccountOrder> orderByFields)
     {
-        if (orderByFields.Count == 0)
+        if (!orderByFields.Any())
         {
             return
             [

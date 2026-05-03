@@ -28,7 +28,7 @@ public interface IResourceService
     Task<(PaginatedInfo, IReadOnlyList<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
         ResourceSearchCriteria searchCriteria,
-        IReadOnlyList<ResourceOrder> orderByFields,
+        IEnumerable<ResourceOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -393,7 +393,7 @@ public class ResourceService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
         ResourceSearchCriteria searchCriteria,
-        IReadOnlyList<ResourceOrder> orderByFields,
+        IEnumerable<ResourceOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var existingLocation = await cachedLocationService.GetByIdAsync(searchCriteria.LocationId, cancellationToken) ?? throw new LocationNotFound();

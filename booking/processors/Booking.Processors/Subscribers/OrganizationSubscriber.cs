@@ -140,7 +140,7 @@ public class OrganizationSubscriber(
             await temporalService.SignalRunOrganizationArrearsBillingWorkflowStopAsync(existingOrganization.Id, cancellationToken);
         }
 
-        repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers.ToList());
+        repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
         existingOrganization.CustomDomain = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

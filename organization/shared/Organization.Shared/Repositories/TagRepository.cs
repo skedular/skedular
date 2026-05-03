@@ -25,13 +25,13 @@ public interface ITagRepository : IRepository<Tag>
 
     Tag Add(Tag tag);
     Tag Update(Tag tag);
-    void RemoveRange(IReadOnlyList<Tag> tags);
+    void RemoveRange(IEnumerable<Tag> tags);
     Tag Remove(Tag tag);
 
     Task<(PaginatedInfo, IReadOnlyList<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
-        IReadOnlyList<TagOrder> orderByFields,
+        IEnumerable<TagOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -119,7 +119,7 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
         return DbContext.Tag.Add(tag).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<Tag> tags)
+    public void RemoveRange(IEnumerable<Tag> tags)
     {
         var now = TimeProvider.GetUtcNow();
         tags.ForEach(tag => tag.DeletedAt = now);
@@ -143,16 +143,16 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
-        IReadOnlyList<TagOrder> orderByFields,
+        IEnumerable<TagOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Tag
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects()
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Tag>> GetPaginationFields(IReadOnlyList<TagOrder> orderByFields)
+    private static List<KeysetPaginationField<Tag>> GetPaginationFields(IEnumerable<TagOrder> orderByFields)
     {
-        if (orderByFields.Count == 0)
+        if (!orderByFields.Any())
         {
             return
             [

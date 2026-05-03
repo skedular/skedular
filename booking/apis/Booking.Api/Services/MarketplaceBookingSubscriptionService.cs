@@ -23,7 +23,7 @@ public interface IMarketplaceBookingSubscriptionService
     Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(
         PaginationInputParam paginationInputParam,
         MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
-        IReadOnlyList<MarketplaceBookingSubscriptionOrder> orderByFields,
+        IEnumerable<MarketplaceBookingSubscriptionOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
@@ -80,7 +80,7 @@ public class MarketplaceBookingSubscriptionService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(
         PaginationInputParam paginationInputParam,
         MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
-        IReadOnlyList<MarketplaceBookingSubscriptionOrder> orderByFields,
+        IEnumerable<MarketplaceBookingSubscriptionOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {

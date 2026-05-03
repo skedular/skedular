@@ -34,7 +34,7 @@ public interface IInvitationService
     Task<(PaginatedInfo, IReadOnlyList<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
-        IReadOnlyList<JoinOrganizationInvitationOrder> orderByFields,
+        IEnumerable<JoinOrganizationInvitationOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -255,7 +255,7 @@ public class InvitationService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
-        IReadOnlyList<JoinOrganizationInvitationOrder> orderByFields,
+        IEnumerable<JoinOrganizationInvitationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);

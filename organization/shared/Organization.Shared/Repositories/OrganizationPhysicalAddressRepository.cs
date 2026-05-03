@@ -56,7 +56,7 @@ public class OrganizationPhysicalAddressRepository(OrganizationDbContext dbConte
         return DbContext.OrganizationPhysicalAddress.Update(address).Entity;
     }
 
-    public void RemoveRange(IReadOnlyList<OrganizationPhysicalAddress> organizationBankAccounts)
+    public void RemoveRange(IEnumerable<OrganizationPhysicalAddress> organizationBankAccounts)
     {
         var now = TimeProvider.GetUtcNow();
         organizationBankAccounts.ForEach(organizationBankAccount => organizationBankAccount.DeletedAt = now);

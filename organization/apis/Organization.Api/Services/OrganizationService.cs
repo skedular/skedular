@@ -46,7 +46,7 @@ public interface IOrganizationService
     Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationOrder> orderByFields,
+        IEnumerable<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Organization> UpdateMarketplaceListingMetadataAsync(
@@ -345,7 +345,7 @@ public class OrganizationService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationSearchCriteria searchCriteria,
-        IReadOnlyList<OrganizationOrder> orderByFields,
+        IEnumerable<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);

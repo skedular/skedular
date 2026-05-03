@@ -24,7 +24,7 @@ public interface ITagService
     Task<(PaginatedInfo, IReadOnlyList<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
-        IReadOnlyList<TagOrder> orderByFields,
+        IEnumerable<TagOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
@@ -232,7 +232,7 @@ public class TagService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
-        IReadOnlyList<TagOrder> orderByFields,
+        IEnumerable<TagOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {

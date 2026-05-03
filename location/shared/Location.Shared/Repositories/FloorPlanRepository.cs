@@ -21,7 +21,7 @@ public interface IFloorPlanRepository : IRepository<FloorPlan>
     Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int )> GetPaginatedFloorPlansAsync(
         PaginationInputParam paginationInputParam,
         FloorPlanSearchCriteria searchCriteria,
-        IReadOnlyList<FloorPlanOrder> orderByFields,
+        IEnumerable<FloorPlanOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -81,16 +81,16 @@ public class FloorPlanRepository(LocationDbContext dbContext, TimeProvider timeP
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int)> GetPaginatedFloorPlansAsync(
         PaginationInputParam paginationInputParam,
         FloorPlanSearchCriteria searchCriteria,
-        IReadOnlyList<FloorPlanOrder> orderByFields,
+        IEnumerable<FloorPlanOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.FloorPlan
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects()
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<FloorPlan>> GetPaginationFields(IReadOnlyList<FloorPlanOrder> orderByFields)
+    private static List<KeysetPaginationField<FloorPlan>> GetPaginationFields(IEnumerable<FloorPlanOrder> orderByFields)
     {
-        if (orderByFields.Count == 0)
+        if (!orderByFields.Any())
         {
             return
             [

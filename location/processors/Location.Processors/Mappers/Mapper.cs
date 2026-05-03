@@ -23,7 +23,7 @@ public interface IMapper
 {
     Customer MapTo(Event src);
     Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Event src);
-    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, IReadOnlyList<Identity> identities);
+    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, IEnumerable<Identity> identities);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
 
@@ -55,13 +55,13 @@ public interface IMapper
         Product src,
         Shared.Database.Entities.Product dest,
         Shared.Database.Entities.Organization organization,
-        IReadOnlyList<ProductVersion> productVersions);
+        IEnumerable<ProductVersion> productVersions);
 
     ProductVersion MergeToEntity(
         Shared.Models.ProductVersion src,
         ProductVersion dest,
         Shared.Database.Entities.Product product,
-        IReadOnlyList<OrganizationTag> organizationTags);
+        IEnumerable<OrganizationTag> organizationTags);
 }
 
 public class Mapper : IMapper
@@ -168,7 +168,7 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, IReadOnlyList<Identity> identities)
+    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, IEnumerable<Identity> identities)
     {
         dest.Id = src.Id;
         dest.Type = src.Type.ToNullableCustomerType();
@@ -282,7 +282,7 @@ public class Mapper : IMapper
         Product src,
         Shared.Database.Entities.Product dest,
         Shared.Database.Entities.Organization organization,
-        IReadOnlyList<ProductVersion> productVersions)
+        IEnumerable<ProductVersion> productVersions)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -296,7 +296,7 @@ public class Mapper : IMapper
         Shared.Models.ProductVersion src,
         ProductVersion dest,
         Shared.Database.Entities.Product product,
-        IReadOnlyList<OrganizationTag> organizationTags)
+        IEnumerable<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.Type = src.Type.ToProductType();

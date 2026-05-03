@@ -35,7 +35,7 @@ public interface ILocationService
     Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
-        IReadOnlyList<LocationOrder> orderByFields,
+        IEnumerable<LocationOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
@@ -263,7 +263,7 @@ public class LocationService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
-        IReadOnlyList<LocationOrder> orderByFields,
+        IEnumerable<LocationOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
