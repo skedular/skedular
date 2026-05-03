@@ -32,10 +32,10 @@ public class MarketplaceRefundRootQuery
     [UseResolverScope]
     public async Task<IEnumerable<MarketplaceRefundDetails>> MarketplaceRefundsAsync(
         string organizationCustomDomain,
-        IReadOnlyList<string>? statuses,
+        IEnumerable<string>? statuses,
         [Service] IMarketplaceRefundReadService marketplaceRefundReadService,
         CancellationToken cancellationToken) =>
-        await marketplaceRefundReadService.GetByOrganizationCustomDomainAsync(organizationCustomDomain, statuses, cancellationToken);
+        await marketplaceRefundReadService.GetByOrganizationCustomDomainAsync(organizationCustomDomain, statuses?.ToList(), cancellationToken);
 
     [UseResolverScope]
     public IEnumerable<MarketplaceRefundStatusDetails> MarketplaceRefundStatuses() =>
