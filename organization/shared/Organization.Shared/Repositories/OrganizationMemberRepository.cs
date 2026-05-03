@@ -1,4 +1,3 @@
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
@@ -102,15 +101,21 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
     public void AddRange(IEnumerable<OrganizationMember> organizationMembers)
     {
         var now = TimeProvider.GetUtcNow();
-        organizationMembers.ForEach(organizationMember => organizationMember.CreatedAt = now);
-        DbContext.OrganizationMember.AddRange(organizationMembers);
+        DbContext.OrganizationMember.AddRange(organizationMembers.Select(item =>
+        {
+            item.CreatedAt = now;
+            return item;
+        }));
     }
 
     public void RemoveRange(IEnumerable<OrganizationMember> organizationMembers)
     {
         var now = TimeProvider.GetUtcNow();
-        organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);
-        DbContext.OrganizationMember.UpdateRange(organizationMembers);
+        DbContext.OrganizationMember.UpdateRange(organizationMembers.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public OrganizationMember Update(OrganizationMember organizationMember)

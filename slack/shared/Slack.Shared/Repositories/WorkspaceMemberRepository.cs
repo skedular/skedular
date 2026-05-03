@@ -1,5 +1,4 @@
-﻿using Enterprise.Shared;
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -83,8 +82,11 @@ public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider ti
     public void RemoveRange(IEnumerable<WorkspaceMember> workspaceMembers)
     {
         var now = TimeProvider.GetUtcNow();
-        workspaceMembers.ForEach(workspaceMember => workspaceMember.DeletedAt = now);
-        DbContext.WorkspaceMember.UpdateRange(workspaceMembers);
+        DbContext.WorkspaceMember.UpdateRange(workspaceMembers.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public async Task<IReadOnlyList<WorkspaceMember>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken) =>

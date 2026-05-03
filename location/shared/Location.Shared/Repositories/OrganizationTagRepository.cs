@@ -1,4 +1,3 @@
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Location.Shared.Database;
@@ -43,8 +42,11 @@ public class OrganizationTagRepository(LocationDbContext dbContext, TimeProvider
     public void RemoveRange(IEnumerable<OrganizationTag> organizationTags)
     {
         var now = TimeProvider.GetUtcNow();
-        organizationTags.ForEach(organizationTag => organizationTag.DeletedAt = now);
-        DbContext.OrganizationTag.UpdateRange(organizationTags);
+        DbContext.OrganizationTag.UpdateRange(organizationTags.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public OrganizationTag Update(OrganizationTag organizationTag)

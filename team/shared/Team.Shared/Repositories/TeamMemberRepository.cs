@@ -1,4 +1,3 @@
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
@@ -95,8 +94,11 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
     public void AddRange(IEnumerable<TeamMember> teamMembers)
     {
         var now = TimeProvider.GetUtcNow();
-        teamMembers.ForEach(teamMember => teamMember.CreatedAt = now);
-        DbContext.TeamMember.AddRange(teamMembers);
+        DbContext.TeamMember.AddRange(teamMembers.Select(item =>
+        {
+            item.CreatedAt = now;
+            return item;
+        }));
     }
 
     public TeamMember Remove(TeamMember teamMember)
@@ -109,8 +111,11 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
     public void RemoveRange(IEnumerable<TeamMember> teamMembers)
     {
         var now = TimeProvider.GetUtcNow();
-        teamMembers.ForEach(teamMember => teamMember.DeletedAt = now);
-        DbContext.TeamMember.UpdateRange(teamMembers);
+        DbContext.TeamMember.UpdateRange(teamMembers.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public TeamMember Update(TeamMember teamMember)

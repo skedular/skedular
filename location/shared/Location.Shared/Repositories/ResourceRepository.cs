@@ -1,5 +1,4 @@
-﻿using Enterprise.Shared;
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
@@ -137,8 +136,11 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
     public void RemoveRange(IEnumerable<Resource> resources)
     {
         var now = TimeProvider.GetUtcNow();
-        resources.ForEach(resource => resource.DeletedAt = now);
-        DbContext.Resource.UpdateRange(resources);
+        DbContext.Resource.UpdateRange(resources.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public Resource Remove(Resource resource)

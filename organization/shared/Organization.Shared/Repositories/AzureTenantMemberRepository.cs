@@ -1,5 +1,4 @@
-﻿using Enterprise.Shared;
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Organization.Shared.Database;
@@ -38,8 +37,11 @@ public class AzureTenantMemberRepository(OrganizationDbContext dbContext, TimePr
     public void RemoveRange(IEnumerable<AzureTenantMember> tenantMembers)
     {
         var now = TimeProvider.GetUtcNow();
-        tenantMembers.ForEach(teamMember => teamMember.DeletedAt = now);
-        DbContext.AzureTenantMember.UpdateRange(tenantMembers);
+        DbContext.AzureTenantMember.UpdateRange(tenantMembers.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public async Task<IReadOnlyList<AzureTenantMember>> GetByTenantIdAsync(

@@ -1,4 +1,3 @@
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
@@ -115,8 +114,11 @@ public class OrganizationStripeConnectAccountRepository(OrganizationDbContext db
     public void RemoveRange(IEnumerable<OrganizationStripeConnectAccount> organizationStripeConnectAccounts)
     {
         var now = TimeProvider.GetUtcNow();
-        organizationStripeConnectAccounts.ForEach(organizationStripeConnectAccount => organizationStripeConnectAccount.DeletedAt = now);
-        DbContext.OrganizationStripeConnectAccount.UpdateRange(organizationStripeConnectAccounts);
+        DbContext.OrganizationStripeConnectAccount.UpdateRange(organizationStripeConnectAccounts.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(

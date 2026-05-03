@@ -21,7 +21,7 @@ public class SnapshotGroupingShould
         var options = new DbContextOptionsBuilder<LocationDbContext>()
             .UseInMemoryDatabase(Guid.CreateVersion7().ToString())
             .Options;
-        return new LocationDbContext(options, new CustomDbContextOptions<LocationDbContext> { IsPooled = false });
+        return new TestLocationDbContext(options, new CustomDbContextOptions<LocationDbContext> { IsPooled = false });
     }
 
     [Theory]

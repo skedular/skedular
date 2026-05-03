@@ -1,4 +1,3 @@
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
@@ -119,8 +118,11 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
     public void RemoveRange(IEnumerable<OrganizationBankAccount> organizationBankAccounts)
     {
         var now = TimeProvider.GetUtcNow();
-        organizationBankAccounts.ForEach(organizationBankAccount => organizationBankAccount.DeletedAt = now);
-        DbContext.OrganizationBankAccount.UpdateRange(organizationBankAccounts);
+        DbContext.OrganizationBankAccount.UpdateRange(organizationBankAccounts.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationBankAccount>>, int)> GetPaginatedBankAccountsAsync(

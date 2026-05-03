@@ -1,5 +1,4 @@
 using Api.Shared.Services.Models;
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
@@ -24,7 +23,7 @@ public interface IProductRepository : IRepository<Product>
     Product Update(Product product);
     void RemoveRange(IEnumerable<Product> products);
 
-    Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int )> GetPaginatedProductsUntrackedAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int)> GetPaginatedProductsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
         IEnumerable<ProductOrder> orderByFields,
@@ -121,8 +120,11 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
     public void RemoveRange(IEnumerable<Product> products)
     {
         var now = TimeProvider.GetUtcNow();
-        products.ForEach(product => product.DeletedAt = now);
-        DbContext.Product.UpdateRange(products);
+        DbContext.Product.UpdateRange(products.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int)> GetPaginatedProductsUntrackedAsync(

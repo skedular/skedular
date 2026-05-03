@@ -1,5 +1,4 @@
-﻿using Enterprise.Shared;
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Slack.Shared.Database;
@@ -49,8 +48,11 @@ public class WorkspaceChannelRepository(SlackDbContext dbContext, TimeProvider t
     public void RemoveRange(IEnumerable<WorkspaceChannel> workspaceChannels)
     {
         var now = TimeProvider.GetUtcNow();
-        workspaceChannels.ForEach(workspaceChannel => workspaceChannel.DeletedAt = now);
-        DbContext.WorkspaceChannel.UpdateRange(workspaceChannels);
+        DbContext.WorkspaceChannel.UpdateRange(workspaceChannels.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public async Task<IReadOnlyList<WorkspaceChannel>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken) =>

@@ -1,4 +1,3 @@
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using MsTeams.Shared.Database;
@@ -27,8 +26,11 @@ public class IdentityRepository(MsTeamsDbContext dbContext, TimeProvider timePro
     public void AddRange(IEnumerable<Identity> identities)
     {
         var now = TimeProvider.GetUtcNow();
-        identities.ForEach(identity => identity.CreatedAt = now);
-        DbContext.Identity.AddRange(identities);
+        DbContext.Identity.AddRange(identities.Select(item =>
+        {
+            item.CreatedAt = now;
+            return item;
+        }));
     }
 
     public Identity Update(Identity identity)

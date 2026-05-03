@@ -1,4 +1,3 @@
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
@@ -28,8 +27,11 @@ public class OrganizationMemberRepository(SlackDbContext dbContext, TimeProvider
     public void RemoveRange(IEnumerable<OrganizationMember> organizationMembers)
     {
         var now = TimeProvider.GetUtcNow();
-        organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);
-        DbContext.OrganizationMember.UpdateRange(organizationMembers);
+        DbContext.OrganizationMember.UpdateRange(organizationMembers.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public OrganizationMember Update(OrganizationMember organizationMember)

@@ -1,6 +1,5 @@
 ﻿using Booking.Shared.Database;
 using Booking.Shared.Database.Entities;
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
@@ -75,8 +74,11 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
     public void RemoveRange(IEnumerable<Resource> resources)
     {
         var now = TimeProvider.GetUtcNow();
-        resources.ForEach(resource => resource.DeletedAt = now);
-        DbContext.Resource.UpdateRange(resources);
+        DbContext.Resource.UpdateRange(resources.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public Resource Update(Resource resource)

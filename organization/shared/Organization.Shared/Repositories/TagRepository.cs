@@ -1,5 +1,4 @@
-﻿using Enterprise.Shared;
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
@@ -122,8 +121,11 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
     public void RemoveRange(IEnumerable<Tag> tags)
     {
         var now = TimeProvider.GetUtcNow();
-        tags.ForEach(tag => tag.DeletedAt = now);
-        DbContext.Tag.UpdateRange(tags);
+        DbContext.Tag.UpdateRange(tags.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public Tag Remove(Tag tag)

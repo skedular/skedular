@@ -1,6 +1,5 @@
 using Booking.Shared.Database;
 using Booking.Shared.Database.Entities;
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
@@ -28,8 +27,11 @@ public class TeamMemberRepository(BookingDbContext dbContext, TimeProvider timeP
     public void RemoveRange(IEnumerable<TeamMember> teamMembers)
     {
         var now = TimeProvider.GetUtcNow();
-        teamMembers.ForEach(teamMember => teamMember.DeletedAt = now);
-        DbContext.TeamMember.UpdateRange(teamMembers);
+        DbContext.TeamMember.UpdateRange(teamMembers.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 
     public TeamMember Update(TeamMember teamMember)

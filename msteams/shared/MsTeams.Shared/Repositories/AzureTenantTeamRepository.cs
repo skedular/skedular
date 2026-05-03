@@ -1,5 +1,4 @@
-﻿using Enterprise.Shared;
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using MsTeams.Shared.Database;
 using MsTeams.Shared.Database.Entities;
@@ -33,7 +32,10 @@ public class AzureTenantTeamRepository(MsTeamsDbContext dbContext, TimeProvider 
     public void RemoveRange(IEnumerable<AzureTenantTeam> tenantMembers)
     {
         var now = TimeProvider.GetUtcNow();
-        tenantMembers.ForEach(teamMember => teamMember.DeletedAt = now);
-        DbContext.AzureTenantTeam.UpdateRange(tenantMembers);
+        DbContext.AzureTenantTeam.UpdateRange(tenantMembers.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 }

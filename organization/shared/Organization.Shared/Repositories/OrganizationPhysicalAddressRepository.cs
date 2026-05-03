@@ -1,4 +1,3 @@
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
@@ -59,7 +58,10 @@ public class OrganizationPhysicalAddressRepository(OrganizationDbContext dbConte
     public void RemoveRange(IEnumerable<OrganizationPhysicalAddress> organizationBankAccounts)
     {
         var now = TimeProvider.GetUtcNow();
-        organizationBankAccounts.ForEach(organizationBankAccount => organizationBankAccount.DeletedAt = now);
-        DbContext.OrganizationPhysicalAddress.UpdateRange(organizationBankAccounts);
+        DbContext.OrganizationPhysicalAddress.UpdateRange(organizationBankAccounts.Select(item =>
+        {
+            item.DeletedAt = now;
+            return item;
+        }));
     }
 }

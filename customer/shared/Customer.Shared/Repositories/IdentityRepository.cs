@@ -1,6 +1,5 @@
 ﻿using Customer.Shared.Database;
 using Customer.Shared.Database.Entities;
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 
@@ -27,8 +26,11 @@ public class IdentityRepository(CustomerDbContext dbContext, TimeProvider timePr
     public void AddRange(IEnumerable<Identity> identities)
     {
         var now = TimeProvider.GetUtcNow();
-        identities.ForEach(identity => identity.CreatedAt = now);
-        DbContext.Identity.AddRange(identities);
+        DbContext.Identity.AddRange(identities.Select(item =>
+        {
+            item.CreatedAt = now;
+            return item;
+        }));
     }
 
     public Identity Update(Identity identity)
