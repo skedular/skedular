@@ -1340,7 +1340,7 @@ type BookingDetails
   @fusion__lookup(
     schema: BOOKING_API
     key: "id"
-    field: "bookingById(id: String!): BookingDetails"
+    field: "bookingById(id: ID!): BookingDetails"
     map: ["id"]
     path: null
     internal: true
@@ -1597,7 +1597,7 @@ type CustomerDetails
   @fusion__lookup(
     schema: CUSTOMER_API
     key: "id"
-    field: "customerById(id: String!): CustomerDetails"
+    field: "customerById(id: ID!): CustomerDetails"
     map: ["id"]
     path: null
     internal: true
@@ -1697,7 +1697,7 @@ type FloorPlanDetails
   @fusion__lookup(
     schema: LOCATION_API
     key: "id"
-    field: "floorPlanById(id: String!): FloorPlanDetails"
+    field: "floorPlanById(id: ID!): FloorPlanDetails"
     map: ["id"]
     path: null
     internal: true
@@ -1818,7 +1818,7 @@ type LocationDetails
   @fusion__lookup(
     schema: LOCATION_API
     key: "id"
-    field: "locationById(id: String!): LocationDetails"
+    field: "locationById(id: ID!): LocationDetails"
     map: ["id"]
     path: null
     internal: true
@@ -1978,7 +1978,7 @@ type MarketplaceBookingSubscriptionDetails
   @fusion__lookup(
     schema: BOOKING_API
     key: "id"
-    field: "marketplaceBookingSubscriptionById(id: String!): MarketplaceBookingSubscriptionDetails"
+    field: "marketplaceBookingSubscriptionById(id: ID!): MarketplaceBookingSubscriptionDetails"
     map: ["id"]
     path: null
     internal: true
@@ -2175,7 +2175,7 @@ type OrganizationBankAccountDetails
   @fusion__lookup(
     schema: ORGANIZATION_API
     key: "id"
-    field: "organizationBankAccountById(id: String!): OrganizationBankAccountDetails"
+    field: "organizationBankAccountById(id: ID!): OrganizationBankAccountDetails"
     map: ["id"]
     path: null
     internal: true
@@ -2256,7 +2256,7 @@ type OrganizationDetails
   @fusion__lookup(
     schema: ORGANIZATION_API
     key: "id"
-    field: "organizationById(id: String!): OrganizationDetails"
+    field: "organizationById(id: ID!): OrganizationDetails"
     map: ["id"]
     path: null
     internal: true
@@ -2571,7 +2571,7 @@ type OrganizationStripeConnectAccountDetails
   @fusion__lookup(
     schema: ORGANIZATION_API
     key: "id"
-    field: "organizationStripeConnectAccountById(id: String!): OrganizationStripeConnectAccountDetails"
+    field: "organizationStripeConnectAccountById(id: ID!): OrganizationStripeConnectAccountDetails"
     map: ["id"]
     path: null
     internal: true
@@ -2629,7 +2629,7 @@ type OrganizationTagDetails
   @fusion__lookup(
     schema: ORGANIZATION_API
     key: "id"
-    field: "customTagById(id: String!): OrganizationTagDetails"
+    field: "customTagById(id: ID!): OrganizationTagDetails"
     map: ["id"]
     path: null
     internal: true
@@ -2637,7 +2637,7 @@ type OrganizationTagDetails
   @fusion__lookup(
     schema: ORGANIZATION_API
     key: "id"
-    field: "zoneById(id: String!): OrganizationTagDetails"
+    field: "zoneById(id: ID!): OrganizationTagDetails"
     map: ["id"]
     path: null
     internal: true
@@ -2645,7 +2645,7 @@ type OrganizationTagDetails
   @fusion__lookup(
     schema: ORGANIZATION_API
     key: "id"
-    field: "productTagById(id: String!): OrganizationTagDetails"
+    field: "productTagById(id: ID!): OrganizationTagDetails"
     map: ["id"]
     path: null
     internal: true
@@ -2813,7 +2813,7 @@ type ProductDetails
   @fusion__lookup(
     schema: MARKETPLACE_API
     key: "id"
-    field: "productById(id: String!): ProductDetails"
+    field: "productById(id: ID!): ProductDetails"
     map: ["id"]
     path: null
     internal: true
@@ -2945,7 +2945,7 @@ type ProductVersionDetails
   @fusion__lookup(
     schema: MARKETPLACE_API
     key: "id"
-    field: "productVersionById(id: String!): ProductVersionDetails"
+    field: "productVersionById(id: ID!): ProductVersionDetails"
     map: ["id"]
     path: null
     internal: true
@@ -2970,7 +2970,7 @@ type RecurringBookingDetails
   @fusion__lookup(
     schema: BOOKING_API
     key: "id"
-    field: "recurringBookingById(id: String!): RecurringBookingDetails"
+    field: "recurringBookingById(id: ID!): RecurringBookingDetails"
     map: ["id"]
     path: null
     internal: true
@@ -3039,7 +3039,7 @@ type ResourceDetails
   @fusion__lookup(
     schema: LOCATION_API
     key: "id"
-    field: "resourceById(id: String!): ResourceDetails"
+    field: "resourceById(id: ID!): ResourceDetails"
     map: ["id"]
     path: null
     internal: true
@@ -3125,7 +3125,7 @@ type TeamDetails
   @fusion__lookup(
     schema: TEAM_API
     key: "id"
-    field: "teamById(id: String!): TeamDetails"
+    field: "teamById(id: ID!): TeamDetails"
     map: ["id"]
     path: null
     internal: true
@@ -6252,6 +6252,50 @@ enum ResourceOrderField @fusion__type(schema: LOCATION_API) {
   NAME @fusion__enumValue(schema: LOCATION_API)
 }
 
+enum ScalarSerializationType
+  @fusion__type(schema: BOOKING_API)
+  @fusion__type(schema: CUSTOMER_API)
+  @fusion__type(schema: LOCATION_API)
+  @fusion__type(schema: MARKETPLACE_API)
+  @fusion__type(schema: ORGANIZATION_API) {
+  BOOLEAN
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  FLOAT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  INT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  LIST
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  OBJECT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  STRING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
 enum TeamMemberOrderField @fusion__type(schema: TEAM_API) {
   FAMILY_NAME @fusion__enumValue(schema: TEAM_API)
   GIVEN_NAME @fusion__enumValue(schema: TEAM_API)
@@ -6279,6 +6323,10 @@ enum TeamOrderField @fusion__type(schema: TEAM_API) {
 
 "The `DateTime` scalar type represents a date and time with time zone offset information."
 scalar DateTime
+  @serializeAs(
+    type: STRING
+    pattern: "\"^\\\\d{4}-\\\\d{2}-\\\\d{2}[Tt]\\\\d{2}:\\\\d{2}:\\\\d{2}(?:\\\\.\\\\d{1,9})?(?:[Zz]|[+-]\\\\d{2}:\\\\d{2})$\""
+  )
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
   @fusion__type(schema: BOOKING_API)
   @fusion__type(schema: CUSTOMER_API)
@@ -6287,6 +6335,7 @@ scalar DateTime
 
 "The `Decimal` scalar type represents a decimal floating-point number with high precision."
 scalar Decimal
+  @serializeAs(type: FLOAT)
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/decimal.html")
   @fusion__type(schema: BOOKING_API)
   @fusion__type(schema: MARKETPLACE_API)
@@ -6436,3 +6485,6 @@ directive @fusion__unionMember(
   "The name of the source schema that provides the specified member type."
   schema: fusion__Schema!
 ) repeatable on UNION
+
+directive @serializeAs(pattern: String, type: [ScalarSerializationType!]!) on
+  | SCALAR

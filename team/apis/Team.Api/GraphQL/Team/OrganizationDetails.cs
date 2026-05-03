@@ -5,6 +5,7 @@ using HotChocolate.Types.Composite;
 namespace Team.Api.GraphQL.Team;
 
 [GraphQLName("OrganizationDetails")]
+[EntityKey("id")]
 [Shareable]
 public class OrganizationDetails(string id, string customDomain) : Node(id)
 {

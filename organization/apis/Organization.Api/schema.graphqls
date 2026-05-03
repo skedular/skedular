@@ -9,7 +9,7 @@ type Query {
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   organizationBankAccount(id: String!): OrganizationBankAccountDetails
     @cost(weight: "10")
-  organizationBankAccountById(id: String!): OrganizationBankAccountDetails
+  organizationBankAccountById(id: ID!): OrganizationBankAccountDetails
     @lookup
     @internal
     @cost(weight: "10")
@@ -45,7 +45,7 @@ type Query {
     @cost(weight: "10")
   organizationPublic(id: String, customDomain: String): OrganizationPublicDetails
     @cost(weight: "10")
-  organizationById(id: String!): OrganizationDetails
+  organizationById(id: ID!): OrganizationDetails
     @lookup
     @internal
     @cost(weight: "10")
@@ -66,7 +66,7 @@ type Query {
   emailsToIgnoreObservability: [String!]!
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails
     @cost(weight: "10")
-  organizationStripeConnectAccountById(id: String!): OrganizationStripeConnectAccountDetails
+  organizationStripeConnectAccountById(id: ID!): OrganizationStripeConnectAccountDetails
     @lookup
     @internal
     @cost(weight: "10")
@@ -83,17 +83,17 @@ type Query {
   parkingResourceType: OrganizationTagType!
   otherResourceType: OrganizationTagType!
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  customTagById(id: String!): OrganizationTagDetails
+  customTagById(id: ID!): OrganizationTagDetails
     @lookup
     @internal
     @cost(weight: "10")
   zone(id: String!): OrganizationTagDetails @cost(weight: "10")
-  zoneById(id: String!): OrganizationTagDetails
+  zoneById(id: ID!): OrganizationTagDetails
     @lookup
     @internal
     @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  productTagById(id: String!): OrganizationTagDetails
+  productTagById(id: ID!): OrganizationTagDetails
     @lookup
     @internal
     @cost(weight: "10")
@@ -274,7 +274,7 @@ type ConnectionOfOrganizationTagEdge {
   totalCount: Int!
 }
 
-type CustomerDetails @shareable {
+type CustomerDetails @key(fields: "id") {
   id: ID!
 }
 
@@ -397,7 +397,7 @@ type OrganizationDailyBookingsTotal {
   total: Int!
 }
 
-type OrganizationDetails @shareable {
+type OrganizationDetails @key(fields: "id") @shareable {
   members(
     after: String
     first: Int
@@ -673,7 +673,7 @@ type OrganizationStripeConnectAccountsPayload {
   organizationStripeConnectAccounts: [OrganizationStripeConnectAccountDetails!]!
 }
 
-type OrganizationTagDetails @shareable {
+type OrganizationTagDetails @key(fields: "id") @shareable {
   name: String!
   description: String
   type: OrganizationTagType!
@@ -1522,13 +1522,29 @@ enum OrganizationXeroBillingMode {
   REPEATING_INVOICES
 }
 
+enum ScalarSerializationType {
+  STRING
+  BOOLEAN
+  INT
+  FLOAT
+  OBJECT
+  LIST
+}
+
 "The `DateTime` scalar type represents a date and time with time zone offset information."
 scalar DateTime
+  @serializeAs(
+    type: STRING
+    pattern: "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,9})?(?:[Zz]|[+-]\\d{2}:\\d{2})$"
+  )
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
 
 "The `Decimal` scalar type represents a decimal floating-point number with high precision."
 scalar Decimal
+  @serializeAs(type: FLOAT)
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/decimal.html")
+
+scalar FieldSelectionSet
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost(
@@ -1545,10 +1561,26 @@ directive @cost(
 directive @internal on OBJECT | FIELD_DEFINITION
 
 """
+The @key directive is used to designate an entity's unique key,
+which identifies how to uniquely reference an instance of
+an entity across different source schemas.
+"""
+directive @key("The field selection set syntax." fields: FieldSelectionSet!) on
+  | OBJECT
+  | INTERFACE
+
+"""
 The @lookup directive is used within a source schema to specify output fields
 that can be used by the distributed GraphQL executor to resolve an entity by
 a stable key.
 """
 directive @lookup on FIELD_DEFINITION
+
+directive @serializeAs(
+  "The primitive type a scalar is serialized to."
+  type: [ScalarSerializationType!]!
+  "The ECMA-262 regex pattern that the serialized scalar value conforms to."
+  pattern: String
+) on SCALAR
 
 directive @shareable repeatable on OBJECT | FIELD_DEFINITION

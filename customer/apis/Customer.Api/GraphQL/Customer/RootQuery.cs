@@ -4,6 +4,7 @@ using Customer.Api.Services;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
+using HotChocolate.Types.Relay;
 
 namespace Customer.Api.GraphQL.Customer;
 
@@ -29,7 +30,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<CustomerDetails?> CustomerByIdAsync(
-        string id,
+        [ID] string id,
         [Service] ICustomerService customerService,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await customerService.GetByIdAsync(id, true, cancellationToken));

@@ -9,6 +9,7 @@ using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
+using HotChocolate.Types.Relay;
 
 namespace Booking.Api.GraphQL.Booking;
 
@@ -54,7 +55,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<BookingDetails?> BookingByIdAsync(
-        string id,
+        [ID] string id,
         [Service] IBookingService bookingService,
         CancellationToken cancellationToken) =>
         await BookingAsync(id, bookingService, cancellationToken);

@@ -16,7 +16,7 @@ type Query {
   bookingCategories: [BookingCategoryDetails!]!
   marketplaceBookingCategories: [BookingCategoryDetails!]!
   booking(id: String!): BookingDetails @cost(weight: "10")
-  bookingById(id: String!): BookingDetails @lookup @internal @cost(weight: "10")
+  bookingById(id: ID!): BookingDetails @lookup @internal @cost(weight: "10")
   bookings(
     after: String
     first: Int
@@ -31,7 +31,7 @@ type Query {
   marketplaceBookingPaymentStatuses: [MarketplaceBookingPaymentStatusDetails!]!
   marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails
     @cost(weight: "10")
-  marketplaceBookingSubscriptionById(id: String!): MarketplaceBookingSubscriptionDetails
+  marketplaceBookingSubscriptionById(id: ID!): MarketplaceBookingSubscriptionDetails
     @lookup
     @internal
     @cost(weight: "10")
@@ -55,7 +55,7 @@ type Query {
   teamBookingPermissions(teamId: String!): TeamBookingPermissions!
     @cost(weight: "10")
   recurringBooking(id: String!): RecurringBookingDetails @cost(weight: "10")
-  recurringBookingById(id: String!): RecurringBookingDetails
+  recurringBookingById(id: ID!): RecurringBookingDetails
     @lookup
     @internal
     @cost(weight: "10")
@@ -230,7 +230,7 @@ type CurrencyDetails @shareable {
   name: String!
 }
 
-type CustomerDetails @shareable {
+type CustomerDetails @key(fields: "id") {
   id: ID!
 }
 
@@ -414,12 +414,12 @@ type OrganizationBookingPermissions {
   canModifyPaymentMethod: Boolean!
 }
 
-type OrganizationDetails @shareable {
+type OrganizationDetails @key(fields: "id") @shareable {
   customDomain: String
   id: ID!
 }
 
-type OrganizationTagDetails @shareable {
+type OrganizationTagDetails @key(fields: "id") @shareable {
   name: String!
   type: OrganizationTagType
   color: String
@@ -468,7 +468,7 @@ type ProductPricingCancellationRefundRule @shareable {
   refundPercentage: Int!
 }
 
-type ProductVersionDetails @shareable {
+type ProductVersionDetails @key(fields: "id") {
   id: ID!
 }
 
@@ -508,7 +508,7 @@ type RecurringBookingPayload {
   recurringBooking: RecurringBookingDetails!
 }
 
-type ResourceDetails @shareable {
+type ResourceDetails @key(fields: "id") @shareable {
   name: String!
   inactive: Boolean!
   requireBookingApproval: Boolean!
@@ -528,7 +528,7 @@ type TeamBookingPermissions {
   canDeleteBooking: Boolean!
 }
 
-type TeamDetails @shareable {
+type TeamDetails @key(fields: "id") {
   id: ID!
 }
 
@@ -1169,13 +1169,29 @@ enum RecurringBookingOrderField {
   CHANNEL
 }
 
+enum ScalarSerializationType {
+  STRING
+  BOOLEAN
+  INT
+  FLOAT
+  OBJECT
+  LIST
+}
+
 "The `DateTime` scalar type represents a date and time with time zone offset information."
 scalar DateTime
+  @serializeAs(
+    type: STRING
+    pattern: "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,9})?(?:[Zz]|[+-]\\d{2}:\\d{2})$"
+  )
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
 
 "The `Decimal` scalar type represents a decimal floating-point number with high precision."
 scalar Decimal
+  @serializeAs(type: FLOAT)
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/decimal.html")
+
+scalar FieldSelectionSet
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost(
@@ -1192,10 +1208,26 @@ directive @cost(
 directive @internal on OBJECT | FIELD_DEFINITION
 
 """
+The @key directive is used to designate an entity's unique key,
+which identifies how to uniquely reference an instance of
+an entity across different source schemas.
+"""
+directive @key("The field selection set syntax." fields: FieldSelectionSet!) on
+  | OBJECT
+  | INTERFACE
+
+"""
 The @lookup directive is used within a source schema to specify output fields
 that can be used by the distributed GraphQL executor to resolve an entity by
 a stable key.
 """
 directive @lookup on FIELD_DEFINITION
+
+directive @serializeAs(
+  "The primitive type a scalar is serialized to."
+  type: [ScalarSerializationType!]!
+  "The ECMA-262 regex pattern that the serialized scalar value conforms to."
+  pattern: String
+) on SCALAR
 
 directive @shareable repeatable on OBJECT | FIELD_DEFINITION

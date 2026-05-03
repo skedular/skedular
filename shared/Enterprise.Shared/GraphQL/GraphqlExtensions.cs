@@ -44,7 +44,8 @@ public static class GraphqlExtensions
             builder = builder
                 .AddCostAnalyzer()
                 .DisableIntrospection(!graphqlConfig.IntrospectionEnabled)
-                .AddCustomGraphqlInstrumentation();
+                .AddCustomGraphqlInstrumentation()
+                .AddSourceSchemaDefaults();
 
             var subscriptionOptions = new SubscriptionOptions { TopicPrefix = $"{applicationConfiguration.Environment}:{schemaName}:" };
 

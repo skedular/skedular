@@ -4,6 +4,7 @@ using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
+using HotChocolate.Types.Relay;
 using Marketplace.Api.Mappers;
 using Marketplace.Api.Services;
 using Marketplace.Shared.Models;
@@ -21,7 +22,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<ProductDetails?> ProductByIdAsync(
-        string id,
+        [ID] string id,
         [Service] IProductService productService,
         CancellationToken cancellationToken) =>
         await ProductAsync(id, productService, cancellationToken);
@@ -37,7 +38,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<ProductVersionDetails?> ProductVersionByIdAsync(
-        string id,
+        [ID] string id,
         [Service] IProductVersionService productVersionService,
         CancellationToken cancellationToken) =>
         await ProductVersionAsync(id, productVersionService, cancellationToken);

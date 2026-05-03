@@ -6,6 +6,7 @@ using HotChocolate.Types.Composite;
 namespace Marketplace.Api.GraphQL.Product;
 
 [GraphQLName("ProductVersionDetails")]
+[EntityKey("id")]
 [Shareable]
 public class ProductVersionDetails : Node
 {

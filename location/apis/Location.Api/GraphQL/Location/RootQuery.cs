@@ -5,6 +5,7 @@ using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
+using HotChocolate.Types.Relay;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Shared.Models;
@@ -30,7 +31,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<LocationDetails?> LocationByIdAsync(
-        string id,
+        [ID] string id,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await locationService.GetByIdAsync(id, true, cancellationToken));

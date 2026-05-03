@@ -6,6 +6,7 @@ using Location.Api.GraphQL.Location;
 namespace Location.Api.GraphQL.Resource;
 
 [GraphQLName("ResourceDetails")]
+[EntityKey("id")]
 [Shareable]
 public class ResourceDetails : Node
 {

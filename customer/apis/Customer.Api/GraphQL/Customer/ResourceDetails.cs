@@ -5,5 +5,5 @@ using HotChocolate.Types.Composite;
 namespace Customer.Api.GraphQL.Customer;
 
 [GraphQLName("ResourceDetails")]
-[Shareable]
+[EntityKey("id")]
 public class ResourceDetails(string id) : Node(id);

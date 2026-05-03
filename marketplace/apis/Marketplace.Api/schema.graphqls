@@ -5,9 +5,9 @@ schema {
 
 type Query {
   product(id: String!): ProductDetails @cost(weight: "10")
-  productById(id: String!): ProductDetails @lookup @internal @cost(weight: "10")
+  productById(id: ID!): ProductDetails @lookup @internal @cost(weight: "10")
   productVersion(id: String!): ProductVersionDetails @cost(weight: "10")
-  productVersionById(id: String!): ProductVersionDetails
+  productVersionById(id: ID!): ProductVersionDetails
     @lookup
     @internal
     @cost(weight: "10")
@@ -80,7 +80,7 @@ type Marketplace_OrganizationDetails {
   logoUrl: String
 }
 
-type OrganizationTagDetails @shareable {
+type OrganizationTagDetails @key(fields: "id") @shareable {
   name: String!
   type: OrganizationTagType
   color: String
@@ -99,7 +99,7 @@ type PaymentMethodTypeDetails @shareable {
   name: String!
 }
 
-type ProductDetails @shareable {
+type ProductDetails @key(fields: "id") @shareable {
   inactive: Boolean!
   type: ProductTypeDetails!
   currency: CurrencyDetails!
@@ -173,7 +173,7 @@ type ProductTypeDetails {
   name: String!
 }
 
-type ProductVersionDetails @shareable {
+type ProductVersionDetails @key(fields: "id") @shareable {
   inactive: Boolean!
   listingMetadata: ListingMetadata!
   type: ProductTypeDetails!
@@ -515,9 +515,21 @@ enum ProductType {
   EVENT
 }
 
+enum ScalarSerializationType {
+  STRING
+  BOOLEAN
+  INT
+  FLOAT
+  OBJECT
+  LIST
+}
+
 "The `Decimal` scalar type represents a decimal floating-point number with high precision."
 scalar Decimal
+  @serializeAs(type: FLOAT)
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/decimal.html")
+
+scalar FieldSelectionSet
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost(
@@ -534,10 +546,26 @@ directive @cost(
 directive @internal on OBJECT | FIELD_DEFINITION
 
 """
+The @key directive is used to designate an entity's unique key,
+which identifies how to uniquely reference an instance of
+an entity across different source schemas.
+"""
+directive @key("The field selection set syntax." fields: FieldSelectionSet!) on
+  | OBJECT
+  | INTERFACE
+
+"""
 The @lookup directive is used within a source schema to specify output fields
 that can be used by the distributed GraphQL executor to resolve an entity by
 a stable key.
 """
 directive @lookup on FIELD_DEFINITION
+
+directive @serializeAs(
+  "The primitive type a scalar is serialized to."
+  type: [ScalarSerializationType!]!
+  "The ECMA-262 regex pattern that the serialized scalar value conforms to."
+  pattern: String
+) on SCALAR
 
 directive @shareable repeatable on OBJECT | FIELD_DEFINITION

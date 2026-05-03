@@ -12,7 +12,7 @@ using CustomerBillingDetails = Customer.Api.GraphQL.Billing.CustomerBillingDetai
 namespace Customer.Api.GraphQL.Customer;
 
 [GraphQLName("CustomerDetails")]
-[Shareable]
+[EntityKey("id")]
 public class CustomerDetails : Node
 {
     [GraphQLName("createdAt")] public DateTimeOffset CreatedAt { get; set; }

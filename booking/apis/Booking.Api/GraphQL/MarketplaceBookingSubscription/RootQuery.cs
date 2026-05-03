@@ -9,6 +9,7 @@ using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
+using HotChocolate.Types.Relay;
 
 namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
 
@@ -82,7 +83,7 @@ public class RootQuery(IMapper mapper, ILogger<RootQuery> logger)
     [Lookup]
     [Internal]
     public async Task<MarketplaceBookingSubscriptionDetails?> MarketplaceBookingSubscriptionByIdAsync(
-        string id,
+        [ID] string id,
         [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken) =>
         await MarketplaceBookingSubscriptionAsync(id, marketplaceBookingSubscriptionService, cancellationToken);

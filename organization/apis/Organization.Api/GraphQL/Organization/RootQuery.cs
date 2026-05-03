@@ -5,6 +5,7 @@ using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
+using HotChocolate.Types.Relay;
 using Organization.Api.GraphQL.Xero;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
@@ -82,7 +83,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<OrganizationDetails?> OrganizationByIdAsync(
-        string id,
+        [ID] string id,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await organizationService.GetByIdOrCustomDomainAsync(id, null, true, cancellationToken));

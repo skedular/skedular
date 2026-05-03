@@ -4,6 +4,7 @@ using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
+using HotChocolate.Types.Relay;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Shared.Models;
@@ -24,7 +25,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<OrganizationBankAccountDetails?> OrganizationBankAccountByIdAsync(
-        string id,
+        [ID] string id,
         [Service] IOrganizationBankAccountService organizationBankAccountService,
         CancellationToken cancellationToken) =>
         await OrganizationBankAccountAsync(id, organizationBankAccountService, cancellationToken);

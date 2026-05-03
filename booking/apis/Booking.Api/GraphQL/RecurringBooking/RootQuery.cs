@@ -8,6 +8,7 @@ using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
+using HotChocolate.Types.Relay;
 
 namespace Booking.Api.GraphQL.RecurringBooking;
 
@@ -23,7 +24,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<RecurringBookingDetails?> RecurringBookingByIdAsync(
-        string id,
+        [ID] string id,
         [Service] IRecurringBookingService recurringBookingService,
         CancellationToken cancellationToken) =>
         await RecurringBookingAsync(id, recurringBookingService, cancellationToken);

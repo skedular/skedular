@@ -4,6 +4,7 @@ using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
+using HotChocolate.Types.Relay;
 using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Shared.Models;
@@ -21,7 +22,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<TeamDetails?> TeamByIdAsync(
-        string id,
+        [ID] string id,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await teamService.GetByIdAsync(id, true, cancellationToken));

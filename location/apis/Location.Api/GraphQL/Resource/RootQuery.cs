@@ -1,6 +1,7 @@
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
+using HotChocolate.Types.Relay;
 using Location.Api.Mappers;
 using Location.Api.Services;
 
@@ -17,7 +18,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<ResourceDetails?> ResourceByIdAsync(
-        string id,
+        [ID] string id,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await resourceService.GetByIdAsync(id, true, cancellationToken));

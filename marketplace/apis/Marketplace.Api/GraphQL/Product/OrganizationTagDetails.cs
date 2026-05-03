@@ -6,6 +6,7 @@ using HotChocolate.Types.Composite;
 namespace Marketplace.Api.GraphQL.Product;
 
 [GraphQLName("OrganizationTagDetails")]
+[EntityKey("id")]
 [Shareable]
 public class OrganizationTagDetails : Node
 {

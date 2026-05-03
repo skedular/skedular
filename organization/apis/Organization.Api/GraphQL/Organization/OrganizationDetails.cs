@@ -21,6 +21,7 @@ using OrganizationTaxDetails = Organization.Api.GraphQL.TaxDetails.OrganizationT
 namespace Organization.Api.GraphQL.Organization;
 
 [GraphQLName("OrganizationDetails")]
+[EntityKey("id")]
 [Shareable]
 public class OrganizationDetails : Node
 {

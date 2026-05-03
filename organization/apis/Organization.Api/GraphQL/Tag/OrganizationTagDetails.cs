@@ -6,6 +6,7 @@ using HotChocolate.Types.Composite;
 namespace Organization.Api.GraphQL.Tag;
 
 [GraphQLName("OrganizationTagDetails")]
+[EntityKey("id")]
 [Shareable]
 public class OrganizationTagDetails : Node
 {

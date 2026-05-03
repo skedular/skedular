@@ -2,6 +2,7 @@ using Api.Shared.Services.Models;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
+using HotChocolate.Types.Relay;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 
@@ -30,7 +31,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<OrganizationTagDetails?> CustomTagByIdAsync(
-        string id,
+        [ID] string id,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
         await CustomTagAsync(id, tagService, cancellationToken);
@@ -43,7 +44,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<OrganizationTagDetails?> ZoneByIdAsync(
-        string id,
+        [ID] string id,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
         await ZoneAsync(id, tagService, cancellationToken);
@@ -56,7 +57,7 @@ public class RootQuery(IMapper mapper)
     [Lookup]
     [Internal]
     public async Task<OrganizationTagDetails?> ProductTagByIdAsync(
-        string id,
+        [ID] string id,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
         await ProductTagAsync(id, tagService, cancellationToken);
