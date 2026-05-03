@@ -24,7 +24,7 @@ public class RootQuery(IMapper mapper)
         string id,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken) =>
-        await TeamAsync(id, teamService, cancellationToken);
+        mapper.MapTo(await teamService.GetByIdAsync(id, true, cancellationToken));
 
     [UseResolverScope]
     public async Task<Connection<TeamEdge>> TeamsAsync(

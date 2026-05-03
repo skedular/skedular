@@ -20,5 +20,5 @@ public class RootQuery(IMapper mapper)
         string id,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken) =>
-        await ResourceAsync(id, resourceService, cancellationToken);
+        mapper.MapTo(await resourceService.GetByIdAsync(id, true, cancellationToken));
 }

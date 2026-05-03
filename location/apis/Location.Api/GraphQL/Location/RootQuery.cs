@@ -33,7 +33,7 @@ public class RootQuery(IMapper mapper)
         string id,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
-        await LocationAsync(id, locationService, cancellationToken);
+        mapper.MapTo(await locationService.GetByIdAsync(id, true, cancellationToken));
 
     [UseResolverScope]
     public async Task<Connection<LocationEdge>> LocationsAsync(

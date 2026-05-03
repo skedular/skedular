@@ -85,7 +85,7 @@ public class RootQuery(IMapper mapper)
         string id,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
-        await OrganizationAsync(id, null, organizationService, cancellationToken);
+        mapper.MapTo(await organizationService.GetByIdOrCustomDomainAsync(id, null, true, cancellationToken));
 
     [UseResolverScope]
     public async Task<Connection<OrganizationEdge>> OrganizationsAsync(
