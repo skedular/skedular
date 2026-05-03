@@ -6,11 +6,11 @@ namespace Enterprise.Shared.Random;
 public interface IRandomHelper
 {
     Guid GenerateGuid();
-    IReadOnlyCollection<Guid> GenerateManyGuids(int count);
+    IReadOnlyList<Guid> GenerateManyGuids(int count);
     string Generate();
-    IReadOnlyCollection<string> GenerateMany(int count);
+    IReadOnlyList<string> GenerateMany(int count);
     string GenerateAlphanumericNumeric(int size = 21);
-    IReadOnlyCollection<string> GenerateManyGenerateAlphanumericNumeric(int count, int size = 21);
+    IReadOnlyList<string> GenerateManyGenerateAlphanumericNumeric(int count, int size = 21);
 }
 
 public class RandomHelper(ILogger<RandomHelper> logger) : IRandomHelper
@@ -21,7 +21,7 @@ public class RandomHelper(ILogger<RandomHelper> logger) : IRandomHelper
         return Guid.CreateVersion7();
     }
 
-    public IReadOnlyCollection<Guid> GenerateManyGuids(int count)
+    public IReadOnlyList<Guid> GenerateManyGuids(int count)
     {
         logger.LogDebug("Generating multiple version 7 GUIDs. Count={Count}", count);
         return Enumerable.Range(0, count).Select(_ => GenerateGuid()).ToList();
@@ -33,7 +33,7 @@ public class RandomHelper(ILogger<RandomHelper> logger) : IRandomHelper
         return GenerateGuid().ToString();
     }
 
-    public IReadOnlyCollection<string> GenerateMany(int count)
+    public IReadOnlyList<string> GenerateMany(int count)
     {
         logger.LogDebug("Generating multiple string identifiers. Count={Count}", count);
         return GenerateManyGuids(count).Select(item => item.ToString()).ToList();
@@ -44,6 +44,6 @@ public class RandomHelper(ILogger<RandomHelper> logger) : IRandomHelper
         size == 1 ? Nanoid.Generate("abcdefghijklmnopqrstuvwxyz", 1) :
         $"{Nanoid.Generate("abcdefghijklmnopqrstuvwxyz", 1)}{Nanoid.Generate("0123456789abcdefghijklmnopqrstuvwxyz", size - 1)}";
 
-    public IReadOnlyCollection<string> GenerateManyGenerateAlphanumericNumeric(int count, int size = 21) =>
+    public IReadOnlyList<string> GenerateManyGenerateAlphanumericNumeric(int count, int size = 21) =>
         Enumerable.Range(0, count).Select(_ => GenerateAlphanumericNumeric(size)).ToList();
 }
