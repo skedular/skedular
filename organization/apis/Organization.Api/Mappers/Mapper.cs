@@ -2254,8 +2254,10 @@ public class Mapper : IMapper
                 Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt()
             };
 
-    private static ListingMetadata MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ListingMetadata src) =>
-        new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
+    private static ListingMetadata MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ListingMetadata? src) =>
+        src is null
+            ? ListingMetadata.Empty
+            : new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures.ToSafeCollection());
 
     private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ListingMetadata MapTo(ListingMetadata src)
     {
