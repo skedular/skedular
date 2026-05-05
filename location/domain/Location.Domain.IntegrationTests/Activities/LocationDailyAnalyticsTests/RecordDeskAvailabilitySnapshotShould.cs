@@ -68,7 +68,10 @@ public class RecordDeskAvailabilitySnapshotShould(
 
         for (var i = 0; i < deskCount; i++)
         {
-            var resource = new LocationResource { Id = await Nanoid.GenerateAsync(), Name = $"Desk {i + 1:D2}", Location = location, CreatedAt = now };
+            var resource = new LocationResource
+            {
+                Id = await Nanoid.GenerateAsync(), Name = $"Desk {i + 1:D2}", Location = location, CreatedAt = now
+            };
             resource.OrganizationTags.Add(deskTag);
             repositoryFactory.DbContext.Resource.Add(resource);
         }

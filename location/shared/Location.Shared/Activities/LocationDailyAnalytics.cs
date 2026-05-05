@@ -54,10 +54,7 @@ public class LocationDailyAnalytics(
 
         _ = repositoryFactory.DailyDeskCountRecordingRepository.Add(new DailyDeskCountRecording
         {
-            Id = randomHelper.Generate(),
-            Count = deskResources.Count,
-            Date = startOfToday,
-            Location = location
+            Id = randomHelper.Generate(), Count = deskResources.Count, Date = startOfToday, Location = location
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

@@ -21,35 +21,33 @@ public class GenerateLocationResourcesSlots
             }
         }
 
-        do
+        var response = await Workflow.ExecuteActivityAsync(
+            (LocationResourceSlot activity) => activity.ExecuteAllLocationResourcesSlotGenerationWorkflowsAsync(args.LocationId),
+            new ActivityOptions
+            {
+                StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                TaskQueue = Workflow.Info.TaskQueue,
+                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+            });
+
+        if (!response.ShallContinue)
         {
-            var response = await Workflow.ExecuteActivityAsync(
-                (LocationResourceSlot activity) => activity.ExecuteAllLocationResourcesSlotGenerationWorkflowsAsync(args.LocationId),
+            return;
+        }
+
+        foreach (var resourceId in response.ResourceIds)
+        {
+            await Workflow.ExecuteActivityAsync(
+                (LocationResourceSlot activity) => activity.GenerateMissingResourceSlotsAsync(resourceId),
                 new ActivityOptions
                 {
-                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                    StartToCloseTimeout = TimeSpan.FromMinutes(1),
                     TaskQueue = Workflow.Info.TaskQueue,
                     RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
                 });
+        }
 
-            if (!response.ShallContinue)
-            {
-                break;
-            }
-
-            foreach (var resourceId in response.ResourceIds)
-            {
-                await Workflow.ExecuteActivityAsync(
-                    (LocationResourceSlot activity) => activity.GenerateMissingResourceSlotsAsync(resourceId),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromMinutes(1),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
-                    });
-            }
-
-            await Workflow.DelayAsync(TimeSpan.FromDays(1), Workflow.CancellationToken);
-        } while (true);
+        throw Workflow.CreateContinueAsNewException((GenerateLocationResourcesSlots workflow) =>
+            workflow.ExecuteAsync(new GenerateLocationResourcesSlotsInput(args.LocationId, Workflow.UtcNow.AddDays(1))));
     }
 }

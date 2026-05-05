@@ -21,43 +21,41 @@ public class GenerateLocationDailyAnalytics
             }
         }
 
-        do
-        {
-            if (!await Workflow.ExecuteActivityAsync(
-                    (LocationDailyAnalytics activity) => activity.RecordLocationDesksCountAsync(args.LocationId),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromMinutes(1),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-                    }))
-            {
-                break;
-            }
-
-            if (!await Workflow.ExecuteActivityAsync(
-                    (LocationDailyAnalytics activity) => activity.RecordLocationRoomsCountAsync(args.LocationId),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromMinutes(1),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-                    }))
-            {
-                break;
-            }
-
-            await Workflow.ExecuteActivityAsync(
-                (LocationDailyAnalytics activity) =>
-                    activity.RecordResourceAvailabilitySnapshotForDateAsync(args.LocationId, args.SnapshotDateOverride),
+        if (!await Workflow.ExecuteActivityAsync(
+                (LocationDailyAnalytics activity) => activity.RecordLocationDesksCountAsync(args.LocationId),
                 new ActivityOptions
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),
                     TaskQueue = Workflow.Info.TaskQueue,
                     RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-                });
+                }))
+        {
+            return;
+        }
 
-            await Workflow.DelayAsync(TimeSpan.FromDays(1), Workflow.CancellationToken);
-        } while (true);
+        if (!await Workflow.ExecuteActivityAsync(
+                (LocationDailyAnalytics activity) => activity.RecordLocationRoomsCountAsync(args.LocationId),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromMinutes(1),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                }))
+        {
+            return;
+        }
+
+        await Workflow.ExecuteActivityAsync(
+            (LocationDailyAnalytics activity) =>
+                activity.RecordResourceAvailabilitySnapshotForDateAsync(args.LocationId, args.SnapshotDateOverride),
+            new ActivityOptions
+            {
+                StartToCloseTimeout = TimeSpan.FromMinutes(1),
+                TaskQueue = Workflow.Info.TaskQueue,
+                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+            });
+
+        throw Workflow.CreateContinueAsNewException((GenerateLocationDailyAnalytics workflow) =>
+            workflow.ExecuteAsync(new GenerateLocationDailyAnalyticsInput(args.LocationId, Workflow.UtcNow.AddDays(1), null)));
     }
 }

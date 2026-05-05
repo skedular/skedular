@@ -21,21 +21,19 @@ public class GenerateOrganizationDailyAnalytics
             }
         }
 
-        do
+        if (!await Workflow.ExecuteActivityAsync(
+                (OrganizationDailyAnalytics activity) => activity.RecordOrganizationMembersCountAsync(args.OrganizationId),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromMinutes(1),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                }))
         {
-            if (!await Workflow.ExecuteActivityAsync(
-                    (OrganizationDailyAnalytics activity) => activity.RecordOrganizationMembersCountAsync(args.OrganizationId),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromMinutes(1),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-                    }))
-            {
-                break;
-            }
+            return;
+        }
 
-            await Workflow.DelayAsync(TimeSpan.FromDays(1), Workflow.CancellationToken);
-        } while (true);
+        throw Workflow.CreateContinueAsNewException((GenerateOrganizationDailyAnalytics workflow) =>
+            workflow.ExecuteAsync(new GenerateOrganizationDailyAnalyticsInput(args.OrganizationId, Workflow.UtcNow.AddDays(1))));
     }
 }

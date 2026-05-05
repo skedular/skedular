@@ -21,45 +21,43 @@ public class ReSyncSlackWorkspace
             }
         }
 
-        do
+        if (!await Workflow.ExecuteActivityAsync(
+                (SlackIntegrations activity) => activity.ReSyncWorkspaceAsync(args.WorkspaceId),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromMinutes(1),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                }))
         {
-            if (!await Workflow.ExecuteActivityAsync(
-                    (SlackIntegrations activity) => activity.ReSyncWorkspaceAsync(args.WorkspaceId),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromMinutes(1),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-                    }))
-            {
-                break;
-            }
+            return;
+        }
 
-            if (!await Workflow.ExecuteActivityAsync(
-                    (SlackIntegrations activity) => activity.ReSyncWorkspaceMembersAsync(args.WorkspaceId),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromMinutes(10),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-                    }))
-            {
-                break;
-            }
+        if (!await Workflow.ExecuteActivityAsync(
+                (SlackIntegrations activity) => activity.ReSyncWorkspaceMembersAsync(args.WorkspaceId),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromMinutes(10),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                }))
+        {
+            return;
+        }
 
-            if (!await Workflow.ExecuteActivityAsync(
-                    (SlackIntegrations activity) => activity.ReSyncWorkspaceChannelsAsync(args.WorkspaceId),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromMinutes(5),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-                    }))
-            {
-                break;
-            }
+        if (!await Workflow.ExecuteActivityAsync(
+                (SlackIntegrations activity) => activity.ReSyncWorkspaceChannelsAsync(args.WorkspaceId),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromMinutes(5),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                }))
+        {
+            return;
+        }
 
-            await Workflow.DelayAsync(TimeSpan.FromDays(1), Workflow.CancellationToken);
-        } while (true);
+        throw Workflow.CreateContinueAsNewException((ReSyncSlackWorkspace workflow) =>
+            workflow.ExecuteAsync(new ReSyncSlackWorkspaceInput(args.WorkspaceId, Workflow.UtcNow.AddDays(1))));
     }
 }

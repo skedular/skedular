@@ -46,7 +46,8 @@ public class Program
             .AddTemporalWorker(
                 configuration,
                 typeof(Program).Assembly.GetName().Name!,
-                (Attribute.GetCustomAttribute(typeof(Program).Assembly, typeof(System.Reflection.AssemblyInformationalVersionAttribute)) as System.Reflection.AssemblyInformationalVersionAttribute)?.InformationalVersion ?? "0.0.0",
+                (Attribute.GetCustomAttribute(typeof(Program).Assembly, typeof(AssemblyInformationalVersionAttribute)) as
+                    AssemblyInformationalVersionAttribute)?.InformationalVersion ?? "0.0.0",
                 "temporal")
             .AddWorkflow<InviteToJoinTeam>()
             .AddScopedActivities<EmailIntegrations>()

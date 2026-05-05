@@ -21,21 +21,19 @@ public class ReSyncMsTeams
             }
         }
 
-        do
+        if (!await Workflow.ExecuteActivityAsync(
+                (MsTeamsIntegrations activity) => activity.ReSyncTeamsAndChannelsAsync(args.TenantId),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromMinutes(10),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                }))
         {
-            if (!await Workflow.ExecuteActivityAsync(
-                    (MsTeamsIntegrations activity) => activity.ReSyncTeamsAndChannelsAsync(args.TenantId),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromMinutes(10),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-                    }))
-            {
-                break;
-            }
+            return;
+        }
 
-            await Workflow.DelayAsync(TimeSpan.FromDays(1), Workflow.CancellationToken);
-        } while (true);
+        throw Workflow.CreateContinueAsNewException((ReSyncMsTeams workflow) =>
+            workflow.ExecuteAsync(new ReSyncMsTeamsInput(args.TenantId, Workflow.UtcNow.AddDays(1))));
     }
 }

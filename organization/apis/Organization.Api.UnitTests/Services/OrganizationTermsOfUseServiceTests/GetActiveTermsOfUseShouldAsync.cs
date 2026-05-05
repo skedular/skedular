@@ -24,7 +24,7 @@ public class GetActiveTermsOfUseShouldAsync
 
         A.CallTo(() => repositoryFactory.TermsOfUseRepository).Returns(termsOfUseRepository);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 4, 19, 10, 0, 0, TimeSpan.Zero));
-        A.CallTo(() => termsOfUseRepository.GetActiveAsync(cancellationToken)).Returns(entity);
+        A.CallTo(() => termsOfUseRepository.GetActiveUntrackedAsync(cancellationToken)).Returns(entity);
         A.CallTo(() => mapper.MapTo(entity)).Returns(mapped);
 
         var sut = new OrganizationTermsOfUseService(repositoryFactory, mapper, memoryCache, timeProvider);
@@ -34,7 +34,7 @@ public class GetActiveTermsOfUseShouldAsync
 
         first.ShouldBe(mapped);
         second.ShouldBe(mapped);
-        A.CallTo(() => termsOfUseRepository.GetActiveAsync(cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => termsOfUseRepository.GetActiveUntrackedAsync(cancellationToken)).MustHaveHappenedOnceExactly();
     }
 
     [Theory]
