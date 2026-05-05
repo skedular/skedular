@@ -7,7 +7,7 @@ using Organization.Shared.Repositories;
 namespace Organization.Api.UnitTests.Services.OrganizationTermsOfUseServiceTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
-public class GetActiveTermsOfUseShould
+public class GetActiveTermsOfUseShouldAsync
 {
     [Theory]
     [AutoFakeItEasyData]

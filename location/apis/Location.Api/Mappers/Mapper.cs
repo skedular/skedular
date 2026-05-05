@@ -1293,8 +1293,10 @@ public class Mapper : IMapper
     private static Product MapTo(Shared.Database.Entities.Product src) =>
         new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, DeletedAt = src.DeletedAt };
 
-    private static ListingMetadata MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata src) =>
-        new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
+    private static ListingMetadata MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata? src) =>
+        src is null
+            ? ListingMetadata.Empty
+            : new ListingMetadata(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
 
     private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata MapTo(ListingMetadata src)
     {

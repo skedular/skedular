@@ -19,7 +19,7 @@ public class OrganizationTermsOfUseService(
     : IOrganizationTermsOfUseService
 {
     private const string ActiveTermsOfUseCacheKey = "organization-active-term-of-use";
-    private static readonly TimeSpan ActiveTermsOfUseCacheDuration = TimeSpan.FromHours(1);
+    private static readonly TimeSpan s_activeTermsOfUseCacheDuration = TimeSpan.FromHours(1);
 
     public async Task<TermsOfUse> GetActiveTermsOfUseAsync(CancellationToken cancellationToken)
     {
@@ -30,13 +30,13 @@ public class OrganizationTermsOfUseService(
             return cachedTermsOfUse.Value;
         }
 
-        var termsOfUse = await repositoryFactory.TermsOfUseRepository.GetActiveAsync(cancellationToken);
+        var termsOfUse = await repositoryFactory.TermsOfUseRepository.GetActiveUntrackedAsync(cancellationToken);
         var mappedTermsOfUse = mapper.MapTo(termsOfUse)!;
 
         memoryCache.Set(
             ActiveTermsOfUseCacheKey,
-            new CachedTermsOfUse(mappedTermsOfUse, timeProvider.GetUtcNow().Add(ActiveTermsOfUseCacheDuration)),
-            new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = ActiveTermsOfUseCacheDuration });
+            new CachedTermsOfUse(mappedTermsOfUse, timeProvider.GetUtcNow().Add(s_activeTermsOfUseCacheDuration)),
+            new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = s_activeTermsOfUseCacheDuration });
 
         return mappedTermsOfUse;
     }
