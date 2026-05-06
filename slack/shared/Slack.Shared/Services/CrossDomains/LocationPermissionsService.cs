@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Grpc.Skedular.Location.Core.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
 using Microsoft.Extensions.Caching.Memory;
@@ -16,7 +16,7 @@ public interface ILocationPermissionsService
 public class LocationPermissionsService(
     ApplicationConfiguration applicationConfiguration,
     LocationConfiguration locationConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient locationServiceClient,
+    Api.Shared.Grpc.Skedular.Location.Core.V1.LocationService.LocationServiceClient locationServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache)
     : ILocationPermissionsService

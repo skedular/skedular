@@ -1,19 +1,9 @@
 syntax = "proto3";
 package customer;
 
-option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Customer.V1";
+option csharp_namespace = "Api.Shared.Grpc.Skedular.Customer.Core.V1";
 
 service CustomerService {
-  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
-
-  rpc Admin_Get (Admin_GetInput) returns (Customer);
-  rpc Admin_Add (Admin_AddInput) returns (Customer);
-  rpc Admin_AddIdentity (Admin_AddIdentityInput) returns (Customer);
-  rpc Admin_UpdateIdentity (Admin_UpdateIdentityInput) returns (Customer);
-  rpc Admin_AnyCustomerExistByVerifiableToken (Admin_AnyCustomerExistByVerifiableTokenInput) returns (AnyCustomerExistByVerifiableTokenResponse);
-  rpc Admin_AnyCustomerExistByEmail (Admin_AnyCustomerExistByEmailInput) returns (AnyCustomerExistByEmailResponse);
-  rpc Admin_SetDefaultOrganization (Admin_SetDefaultOrganizationInput) returns (Customer);
-  rpc Admin_AddPreferredLocation (Admin_AddPreferredLocationInput) returns (Customer);
 
   rpc GetVersion (VersionInput) returns (Version);
   rpc Get (GetInput) returns (Customer);
@@ -27,14 +17,6 @@ service CustomerService {
   rpc RemovePreferredResource (RemovePreferredResourceInput) returns (Customer);
 }
 
-message RaiseGraphqlChangeInput {
-  string topicName = 1;
-  string id        = 2;
-}
-
-message RaiseGraphqlChangeResponse {
-}
-
 message VersionInput {
 }
 
@@ -45,61 +27,11 @@ message Version {
   int32 revision = 4;
 }
 
-message Admin_GetInput {
-  string customerId = 1;
-}
-
 message GetInput {
 }
 
 message GetByIdInput {
   string customerId = 1;
-}
-
-message Admin_AnyCustomerExistByVerifiableTokenInput {
-  string verifiableToken = 1;
-}
-
-message AnyCustomerExistByVerifiableTokenResponse {
-  bool     exist    = 1;
-  Customer customer = 2;
-}
-
-message Admin_AnyCustomerExistByEmailInput {
-  string email = 1;
-}
-
-message AnyCustomerExistByEmailResponse {
-  bool     exist    = 1;
-  Customer customer = 2;
-}
-
-message Admin_AddInput {
-  string                        id                            = 1;
-  repeated Identity             identities                    = 2;
-  string                        designation                   = 3;
-  string                        title                         = 4;
-  string                        name                          = 5;
-  string                        givenName                     = 6;
-  string                        middleName                    = 7;
-  string                        familyName                    = 8;
-  string                        photoUrl                      = 9;
-  string                        photoUrl24                    = 10;
-  string                        photoUrl32                    = 11;
-  string                        photoUrl48                    = 12;
-  string                        photoUrl72                    = 13;
-  string                        photoUrl192                   = 14;
-  string                        photoUrl512                   = 15;
-  string                        timezone                      = 16;
-  string                        locale                        = 17;
-  string                        defaultOrganizationId         = 18;
-  repeated Location             preferredLocations            = 19;
-  repeated Resource             preferredResources            = 20;
-  repeated OrganizationTag      preferredOrganizationTags     = 21;
-  string                        phoneNumber                   = 22;
-  bool                          isOnboardingDone              = 23;
-  PersonalInformationVisibility personalInformationVisibility = 24;
-  CustomerType                  type                          = 25;
 }
 
 message Customer {
@@ -146,30 +78,6 @@ message Organization {
 message Location {
   string       id           = 1;
   Organization organization = 3;
-}
-
-message Admin_AddIdentityInput {
-  string customerId    = 1;
-  string id            = 2;
-  string email         = 3;
-  bool   emailVerified = 4;
-}
-
-message Admin_UpdateIdentityInput {
-  string customerId    = 1;
-  string id            = 2;
-  string email         = 3;
-  bool   emailVerified = 4;
-}
-
-message Admin_SetDefaultOrganizationInput {
-  string customerId     = 1;
-  string organizationId = 2;
-}
-
-message Admin_AddPreferredLocationInput {
-  string customerId = 1;
-  string locationId = 2;
 }
 
 enum FeedbackChannel {

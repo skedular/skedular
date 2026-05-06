@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
@@ -22,7 +22,7 @@ public interface IOrganizationBillingService
 public class OrganizationBillingService(
     ApplicationConfiguration applicationConfiguration,
     OrganizationConfiguration organizationConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
+    Api.Shared.Grpc.Skedular.Organization.Billing.V1.OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache) : IOrganizationBillingService
 {
@@ -34,7 +34,7 @@ public class OrganizationBillingService(
         CancellationToken cancellationToken)
     {
         var mappedOrganizationBillingDetails = mapper.MapTo(
-            await organizationServiceClient.AddBillingDetailsAsync(
+            await organizationBillingServiceClient.AddBillingDetailsAsync(
                 new AddBillingDetailsInput
                 {
                     Id = organizationBillingDetails.Id.ToSafeString(),
@@ -62,7 +62,7 @@ public class OrganizationBillingService(
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(organizationId),
             async _ => mapper.MapTo(
-                await organizationServiceClient.GetBillingDetailsAsync(
+                await organizationBillingServiceClient.GetBillingDetailsAsync(
                     new GetBillingDetailsInput { OrganizationId = organizationId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),

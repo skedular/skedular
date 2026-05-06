@@ -17,6 +17,7 @@ public class Program
         var app = builder.Build().UseWebApplicationDefaults<Program>();
         app.MapGrpcService<FakeCoreGrpcService>();
         app.MapGrpcService<FakeOrganizationGrpcService>();
+        app.MapGrpcService<FakeOrganizationBillingGrpcService>();
         app.MapGrpcService<InfrastructureTestGrpcService>();
         return app;
     }

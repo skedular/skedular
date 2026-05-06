@@ -1,22 +1,21 @@
+using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Services.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Enterprise.Shared;
-using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Version;
 using Grpc.Core;
 using BookingOrderField = Booking.Shared.Models.BookingOrderField;
-using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
+using BookingService = Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingService;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
-using OrganizationPermissions = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions;
-using TeamPermissions = Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions;
-using Version = Api.Shared.Services.Grpc.Skedular.Booking.V1.Version;
+using OrganizationPermissions = Api.Shared.Grpc.Skedular.Booking.Core.V1.OrganizationPermissions;
+using TeamPermissions = Api.Shared.Grpc.Skedular.Booking.Core.V1.TeamPermissions;
+using Version = Api.Shared.Grpc.Skedular.Booking.Core.V1.Version;
 
 namespace Booking.Api.Grpc;
 
@@ -29,19 +28,9 @@ public class BookingGrpcService(
     IResourceService resourceService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
-    IMapper mapper,
-    IGraphQlTopicEventSender graphQlTopicEventSender)
+    IMapper mapper)
     : BookingService.BookingServiceBase
 {
-    public override async Task<RaiseGraphqlChangeResponse> RaiseGraphqlChange(RaiseGraphqlChangeInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
-
-        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(request.TopicName, request.Id, context.CancellationToken);
-
-        return new RaiseGraphqlChangeResponse();
-    }
-
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
         var version = versionService.GetVersion();
@@ -79,16 +68,16 @@ public class BookingGrpcService(
                 []),
             request.OrderBy.Select(item =>
             {
-                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending
+                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Booking.Core.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.From => BookingOrderField.From,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.To => BookingOrderField.To,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Notes => BookingOrderField.Notes,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Category => BookingOrderField.Category,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Channel => BookingOrderField.Channel,
+                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.From => BookingOrderField.From,
+                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.To => BookingOrderField.To,
+                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Notes => BookingOrderField.Notes,
+                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Category => BookingOrderField.Category,
+                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Channel => BookingOrderField.Channel,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -143,16 +132,16 @@ public class BookingGrpcService(
                 []),
             request.OrderBy.Select(item =>
             {
-                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending
+                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Booking.Core.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.From => BookingOrderField.From,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.To => BookingOrderField.To,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Notes => BookingOrderField.Notes,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Category => BookingOrderField.Category,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Channel => BookingOrderField.Channel,
+                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.From => BookingOrderField.From,
+                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.To => BookingOrderField.To,
+                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Notes => BookingOrderField.Notes,
+                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Category => BookingOrderField.Category,
+                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Channel => BookingOrderField.Channel,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -206,14 +195,14 @@ public class BookingGrpcService(
     }
 
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Get(GetInput request, ServerCallContext context)
+    public override async Task<global::Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking> Get(GetInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(await bookingService.GetByIdAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> AddPrivate(
+    public override async Task<global::Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking> AddPrivate(
         AddPrivateInput request,
         ServerCallContext context)
     {
@@ -222,7 +211,7 @@ public class BookingGrpcService(
         return mapper.MapToGrpcResponse(await privateBookingService.AddAsync(mapper.MapTo(request), context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> UpdatePrivate(
+    public override async Task<global::Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking> UpdatePrivate(
         UpdatePrivateInput request,
         ServerCallContext context)
     {
@@ -231,7 +220,7 @@ public class BookingGrpcService(
         return mapper.MapToGrpcResponse(await privateBookingService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> DeletePrivate(
+    public override async Task<global::Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking> DeletePrivate(
         DeletePrivateInput request,
         ServerCallContext context)
     {

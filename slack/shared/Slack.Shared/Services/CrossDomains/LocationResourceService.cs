@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Grpc.Skedular.Location.Core.V1;
+using Api.Shared.Grpc.Skedular.Location.Resources.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.GraphQL.Types;
@@ -35,7 +36,7 @@ public interface ILocationResourceService
 public class LocationResourceService(
     ApplicationConfiguration applicationConfiguration,
     LocationConfiguration locationConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient locationServiceClient,
+    LocationResourcesService.LocationResourcesServiceClient locationResourcesServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache,
     IOrganizationCustomTagService organizationCustomTagService,
@@ -50,7 +51,7 @@ public class LocationResourceService(
             (await memoryCache.GetOrCreateAsync(
                 CreateKeyById(resourceId),
                 async _ => mapper.MapTo(
-                    await locationServiceClient.Admin_GetResourceAsync(
+                    await locationResourcesServiceClient.Admin_GetResourceAsync(
                         new Admin_GetResourceInput { Id = resourceId },
                         locationConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken)),
@@ -76,7 +77,7 @@ public class LocationResourceService(
         addResourceInput.TagIds.Add(resource.ResourceType.Id);
 
         var mappedResource = mapper.MapTo(
-            await locationServiceClient.AddResourceAsync(
+            await locationResourcesServiceClient.AddResourceAsync(
                 addResourceInput,
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -104,7 +105,7 @@ public class LocationResourceService(
         updateZoneInput.TagIds.Add(resource.ResourceType.Id);
 
         var mappedResource = mapper.MapTo(
-            await locationServiceClient.UpdateResourceAsync(
+            await locationResourcesServiceClient.UpdateResourceAsync(
                 updateZoneInput,
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -116,7 +117,7 @@ public class LocationResourceService(
 
     public async Task RemoveAsync(string workspaceMemberId, string resourceId, CancellationToken cancellationToken)
     {
-        await locationServiceClient.RemoveResourceAsync(
+        await locationResourcesServiceClient.RemoveResourceAsync(
             new RemoveResourceInput { Id = resourceId },
             locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
@@ -132,7 +133,7 @@ public class LocationResourceService(
             (await memoryCache.GetOrCreateAsync(
                 CreateKeyById(resourceId),
                 async _ => mapper.MapTo(
-                    await locationServiceClient.GetResourceAsync(
+                    await locationResourcesServiceClient.GetResourceAsync(
                         new GetResourceInput { Id = resourceId },
                         locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                         cancellationToken: cancellationToken)),
@@ -163,7 +164,7 @@ public class LocationResourceService(
             Direction = OrderDirection.Ascending, Field = ResourceOrderField.ResourceName
         });
 
-        var connection = await locationServiceClient.GetPaginatedResourcesAsync(
+        var connection = await locationResourcesServiceClient.GetPaginatedResourcesAsync(
             getPaginatedResourcesInput,
             locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);

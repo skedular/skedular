@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Grpc.Skedular.Booking.Graphql.V1;
 using Booking.Processors.Services;
 using Enterprise.Shared.Grpc;
 using Grpc.Core;
@@ -20,7 +20,7 @@ public class RaiseGraphqlChangeAsyncShould
         CancellationToken cancellationToken)
     {
         bookingConfiguration.ApiKey = apiKey;
-        var sut = new GraphQlTopicEventSender(bookingConfiguration, new BookingService.BookingServiceClient(callInvoker));
+        var sut = new GraphQlTopicEventSender(bookingConfiguration, new BookingGraphqlService.BookingGraphqlServiceClient(callInvoker));
 
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<RaiseGraphqlChangeInput, RaiseGraphqlChangeResponse>>._,

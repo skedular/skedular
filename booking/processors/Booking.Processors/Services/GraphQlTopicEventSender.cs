@@ -1,11 +1,13 @@
 using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Grpc.Skedular.Booking.Graphql.V1;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Grpc;
 
 namespace Booking.Processors.Services;
 
-public class GraphQlTopicEventSender(BookingConfiguration bookingConfiguration, BookingService.BookingServiceClient bookingServiceClient)
+public class GraphQlTopicEventSender(
+    BookingConfiguration bookingConfiguration,
+    BookingGraphqlService.BookingGraphqlServiceClient bookingServiceClient)
     : IGraphQlTopicEventSender
 {
     public async Task RaiseGraphqlChangeAsync(string topicName, string id, CancellationToken cancellationToken) =>

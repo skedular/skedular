@@ -1,10 +1,14 @@
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Grpc.Core;
-using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
+using OrganizationService = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationService;
 
 namespace Booking.Domain.FakeDependencies.Fakes;
 
-public class FakeOrganizationGrpcService(FakeOrganizationGrpcState state) : OrganizationService.OrganizationServiceBase
+public class FakeOrganizationGrpcService : OrganizationService.OrganizationServiceBase
+{
+}
+
+public class FakeOrganizationBillingGrpcService(FakeOrganizationGrpcState state) : OrganizationBillingService.OrganizationBillingServiceBase
 {
     public override Task<XeroConnection> Admin_GetXeroConnection(Admin_GetXeroConnectionInput request, ServerCallContext context)
     {

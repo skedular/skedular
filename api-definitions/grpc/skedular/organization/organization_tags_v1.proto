@@ -1,0 +1,241 @@
+syntax = "proto3";
+package organization;
+
+option csharp_namespace = "Api.Shared.Grpc.Skedular.Organization.Tags.V1";
+
+import "organization/organization_core_v1.proto";
+
+service OrganizationTagsService {
+  rpc Admin_GetTag (Admin_GetTagInput) returns (Tag);
+  rpc Admin_GetPaginatedTags (Admin_GetPaginatedTagsInput) returns (TagConnection);
+  rpc Admin_GetCustomTag (Admin_GetCustomTagInput) returns (CustomTag);
+  rpc Admin_GetProductTag (Admin_GetProductTagInput) returns (ProductTag);
+
+  rpc GetPaginatedTags (GetPaginatedTagsInput) returns (TagConnection);
+  rpc GetTag (GetTagInput) returns (Tag);
+  rpc AddTag (AddTagInput) returns (Tag);
+  rpc UpdateTag (UpdateTagInput) returns (Tag);
+  rpc RemoveTag (RemoveTagInput) returns (Tag);
+
+  rpc GetPaginatedCustomTags (GetPaginatedCustomTagsInput) returns (CustomTagConnection);
+  rpc GetCustomTag (GetCustomTagInput) returns (CustomTag);
+  rpc AddCustomTag (AddCustomTagInput) returns (CustomTag);
+  rpc UpdateCustomTag (UpdateCustomTagInput) returns (CustomTag);
+  rpc RemoveCustomTag (RemoveCustomTagInput) returns (CustomTag);
+
+  rpc GetPaginatedProductTags (GetPaginatedProductTagsInput) returns (ProductTagConnection);
+  rpc GetProductTag (GetProductTagInput) returns (ProductTag);
+  rpc AddProductTag (AddProductTagInput) returns (ProductTag);
+  rpc UpdateProductTag (UpdateProductTagInput) returns (ProductTag);
+  rpc RemoveProductTag (RemoveProductTagInput) returns (ProductTag);
+}
+
+// ============================================================================
+// TAG
+// ============================================================================
+
+message TagConnection {
+  PageInfo         pageInfo   = 1;
+  repeated TagEdge edges      = 2;
+  int32            totalCount = 3;
+}
+
+message TagEdge {
+  Tag    node   = 1;
+  string cursor = 2;
+}
+
+message Admin_GetTagInput {
+  string id = 1;
+}
+
+message Admin_GetPaginatedTagsInput {
+  string                 after   = 1;
+  int32                  first   = 2;
+  string                 before  = 3;
+  int32                  last    = 4;
+  TagWhereInput          where   = 5;
+  repeated TagOrderInput orderBy = 6;
+}
+
+message GetPaginatedTagsInput {
+  string                 after   = 1;
+  int32                  first   = 2;
+  string                 before  = 3;
+  int32                  last    = 4;
+  TagWhereInput          where   = 5;
+  repeated TagOrderInput orderBy = 6;
+}
+
+message TagWhereInput {
+  string          organizationId = 1;
+  string          nameContains   = 2;
+  repeated string types          = 3;
+}
+
+message TagOrderInput {
+  OrderDirection direction = 1;
+  TagOrderField  field     = 2;
+}
+
+enum TagOrderField {
+  TagOrderField_Name        = 0;
+  TagOrderField_Description = 1;
+}
+
+message GetTagInput {
+  string id = 1;
+}
+
+message AddTagInput {
+  string id             = 1;
+  string organizationId = 2;
+  string name           = 3;
+  string description    = 4;
+  string color          = 5;
+  string type           = 6;
+}
+
+message UpdateTagInput {
+  string id          = 1;
+  string name        = 2;
+  string description = 3;
+  string color       = 4;
+  string type        = 6;
+}
+
+message RemoveTagInput {
+  string id = 1;
+}
+
+// ============================================================================
+// CUSTOM TAG
+// ============================================================================
+
+message CustomTagConnection {
+  PageInfo               pageInfo   = 1;
+  repeated CustomTagEdge edges      = 2;
+  int32                  totalCount = 3;
+}
+
+message CustomTagEdge {
+  CustomTag node   = 1;
+  string    cursor = 2;
+}
+
+message Admin_GetCustomTagInput {
+  string id = 1;
+}
+
+message GetPaginatedCustomTagsInput {
+  string                       after   = 1;
+  int32                        first   = 2;
+  string                       before  = 3;
+  int32                        last    = 4;
+  CustomTagWhereInput          where   = 5;
+  repeated CustomTagOrderInput orderBy = 6;
+}
+
+message CustomTagWhereInput {
+  string organizationId = 1;
+  string nameContains   = 2;
+}
+
+message CustomTagOrderInput {
+  OrderDirection      direction = 1;
+  CustomTagOrderField field     = 2;
+}
+
+enum CustomTagOrderField {
+  CustomTagOrderField_Name        = 0;
+  CustomTagOrderField_Description = 1;
+}
+
+message GetCustomTagInput {
+  string id = 1;
+}
+
+message AddCustomTagInput {
+  string id             = 1;
+  string organizationId = 2;
+  string name           = 3;
+  string description    = 4;
+  string color          = 5;
+}
+
+message UpdateCustomTagInput {
+  string id          = 1;
+  string name        = 2;
+  string description = 3;
+  string color       = 4;
+}
+
+message RemoveCustomTagInput {
+  string id = 1;
+}
+
+// ============================================================================
+// PRODUCT TAG
+// ============================================================================
+
+message ProductTagConnection {
+  PageInfo                pageInfo   = 1;
+  repeated ProductTagEdge edges      = 2;
+  int32                   totalCount = 3;
+}
+
+message ProductTagEdge {
+  ProductTag node   = 1;
+  string     cursor = 2;
+}
+
+message Admin_GetProductTagInput {
+  string id = 1;
+}
+
+message GetPaginatedProductTagsInput {
+  string                        after   = 1;
+  int32                         first   = 2;
+  string                        before  = 3;
+  int32                         last    = 4;
+  ProductTagWhereInput          where   = 5;
+  repeated ProductTagOrderInput orderBy = 6;
+}
+
+message ProductTagWhereInput {
+  string organizationId = 1;
+  string nameContains   = 2;
+}
+
+message ProductTagOrderInput {
+  OrderDirection       direction = 1;
+  ProductTagOrderField field     = 2;
+}
+
+enum ProductTagOrderField {
+  ProductTagOrderField_Name        = 0;
+  ProductTagOrderField_Description = 1;
+}
+
+message GetProductTagInput {
+  string id = 1;
+}
+
+message AddProductTagInput {
+  string id             = 1;
+  string organizationId = 2;
+  string name           = 3;
+  string description    = 4;
+  string color          = 5;
+}
+
+message UpdateProductTagInput {
+  string id          = 1;
+  string name        = 2;
+  string description = 3;
+  string color       = 4;
+}
+
+message RemoveProductTagInput {
+  string id = 1;
+}

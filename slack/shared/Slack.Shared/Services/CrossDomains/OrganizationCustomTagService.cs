@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
+using Api.Shared.Grpc.Skedular.Organization.Tags.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.GraphQL.Types;
@@ -43,7 +44,7 @@ public interface IOrganizationCustomTagService
 public class OrganizationCustomTagService(
     ApplicationConfiguration applicationConfiguration,
     OrganizationConfiguration organizationConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
+    OrganizationTagsService.OrganizationTagsServiceClient organizationTagsServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache) : IOrganizationCustomTagService
 {
@@ -53,7 +54,7 @@ public class OrganizationCustomTagService(
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(customTagId),
             async _ => mapper.MapTo(
-                await organizationServiceClient.Admin_GetCustomTagAsync(
+                await organizationTagsServiceClient.Admin_GetCustomTagAsync(
                     new Admin_GetCustomTagInput { Id = customTagId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken)),
@@ -65,7 +66,7 @@ public class OrganizationCustomTagService(
         CancellationToken cancellationToken)
     {
         var mappedOrganizationCustomTag = mapper.MapTo(
-            await organizationServiceClient.AddCustomTagAsync(
+            await organizationTagsServiceClient.AddCustomTagAsync(
                 new AddCustomTagInput
                 {
                     Id = organizationCustomTag.Id,
@@ -88,7 +89,7 @@ public class OrganizationCustomTagService(
         CancellationToken cancellationToken)
     {
         var mappedOrganizationCustomTag = mapper.MapTo(
-            await organizationServiceClient.UpdateCustomTagAsync(
+            await organizationTagsServiceClient.UpdateCustomTagAsync(
                 new UpdateCustomTagInput
                 {
                     Id = organizationCustomTag.Id,
@@ -106,7 +107,7 @@ public class OrganizationCustomTagService(
 
     public async Task RemoveAsync(string workspaceMemberId, string customTagId, CancellationToken cancellationToken)
     {
-        await organizationServiceClient.RemoveCustomTagAsync(
+        await organizationTagsServiceClient.RemoveCustomTagAsync(
             new RemoveCustomTagInput { Id = customTagId },
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
@@ -120,7 +121,7 @@ public class OrganizationCustomTagService(
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(customTagId),
             async _ => mapper.MapTo(
-                await organizationServiceClient.GetCustomTagAsync(
+                await organizationTagsServiceClient.GetCustomTagAsync(
                     new GetCustomTagInput { Id = customTagId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
@@ -148,7 +149,7 @@ public class OrganizationCustomTagService(
                     Direction = OrderDirection.Ascending, Field = CustomTagOrderField.Name
                 });
 
-                var connection = await organizationServiceClient.GetPaginatedCustomTagsAsync(
+                var connection = await organizationTagsServiceClient.GetPaginatedCustomTagsAsync(
                     getPaginatedCustomTagsInput,
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken);
@@ -194,7 +195,7 @@ public class OrganizationCustomTagService(
 
         getPaginatedCustomTagsInput.OrderBy.Add(new CustomTagOrderInput { Direction = OrderDirection.Ascending, Field = CustomTagOrderField.Name });
 
-        var connection = await organizationServiceClient.GetPaginatedCustomTagsAsync(
+        var connection = await organizationTagsServiceClient.GetPaginatedCustomTagsAsync(
             getPaginatedCustomTagsInput,
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);

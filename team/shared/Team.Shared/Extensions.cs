@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
+using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
 using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +10,7 @@ using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Team.Shared.Services;
 using Team.Shared.Services.Cache;
-using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
+using CustomerService = Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerService;
 
 namespace Team.Shared;
 
@@ -71,6 +72,7 @@ public static class Extensions
             ArgumentNullException.ThrowIfNull(customerConfiguration.GrpcUrl);
 
             services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
+            services.AddGrpcClient<CustomerAdminService.CustomerAdminServiceClient>(GrpcClients.ConfigureCustomer);
 
             return services.AddSingleton(customerConfiguration);
         }

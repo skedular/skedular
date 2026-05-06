@@ -1,5 +1,5 @@
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using AutoFixture.Xunit3;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
@@ -13,6 +13,7 @@ using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.Organiz
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using Xero.NetStandard.OAuth2.Api;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 
 namespace Booking.Shared.UnitTests.Services.AccountingInvoiceCancellationServiceTests;
 
@@ -35,7 +36,7 @@ public class CancelRecurringBookingShould
     {
         var sut = new AccountingInvoiceCancellationService(
             organizationConfiguration,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
@@ -91,7 +92,7 @@ public class CancelRecurringBookingShould
     {
         var sut = new AccountingInvoiceCancellationService(
             organizationConfiguration,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
@@ -156,7 +157,7 @@ public class CancelRecurringBookingShould
     {
         var sut = new AccountingInvoiceCancellationService(
             organizationConfiguration,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
@@ -222,7 +223,7 @@ public class CancelRecurringBookingShould
     {
         var sut = new AccountingInvoiceCancellationService(
             organizationConfiguration,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
@@ -290,7 +291,7 @@ public class CancelRecurringBookingShould
     {
         var sut = new AccountingInvoiceCancellationService(
             organizationConfiguration,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
@@ -356,7 +357,7 @@ public class CancelRecurringBookingShould
         var accountingApi = A.Fake<AccountingApi>();
         var sut = new TestAccountingInvoiceCancellationService(
             organizationConfiguration,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
@@ -440,7 +441,7 @@ public class CancelRecurringBookingShould
         var accountingApi = A.Fake<AccountingApi>();
         var sut = new TestAccountingInvoiceCancellationService(
             organizationConfiguration,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
@@ -543,7 +544,7 @@ public class CancelRecurringBookingShould
     {
         var sut = new AccountingInvoiceCancellationService(
             organizationConfiguration,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
@@ -596,14 +597,14 @@ public class CancelRecurringBookingShould
 
     private sealed class TestAccountingInvoiceCancellationService(
         OrganizationConfiguration organizationConfiguration,
-        OrganizationService.OrganizationServiceClient organizationServiceClient,
+        OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
         IRepositoryFactory repositoryFactory,
         IXeroSdkClientFactory xeroSdkClientFactory,
         IXeroTokenEncryptionService xeroTokenEncryptionService,
         TimeProvider timeProvider)
         : AccountingInvoiceCancellationService(
             organizationConfiguration,
-            organizationServiceClient,
+            organizationBillingServiceClient,
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,

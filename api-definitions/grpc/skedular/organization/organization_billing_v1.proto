@@ -1,0 +1,192 @@
+syntax = "proto3";
+package organization;
+
+option csharp_namespace = "Api.Shared.Grpc.Skedular.Organization.Billing.V1";
+
+import "google/protobuf/timestamp.proto";
+
+import "organization/organization_core_v1.proto";
+
+service OrganizationBillingService {
+  rpc Admin_GetStripeConnectAccounts (Admin_GetStripeConnectAccountsInput) returns (StripeConnectAccountConnection);
+  rpc Admin_GetBankAccounts (Admin_GetBankAccountsInput) returns (BankAccountConnection);
+  rpc Admin_GetXeroConnection (Admin_GetXeroConnectionInput) returns (XeroConnection);
+  rpc Admin_GetByXeroTenantId (Admin_GetByXeroTenantIdInput) returns (Organization);
+  rpc Admin_RefreshXeroConnectionTokens (Admin_RefreshXeroConnectionTokensInput) returns (XeroConnection);
+
+  rpc GetBillingDetails (GetBillingDetailsInput) returns (BillingDetails);
+  rpc AddBillingDetails (AddBillingDetailsInput) returns (BillingDetails);
+  rpc UpdateBillingDetails (UpdateBillingDetailsInput) returns (BillingDetails);
+}
+
+// ============================================================================
+// STRIPE CONNECT ACCOUNTS
+// ============================================================================
+
+message Admin_GetStripeConnectAccountsInput {
+  string                                  after   = 1;
+  int32                                   first   = 2;
+  string                                  before  = 3;
+  int32                                   last    = 4;
+  StripeConnectAccountWhereInput          where   = 5;
+  repeated StripeConnectAccountOrderInput orderBy = 6;
+}
+
+message StripeConnectAccountWhereInput {
+  string organizationId      = 1;
+  string nameContains        = 2;
+  bool   onboardingCompleted = 3;
+}
+
+message StripeConnectAccountOrderInput {
+  OrderDirection                 direction = 1;
+  StripeConnectAccountOrderField field     = 2;
+}
+
+enum StripeConnectAccountOrderField {
+  StripeConnectAccountOrderField_Name = 0;
+}
+
+message StripeConnectAccountConnection {
+  PageInfo                          pageInfo   = 1;
+  repeated StripeConnectAccountEdge edges      = 2;
+  int32                             totalCount = 3;
+}
+
+message StripeConnectAccountEdge {
+  StripeConnectAccount node   = 1;
+  string               cursor = 2;
+}
+
+// ============================================================================
+// BANK ACCOUNTS
+// ============================================================================
+
+message Admin_GetBankAccountsInput {
+  string                         after   = 1;
+  int32                          first   = 2;
+  string                         before  = 3;
+  int32                          last    = 4;
+  BankAccountWhereInput          where   = 5;
+  repeated BankAccountOrderInput orderBy = 6;
+}
+
+message BankAccountWhereInput {
+  string organizationId = 1;
+  string nameContains   = 2;
+}
+
+message BankAccountOrderInput {
+  OrderDirection        direction = 1;
+  BankAccountOrderField field     = 2;
+}
+
+enum BankAccountOrderField {
+  BankAccountOrderField_Name = 0;
+}
+
+message BankAccountConnection {
+  PageInfo                 pageInfo   = 1;
+  repeated BankAccountEdge edges      = 2;
+  int32                    totalCount = 3;
+}
+
+message BankAccountEdge {
+  BankAccount node   = 1;
+  string      cursor = 2;
+}
+
+message BankAccount {
+  string id                = 1;
+  bool   isDefault         = 2;
+  string name              = 3;
+  string bankName          = 4;
+  string accountHolderName = 5;
+  string accountNumber     = 6;
+  string country           = 7;
+}
+
+// ============================================================================
+// XERO
+// ============================================================================
+
+message Admin_GetXeroConnectionInput {
+  string organizationId           = 1;
+  string organizationCustomDomain = 2;
+}
+
+message Admin_GetByXeroTenantIdInput {
+  string tenantId = 1;
+}
+
+message XeroConnection {
+  string                    id                            = 1;
+  string                    tenantId                      = 2;
+  string                    tenantName                    = 3;
+  string                    billingMode                   = 4;
+  string                    scopes                        = 5;
+  bool                      isActive                      = 6;
+  bool                      sendInvoicesViaXero           = 7;
+  bool                      autoReconcilePayments         = 8;
+  string                    defaultSalesAccountCode       = 9;
+  string                    defaultReceivablesAccountCode = 10;
+  string                    defaultTrackingCategory1      = 11;
+  string                    defaultTrackingCategory2      = 12;
+  string                    defaultBrandingThemeId        = 13;
+  string                    defaultReferencePrefix        = 14;
+  google.protobuf.Timestamp accessTokenExpiresAt          = 15;
+  google.protobuf.Timestamp refreshTokenExpiresAt         = 16;
+  google.protobuf.Timestamp lastSuccessfulSyncAt          = 17;
+  string                    lastError                     = 18;
+  bool                      hasAccessToken                = 19;
+  bool                      hasRefreshToken               = 20;
+  string                    accessTokenEncrypted          = 21;
+  string                    refreshTokenEncrypted         = 22;
+}
+
+message Admin_RefreshXeroConnectionTokensInput {
+  string                    organizationId        = 1;
+  string                    accessTokenEncrypted  = 2;
+  string                    refreshTokenEncrypted = 3;
+  google.protobuf.Timestamp accessTokenExpiresAt  = 4;
+  google.protobuf.Timestamp refreshTokenExpiresAt = 5;
+}
+
+// ============================================================================
+// BILLING DETAILS
+// ============================================================================
+
+message GetBillingDetailsInput {
+  string organizationId = 1;
+}
+
+message AddBillingDetailsInput {
+  string id               = 1;
+  string organizationId   = 2;
+  string companyName      = 3;
+  string email            = 4;
+  string addressLine1     = 5;
+  string addressLine2     = 6;
+  string suburb           = 7;
+  string city             = 8;
+  string province         = 9;
+  string zipcode          = 10;
+  string country          = 11;
+  string countryCode      = 12;
+  int32  invoiceDueInDays = 13;
+}
+
+message UpdateBillingDetailsInput {
+  string id               = 1;
+  string companyName      = 2;
+  string email            = 3;
+  string addressLine1     = 4;
+  string addressLine2     = 5;
+  string suburb           = 6;
+  string city             = 7;
+  string province         = 8;
+  string zipcode          = 9;
+  string country          = 10;
+  string countryCode      = 11;
+  int32  invoiceDueInDays = 12;
+}

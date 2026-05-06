@@ -1,5 +1,5 @@
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
@@ -59,7 +59,7 @@ public class GetProcessingAvailabilityAsyncShould
         };
         var sut = new TestableXeroRefundService(
             organizationConfiguration,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
@@ -133,7 +133,7 @@ public class GetProcessingAvailabilityAsyncShould
         };
         var sut = new TestableXeroRefundService(
             organizationConfiguration,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
@@ -219,14 +219,14 @@ public class GetProcessingAvailabilityAsyncShould
 
     private sealed class TestableXeroRefundService(
         OrganizationConfiguration organizationConfiguration,
-        OrganizationService.OrganizationServiceClient organizationServiceClient,
+        OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
         IRepositoryFactory repositoryFactory,
         IXeroSdkClientFactory xeroSdkClientFactory,
         IXeroTokenEncryptionService xeroTokenEncryptionService,
         TimeProvider timeProvider)
         : XeroRefundService(
             organizationConfiguration,
-            organizationServiceClient,
+            organizationBillingServiceClient,
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,

@@ -1,7 +1,8 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Core.V1;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Core.Core.V1;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Booking.Shared.Configurations;
 using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
@@ -135,6 +136,7 @@ public static class Extensions
 
             services.AddGrpcClient<CoreService.CoreServiceClient>(GrpcClients.ConfigureCore);
             services.AddGrpcClient<OrganizationService.OrganizationServiceClient>(GrpcClients.ConfigureOrganization);
+            services.AddGrpcClient<OrganizationBillingService.OrganizationBillingServiceClient>(GrpcClients.ConfigureOrganization);
 
             return services
                 .AddSingleton(coreConfiguration)

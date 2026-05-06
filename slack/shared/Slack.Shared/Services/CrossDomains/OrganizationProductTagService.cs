@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Tags.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
 using Microsoft.Extensions.Caching.Memory;
@@ -17,7 +17,7 @@ public interface IOrganizationProductTagService
 public class OrganizationProductTagService(
     ApplicationConfiguration applicationConfiguration,
     OrganizationConfiguration organizationConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
+    OrganizationTagsService.OrganizationTagsServiceClient organizationTagsServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache) : IOrganizationProductTagService
 {
@@ -27,7 +27,7 @@ public class OrganizationProductTagService(
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(productTagId),
             async _ => mapper.MapTo(
-                await organizationServiceClient.Admin_GetProductTagAsync(
+                await organizationTagsServiceClient.Admin_GetProductTagAsync(
                     new Admin_GetProductTagInput { Id = productTagId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken)),
@@ -37,7 +37,7 @@ public class OrganizationProductTagService(
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(productTagId),
             async _ => mapper.MapTo(
-                await organizationServiceClient.GetProductTagAsync(
+                await organizationTagsServiceClient.GetProductTagAsync(
                     new GetProductTagInput { Id = productTagId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),

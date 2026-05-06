@@ -27,14 +27,10 @@
         <PackageReference Include="Grpc.AspNetCore" Version="2.80.0"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/core_v1.proto" GrpcServices="Server"/>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/organization_v1.proto" GrpcServices="Server"/>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/infrastructure_test_v1.proto" GrpcServices="Server"/>
-    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="../../../shared/Enterprise.Shared/Enterprise.Shared.csproj"/>
+        <ProjectReference Include="../../../shared/Api.Shared.Clients/Api.Shared.Clients.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

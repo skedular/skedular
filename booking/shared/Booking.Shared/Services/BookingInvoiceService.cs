@@ -1,6 +1,7 @@
 using System.Globalization;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Mappers;
 using Booking.Shared.Models;
@@ -12,7 +13,7 @@ using Enterprise.Shared.Time;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using Organization = Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization;
+using Organization = Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization;
 using OrganizationBillingCycle = Api.Shared.Services.Models.OrganizationBillingCycle;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
@@ -43,6 +44,7 @@ public class BookingInvoiceService(
     IRepositoryFactory repositoryFactory,
     OrganizationConfiguration organizationConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
+    OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
     IInvoicePaymentTermsService invoicePaymentTermsService,
     IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
     IProductVersionHelperService productVersionHelperService,
@@ -143,7 +145,7 @@ public class BookingInvoiceService(
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var bankAccountConnection = await organizationServiceClient.Admin_GetBankAccountsAsync(
+        var bankAccountConnection = await organizationBillingServiceClient.Admin_GetBankAccountsAsync(
             new Admin_GetBankAccountsInput
             {
                 After = string.Empty,

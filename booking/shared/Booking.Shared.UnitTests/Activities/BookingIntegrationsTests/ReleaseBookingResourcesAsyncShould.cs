@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;

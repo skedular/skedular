@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Grpc;
@@ -29,7 +29,7 @@ public interface IOrganizationMemberService
 
 public class OrganizationMemberService(
     OrganizationConfiguration organizationConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
+    Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
     IMapper mapper,
     ICustomerService customerService)
     : IOrganizationMemberService
@@ -39,23 +39,23 @@ public class OrganizationMemberService(
             new Admin_AddMemberInput
             {
                 Id = organizationMember.Organization.Id,
-                Member = new Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember
+                Member = new Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMember
                 {
                     Id = organizationMember.Id,
                     CustomerId = organizationMember.Customer.Id,
                     IsOrganizationOnboardingDone = true,
                     Role = organizationMember.Role switch
                     {
-                        OrganizationMemberRole.Owner => Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberRole.Owner,
-                        OrganizationMemberRole.Administrator => Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberRole
+                        OrganizationMemberRole.Owner => Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberRole.Owner,
+                        OrganizationMemberRole.Administrator => Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberRole
                             .Administrator,
-                        OrganizationMemberRole.Member => Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberRole.Member,
+                        OrganizationMemberRole.Member => Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberRole.Member,
                         _ => throw new ArgumentOutOfRangeException()
                     },
                     Status = organizationMember.Status switch
                     {
-                        OrganizationMemberStatus.Active => Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active,
-                        OrganizationMemberStatus.Inactive => Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive,
+                        OrganizationMemberStatus.Active => Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Active,
+                        OrganizationMemberStatus.Inactive => Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Inactive,
                         _ => throw new ArgumentOutOfRangeException()
                     }
                 }

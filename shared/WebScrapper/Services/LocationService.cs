@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Location.Core.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
+using Api.Shared.Grpc.Skedular.Organization.Tags.V1;
 using Api.Shared.Services.Models;
 using CommandLine;
 using Enterprise.Shared;
@@ -8,16 +9,16 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Flurl.Http;
 using WebScrapper.Models;
-using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Location.V1.Admin_AddInput;
-using Admin_GetInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.Admin_GetInput;
-using AreaRange = Api.Shared.Services.Grpc.Skedular.Location.V1.AreaRange;
+using Admin_AddInput = Api.Shared.Grpc.Skedular.Location.Core.V1.Admin_AddInput;
+using Admin_GetInput = Api.Shared.Grpc.Skedular.Organization.Core.V1.Admin_GetInput;
+using AreaRange = Api.Shared.Grpc.Skedular.Location.Core.V1.AreaRange;
 using Constants = Api.Shared.Services.Constants;
-using ContactDetails = Api.Shared.Services.Grpc.Skedular.Location.V1.ContactDetails;
-using ListingMetadata = Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata;
+using ContactDetails = Api.Shared.Grpc.Skedular.Location.Core.V1.ContactDetails;
+using ListingMetadata = Api.Shared.Grpc.Skedular.Location.Core.V1.ListingMetadata;
 using Location = WebScrapper.Models.Location;
-using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
-using PeopleCapacity = Api.Shared.Services.Grpc.Skedular.Location.V1.PeopleCapacity;
-using PhysicalAddress = Api.Shared.Services.Grpc.Skedular.Location.V1.PhysicalAddress;
+using LocationType = Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType;
+using PeopleCapacity = Api.Shared.Grpc.Skedular.Location.Core.V1.PeopleCapacity;
+using PhysicalAddress = Api.Shared.Grpc.Skedular.Location.Core.V1.PhysicalAddress;
 
 namespace WebScrapper.Services;
 
@@ -36,8 +37,9 @@ public class LocationService(
     ICsvLocationFileReaderService csvLocationFileReaderService,
     OrganizationConfiguration organizationConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
+    OrganizationTagsService.OrganizationTagsServiceClient organizationTagsServiceClient,
     LocationConfiguration locationConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient locationServiceClient,
+    Api.Shared.Grpc.Skedular.Location.Core.V1.LocationService.LocationServiceClient locationServiceClient,
     IRandomHelper randomHelper) : ILocationService
 {
     public async Task HandleAsync(ImportOptions options, CancellationToken cancellationToken)
@@ -49,7 +51,7 @@ public class LocationService(
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
-        var tagConnection = await organizationServiceClient.Admin_GetPaginatedTagsAsync(
+        var tagConnection = await organizationTagsServiceClient.Admin_GetPaginatedTagsAsync(
             new Admin_GetPaginatedTagsInput
             {
                 First = ((int?)null).ToNullInt(),

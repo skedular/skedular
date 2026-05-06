@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
+using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
 using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,9 +10,9 @@ using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
-using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
-using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
-using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
+using BookingService = Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingService;
+using CustomerService = Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerService;
+using LocationService = Api.Shared.Grpc.Skedular.Location.Core.V1.LocationService;
 
 namespace Organization.Shared;
 
@@ -106,6 +107,7 @@ public static class Extensions
 
             services.AddGrpcClient<BookingService.BookingServiceClient>(GrpcClients.ConfigureBooking);
             services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
+            services.AddGrpcClient<CustomerAdminService.CustomerAdminServiceClient>(GrpcClients.ConfigureCustomer);
             services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
 
             return services

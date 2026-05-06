@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Grpc.Skedular.Booking.Core.V1;
+using Api.Shared.Grpc.Skedular.Booking.Graphql.V1;
 using Booking.Processors.Mappers;
 using Booking.Processors.Services;
 using Enterprise.Shared.GraphQL;
@@ -26,6 +27,7 @@ public static class Extensions
             ArgumentNullException.ThrowIfNull(bookingConfiguration.GrpcUrl);
 
             services.AddGrpcClient<BookingService.BookingServiceClient>(GrpcClients.ConfigureBooking);
+            services.AddGrpcClient<BookingGraphqlService.BookingGraphqlServiceClient>(GrpcClients.ConfigureBooking);
 
             return services
                 .AddSingleton(bookingConfiguration);

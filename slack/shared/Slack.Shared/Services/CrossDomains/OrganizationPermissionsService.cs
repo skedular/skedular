@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
 using Microsoft.Extensions.Caching.Memory;
@@ -16,7 +16,7 @@ public interface IOrganizationPermissionsService
 public class OrganizationPermissionsService(
     ApplicationConfiguration applicationConfiguration,
     OrganizationConfiguration organizationConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
+    Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache)
     : IOrganizationPermissionsService

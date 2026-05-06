@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 
 namespace Organization.Domain.IntegrationTests.Api.Grpc.OrganizationGrpcServiceTests;
 

@@ -1,0 +1,16 @@
+syntax = "proto3";
+package slack;
+
+option csharp_namespace = "Api.Shared.Grpc.Skedular.Slack.Graphql.V1";
+
+service SlackGraphqlService {
+  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
+}
+
+message RaiseGraphqlChangeInput {
+  string topicName = 1;
+  string id        = 2;
+}
+
+message RaiseGraphqlChangeResponse {
+}

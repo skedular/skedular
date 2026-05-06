@@ -1,5 +1,5 @@
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
+using Api.Shared.Grpc.Skedular.Location.Core.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
@@ -12,7 +12,6 @@ using Organization.Shared.Services;
 using Temporalio.Activities;
 using Customer = Organization.Shared.Models.Customer;
 using OrganizationMember = Organization.Shared.Models.OrganizationMember;
-using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 using CustomerConfiguration = Api.Shared.Clients.Configurations.Grpc.CustomerConfiguration;
 
@@ -25,7 +24,7 @@ public class AzureTenantIntegrations(
     IRandomHelper randomHelper,
     IMapper mapper,
     IGraphService graphService,
-    CustomerService.CustomerServiceClient customerServiceClient,
+    CustomerAdminService.CustomerAdminServiceClient customerAdminServiceClient,
     LocationService.LocationServiceClient locationServiceClient,
     IOrganizationMemberService organizationMemberService)
 {
@@ -95,7 +94,7 @@ public class AzureTenantIntegrations(
 
         foreach (var tenantMember in azureTenant.AzureTenantMembers)
         {
-            var anyCustomerExistByVerifiableTokenResponse = await customerServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
+            var anyCustomerExistByVerifiableTokenResponse = await customerAdminServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
                 new Admin_AnyCustomerExistByVerifiableTokenInput { VerifiableToken = tenantMember.Id },
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
@@ -103,14 +102,14 @@ public class AzureTenantIntegrations(
             {
                 customerIdsTenantMembersPair.Add((anyCustomerExistByVerifiableTokenResponse.Customer.Id, tenantMember));
 
-                await customerServiceClient.Admin_UpdateIdentityAsync(
+                await customerAdminServiceClient.Admin_UpdateIdentityAsync(
                     mapper.MapToUpdateIdentityInput(tenantMember, anyCustomerExistByVerifiableTokenResponse.Customer.Id),
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken);
 
                 if (string.IsNullOrWhiteSpace(anyCustomerExistByVerifiableTokenResponse.Customer.DefaultOrganizationId))
                 {
-                    await customerServiceClient.Admin_SetDefaultOrganizationAsync(
+                    await customerAdminServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
                             OrganizationId = azureTenant.Organization.Id, CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
@@ -121,7 +120,7 @@ public class AzureTenantIntegrations(
 
                 if (getLocationsResponse.TotalCount == 1)
                 {
-                    await customerServiceClient.Admin_AddPreferredLocationAsync(
+                    await customerAdminServiceClient.Admin_AddPreferredLocationAsync(
                         new Admin_AddPreferredLocationInput
                         {
                             LocationId = getLocationsResponse.Edges.First().Node.Id,
@@ -134,7 +133,7 @@ public class AzureTenantIntegrations(
                 continue;
             }
 
-            var anyCustomerExistByEmailTokenResponse = await customerServiceClient.Admin_AnyCustomerExistByEmailAsync(
+            var anyCustomerExistByEmailTokenResponse = await customerAdminServiceClient.Admin_AnyCustomerExistByEmailAsync(
                 new Admin_AnyCustomerExistByEmailInput { Email = tenantMember.Email },
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
@@ -142,14 +141,14 @@ public class AzureTenantIntegrations(
             {
                 customerIdsTenantMembersPair.Add((anyCustomerExistByEmailTokenResponse.Customer.Id, tenantMember));
 
-                await customerServiceClient.Admin_AddIdentityAsync(
+                await customerAdminServiceClient.Admin_AddIdentityAsync(
                     mapper.MapTo(tenantMember, anyCustomerExistByEmailTokenResponse.Customer.Id),
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken);
 
                 if (string.IsNullOrWhiteSpace(anyCustomerExistByEmailTokenResponse.Customer.DefaultOrganizationId))
                 {
-                    await customerServiceClient.Admin_SetDefaultOrganizationAsync(
+                    await customerAdminServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
                             OrganizationId = azureTenant.Organization.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
@@ -160,7 +159,7 @@ public class AzureTenantIntegrations(
 
                 if (getLocationsResponse.TotalCount == 1)
                 {
-                    await customerServiceClient.Admin_AddPreferredLocationAsync(
+                    await customerAdminServiceClient.Admin_AddPreferredLocationAsync(
                         new Admin_AddPreferredLocationInput
                         {
                             LocationId = getLocationsResponse.Edges.First().Node.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
@@ -174,7 +173,7 @@ public class AzureTenantIntegrations(
 
             var customerId = randomHelper.Generate();
             customerIdsTenantMembersPair.Add((customerId, tenantMember));
-            await customerServiceClient.Admin_AddAsync(
+            await customerAdminServiceClient.Admin_AddAsync(
                 mapper.MapTo(tenantMember, customerId, new Database.Entities.Organization { Id = azureTenant.Organization.Id }),
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);

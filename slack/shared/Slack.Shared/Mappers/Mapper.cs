@@ -1,5 +1,6 @@
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
+using Api.Shared.Grpc.Skedular.Organization.Zones.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using NetTopologySuite.Geometries;
@@ -14,23 +15,23 @@ using Identity = Slack.Shared.Models.Identity;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
-using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
-using BookingCategory = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory;
-using BookingChannel = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingChannel;
+using Admin_AddInput = Api.Shared.Grpc.Skedular.Customer.Admin.V1.Admin_AddInput;
+using BookingCategory = Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory;
+using BookingChannel = Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingChannel;
 using CustomerType = Api.Shared.Services.Models.CustomerType;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
-using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
+using LocationType = Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType;
 using Models_OrganizationCustomTag = Slack.Shared.Models.OrganizationCustomTag;
-using OrganizationBillingCycle = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingCycle;
-using OrganizationMemberRole = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberRole;
-using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
+using OrganizationBillingCycle = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationBillingCycle;
+using OrganizationMemberRole = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus;
 using OrganizationTag = Slack.Shared.Models.OrganizationTag;
-using OrganizationType = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationType;
-using PersonalInformationVisibility = Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility;
+using OrganizationType = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationType;
+using PersonalInformationVisibility = Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility;
 using Resource = Slack.Shared.Models.Resource;
 using ResourceType = Slack.Shared.Models.ResourceType;
-using Role = Api.Shared.Services.Grpc.Skedular.Team.V1.Role;
-using TeamMemberStatus = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus;
+using Role = Api.Shared.Grpc.Skedular.Team.Core.V1.Role;
+using TeamMemberStatus = Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus;
 using WorkspaceChannel = Slack.Shared.Database.Entities.WorkspaceChannel;
 
 namespace Slack.Shared.Mappers;
@@ -38,7 +39,7 @@ namespace Slack.Shared.Mappers;
 public interface IMapper
 {
     Customer? MapTo(Database.Entities.Customer? src);
-    Booking MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking src);
+    Booking MapTo(Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking src);
     Models.Workspace MapTo(Workspace src);
     WorkspaceMember MapToEntity(User src, Workspace workspace);
     WorkspaceMember MergeToEntity(User src, WorkspaceMember dest, Workspace workspace);
@@ -48,22 +49,22 @@ public interface IMapper
     Admin_AddIdentityInput MapToAddIdentityInput(WorkspaceMember src, string customerId);
     Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId);
     Admin_AddInput MapTo(WorkspaceMember src, string customerId, string defaultOrganizationId, IReadOnlyList<string> preferredLocationIds);
-    Customer? MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer? src);
-    Organization MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization src);
-    Location MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Location src);
-    Team MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Team src);
+    Customer? MapTo(Api.Shared.Grpc.Skedular.Customer.Core.V1.Customer? src);
+    Organization MapTo(Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization src);
+    Location MapTo(Api.Shared.Grpc.Skedular.Location.Core.V1.Location src);
+    Team MapTo(Api.Shared.Grpc.Skedular.Team.Core.V1.Team src);
     OrganizationPermissions MapTo(Permissions src);
-    LocationPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions src);
-    TeamPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions src);
-    Models.OrganizationMember MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember src);
+    LocationPermissions MapTo(Api.Shared.Grpc.Skedular.Location.Core.V1.Permissions src);
+    TeamPermissions MapTo(Api.Shared.Grpc.Skedular.Team.Core.V1.Permissions src);
+    Models.OrganizationMember MapTo(Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMember src);
     OrganizationZone MapTo(Zone src);
     Models_OrganizationCustomTag MapTo(CustomTag src);
     OrganizationBillingDetails MapTo(BillingDetails src);
-    Resource MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Resource src);
+    Resource MapTo(Api.Shared.Grpc.Skedular.Location.Core.V1.Resource src);
     OrganizationProductTag MapTo(ProductTag src);
     OrganizationTag MapTo(Tag src);
-    TeamBookingPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions src);
-    OrganizationBookingPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions src);
+    TeamBookingPermissions MapTo(Api.Shared.Grpc.Skedular.Booking.Core.V1.TeamPermissions src);
+    OrganizationBookingPermissions MapTo(Api.Shared.Grpc.Skedular.Booking.Core.V1.OrganizationPermissions src);
 }
 
 public class Mapper : IMapper
@@ -120,7 +121,7 @@ public class Mapper : IMapper
         return workspace;
     }
 
-    public Booking MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking src) =>
+    public Booking MapTo(Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking src) =>
         new()
         {
             Id = src.Id,
@@ -233,21 +234,21 @@ public class Mapper : IMapper
             IsOnboardingDone = true,
             DefaultOrganizationId = defaultOrganizationId.ToSafeString(),
             PersonalInformationVisibility = PersonalInformationVisibility.Visible,
-            Type = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType.Registered
+            Type = Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Registered
         };
 
-        input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
+        input.Identities.Add(new Api.Shared.Grpc.Skedular.Customer.Core.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
         input.PreferredLocations.AddRange(preferredLocationIds.Select(item =>
-            new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
+            new Api.Shared.Grpc.Skedular.Customer.Core.V1.Location
             {
-                Id = item, Organization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganizationId }
+                Id = item, Organization = new Api.Shared.Grpc.Skedular.Customer.Core.V1.Organization { Id = defaultOrganizationId }
             }));
 
         return input;
     }
 
-    public Organization MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization src) =>
+    public Organization MapTo(Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization src) =>
         new()
         {
             Id = src.Id,
@@ -279,7 +280,7 @@ public class Mapper : IMapper
             ResourceTypes = MapTo(src.ResourceTypes).ToList()
         };
 
-    public Location MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Location src) =>
+    public Location MapTo(Api.Shared.Grpc.Skedular.Location.Core.V1.Location src) =>
         new()
         {
             Id = src.Id,
@@ -296,7 +297,7 @@ public class Mapper : IMapper
             Resources = MapTo(src.Resources).ToList()
         };
 
-    public Team MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Team src)
+    public Team MapTo(Api.Shared.Grpc.Skedular.Team.Core.V1.Team src)
     {
         var team = new Team
         {
@@ -321,7 +322,7 @@ public class Mapper : IMapper
         return team;
     }
 
-    public Customer? MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer? src) =>
+    public Customer? MapTo(Api.Shared.Grpc.Skedular.Customer.Core.V1.Customer? src) =>
         src is null
             ? null
             : new Customer
@@ -354,8 +355,8 @@ public class Mapper : IMapper
                 PreferredOrganizationTags = src.PreferredOrganizationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
                 Type = src.Type switch
                 {
-                    Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType.Guest => CustomerType.Guest,
-                    Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType.Registered => CustomerType.Registered,
+                    Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Guest => CustomerType.Guest,
+                    Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Registered => CustomerType.Registered,
                     _ => throw new ArgumentOutOfRangeException()
                 }
             };
@@ -371,10 +372,10 @@ public class Mapper : IMapper
             CanViewAnalytics = src.CanViewAnalytics
         };
 
-    public LocationPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions src) =>
+    public LocationPermissions MapTo(Api.Shared.Grpc.Skedular.Location.Core.V1.Permissions src) =>
         new() { CanView = src.CanView, CanModify = src.CanModify, CanDelete = src.CanDelete, CanViewAnalytics = src.CanViewAnalytics };
 
-    public TeamPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions src) =>
+    public TeamPermissions MapTo(Api.Shared.Grpc.Skedular.Team.Core.V1.Permissions src) =>
         new()
         {
             CanView = src.CanView,
@@ -384,7 +385,7 @@ public class Mapper : IMapper
             CanCancelPeopleExistingInvitations = src.CanCancelPeopleExistingInvitations
         };
 
-    public Models.OrganizationMember MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember src) =>
+    public Models.OrganizationMember MapTo(Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMember src) =>
         new()
         {
             Id = src.Id,
@@ -423,7 +424,7 @@ public class Mapper : IMapper
             Type = src.TagType.ToSafeString().ToOrganizationTagType()
         };
 
-    public TeamBookingPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions src) =>
+    public TeamBookingPermissions MapTo(Api.Shared.Grpc.Skedular.Booking.Core.V1.TeamPermissions src) =>
         new()
         {
             CanViewBookings = src.CanViewBookings,
@@ -432,7 +433,7 @@ public class Mapper : IMapper
             CanDeleteBooking = src.CanDeleteBooking
         };
 
-    public OrganizationBookingPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions src) =>
+    public OrganizationBookingPermissions MapTo(Api.Shared.Grpc.Skedular.Booking.Core.V1.OrganizationPermissions src) =>
         new()
         {
             CanViewBookings = src.CanViewBookings,
@@ -462,7 +463,7 @@ public class Mapper : IMapper
             FormattedAddress = src.FormattedAddress
         };
 
-    public Resource MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Resource src) =>
+    public Resource MapTo(Api.Shared.Grpc.Skedular.Location.Core.V1.Resource src) =>
         new()
         {
             Id = src.Id,
@@ -483,10 +484,10 @@ public class Mapper : IMapper
     private static Models_OrganizationCustomTag MapToOrganizationCustomTag(Tag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
-    private static IEnumerable<OrganizationResourceType> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType> src) =>
+    private static IEnumerable<OrganizationResourceType> MapTo(IEnumerable<Api.Shared.Grpc.Skedular.Organization.Core.V1.ResourceType> src) =>
         src.Select(MapToResourceType);
 
-    private static OrganizationResourceType MapToResourceType(Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType src) =>
+    private static OrganizationResourceType MapToResourceType(Api.Shared.Grpc.Skedular.Organization.Core.V1.ResourceType src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private Organization MapTo(Database.Entities.Organization src)
@@ -562,19 +563,19 @@ public class Mapper : IMapper
     private static Identity MapTo(Database.Entities.Identity src, Customer customer) =>
         new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, Customer = customer };
 
-    private static IEnumerable<Identity> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity> src) =>
+    private static IEnumerable<Identity> MapTo(IEnumerable<Api.Shared.Grpc.Skedular.Customer.Core.V1.Identity> src) =>
         src.Select(MapTo);
 
-    private static Identity MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity src) =>
+    private static Identity MapTo(Api.Shared.Grpc.Skedular.Customer.Core.V1.Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
 
-    private IEnumerable<Resource> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> src) =>
+    private IEnumerable<Resource> MapTo(IEnumerable<Api.Shared.Grpc.Skedular.Location.Core.V1.Resource> src) =>
         src.Select(MapTo);
 
-    private static IEnumerable<TeamMember> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember> src, Team team) =>
+    private static IEnumerable<TeamMember> MapTo(IEnumerable<Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMember> src, Team team) =>
         src.Select(item => MapTo(item, team));
 
-    private static TeamMember MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember src, Team team) =>
+    private static TeamMember MapTo(Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMember src, Team team) =>
         new()
         {
             Id = src.Id,
@@ -601,9 +602,9 @@ public class Mapper : IMapper
             Team = team
         };
 
-    private static ListingMetadata MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.ListingMetadata src) =>
+    private static ListingMetadata MapTo(Api.Shared.Grpc.Skedular.Organization.Core.V1.ListingMetadata src) =>
         new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
 
-    private static ListingMetadata MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata src) =>
+    private static ListingMetadata MapTo(Api.Shared.Grpc.Skedular.Location.Core.V1.ListingMetadata src) =>
         new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
 }

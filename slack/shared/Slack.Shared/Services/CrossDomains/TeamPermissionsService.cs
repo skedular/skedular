@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Team.V1;
+using Api.Shared.Grpc.Skedular.Team.Core.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
 using Microsoft.Extensions.Caching.Memory;
@@ -16,7 +16,7 @@ public interface ITeamPermissionsService
 public class TeamPermissionsService(
     ApplicationConfiguration applicationConfiguration,
     TeamConfiguration teamConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Team.V1.TeamService.TeamServiceClient teamServiceClient,
+    Api.Shared.Grpc.Skedular.Team.Core.V1.TeamService.TeamServiceClient teamServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache)
     : ITeamPermissionsService

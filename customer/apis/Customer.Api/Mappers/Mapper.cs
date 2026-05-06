@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
 using Api.Shared.Services.Models;
 using Customer.Api.GraphQL.Billing;
 using Customer.Api.GraphQL.Customer;
@@ -43,7 +43,7 @@ public interface IMapper
     CustomerFeedback MapTo(Shared.Database.Entities.CustomerFeedback src);
     Shared.Database.Entities.CustomerFeedback MapTo(CustomerFeedback src, Shared.Database.Entities.Customer customer);
     Shared.Models.Customer MapTo(Admin_AddInput src);
-    global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer MapToGrpcResponse(Shared.Models.Customer src);
+    global::Api.Shared.Grpc.Skedular.Customer.Core.V1.Customer MapToGrpcResponse(Shared.Models.Customer src);
     Identity MapTo(Shared.Models.Identity src, Shared.Database.Entities.Customer customer);
     Identity MergeTo(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer customer);
     Shared.Models.Identity MapTo(Admin_AddIdentityInput src);
@@ -260,22 +260,22 @@ public class Mapper : IMapper
             FavouriteLocations = [],
             PersonalInformationVisibility = src.PersonalInformationVisibility switch
             {
-                global::Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility.Visible => PersonalInformationVisibility.Visible,
-                global::Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility.Redacted =>
+                global::Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility.Visible => PersonalInformationVisibility.Visible,
+                global::Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility.Redacted =>
                     PersonalInformationVisibility.Redacted,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Type = src.Type switch
             {
-                global::Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType.Guest => CustomerType.Guest,
-                global::Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType.Registered => CustomerType.Registered,
+                global::Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Guest => CustomerType.Guest,
+                global::Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Registered => CustomerType.Registered,
                 _ => throw new ArgumentOutOfRangeException()
             }
         };
 
-    public global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer MapToGrpcResponse(Shared.Models.Customer src)
+    public global::Api.Shared.Grpc.Skedular.Customer.Core.V1.Customer MapToGrpcResponse(Shared.Models.Customer src)
     {
-        var customer = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer
+        var customer = new global::Api.Shared.Grpc.Skedular.Customer.Core.V1.Customer
         {
             Id = src.Id,
             Designation = src.Designation.ToSafeString(),
@@ -299,21 +299,21 @@ public class Mapper : IMapper
             DisplayableName = src.DisplayableName.ToSafeString(),
             PersonalInformationVisibility = src.PersonalInformationVisibility switch
             {
-                PersonalInformationVisibility.Visible => global::Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility.Visible,
+                PersonalInformationVisibility.Visible => global::Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility.Visible,
                 PersonalInformationVisibility.Redacted =>
-                    global::Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility.Redacted,
+                    global::Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility.Redacted,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Type = src.Type switch
             {
-                CustomerType.Guest => global::Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType.Guest,
-                CustomerType.Registered => global::Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType.Registered,
+                CustomerType.Guest => global::Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Guest,
+                CustomerType.Registered => global::Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Registered,
                 _ => throw new ArgumentOutOfRangeException()
             }
         };
 
         customer.Identities.AddRange(src.Identities.Select(item =>
-            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity
+            new global::Api.Shared.Grpc.Skedular.Customer.Core.V1.Identity
             {
                 Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified ?? false
             }));

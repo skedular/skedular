@@ -15,7 +15,7 @@ public interface IMapper
     FileUploadResponse MapTo(CdnFile src);
     PrivateFile MapTo(Shared.Database.Entities.PrivateFile src);
     FileUploadResponse MapTo(PrivateFile src);
-    global::Api.Shared.Services.Grpc.Skedular.Core.V1.FileUploadResponse MapToGrpcResponse(PrivateFile src);
+    global::Api.Shared.Grpc.Skedular.Core.Core.V1.FileUploadResponse MapToGrpcResponse(PrivateFile src);
 }
 
 public class Mapper : IMapper
@@ -101,11 +101,11 @@ public class Mapper : IMapper
                 }
         };
 
-    public global::Api.Shared.Services.Grpc.Skedular.Core.V1.FileUploadResponse MapToGrpcResponse(PrivateFile src) =>
+    public global::Api.Shared.Grpc.Skedular.Core.Core.V1.FileUploadResponse MapToGrpcResponse(PrivateFile src) =>
         new()
         {
             Id = src.Id.ToSafeString(),
-            Original = new global::Api.Shared.Services.Grpc.Skedular.Core.V1.File
+            Original = new global::Api.Shared.Grpc.Skedular.Core.Core.V1.File
             {
                 Url = src.StorageUrl.ToString().ToSafeString(),
                 ContentType = src.ContentType.ToSafeString(),
@@ -114,7 +114,7 @@ public class Mapper : IMapper
             },
             Thumbnail = src.ThumbnailStorageUrl is null
                 ? null
-                : new global::Api.Shared.Services.Grpc.Skedular.Core.V1.File
+                : new global::Api.Shared.Grpc.Skedular.Core.Core.V1.File
                 {
                     Url = src.ThumbnailStorageUrl.ToString().ToSafeString(),
                     ContentType = src.ThumbnailContentType.ToSafeString(),

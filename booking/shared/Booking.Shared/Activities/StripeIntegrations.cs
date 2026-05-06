@@ -1,5 +1,5 @@
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
@@ -42,7 +42,7 @@ public class StripeIntegrations(
     ApplicationConfiguration applicationConfiguration,
     IRepositoryFactory repositoryFactory,
     OrganizationConfiguration organizationConfiguration,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
+    OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
     IStripeProductPricingService stripeProductPricingService,
     IStripeCustomerService stripeCustomerService,
     ICreatable<Session, SessionCreateOptions> sessionCreateService,
@@ -67,7 +67,7 @@ public class StripeIntegrations(
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
                              throw new ProductVersionNotFound();
 
-        var stripeConnectAccountConnection = await organizationServiceClient.Admin_GetStripeConnectAccountsAsync(
+        var stripeConnectAccountConnection = await organizationBillingServiceClient.Admin_GetStripeConnectAccountsAsync(
             new Admin_GetStripeConnectAccountsInput
             {
                 After = string.Empty,
@@ -100,7 +100,7 @@ public class StripeIntegrations(
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
                              throw new ProductVersionNotFound();
 
-        var stripeConnectAccountConnection = await organizationServiceClient.Admin_GetStripeConnectAccountsAsync(
+        var stripeConnectAccountConnection = await organizationBillingServiceClient.Admin_GetStripeConnectAccountsAsync(
             new Admin_GetStripeConnectAccountsInput
             {
                 After = string.Empty,

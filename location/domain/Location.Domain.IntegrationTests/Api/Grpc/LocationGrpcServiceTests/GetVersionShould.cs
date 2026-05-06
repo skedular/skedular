@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Grpc.Skedular.Location.Core.V1;
 
 namespace Location.Domain.IntegrationTests.Api.Grpc.LocationGrpcServiceTests;
 

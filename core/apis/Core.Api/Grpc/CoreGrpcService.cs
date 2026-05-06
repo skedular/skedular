@@ -1,12 +1,11 @@
+using Api.Shared.Grpc.Skedular.Core.Core.V1;
 using Api.Shared.Services.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Core.V1;
 using Core.Api.Mappers;
 using Core.Api.Services;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Version;
 using Grpc.Core;
-using HotChocolate.Subscriptions;
-using Version = Api.Shared.Services.Grpc.Skedular.Core.V1.Version;
+using Version = Api.Shared.Grpc.Skedular.Core.Core.V1.Version;
 
 namespace Core.Api.Grpc;
 
@@ -15,18 +14,8 @@ public class CoreGrpcService(
     CoreConfiguration coreConfiguration,
     IVersionService versionService,
     IFileUploaderService fileUploaderService,
-    IMapper mapper,
-    ITopicEventSender topicEventSender) : CoreService.CoreServiceBase
+    IMapper mapper) : CoreService.CoreServiceBase
 {
-    public override async Task<RaiseGraphqlChangeResponse> RaiseGraphqlChange(RaiseGraphqlChangeInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(coreConfiguration.ApiKey);
-
-        await topicEventSender.SendAsync(request.TopicName, request.Id, context.CancellationToken);
-
-        return new RaiseGraphqlChangeResponse();
-    }
-
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
         var version = versionService.GetVersion();

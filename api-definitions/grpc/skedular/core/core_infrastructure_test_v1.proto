@@ -1,7 +1,7 @@
 syntax = "proto3";
 package infrastructuretest;
 
-option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.InfrastructureTest.V1";
+option csharp_namespace = "Api.Shared.Grpc.Skedular.InfrastructureTest.V1";
 
 service InfrastructureTestService {
   rpc Reset (ResetInput) returns (ResetResponse);

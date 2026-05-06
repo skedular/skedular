@@ -1,8 +1,8 @@
 using Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Organization.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Aspire.Hosting.Testing;
 using Enterprise.Shared;
 using Enterprise.Shared.Accounting;

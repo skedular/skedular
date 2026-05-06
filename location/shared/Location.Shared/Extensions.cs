@@ -9,7 +9,7 @@ using Location.Shared.Services;
 using Location.Shared.Services.Cache;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
+using BookingService = Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingService;
 
 namespace Location.Shared;
 

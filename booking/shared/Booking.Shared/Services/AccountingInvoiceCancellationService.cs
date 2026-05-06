@@ -1,5 +1,5 @@
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
@@ -25,7 +25,7 @@ public interface IAccountingInvoiceCancellationService
 
 public class AccountingInvoiceCancellationService(
     OrganizationConfiguration organizationConfiguration,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
+    OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
     IRepositoryFactory repositoryFactory,
     IXeroSdkClientFactory xeroSdkClientFactory,
     IXeroTokenEncryptionService xeroTokenEncryptionService,
@@ -287,7 +287,7 @@ public class AccountingInvoiceCancellationService(
 
     private async Task<XeroConnection?> GetOrganizationXeroConnectionAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var response = await organizationServiceClient.Admin_GetXeroConnectionAsync(
+        var response = await organizationBillingServiceClient.Admin_GetXeroConnectionAsync(
             new Admin_GetXeroConnectionInput { OrganizationId = organizationId },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -365,7 +365,7 @@ public class AccountingInvoiceCancellationService(
             string.IsNullOrWhiteSpace(refreshedToken.RefreshToken)
                 ? xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted)
                 : refreshedToken.RefreshToken);
-        var refreshedConnection = await organizationServiceClient.Admin_RefreshXeroConnectionTokensAsync(
+        var refreshedConnection = await organizationBillingServiceClient.Admin_RefreshXeroConnectionTokensAsync(
             new Admin_RefreshXeroConnectionTokensInput
             {
                 OrganizationId = organizationId,

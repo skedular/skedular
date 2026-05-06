@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Email;
@@ -18,7 +18,7 @@ public class EmailIntegrations(
     CustomerConfiguration customerConfiguration,
     IEmailService emailService,
     IRepositoryFactory repositoryFactory,
-    CustomerService.CustomerServiceClient customerServiceClient,
+    CustomerAdminService.CustomerAdminServiceClient customerAdminServiceClient,
     ILogger<EmailIntegrations> logger)
 {
     [Activity]
@@ -42,7 +42,7 @@ public class EmailIntegrations(
             return;
         }
 
-        var inviterCustomer = await customerServiceClient.Admin_GetAsync(
+        var inviterCustomer = await customerAdminServiceClient.Admin_GetAsync(
             new Admin_GetInput { CustomerId = inviterCustomerId },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -104,12 +104,12 @@ public class EmailIntegrations(
             return;
         }
 
-        var inviterCustomer = await customerServiceClient.Admin_GetAsync(
+        var inviterCustomer = await customerAdminServiceClient.Admin_GetAsync(
             new Admin_GetInput { CustomerId = inviterCustomerId },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
-        var inviteeCustomer = await customerServiceClient.Admin_GetAsync(
+        var inviteeCustomer = await customerAdminServiceClient.Admin_GetAsync(
             new Admin_GetInput { CustomerId = inviteeCustomerId },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);

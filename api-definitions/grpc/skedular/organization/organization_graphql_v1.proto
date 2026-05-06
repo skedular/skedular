@@ -1,0 +1,16 @@
+syntax = "proto3";
+package organization;
+
+option csharp_namespace = "Api.Shared.Grpc.Skedular.Organization.Graphql.V1";
+
+service OrganizationGraphqlService {
+  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
+}
+
+message RaiseGraphqlChangeInput {
+  string topicName = 1;
+  string id        = 2;
+}
+
+message RaiseGraphqlChangeResponse {
+}

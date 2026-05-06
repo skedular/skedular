@@ -19,7 +19,6 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/msteams_v1.proto" GrpcServices="Client"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -46,7 +45,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../../shared/Api.Shared.Clients/Api.Shared.Clients.csproj"/>
         <ProjectReference Include="../../../shared/Testing.Shared.IntegrationTests/Testing.Shared.IntegrationTests.csproj"/>
         <ProjectReference Include="../../shared/MsTeams.Shared/MsTeams.Shared.csproj"/>
         <ProjectReference Include="../MsTeams.Domain.AppHost/MsTeams.Domain.AppHost.csproj"/>

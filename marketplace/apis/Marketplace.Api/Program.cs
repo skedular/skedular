@@ -50,6 +50,7 @@ public class Program
             .UseSecurity();
 
         app.MapGrpcService<MarketplaceGrpcService>();
+        app.MapGrpcService<MarketplaceGraphqlGrpcService>();
 
         return app;
     }

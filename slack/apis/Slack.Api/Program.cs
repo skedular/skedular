@@ -145,6 +145,7 @@ public class Program
             .UseSecurity();
 
         app.MapGrpcService<SlackGrpcService>();
+        app.MapGrpcService<SlackGraphqlGrpcService>();
         app.UseSlackNet(c => c.MapToPrefix("v1/slack"));
 
         return app;

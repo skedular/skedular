@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.Skedular.Core.V1;
+using Api.Shared.Grpc.Skedular.Core.Core.V1;
 using Grpc.Core;
 
 namespace Booking.Domain.FakeDependencies.Fakes;

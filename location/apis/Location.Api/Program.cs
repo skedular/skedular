@@ -54,6 +54,8 @@ public class Program
             .UseSecurity();
 
         app.MapGrpcService<LocationGrpcService>();
+        app.MapGrpcService<LocationGraphqlGrpcService>();
+        app.MapGrpcService<LocationResourcesGrpcService>();
 
         return app;
     }

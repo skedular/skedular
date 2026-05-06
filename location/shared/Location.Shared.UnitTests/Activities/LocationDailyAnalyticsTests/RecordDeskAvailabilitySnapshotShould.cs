@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
@@ -11,8 +11,8 @@ using Location.Shared.Repositories;
 using Microsoft.Extensions.Logging;
 using Temporalio.Testing;
 using ResourceAvailabilityClassificationConstants = Location.Shared.Models.ResourceAvailabilityClassificationConstants;
-using BookingProto = Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking;
-using BookingResource = Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource;
+using BookingProto = Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking;
+using BookingResource = Api.Shared.Grpc.Skedular.Booking.Core.V1.Resource;
 using LocationResource = Location.Shared.Database.Entities.Resource;
 
 namespace Location.Shared.UnitTests.Activities.LocationDailyAnalyticsTests;

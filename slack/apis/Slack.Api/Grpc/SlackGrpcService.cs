@@ -1,28 +1,12 @@
-using Api.Shared.Services.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Slack.V1;
-using Enterprise.Shared.Grpc;
+using Api.Shared.Grpc.Skedular.Slack.Core.V1;
 using Enterprise.Shared.Version;
 using Grpc.Core;
-using HotChocolate.Subscriptions;
-using Version = Api.Shared.Services.Grpc.Skedular.Slack.V1.Version;
+using Version = Api.Shared.Grpc.Skedular.Slack.Core.V1.Version;
 
 namespace Slack.Api.Grpc;
 
-public class SlackGrpcService(
-    SlackConfiguration slackConfiguration,
-    IVersionService versionService,
-    ITopicEventSender topicEventSender,
-    IGrpcAuthenticator grpcAuthenticator) : SlackService.SlackServiceBase
+public class SlackGrpcService(IVersionService versionService) : SlackService.SlackServiceBase
 {
-    public override async Task<RaiseGraphqlChangeResponse> RaiseGraphqlChange(RaiseGraphqlChangeInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(slackConfiguration.ApiKey);
-
-        await topicEventSender.SendAsync(request.TopicName, request.Id, context.CancellationToken);
-
-        return new RaiseGraphqlChangeResponse();
-    }
-
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
         var version = versionService.GetVersion();

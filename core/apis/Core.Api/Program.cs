@@ -52,6 +52,7 @@ public class Program
             .UseSecurity();
 
         app.MapGrpcService<CoreGrpcService>();
+        app.MapGrpcService<CoreGraphqlGrpcService>();
 
         return app;
     }

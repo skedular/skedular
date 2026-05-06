@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.Skedular.Marketplace.V1;
+using Api.Shared.Grpc.Skedular.Marketplace.Core.V1;
 
 namespace Marketplace.Domain.IntegrationTests.Api.Grpc.MarketplaceGrpcServiceTests;
 

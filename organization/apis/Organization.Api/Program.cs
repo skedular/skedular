@@ -58,6 +58,10 @@ public class Program
             .UseSecurity();
 
         app.MapGrpcService<OrganizationGrpcService>();
+        app.MapGrpcService<OrganizationGraphqlGrpcService>();
+        app.MapGrpcService<OrganizationTagsGrpcService>();
+        app.MapGrpcService<OrganizationZonesGrpcService>();
+        app.MapGrpcService<OrganizationBillingGrpcService>();
 
         return app;
     }

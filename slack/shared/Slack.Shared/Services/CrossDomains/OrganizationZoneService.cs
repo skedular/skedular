@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
+using Api.Shared.Grpc.Skedular.Organization.Zones.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.GraphQL.Types;
@@ -34,7 +35,7 @@ public interface IOrganizationZoneService
 public class OrganizationZoneService(
     ApplicationConfiguration applicationConfiguration,
     OrganizationConfiguration organizationConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
+    OrganizationZonesService.OrganizationZonesServiceClient organizationZonesServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache) : IOrganizationZoneService
 {
@@ -44,7 +45,7 @@ public class OrganizationZoneService(
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(zoneId),
             async _ => mapper.MapTo(
-                await organizationServiceClient.Admin_GetZoneAsync(
+                await organizationZonesServiceClient.Admin_GetZoneAsync(
                     new Admin_GetZoneInput { Id = zoneId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken)),
@@ -53,7 +54,7 @@ public class OrganizationZoneService(
     public async Task<OrganizationZone> AddAsync(string workspaceMemberId, OrganizationZone organizationZone, CancellationToken cancellationToken)
     {
         var mappedOrganizationZone = mapper.MapTo(
-            await organizationServiceClient.AddZoneAsync(
+            await organizationZonesServiceClient.AddZoneAsync(
                 new AddZoneInput
                 {
                     Id = organizationZone.Id,
@@ -73,7 +74,7 @@ public class OrganizationZoneService(
     public async Task<OrganizationZone> UpdateAsync(string workspaceMemberId, OrganizationZone organizationZone, CancellationToken cancellationToken)
     {
         var mappedOrganizationZone = mapper.MapTo(
-            await organizationServiceClient.UpdateZoneAsync(
+            await organizationZonesServiceClient.UpdateZoneAsync(
                 new UpdateZoneInput
                 {
                     Id = organizationZone.Id,
@@ -91,7 +92,7 @@ public class OrganizationZoneService(
 
     public async Task RemoveAsync(string workspaceMemberId, string zoneId, CancellationToken cancellationToken)
     {
-        await organizationServiceClient.RemoveZoneAsync(
+        await organizationZonesServiceClient.RemoveZoneAsync(
             new RemoveZoneInput { Id = zoneId },
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
@@ -105,7 +106,7 @@ public class OrganizationZoneService(
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(zoneId),
             async _ => mapper.MapTo(
-                await organizationServiceClient.GetZoneAsync(
+                await organizationZonesServiceClient.GetZoneAsync(
                     new GetZoneInput { Id = zoneId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
@@ -130,7 +131,7 @@ public class OrganizationZoneService(
 
                 getPaginatedZonesInput.OrderBy.Add(new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.Name });
 
-                var connection = await organizationServiceClient.GetPaginatedZonesAsync(
+                var connection = await organizationZonesServiceClient.GetPaginatedZonesAsync(
                     getPaginatedZonesInput,
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken);
@@ -176,7 +177,7 @@ public class OrganizationZoneService(
 
         getPaginatedZonesInput.OrderBy.Add(new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.Name });
 
-        var connection = await organizationServiceClient.GetPaginatedZonesAsync(
+        var connection = await organizationZonesServiceClient.GetPaginatedZonesAsync(
             getPaginatedZonesInput,
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);

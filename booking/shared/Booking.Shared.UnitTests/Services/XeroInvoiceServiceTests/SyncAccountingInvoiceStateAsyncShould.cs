@@ -1,5 +1,6 @@
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
@@ -65,6 +66,7 @@ public class SyncAccountingInvoiceStateAsyncShould
         var sut = new TestableXeroInvoiceService(
             organizationConfiguration,
             new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             transactionBuilder,
             graphQlTopicEventSender,
@@ -211,6 +213,7 @@ public class SyncAccountingInvoiceStateAsyncShould
         var sut = new TestableXeroInvoiceService(
             organizationConfiguration,
             new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             transactionBuilder,
             graphQlTopicEventSender,
@@ -323,6 +326,7 @@ public class SyncAccountingInvoiceStateAsyncShould
     private sealed class TestableXeroInvoiceService(
         OrganizationConfiguration organizationConfiguration,
         OrganizationService.OrganizationServiceClient organizationServiceClient,
+        OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
         IRepositoryFactory repositoryFactory,
         IDbTransactionBuilder transactionBuilder,
         IGraphQlTopicEventSender graphQlTopicEventSender,
@@ -341,6 +345,7 @@ public class SyncAccountingInvoiceStateAsyncShould
         : XeroInvoiceService(
             organizationConfiguration,
             organizationServiceClient,
+            organizationBillingServiceClient,
             repositoryFactory,
             transactionBuilder,
             graphQlTopicEventSender,

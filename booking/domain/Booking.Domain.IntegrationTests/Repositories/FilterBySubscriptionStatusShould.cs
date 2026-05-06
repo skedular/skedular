@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.Skedular.InfrastructureTest.V1;
+using Api.Shared.Grpc.Skedular.InfrastructureTest.V1;
 using Api.Shared.Services.Models;
 using Booking.Domain.IntegrationTests.Fixtures;
 using Booking.Shared.Models;

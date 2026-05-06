@@ -1,4 +1,7 @@
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
+using Api.Shared.Grpc.Skedular.Organization.Tags.V1;
+using Api.Shared.Grpc.Skedular.Organization.Zones.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
@@ -22,13 +25,13 @@ using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.Tag.AddCustomTagInput;
 using AddOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.AddOrganizationBillingDetailsInput;
 using AddProductTagInput = Organization.Api.GraphQL.Tag.AddProductTagInput;
-using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneInput;
+using AddZoneInput = Api.Shared.Grpc.Skedular.Organization.Zones.V1.AddZoneInput;
 using AzureTenant = Organization.Shared.Models.AzureTenant;
 using AzureTenantMember = Organization.Shared.Models.AzureTenantMember;
-using BankAccount = Api.Shared.Services.Grpc.Skedular.Organization.V1.BankAccount;
+using BankAccount = Api.Shared.Grpc.Skedular.Organization.Billing.V1.BankAccount;
 using CdnFile = Api.Shared.Services.Models.CdnFile;
 using CdnImageFile = Api.Shared.Services.Models.CdnImageFile;
-using Coordinates = Api.Shared.Services.Grpc.Skedular.Organization.V1.Coordinates;
+using Coordinates = Api.Shared.Grpc.Skedular.Organization.Core.V1.Coordinates;
 using Customer = Organization.Shared.Models.Customer;
 using DailyMemberCountRecording = Organization.Shared.Models.DailyMemberCountRecording;
 using Identity = Organization.Shared.Models.Identity;
@@ -45,13 +48,13 @@ using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
 using Tag = Organization.Shared.Models.Tag;
 using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
 using UpdateCustomTagInput = Organization.Api.GraphQL.Tag.UpdateCustomTagInput;
-using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
-using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
+using UpdateZoneInput = Api.Shared.Grpc.Skedular.Organization.Zones.V1.UpdateZoneInput;
+using Member = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMember;
 using OrganizationBankAccount = Organization.Shared.Database.Entities.OrganizationBankAccount;
-using OrganizationBillingCycle = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingCycle;
+using OrganizationBillingCycle = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationBillingCycle;
 using OrganizationBillingDetails = Organization.Shared.Database.Entities.OrganizationBillingDetails;
 using OrganizationDetails = Organization.Api.GraphQL.Organization.OrganizationDetails;
-using OrganizationMemberRole = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberRole;
+using OrganizationMemberRole = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberRole;
 using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
 using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
 using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.OrganizationStripeConnectAccount;
@@ -61,7 +64,7 @@ using OrganizationStripePaymentMethod = Organization.Shared.Models.OrganizationS
 using OrganizationXeroConnection = Organization.Shared.Models.OrganizationXeroConnection;
 using UpdateOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.UpdateOrganizationBillingDetailsInput;
 using OrganizationPhysicalAddress = Organization.Shared.Database.Entities.OrganizationPhysicalAddress;
-using OrganizationType = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationType;
+using OrganizationType = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationType;
 using UpdateProductTagInput = Organization.Api.GraphQL.Tag.UpdateProductTagInput;
 
 namespace Organization.Api.Mappers;
@@ -99,9 +102,9 @@ public interface IMapper
 
     Shared.Models.Organization MapTo(AddOrganizationInput src);
     Shared.Models.Organization MapTo(UpdateOrganizationInput src);
-    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse MapToGrpcResponse(Shared.Models.TermsOfUse src);
+    global::Api.Shared.Grpc.Skedular.Organization.Core.V1.TermsOfUse MapToGrpcResponse(Shared.Models.TermsOfUse src);
     Shared.Models.Organization MapTo(Admin_AddInput src);
-    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization MapToGrpcResponse(Shared.Models.Organization src);
+    global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization MapToGrpcResponse(Shared.Models.Organization src);
     XeroConnection? MapToGrpcResponse(OrganizationXeroConnection? src);
 
     Shared.Database.Entities.OrganizationMember MapToEntity(
@@ -135,15 +138,15 @@ public interface IMapper
     OrganizationTagDetails? MapTo(Tag? src);
     OrganizationTagEdge MapTo(Edge<Tag> src);
 
-    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag MapToGrpcResponseTag(Tag src);
+    global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag MapToGrpcResponseTag(Tag src);
     TagEdge MapToGrpcResponseTag(Edge<Tag> src);
     Tag MapTo(AddTagInput src);
     Tag MapTo(UpdateTagInput src);
 
     CustomTag MapToGrpcResponseCustomTag(Tag src);
     CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src);
-    Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddCustomTagInput src);
-    Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateCustomTagInput src);
+    Tag MapTo(global::Api.Shared.Grpc.Skedular.Organization.Tags.V1.AddCustomTagInput src);
+    Tag MapTo(global::Api.Shared.Grpc.Skedular.Organization.Tags.V1.UpdateCustomTagInput src);
 
     Zone MapToGrpcResponseZone(Tag src);
     ZoneEdge MapToGrpcResponseZone(Edge<Tag> src);
@@ -152,8 +155,8 @@ public interface IMapper
 
     ProductTag MapToGrpcResponseProductTag(Tag src);
     ProductTagEdge MapToGrpcResponseProductTag(Edge<Tag> src);
-    Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddProductTagInput src);
-    Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateProductTagInput src);
+    Tag MapTo(global::Api.Shared.Grpc.Skedular.Organization.Tags.V1.AddProductTagInput src);
+    Tag MapTo(global::Api.Shared.Grpc.Skedular.Organization.Tags.V1.UpdateProductTagInput src);
 
     IEnumerable<string> MapTo(Offering offering);
     OrganizationSsoSettings MapTo(UpdateOrganizationSsoSettingsInput src);
@@ -585,7 +588,7 @@ public class Mapper : IMapper
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
 
-    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse MapToGrpcResponse(Shared.Models.TermsOfUse src) =>
+    public global::Api.Shared.Grpc.Skedular.Organization.Core.V1.TermsOfUse MapToGrpcResponse(Shared.Models.TermsOfUse src) =>
         new() { Id = src.Id, Terms = src.Terms };
 
     public Shared.Models.Organization MapTo(Admin_AddInput src) =>
@@ -622,11 +625,11 @@ public class Mapper : IMapper
             InvoiceDueInDays = src.InvoiceDueInDays
         };
 
-    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization MapToGrpcResponse(Shared.Models.Organization src)
+    public global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization MapToGrpcResponse(Shared.Models.Organization src)
     {
         var organizationOffering = src.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue)
             .OrderByDescending(item => item.End).First();
-        var organization = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization
+        var organization = new global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization
         {
             Id = src.Id,
             CustomDomain = src.CustomDomain.ToSafeString(),
@@ -647,7 +650,7 @@ public class Mapper : IMapper
             IsOwnershipVerified = src.IsOwnershipVerified ?? false,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl.ToSafeString(),
-            Offering = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Offering
+            Offering = new global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Offering
             {
                 Id = organizationOffering.Id,
                 OrganizationId = src.Id,
@@ -669,7 +672,7 @@ public class Mapper : IMapper
             organizationOffering.OrganizationOfferingActiveMembers.Select(item => item.OrganizationMember.Customer.Id));
 
         organization.IndustrySubCategories.AddRange(src.IndustrySubCategories.Select(item =>
-            new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.IndustrySubCategory
+            new global::Api.Shared.Grpc.Skedular.Organization.Core.V1.IndustrySubCategory
             {
                 Id = item.Id, Name = item.Name, MainCategoryName = item.IndustryMainCategory.Name
             }));
@@ -838,7 +841,7 @@ public class Mapper : IMapper
 
     public OrganizationTagEdge MapTo(Edge<Tag> src) => new(MapTo(src.Node)!, src.Cursor);
 
-    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag MapToGrpcResponseTag(Tag src) =>
+    public global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag MapToGrpcResponseTag(Tag src) =>
         new()
         {
             Id = src.Id,
@@ -876,7 +879,7 @@ public class Mapper : IMapper
 
     public CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseCustomTag(src.Node) };
 
-    public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddCustomTagInput src) =>
+    public Tag MapTo(global::Api.Shared.Grpc.Skedular.Organization.Tags.V1.AddCustomTagInput src) =>
         new()
         {
             Id = src.Id,
@@ -887,7 +890,7 @@ public class Mapper : IMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateCustomTagInput src) =>
+    public Tag MapTo(global::Api.Shared.Grpc.Skedular.Organization.Tags.V1.UpdateCustomTagInput src) =>
         new()
         {
             Id = src.Id,
@@ -921,7 +924,7 @@ public class Mapper : IMapper
 
     public ProductTagEdge MapToGrpcResponseProductTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseProductTag(src.Node) };
 
-    public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddProductTagInput src) =>
+    public Tag MapTo(global::Api.Shared.Grpc.Skedular.Organization.Tags.V1.AddProductTagInput src) =>
         new()
         {
             Id = src.Id,
@@ -932,7 +935,7 @@ public class Mapper : IMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateProductTagInput src) =>
+    public Tag MapTo(global::Api.Shared.Grpc.Skedular.Organization.Tags.V1.UpdateProductTagInput src) =>
         new()
         {
             Id = src.Id,
@@ -1590,10 +1593,10 @@ public class Mapper : IMapper
         return dest;
     }
 
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
+    private static IEnumerable<global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag MapToGrpcResponse(Tag src) =>
+    private static global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag MapToGrpcResponse(Tag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private static IEnumerable<ResourceType> MapToGrpcResponseResourceType(IEnumerable<Tag> src) =>
@@ -1629,8 +1632,8 @@ public class Mapper : IMapper
             },
             Status = src.Status switch
             {
-                OrganizationMemberStatus.Active => global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active,
-                OrganizationMemberStatus.Inactive => global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive,
+                OrganizationMemberStatus.Active => global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Active,
+                OrganizationMemberStatus.Inactive => global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
@@ -1652,8 +1655,8 @@ public class Mapper : IMapper
             },
             Status = src.Status switch
             {
-                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active => OrganizationMemberStatus.Active,
-                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive => OrganizationMemberStatus.Inactive,
+                global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Active => OrganizationMemberStatus.Active,
+                global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Inactive => OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
@@ -2231,38 +2234,38 @@ public class Mapper : IMapper
                 Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
             };
 
-    private static IEnumerable<CdnImageFile> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnImageFile> src) =>
+    private static IEnumerable<CdnImageFile> MapTo(IEnumerable<global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnImageFile> src) =>
         src.Select(MapTo);
 
-    private static CdnImageFile MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnImageFile src) =>
+    private static CdnImageFile MapTo(global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnImageFile src) =>
         new(MapTo(src.Original), MapTo(src.Thumbnail));
 
-    private static CdnFile? MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnFile? src) =>
+    private static CdnFile? MapTo(global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnFile? src) =>
         src is null ? null : new CdnFile(src.Url, src.Height.FromNullInt(), src.Width.FromNullInt());
 
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnImageFile> MapTo(IEnumerable<CdnImageFile> src) =>
+    private static IEnumerable<global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnImageFile> MapTo(IEnumerable<CdnImageFile> src) =>
         src.Select(MapTo);
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnImageFile MapTo(CdnImageFile src) =>
+    private static global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnImageFile MapTo(CdnImageFile src) =>
         new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnFile? MapTo(CdnFile? src) =>
+    private static global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnFile? MapTo(CdnFile? src) =>
         src is null
             ? null
-            : new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnFile
+            : new global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnFile
             {
                 Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt()
             };
 
-    private static ListingMetadata MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ListingMetadata? src) =>
+    private static ListingMetadata MapTo(global::Api.Shared.Grpc.Skedular.Organization.Core.V1.ListingMetadata? src) =>
         src is null
             ? ListingMetadata.Empty
             : new ListingMetadata(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(),
                 src.IncludedFeatures.ToSafeCollection());
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ListingMetadata MapTo(ListingMetadata src)
+    private static global::Api.Shared.Grpc.Skedular.Organization.Core.V1.ListingMetadata MapTo(ListingMetadata src)
     {
-        var listingMetadata = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ListingMetadata
+        var listingMetadata = new global::Api.Shared.Grpc.Skedular.Organization.Core.V1.ListingMetadata
         {
             About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
         };

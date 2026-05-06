@@ -1,0 +1,16 @@
+syntax = "proto3";
+package booking;
+
+option csharp_namespace = "Api.Shared.Grpc.Skedular.Booking.Graphql.V1";
+
+service BookingGraphqlService {
+  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
+}
+
+message RaiseGraphqlChangeInput {
+  string topicName = 1;
+  string id        = 2;
+}
+
+message RaiseGraphqlChangeResponse {
+}

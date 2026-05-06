@@ -1,8 +1,8 @@
 using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Workaround.V1;
+using Api.Shared.Grpc.Skedular.Marketplace.Core.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Marketplace.V1;
 using Aspire.Hosting.Testing;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;

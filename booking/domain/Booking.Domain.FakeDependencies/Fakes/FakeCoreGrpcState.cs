@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
-using Api.Shared.Services.Grpc.Skedular.Core.V1;
-using GrpcFile = Api.Shared.Services.Grpc.Skedular.Core.V1.File;
+using Api.Shared.Grpc.Skedular.Core.Core.V1;
+using GrpcFile = Api.Shared.Grpc.Skedular.Core.Core.V1.File;
 
 namespace Booking.Domain.FakeDependencies.Fakes;
 

@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
@@ -17,7 +17,7 @@ using Xero.NetStandard.OAuth2.Model.Accounting;
 using Constants = Enterprise.Shared.Grpc.Constants;
 using Invoice = Xero.NetStandard.OAuth2.Model.Accounting.Invoice;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
-using OrganizationModel = Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization;
+using OrganizationModel = Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization;
 
 namespace Booking.Shared.UnitTests.Services.XeroWebhookServiceTests;
 
@@ -173,7 +173,7 @@ public class XeroWebhookServiceShould
             xeroConfiguration,
             repositoryFactory,
             temporalService,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             organizationConfiguration,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
@@ -287,7 +287,7 @@ public class XeroWebhookServiceShould
             xeroConfiguration,
             repositoryFactory,
             temporalService,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             organizationConfiguration,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
@@ -389,7 +389,7 @@ public class XeroWebhookServiceShould
         XeroConfiguration xeroConfiguration,
         IRepositoryFactory repositoryFactory,
         ITemporalService temporalService,
-        OrganizationService.OrganizationServiceClient organizationServiceClient,
+        OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
         OrganizationConfiguration organizationConfiguration,
         IXeroSdkClientFactory xeroSdkClientFactory,
         IXeroTokenEncryptionService xeroTokenEncryptionService,
@@ -399,7 +399,7 @@ public class XeroWebhookServiceShould
             xeroConfiguration,
             repositoryFactory,
             temporalService,
-            organizationServiceClient,
+            organizationBillingServiceClient,
             organizationConfiguration,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,

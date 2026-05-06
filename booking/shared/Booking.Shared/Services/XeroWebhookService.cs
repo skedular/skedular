@@ -1,8 +1,8 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
@@ -29,7 +29,7 @@ public class XeroWebhookService(
     XeroConfiguration xeroConfiguration,
     IRepositoryFactory repositoryFactory,
     ITemporalService temporalService,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
+    OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
     OrganizationConfiguration organizationConfiguration,
     IXeroSdkClientFactory xeroSdkClientFactory,
     IXeroTokenEncryptionService xeroTokenEncryptionService,
@@ -212,7 +212,7 @@ public class XeroWebhookService(
             return null;
         }
 
-        var organization = await organizationServiceClient.Admin_GetByXeroTenantIdAsync(
+        var organization = await organizationBillingServiceClient.Admin_GetByXeroTenantIdAsync(
             new Admin_GetByXeroTenantIdInput { TenantId = tenantId },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -221,7 +221,7 @@ public class XeroWebhookService(
             return null;
         }
 
-        var xeroConnection = await organizationServiceClient.Admin_GetXeroConnectionAsync(
+        var xeroConnection = await organizationBillingServiceClient.Admin_GetXeroConnectionAsync(
             new Admin_GetXeroConnectionInput { OrganizationId = organization.Id },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -283,7 +283,7 @@ public class XeroWebhookService(
 
         if (!tenantCache.TryGetValue(organizationId, out var expectedTenantId))
         {
-            var xeroConnection = await organizationServiceClient.Admin_GetXeroConnectionAsync(
+            var xeroConnection = await organizationBillingServiceClient.Admin_GetXeroConnectionAsync(
                 new Admin_GetXeroConnectionInput { OrganizationId = organizationId },
                 organizationConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
@@ -331,7 +331,7 @@ public class XeroWebhookService(
         var refreshedToken = (XeroOAuth2Token)await xeroSdkClientFactory.CreateClient().RefreshAccessTokenAsync(
             new XeroOAuth2Token { RefreshToken = xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted) });
         var now = timeProvider.GetUtcNow();
-        var refreshedConnection = await organizationServiceClient.Admin_RefreshXeroConnectionTokensAsync(
+        var refreshedConnection = await organizationBillingServiceClient.Admin_RefreshXeroConnectionTokensAsync(
             new Admin_RefreshXeroConnectionTokensInput
             {
                 OrganizationId = organizationId,

@@ -3,10 +3,9 @@ package booking;
 
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Booking.V1";
+option csharp_namespace = "Api.Shared.Grpc.Skedular.Booking.Core.V1";
 
 service BookingService {
-  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
 
   rpc Admin_GetPaginatedBookings (Admin_GetPaginatedBookingsInput) returns (BookingConnection);
 
@@ -19,14 +18,6 @@ service BookingService {
   rpc UpdatePrivate (UpdatePrivateInput) returns (Booking);
   rpc DeletePrivate (DeletePrivateInput) returns (Booking);
   rpc GetAvailableResources (GetAvailableResourcesInput) returns (AvailableResources);
-}
-
-message RaiseGraphqlChangeInput {
-  string topicName = 1;
-  string id        = 2;
-}
-
-message RaiseGraphqlChangeResponse {
 }
 
 message VersionInput {

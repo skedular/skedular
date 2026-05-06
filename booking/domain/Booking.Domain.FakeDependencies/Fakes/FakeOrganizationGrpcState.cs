@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Booking.Domain.FakeDependencies.Fakes;

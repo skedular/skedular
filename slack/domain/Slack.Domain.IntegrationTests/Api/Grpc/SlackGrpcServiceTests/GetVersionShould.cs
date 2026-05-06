@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.Skedular.Slack.V1;
+using Api.Shared.Grpc.Skedular.Slack.Core.V1;
 
 namespace Slack.Domain.IntegrationTests.Api.Grpc.SlackGrpcServiceTests;
 

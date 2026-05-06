@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
@@ -12,10 +12,10 @@ using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Microsoft.EntityFrameworkCore;
 using Temporalio.Testing;
-using BookingProto = Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking;
+using BookingProto = Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking;
 using LocationEntity = Location.Shared.Database.Entities.Location;
 using LocationResource = Location.Shared.Database.Entities.Resource;
-using Resource = Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource;
+using Resource = Api.Shared.Grpc.Skedular.Booking.Core.V1.Resource;
 
 namespace Location.Shared.UnitTests.Activities.LocationBookingDerivedStateTests;
 

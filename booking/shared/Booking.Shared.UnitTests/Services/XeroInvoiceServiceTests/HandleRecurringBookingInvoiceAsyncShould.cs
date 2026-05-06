@@ -1,5 +1,5 @@
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services.Models;
 using AutoFixture.Xunit3;
 using Booking.Shared.Database.Entities;
@@ -19,6 +19,7 @@ using AccountingInvoiceExportModeConstants = Booking.Shared.Models.AccountingInv
 using OrganizationBillingCycleModel = Api.Shared.Services.Models.OrganizationBillingCycle;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 
 namespace Booking.Shared.UnitTests.Services.XeroInvoiceServiceTests;
 
@@ -58,6 +59,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
         var sut = new XeroInvoiceService(
             organizationConfiguration,
             new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             transactionBuilder,
             graphQlTopicEventSender,
@@ -208,6 +210,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
         var sut = new XeroInvoiceService(
             organizationConfiguration,
             new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             transactionBuilder,
             graphQlTopicEventSender,
@@ -337,6 +340,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
         var sut = new XeroInvoiceService(
             organizationConfiguration,
             new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             repositoryFactory,
             transactionBuilder,
             graphQlTopicEventSender,

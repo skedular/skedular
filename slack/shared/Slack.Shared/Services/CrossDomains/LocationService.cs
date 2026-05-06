@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Grpc.Skedular.Location.Core.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.GraphQL.Types;
@@ -37,7 +37,7 @@ public interface ILocationService
 public class LocationService(
     ApplicationConfiguration applicationConfiguration,
     LocationConfiguration locationConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient locationServiceClient,
+    Api.Shared.Grpc.Skedular.Location.Core.V1.LocationService.LocationServiceClient locationServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache)
     : ILocationService
@@ -90,8 +90,8 @@ public class LocationService(
                     OrganizationId = location.Organization!.Id,
                     Type = location.Type switch
                     {
-                        LocationType.Private => Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private,
-                        LocationType.Marketplace => Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Marketplace,
+                        LocationType.Private => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private,
+                        LocationType.Marketplace => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace,
                         _ => throw new ArgumentOutOfRangeException()
                     }
                 },
@@ -131,8 +131,8 @@ public class LocationService(
                     Timezone = location.Timezone,
                     Type = location.Type switch
                     {
-                        LocationType.Private => Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private,
-                        LocationType.Marketplace => Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Marketplace,
+                        LocationType.Private => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private,
+                        LocationType.Marketplace => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace,
                         _ => throw new ArgumentOutOfRangeException()
                     }
                 },
@@ -162,8 +162,8 @@ public class LocationService(
                     OrganizationId = location.Organization!.Id,
                     Type = location.Type switch
                     {
-                        LocationType.Private => Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private,
-                        LocationType.Marketplace => Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Marketplace,
+                        LocationType.Private => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private,
+                        LocationType.Marketplace => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace,
                         _ => throw new ArgumentOutOfRangeException()
                     }
                 },

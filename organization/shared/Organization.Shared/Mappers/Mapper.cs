@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1;
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
@@ -8,7 +8,7 @@ using Microsoft.Graph.Models;
 using Organization.Shared.Models;
 using AzureTenant = Organization.Shared.Database.Entities.AzureTenant;
 using Customer = Organization.Shared.Models.Customer;
-using CustomerType = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType;
+using CustomerType = Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType;
 using Identity = Organization.Shared.Models.Identity;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMember;
@@ -17,7 +17,7 @@ using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails
 using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
 using OrganizationType = Api.Shared.Services.Models.OrganizationType;
 using PaymentMethod = Stripe.PaymentMethod;
-using PersonalInformationVisibility = Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility;
+using PersonalInformationVisibility = Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility;
 using PhysicalAddress = Api.Shared.Clients.Events.Skedular.Organization.V1.PhysicalAddress;
 using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
@@ -251,7 +251,7 @@ public class Mapper : IMapper
             Type = CustomerType.Registered
         };
 
-        input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
+        input.Identities.Add(new Api.Shared.Grpc.Skedular.Customer.Core.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
         return input;
     }

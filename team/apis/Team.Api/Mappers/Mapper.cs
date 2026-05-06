@@ -1,12 +1,12 @@
-using Api.Shared.Services.Grpc.Skedular.Team.V1;
+using Api.Shared.Grpc.Skedular.Team.Core.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
 using Team.Api.GraphQL.Invitation;
 using Team.Api.GraphQL.Member;
 using Team.Api.GraphQL.Team;
-using CdnFile = Api.Shared.Services.Grpc.Skedular.Team.V1.CdnFile;
-using CdnImageFile = Api.Shared.Services.Grpc.Skedular.Team.V1.CdnImageFile;
+using CdnFile = Api.Shared.Grpc.Skedular.Team.Core.V1.CdnFile;
+using CdnImageFile = Api.Shared.Grpc.Skedular.Team.Core.V1.CdnImageFile;
 using Customer = Team.Shared.Models.Customer;
 using Identity = Team.Shared.Models.Identity;
 using JoinInvitation = Team.Shared.Models.JoinInvitation;
@@ -14,7 +14,7 @@ using Location = Team.Shared.Database.Entities.Location;
 using Organization = Team.Shared.Database.Entities.Organization;
 using OrganizationMember = Team.Shared.Models.OrganizationMember;
 using OrganizationMemberRole = Api.Shared.Services.Models.OrganizationMemberRole;
-using Permissions = Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions;
+using Permissions = Api.Shared.Grpc.Skedular.Team.Core.V1.Permissions;
 using TeamEdge = Team.Api.GraphQL.Team.TeamEdge;
 using TeamMember = Team.Shared.Models.TeamMember;
 using TeamMemberStatus = Api.Shared.Services.Models.TeamMemberStatus;
@@ -43,11 +43,11 @@ public interface IMapper
     TeamMember MapTo(AddTeamMemberInput src);
     IReadOnlyList<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src);
     JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
-    global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team MapToGrpcResponse(Shared.Models.Team src);
+    global::Api.Shared.Grpc.Skedular.Team.Core.V1.Team MapToGrpcResponse(Shared.Models.Team src);
     Shared.Models.Team MapTo(AddInput src);
     Shared.Models.Team MapTo(UpdateInput src);
     TeamEdge MapTo(Edge<Shared.Models.Team> src);
-    global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src);
+    global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src);
     IEnumerable<Edge<TeamMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.TeamMember>> src, Shared.Models.Team team);
     TeamMemberEdge MapTo(Edge<TeamMember> src);
     IEnumerable<InviteCustomerToJoinTeamDetails> MapTo(IEnumerable<JoinInvitation> src);
@@ -240,9 +240,9 @@ public class Mapper : IMapper
             Invitee = MapTo(src.Invitee)
         };
 
-    public global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team MapToGrpcResponse(Shared.Models.Team src)
+    public global::Api.Shared.Grpc.Skedular.Team.Core.V1.Team MapToGrpcResponse(Shared.Models.Team src)
     {
-        var team = new global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team
+        var team = new global::Api.Shared.Grpc.Skedular.Team.Core.V1.Team
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
@@ -295,7 +295,7 @@ public class Mapper : IMapper
 
     public TeamEdge MapTo(Edge<Shared.Models.Team> src) => new(MapTo(src.Node)!, src.Cursor);
 
-    public global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src) =>
+    public global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
     public IEnumerable<Edge<TeamMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.TeamMember>> src, Shared.Models.Team team) =>
@@ -343,10 +343,10 @@ public class Mapper : IMapper
     private IEnumerable<TeamMember> MapTo(IEnumerable<Shared.Database.Entities.TeamMember> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember> MapToGrpcResponse(IEnumerable<TeamMember> src) =>
+    private static IEnumerable<global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMember> MapToGrpcResponse(IEnumerable<TeamMember> src) =>
         src.Select(MapToGrpcResponse);
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember MapToGrpcResponse(TeamMember src) =>
+    private static global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMember MapToGrpcResponse(TeamMember src) =>
         new()
         {
             Id = src.Id,
@@ -359,14 +359,14 @@ public class Mapper : IMapper
             },
             Status = src.Status switch
             {
-                TeamMemberStatus.Active => global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Active,
-                TeamMemberStatus.Inactive => global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Inactive,
+                TeamMemberStatus.Active => global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Active,
+                TeamMemberStatus.Inactive => global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             CustomerId = src.Customer.Id.ToSafeString(),
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)
                 ? null
-                : new global::Api.Shared.Services.Grpc.Skedular.Team.V1.OrganizationMember
+                : new global::Api.Shared.Grpc.Skedular.Team.Core.V1.OrganizationMember
                 {
                     Id = src.OrganizationMember.Id,
                     Role = src.OrganizationMember.Role switch
@@ -380,7 +380,7 @@ public class Mapper : IMapper
                 }
         };
 
-    private static TeamMember MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember src, Shared.Models.Team team) =>
+    private static TeamMember MapTo(global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMember src, Shared.Models.Team team) =>
         new()
         {
             Id = src.Id,
@@ -393,8 +393,8 @@ public class Mapper : IMapper
             },
             Status = src.Status switch
             {
-                global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Active => TeamMemberStatus.Active,
-                global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Inactive => TeamMemberStatus.Inactive,
+                global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Active => TeamMemberStatus.Active,
+                global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Inactive => TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Customer { Id = src.CustomerId },

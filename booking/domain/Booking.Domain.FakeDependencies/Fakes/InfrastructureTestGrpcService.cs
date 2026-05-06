@@ -1,5 +1,5 @@
-using Api.Shared.Services.Grpc.Skedular.InfrastructureTest.V1;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.InfrastructureTest.V1;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Google.Protobuf;
 using Grpc.Core;
 

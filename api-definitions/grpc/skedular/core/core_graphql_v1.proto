@@ -1,0 +1,16 @@
+syntax = "proto3";
+package core;
+
+option csharp_namespace = "Api.Shared.Grpc.Skedular.Core.Graphql.V1";
+
+service CoreGraphqlService {
+  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
+}
+
+message RaiseGraphqlChangeInput {
+  string topicName = 1;
+  string id        = 2;
+}
+
+message RaiseGraphqlChangeResponse {
+}

@@ -1,0 +1,85 @@
+syntax = "proto3";
+package location;
+
+option csharp_namespace = "Api.Shared.Grpc.Skedular.Location.Resources.V1";
+
+import "location/location_core_v1.proto";
+
+service LocationResourcesService {
+  rpc Admin_GetResource (Admin_GetResourceInput) returns (Resource);
+
+  rpc GetPaginatedResources (GetPaginatedResourcesInput) returns (ResourceConnection);
+  rpc GetResource (GetResourceInput) returns (Resource);
+  rpc AddResource (AddResourceInput) returns (Resource);
+  rpc UpdateResource (UpdateResourceInput) returns (Resource);
+  rpc RemoveResource (RemoveResourceInput) returns (Resource);
+}
+
+message ResourceConnection {
+  PageInfo              pageInfo   = 1;
+  repeated ResourceEdge edges      = 2;
+  int32                 totalCount = 3;
+}
+
+message ResourceEdge {
+  Resource node   = 1;
+  string   cursor = 2;
+}
+
+message GetPaginatedResourcesInput {
+  string                      after   = 1;
+  int32                       first   = 2;
+  string                      before  = 3;
+  int32                       last    = 4;
+  ResourceWhereInput          where   = 5;
+  repeated ResourceOrderInput orderBy = 6;
+}
+
+message ResourceWhereInput {
+  string          locationId   = 1;
+  string          nameContains = 2;
+  repeated string tagIds       = 3;
+  string          floorPlanId  = 4;
+}
+
+message ResourceOrderInput {
+  OrderDirection     direction = 1;
+  ResourceOrderField field     = 2;
+}
+
+enum ResourceOrderField {
+  ResourceOrderField_ResourceName = 0;
+}
+
+message Admin_GetResourceInput {
+  string id = 1;
+}
+
+message GetResourceInput {
+  string id = 1;
+}
+
+message AddResourceInput {
+  string          id                     = 1;
+  string          locationId             = 2;
+  string          name                   = 3;
+  bool            inactive               = 4;
+  bool            requireBookingApproval = 5;
+  repeated string tagIds                 = 6;
+  string          color                  = 7;
+  int32           capacity               = 8;
+}
+
+message UpdateResourceInput {
+  string          id                     = 1;
+  string          name                   = 2;
+  bool            inactive               = 3;
+  bool            requireBookingApproval = 4;
+  repeated string tagIds                 = 5;
+  string          color                  = 6;
+  int32           capacity               = 7;
+}
+
+message RemoveResourceInput {
+  string id = 1;
+}

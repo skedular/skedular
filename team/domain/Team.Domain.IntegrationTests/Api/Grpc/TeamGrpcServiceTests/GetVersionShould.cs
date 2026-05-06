@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.Skedular.Team.V1;
+using Api.Shared.Grpc.Skedular.Team.Core.V1;
 
 namespace Team.Domain.IntegrationTests.Api.Grpc.TeamGrpcServiceTests;
 

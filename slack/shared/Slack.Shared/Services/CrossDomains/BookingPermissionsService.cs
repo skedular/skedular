@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
 using Microsoft.Extensions.Caching.Memory;
@@ -21,7 +21,7 @@ public interface IBookingPermissionsService
 public class BookingPermissionsService(
     ApplicationConfiguration applicationConfiguration,
     BookingConfiguration bookingConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService.BookingServiceClient bookingServiceClient,
+    Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingService.BookingServiceClient bookingServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache) : IBookingPermissionsService
 {

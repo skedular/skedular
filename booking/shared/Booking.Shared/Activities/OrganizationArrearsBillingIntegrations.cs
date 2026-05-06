@@ -1,8 +1,9 @@
 using System.Globalization;
 using Api.Shared.Clients.Configurations.Grpc;
+using Api.Shared.Grpc.Skedular.Core.Core.V1;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Core.V1;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Configurations;
 using Booking.Shared.Database.Entities;
@@ -58,6 +59,7 @@ public class OrganizationArrearsBillingIntegrations(
     IXeroSdkClientFactory xeroSdkClientFactory,
     CoreService.CoreServiceClient coreServiceClient,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
+    OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
     IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
@@ -387,7 +389,7 @@ public class OrganizationArrearsBillingIntegrations(
 
     private async Task<XeroConnection?> GetOrganizationXeroConnectionAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var response = await organizationServiceClient.Admin_GetXeroConnectionAsync(
+        var response = await organizationBillingServiceClient.Admin_GetXeroConnectionAsync(
             new Admin_GetXeroConnectionInput { OrganizationId = organizationId },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -395,7 +397,7 @@ public class OrganizationArrearsBillingIntegrations(
         return string.IsNullOrWhiteSpace(response.Id) ? null : response;
     }
 
-    private async Task<Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> GetOrganizationAsync(
+    private async Task<Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization> GetOrganizationAsync(
         string organizationId,
         CancellationToken cancellationToken) =>
         await organizationServiceClient.Admin_GetAsync(
@@ -552,7 +554,7 @@ public class OrganizationArrearsBillingIntegrations(
         var accessTokenExpiresAt = now.AddMinutes(30);
         var refreshTokenExpiresAt = now.AddDays(60);
 
-        var refreshedConnection = await organizationServiceClient.Admin_RefreshXeroConnectionTokensAsync(
+        var refreshedConnection = await organizationBillingServiceClient.Admin_RefreshXeroConnectionTokensAsync(
             new Admin_RefreshXeroConnectionTokensInput
             {
                 OrganizationId = organizationId,

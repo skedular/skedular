@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
+using Api.Shared.Grpc.Skedular.Organization.Tags.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.GraphQL.Types;
@@ -34,7 +35,7 @@ public interface IOrganizationTagService
 public class OrganizationTagService(
     ApplicationConfiguration applicationConfiguration,
     OrganizationConfiguration organizationConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
+    OrganizationTagsService.OrganizationTagsServiceClient organizationTagsServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache) : IOrganizationTagService
 {
@@ -44,7 +45,7 @@ public class OrganizationTagService(
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(tagId),
             async _ => mapper.MapTo(
-                await organizationServiceClient.Admin_GetTagAsync(
+                await organizationTagsServiceClient.Admin_GetTagAsync(
                     new Admin_GetTagInput { Id = tagId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken)),
@@ -56,7 +57,7 @@ public class OrganizationTagService(
         CancellationToken cancellationToken)
     {
         var mappedOrganizationTag = mapper.MapTo(
-            await organizationServiceClient.AddTagAsync(
+            await organizationTagsServiceClient.AddTagAsync(
                 new AddTagInput
                 {
                     Id = organizationTag.Id,
@@ -79,7 +80,7 @@ public class OrganizationTagService(
         CancellationToken cancellationToken)
     {
         var mappedOrganizationTag = mapper.MapTo(
-            await organizationServiceClient.UpdateTagAsync(
+            await organizationTagsServiceClient.UpdateTagAsync(
                 new UpdateTagInput
                 {
                     Id = organizationTag.Id, Name = organizationTag.Name, Description = organizationTag.Description, Color = organizationTag.Color
@@ -94,7 +95,7 @@ public class OrganizationTagService(
 
     public async Task RemoveAsync(string workspaceMemberId, string tagId, CancellationToken cancellationToken)
     {
-        await organizationServiceClient.RemoveTagAsync(
+        await organizationTagsServiceClient.RemoveTagAsync(
             new RemoveTagInput { Id = tagId },
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
@@ -108,7 +109,7 @@ public class OrganizationTagService(
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(tagId),
             async _ => mapper.MapTo(
-                await organizationServiceClient.GetTagAsync(
+                await organizationTagsServiceClient.GetTagAsync(
                     new GetTagInput { Id = tagId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
@@ -133,7 +134,7 @@ public class OrganizationTagService(
 
                 getPaginatedTagsInput.OrderBy.Add(new TagOrderInput { Direction = OrderDirection.Ascending, Field = TagOrderField.Name });
 
-                var connection = await organizationServiceClient.GetPaginatedTagsAsync(
+                var connection = await organizationTagsServiceClient.GetPaginatedTagsAsync(
                     getPaginatedTagsInput,
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken);
@@ -179,7 +180,7 @@ public class OrganizationTagService(
 
         getPaginatedTagsInput.OrderBy.Add(new TagOrderInput { Direction = OrderDirection.Ascending, Field = TagOrderField.Name });
 
-        var connection = await organizationServiceClient.GetPaginatedTagsAsync(
+        var connection = await organizationTagsServiceClient.GetPaginatedTagsAsync(
             getPaginatedTagsInput,
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);

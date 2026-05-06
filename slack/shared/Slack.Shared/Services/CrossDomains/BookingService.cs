@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
@@ -12,7 +12,7 @@ using Slack.Shared.Models;
 using Booking = Slack.Shared.Models.Booking;
 using BookingCategory = Api.Shared.Services.Models.BookingCategory;
 using BookingEdge = Slack.Shared.Models.BookingEdge;
-using BookingOrderField = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField;
+using BookingOrderField = Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField;
 using PageInfo = Enterprise.Shared.GraphQL.Types.PageInfo;
 using Resource = Slack.Shared.Models.Resource;
 
@@ -54,7 +54,7 @@ public interface IBookingService
 public class BookingService(
     ApplicationConfiguration applicationConfiguration,
     BookingConfiguration bookingConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService.BookingServiceClient bookingServiceClient,
+    Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingService.BookingServiceClient bookingServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache,
     IOrganizationService organizationService,
@@ -158,16 +158,16 @@ public class BookingService(
             Until = booking.Until.ToTimestamp(),
             Category = booking.Category switch
             {
-                BookingCategory.WorkingFromHome => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromHome,
-                BookingCategory.WorkingFromOffice => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromOffice,
-                BookingCategory.WorkingFromCoworkingSpace => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromCoworkingSpace,
-                BookingCategory.SickLeave => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.SickLeave,
-                BookingCategory.AnnualLeave => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.AnnualLeave,
-                BookingCategory.WellbeingLeave => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WellbeingLeave,
-                BookingCategory.ClientOffice => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.ClientOffice,
-                BookingCategory.Vacation => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.Vacation,
-                BookingCategory.TravelingForWork => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.TravelingForWork,
-                BookingCategory.NonWorkingDay => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.NonWorkingDay,
+                BookingCategory.WorkingFromHome => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromHome,
+                BookingCategory.WorkingFromOffice => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromOffice,
+                BookingCategory.WorkingFromCoworkingSpace => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromCoworkingSpace,
+                BookingCategory.SickLeave => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.SickLeave,
+                BookingCategory.AnnualLeave => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.AnnualLeave,
+                BookingCategory.WellbeingLeave => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WellbeingLeave,
+                BookingCategory.ClientOffice => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.ClientOffice,
+                BookingCategory.Vacation => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.Vacation,
+                BookingCategory.TravelingForWork => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.TravelingForWork,
+                BookingCategory.NonWorkingDay => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Notes = booking.Notes.ToSafeString()
@@ -198,16 +198,16 @@ public class BookingService(
             Until = booking.Until.ToTimestamp(),
             Category = booking.Category switch
             {
-                BookingCategory.WorkingFromHome => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromHome,
-                BookingCategory.WorkingFromOffice => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromOffice,
-                BookingCategory.WorkingFromCoworkingSpace => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromCoworkingSpace,
-                BookingCategory.SickLeave => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.SickLeave,
-                BookingCategory.AnnualLeave => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.AnnualLeave,
-                BookingCategory.WellbeingLeave => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WellbeingLeave,
-                BookingCategory.ClientOffice => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.ClientOffice,
-                BookingCategory.Vacation => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.Vacation,
-                BookingCategory.TravelingForWork => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.TravelingForWork,
-                BookingCategory.NonWorkingDay => Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.NonWorkingDay,
+                BookingCategory.WorkingFromHome => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromHome,
+                BookingCategory.WorkingFromOffice => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromOffice,
+                BookingCategory.WorkingFromCoworkingSpace => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromCoworkingSpace,
+                BookingCategory.SickLeave => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.SickLeave,
+                BookingCategory.AnnualLeave => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.AnnualLeave,
+                BookingCategory.WellbeingLeave => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WellbeingLeave,
+                BookingCategory.ClientOffice => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.ClientOffice,
+                BookingCategory.Vacation => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.Vacation,
+                BookingCategory.TravelingForWork => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.TravelingForWork,
+                BookingCategory.NonWorkingDay => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Notes = booking.Notes.ToSafeString()

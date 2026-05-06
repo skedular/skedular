@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Grpc.Skedular.Location.Core.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
@@ -18,15 +18,15 @@ using LocationDailyBookingsTotal = Location.Shared.Models.LocationDailyBookingsT
 using ResourceAvailabilitySnapshotReport = Location.Shared.Models.ResourceAvailabilitySnapshotReport;
 using Organization = Location.Shared.Database.Entities.Organization;
 using OrganizationTag = Location.Shared.Models.OrganizationTag;
-using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
+using Permissions = Api.Shared.Grpc.Skedular.Location.Core.V1.Permissions;
 using DailyRoomCountRecording = Location.Shared.Models.DailyRoomCountRecording;
 using LocationRoomsOccupancyPercentage = Location.Shared.Models.LocationRoomsOccupancyPercentage;
 using AddResourceInput = Location.Api.GraphQL.Resource.AddResourceInput;
 using AreaRange = Api.Shared.Services.Models.AreaRange;
-using CdnFile = Api.Shared.Services.Grpc.Skedular.Location.V1.CdnFile;
-using CdnImageFile = Api.Shared.Services.Grpc.Skedular.Location.V1.CdnImageFile;
+using CdnFile = Api.Shared.Grpc.Skedular.Location.Core.V1.CdnFile;
+using CdnImageFile = Api.Shared.Grpc.Skedular.Location.Core.V1.CdnImageFile;
 using ContactDetails = Api.Shared.Services.Models.ContactDetails;
-using Coordinates = Api.Shared.Services.Grpc.Skedular.Location.V1.Coordinates;
+using Coordinates = Api.Shared.Grpc.Skedular.Location.Core.V1.Coordinates;
 using FloorPlan = Location.Shared.Models.FloorPlan;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
@@ -34,10 +34,10 @@ using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
 using UpdateResourceInput = Location.Api.GraphQL.Resource.UpdateResourceInput;
 using ResourceEdge = Location.Api.GraphQL.Resource.ResourceEdge;
 using ResourcePosition = Location.Shared.Models.ResourcePosition;
-using VariedDateOpeningHours = Api.Shared.Services.Grpc.Skedular.Location.V1.VariedDateOpeningHours;
+using VariedDateOpeningHours = Api.Shared.Grpc.Skedular.Location.Core.V1.VariedDateOpeningHours;
 using WeekOpeningHours = Api.Shared.Services.Models.WeekOpeningHours;
 using LocationPhysicalAddress = Location.Shared.Database.Entities.LocationPhysicalAddress;
-using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
+using LocationType = Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType;
 using PeopleCapacity = Api.Shared.Services.Models.PeopleCapacity;
 
 namespace Location.Api.Mappers;
@@ -86,19 +86,19 @@ public interface IMapper
     Shared.Models.Location MapTo(UpdateLocationInput src);
     Shared.Models.Location MapTo(Admin_AddInput src);
     Shared.Models.Location MapTo(Admin_UpdateInput src);
-    global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src);
+    global::Api.Shared.Grpc.Skedular.Location.Core.V1.Location MapToGrpcResponse(Shared.Models.Location src);
     Shared.Models.Location MapTo(AddInput src);
     Shared.Models.Location MapTo(UpdateInput src);
-    global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource MapToGrpcResponse(Shared.Models.Resource src);
+    global::Api.Shared.Grpc.Skedular.Location.Core.V1.Resource MapToGrpcResponse(Shared.Models.Resource src);
     LocationEdge MapTo(Edge<Shared.Models.Location> src);
-    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationEdge MapToGrpcResponse(Edge<Shared.Models.Location> src);
+    global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationEdge MapToGrpcResponse(Edge<Shared.Models.Location> src);
     IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location);
     Shared.Models.Resource MapTo(AddResourceInput src);
     Shared.Models.Resource MapTo(UpdateResourceInput src);
     ResourceEdge MapTo(Edge<Shared.Models.Resource> src);
-    global::Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceEdge MapToGrpcResponse(Edge<Shared.Models.Resource> src);
-    Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddResourceInput src);
-    Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateResourceInput src);
+    global::Api.Shared.Grpc.Skedular.Location.Resources.V1.ResourceEdge MapToGrpcResponse(Edge<Shared.Models.Resource> src);
+    Shared.Models.Resource MapTo(global::Api.Shared.Grpc.Skedular.Location.Resources.V1.AddResourceInput src);
+    Shared.Models.Resource MapTo(global::Api.Shared.Grpc.Skedular.Location.Resources.V1.UpdateResourceInput src);
     WeekOpeningHours? MapTo(GraphQL.Location.WeekOpeningHours? src);
 
     Shared.Database.Entities.FloorPlan MapTo(
@@ -297,10 +297,10 @@ public class Mapper : IMapper
 
     public ResourceEdge MapTo(Edge<Shared.Models.Resource> src) => new(MapTo(src.Node), src.Cursor);
 
-    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceEdge MapToGrpcResponse(Edge<Shared.Models.Resource> src) =>
+    public global::Api.Shared.Grpc.Skedular.Location.Resources.V1.ResourceEdge MapToGrpcResponse(Edge<Shared.Models.Resource> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
-    public Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddResourceInput src) =>
+    public Shared.Models.Resource MapTo(global::Api.Shared.Grpc.Skedular.Location.Resources.V1.AddResourceInput src) =>
         new()
         {
             Id = src.Id,
@@ -313,7 +313,7 @@ public class Mapper : IMapper
             Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
-    public Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateResourceInput src) =>
+    public Shared.Models.Resource MapTo(global::Api.Shared.Grpc.Skedular.Location.Resources.V1.UpdateResourceInput src) =>
         new()
         {
             Id = src.Id,
@@ -358,7 +358,7 @@ public class Mapper : IMapper
 
     public LocationEdge MapTo(Edge<Shared.Models.Location> src) => new(MapTo(src.Node)!, src.Cursor);
 
-    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationEdge MapToGrpcResponse(Edge<Shared.Models.Location> src) =>
+    public global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationEdge MapToGrpcResponse(Edge<Shared.Models.Location> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
     public IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src) => src.Select(MapTo)!;
@@ -499,9 +499,9 @@ public class Mapper : IMapper
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
         };
 
-    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src)
+    public global::Api.Shared.Grpc.Skedular.Location.Core.V1.Location MapToGrpcResponse(Shared.Models.Location src)
     {
-        var location = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location
+        var location = new global::Api.Shared.Grpc.Skedular.Location.Core.V1.Location
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
@@ -601,9 +601,9 @@ public class Mapper : IMapper
             Tags = MapTo(src.OrganizationTags, location.Organization).ToList()
         };
 
-    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource MapToGrpcResponse(Shared.Models.Resource src)
+    public global::Api.Shared.Grpc.Skedular.Location.Core.V1.Resource MapToGrpcResponse(Shared.Models.Resource src)
     {
-        var resource = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource
+        var resource = new global::Api.Shared.Grpc.Skedular.Location.Core.V1.Resource
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
@@ -815,7 +815,7 @@ public class Mapper : IMapper
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 
-    private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> MapToGrpcResponse(IEnumerable<Shared.Models.Resource> src) =>
+    private IEnumerable<global::Api.Shared.Grpc.Skedular.Location.Core.V1.Resource> MapToGrpcResponse(IEnumerable<Shared.Models.Resource> src) =>
         src.Select(MapToGrpcResponse);
 
     private static ResourcePositionDetails MapToResourcePosition(ResourcePosition src) =>
@@ -900,13 +900,13 @@ public class Mapper : IMapper
         return new Edge<Shared.Models.Resource>(resource, src.Cursor);
     }
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours MapToGrpcResponse(OpeningHours? src)
+    private static global::Api.Shared.Grpc.Skedular.Location.Core.V1.OpeningHours MapToGrpcResponse(OpeningHours? src)
     {
         if (src is null)
         {
-            return new global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours
+            return new global::Api.Shared.Grpc.Skedular.Location.Core.V1.OpeningHours
             {
-                WeekOpeningHours = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.WeekOpeningHours
+                WeekOpeningHours = new global::Api.Shared.Grpc.Skedular.Location.Core.V1.WeekOpeningHours
                 {
                     Monday = MapToGrpcDefault(),
                     Tuesday = MapToGrpcDefault(),
@@ -920,7 +920,7 @@ public class Mapper : IMapper
         }
 
         var openingHours =
-            new global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours { WeekOpeningHours = MapToGrpcResponse(src.WeekOpeningHours) };
+            new global::Api.Shared.Grpc.Skedular.Location.Core.V1.OpeningHours { WeekOpeningHours = MapToGrpcResponse(src.WeekOpeningHours) };
         openingHours.ClosedDates.AddRange(src.ClosedDates.Select(item => item.ToTimestamp()));
         openingHours.DatesWithVariedOpeningHours.AddRange(src.DatesWithVariedOpeningHours.Select(item => new VariedDateOpeningHours
         {
@@ -930,7 +930,7 @@ public class Mapper : IMapper
         return openingHours;
     }
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.WeekOpeningHours MapToGrpcResponse(WeekOpeningHours src) =>
+    private static global::Api.Shared.Grpc.Skedular.Location.Core.V1.WeekOpeningHours MapToGrpcResponse(WeekOpeningHours src) =>
         new()
         {
             Monday = MapToGrpcResponse(src.Monday),
@@ -942,7 +942,7 @@ public class Mapper : IMapper
             Sunday = MapToGrpcResponse(src.Sunday)
         };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHoursDetails MapToGrpcResponse(OpeningHoursDetails src) =>
+    private static global::Api.Shared.Grpc.Skedular.Location.Core.V1.OpeningHoursDetails MapToGrpcResponse(OpeningHoursDetails src) =>
         new()
         {
             Closed = src.Closed,
@@ -951,7 +951,7 @@ public class Mapper : IMapper
             Until = src.Until is null ? string.Empty : $"{src.Until.Value.Hour}:{src.Until.Value.Minute}"
         };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHoursDetails MapToGrpcDefault() =>
+    private static global::Api.Shared.Grpc.Skedular.Location.Core.V1.OpeningHoursDetails MapToGrpcDefault() =>
         new() { Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty };
 
     private static GraphQL.Location.OpeningHours MapTo(OpeningHours? src)
@@ -1160,13 +1160,13 @@ public class Mapper : IMapper
                 src.RelatedVideoLinks,
                 src.OtherLinks);
 
-    private static ContactDetails? MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.ContactDetails? src) =>
+    private static ContactDetails? MapTo(global::Api.Shared.Grpc.Skedular.Location.Core.V1.ContactDetails? src) =>
         src is null ? null : new ContactDetails(src.ContactPeople, src.ContactEmails, src.ContactPhones);
 
-    private static AreaRange? MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AreaRange? src) =>
+    private static AreaRange? MapTo(global::Api.Shared.Grpc.Skedular.Location.Core.V1.AreaRange? src) =>
         src is null ? null : new AreaRange(src.FromInSqm, src.ToInSqm);
 
-    private static PeopleCapacity? MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.PeopleCapacity? src) =>
+    private static PeopleCapacity? MapTo(global::Api.Shared.Grpc.Skedular.Location.Core.V1.PeopleCapacity? src) =>
         src is null ? null : new PeopleCapacity(src.From, src.To);
 
     private static ExtraMetadata? MapTo(LocationExtraMetadata? src)
@@ -1202,14 +1202,14 @@ public class Mapper : IMapper
         return extraMetadata;
     }
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.ContactDetails? MapTo(ContactDetails? src)
+    private static global::Api.Shared.Grpc.Skedular.Location.Core.V1.ContactDetails? MapTo(ContactDetails? src)
     {
         if (src is null)
         {
             return null;
         }
 
-        var contactDetails = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.ContactDetails();
+        var contactDetails = new global::Api.Shared.Grpc.Skedular.Location.Core.V1.ContactDetails();
 
         if (src.ContactPeople is not null)
         {
@@ -1229,18 +1229,18 @@ public class Mapper : IMapper
         return contactDetails;
     }
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.AreaRange? MapTo(AreaRange? src) =>
+    private static global::Api.Shared.Grpc.Skedular.Location.Core.V1.AreaRange? MapTo(AreaRange? src) =>
         src is null
             ? null
-            : new global::Api.Shared.Services.Grpc.Skedular.Location.V1.AreaRange
+            : new global::Api.Shared.Grpc.Skedular.Location.Core.V1.AreaRange
             {
                 FromInSqm = src.FromInSqm.ToSafeString(), ToInSqm = src.ToInSqm.ToSafeString()
             };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.PeopleCapacity? MapTo(PeopleCapacity? src) =>
+    private static global::Api.Shared.Grpc.Skedular.Location.Core.V1.PeopleCapacity? MapTo(PeopleCapacity? src) =>
         src is null
             ? null
-            : new global::Api.Shared.Services.Grpc.Skedular.Location.V1.PeopleCapacity { From = src.From.ToSafeString(), To = src.To.ToSafeString() };
+            : new global::Api.Shared.Grpc.Skedular.Location.Core.V1.PeopleCapacity { From = src.From.ToSafeString(), To = src.To.ToSafeString() };
 
     private static PhysicalAddress? MapToGrpcResponse(Shared.Models.LocationPhysicalAddress? src) =>
         src is null
@@ -1293,14 +1293,14 @@ public class Mapper : IMapper
     private static Product MapTo(Shared.Database.Entities.Product src) =>
         new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, DeletedAt = src.DeletedAt };
 
-    private static ListingMetadata MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata? src) =>
+    private static ListingMetadata MapTo(global::Api.Shared.Grpc.Skedular.Location.Core.V1.ListingMetadata? src) =>
         src is null
             ? ListingMetadata.Empty
             : new ListingMetadata(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata MapTo(ListingMetadata src)
+    private static global::Api.Shared.Grpc.Skedular.Location.Core.V1.ListingMetadata MapTo(ListingMetadata src)
     {
-        var listingMetadata = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata
+        var listingMetadata = new global::Api.Shared.Grpc.Skedular.Location.Core.V1.ListingMetadata
         {
             About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
         };

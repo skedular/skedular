@@ -56,6 +56,34 @@
     </ItemGroup>
 
     <ItemGroup>
+        <!-- gRPC service proto definitions — GrpcServices="Both" generates client stubs + server base classes -->
+        <Protobuf Include="../../api-definitions/grpc/skedular/booking/booking_core_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/booking/booking_graphql_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/core/core_core_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/core/core_graphql_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/core/core_infrastructure_test_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/customer/customer_core_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/customer/customer_admin_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/customer/customer_graphql_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/location/location_core_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/location/location_graphql_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/location/location_resources_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/marketplace/marketplace_core_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/marketplace/marketplace_graphql_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/msteams/msteams_core_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/msteams/msteams_graphql_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/organization/organization_core_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/organization/organization_billing_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/organization/organization_graphql_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/organization/organization_tags_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/organization/organization_zones_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/slack/slack_core_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/slack/slack_graphql_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/team/team_core_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+        <Protobuf Include="../../api-definitions/grpc/skedular/team/team_graphql_v1.proto" GrpcServices="Both" ProtoRoot="../../api-definitions/grpc/skedular"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="../Api.Shared/Api.Shared.csproj"/>
     </ItemGroup>
 

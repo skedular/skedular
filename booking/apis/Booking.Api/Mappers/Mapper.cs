@@ -1,5 +1,5 @@
+using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Booking;
 using Booking.Api.GraphQL.MarketplaceBookingSubscription;
@@ -48,7 +48,7 @@ public interface IMapper
     Shared.Models.Booking MapTo(AddMarketplaceBookingInput src);
     Shared.Models.Booking MapTo(UpdateMarketplaceBookingInput src);
     Shared.Models.Location? MapTo(Location? src);
-    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
+    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddPrivateInput src);
     Shared.Models.Booking MapTo(UpdatePrivateInput src);
     Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src);
@@ -57,7 +57,7 @@ public interface IMapper
     BookingEdge MapTo(Edge<Shared.Models.Booking> src);
     RecurringBookingEdge MapTo(Edge<RecurringBooking> src);
     MarketplaceBookingSubscriptionEdge MapTo(Edge<MarketplaceBookingSubscription> src);
-    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
+    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
     IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src);
     IEnumerable<BookingResourceDetails> MapTo(IEnumerable<Resource> src);
 }
@@ -390,9 +390,9 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         };
     }
 
-    public global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src)
+    public global::Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking MapToGrpcResponse(Shared.Models.Booking src)
     {
-        var booking = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking
+        var booking = new global::Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking
         {
             Id = src.Id,
             From = src.From.ToTimestamp(),
@@ -400,23 +400,23 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Notes = src.Notes.ToSafeString(),
             Category = src.Category switch
             {
-                BookingCategory.WorkingFromHome => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromHome,
-                BookingCategory.WorkingFromOffice => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromOffice,
-                BookingCategory.WorkingFromCoworkingSpace => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory
+                BookingCategory.WorkingFromHome => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromHome,
+                BookingCategory.WorkingFromOffice => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromOffice,
+                BookingCategory.WorkingFromCoworkingSpace => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory
                     .WorkingFromCoworkingSpace,
-                BookingCategory.SickLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.SickLeave,
-                BookingCategory.AnnualLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.AnnualLeave,
-                BookingCategory.WellbeingLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WellbeingLeave,
-                BookingCategory.ClientOffice => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.ClientOffice,
-                BookingCategory.Vacation => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.Vacation,
-                BookingCategory.TravelingForWork => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.TravelingForWork,
-                BookingCategory.NonWorkingDay => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.NonWorkingDay,
+                BookingCategory.SickLeave => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.SickLeave,
+                BookingCategory.AnnualLeave => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.AnnualLeave,
+                BookingCategory.WellbeingLeave => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WellbeingLeave,
+                BookingCategory.ClientOffice => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.ClientOffice,
+                BookingCategory.Vacation => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.Vacation,
+                BookingCategory.TravelingForWork => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.TravelingForWork,
+                BookingCategory.NonWorkingDay => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Channel = src.Channel switch
             {
-                BookingChannel.Private => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingChannel.Private,
-                BookingChannel.Marketplace => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingChannel.Marketplace,
+                BookingChannel.Private => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingChannel.Private,
+                BookingChannel.Marketplace => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingChannel.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
             MarketplaceBooking = MapToGrpcResponse(src.MarketplaceBooking),
@@ -430,7 +430,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         booking.InvolvedLocationIds.AddRange(src.InvolvedLocations.Select(item => item.Id));
         booking.InvolvedTeamIds.AddRange(src.InvolvedTeams.Select(item => item.Id));
         booking.Resources.AddRange(src.InvolvedResources.Select(item =>
-            new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource { Id = item.Id }));
+            new global::Api.Shared.Grpc.Skedular.Booking.Core.V1.Resource { Id = item.Id }));
 
         booking.Schedules.AddRange(MapToGrpcResponse(src.Schedules));
 
@@ -505,7 +505,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
     public RecurringBookingEdge MapTo(Edge<RecurringBooking> src) => new(MapTo(src.Node)!, src.Cursor);
     public MarketplaceBookingSubscriptionEdge MapTo(Edge<MarketplaceBookingSubscription> src) => new(MapTo(src.Node), src.Cursor);
 
-    public global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src) =>
+    public global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
     public IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src) => src.Select(MapTo);
@@ -562,11 +562,11 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
     private static IEnumerable<BookingResourceDetails> MapTo(IReadOnlyList<ResourceCustomersPair> src, IReadOnlyList<Resource> involvedResources) =>
         src.Count == 0 ? involvedResources.Select(MapTo) : src.Select(item => MapTo(item.Resource, item.Customers));
 
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule> MapToGrpcResponse(
+    private static IEnumerable<global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingSchedule> MapToGrpcResponse(
         IEnumerable<BookingSchedule> src) =>
         src.Select(MapToGrpcResponse);
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule MapToGrpcResponse(BookingSchedule src) =>
+    private static global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingSchedule MapToGrpcResponse(BookingSchedule src) =>
         new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };
 
     private static BookingCheckoutSessionDetails? MapTo(StripeCheckoutSession? src) =>
@@ -619,25 +619,25 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 CurrencyToDisplay = src.Currency is null ? "N/A" : src.Currency.Value.ToCurrencyName()
             };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.MarketplaceBooking? MapToGrpcResponse(MarketplaceBooking? src)
+    private static global::Api.Shared.Grpc.Skedular.Booking.Core.V1.MarketplaceBooking? MapToGrpcResponse(MarketplaceBooking? src)
     {
         if (src is null)
         {
             return null;
         }
 
-        var marketplaceBooking = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.MarketplaceBooking
+        var marketplaceBooking = new global::Api.Shared.Grpc.Skedular.Booking.Core.V1.MarketplaceBooking
         {
             Id = src.Id,
             PaymentStatus = src.PaymentStatus switch
             {
-                PaymentStatus.NotSet => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.NotSet,
-                PaymentStatus.Pending => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Pending,
-                PaymentStatus.Rejected => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Rejected,
-                PaymentStatus.Confirmed => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Confirmed,
-                PaymentStatus.Expired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Expired,
-                PaymentStatus.RecordNeverCreated => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.RecordNeverCreated,
-                PaymentStatus.NoPaymentRequired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.NoPaymentRequired,
+                PaymentStatus.NotSet => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentStatus.NotSet,
+                PaymentStatus.Pending => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentStatus.Pending,
+                PaymentStatus.Rejected => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentStatus.Rejected,
+                PaymentStatus.Confirmed => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentStatus.Confirmed,
+                PaymentStatus.Expired => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentStatus.Expired,
+                PaymentStatus.RecordNeverCreated => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentStatus.RecordNeverCreated,
+                PaymentStatus.NoPaymentRequired => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentStatus.NoPaymentRequired,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsPaymentRequired = src.IsPaymentRequired,
@@ -654,8 +654,8 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             InvoiceNumber = src.InvoiceNumber.ToSafeString(),
             PaymentMethod = src.PaymentMethod switch
             {
-                PaymentMethod.Card => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.Card,
-                PaymentMethod.BankTransfer => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.BankAccount,
+                PaymentMethod.Card => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentMethod.Card,
+                PaymentMethod.BankTransfer => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentMethod.BankAccount,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Quantity = src.Quantity,
@@ -667,20 +667,20 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         return marketplaceBooking;
     }
 
-    private static BookingCategory MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory src) =>
+    private static BookingCategory MapTo(global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory src) =>
         src switch
         {
-            global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromHome => BookingCategory.WorkingFromHome,
-            global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromOffice => BookingCategory.WorkingFromOffice,
-            global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromCoworkingSpace => BookingCategory
+            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromHome => BookingCategory.WorkingFromHome,
+            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromOffice => BookingCategory.WorkingFromOffice,
+            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromCoworkingSpace => BookingCategory
                 .WorkingFromCoworkingSpace,
-            global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.SickLeave => BookingCategory.SickLeave,
-            global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.AnnualLeave => BookingCategory.AnnualLeave,
-            global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WellbeingLeave => BookingCategory.WellbeingLeave,
-            global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.ClientOffice => BookingCategory.ClientOffice,
-            global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.Vacation => BookingCategory.Vacation,
-            global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.TravelingForWork => BookingCategory.TravelingForWork,
-            global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.NonWorkingDay => BookingCategory.NonWorkingDay,
+            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.SickLeave => BookingCategory.SickLeave,
+            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.AnnualLeave => BookingCategory.AnnualLeave,
+            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WellbeingLeave => BookingCategory.WellbeingLeave,
+            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.ClientOffice => BookingCategory.ClientOffice,
+            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.Vacation => BookingCategory.Vacation,
+            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.TravelingForWork => BookingCategory.TravelingForWork,
+            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.NonWorkingDay => BookingCategory.NonWorkingDay,
             _ => throw new ArgumentOutOfRangeException()
         };
 

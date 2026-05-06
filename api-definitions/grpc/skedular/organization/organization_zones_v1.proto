@@ -1,0 +1,85 @@
+syntax = "proto3";
+package organization;
+
+option csharp_namespace = "Api.Shared.Grpc.Skedular.Organization.Zones.V1";
+
+import "organization/organization_core_v1.proto";
+
+service OrganizationZonesService {
+  rpc Admin_GetZone (Admin_GetZoneInput) returns (Zone);
+
+  rpc GetPaginatedZones (GetPaginatedZonesInput) returns (ZoneConnection);
+  rpc GetZone (GetZoneInput) returns (Zone);
+  rpc AddZone (AddZoneInput) returns (Zone);
+  rpc UpdateZone (UpdateZoneInput) returns (Zone);
+  rpc RemoveZone (RemoveZoneInput) returns (Zone);
+}
+
+message Zone {
+  string id          = 1;
+  string name        = 2;
+  string description = 3;
+  string color       = 4;
+}
+
+message ZoneConnection {
+  PageInfo          pageInfo   = 1;
+  repeated ZoneEdge edges      = 2;
+  int32             totalCount = 3;
+}
+
+message ZoneEdge {
+  Zone   node   = 1;
+  string cursor = 2;
+}
+
+message Admin_GetZoneInput {
+  string id = 1;
+}
+
+message GetPaginatedZonesInput {
+  string                  after   = 1;
+  int32                   first   = 2;
+  string                  before  = 3;
+  int32                   last    = 4;
+  ZoneWhereInput          where   = 5;
+  repeated ZoneOrderInput orderBy = 6;
+}
+
+message ZoneWhereInput {
+  string organizationId = 1;
+  string nameContains   = 2;
+}
+
+message ZoneOrderInput {
+  OrderDirection direction = 1;
+  ZoneOrderField field     = 2;
+}
+
+enum ZoneOrderField {
+  ZoneOrderField_Name        = 0;
+  ZoneOrderField_Description = 1;
+}
+
+message GetZoneInput {
+  string id = 1;
+}
+
+message AddZoneInput {
+  string id             = 1;
+  string organizationId = 2;
+  string name           = 3;
+  string description    = 4;
+  string color          = 5;
+}
+
+message UpdateZoneInput {
+  string id          = 1;
+  string name        = 2;
+  string description = 3;
+  string color       = 4;
+}
+
+message RemoveZoneInput {
+  string id = 1;
+}

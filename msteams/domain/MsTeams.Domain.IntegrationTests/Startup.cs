@@ -1,8 +1,8 @@
 using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Workaround.V1;
+using Api.Shared.Grpc.Skedular.MsTeams.Core.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.MsTeams.V1;
 using Aspire.Hosting.Testing;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;

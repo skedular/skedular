@@ -55,6 +55,8 @@ public class Program
             .UseSecurity();
 
         app.MapGrpcService<CustomerGrpcService>();
+        app.MapGrpcService<CustomerGraphqlGrpcService>();
+        app.MapGrpcService<CustomerAdminGrpcService>();
 
         return app;
     }

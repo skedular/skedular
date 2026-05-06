@@ -1,6 +1,7 @@
 using System.Globalization;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
@@ -27,7 +28,7 @@ using AccountingContactLink = Booking.Shared.Database.Entities.AccountingContact
 using AccountingPaymentEvent = Booking.Shared.Database.Entities.AccountingPaymentEvent;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
-using Organization = Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization;
+using Organization = Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
@@ -65,6 +66,7 @@ public interface IXeroInvoiceService
 public class XeroInvoiceService(
     OrganizationConfiguration organizationConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
+    OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
     IRepositoryFactory repositoryFactory,
     IDbTransactionBuilder transactionBuilder,
     IGraphQlTopicEventSender graphQlTopicEventSender,
@@ -522,7 +524,7 @@ public class XeroInvoiceService(
 
     private async Task<XeroConnection?> GetOrganizationXeroConnectionAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var response = await organizationServiceClient.Admin_GetXeroConnectionAsync(
+        var response = await organizationBillingServiceClient.Admin_GetXeroConnectionAsync(
             new Admin_GetXeroConnectionInput { OrganizationId = organizationId },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -571,7 +573,7 @@ public class XeroInvoiceService(
             string.IsNullOrWhiteSpace(refreshedToken.RefreshToken)
                 ? xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted)
                 : refreshedToken.RefreshToken);
-        var refreshedConnection = await organizationServiceClient.Admin_RefreshXeroConnectionTokensAsync(
+        var refreshedConnection = await organizationBillingServiceClient.Admin_RefreshXeroConnectionTokensAsync(
             new Admin_RefreshXeroConnectionTokensInput
             {
                 OrganizationId = organizationId,

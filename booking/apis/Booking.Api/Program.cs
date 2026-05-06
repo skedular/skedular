@@ -58,6 +58,7 @@ public class Program
             .UseSecurity();
 
         app.MapGrpcService<BookingGrpcService>();
+        app.MapGrpcService<BookingGraphqlGrpcService>();
 
         return app;
     }

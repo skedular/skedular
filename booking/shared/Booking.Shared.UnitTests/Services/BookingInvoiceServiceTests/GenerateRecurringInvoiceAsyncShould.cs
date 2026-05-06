@@ -1,4 +1,5 @@
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Mappers;
 using Booking.Shared.Models;
@@ -11,7 +12,7 @@ using ProductVersionEntity = Booking.Shared.Database.Entities.ProductVersion;
 using ProductEntity = Booking.Shared.Database.Entities.Product;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
-using Organization = Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization;
+using Organization = Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization;
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using OrganizationBillingCycleModel = Api.Shared.Services.Models.OrganizationBillingCycle;
@@ -45,6 +46,7 @@ public class GenerateRecurringInvoiceAsyncShould
             repositoryFactory,
             organizationConfiguration,
             new OrganizationService.OrganizationServiceClient(callInvoker),
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
             invoicePaymentTermsService,
             recurringInvoiceBillingScheduleService,
             productVersionHelperService,

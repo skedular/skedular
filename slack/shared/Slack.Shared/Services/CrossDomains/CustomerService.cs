@@ -1,4 +1,5 @@
-﻿using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+﻿using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
+using Api.Shared.Grpc.Skedular.Customer.Core.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
@@ -41,7 +42,8 @@ public interface ICustomerService
 public class CustomerService(
     ApplicationConfiguration applicationConfiguration,
     CustomerConfiguration customerConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService.CustomerServiceClient customerServiceClient,
+    Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerService.CustomerServiceClient customerServiceClient,
+    CustomerAdminService.CustomerAdminServiceClient customerAdminServiceClient,
     IMapper mapper,
     IRandomHelper randomHelper,
     IMemoryCache memoryCache,
@@ -58,7 +60,7 @@ public class CustomerService(
         var customer = await memoryCache.GetOrCreateAsync(
             CreateKeyById(customerId),
             async _ => mapper.MapTo(
-                await customerServiceClient.Admin_GetAsync(
+                await customerAdminServiceClient.Admin_GetAsync(
                     new Admin_GetInput { CustomerId = customerId },
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken))!,
@@ -101,7 +103,7 @@ public class CustomerService(
         CancellationToken cancellationToken)
     {
         var customer = mapper.MapTo(
-            await customerServiceClient.Admin_AddAsync(
+            await customerAdminServiceClient.Admin_AddAsync(
                 mapper.MapTo(workspaceMember, customerId, defaultOrganizationId, preferredLocationIds),
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
@@ -114,7 +116,7 @@ public class CustomerService(
     public async Task<Customer> AdminAddIdentityAsync(WorkspaceMember workspaceMember, string customerId, CancellationToken cancellationToken)
     {
         var customer = mapper.MapTo(
-            await customerServiceClient.Admin_AddIdentityAsync(
+            await customerAdminServiceClient.Admin_AddIdentityAsync(
                 mapper.MapToAddIdentityInput(workspaceMember, customerId),
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
@@ -127,7 +129,7 @@ public class CustomerService(
     public async Task<Customer> AdminUpdateIdentityAsync(WorkspaceMember workspaceMember, string customerId, CancellationToken cancellationToken)
     {
         var customer = mapper.MapTo(
-            await customerServiceClient.Admin_UpdateIdentityAsync(
+            await customerAdminServiceClient.Admin_UpdateIdentityAsync(
                 mapper.MapToUpdateIdentityInput(workspaceMember, customerId),
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
@@ -139,7 +141,7 @@ public class CustomerService(
 
     public async Task<(bool, Customer?)> AdminAnyCustomerExistByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken)
     {
-        var result = await customerServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
+        var result = await customerAdminServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
             new Admin_AnyCustomerExistByVerifiableTokenInput { VerifiableToken = verifiableToken },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -155,7 +157,7 @@ public class CustomerService(
 
     public async Task<(bool, Customer?)> AdminAnyCustomerExistByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        var result = await customerServiceClient.Admin_AnyCustomerExistByEmailAsync(
+        var result = await customerAdminServiceClient.Admin_AnyCustomerExistByEmailAsync(
             new Admin_AnyCustomerExistByEmailInput { Email = email },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -172,7 +174,7 @@ public class CustomerService(
     public async Task<Customer> AdminSetDefaultOrganizationAsync(string customerId, string organizationId, CancellationToken cancellationToken)
     {
         var customer = mapper.MapTo(
-            await customerServiceClient.Admin_SetDefaultOrganizationAsync(
+            await customerAdminServiceClient.Admin_SetDefaultOrganizationAsync(
                 new Admin_SetDefaultOrganizationInput { CustomerId = customerId, OrganizationId = organizationId },
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
@@ -185,7 +187,7 @@ public class CustomerService(
     public async Task<Customer> AdminAddPreferredLocationAsync(string customerId, string locationId, CancellationToken cancellationToken)
     {
         var customer = mapper.MapTo(
-            await customerServiceClient.Admin_AddPreferredLocationAsync(
+            await customerAdminServiceClient.Admin_AddPreferredLocationAsync(
                 new Admin_AddPreferredLocationInput { CustomerId = customerId, LocationId = locationId },
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;

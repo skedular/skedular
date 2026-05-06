@@ -1,10 +1,9 @@
 syntax = "proto3";
 package team;
 
-option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Team.V1";
+option csharp_namespace = "Api.Shared.Grpc.Skedular.Team.Core.V1";
 
 service TeamService {
-  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
 
   rpc Admin_Get (Admin_GetInput) returns (Team);
 
@@ -15,14 +14,6 @@ service TeamService {
   rpc Add (AddInput) returns (Team);
   rpc Update (UpdateInput) returns (Team);
   rpc Remove (RemoveInput) returns (Team);
-}
-
-message RaiseGraphqlChangeInput {
-  string topicName = 1;
-  string id        = 2;
-}
-
-message RaiseGraphqlChangeResponse {
 }
 
 message VersionInput {

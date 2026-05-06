@@ -23,7 +23,7 @@ This file is the entry point for AI agents working in `api-definitions/`.
 - For events: edit `events/skedular/*.proto`, then build `shared/Api.Shared.Clients`.
 - For OpenAPI: edit `openapi/skedular/*_v1.yaml`, then run `api-definitions/openapi/generate.sh`.
 - For GraphQL: edit the server-side schema definition in the relevant domain API, then run `scripts/generate-graphql.sh`.
-- For gRPC: edit `grpc/skedular/*.proto`; generated C# stubs appear at build time in consuming projects.
+- For gRPC: edit `grpc/skedular/**/*.proto`; generated C# stubs appear at build time in consuming projects.
 
 ## Preferred Umbrella Entry Point
 

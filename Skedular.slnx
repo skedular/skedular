@@ -40,17 +40,48 @@
         <File Path="api-definitions/graphql/skedular/v1/schema.graphql"/>
     </Folder>
     <Folder Name="/api-definitions/grpc/"/>
-    <Folder Name="/api-definitions/grpc/skedular/">
-        <File Path="api-definitions/grpc/skedular/booking_v1.proto"/>
-        <File Path="api-definitions/grpc/skedular/core_v1.proto"/>
-        <File Path="api-definitions/grpc/skedular/customer_v1.proto"/>
-        <File Path="api-definitions/grpc/skedular/location_v1.proto"/>
-        <File Path="api-definitions/grpc/skedular/marketplace_v1.proto"/>
-        <File Path="api-definitions/grpc/skedular/msteams_v1.proto"/>
-        <File Path="api-definitions/grpc/skedular/organization_v1.proto"/>
-        <File Path="api-definitions/grpc/skedular/slack_v1.proto"/>
-        <File Path="api-definitions/grpc/skedular/team_v1.proto"/>
-        <File Path="api-definitions/grpc/skedular/infrastructure_test_v1.proto"/>
+    <Folder Name="/api-definitions/grpc/skedular/"/>
+    <Folder Name="/api-definitions/grpc/skedular/booking/">
+        <File Path="api-definitions/grpc/skedular/booking/booking_core_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/booking/booking_graphql_v1.proto"/>
+    </Folder>
+    <Folder Name="/api-definitions/grpc/skedular/core/">
+        <File Path="api-definitions/grpc/skedular/core/core_core_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/core/core_graphql_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/core/core_infrastructure_test_v1.proto"/>
+    </Folder>
+    <Folder Name="/api-definitions/grpc/skedular/customer/">
+        <File Path="api-definitions/grpc/skedular/customer/customer_core_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/customer/customer_graphql_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/customer/customer_admin_v1.proto"/>
+    </Folder>
+    <Folder Name="/api-definitions/grpc/skedular/location/">
+        <File Path="api-definitions/grpc/skedular/location/location_core_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/location/location_graphql_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/location/location_resources_v1.proto"/>
+    </Folder>
+    <Folder Name="/api-definitions/grpc/skedular/marketplace/">
+        <File Path="api-definitions/grpc/skedular/marketplace/marketplace_core_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/marketplace/marketplace_graphql_v1.proto"/>
+    </Folder>
+    <Folder Name="/api-definitions/grpc/skedular/msteams/">
+        <File Path="api-definitions/grpc/skedular/msteams/msteams_core_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/msteams/msteams_graphql_v1.proto"/>
+    </Folder>
+    <Folder Name="/api-definitions/grpc/skedular/organization/">
+        <File Path="api-definitions/grpc/skedular/organization/organization_core_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/organization/organization_graphql_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/organization/organization_tags_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/organization/organization_zones_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/organization/organization_billing_v1.proto"/>
+    </Folder>
+    <Folder Name="/api-definitions/grpc/skedular/slack/">
+        <File Path="api-definitions/grpc/skedular/slack/slack_core_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/slack/slack_graphql_v1.proto"/>
+    </Folder>
+    <Folder Name="/api-definitions/grpc/skedular/team/">
+        <File Path="api-definitions/grpc/skedular/team/team_core_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/team/team_graphql_v1.proto"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/">
         <File Path="api-definitions/openapi/clients.Dockerfile"/>

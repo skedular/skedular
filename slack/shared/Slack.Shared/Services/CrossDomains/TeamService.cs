@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Team.V1;
+using Api.Shared.Grpc.Skedular.Team.Core.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
@@ -7,9 +7,9 @@ using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Grpc;
 using Microsoft.Extensions.Caching.Memory;
 using Slack.Shared.Mappers;
-using Admin_GetInput = Api.Shared.Services.Grpc.Skedular.Team.V1.Admin_GetInput;
-using GetInput = Api.Shared.Services.Grpc.Skedular.Team.V1.GetInput;
-using OrderDirection = Api.Shared.Services.Grpc.Skedular.Team.V1.OrderDirection;
+using Admin_GetInput = Api.Shared.Grpc.Skedular.Team.Core.V1.Admin_GetInput;
+using GetInput = Api.Shared.Grpc.Skedular.Team.Core.V1.GetInput;
+using OrderDirection = Api.Shared.Grpc.Skedular.Team.Core.V1.OrderDirection;
 using OrganizationMemberRole = Api.Shared.Services.Models.OrganizationMemberRole;
 using PageInfo = Enterprise.Shared.GraphQL.Types.PageInfo;
 using Team = Slack.Shared.Models.Team;
@@ -40,7 +40,7 @@ public interface ITeamService
 public class TeamService(
     ApplicationConfiguration applicationConfiguration,
     TeamConfiguration teamConfiguration,
-    Api.Shared.Services.Grpc.Skedular.Team.V1.TeamService.TeamServiceClient teamServiceClient,
+    Api.Shared.Grpc.Skedular.Team.Core.V1.TeamService.TeamServiceClient teamServiceClient,
     IMapper mapper,
     IMemoryCache memoryCache,
     ICustomerService customerService,
@@ -138,8 +138,8 @@ public class TeamService(
             },
             Status = item.Status switch
             {
-                TeamMemberStatus.Active => Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Active,
-                TeamMemberStatus.Inactive => Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Inactive,
+                TeamMemberStatus.Active => Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Active,
+                TeamMemberStatus.Inactive => Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             OrganizationMember = new OrganizationMember
@@ -211,8 +211,8 @@ public class TeamService(
             },
             Status = item.Status switch
             {
-                TeamMemberStatus.Active => Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Active,
-                TeamMemberStatus.Inactive => Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Inactive,
+                TeamMemberStatus.Active => Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Active,
+                TeamMemberStatus.Inactive => Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             OrganizationMember = new OrganizationMember
