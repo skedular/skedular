@@ -25,10 +25,8 @@ public class RecordDeskAvailabilitySnapshotShould(
 {
     private const int DeskCount = 22;
 
-    /// <summary>Creates a fake <see cref="CallInvoker" /> that returns an empty booking connection for any gRPC call.</summary>
-    private static CallInvoker CreateEmptyBookingCallInvoker()
-    {
-        var callInvoker = A.Fake<CallInvoker>();
+    /// <summary>Sets up a fake <see cref="CallInvoker" /> to return an empty booking connection for any gRPC call.</summary>
+    private static void SetupEmptyBookingCallInvoker(CallInvoker callInvoker) =>
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<Admin_GetPaginatedBookingsInput, BookingConnection>>._,
                 A<string?>._,
@@ -40,8 +38,6 @@ public class RecordDeskAvailabilitySnapshotShould(
                 () => Status.DefaultSuccess,
                 () => new Metadata(),
                 () => { }));
-        return callInvoker;
-    }
 
     private async Task<string> SeedLocationWithDesksAsync(int deskCount, CancellationToken cancellationToken)
     {
@@ -82,18 +78,21 @@ public class RecordDeskAvailabilitySnapshotShould(
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Persist_One_Snapshot_Per_Desk(CancellationToken cancellationToken)
+    public async Task Persist_One_Snapshot_Per_Desk(
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] ILogger<LocationDailyAnalytics> logger,
+        CancellationToken cancellationToken)
     {
+        SetupEmptyBookingCallInvoker(callInvoker);
         var locationId = await SeedLocationWithDesksAsync(DeskCount, cancellationToken);
 
-        var logger = A.Fake<ILogger<LocationDailyAnalytics>>();
         var bookingConfiguration = new BookingConfiguration { GrpcUrl = new Uri("http://localhost:5999"), ApiKey = "test-key" };
         var sut = new LocationDailyAnalytics(
             repositoryFactory,
             randomHelper,
             timeProvider,
             bookingConfiguration,
-            new BookingService.BookingServiceClient(CreateEmptyBookingCallInvoker()),
+            new BookingService.BookingServiceClient(callInvoker),
             logger);
 
         var environment = new ActivityEnvironment();
@@ -111,18 +110,21 @@ public class RecordDeskAvailabilitySnapshotShould(
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Replace_Existing_Snapshots_On_Second_Invocation(CancellationToken cancellationToken)
+    public async Task Replace_Existing_Snapshots_On_Second_Invocation(
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] ILogger<LocationDailyAnalytics> logger,
+        CancellationToken cancellationToken)
     {
+        SetupEmptyBookingCallInvoker(callInvoker);
         var locationId = await SeedLocationWithDesksAsync(DeskCount, cancellationToken);
 
-        var logger = A.Fake<ILogger<LocationDailyAnalytics>>();
         var bookingConfiguration = new BookingConfiguration { GrpcUrl = new Uri("http://localhost:5999"), ApiKey = "test-key" };
         var sut = new LocationDailyAnalytics(
             repositoryFactory,
             randomHelper,
             timeProvider,
             bookingConfiguration,
-            new BookingService.BookingServiceClient(CreateEmptyBookingCallInvoker()),
+            new BookingService.BookingServiceClient(callInvoker),
             logger);
 
         var environment = new ActivityEnvironment();

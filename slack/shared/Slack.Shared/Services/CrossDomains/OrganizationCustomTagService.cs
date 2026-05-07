@@ -45,7 +45,7 @@ public class OrganizationCustomTagService(
     ApplicationConfiguration applicationConfiguration,
     OrganizationConfiguration organizationConfiguration,
     OrganizationTagsService.OrganizationTagsServiceClient organizationTagsServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache) : IOrganizationCustomTagService
 {
     private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
@@ -53,7 +53,7 @@ public class OrganizationCustomTagService(
     public async Task<OrganizationCustomTag> AdminGetAsync(string customTagId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(customTagId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await organizationTagsServiceClient.Admin_GetCustomTagAsync(
                     new Admin_GetCustomTagInput { Id = customTagId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
@@ -65,7 +65,7 @@ public class OrganizationCustomTagService(
         OrganizationCustomTag organizationCustomTag,
         CancellationToken cancellationToken)
     {
-        var mappedOrganizationCustomTag = mapper.MapTo(
+        var mappedOrganizationCustomTag = grpcMapper.MapTo(
             await organizationTagsServiceClient.AddCustomTagAsync(
                 new AddCustomTagInput
                 {
@@ -88,7 +88,7 @@ public class OrganizationCustomTagService(
         OrganizationCustomTag organizationCustomTag,
         CancellationToken cancellationToken)
     {
-        var mappedOrganizationCustomTag = mapper.MapTo(
+        var mappedOrganizationCustomTag = grpcMapper.MapTo(
             await organizationTagsServiceClient.UpdateCustomTagAsync(
                 new UpdateCustomTagInput
                 {
@@ -120,7 +120,7 @@ public class OrganizationCustomTagService(
     public async Task<OrganizationCustomTag> GetAsync(string workspaceMemberId, string customTagId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(customTagId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await organizationTagsServiceClient.GetCustomTagAsync(
                     new GetCustomTagInput { Id = customTagId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -164,7 +164,7 @@ public class OrganizationCustomTagService(
                         HasPreviousPage = connection.PageInfo.HasPreviousPage
                     },
                     TotalCount = connection.TotalCount,
-                    Edges = connection.Edges.Select(item => new OrganizationCustomTagEdge(mapper.MapTo(item.Node), item.Cursor)).ToList()
+                    Edges = connection.Edges.Select(item => new OrganizationCustomTagEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList()
                 };
 
                 Cache(result.Edges.Select(item => item.Node).ToList());
@@ -210,7 +210,7 @@ public class OrganizationCustomTagService(
                 HasPreviousPage = connection.PageInfo.HasPreviousPage
             },
             TotalCount = connection.TotalCount,
-            Edges = connection.Edges.Select(item => new OrganizationCustomTagEdge(mapper.MapTo(item.Node), item.Cursor)).ToList()
+            Edges = connection.Edges.Select(item => new OrganizationCustomTagEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList()
         };
 
         Cache(result.Edges.Select(item => item.Node).ToList());

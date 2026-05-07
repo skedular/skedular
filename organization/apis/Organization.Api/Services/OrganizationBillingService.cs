@@ -23,7 +23,7 @@ public class OrganizationBillingService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IOrganizationOutboxPublisher organizationOutboxPublisher) : IOrganizationBillingService
 {
     public async Task<OrganizationBillingDetails?> GetAsync(
@@ -42,7 +42,7 @@ public class OrganizationBillingService(
             throw new UnauthorizedAccessException();
         }
 
-        return mapper.MapTo(existingOrganization.BillingDetails);
+        return graphQlMapper.MapTo(existingOrganization.BillingDetails);
     }
 
     public async Task<Shared.Models.Organization> AddAsync(OrganizationBillingDetails organizationBillingDetails, CancellationToken cancellationToken)
@@ -87,11 +87,11 @@ public class OrganizationBillingService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var organizationBillingDetailsEntity = mapper.MapTo(organizationBillingDetails, existingOrganization);
+        var organizationBillingDetailsEntity = graphQlMapper.MapTo(organizationBillingDetails, existingOrganization);
         repositoryFactory.OrganizationBillingDetailsRepository.Add(organizationBillingDetailsEntity);
 
         existingOrganization.BillingDetails = organizationBillingDetailsEntity;
-        var mappedOrganization = mapper.MapTo(
+        var mappedOrganization = graphQlMapper.MapTo(
             existingOrganization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
 
@@ -137,12 +137,12 @@ public class OrganizationBillingService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         existingOrganizationBillingDetails =
-            mapper.MergeToEntity(organizationBillingDetails, existingOrganizationBillingDetails, existingOrganization);
+            graphQlMapper.MergeToEntity(organizationBillingDetails, existingOrganizationBillingDetails, existingOrganization);
         repositoryFactory.OrganizationBillingDetailsRepository.Update(existingOrganizationBillingDetails);
 
         existingOrganization.BillingDetails = existingOrganizationBillingDetails;
 
-        var mappedOrganization = mapper.MapTo(
+        var mappedOrganization = graphQlMapper.MapTo(
             existingOrganization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);

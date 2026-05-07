@@ -17,7 +17,7 @@ public class OrganizationZonesGrpcService(
     OrganizationConfiguration organizationConfiguration,
     IGrpcAuthenticator grpcAuthenticator,
     ITagService tagService,
-    IMapper mapper) : OrganizationZonesService.OrganizationZonesServiceBase
+    IGrpcMapper grpcMapper) : OrganizationZonesService.OrganizationZonesServiceBase
 {
     public override async Task<ZoneConnection> GetPaginatedZones(GetPaginatedZonesInput request, ServerCallContext context)
     {
@@ -55,7 +55,7 @@ public class OrganizationZonesGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponseZone));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponseZone));
         return connection;
     }
 
@@ -63,34 +63,34 @@ public class OrganizationZonesGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseZone(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseZone(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
     }
 
     public override async Task<Zone> GetZone(GetZoneInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseZone(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseZone(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
     }
 
     public override async Task<Zone> AddZone(AddZoneInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseZone(await tagService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseZone(await tagService.AddAsync(grpcMapper.MapTo(request), false, context.CancellationToken));
     }
 
     public override async Task<Zone> UpdateZone(UpdateZoneInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseZone(await tagService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseZone(await tagService.UpdateAsync(grpcMapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<Zone> RemoveZone(RemoveZoneInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseZone(await tagService.DeleteAsync(request.Id, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseZone(await tagService.DeleteAsync(request.Id, context.CancellationToken));
     }
 }

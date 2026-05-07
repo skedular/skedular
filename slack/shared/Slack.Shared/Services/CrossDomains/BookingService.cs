@@ -55,7 +55,7 @@ public class BookingService(
     ApplicationConfiguration applicationConfiguration,
     BookingConfiguration bookingConfiguration,
     Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingService.BookingServiceClient bookingServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache,
     IOrganizationService organizationService,
     ICustomerService customerService,
@@ -110,7 +110,7 @@ public class BookingService(
             adminGetPaginatedBookingsInput,
             bookingConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
-        var edges = connection.Edges.Select(item => new BookingEdge(mapper.MapTo(item.Node), item.Cursor)).ToList();
+        var edges = connection.Edges.Select(item => new BookingEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList();
 
         Cache(edges.Select(item => item.Node).ToList());
 
@@ -141,7 +141,7 @@ public class BookingService(
             workspaceMemberId,
             (await memoryCache.GetOrCreateAsync(
                 CreateKeyById(bookingId),
-                async _ => mapper.MapTo(
+                async _ => grpcMapper.MapTo(
                     await bookingServiceClient.GetAsync(
                         new GetInput { Id = bookingId },
                         bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -178,7 +178,7 @@ public class BookingService(
         addInput.TeamIds.AddRange(booking.InvolvedTeams.Select(item => item.Id));
         addInput.ResourceIds.AddRange(booking.Resources.Select(item => item.Id));
 
-        var mappedBooking = mapper.MapTo(
+        var mappedBooking = grpcMapper.MapTo(
             await bookingServiceClient.AddPrivateAsync(
                 addInput,
                 bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -218,7 +218,7 @@ public class BookingService(
         updateInput.TeamIds.AddRange(booking.InvolvedTeams.Select(item => item.Id));
         updateInput.ResourceIds.AddRange(booking.Resources.Select(item => item.Id));
 
-        var mappedBooking = mapper.MapTo(
+        var mappedBooking = grpcMapper.MapTo(
             await bookingServiceClient.UpdatePrivateAsync(
                 updateInput,
                 bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -286,7 +286,7 @@ public class BookingService(
             getPaginatedBookingsInput,
             bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
-        var edges = connection.Edges.Select(item => new BookingEdge(mapper.MapTo(item.Node), item.Cursor)).ToList();
+        var edges = connection.Edges.Select(item => new BookingEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList();
 
         Cache(edges.Select(item => item.Node).ToList());
 

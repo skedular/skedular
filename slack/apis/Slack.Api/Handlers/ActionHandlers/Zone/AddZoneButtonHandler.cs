@@ -22,7 +22,7 @@ public class AddZoneButtonHandler(
     SlackConfigurationService slackConfigurationService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     IPageNavigator pageNavigator,
     IOrganizationZoneService organizationZoneService)
@@ -37,7 +37,7 @@ public class AddZoneButtonHandler(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
+        var workspace = entityMapper.MapTo(workspaceEntity);
         var name = new InputBlock
         {
             BlockId = ZoneActionTypes.Name,
@@ -91,8 +91,8 @@ public class AddZoneButtonHandler(
             viewSubmission.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = AddZoneContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var organizationZone = new OrganizationZone

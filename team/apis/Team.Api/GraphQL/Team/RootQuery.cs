@@ -12,11 +12,11 @@ using Team.Shared.Models;
 namespace Team.Api.GraphQL.Team;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<TeamDetails?> TeamAsync(string id, [Service] ITeamService teamService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await teamService.GetByIdAsync(id, false, cancellationToken));
+        graphQlMapper.MapTo(await teamService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -25,7 +25,7 @@ public class RootQuery(IMapper mapper)
         [ID] string id,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await teamService.GetByIdAsync(id, true, cancellationToken));
+        graphQlMapper.MapTo(await teamService.GetByIdAsync(id, true, cancellationToken));
 
     [UseResolverScope]
     public async Task<Connection<TeamEdge>> TeamsAsync(
@@ -58,7 +58,7 @@ public class RootQuery(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }
@@ -94,7 +94,7 @@ public class RootQuery(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }
@@ -105,5 +105,5 @@ public class RootQuery(IMapper mapper)
         string? organizationCustomDomain,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await teamService.GetMyTeamsAsync(organizationId, organizationCustomDomain, cancellationToken));
+        graphQlMapper.MapTo(await teamService.GetMyTeamsAsync(organizationId, organizationCustomDomain, cancellationToken));
 }

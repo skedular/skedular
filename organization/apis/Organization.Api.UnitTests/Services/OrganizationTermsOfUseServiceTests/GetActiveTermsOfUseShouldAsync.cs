@@ -14,7 +14,7 @@ public class GetActiveTermsOfUseShouldAsync
     public async Task Cache_The_Mapped_Active_Terms_Of_Use(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ITermsOfUseRepository termsOfUseRepository,
-        [Frozen] IMapper mapper,
+        [Frozen] IGraphQlMapper graphQlMapper,
         [Frozen] TimeProvider timeProvider,
         CancellationToken cancellationToken)
     {
@@ -25,9 +25,9 @@ public class GetActiveTermsOfUseShouldAsync
         A.CallTo(() => repositoryFactory.TermsOfUseRepository).Returns(termsOfUseRepository);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 4, 19, 10, 0, 0, TimeSpan.Zero));
         A.CallTo(() => termsOfUseRepository.GetActiveUntrackedAsync(cancellationToken)).Returns(entity);
-        A.CallTo(() => mapper.MapTo(entity)).Returns(mapped);
+        A.CallTo(() => graphQlMapper.MapTo(entity)).Returns(mapped);
 
-        var sut = new OrganizationTermsOfUseService(repositoryFactory, mapper, memoryCache, timeProvider);
+        var sut = new OrganizationTermsOfUseService(repositoryFactory, graphQlMapper, memoryCache, timeProvider);
 
         var first = await sut.GetActiveTermsOfUseAsync(cancellationToken);
         var second = await sut.GetActiveTermsOfUseAsync(cancellationToken);
@@ -42,7 +42,7 @@ public class GetActiveTermsOfUseShouldAsync
     public async Task Return_The_Active_Terms_Entity(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ITermsOfUseRepository termsOfUseRepository,
-        IMapper mapper,
+        IGraphQlMapper graphQlMapper,
         [Frozen] TimeProvider timeProvider,
         CancellationToken cancellationToken)
     {
@@ -52,7 +52,7 @@ public class GetActiveTermsOfUseShouldAsync
         A.CallTo(() => repositoryFactory.TermsOfUseRepository).Returns(termsOfUseRepository);
         A.CallTo(() => termsOfUseRepository.GetActiveAsync(cancellationToken)).Returns(entity);
 
-        var sut = new OrganizationTermsOfUseService(repositoryFactory, mapper, memoryCache, timeProvider);
+        var sut = new OrganizationTermsOfUseService(repositoryFactory, graphQlMapper, memoryCache, timeProvider);
 
         var result = await sut.GetActiveTermsOfUseEntityAsync(cancellationToken);
 

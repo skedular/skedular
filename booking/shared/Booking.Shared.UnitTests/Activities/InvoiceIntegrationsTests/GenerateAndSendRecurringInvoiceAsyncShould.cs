@@ -3,7 +3,6 @@ using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Temporalio.Testing;
 using Constants = Booking.Shared.GraphQL.Constants;
@@ -24,8 +23,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
         [Frozen] IXeroInvoiceService xeroInvoiceService,
         [Frozen] ISkedularInvoiceService skedularInvoiceService,
-        IDbTransactionBuilder transactionBuilder,
-        IOrganizationInvoiceCounterService organizationInvoiceCounterService,
+        InvoiceIntegrations sut,
         string recurringBookingId,
         string productVersionId,
         string pricingId,
@@ -34,13 +32,6 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         string subscriptionId)
     {
         var environment = new ActivityEnvironment();
-        var sut = new InvoiceIntegrations(
-            repositoryFactory,
-            transactionBuilder,
-            organizationInvoiceCounterService,
-            graphQlTopicEventSender,
-            skedularInvoiceService,
-            xeroInvoiceService);
 
         var recurringBooking = new RecurringBooking
         {
@@ -112,8 +103,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
         [Frozen] IXeroInvoiceService xeroInvoiceService,
         [Frozen] ISkedularInvoiceService skedularInvoiceService,
-        IDbTransactionBuilder transactionBuilder,
-        IOrganizationInvoiceCounterService organizationInvoiceCounterService,
+        InvoiceIntegrations sut,
         string recurringBookingId,
         string productVersionId,
         string pricingId,
@@ -122,13 +112,6 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         string subscriptionId)
     {
         var environment = new ActivityEnvironment();
-        var sut = new InvoiceIntegrations(
-            repositoryFactory,
-            transactionBuilder,
-            organizationInvoiceCounterService,
-            graphQlTopicEventSender,
-            skedularInvoiceService,
-            xeroInvoiceService);
 
         var recurringBooking = new RecurringBooking
         {

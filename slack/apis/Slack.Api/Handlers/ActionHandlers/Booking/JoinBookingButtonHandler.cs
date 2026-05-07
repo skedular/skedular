@@ -21,7 +21,7 @@ public class JoinBookingButtonHandler(
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IPageNavigator pageNavigator,
     IBookingService bookingService) : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>
 {
@@ -34,8 +34,8 @@ public class JoinBookingButtonHandler(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = JoinBookingContext.Deserialize(action.Value);
         var existingBooking = await bookingService.GetAsync(workspaceMember.Id, context.BookingId, cancellationToken);
         var booking = new Shared.Models.Booking

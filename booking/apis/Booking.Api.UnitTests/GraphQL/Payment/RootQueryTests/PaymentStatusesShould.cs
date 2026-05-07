@@ -6,11 +6,10 @@ namespace Booking.Api.UnitTests.GraphQL.Payment.RootQueryTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class PaymentStatusesShould
 {
-    [Fact]
-    public void Return_All_Payment_Statuses()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_All_Payment_Statuses(RootQuery sut)
     {
-        var sut = new RootQuery();
-
         var result = sut.PaymentStatuses().ToList();
 
         result.Count.ShouldBe(6);

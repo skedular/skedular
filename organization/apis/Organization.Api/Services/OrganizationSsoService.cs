@@ -43,7 +43,7 @@ public class OrganizationSsoService(
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IDbTransactionBuilder transactionBuilder,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IRandomHelper randomHelper,
@@ -141,19 +141,19 @@ public class OrganizationSsoService(
         if (organization.OrganizationSsoSettings is null)
         {
             ssoSettings.Id = randomHelper.Generate();
-            var organizationSsoSettingsEntity = mapper.MapToEntity(ssoSettings, organization);
+            var organizationSsoSettingsEntity = graphQlMapper.MapToEntity(ssoSettings, organization);
             organizationSsoSettingsEntity.IsActive = true;
             repositoryFactory.OrganizationSsoSettingsRepository.Add(organizationSsoSettingsEntity);
         }
         else
         {
             ssoSettings.Id = organization.OrganizationSsoSettings.Id;
-            var organizationSsoSettingsEntity = mapper.MergeToEntity(ssoSettings, organization.OrganizationSsoSettings, organization);
+            var organizationSsoSettingsEntity = graphQlMapper.MergeToEntity(ssoSettings, organization.OrganizationSsoSettings, organization);
             organizationSsoSettingsEntity.IsActive = true;
             repositoryFactory.OrganizationSsoSettingsRepository.Update(organizationSsoSettingsEntity);
         }
 
-        var mappedOrganization = mapper.MapTo(
+        var mappedOrganization = graphQlMapper.MapTo(
             organization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
@@ -182,7 +182,8 @@ public class OrganizationSsoService(
 
         if (organization.OrganizationSsoSettings is null)
         {
-            return mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
+            return graphQlMapper.MapTo(organization,
+                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -190,7 +191,7 @@ public class OrganizationSsoService(
         organization.OrganizationSsoSettings.IsActive = false;
         repositoryFactory.OrganizationSsoSettingsRepository.Update(organization.OrganizationSsoSettings);
 
-        var mappedOrganization = mapper.MapTo(
+        var mappedOrganization = graphQlMapper.MapTo(
             organization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);

@@ -1,7 +1,7 @@
 using Api.Shared.Services.OpenApi.Skedular.Location.Analytics.V1;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
-using Location.Api.Mappers;
+using Location.Shared.Mappers;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services;
@@ -23,7 +23,7 @@ public interface IWorkaroundService
 
 public class WorkaroundService(
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ILocationPublisher locationPublisher,
     ITemporalService temporalService) : IWorkaroundService
 {
@@ -35,13 +35,13 @@ public class WorkaroundService(
             return;
         }
 
-        await locationPublisher.PublishLocationsAsync([mapper.MapTo(location)], cancellationToken);
+        await locationPublisher.PublishLocationsAsync([entityMapper.MapTo(location)], cancellationToken);
     }
 
     public async Task RepublishAllLocationsAsync(CancellationToken cancellationToken)
     {
         var locations = await repositoryFactory.LocationRepository.GetAllUntrackedAsync(false, cancellationToken);
-        await locationPublisher.PublishLocationsAsync(locations.Select(mapper.MapTo).ToList(), cancellationToken);
+        await locationPublisher.PublishLocationsAsync(locations.Select(entityMapper.MapTo).ToList(), cancellationToken);
     }
 
     public async Task RegenerateAllDailyAnalyticsAsync(CancellationToken cancellationToken)

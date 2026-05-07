@@ -1,5 +1,5 @@
 using Api.Shared.Services;
-using Customer.Api.Mappers;
+using Customer.Shared.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
@@ -20,7 +20,7 @@ public class BillingService(
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ICustomerOutboxPublisher organizationOutboxPublisher) : IBillingService
 {
     public async Task<Shared.Models.Customer> AddAsync(CustomerBillingDetails customerBillingDetails, CancellationToken cancellationToken)
@@ -53,13 +53,13 @@ public class BillingService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var organizationBillingDetailsEntity = mapper.MapTo(customerBillingDetails, customerEntity);
+        var organizationBillingDetailsEntity = entityMapper.MapTo(customerBillingDetails, customerEntity);
         repositoryFactory.CustomerBillingDetailsRepository.Add(organizationBillingDetailsEntity);
 
         customerEntity.BillingDetails = organizationBillingDetailsEntity;
-        var mappedCustomer = mapper.MapTo(customerEntity);
+        var mappedCustomer = entityMapper.MapTo(customerEntity);
 
-        organizationOutboxPublisher.PublishCustomers([mapper.MapTo(customerEntity)], repositoryFactory.UnitOfWork);
+        organizationOutboxPublisher.PublishCustomers([entityMapper.MapTo(customerEntity)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -96,7 +96,7 @@ public class BillingService(
         var customerBillingDetails =
             await repositoryFactory.CustomerBillingDetailsRepository.GetByCustomerIdAsync(customerEntity.Id, cancellationToken);
 
-        return mapper.MapTo(customerBillingDetails);
+        return entityMapper.MapTo(customerBillingDetails);
     }
 
     private async Task<Shared.Models.Customer> UpdateInternalAsync(
@@ -108,12 +108,12 @@ public class BillingService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var organizationBillingDetailsEntity =
-            mapper.MergeToEntity(organizationBillingDetails, existingCustomerBillingDetails, existingCustomer);
+            entityMapper.MergeToEntity(organizationBillingDetails, existingCustomerBillingDetails, existingCustomer);
         repositoryFactory.CustomerBillingDetailsRepository.Update(organizationBillingDetailsEntity);
 
         existingCustomer.BillingDetails = organizationBillingDetailsEntity;
 
-        var mappedCustomer = mapper.MapTo(existingCustomer);
+        var mappedCustomer = entityMapper.MapTo(existingCustomer);
         organizationOutboxPublisher.PublishCustomers([mappedCustomer], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

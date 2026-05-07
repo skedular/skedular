@@ -9,7 +9,7 @@ using HotChocolate.Types;
 namespace Booking.Api.GraphQL.Booking;
 
 [SubscriptionType]
-public class RootSubscription(IMapper mapper)
+public class RootSubscription(IGraphQlMapper graphQlMapper)
 {
     public async IAsyncEnumerable<BookingDetails> OnBookingUpdated(
         string id,
@@ -36,6 +36,6 @@ public class RootSubscription(IMapper mapper)
         await using var scope = serviceProvider.CreateAsyncScope();
 
         var bookingService = scope.ServiceProvider.GetRequiredService<IBookingService>();
-        return mapper.MapTo(await bookingService.GetByIdAsync(id, cancellationToken));
+        return graphQlMapper.MapTo(await bookingService.GetByIdAsync(id, cancellationToken));
     }
 }

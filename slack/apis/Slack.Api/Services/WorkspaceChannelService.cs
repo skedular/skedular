@@ -14,7 +14,7 @@ public interface IWorkspaceChannelService
         CancellationToken cancellationToken);
 }
 
-public class WorkspaceChannelService(IRepositoryFactory repositoryFactory, IMapper mapper) : IWorkspaceChannelService
+public class WorkspaceChannelService(IRepositoryFactory repositoryFactory, IEntityMapper entityMapper) : IWorkspaceChannelService
 {
     public async Task<WorkspaceChannel> EnsureChannelResourcesAllExistAsync(
         Workspace workspace,
@@ -33,7 +33,7 @@ public class WorkspaceChannelService(IRepositoryFactory repositoryFactory, IMapp
             true,
             false,
             cancellationToken);
-        channel = repositoryFactory.WorkspaceChannelRepository.Add(mapper.MapTo(workspaceChannel, workspace));
+        channel = repositoryFactory.WorkspaceChannelRepository.Add(entityMapper.MapTo(workspaceChannel, workspace));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return channel;

@@ -19,7 +19,7 @@ public interface ILocationDailyUpdaterService
 }
 
 public class LocationDailyUpdaterService(
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRepositoryFactory repositoryFactory,
     IBookingComponents bookingComponents,
     IWorkspaceMemberService workspaceMemberService,
@@ -53,7 +53,7 @@ public class LocationDailyUpdaterService(
             return;
         }
 
-        var workspace = mapper.MapTo(workspaceEntity);
+        var workspace = entityMapper.MapTo(workspaceEntity);
         var convertedNow = TimeZoneInfo.ConvertTime(now, locationEntity.Timezone.ToTimezoneInfo());
         var from = new DateTimeOffset(convertedNow.Year, convertedNow.Month, convertedNow.Day, 0, 0, 0, TimeSpan.Zero)
             .StartOfDay();
@@ -107,7 +107,7 @@ public class LocationDailyUpdaterService(
 
                 foreach (var customerEntity in customerEntities)
                 {
-                    var customer = mapper.MapTo(customerEntity)!;
+                    var customer = entityMapper.MapTo(customerEntity)!;
                     blocks.Add(new SectionBlock
                     {
                         Text = workspaceMemberService.GetMentionedCustomerNameInSlackFormat(

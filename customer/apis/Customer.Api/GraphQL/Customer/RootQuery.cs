@@ -9,7 +9,7 @@ using HotChocolate.Types.Relay;
 namespace Customer.Api.GraphQL.Customer;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public IEnumerable<PersonalInformationVisibilityDetails> PersonalInformationVisibilityTypes() =>
@@ -20,11 +20,11 @@ public class RootQuery(IMapper mapper)
 
     [UseResolverScope]
     public async Task<CustomerDetails> MeAsync([Service] ICustomerService customerService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));
+        graphQlMapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));
 
     [UseResolverScope]
     public async Task<CustomerDetails?> CustomerAsync(string id, [Service] ICustomerService customerService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await customerService.GetByIdAsync(id, false, cancellationToken));
+        graphQlMapper.MapTo(await customerService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -33,5 +33,5 @@ public class RootQuery(IMapper mapper)
         [ID] string id,
         [Service] ICustomerService customerService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await customerService.GetByIdAsync(id, true, cancellationToken));
+        graphQlMapper.MapTo(await customerService.GetByIdAsync(id, true, cancellationToken));
 }

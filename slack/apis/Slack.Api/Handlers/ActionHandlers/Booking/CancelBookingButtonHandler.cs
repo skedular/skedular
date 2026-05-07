@@ -16,7 +16,7 @@ public class CancelBookingButtonHandler(
     SlackConfigurationService slackConfigurationService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IPageNavigator pageNavigator,
     IBookingService bookingService) : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>
 {
@@ -29,8 +29,8 @@ public class CancelBookingButtonHandler(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = CancelBookingContext.Deserialize(action.Value);
 
         await bookingService.DeletePrivateAsync(workspaceMember.Id, context.BookingId, cancellationToken);

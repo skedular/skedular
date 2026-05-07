@@ -73,7 +73,7 @@ public class OrganizationService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     TimeProvider timeProvider,
     IContext context,
     ICachedOrganizationService cachedOrganizationService,
@@ -138,7 +138,7 @@ public class OrganizationService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var organizationEntity = mapper.MapTo(organization, termsOfUse, industrySubCategories);
+        var organizationEntity = graphQlMapper.MapTo(organization, termsOfUse, industrySubCategories);
 
         var organizationMembers = new List<OrganizationMember>();
         if (customerEntity is not null)
@@ -174,7 +174,7 @@ public class OrganizationService(
         AddDefaultOrganizationTags(organizationEntity);
 
         repositoryFactory.OrganizationMemberRepository.AddRange(organizationMembers);
-        organization = mapper.MapTo(
+        organization = graphQlMapper.MapTo(
             organizationEntity,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organizationEntity.Id));
 
@@ -238,7 +238,7 @@ public class OrganizationService(
 
         organization.CustomDomain = null;
 
-        var deletedOrganization = mapper.MapTo(
+        var deletedOrganization = graphQlMapper.MapTo(
             repositoryFactory.OrganizationRepository.Remove(organization),
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
 
@@ -325,7 +325,7 @@ public class OrganizationService(
         var organization = await repositoryFactory.OrganizationRepository.GetByXeroTenantIdUntrackedAsync(tenantId, cancellationToken);
         return organization is null
             ? null
-            : mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
+            : graphQlMapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
     }
 
     public async Task<IReadOnlyList<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken)
@@ -339,7 +339,7 @@ public class OrganizationService(
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var myOrganizations = await cachedOrganizationService.GetMyOrganizationsByCustomerIdAsync(customerId, cancellationToken);
 
-        return mapper.MapTo(myOrganizations).ToList();
+        return graphQlMapper.MapTo(myOrganizations).ToList();
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
@@ -390,7 +390,7 @@ public class OrganizationService(
 
         existingOrganization.MarketplaceListingMetadata = marketplaceListingMetadata;
 
-        var organization = mapper.MapTo(
+        var organization = graphQlMapper.MapTo(
             repositoryFactory.OrganizationRepository.Update(existingOrganization),
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
 
@@ -438,7 +438,7 @@ public class OrganizationService(
 
         repositoryFactory.OrganizationRepository.Update(existingOrganization);
 
-        var organization = mapper.MapTo(
+        var organization = graphQlMapper.MapTo(
             existingOrganization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
 
@@ -482,12 +482,12 @@ public class OrganizationService(
         // Preserve ownership verification status. It has its own service to handle it
         var isOwnershipVerified = existingOrganization.IsOwnershipVerified;
 
-        existingOrganization = mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities);
+        existingOrganization = graphQlMapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities);
 
         // Restoring the ownership verification status
         existingOrganization.IsOwnershipVerified = isOwnershipVerified;
 
-        organization = mapper.MapTo(
+        organization = graphQlMapper.MapTo(
             repositoryFactory.OrganizationRepository.Update(existingOrganization),
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
 
@@ -546,13 +546,13 @@ public class OrganizationService(
                 organization.OrganizationTaxDetails = null;
                 organization.PhysicalAddress = null;
 
-                return mapper.MapTo(
+                return graphQlMapper.MapTo(
                     organization,
                     organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
             }
         }
 
-        var mappedOrganization = mapper.MapTo(
+        var mappedOrganization = graphQlMapper.MapTo(
             organization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
 
@@ -605,7 +605,7 @@ public class OrganizationService(
         organization.OrganizationBankAccounts = [];
         organization.OrganizationTaxDetails = null;
 
-        return mapper.MapTo(organization, Constants.EmptyUri);
+        return graphQlMapper.MapTo(organization, Constants.EmptyUri);
     }
 
     private void AddDefaultOrganizationTags(Shared.Database.Entities.Organization organizationEntity)

@@ -1,9 +1,9 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
-using Marketplace.Api.Mappers;
 using Marketplace.Api.Services;
 using Marketplace.Api.Services.Authorization;
+using Marketplace.Shared.Mappers;
 using Marketplace.Shared.Models;
 using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
@@ -27,7 +27,7 @@ public class GetOrganizationTagsShould
         [Frozen] ICustomerService customerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IMarketplaceOutboxPublisher marketplaceOutboxPublisher,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] ICachedProductService cachedProductService,
         [Frozen] IOrganizationRepository organizationRepository,
         [Frozen] IOrganizationTagRepository organizationTagRepository,
@@ -88,13 +88,14 @@ public class GetOrganizationTagsShould
                 null,
                 cancellationToken))
             .Returns([organizationTag]);
-        A.CallTo(() => mapper.MapTo(A<Shared.Models.Product>.That.Matches(product => product.Id == "product-1" && product.Inactive), organization))
+        A.CallTo(() => entityMapper.MapTo(A<Shared.Models.Product>.That.Matches(product => product.Id == "product-1" && product.Inactive),
+                organization))
             .Returns(productEntity);
-        A.CallTo(() => mapper.MapTo(productVersion, productEntity, A<IReadOnlyList<OrganizationTag>>._))
+        A.CallTo(() => entityMapper.MapTo(productVersion, productEntity, A<IReadOnlyList<OrganizationTag>>._))
             .Returns(productVersionEntity);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => productRepository.Add(productEntity)).Returns(productEntity);
-        A.CallTo(() => mapper.MapTo(productEntity)).Returns(mappedProduct);
+        A.CallTo(() => entityMapper.MapTo(productEntity)).Returns(mappedProduct);
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).Returns(1);
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).Returns(Task.CompletedTask);
 

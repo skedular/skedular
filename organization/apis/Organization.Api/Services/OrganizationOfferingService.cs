@@ -35,7 +35,7 @@ public class OrganizationOfferingService(
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     TimeProvider timeProvider) : IOrganizationOfferingService
 {
     public async Task UpdateOfferingAsync(
@@ -133,7 +133,10 @@ public class OrganizationOfferingService(
             organizationUniqueAlphanumericName,
             cancellationToken);
         organizationOutboxPublisher.PublishOrganizations(
-            [mapper.MapTo(organization!, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization!.Id))],
+            [
+                graphQlMapper.MapTo(organization!,
+                    organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization!.Id))
+            ],
             repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -158,7 +161,10 @@ public class OrganizationOfferingService(
             repositoryFactory.OrganizationOfferingRepository.Update(offering);
 
             organizationOutboxPublisher.PublishOrganizations(
-                [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+                [
+                    graphQlMapper.MapTo(organization,
+                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))
+                ],
                 repositoryFactory.UnitOfWork);
         }
 

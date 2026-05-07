@@ -656,7 +656,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         [Frozen] IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
         [Frozen] IMarketplaceBookingService marketplaceBookingService,
         [Frozen] IProductVersionHelperService productVersionHelperService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IRandomHelper randomHelper,
         MarketplaceBookingSubscriptionIntegrations sut,
         IUnitOfWork unitOfWork,
@@ -776,8 +776,8 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 new DateTimeOffset(2026, 3, 17, 8, 0, 0, TimeSpan.Zero),
                 new DateTimeOffset(2026, 3, 17, 17, 0, 0, TimeSpan.Zero),
                 [new Resource { Id = "res-7" }]));
-        A.CallTo(() => mapper.MapTo(A<RecurringBooking>._, new DateOnly(2026, 3, 17))).Returns(generatedBooking);
-        A.CallTo(() => mapper.MapTo(A<MarketplaceBooking>._)).Returns(new Shared.Models.MarketplaceBooking
+        A.CallTo(() => entityMapper.MapTo(A<RecurringBooking>._, new DateOnly(2026, 3, 17))).Returns(generatedBooking);
+        A.CallTo(() => entityMapper.MapTo(A<MarketplaceBooking>._)).Returns(new Shared.Models.MarketplaceBooking
         {
             ProductPricing = subscription.MarketplaceBooking.ProductPricing, ProductVersion = new Shared.Models.ProductVersion { Id = "pv-1" }
         });

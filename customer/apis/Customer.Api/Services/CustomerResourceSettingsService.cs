@@ -1,6 +1,6 @@
 using Api.Shared.Services;
-using Customer.Api.Mappers;
 using Customer.Api.Services.Authorization;
+using Customer.Shared.Mappers;
 using Customer.Shared.Repositories;
 
 namespace Customer.Api.Services;
@@ -15,7 +15,7 @@ public class CustomerResourceSettingsService(
     ICustomerHelperService customerHelperService,
     ILocationAuthorizationService locationAuthorizationService,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper)
+    IEntityMapper entityMapper)
     : ICustomerResourceSettingsService
 {
     public async Task<Shared.Models.Customer> AddCustomerPreferredResourceAsync(
@@ -41,7 +41,7 @@ public class CustomerResourceSettingsService(
 
         if (customer.PreferredResources.Any(item => item.Id == resourceId))
         {
-            return mapper.MapTo(customer);
+            return entityMapper.MapTo(customer);
         }
 
         customer.PreferredResources = customer.PreferredResources.Append(resource).ToList();

@@ -106,7 +106,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
         [Frozen] IMarketplaceRefundService marketplaceRefundService,
         [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
         MarketplaceBookingSubscriptionService sut,
@@ -128,7 +128,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(existingSubscription)).Returns(existingSubscription);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Remove(existingSubscription)).Returns(existingSubscription);
-        A.CallTo(() => mapper.MapTo(existingSubscription)).Returns(deletedSubscription);
+        A.CallTo(() => entityMapper.MapTo(existingSubscription)).Returns(deletedSubscription);
 
         // Act
         var result = await sut.DeleteAsync(
@@ -164,7 +164,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
         [Frozen] IMarketplaceRefundService marketplaceRefundService,
         [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
         MarketplaceBookingSubscriptionService sut,
@@ -186,7 +186,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(existingSubscription)).Returns(existingSubscription);
-        A.CallTo(() => mapper.MapTo(existingSubscription)).Returns(updatedSubscription);
+        A.CallTo(() => entityMapper.MapTo(existingSubscription)).Returns(updatedSubscription);
 
         var result = await sut.DeleteAsync(
             existingSubscription,
@@ -221,7 +221,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
         MarketplaceBookingSubscriptionService sut,
@@ -246,7 +246,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(existingSubscription)).Returns(existingSubscription);
-        A.CallTo(() => mapper.MapTo(existingSubscription)).Returns(updatedSubscription);
+        A.CallTo(() => entityMapper.MapTo(existingSubscription)).Returns(updatedSubscription);
 
         _ = await sut.DeleteAsync(
             existingSubscription,
@@ -264,7 +264,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
         MarketplaceBookingSubscriptionService sut,
@@ -285,7 +285,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(existingSubscription)).Returns(existingSubscription);
-        A.CallTo(() => mapper.MapTo(existingSubscription)).Returns(updatedSubscription);
+        A.CallTo(() => entityMapper.MapTo(existingSubscription)).Returns(updatedSubscription);
 
         var result = await sut.DeleteAsync(
             existingSubscription,
@@ -306,7 +306,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
         MarketplaceBookingSubscriptionService sut,
@@ -327,7 +327,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(existingSubscription)).Returns(existingSubscription);
-        A.CallTo(() => mapper.MapTo(existingSubscription)).Returns(updatedSubscription);
+        A.CallTo(() => entityMapper.MapTo(existingSubscription)).Returns(updatedSubscription);
 
         var result = await sut.DeleteAsync(
             existingSubscription,

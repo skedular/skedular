@@ -22,11 +22,12 @@ public class OrganizationSubscriberShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Start_Arrears_Billing_Workflow_For_New_Marketplace_Organization(
-        [Frozen] IMapper mapper,
+        [Frozen] IEventMapper eventMapper,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IOrganizationRepository organizationRepository,
         [Frozen] ITemporalService temporalService,
         [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen] EventContext eventContext,
         OrganizationSubscriber sut,
         CancellationToken cancellationToken)
     {
@@ -54,14 +55,14 @@ public class OrganizationSubscriberShould
         var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.OrganizationUpserted } };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
-        A.CallTo(() => mapper.MapTo(@event)).Returns(organization);
+        A.CallTo(() => eventMapper.MapTo(@event)).Returns(organization);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, true, true, cancellationToken))
             .Returns(Task.FromResult<Organization?>(null));
         A.CallTo(() => organizationRepository.UpsertNakedAsync("org-1", cancellationToken)).Returns(organizationEntity);
-        A.CallTo(() => mapper.MergeToEntity(organization, organizationEntity)).Returns(updatedEntity);
+        A.CallTo(() => eventMapper.MergeToEntity(organization, organizationEntity)).Returns(updatedEntity);
         A.CallTo(() => organizationRepository.Update(updatedEntity)).Returns(updatedEntity);
 
-        var result = await sut.HandleAsync(A.Fake<EventContext>(), new Key(), @event, cancellationToken);
+        var result = await sut.HandleAsync(eventContext, new Key(), @event, cancellationToken);
 
         result.ShouldBe(EventSubscriberResults.Success);
         A.CallTo(() => temporalService.SignalRunOrganizationArrearsBillingWorkflowUpdateConfigurationAsync(
@@ -82,11 +83,12 @@ public class OrganizationSubscriberShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Signal_Arrears_Billing_Workflow_When_Marketplace_Billing_Cycle_Changes(
-        [Frozen] IMapper mapper,
+        [Frozen] IEventMapper eventMapper,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IOrganizationRepository organizationRepository,
         [Frozen] ITemporalService temporalService,
         [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen] EventContext eventContext,
         OrganizationSubscriber sut,
         CancellationToken cancellationToken)
     {
@@ -116,12 +118,12 @@ public class OrganizationSubscriberShould
         var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.OrganizationUpserted } };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
-        A.CallTo(() => mapper.MapTo(@event)).Returns(organization);
+        A.CallTo(() => eventMapper.MapTo(@event)).Returns(organization);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, true, true, cancellationToken)).Returns(existingEntity);
-        A.CallTo(() => mapper.MergeToEntity(organization, existingEntity)).Returns(updatedEntity);
+        A.CallTo(() => eventMapper.MergeToEntity(organization, existingEntity)).Returns(updatedEntity);
         A.CallTo(() => organizationRepository.Update(updatedEntity)).Returns(updatedEntity);
 
-        var result = await sut.HandleAsync(A.Fake<EventContext>(), new Key(), @event, cancellationToken);
+        var result = await sut.HandleAsync(eventContext, new Key(), @event, cancellationToken);
 
         result.ShouldBe(EventSubscriberResults.Success);
         A.CallTo(() => temporalService.SignalRunOrganizationArrearsBillingWorkflowUpdateConfigurationAsync(
@@ -138,11 +140,12 @@ public class OrganizationSubscriberShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Stop_Arrears_Billing_Workflow_When_Marketplace_Organization_Is_Deleted(
-        [Frozen] IMapper mapper,
+        [Frozen] IEventMapper eventMapper,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IOrganizationRepository organizationRepository,
         [Frozen] ITemporalService temporalService,
         [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen] EventContext eventContext,
         OrganizationSubscriber sut,
         CancellationToken cancellationToken)
     {
@@ -157,11 +160,11 @@ public class OrganizationSubscriberShould
         var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.OrganizationDeleted } };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
-        A.CallTo(() => mapper.MapTo(@event)).Returns(organization);
+        A.CallTo(() => eventMapper.MapTo(@event)).Returns(organization);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, true, true, cancellationToken)).Returns(existingEntity);
         A.CallTo(() => organizationRepository.Remove(existingEntity)).Returns(existingEntity);
 
-        var result = await sut.HandleAsync(A.Fake<EventContext>(), new Key(), @event, cancellationToken);
+        var result = await sut.HandleAsync(eventContext, new Key(), @event, cancellationToken);
 
         result.ShouldBe(EventSubscriberResults.Success);
         A.CallTo(() => temporalService.SignalRunOrganizationArrearsBillingWorkflowStopAsync("org-1", cancellationToken))
@@ -173,11 +176,12 @@ public class OrganizationSubscriberShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Stop_Arrears_Billing_Workflow_When_Organization_Stops_Being_Marketplace(
-        [Frozen] IMapper mapper,
+        [Frozen] IEventMapper eventMapper,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IOrganizationRepository organizationRepository,
         [Frozen] ITemporalService temporalService,
         [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen] EventContext eventContext,
         OrganizationSubscriber sut,
         CancellationToken cancellationToken)
     {
@@ -207,12 +211,12 @@ public class OrganizationSubscriberShould
         var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.OrganizationUpserted } };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
-        A.CallTo(() => mapper.MapTo(@event)).Returns(organization);
+        A.CallTo(() => eventMapper.MapTo(@event)).Returns(organization);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, true, true, cancellationToken)).Returns(existingEntity);
-        A.CallTo(() => mapper.MergeToEntity(organization, existingEntity)).Returns(updatedEntity);
+        A.CallTo(() => eventMapper.MergeToEntity(organization, existingEntity)).Returns(updatedEntity);
         A.CallTo(() => organizationRepository.Update(updatedEntity)).Returns(updatedEntity);
 
-        var result = await sut.HandleAsync(A.Fake<EventContext>(), new Key(), @event, cancellationToken);
+        var result = await sut.HandleAsync(eventContext, new Key(), @event, cancellationToken);
 
         result.ShouldBe(EventSubscriberResults.Success);
         A.CallTo(() => temporalService.SignalRunOrganizationArrearsBillingWorkflowStopAsync("org-1", cancellationToken))

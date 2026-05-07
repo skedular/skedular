@@ -42,7 +42,7 @@ public class PrivateBookingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IBookingOutboxPublisher bookingOutboxPublisher,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     ICachedBookingService cachedBookingService,
     IResourceService resourceService,
@@ -105,7 +105,7 @@ public class PrivateBookingService(
 
         repositoryFactory.ResourceBookingSlotRepository.UpdateRange(slots);
 
-        var bookingEntity = mapper.MapTo(
+        var bookingEntity = entityMapper.MapTo(
             booking,
             customerEntities,
             organizations,
@@ -121,7 +121,7 @@ public class PrivateBookingService(
         bookingEntity.Channel = BookingChannelConstants.Private;
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
-        booking = mapper.MapTo(bookingEntity);
+        booking = entityMapper.MapTo(bookingEntity);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
@@ -224,7 +224,7 @@ public class PrivateBookingService(
 
         repositoryFactory.ResourceBookingSlotRepository.UpdateRange(slots);
 
-        var bookingEntity = mapper.MergeTo(
+        var bookingEntity = entityMapper.MergeTo(
             booking,
             existingBooking,
             customerEntities,
@@ -239,7 +239,7 @@ public class PrivateBookingService(
             recurringBooking);
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
-        booking = mapper.MapTo(bookingEntity);
+        booking = entityMapper.MapTo(bookingEntity);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
@@ -286,7 +286,7 @@ public class PrivateBookingService(
         existingBooking.InvolvedResources.Clear();
         existingBooking.DeletedByCustomer = deletedByCustomer;
         existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
-        var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
+        var deletedBooking = entityMapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
 
         bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
 

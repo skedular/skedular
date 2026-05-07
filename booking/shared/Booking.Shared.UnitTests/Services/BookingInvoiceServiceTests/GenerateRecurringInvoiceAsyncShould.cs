@@ -31,10 +31,10 @@ public class GenerateRecurringInvoiceAsyncShould
         [Frozen] IProductVersionRepository productVersionRepository,
         [Frozen] IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
         [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
-        IProductVersionHelperService productVersionHelperService,
-        IMapper mapper,
-        IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
-        CallInvoker callInvoker,
+        [Frozen] IProductVersionHelperService productVersionHelperService,
+        [Frozen] IEntityMapper entityMapper,
+        [Frozen] IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
+        [Frozen] CallInvoker callInvoker,
         string recurringBookingId,
         string productVersionId,
         string pricingId,
@@ -50,7 +50,7 @@ public class GenerateRecurringInvoiceAsyncShould
             invoicePaymentTermsService,
             recurringInvoiceBillingScheduleService,
             productVersionHelperService,
-            mapper,
+            entityMapper,
             organizationArrearsBillingPlannerService);
 
         var recurringBooking = new RecurringBookingEntity

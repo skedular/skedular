@@ -23,7 +23,7 @@ public class OrganizationBillingService(
     ApplicationConfiguration applicationConfiguration,
     OrganizationConfiguration organizationConfiguration,
     Api.Shared.Grpc.Skedular.Organization.Billing.V1.OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache) : IOrganizationBillingService
 {
     private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
@@ -33,7 +33,7 @@ public class OrganizationBillingService(
         OrganizationBillingDetails organizationBillingDetails,
         CancellationToken cancellationToken)
     {
-        var mappedOrganizationBillingDetails = mapper.MapTo(
+        var mappedOrganizationBillingDetails = grpcMapper.MapTo(
             await organizationBillingServiceClient.AddBillingDetailsAsync(
                 new AddBillingDetailsInput
                 {
@@ -61,7 +61,7 @@ public class OrganizationBillingService(
     public async Task<OrganizationBillingDetails> GetAsync(string workspaceMemberId, string organizationId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(organizationId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await organizationBillingServiceClient.GetBillingDetailsAsync(
                     new GetBillingDetailsInput { OrganizationId = organizationId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),

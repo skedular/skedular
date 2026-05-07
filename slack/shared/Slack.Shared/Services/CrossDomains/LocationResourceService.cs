@@ -37,7 +37,7 @@ public class LocationResourceService(
     ApplicationConfiguration applicationConfiguration,
     LocationConfiguration locationConfiguration,
     LocationResourcesService.LocationResourcesServiceClient locationResourcesServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache,
     IOrganizationCustomTagService organizationCustomTagService,
     IOrganizationZoneService organizationZoneService,
@@ -50,7 +50,7 @@ public class LocationResourceService(
         await AdminEnrichAsync(
             (await memoryCache.GetOrCreateAsync(
                 CreateKeyById(resourceId),
-                async _ => mapper.MapTo(
+                async _ => grpcMapper.MapTo(
                     await locationResourcesServiceClient.Admin_GetResourceAsync(
                         new Admin_GetResourceInput { Id = resourceId },
                         locationConfiguration.ApiKey.CreateMetadata(),
@@ -76,7 +76,7 @@ public class LocationResourceService(
         addResourceInput.TagIds.AddRange(resource.ProductTags.Select(item => item.Id));
         addResourceInput.TagIds.Add(resource.ResourceType.Id);
 
-        var mappedResource = mapper.MapTo(
+        var mappedResource = grpcMapper.MapTo(
             await locationResourcesServiceClient.AddResourceAsync(
                 addResourceInput,
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -104,7 +104,7 @@ public class LocationResourceService(
         updateZoneInput.TagIds.AddRange(resource.ProductTags.Select(item => item.Id));
         updateZoneInput.TagIds.Add(resource.ResourceType.Id);
 
-        var mappedResource = mapper.MapTo(
+        var mappedResource = grpcMapper.MapTo(
             await locationResourcesServiceClient.UpdateResourceAsync(
                 updateZoneInput,
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -132,7 +132,7 @@ public class LocationResourceService(
             workspaceMemberId,
             (await memoryCache.GetOrCreateAsync(
                 CreateKeyById(resourceId),
-                async _ => mapper.MapTo(
+                async _ => grpcMapper.MapTo(
                     await locationResourcesServiceClient.GetResourceAsync(
                         new GetResourceInput { Id = resourceId },
                         locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -168,7 +168,7 @@ public class LocationResourceService(
             getPaginatedResourcesInput,
             locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
-        var edges = connection.Edges.Select(item => new ResourceEdge(mapper.MapTo(item.Node), item.Cursor)).ToList();
+        var edges = connection.Edges.Select(item => new ResourceEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList();
 
         Cache(edges.Select(item => item.Node).ToList());
 

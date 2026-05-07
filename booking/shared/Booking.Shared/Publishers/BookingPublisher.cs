@@ -16,7 +16,7 @@ public interface IBookingPublisher
 
 public class BookingPublisher(
     ApplicationConfiguration applicationConfiguration,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IContext context,
     IKafkaPublisher<Key, Event> publisher)
     : IBookingPublisher
@@ -31,7 +31,7 @@ public class BookingPublisher(
                     applicationConfiguration.AppSource,
                     booking.IsDeleted() ? Type.BookingDeleted : Type.BookingUpserted,
                     context.GetCorrelationId()),
-                Data = new Data { Booking = mapper.MapTo(booking) }
+                Data = new Data { Booking = eventMapper.MapTo(booking) }
             },
             cancellationToken)));
 }

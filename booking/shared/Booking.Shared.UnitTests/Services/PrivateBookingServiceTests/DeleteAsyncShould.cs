@@ -20,7 +20,7 @@ public class DeleteAsyncShould
         [Frozen] IBookingRepository bookingRepository,
         [Frozen] IRecurringBookingRepository recurringBookingRepository,
         [Frozen] IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] ICachedBookingService cachedBookingService,
         [Frozen] ITemporalOutboxService temporalOutboxService,
         [Frozen] IUnitOfWork unitOfWork,
@@ -49,7 +49,7 @@ public class DeleteAsyncShould
         A.CallTo(() => recurringBookingRepository.Update(recurringBooking)).Returns(recurringBooking);
         A.CallTo(() => bookingRepository.Update(existingBooking)).Returns(existingBooking);
         A.CallTo(() => bookingRepository.Remove(existingBooking)).Returns(existingBooking);
-        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(deletedBooking);
+        A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(deletedBooking);
 
         var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, true, cancellationToken);
 
@@ -72,7 +72,7 @@ public class DeleteAsyncShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IBookingRepository bookingRepository,
         [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] ITemporalOutboxService temporalOutboxService,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
@@ -98,7 +98,7 @@ public class DeleteAsyncShould
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => bookingRepository.Update(existingBooking)).Returns(existingBooking);
         A.CallTo(() => bookingRepository.Remove(existingBooking)).Returns(existingBooking);
-        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(deletedBooking);
+        A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(deletedBooking);
 
         var result = await sut.DeleteAsync(existingBooking, null, false, cancellationToken);
 

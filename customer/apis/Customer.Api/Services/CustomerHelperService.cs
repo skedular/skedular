@@ -1,5 +1,5 @@
 using Api.Shared.Services;
-using Customer.Api.Mappers;
+using Customer.Shared.Mappers;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services.Cache;
@@ -19,7 +19,7 @@ public class CustomerHelperService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     ICustomerOutboxPublisher customerOutboxPublisher,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IContext context,
     ICachedCustomerService cachedCustomerService) : ICustomerHelperService
 {
@@ -50,7 +50,7 @@ public class CustomerHelperService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         existingCustomer = repositoryFactory.CustomerRepository.Update(existingCustomer);
-        var customer = mapper.MapTo(existingCustomer);
+        var customer = entityMapper.MapTo(existingCustomer);
         customerOutboxPublisher.PublishCustomers([customer], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

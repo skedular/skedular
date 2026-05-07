@@ -6,7 +6,7 @@ using Location.Api.Services;
 namespace Location.Api.GraphQL.Location;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<LocationPayload> AddLocationAsync(
@@ -16,7 +16,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Location = mapper.MapTo(await locationService.AddAsync(mapper.MapTo(input), false, cancellationToken))!
+            Location = graphQlMapper.MapTo(await locationService.AddAsync(graphQlMapper.MapTo(input), false, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -27,7 +27,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Location = mapper.MapTo(await locationService.UpdateAsync(mapper.MapTo(input), false, cancellationToken))!
+            Location = graphQlMapper.MapTo(await locationService.UpdateAsync(graphQlMapper.MapTo(input), false, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -35,7 +35,11 @@ public class RootMutation(IMapper mapper)
         DeleteLocationInput input,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
-        new() { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(await locationService.DeleteAsync(input.Id, cancellationToken))! };
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Location = graphQlMapper.MapTo(await locationService.DeleteAsync(input.Id, cancellationToken))!
+        };
 
     [UseResolverScope]
     public async Task<LocationPayload> UpdateLocationOpeningHoursAsync(
@@ -45,7 +49,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Location = mapper.MapTo(
-                await locationOpeningHoursService.UpdateOpeningHoursAsync(input.Id, mapper.MapTo(input.WeekOpeningHours)!, cancellationToken))!
+            Location = graphQlMapper.MapTo(
+                await locationOpeningHoursService.UpdateOpeningHoursAsync(input.Id, graphQlMapper.MapTo(input.WeekOpeningHours)!, cancellationToken))!
         };
 }

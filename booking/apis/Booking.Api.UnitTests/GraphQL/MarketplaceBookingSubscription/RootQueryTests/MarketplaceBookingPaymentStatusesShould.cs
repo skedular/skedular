@@ -1,7 +1,5 @@
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.MarketplaceBookingSubscription;
-using Booking.Api.Mappers;
-using Microsoft.Extensions.Logging;
 
 namespace Booking.Api.UnitTests.GraphQL.MarketplaceBookingSubscription.RootQueryTests;
 
@@ -10,12 +8,8 @@ public class MarketplaceBookingPaymentStatusesShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void Return_All_Operator_Relevant_Payment_Status_Options(
-        IMapper mapper,
-        ILogger<RootQuery> logger)
+    public void Return_All_Operator_Relevant_Payment_Status_Options(RootQuery sut)
     {
-        var sut = new RootQuery(mapper, logger);
-
         var result = sut.MarketplaceBookingPaymentStatuses().ToList();
 
         result.Count.ShouldBe(6);
@@ -29,12 +23,8 @@ public class MarketplaceBookingPaymentStatusesShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Return_Payment_Status_Options_With_Correct_Names(
-        IMapper mapper,
-        ILogger<RootQuery> logger)
+    public void Return_Payment_Status_Options_With_Correct_Names(RootQuery sut)
     {
-        var sut = new RootQuery(mapper, logger);
-
         var result = sut.MarketplaceBookingPaymentStatuses().ToList();
 
         result.ShouldContain(item =>
@@ -47,12 +37,8 @@ public class MarketplaceBookingPaymentStatusesShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Not_Include_RecordNeverCreated_In_Operator_Facing_Options(
-        IMapper mapper,
-        ILogger<RootQuery> logger)
+    public void Not_Include_RecordNeverCreated_In_Operator_Facing_Options(RootQuery sut)
     {
-        var sut = new RootQuery(mapper, logger);
-
         var result = sut.MarketplaceBookingPaymentStatuses().ToList();
 
         result.ShouldNotContain(item => item.Type == PaymentStatus.RecordNeverCreated);

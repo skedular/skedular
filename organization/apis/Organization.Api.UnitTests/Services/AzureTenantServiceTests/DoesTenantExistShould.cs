@@ -19,6 +19,8 @@ public class DoesTenantExistShould
     public async Task Return_False_When_There_Is_No_Tenant_In_Context(
         [Frozen] IContext context,
         [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IDbTransactionBuilder dbTransactionBuilder,
+        [Frozen] IHttpContextAccessor httpContextAccessor,
         IRandomHelper randomHelper,
         IAzureTenantOnboardingService azureTenantOnboardingService,
         ITemporalOutboxService temporalOutboxService,
@@ -30,13 +32,13 @@ public class DoesTenantExistShould
 
         var sut = new AzureTenantService(
             new ApplicationConfiguration(),
-            A.Fake<IDbTransactionBuilder>(),
+            dbTransactionBuilder,
             repositoryFactory,
             context,
             memoryCache,
             randomHelper,
             new AzureEntraConfiguration(),
-            A.Fake<IHttpContextAccessor>(),
+            httpContextAccessor,
             azureTenantOnboardingService,
             temporalOutboxService,
             TimeProvider.System);
@@ -53,6 +55,8 @@ public class DoesTenantExistShould
         [Frozen] IContext context,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAzureTenantRepository azureTenantRepository,
+        [Frozen] IDbTransactionBuilder dbTransactionBuilder,
+        [Frozen] IHttpContextAccessor httpContextAccessor,
         IRandomHelper randomHelper,
         IAzureTenantOnboardingService azureTenantOnboardingService,
         ITemporalOutboxService temporalOutboxService,
@@ -67,13 +71,13 @@ public class DoesTenantExistShould
 
         var sut = new AzureTenantService(
             new ApplicationConfiguration(),
-            A.Fake<IDbTransactionBuilder>(),
+            dbTransactionBuilder,
             repositoryFactory,
             context,
             memoryCache,
             randomHelper,
             new AzureEntraConfiguration(),
-            A.Fake<IHttpContextAccessor>(),
+            httpContextAccessor,
             azureTenantOnboardingService,
             temporalOutboxService,
             TimeProvider.System);

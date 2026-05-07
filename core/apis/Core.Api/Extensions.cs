@@ -9,7 +9,9 @@ public static class Extensions
     extension(IServiceCollection services)
     {
         public IServiceCollection AddMappers() =>
-            services.AddSingleton<IMapper, Mapper>();
+            services
+                .AddSingleton<IGrpcMapper, GrpcMapper>()
+                .AddSingleton<IOpenApiMapper, OpenApiMapper>();
 
         public IServiceCollection AddServices() =>
             services

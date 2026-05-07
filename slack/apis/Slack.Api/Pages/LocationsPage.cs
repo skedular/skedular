@@ -47,7 +47,7 @@ public class LocationsPage(
     ILocationPermissionsService locationPermissionsService,
     IBookingPermissionsService bookingPermissionsService,
     IResourcesPageContextService resourcesPageContextService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IBookingsPageContextService bookingsPageContextService,
     ICustomerService customerService,
     ILocationService locationService) :
@@ -72,8 +72,8 @@ public class LocationsPage(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         switch (action.ActionId)
         {
@@ -146,8 +146,8 @@ public class LocationsPage(
                 request.User.Id,
                 cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         if (action.SelectedOption.Value.StartsWith(BookingActionTypes.Bookings))
         {
@@ -419,7 +419,7 @@ public class LocationsPage(
                 locationsWithChannel.FirstOrDefault(replicatedLocation => replicatedLocation.Id == item.Id);
             if (matchedLocation is not null)
             {
-                item.DailyUpdateChannel = mapper.MapTo(matchedLocation.DailyUpdateChannel);
+                item.DailyUpdateChannel = entityMapper.MapTo(matchedLocation.DailyUpdateChannel);
             }
 
             return item;

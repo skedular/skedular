@@ -23,23 +23,12 @@ public class CancelBookingShould
     public async Task Mark_Link_As_Cancelled_Without_Xero_Call_When_Live_Standard_Invoice_Does_Not_Exist(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        AccountingInvoiceCancellationService sut,
         string bookingId,
         string marketplaceBookingId,
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var sut = new AccountingInvoiceCancellationService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            timeProvider);
         var booking = new BookingEntity
         {
             Id = bookingId,
@@ -81,11 +70,7 @@ public class CancelBookingShould
     public async Task Create_Local_Cancelled_Link_When_Internal_Invoice_Exists_Without_External_Provider_Link(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        AccountingInvoiceCancellationService sut,
         string bookingId,
         string marketplaceBookingId,
         string organizationId,
@@ -93,13 +78,6 @@ public class CancelBookingShould
         string invoiceUrl,
         CancellationToken cancellationToken)
     {
-        var sut = new AccountingInvoiceCancellationService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            timeProvider);
         var booking = new BookingEntity
         {
             Id = bookingId,
@@ -151,16 +129,16 @@ public class CancelBookingShould
         [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        OrganizationConfiguration organizationConfiguration,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] AccountingApi accountingApi,
         string bookingId,
         string marketplaceBookingId,
         string organizationId,
         string accessTokenEncrypted,
         CancellationToken cancellationToken)
     {
-        var accountingApi = A.Fake<AccountingApi>();
         var sut = new TestAccountingInvoiceCancellationService(
             organizationConfiguration,
             new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
@@ -238,16 +216,16 @@ public class CancelBookingShould
         [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        OrganizationConfiguration organizationConfiguration,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] AccountingApi accountingApi,
         string bookingId,
         string marketplaceBookingId,
         string organizationId,
         string accessTokenEncrypted,
         CancellationToken cancellationToken)
     {
-        var accountingApi = A.Fake<AccountingApi>();
         var sut = new TestAccountingInvoiceCancellationService(
             organizationConfiguration,
             new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
@@ -330,23 +308,12 @@ public class CancelBookingShould
     public async Task Preserve_Existing_Export_Configuration_When_Invoice_Is_Already_Paid(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        AccountingInvoiceCancellationService sut,
         string bookingId,
         string marketplaceBookingId,
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var sut = new AccountingInvoiceCancellationService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            timeProvider);
         var booking = new BookingEntity
         {
             Id = bookingId,

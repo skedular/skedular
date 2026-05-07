@@ -19,7 +19,7 @@ public class OrganizationTagsGrpcService(
     OrganizationConfiguration organizationConfiguration,
     IGrpcAuthenticator grpcAuthenticator,
     ITagService tagService,
-    IMapper mapper) : OrganizationTagsService.OrganizationTagsServiceBase
+    IGrpcMapper grpcMapper) : OrganizationTagsService.OrganizationTagsServiceBase
 {
     public override async Task<TagConnection> GetPaginatedTags(GetPaginatedTagsInput request, ServerCallContext context)
     {
@@ -57,7 +57,7 @@ public class OrganizationTagsGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponseTag));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponseTag));
         return connection;
     }
 
@@ -65,7 +65,7 @@ public class OrganizationTagsGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseTag(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseTag(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
     }
 
     public override async Task<TagConnection> Admin_GetPaginatedTags(Admin_GetPaginatedTagsInput request, ServerCallContext context)
@@ -104,7 +104,7 @@ public class OrganizationTagsGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponseTag));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponseTag));
         return connection;
     }
 
@@ -112,28 +112,28 @@ public class OrganizationTagsGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseTag(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseTag(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
     }
 
     public override async Task<Tag> AddTag(AddTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseTag(await tagService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseTag(await tagService.AddAsync(grpcMapper.MapTo(request), false, context.CancellationToken));
     }
 
     public override async Task<Tag> UpdateTag(UpdateTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseTag(await tagService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseTag(await tagService.UpdateAsync(grpcMapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<Tag> RemoveTag(RemoveTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseTag(await tagService.DeleteAsync(request.Id, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseTag(await tagService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
     public override async Task<CustomTagConnection> GetPaginatedCustomTags(GetPaginatedCustomTagsInput request, ServerCallContext context)
@@ -172,7 +172,7 @@ public class OrganizationTagsGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponseCustomTag));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponseCustomTag));
         return connection;
     }
 
@@ -180,35 +180,35 @@ public class OrganizationTagsGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseCustomTag(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseCustomTag(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
     }
 
     public override async Task<CustomTag> Admin_GetCustomTag(Admin_GetCustomTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseCustomTag(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseCustomTag(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
     }
 
     public override async Task<CustomTag> AddCustomTag(AddCustomTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseCustomTag(await tagService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseCustomTag(await tagService.AddAsync(grpcMapper.MapTo(request), false, context.CancellationToken));
     }
 
     public override async Task<CustomTag> UpdateCustomTag(UpdateCustomTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseCustomTag(await tagService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseCustomTag(await tagService.UpdateAsync(grpcMapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<CustomTag> RemoveCustomTag(RemoveCustomTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseCustomTag(await tagService.DeleteAsync(request.Id, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseCustomTag(await tagService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
     public override async Task<ProductTagConnection> GetPaginatedProductTags(GetPaginatedProductTagsInput request, ServerCallContext context)
@@ -247,7 +247,7 @@ public class OrganizationTagsGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponseProductTag));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponseProductTag));
         return connection;
     }
 
@@ -255,34 +255,34 @@ public class OrganizationTagsGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseProductTag(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseProductTag(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
     }
 
     public override async Task<ProductTag> Admin_GetProductTag(Admin_GetProductTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseProductTag(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseProductTag(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
     }
 
     public override async Task<ProductTag> AddProductTag(AddProductTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseProductTag(await tagService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseProductTag(await tagService.AddAsync(grpcMapper.MapTo(request), false, context.CancellationToken));
     }
 
     public override async Task<ProductTag> UpdateProductTag(UpdateProductTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseProductTag(await tagService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseProductTag(await tagService.UpdateAsync(grpcMapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<ProductTag> RemoveProductTag(RemoveProductTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseProductTag(await tagService.DeleteAsync(request.Id, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseProductTag(await tagService.DeleteAsync(request.Id, context.CancellationToken));
     }
 }

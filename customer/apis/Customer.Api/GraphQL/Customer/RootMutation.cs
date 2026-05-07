@@ -6,7 +6,7 @@ using HotChocolate.Types;
 namespace Customer.Api.GraphQL.Customer;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<CustomerPayload> UpdateMyCustomerDetailsAsync(
@@ -25,7 +25,7 @@ public class RootMutation(IMapper mapper)
             input.PhoneNumber,
             input.PersonalInformationVisibility,
             cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -47,6 +47,6 @@ public class RootMutation(IMapper mapper)
             input.PersonalInformationVisibility,
             cancellationToken);
 
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 }

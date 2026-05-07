@@ -12,14 +12,14 @@ using Organization.Shared.Models;
 namespace Organization.Api.GraphQL.Stripe;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountDetails?> OrganizationStripeConnectAccountAsync(
         string id,
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await organizationStripeConnectAccountService.GetByIdAsync(id, cancellationToken));
+        graphQlMapper.MapTo(await organizationStripeConnectAccountService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -61,7 +61,7 @@ public class RootQuery(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }

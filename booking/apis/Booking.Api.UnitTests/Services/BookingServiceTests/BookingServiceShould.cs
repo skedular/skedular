@@ -20,7 +20,7 @@ public class BookingServiceShould
     public async Task GetByIdAsync_Returns_Booking_For_Involved_Customer(
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedBookingService cachedBookingService,
-        [Frozen] IMapper sharedMapper,
+        [Frozen] IEntityMapper sharedEntityMapper,
         BookingService sut,
         CancellationToken cancellationToken)
     {
@@ -34,7 +34,7 @@ public class BookingServiceShould
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedBookingService.GetByIdAsync(booking.Id, cancellationToken)).Returns(booking);
-        A.CallTo(() => sharedMapper.MapTo(booking)).Returns(mappedBooking);
+        A.CallTo(() => sharedEntityMapper.MapTo(booking)).Returns(mappedBooking);
 
         var result = await sut.GetByIdAsync(booking.Id, cancellationToken);
 
@@ -49,7 +49,7 @@ public class BookingServiceShould
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedBookingService cachedBookingService,
-        [Frozen] IMapper sharedMapper,
+        [Frozen] IEntityMapper sharedEntityMapper,
         BookingService sut,
         CancellationToken cancellationToken)
     {
@@ -75,7 +75,7 @@ public class BookingServiceShould
             .Returns([organization]);
         A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync("org-1", "customer-1", cancellationToken))
             .Returns(true);
-        A.CallTo(() => sharedMapper.MapTo(booking)).Returns(mappedBooking);
+        A.CallTo(() => sharedEntityMapper.MapTo(booking)).Returns(mappedBooking);
 
         var result = await sut.GetByIdAsync(booking.Id, cancellationToken);
 

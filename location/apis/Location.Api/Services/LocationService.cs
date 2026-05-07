@@ -6,8 +6,8 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
-using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
+using Location.Shared.Mappers;
 using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
@@ -49,7 +49,7 @@ public class LocationService(
     IOrganizationOfferingService organizationOfferingService,
     ILocationOutboxPublisher locationOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     TimeProvider timeProvider,
     IContext context,
     ICachedLocationService cachedLocationService) : ILocationService
@@ -137,7 +137,7 @@ public class LocationService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var locationEntity = mapper.MapTo(location, organization, organizationTags);
+        var locationEntity = entityMapper.MapTo(location, organization, organizationTags);
 
         if (organization.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName &&
             string.IsNullOrWhiteSpace(location.UniqueClaimCode))
@@ -151,11 +151,11 @@ public class LocationService(
         if (location.PhysicalAddress is not null)
         {
             location.PhysicalAddress.Id = randomHelper.Generate();
-            var locationPhysicalAddressEntity = mapper.MapTo(location.PhysicalAddress, locationEntity);
+            var locationPhysicalAddressEntity = entityMapper.MapTo(location.PhysicalAddress, locationEntity);
             repositoryFactory.LocationPhysicalAddressRepository.Add(locationPhysicalAddressEntity);
         }
 
-        location = mapper.MapTo(locationEntity);
+        location = entityMapper.MapTo(locationEntity);
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
 
@@ -221,7 +221,7 @@ public class LocationService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var deletedLocation = mapper.MapTo(repositoryFactory.LocationRepository.Remove(existingLocation));
+        var deletedLocation = entityMapper.MapTo(repositoryFactory.LocationRepository.Remove(existingLocation));
 
         locationOutboxPublisher.PublishLocations([deletedLocation], repositoryFactory.UnitOfWork);
 
@@ -323,7 +323,7 @@ public class LocationService(
 
         var locations = await repositoryFactory.LocationRepository.GetByCustomerIdUntrackedAsync(customerId, organization?.Id, cancellationToken);
 
-        return locations.Select(mapper.MapTo).ToList();
+        return locations.Select(entityMapper.MapTo).ToList();
     }
 
     private async Task<Shared.Models.Location> UpdateInternalAsync(
@@ -363,7 +363,7 @@ public class LocationService(
         var contactedViaCall = existingLocation.ContactedViaCall;
         var contactedViaWhatsapp = existingLocation.ContactedViaWhatsapp;
 
-        existingLocation = mapper.MergeTo(location, existingLocation, organizationTags);
+        existingLocation = entityMapper.MergeTo(location, existingLocation, organizationTags);
 
         if (string.IsNullOrWhiteSpace(location.UniqueClaimCode))
         {
@@ -383,18 +383,19 @@ public class LocationService(
             if (existingLocation.PhysicalAddress is null)
             {
                 location.PhysicalAddress.Id = randomHelper.Generate();
-                var locationPhysicalAddressEntity = mapper.MapTo(location.PhysicalAddress, existingLocation);
+                var locationPhysicalAddressEntity = entityMapper.MapTo(location.PhysicalAddress, existingLocation);
                 repositoryFactory.LocationPhysicalAddressRepository.Add(locationPhysicalAddressEntity);
             }
             else
             {
                 location.PhysicalAddress.Id = existingLocation.PhysicalAddress.Id;
-                var locationPhysicalAddressEntity = mapper.MergeTo(location.PhysicalAddress, existingLocation.PhysicalAddress, existingLocation);
+                var locationPhysicalAddressEntity =
+                    entityMapper.MergeTo(location.PhysicalAddress, existingLocation.PhysicalAddress, existingLocation);
                 repositoryFactory.LocationPhysicalAddressRepository.Update(locationPhysicalAddressEntity);
             }
         }
 
-        location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
+        location = entityMapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
 
@@ -422,7 +423,7 @@ public class LocationService(
             throw new UnauthorizedAccessException();
         }
 
-        var mappedLocation = mapper.MapTo(location);
+        var mappedLocation = entityMapper.MapTo(location);
 
         if (customer is null || location.Organization.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName)
         {

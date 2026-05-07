@@ -12,14 +12,14 @@ using Organization.Shared.Models;
 namespace Organization.Api.GraphQL.BankAccount;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<OrganizationBankAccountDetails?> OrganizationBankAccountAsync(
         string id,
         [Service] IOrganizationBankAccountService organizationBankAccountService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await organizationBankAccountService.GetByIdAsync(id, cancellationToken));
+        graphQlMapper.MapTo(await organizationBankAccountService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -57,7 +57,7 @@ public class RootQuery(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }

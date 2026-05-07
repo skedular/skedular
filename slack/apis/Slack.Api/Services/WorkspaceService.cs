@@ -19,7 +19,7 @@ public class WorkspaceService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IWorkspaceOnboardingService workspaceOnboardingService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ITemporalOutboxService temporalOutboxService)
     : IWorkspaceService
 {
@@ -47,7 +47,7 @@ public class WorkspaceService(
             var workspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(response.Team.Id, cancellationToken);
             ArgumentNullException.ThrowIfNull(workspace);
 
-            workspace = repositoryFactory.WorkspaceRepository.Update(mapper.MergeTo(response, workspace, organization));
+            workspace = repositoryFactory.WorkspaceRepository.Update(entityMapper.MergeTo(response, workspace, organization));
 
             temporalOutboxService.StartWorkflowReSyncSlackWorkspace(new ReSyncSlackWorkspaceInput(workspace.Id, null), repositoryFactory.UnitOfWork);
             temporalOutboxService.StartWorkflowNewSlackWorkspaceJoined(new NewSlackWorkspaceJoinedInput(workspace.Id), repositoryFactory.UnitOfWork);

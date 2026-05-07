@@ -6,7 +6,7 @@ using HotChocolate.Types;
 namespace Customer.Api.GraphQL.Feedback;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<SubmitCustomerFeedbackPayload> SubmitCustomerFeedbackAsync(
@@ -14,7 +14,7 @@ public class RootMutation(IMapper mapper)
         [Service] ICustomerFeedbackService customerFeedbackService,
         CancellationToken cancellationToken)
     {
-        var customerFeedback = await customerFeedbackService.SubmitFeedbackAsync(mapper.MapTo(input), cancellationToken);
+        var customerFeedback = await customerFeedbackService.SubmitFeedbackAsync(graphQlMapper.MapTo(input), cancellationToken);
         return new SubmitCustomerFeedbackPayload { ClientMutationId = input.ClientMutationId, Id = customerFeedback.Id };
     }
 }

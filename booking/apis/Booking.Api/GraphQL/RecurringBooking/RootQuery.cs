@@ -13,12 +13,12 @@ using HotChocolate.Types.Relay;
 namespace Booking.Api.GraphQL.RecurringBooking;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<RecurringBookingDetails?> RecurringBookingAsync(string id, [Service] IRecurringBookingService recurringBookingService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await recurringBookingService.GetByIdAsync(id, cancellationToken));
+        graphQlMapper.MapTo(await recurringBookingService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -76,7 +76,7 @@ public class RootQuery(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }

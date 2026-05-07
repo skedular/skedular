@@ -1,5 +1,5 @@
-using Customer.Api.Mappers;
 using Customer.Api.Services;
+using Customer.Shared.Mappers;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 
@@ -29,7 +29,7 @@ public class RepublishCustomerAsyncShould
     public async Task Not_Publish_Customer_If_Customer_Not_Found(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ICustomerPublisher customerPublisher,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
         string customerId,
@@ -40,7 +40,7 @@ public class RepublishCustomerAsyncShould
 
         await sut.RepublishCustomerAsync(customerId, cancellationToken);
 
-        A.CallTo(() => mapper.MapTo(A<Shared.Database.Entities.Customer>._)).MustNotHaveHappened();
+        A.CallTo(() => entityMapper.MapTo(A<Shared.Database.Entities.Customer>._)).MustNotHaveHappened();
         A.CallTo(() => customerPublisher.PublishCustomersAsync(A<IReadOnlyList<Shared.Models.Customer>>._, A<CancellationToken>._))
             .MustNotHaveHappened();
     }
@@ -49,7 +49,7 @@ public class RepublishCustomerAsyncShould
     [AutoFakeItEasyData]
     public async Task Map_Customer_Entity_To_Model(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
         string customerId,
@@ -59,11 +59,11 @@ public class RepublishCustomerAsyncShould
     {
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => customerRepository.GetByIdAsync(customerId, cancellationToken)).Returns(customerEntity);
-        A.CallTo(() => mapper.MapTo(customerEntity)).Returns(customer);
+        A.CallTo(() => entityMapper.MapTo(customerEntity)).Returns(customer);
 
         await sut.RepublishCustomerAsync(customerId, cancellationToken);
 
-        A.CallTo(() => mapper.MapTo(customerEntity)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => entityMapper.MapTo(customerEntity)).MustHaveHappenedOnceExactly();
     }
 
     [Theory]
@@ -71,7 +71,7 @@ public class RepublishCustomerAsyncShould
     public async Task Publish_Customer_If_Customer_Found(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ICustomerPublisher customerPublisher,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
         string customerId,
@@ -81,7 +81,7 @@ public class RepublishCustomerAsyncShould
     {
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => customerRepository.GetByIdAsync(customerId, cancellationToken)).Returns(customerEntity);
-        A.CallTo(() => mapper.MapTo(customerEntity)).Returns(customer);
+        A.CallTo(() => entityMapper.MapTo(customerEntity)).Returns(customer);
 
         await sut.RepublishCustomerAsync(customerId, cancellationToken);
 

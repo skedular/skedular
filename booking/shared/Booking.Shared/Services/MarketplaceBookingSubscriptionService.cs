@@ -35,7 +35,7 @@ public interface IMarketplaceBookingSubscriptionService
 public class MarketplaceBookingSubscriptionService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IProductVersionHelperService productVersionHelperService,
     IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
     ITemporalOutboxService temporalOutboxService,
@@ -119,14 +119,14 @@ public class MarketplaceBookingSubscriptionService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var marketplaceBookingEntity = repositoryFactory.MarketplaceBookingRepository.Add(mapper.MapTo(
+        var marketplaceBookingEntity = repositoryFactory.MarketplaceBookingRepository.Add(entityMapper.MapTo(
             marketplaceBooking,
             customer,
             null,
             productVersion,
             null));
 
-        var subscriptionEntity = repositoryFactory.MarketplaceBookingSubscriptionRepository.Add(mapper.MapTo(
+        var subscriptionEntity = repositoryFactory.MarketplaceBookingSubscriptionRepository.Add(entityMapper.MapTo(
             subscription,
             customerEntities,
             organizations,
@@ -138,7 +138,7 @@ public class MarketplaceBookingSubscriptionService(
             marketplaceBookingEntity,
             productVersion));
 
-        subscription = mapper.MapTo(subscriptionEntity);
+        subscription = entityMapper.MapTo(subscriptionEntity);
 
         temporalOutboxService.StartBookMarketplaceBookingSubscriptionResources(
             new BookMarketplaceBookingSubscriptionResourcesInput(subscription.Id),
@@ -203,7 +203,7 @@ public class MarketplaceBookingSubscriptionService(
                 await marketplaceRefundNotificationService.NotifyStatusChangedAsync(refund, cancellationToken);
             }
 
-            return mapper.MapTo(existingSubscription);
+            return entityMapper.MapTo(existingSubscription);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -219,7 +219,7 @@ public class MarketplaceBookingSubscriptionService(
             }
         }
 
-        return mapper.MapTo(existingSubscription);
+        return entityMapper.MapTo(existingSubscription);
     }
 
     private static List<Organization> MergeOrganizationsWithProductOwner(

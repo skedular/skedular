@@ -15,7 +15,7 @@ public interface IStripeCustomerService
 
 public class StripeCustomerService(
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IRandomHelper randomHelper,
     ICreatable<Customer, CustomerCreateOptions> customerCreateService) : IStripeCustomerService
 {
@@ -32,7 +32,7 @@ public class StripeCustomerService(
         }
 
         var stripeCustomer = await customerCreateService.CreateAsync(
-            mapper.MapToStripeCustomerCreateOption(organization),
+            graphQlMapper.MapToStripeCustomerCreateOption(organization),
             new RequestOptions { IdempotencyKey = organization.Id, StripeAccount = null },
             cancellationToken);
         organization.OrganizationStripeCustomer = repositoryFactory.OrganizationStripeCustomerRepository.Add(new OrganizationStripeCustomer

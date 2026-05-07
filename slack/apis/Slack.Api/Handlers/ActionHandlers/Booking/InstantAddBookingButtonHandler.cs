@@ -28,7 +28,7 @@ public class InstantAddBookingButtonHandler(
     IWorkspaceMemberService workspaceMemberService,
     IBookingComponents bookingComponents,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IPageNavigator pageNavigator,
     IBookingService bookingService) : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>
 {
@@ -42,8 +42,8 @@ public class InstantAddBookingButtonHandler(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = InstantAddBookingContext.Deserialize(action.Value);
 
         if (context.InitiationSource == InitiationSource.App)

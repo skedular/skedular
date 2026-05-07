@@ -12,7 +12,7 @@ using Team.Shared.Services.Cache;
 namespace Team.Api.GraphQL.Invitation;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public IEnumerable<TeamInvitationStatusDetails> TeamInvitationStatuses() =>
@@ -59,7 +59,7 @@ public class RootQuery(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }

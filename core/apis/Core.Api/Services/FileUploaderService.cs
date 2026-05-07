@@ -1,4 +1,4 @@
-using Core.Api.Mappers;
+using Core.Shared.Mappers;
 using Core.Shared.Models;
 using Core.Shared.Repositories;
 using Enterprise.Shared.FileStorage;
@@ -31,7 +31,7 @@ public class FileUploaderService(
     IFileService fileService,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IImageHelper imageHelper) : IFileUploaderService
 {
     public async Task<CdnFile> UploadToCdnAsync(
@@ -84,7 +84,7 @@ public class FileUploaderService(
         repositoryFactory.CdnFileRepository.Add(cdnFile);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        return mapper.MapTo(cdnFile);
+        return entityMapper.MapTo(cdnFile);
     }
 
     public async Task<PrivateFile> UploadToPrivateStorageAsync(
@@ -138,6 +138,6 @@ public class FileUploaderService(
         repositoryFactory.PrivateFileRepository.Add(privateFile);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        return mapper.MapTo(privateFile);
+        return entityMapper.MapTo(privateFile);
     }
 }

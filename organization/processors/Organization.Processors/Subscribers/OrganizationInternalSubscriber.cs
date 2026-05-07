@@ -15,7 +15,7 @@ namespace Organization.Processors.Subscribers;
 public class OrganizationInternalSubscriber(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IOrganizationPublisher organizationPublisher)
     : IEventSubscriber<Key, Event>
 {
@@ -90,7 +90,7 @@ public class OrganizationInternalSubscriber(
                                null,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
+        await organizationPublisher.PublishOrganizationsAsync([eventMapper.MapTo(organization)], cancellationToken);
     }
 
     private async Task HandleAccountApplicationDeauthorizedAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
@@ -121,7 +121,7 @@ public class OrganizationInternalSubscriber(
                                null,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
+        await organizationPublisher.PublishOrganizationsAsync([eventMapper.MapTo(organization)], cancellationToken);
     }
 
     private async Task HandleAccountUpdatedAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
@@ -136,7 +136,7 @@ public class OrganizationInternalSubscriber(
             return;
         }
 
-        account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(mapper.MergeTo(stripeAccount, account));
+        account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(eventMapper.MergeTo(stripeAccount, account));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -145,6 +145,6 @@ public class OrganizationInternalSubscriber(
                                null,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
+        await organizationPublisher.PublishOrganizationsAsync([eventMapper.MapTo(organization)], cancellationToken);
     }
 }

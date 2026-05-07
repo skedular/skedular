@@ -12,14 +12,14 @@ using Location.Shared.Models;
 namespace Location.Api.GraphQL.FloorPlan;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<FloorPlanDetails?> FloorPlanAsync(
         string id,
         [Service] IFloorPlanService floorPlanService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await floorPlanService.GetByIdAsync(id, cancellationToken));
+        graphQlMapper.MapTo(await floorPlanService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -56,7 +56,7 @@ public class RootQuery(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }

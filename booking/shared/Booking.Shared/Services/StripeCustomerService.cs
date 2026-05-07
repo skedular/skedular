@@ -38,7 +38,7 @@ public interface IStripeCustomerService
 /// </summary>
 public class StripeCustomerService(
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     ICreatable<Stripe.Customer, CustomerCreateOptions> customerCreateService) : IStripeCustomerService
 {
@@ -61,7 +61,7 @@ public class StripeCustomerService(
         }
 
         var stripeCustomer = await customerCreateService.CreateAsync(
-            mapper.MapToCustomerCreateOption(organization),
+            entityMapper.MapToCustomerCreateOption(organization),
             new RequestOptions { IdempotencyKey = $"{organization.Id}-{stripeAccountId}", StripeAccount = stripeAccountId },
             cancellationToken);
 
@@ -90,7 +90,7 @@ public class StripeCustomerService(
         }
 
         var stripeCustomer = await customerCreateService.CreateAsync(
-            mapper.MapToCustomerCreateOption(customer),
+            entityMapper.MapToCustomerCreateOption(customer),
             new RequestOptions { IdempotencyKey = $"{customer.Id}-{stripeAccountId}", StripeAccount = stripeAccountId },
             cancellationToken);
 

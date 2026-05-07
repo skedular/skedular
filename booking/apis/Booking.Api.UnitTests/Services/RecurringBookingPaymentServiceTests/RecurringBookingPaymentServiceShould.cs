@@ -33,7 +33,7 @@ public class RecurringBookingPaymentServiceShould
         [Frozen] IRecurringBookingRepository recurringBookingRepository,
         [Frozen] IBookingRepository bookingRepository,
         [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
@@ -48,7 +48,7 @@ public class RecurringBookingPaymentServiceShould
             recurringBookingRepository,
             bookingRepository,
             temporalOutboxService,
-            mapper,
+            entityMapper,
             graphQlTopicEventSender,
             unitOfWork,
             transaction,
@@ -69,7 +69,7 @@ public class RecurringBookingPaymentServiceShould
         [Frozen] IRecurringBookingRepository recurringBookingRepository,
         [Frozen] IBookingRepository bookingRepository,
         [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
@@ -84,7 +84,7 @@ public class RecurringBookingPaymentServiceShould
             recurringBookingRepository,
             bookingRepository,
             temporalOutboxService,
-            mapper,
+            entityMapper,
             graphQlTopicEventSender,
             unitOfWork,
             transaction,
@@ -105,7 +105,7 @@ public class RecurringBookingPaymentServiceShould
         [Frozen] IRecurringBookingRepository recurringBookingRepository,
         [Frozen] IBookingRepository bookingRepository,
         [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
@@ -120,7 +120,7 @@ public class RecurringBookingPaymentServiceShould
             recurringBookingRepository,
             bookingRepository,
             temporalOutboxService,
-            mapper,
+            entityMapper,
             graphQlTopicEventSender,
             unitOfWork,
             transaction,
@@ -139,7 +139,7 @@ public class RecurringBookingPaymentServiceShould
         IRecurringBookingRepository recurringBookingRepository,
         IBookingRepository bookingRepository,
         ITemporalOutboxService temporalOutboxService,
-        IMapper mapper,
+        IEntityMapper entityMapper,
         IGraphQlTopicEventSender graphQlTopicEventSender,
         IUnitOfWork unitOfWork,
         IDbContextTransaction transaction,
@@ -180,7 +180,7 @@ public class RecurringBookingPaymentServiceShould
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync(recurringBooking.Id, recurringBooking.StartDate, null,
                 cancellationToken))
             .Returns(relatedBookings);
-        A.CallTo(() => mapper.MapTo(recurringBooking)).Returns(mappedRecurringBooking);
+        A.CallTo(() => entityMapper.MapTo(recurringBooking)).Returns(mappedRecurringBooking);
 
         var result = await act(sut, recurringBooking.Id, cancellationToken);
 

@@ -7,7 +7,7 @@ using Organization.Api.Services;
 namespace Organization.Api.GraphQL.TaxDetails;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<OrganizationPayload> UpdateOrganizationTaxDetailsAsync(
@@ -17,7 +17,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(await organizationTaxDetailsService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+            Organization = graphQlMapper.MapTo(await organizationTaxDetailsService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -28,7 +28,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(await organizationTaxDetailsService.RemoveAsync(
+            Organization = graphQlMapper.MapTo(await organizationTaxDetailsService.RemoveAsync(
                 input.OrganizationId,
                 input.OrganizationCustomDomain,
                 cancellationToken))!

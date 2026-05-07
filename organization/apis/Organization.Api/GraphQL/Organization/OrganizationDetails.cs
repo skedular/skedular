@@ -86,7 +86,7 @@ public class OrganizationDetails : Node
         IEnumerable<OrganizationMemberOrderInput>? orderBy,
         [Parent] OrganizationDetails organization,
         [Service] IOrganizationMemberService organizationMemberService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await organizationMemberService.GetPaginatedOrganizationMembersAsync(
@@ -104,7 +104,7 @@ public class OrganizationDetails : Node
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }
@@ -119,7 +119,7 @@ public class OrganizationDetails : Node
         IEnumerable<OrganizationTagOrderInput>? orderBy,
         [Parent] OrganizationDetails organization,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
             after,
@@ -133,7 +133,7 @@ public class OrganizationDetails : Node
                 where?.NameContains),
             orderBy,
             tagService,
-            mapper,
+            graphQlMapper,
             cancellationToken);
 
     [UseResolverScope]
@@ -146,7 +146,7 @@ public class OrganizationDetails : Node
         IEnumerable<OrganizationTagOrderInput>? orderBy,
         [Parent] OrganizationDetails organization,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
             after,
@@ -160,7 +160,7 @@ public class OrganizationDetails : Node
                 where?.NameContains),
             orderBy,
             tagService,
-            mapper,
+            graphQlMapper,
             cancellationToken);
 
     [UseResolverScope]
@@ -173,7 +173,7 @@ public class OrganizationDetails : Node
         IEnumerable<OrganizationTagOrderInput>? orderBy,
         [Parent] OrganizationDetails organization,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
             after,
@@ -187,7 +187,7 @@ public class OrganizationDetails : Node
                 where?.NameContains),
             orderBy,
             tagService,
-            mapper,
+            graphQlMapper,
             cancellationToken);
 
     [UseResolverScope]
@@ -230,7 +230,7 @@ public class OrganizationDetails : Node
         TagSearchCriteria tagSearchCriteria,
         IEnumerable<OrganizationTagOrderInput>? orderBy,
         ITagService tagService,
-        IMapper mapper,
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
@@ -249,7 +249,7 @@ public class OrganizationDetails : Node
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }

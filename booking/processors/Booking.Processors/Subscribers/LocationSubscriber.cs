@@ -1,5 +1,6 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1;
 using Api.Shared.Services.Models;
+using Booking.Processors.Mappers;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
@@ -7,7 +8,6 @@ using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Constants = Api.Shared.Services.Constants;
-using IMapper = Booking.Processors.Mappers.IMapper;
 using Location = Booking.Shared.Database.Entities.Location;
 using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Type;
 
@@ -15,7 +15,7 @@ namespace Booking.Processors.Subscribers;
 
 public class LocationSubscriber(
     ILogger<LocationSubscriber> logger,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IRepositoryFactory repositoryFactory,
     IDbTransactionBuilder transactionBuilder,
     ITemporalService temporalService) : IEventSubscriber<Key, Event>
@@ -28,7 +28,7 @@ public class LocationSubscriber(
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Location.OrganizationId);
 
-                    var location = mapper.MapTo(@event);
+                    var location = eventMapper.MapTo(@event);
                     var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization!.Id, cancellationToken);
                     var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, organization, cancellationToken);
                     if (existingLocation.EventRaisedAt > location.EventRaisedAt)
@@ -46,7 +46,7 @@ public class LocationSubscriber(
 
             case Type.LocationDeleted:
                 {
-                    var location = mapper.MapTo(@event);
+                    var location = eventMapper.MapTo(@event);
                     var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, true, cancellationToken);
                     if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
@@ -83,7 +83,7 @@ public class LocationSubscriber(
 
         var locationOpeningHoursChanged = !location.OpeningHours.IsEqual(existingLocation.OpeningHours);
         existingLocation =
-            repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization, organizationTags));
+            repositoryFactory.LocationRepository.Update(eventMapper.MergeToEntity(location, existingLocation, organization, organizationTags));
 
         (existingLocation, var resourceIdsToRegenerateBookingSlots) =
             await RebuildResourcesAsync(location, existingLocation, organization, cancellationToken);
@@ -160,7 +160,7 @@ public class LocationSubscriber(
                     resourceIdsToRegenerateBookingSlots.Add(resource.Id);
                 }
 
-                var updatedResource = mapper.MergeToEntity(resource, existingResource, existingLocation, filteredOrganizationTags);
+                var updatedResource = eventMapper.MergeToEntity(resource, existingResource, existingLocation, filteredOrganizationTags);
                 updatedResource.DeletedAt = null;
 
                 return repositoryFactory.ResourceRepository.Update(updatedResource);
@@ -174,7 +174,7 @@ public class LocationSubscriber(
                     .Where(tag => resource.OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
                     .ToList();
 
-                return repositoryFactory.ResourceRepository.Add(mapper.MapToEntity(resource, existingLocation, filteredOrganizationTags));
+                return repositoryFactory.ResourceRepository.Add(eventMapper.MapToEntity(resource, existingLocation, filteredOrganizationTags));
             })
             .ToList();
 

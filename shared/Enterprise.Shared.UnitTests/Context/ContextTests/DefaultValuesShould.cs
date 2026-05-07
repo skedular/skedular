@@ -1,30 +1,28 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.UnitTests.Context.ContextTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class DefaultValuesShould
 {
-    [Fact]
-    public void Return_empty_string_for_correlation_id_when_no_http_context()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_empty_string_for_correlation_id_when_no_http_context(
+        [Frozen] IHttpContextAccessor accessor,
+        Shared.Context.Context sut)
     {
-        var accessor = A.Fake<IHttpContextAccessor>();
         A.CallTo(() => accessor.HttpContext).Returns(null);
-        var logger = A.Fake<ILogger<Shared.Context.Context>>();
-        var sut = new Shared.Context.Context(accessor, logger);
 
         sut.GetCorrelationId().ShouldBe(string.Empty);
     }
 
-    [Fact]
-    public void Return_empty_string_for_missing_string_keys()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_empty_string_for_missing_string_keys(
+        [Frozen] IHttpContextAccessor accessor,
+        Shared.Context.Context sut)
     {
-        var httpContext = new DefaultHttpContext();
-        var accessor = A.Fake<IHttpContextAccessor>();
-        A.CallTo(() => accessor.HttpContext).Returns(httpContext);
-        var logger = A.Fake<ILogger<Shared.Context.Context>>();
-        var sut = new Shared.Context.Context(accessor, logger);
+        A.CallTo(() => accessor.HttpContext).Returns(new DefaultHttpContext());
 
         sut.GetDesignation().ShouldBe(string.Empty);
         sut.GetTitle().ShouldBe(string.Empty);

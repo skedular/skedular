@@ -1,13 +1,14 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Team.V1;
 using Enterprise.Shared.Kafka.Consume;
+using Slack.Processors.Mappers;
 using Slack.Shared.Repositories;
-using IMapper = Slack.Processors.Mappers.IMapper;
 using Team = Slack.Shared.Database.Entities.Team;
 using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Type;
 
 namespace Slack.Processors.Subscribers;
 
-public class TeamSubscriber(ILogger<TeamSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
+public class TeamSubscriber(ILogger<TeamSubscriber> logger, IEventMapper eventMapper, IRepositoryFactory repositoryFactory)
+    : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -15,7 +16,7 @@ public class TeamSubscriber(ILogger<TeamSubscriber> logger, IMapper mapper, IRep
         {
             case Type.TeamUpserted:
                 {
-                    var team = mapper.MapTo(@event);
+                    var team = eventMapper.MapTo(@event);
                     var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, cancellationToken);
                     if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
@@ -30,7 +31,7 @@ public class TeamSubscriber(ILogger<TeamSubscriber> logger, IMapper mapper, IRep
 
             case Type.TeamDeleted:
                 {
-                    var team = mapper.MapTo(@event);
+                    var team = eventMapper.MapTo(@event);
                     var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
                     if (existingTeam is not null && existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
@@ -54,7 +55,7 @@ public class TeamSubscriber(ILogger<TeamSubscriber> logger, IMapper mapper, IRep
 
     private async Task HandleTeamUpsertedEventAsync(Shared.Models.Team team, Team existingTeam, CancellationToken cancellationToken)
     {
-        _ = repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam));
+        _ = repositoryFactory.TeamRepository.Update(eventMapper.MergeToEntity(team, existingTeam));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

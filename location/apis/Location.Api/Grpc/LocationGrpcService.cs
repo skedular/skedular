@@ -26,7 +26,7 @@ public class LocationGrpcService(
     IGrpcAuthenticator grpcAuthenticator,
     ILocationService locationService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    IMapper mapper) : LocationService.LocationServiceBase
+    IGrpcMapper grpcMapper) : LocationService.LocationServiceBase
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
@@ -43,7 +43,7 @@ public class LocationGrpcService(
 
         ArgumentException.ThrowIfNullOrWhiteSpace(request.OrganizationId);
 
-        return mapper.MapToGrpcResponse(await locationService.AddAsync(mapper.MapTo(request), true, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await locationService.AddAsync(grpcMapper.MapTo(request), true, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Location.Core.V1.Location> Admin_Update(
@@ -54,7 +54,7 @@ public class LocationGrpcService(
 
         ArgumentException.ThrowIfNullOrWhiteSpace(request.OrganizationId);
 
-        return mapper.MapToGrpcResponse(await locationService.UpdateAsync(mapper.MapTo(request), true, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await locationService.UpdateAsync(grpcMapper.MapTo(request), true, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Location.Core.V1.Location> Get(GetInput request, ServerCallContext context)
@@ -63,7 +63,7 @@ public class LocationGrpcService(
 
         var location = await locationService.GetByIdAsync(request.Id, false, context.CancellationToken) ?? throw new LocationNotFound();
 
-        return mapper.MapToGrpcResponse(location);
+        return grpcMapper.MapToGrpcResponse(location);
     }
 
     public override async Task<LocationConnection> Admin_GetPaginatedLocations(Admin_GetPaginatedLocationsInput request, ServerCallContext context)
@@ -119,7 +119,7 @@ public class LocationGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
         return connection;
     }
 
@@ -131,7 +131,7 @@ public class LocationGrpcService(
 
         var location = await locationService.GetByIdAsync(request.Id, true, context.CancellationToken) ?? throw new LocationNotFound();
 
-        return mapper.MapToGrpcResponse(location);
+        return grpcMapper.MapToGrpcResponse(location);
     }
 
     public override async Task<LocationConnection> GetPaginatedLocations(GetPaginatedLocationsInput request, ServerCallContext context)
@@ -186,7 +186,7 @@ public class LocationGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
         return connection;
     }
 
@@ -210,7 +210,7 @@ public class LocationGrpcService(
 
         ArgumentException.ThrowIfNullOrWhiteSpace(request.OrganizationId);
 
-        return mapper.MapToGrpcResponse(await locationService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await locationService.AddAsync(grpcMapper.MapTo(request), false, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Location.Core.V1.Location> Update(UpdateInput request, ServerCallContext context)
@@ -219,13 +219,13 @@ public class LocationGrpcService(
 
         ArgumentException.ThrowIfNullOrWhiteSpace(request.OrganizationId);
 
-        return mapper.MapToGrpcResponse(await locationService.UpdateAsync(mapper.MapTo(request), false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await locationService.UpdateAsync(grpcMapper.MapTo(request), false, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Location.Core.V1.Location> Remove(RemoveInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await locationService.DeleteAsync(request.Id, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await locationService.DeleteAsync(request.Id, context.CancellationToken));
     }
 }

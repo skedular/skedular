@@ -55,7 +55,7 @@ public class CustomerDetails : Node
     public async Task<bool> HasAttachedPaymentMethodAsync(
         [Parent] CustomerDetails customer,
         [Service] IPaymentService paymentService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         await paymentService.HasAttachedPaymentMethodAsync(customer.Id, cancellationToken);
 
@@ -63,17 +63,17 @@ public class CustomerDetails : Node
     public async Task<IEnumerable<CustomerPaymentMethod>> PaymentMethodsAsync(
         [Parent] CustomerDetails customer,
         [Service] IPaymentService paymentService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await paymentService.GetPaymentMethodsAsync(customer.Id, cancellationToken));
+        graphQlMapper.MapTo(await paymentService.GetPaymentMethodsAsync(customer.Id, cancellationToken));
 
     [UseResolverScope]
     public async Task<CustomerBillingDetails?> BillingDetailsAsync(
         [Parent] CustomerDetails customer,
         [Service] IBillingService billingService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
-        mapper.MapToGraphQl(await billingService.GetBillingAsync(customer.Id, cancellationToken));
+        graphQlMapper.MapToGraphQl(await billingService.GetBillingAsync(customer.Id, cancellationToken));
 }
 
 [ObjectType<CustomerDetails>]

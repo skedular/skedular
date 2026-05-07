@@ -17,7 +17,7 @@ public class EditCustomTagButtonHandler(
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IOrganizationPermissionsService organizationPermissionsService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IPageNavigator pageNavigator,
     IOrganizationCustomTagService organizationCustomTagService) : IViewSubmissionHandler
 {
@@ -31,8 +31,8 @@ public class EditCustomTagButtonHandler(
             viewSubmission.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditCustomTagContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var permissions = await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
         if (!permissions.CanModify)

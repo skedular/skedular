@@ -43,7 +43,7 @@ public class InvitationService(
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IRandomHelper randomHelper,
     ITemporalOutboxService temporalOutboxService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
@@ -121,7 +121,7 @@ public class InvitationService(
                 })
                 : repositoryFactory.JoinInvitationRepository.Update(existingJoinInvitation);
 
-            joinInvitations.Add(mapper.MapTo(existingJoinInvitation));
+            joinInvitations.Add(graphQlMapper.MapTo(existingJoinInvitation));
 
             temporalOutboxService.StartWorkflowInviteToJoin(
                 new InviteToJoinOrganizationInput(existingJoinInvitation.Id, matchingCustomerByEmail is null),
@@ -164,7 +164,10 @@ public class InvitationService(
             });
 
             organizationOutboxPublisher.PublishOrganizations(
-                [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+                [
+                    graphQlMapper.MapTo(organization,
+                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))
+                ],
                 repositoryFactory.UnitOfWork);
         }
 
@@ -186,7 +189,7 @@ public class InvitationService(
 
         await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync([customer.Id], cancellationToken);
 
-        return mapper.MapTo(joinInvitation);
+        return graphQlMapper.MapTo(joinInvitation);
     }
 
     public async Task<JoinInvitation> RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken)
@@ -209,7 +212,7 @@ public class InvitationService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        return mapper.MapTo(joinInvitation);
+        return graphQlMapper.MapTo(joinInvitation);
     }
 
     public async Task<JoinInvitation> CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken)
@@ -239,7 +242,7 @@ public class InvitationService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        return mapper.MapTo(joinInvitation);
+        return graphQlMapper.MapTo(joinInvitation);
     }
 
     public async Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken)
@@ -273,7 +276,7 @@ public class InvitationService(
                 orderByFields,
                 cancellationToken);
 
-        return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
+        return (paginatedInfo, edges.Select(graphQlMapper.MapTo).ToList(), totalCount);
     }
 
     private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(

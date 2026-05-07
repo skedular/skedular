@@ -1,13 +1,13 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1;
 using Enterprise.Shared.Kafka.Consume;
+using Slack.Processors.Mappers;
 using Slack.Shared.Repositories;
-using IMapper = Slack.Processors.Mappers.IMapper;
 using Location = Slack.Shared.Database.Entities.Location;
 using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Type;
 
 namespace Slack.Processors.Subscribers;
 
-public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
+public class LocationSubscriber(ILogger<LocationSubscriber> logger, IEventMapper eventMapper, IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -16,7 +16,7 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
         {
             case Type.LocationUpserted:
                 {
-                    var location = mapper.MapTo(@event);
+                    var location = eventMapper.MapTo(@event);
                     var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, cancellationToken);
                     if (existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
@@ -31,7 +31,7 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
 
             case Type.LocationDeleted:
                 {
-                    var location = mapper.MapTo(@event);
+                    var location = eventMapper.MapTo(@event);
                     var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
                     if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
@@ -58,7 +58,7 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
         Location existingLocation,
         CancellationToken cancellationToken)
     {
-        _ = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation));
+        _ = repositoryFactory.LocationRepository.Update(eventMapper.MergeToEntity(location, existingLocation));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

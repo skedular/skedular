@@ -7,7 +7,7 @@ using Location.Api.Services;
 namespace Location.Api.GraphQL.Ownership;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<LocationPayload> ClaimLocationOwnershipAsync(
@@ -17,7 +17,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Location = mapper.MapTo(await locationOwnershipService.ClaimOwnershipAsync(
+            Location = graphQlMapper.MapTo(await locationOwnershipService.ClaimOwnershipAsync(
                 input.UniqueClaimCode,
                 input.OrganizationId,
                 input.OrganizationCustomDomain,

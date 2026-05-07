@@ -5,7 +5,7 @@ using Organization.Api.Mappers;
 namespace Organization.Api.GraphQL.Offering;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public OrganizationOfferingDetails OrganizationOffering(string code)
@@ -21,7 +21,7 @@ public class RootQuery(IMapper mapper)
             IsEnterprise = matchedOffering.IsEnterpriseOffering(),
             Name = offering.Name,
             UnitPrice = offering.UnitPrice,
-            FeatureSet = mapper.MapTo(offering).ToArray(),
+            FeatureSet = graphQlMapper.MapTo(offering).ToArray(),
             UnderPriceLines = offering.UnderPriceLines.ToArray(),
             Free = matchedOffering.IsFreeOffering(),
             EarlyBird = matchedOffering.IsEarlyBirdOffering()

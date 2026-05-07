@@ -48,7 +48,7 @@ public class BookingInvoiceService(
     IInvoicePaymentTermsService invoicePaymentTermsService,
     IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
     IProductVersionHelperService productVersionHelperService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService) : IBookingInvoiceService
 {
     public async Task<IDocument?> GenerateInvoiceAsync(string bookingId, CancellationToken cancellationToken)
@@ -114,7 +114,7 @@ public class BookingInvoiceService(
         ArgumentNullException.ThrowIfNull(productVersion.Product);
         ArgumentNullException.ThrowIfNull(productVersion.Product.Organization);
 
-        var recurringBookingModel = mapper.MapTo(recurringBooking);
+        var recurringBookingModel = entityMapper.MapTo(recurringBooking);
         var draft = organizationArrearsBillingPlannerService.BuildInitialRecurringInvoiceDraft(
             recurringBookingModel,
             productVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle());

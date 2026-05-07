@@ -46,7 +46,8 @@ public class ResourceService(
     IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    IMapper mapper) : IResourceService
+    IGrpcMapper grpcMapper,
+    IGraphQlMapper graphQlMapper) : IResourceService
 {
     public async Task<IReadOnlyList<Resource>> GetAvailableResourcesAsync(
         string? organizationId,
@@ -108,9 +109,9 @@ public class ResourceService(
             cancellationToken);
 
         resources = resources.Concat(resourcesToInclude).ToList();
-        return mapper.MapTo(resources).Select(item =>
+        return grpcMapper.MapTo(resources).Select(item =>
         {
-            item.Location = mapper.MapTo(resources.Single(resource => resource.Id == item.Id).Location);
+            item.Location = graphQlMapper.MapTo(resources.Single(resource => resource.Id == item.Id).Location);
 
             return item;
         }).ToList();

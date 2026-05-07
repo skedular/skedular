@@ -2,6 +2,7 @@ using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
@@ -44,8 +45,8 @@ public class MarketplaceBookingSubscriptionService(
     ICachedCustomerService cachedCustomerService,
     ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
-    IMapper mapper,
-    Shared.Mappers.IMapper sharedMapper,
+    IGraphQlMapper graphQlMapper,
+    IEntityMapper sharedEntityMapper,
     Shared.Services.IMarketplaceBookingSubscriptionService sharedMarketplaceBookingSubscriptionService)
     : IMarketplaceBookingSubscriptionService
 {
@@ -59,7 +60,7 @@ public class MarketplaceBookingSubscriptionService(
 
         await EnsureCustomerCanViewMarketplaceBookingSubscriptionAsync(subscription, customerId, cancellationToken);
 
-        return sharedMapper.MapTo(subscription);
+        return sharedEntityMapper.MapTo(subscription);
     }
 
     public async Task<IReadOnlyList<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string id, CancellationToken cancellationToken)
@@ -74,7 +75,7 @@ public class MarketplaceBookingSubscriptionService(
 
         var invoices =
             await repositoryFactory.OrganizationArrearsInvoiceRepository.GetByMarketplaceBookingSubscriptionIdUntrackedAsync(id, cancellationToken);
-        return invoices.Select(sharedMapper.MapTo).ToList();
+        return invoices.Select(sharedEntityMapper.MapTo).ToList();
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(
@@ -175,7 +176,7 @@ public class MarketplaceBookingSubscriptionService(
                 accessScope,
                 cancellationToken);
 
-        return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
+        return (paginatedInfo, edges.Select(graphQlMapper.MapTo).ToList(), totalCount);
     }
 
     public async Task<MarketplaceBookingSubscription> AddAsync(MarketplaceBookingSubscription subscription, CancellationToken cancellationToken)

@@ -1,5 +1,4 @@
 using Api.Shared.Services.Configurations.Grpc;
-using MsTeams.Api.Mappers;
 using MsTeams.Api.Services;
 
 namespace MsTeams.Api;
@@ -14,7 +13,7 @@ public static class Extensions
                 .AddScoped<IWorkaroundService, WorkaroundService>();
 
         public IServiceCollection AddMappers() =>
-            services.AddSingleton<IMapper, Mapper>();
+            services;
 
         public IServiceCollection AddJobs() =>
             services;

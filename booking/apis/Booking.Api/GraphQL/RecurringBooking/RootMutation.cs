@@ -6,7 +6,7 @@ using HotChocolate.Types;
 namespace Booking.Api.GraphQL.RecurringBooking;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<RecurringBookingPayload> AddPrivateRecurringBookingAsync(
@@ -14,8 +14,8 @@ public class RootMutation(IMapper mapper)
         [Service] IPrivateRecurringBookingService privateRecurringBookingService,
         CancellationToken cancellationToken)
     {
-        var recurringBooking = await privateRecurringBookingService.AddAsync(mapper.MapTo(input), cancellationToken);
-        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking)! };
+        var recurringBooking = await privateRecurringBookingService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = graphQlMapper.MapTo(recurringBooking)! };
     }
 
     [UseResolverScope]
@@ -24,8 +24,8 @@ public class RootMutation(IMapper mapper)
         [Service] IPrivateRecurringBookingService privateRecurringBookingService,
         CancellationToken cancellationToken)
     {
-        var recurringBooking = await privateRecurringBookingService.UpdateAsync(mapper.MapTo(input), cancellationToken);
-        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking)! };
+        var recurringBooking = await privateRecurringBookingService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken);
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = graphQlMapper.MapTo(recurringBooking)! };
     }
 
     [UseResolverScope]
@@ -35,6 +35,6 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var recurringBooking = await privateRecurringBookingService.DeleteAsync(input.Id, cancellationToken);
-        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking)! };
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = graphQlMapper.MapTo(recurringBooking)! };
     }
 }

@@ -40,7 +40,7 @@ public class TeamDetails : Node
         IEnumerable<TeamMemberOrderInput>? orderBy,
         [Parent] TeamDetails team,
         [Service] ITeamMemberService teamMemberService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await teamMemberService.GetPaginatedMembersAsync(
@@ -58,7 +58,7 @@ public class TeamDetails : Node
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }

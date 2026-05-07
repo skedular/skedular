@@ -7,7 +7,7 @@ using Organization.Api.Services;
 namespace Organization.Api.GraphQL.Sso;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<OrganizationPayload> UpdateOrganizationSsoSettingsAsync(
@@ -17,7 +17,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(await organizationSsoService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+            Organization = graphQlMapper.MapTo(await organizationSsoService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -28,7 +28,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(
+            Organization = graphQlMapper.MapTo(
                 await organizationSsoService.RemoveAsync(input.OrganizationId, input.OrganizationCustomDomain, cancellationToken))!
         };
 }

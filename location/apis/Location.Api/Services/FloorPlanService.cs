@@ -4,8 +4,8 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
-using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
+using Location.Shared.Mappers;
 using Location.Shared.Models;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
@@ -38,7 +38,7 @@ public class FloorPlanService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     ICachedCustomerService cachedCustomerService,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ICachedLocationService cachedLocationService) : IFloorPlanService
 {
     public async Task<FloorPlan?> GetByIdAsync(string id, CancellationToken cancellationToken)
@@ -54,7 +54,7 @@ public class FloorPlanService(
             throw new UnauthorizedAccessException();
         }
 
-        return mapper.MapTo(existingFloorPlan);
+        return entityMapper.MapTo(existingFloorPlan);
     }
 
     public async Task<FloorPlan> AddAsync(FloorPlan floorPlan, bool updateResourcePositions, CancellationToken cancellationToken)
@@ -115,7 +115,7 @@ public class FloorPlanService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var floorPlanEntity = mapper.MapTo(floorPlan, existingLocation, []);
+        var floorPlanEntity = entityMapper.MapTo(floorPlan, existingLocation, []);
         if (updateResourcePositions)
         {
             floorPlanEntity.ResourcePositions = resourcePositions
@@ -124,7 +124,7 @@ public class FloorPlanService(
                     resourcePosition.Id = randomHelper.Generate();
 
                     return repositoryFactory.ResourcePositionRepository.Add(
-                        mapper.MapToEntity(
+                        entityMapper.MapToEntity(
                             resourcePosition,
                             resources.First(item => item.Id == resourcePosition.Resource.Id),
                             floorPlanEntity));
@@ -181,7 +181,7 @@ public class FloorPlanService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        return mapper.MapTo(existingFloorPlan);
+        return entityMapper.MapTo(existingFloorPlan);
     }
 
     public async Task<FloorPlan> UpdateResourcePositionsAsync(
@@ -227,7 +227,7 @@ public class FloorPlanService(
                 matchingResourcePosition.Id = resourcePosition.Id;
 
                 return repositoryFactory.ResourcePositionRepository.Update(
-                    mapper.MergeToEntity(
+                    entityMapper.MergeToEntity(
                         matchingResourcePosition,
                         resourcePosition,
                         resources.First(item => item.Id == resourcePosition.Resource.Id),
@@ -242,7 +242,7 @@ public class FloorPlanService(
                 resourcePosition.Id = randomHelper.Generate();
 
                 return repositoryFactory.ResourcePositionRepository.Add(
-                    mapper.MapToEntity(
+                    entityMapper.MapToEntity(
                         resourcePosition,
                         resources.First(item => item.Id == resourcePosition.Resource.Id),
                         existingFloorPlan));
@@ -257,7 +257,7 @@ public class FloorPlanService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        return mapper.MapTo(existingFloorPlan);
+        return entityMapper.MapTo(existingFloorPlan);
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int)> GetPaginatedFloorPlansAsync(
@@ -285,7 +285,7 @@ public class FloorPlanService(
             orderByFields,
             cancellationToken);
 
-        return (paginatedInfo, edges.Select(item => new Edge<FloorPlan>(mapper.MapTo(item.Node), item.Cursor)).ToList(), totalCount);
+        return (paginatedInfo, edges.Select(item => new Edge<FloorPlan>(entityMapper.MapTo(item.Node), item.Cursor)).ToList(), totalCount);
     }
 
     private async Task<FloorPlan> UpdateInternalAsync(
@@ -329,7 +329,7 @@ public class FloorPlanService(
                     matchingResourcePosition.Id = resourcePosition.Id;
 
                     return repositoryFactory.ResourcePositionRepository.Update(
-                        mapper.MergeToEntity(
+                        entityMapper.MergeToEntity(
                             matchingResourcePosition,
                             resourcePosition,
                             resources.First(item => item.Id == resourcePosition.Resource.Id),
@@ -345,7 +345,7 @@ public class FloorPlanService(
                     resourcePosition.Id = randomHelper.Generate();
 
                     return repositoryFactory.ResourcePositionRepository.Add(
-                        mapper.MapToEntity(
+                        entityMapper.MapToEntity(
                             resourcePosition,
                             resources.First(item => item.Id == resourcePosition.Resource.Id),
                             copiedExistingFloorPlan));
@@ -360,7 +360,7 @@ public class FloorPlanService(
             repositoryFactory.ResourcePositionRepository.RemoveRange(resourcePositionToRemove);
         }
 
-        existingFloorPlan = mapper.MergeTo(
+        existingFloorPlan = entityMapper.MergeTo(
             floorPlan,
             existingFloorPlan,
             existingLocation,

@@ -7,7 +7,7 @@ using Location.Api.Services;
 namespace Location.Api.GraphQL.Resource;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<ResourcePayload> AddResourceAsync(
@@ -17,7 +17,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Resource = mapper.MapTo(await resourceService.AddAsync(mapper.MapTo(input), false, cancellationToken))
+            Resource = graphQlMapper.MapTo(await resourceService.AddAsync(graphQlMapper.MapTo(input), false, cancellationToken))
         };
 
     [UseResolverScope]
@@ -28,7 +28,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Resource = mapper.MapTo(await resourceService.UpdateAsync(mapper.MapTo(input), cancellationToken))
+            Resource = graphQlMapper.MapTo(await resourceService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))
         };
 
     [UseResolverScope]
@@ -36,7 +36,11 @@ public class RootMutation(IMapper mapper)
         DeleteResourceInput input,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken) =>
-        new() { ClientMutationId = input.ClientMutationId, Resource = mapper.MapTo(await resourceService.DeleteAsync(input.Id, cancellationToken)) };
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Resource = graphQlMapper.MapTo(await resourceService.DeleteAsync(input.Id, cancellationToken))
+        };
 
     [UseResolverScope]
     public async Task<ResourcesPayload> DeleteResourcesAsync(
@@ -45,7 +49,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var resources = await resourceService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
-        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo) };
+        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(graphQlMapper.MapTo) };
     }
 
     [UseResolverScope]
@@ -55,7 +59,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var resources = await resourceService.ActivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
-        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo) };
+        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(graphQlMapper.MapTo) };
     }
 
     [UseResolverScope]
@@ -65,7 +69,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var resources = await resourceService.DeactivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
-        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo) };
+        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(graphQlMapper.MapTo) };
     }
 
     [UseResolverScope]
@@ -76,11 +80,11 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Resource = mapper.MapTo(
+            Resource = graphQlMapper.MapTo(
                 await resourceAvailableHoursService.UpdateAvailableHoursAsync(
                     input.Id,
                     input.OverrideAvailableHours,
-                    mapper.MapTo(input.AvailableHours),
+                    graphQlMapper.MapTo(input.AvailableHours),
                     cancellationToken))
         };
 }

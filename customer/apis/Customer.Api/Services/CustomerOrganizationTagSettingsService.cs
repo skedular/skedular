@@ -1,6 +1,6 @@
 using Api.Shared.Services;
-using Customer.Api.Mappers;
 using Customer.Api.Services.Authorization;
+using Customer.Shared.Mappers;
 using Customer.Shared.Repositories;
 
 namespace Customer.Api.Services;
@@ -22,7 +22,7 @@ public class CustomerOrganizationTagSettingsService(
     ICustomerHelperService customerHelperService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper)
+    IEntityMapper entityMapper)
     : ICustomerOrganizationTagSettingsService
 {
     public async Task<Shared.Models.Customer> AddCustomerPreferredOrganizationTagAsync(
@@ -52,7 +52,7 @@ public class CustomerOrganizationTagSettingsService(
 
         if (customer.PreferredOrganizationTags.Any(item => item.Id == organizationTagId))
         {
-            return mapper.MapTo(customer);
+            return entityMapper.MapTo(customer);
         }
 
         customer.PreferredOrganizationTags = customer.PreferredOrganizationTags.Append(organizationTag).ToList();

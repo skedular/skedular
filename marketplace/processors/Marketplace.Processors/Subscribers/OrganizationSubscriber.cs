@@ -12,7 +12,7 @@ namespace Marketplace.Processors.Subscribers;
 
 public class OrganizationSubscriber(
     ILogger<OrganizationSubscriber> logger,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IRepositoryFactory repositoryFactory,
     ICachedOrganizationService cachedOrganizationService)
     : IEventSubscriber<Key, Event>
@@ -23,7 +23,7 @@ public class OrganizationSubscriber(
         {
             case Type.OrganizationUpserted:
                 {
-                    var organization = mapper.MapTo(@event);
+                    var organization = eventMapper.MapTo(@event);
                     var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id, cancellationToken);
                     if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
@@ -38,7 +38,7 @@ public class OrganizationSubscriber(
 
             case Type.OrganizationDeleted:
                 {
-                    var organization = mapper.MapTo(@event);
+                    var organization = eventMapper.MapTo(@event);
                     var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                         organization.Id,
                         null,
@@ -72,7 +72,7 @@ public class OrganizationSubscriber(
         Organization existingOrganization,
         CancellationToken cancellationToken)
     {
-        existingOrganization = repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
+        existingOrganization = repositoryFactory.OrganizationRepository.Update(eventMapper.MergeToEntity(organization, existingOrganization));
         existingOrganization = RebuildOrganizationTags(organization, existingOrganization);
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
@@ -112,7 +112,7 @@ public class OrganizationSubscriber(
                      organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
-            var updatedOrganizationMember = mapper.MergeToEntity(
+            var updatedOrganizationMember = eventMapper.MergeToEntity(
                 organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
                 organizationMember,
                 existingOrganization,
@@ -127,7 +127,7 @@ public class OrganizationSubscriber(
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
             addedItems.Add(
-                repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(organizationMember, existingOrganization, customer)));
+                repositoryFactory.OrganizationMemberRepository.Add(eventMapper.MapToEntity(organizationMember, existingOrganization, customer)));
         }
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(itemsToRemove);
@@ -143,7 +143,7 @@ public class OrganizationSubscriber(
             .Where(tag => organization.Tags.Any(item => item.Id == tag.Id))
             .Select(organizationTag =>
             {
-                var updatedOrganizationTag = mapper.MergeToEntity(
+                var updatedOrganizationTag = eventMapper.MergeToEntity(
                     organization.Tags.First(item => item.Id == organizationTag.Id),
                     organizationTag,
                     existingOrganization);
@@ -154,7 +154,8 @@ public class OrganizationSubscriber(
             .ToList();
         var addedItems = organization.Tags
             .Where(tag => existingOrganization.Tags.All(item => item.Id != tag.Id))
-            .Select(organizationTag => repositoryFactory.OrganizationTagRepository.Add(mapper.MapToEntity(organizationTag, existingOrganization)))
+            .Select(organizationTag =>
+                repositoryFactory.OrganizationTagRepository.Add(eventMapper.MapToEntity(organizationTag, existingOrganization)))
             .ToList();
 
         repositoryFactory.OrganizationTagRepository.RemoveRange(itemsToRemove);
@@ -179,19 +180,19 @@ public class OrganizationSubscriber(
                 {
                     if (ssoSettings is not null && organization.OrganizationSsoSettings is null)
                     {
-                        repositoryFactory.OrganizationSsoSettingRepository.Add(mapper.MapTo(ssoSettings, organization));
+                        repositoryFactory.OrganizationSsoSettingRepository.Add(eventMapper.MapTo(ssoSettings, organization));
                     }
                     else if (ssoSettings is not null && organization.OrganizationSsoSettings is not null)
                     {
                         if (ssoSettings.Id == organization.OrganizationSsoSettings.Id)
                         {
                             repositoryFactory.OrganizationSsoSettingRepository.Update(
-                                mapper.MergeTo(ssoSettings, organization.OrganizationSsoSettings, organization));
+                                eventMapper.MergeTo(ssoSettings, organization.OrganizationSsoSettings, organization));
                         }
                         else
                         {
                             repositoryFactory.OrganizationSsoSettingRepository.Remove(organization.OrganizationSsoSettings);
-                            repositoryFactory.OrganizationSsoSettingRepository.Add(mapper.MapTo(ssoSettings, organization));
+                            repositoryFactory.OrganizationSsoSettingRepository.Add(eventMapper.MapTo(ssoSettings, organization));
                         }
                     }
 

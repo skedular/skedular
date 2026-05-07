@@ -14,7 +14,7 @@ public interface IGraphService
         CancellationToken cancellationToken);
 }
 
-public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, IMapper mapper) : IGraphService
+public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, IEntityMapper entityMapper) : IGraphService
 {
     public async Task<IReadOnlyCollection<AzureTenantTeam>> GetAzureTenantTeamsAsync(string tenantId, CancellationToken cancellationToken)
     {
@@ -44,7 +44,7 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, 
             {
                 ArgumentNullException.ThrowIfNull(response.Value);
                 skipCount += response.Value.Count;
-                teams.AddRange(response.Value.Select(mapper.MapTo));
+                teams.AddRange(response.Value.Select(entityMapper.MapTo));
             }
 
             if (response is null || string.IsNullOrWhiteSpace(response.OdataNextLink))
@@ -83,7 +83,7 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, 
 
         return response.Value
             .Where(item => !item.IsArchived.HasValue || !item.IsArchived.Value)
-            .Select(mapper.MapTo)
+            .Select(entityMapper.MapTo)
             .ToList();
     }
 }

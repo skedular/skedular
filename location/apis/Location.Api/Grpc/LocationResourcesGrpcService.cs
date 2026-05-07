@@ -19,7 +19,7 @@ public class LocationResourcesGrpcService(
     LocationConfiguration locationConfiguration,
     IGrpcAuthenticator grpcAuthenticator,
     IResourceService resourceService,
-    IMapper mapper) : LocationResourcesService.LocationResourcesServiceBase
+    IGrpcMapper grpcMapper) : LocationResourcesService.LocationResourcesServiceBase
 {
     public override async Task<ResourceConnection> GetPaginatedResources(GetPaginatedResourcesInput request, ServerCallContext context)
     {
@@ -55,7 +55,7 @@ public class LocationResourcesGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
         return connection;
     }
 
@@ -63,34 +63,34 @@ public class LocationResourcesGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await resourceService.GetByIdAsync(request.Id, true, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await resourceService.GetByIdAsync(request.Id, true, context.CancellationToken));
     }
 
     public override async Task<Resource> GetResource(GetResourceInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await resourceService.GetByIdAsync(request.Id, false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await resourceService.GetByIdAsync(request.Id, false, context.CancellationToken));
     }
 
     public override async Task<Resource> AddResource(AddResourceInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await resourceService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await resourceService.AddAsync(grpcMapper.MapTo(request), false, context.CancellationToken));
     }
 
     public override async Task<Resource> UpdateResource(UpdateResourceInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await resourceService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await resourceService.UpdateAsync(grpcMapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<Resource> RemoveResource(RemoveResourceInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await resourceService.DeleteAsync(request.Id, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await resourceService.DeleteAsync(request.Id, context.CancellationToken));
     }
 }

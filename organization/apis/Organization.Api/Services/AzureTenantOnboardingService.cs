@@ -24,7 +24,7 @@ public class AzureTenantOnboardingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
     IOrganizationTermsOfUseService organizationTermsOfUseService,
@@ -75,7 +75,7 @@ public class AzureTenantOnboardingService(
         repositoryFactory.AzureInstallStateUserIdLookupRepository.Remove(azureInstallStateUserIdLookup);
 
         organizationOutboxPublisher.PublishOrganizations(
-            [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+            [graphQlMapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
             repositoryFactory.UnitOfWork);
         temporalOutboxService.StartWorkflowReSyncAzureTenant(new ReSyncAzureTenantInput(tenant.Id, null), repositoryFactory.UnitOfWork);
         temporalOutboxService.StartWorkflowScheduleRenewOrganizationOffering(

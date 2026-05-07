@@ -1,5 +1,5 @@
 using Api.Shared.Services;
-using Customer.Api.Mappers;
+using Customer.Shared.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services;
@@ -27,7 +27,7 @@ public class PaymentService(
     PaymentMethodService paymentMethodService,
     IStripeCustomerService stripeCustomerService,
     ITemporalService temporalService,
-    IMapper mapper) : IPaymentService
+    IEntityMapper entityMapper) : IPaymentService
 {
     public async Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, CancellationToken cancellationToken) =>
         await temporalService.SignalAddCustomerStripePaymentMethodAndGetResultAsync(
@@ -86,7 +86,7 @@ public class PaymentService(
 
         var stripePaymentMethods = await repositoryFactory.StripePaymentMethodRepository.GetByCustomerIdAsync(customerEntity.Id, cancellationToken);
 
-        return mapper.MapTo(stripePaymentMethods).ToList();
+        return entityMapper.MapTo(stripePaymentMethods).ToList();
     }
 
     public async Task<bool> HasAttachedPaymentMethodAsync(string requestedCustomerId, CancellationToken cancellationToken) =>

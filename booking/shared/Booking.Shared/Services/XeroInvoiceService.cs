@@ -75,7 +75,7 @@ public class XeroInvoiceService(
     ITemporalService temporalService,
     ITemporalOutboxService temporalOutboxService,
     IBookingOutboxPublisher bookingOutboxPublisher,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
     IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
@@ -1241,7 +1241,7 @@ public class XeroInvoiceService(
             marketplaceBooking.BookingId,
             new SetPaymentStatusArgs(PaymentStatusConstants.Confirmed),
             repositoryFactory.UnitOfWork);
-        bookingOutboxPublisher.PublishBookings([mapper.MapTo(booking)], repositoryFactory.UnitOfWork);
+        bookingOutboxPublisher.PublishBookings([entityMapper.MapTo(booking)], repositoryFactory.UnitOfWork);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -1271,7 +1271,7 @@ public class XeroInvoiceService(
                 recurringBooking.StartDate,
                 null,
                 cancellationToken);
-            bookingOutboxPublisher.PublishBookings(relatedBookingsToPublish.Select(mapper.MapTo).ToList(), repositoryFactory.UnitOfWork);
+            bookingOutboxPublisher.PublishBookings(relatedBookingsToPublish.Select(entityMapper.MapTo).ToList(), repositoryFactory.UnitOfWork);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }

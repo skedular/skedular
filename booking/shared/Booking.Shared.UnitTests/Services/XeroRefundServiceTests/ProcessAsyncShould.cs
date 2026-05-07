@@ -30,23 +30,19 @@ public class ProcessAsyncShould
     public async Task Mark_Failed_When_Refund_Is_Not_For_A_One_Time_Marketplace_Booking(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        CallInvoker callInvoker,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
         {
             Id = "refund-1", Status = MarketplaceRefundStatusConstants.PendingAccounting, LocalEntityType = "UnsupportedEntity"
         };
-        var sut = new TestableXeroRefundService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            TimeProvider.System);
+        var sut = new TestableXeroRefundService(organizationConfiguration,
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker), repositoryFactory, xeroSdkClientFactory,
+            xeroTokenEncryptionService, TimeProvider.System);
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
@@ -64,10 +60,10 @@ public class ProcessAsyncShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceExportLinkRepository,
-        CallInvoker callInvoker,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
@@ -79,13 +75,9 @@ public class ProcessAsyncShould
             LocalEntityId = "marketplace-booking-1",
             RefundAmount = 25m
         };
-        var sut = new TestableXeroRefundService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            TimeProvider.System);
+        var sut = new TestableXeroRefundService(organizationConfiguration,
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker), repositoryFactory, xeroSdkClientFactory,
+            xeroTokenEncryptionService, TimeProvider.System);
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceExportLinkRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -113,8 +105,8 @@ public class ProcessAsyncShould
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
         [Frozen] AccountingApi accountingApi,
-        CallInvoker callInvoker,
-        OrganizationConfiguration organizationConfiguration,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
@@ -223,8 +215,8 @@ public class ProcessAsyncShould
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
         [Frozen] AccountingApi accountingApi,
-        CallInvoker callInvoker,
-        OrganizationConfiguration organizationConfiguration,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
@@ -321,10 +313,10 @@ public class ProcessAsyncShould
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceExportLinkRepository,
         [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        CallInvoker callInvoker,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
@@ -351,13 +343,9 @@ public class ProcessAsyncShould
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             ExternalInvoiceNumber = "TEMPLATE-001"
         };
-        var sut = new TestableXeroRefundService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            TimeProvider.System);
+        var sut = new TestableXeroRefundService(organizationConfiguration,
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker), repositoryFactory, xeroSdkClientFactory,
+            xeroTokenEncryptionService, TimeProvider.System);
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
@@ -392,8 +380,8 @@ public class ProcessAsyncShould
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
         [Frozen] AccountingApi accountingApi,
-        CallInvoker callInvoker,
-        OrganizationConfiguration organizationConfiguration,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
@@ -514,8 +502,8 @@ public class ProcessAsyncShould
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
         [Frozen] AccountingApi accountingApi,
-        CallInvoker callInvoker,
-        OrganizationConfiguration organizationConfiguration,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";

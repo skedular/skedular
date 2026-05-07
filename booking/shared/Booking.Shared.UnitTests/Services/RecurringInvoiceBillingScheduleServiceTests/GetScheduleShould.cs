@@ -11,9 +11,9 @@ public class GetScheduleShould
     [Theory]
     [AutoFakeItEasyData]
     public void Return_Purchase_Cadence_When_It_Is_Shorter_Than_Organization_Billing_Cycle(
+        RecurringInvoiceBillingScheduleService sut,
         string pricingId)
     {
-        var sut = new RecurringInvoiceBillingScheduleService();
         var recurringBooking = new RecurringBooking
         {
             StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero)
@@ -33,9 +33,9 @@ public class GetScheduleShould
     [Theory]
     [AutoFakeItEasyData]
     public void Return_Purchase_Cadence_When_It_Matches_Organization_Billing_Cycle(
+        RecurringInvoiceBillingScheduleService sut,
         string pricingId)
     {
-        var sut = new RecurringInvoiceBillingScheduleService();
         var recurringBooking = new RecurringBooking
         {
             StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 4, 30, 0, 0, 0, TimeSpan.Zero)
@@ -55,9 +55,9 @@ public class GetScheduleShould
     [Theory]
     [AutoFakeItEasyData]
     public void Split_To_Organization_Billing_Cycle_When_Purchase_Cadence_Is_Longer(
+        RecurringInvoiceBillingScheduleService sut,
         string pricingId)
     {
-        var sut = new RecurringInvoiceBillingScheduleService();
         var recurringBooking = new RecurringBooking
         {
             StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero)
@@ -77,9 +77,9 @@ public class GetScheduleShould
     [Theory]
     [AutoFakeItEasyData]
     public void Split_To_Organization_Billing_Cycle_When_Quarterly_Purchase_Cadence_Uses_Weekly_Billing(
+        RecurringInvoiceBillingScheduleService sut,
         string pricingId)
     {
-        var sut = new RecurringInvoiceBillingScheduleService();
         var recurringBooking = new RecurringBooking
         {
             StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 6, 30, 0, 0, 0, TimeSpan.Zero)
@@ -99,9 +99,9 @@ public class GetScheduleShould
     [Theory]
     [AutoFakeItEasyData]
     public void Split_Full_Cadence_Product_Price_Into_Installments_When_Persisted_Totals_Are_Not_Populated(
+        RecurringInvoiceBillingScheduleService sut,
         string pricingId)
     {
-        var sut = new RecurringInvoiceBillingScheduleService();
         var recurringBooking = new RecurringBooking
         {
             StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero)
@@ -121,9 +121,9 @@ public class GetScheduleShould
     [Theory]
     [AutoFakeItEasyData]
     public void Fall_Back_To_Product_Price_When_Marketplace_Booking_Total_Amounts_Are_Not_Populated(
+        RecurringInvoiceBillingScheduleService sut,
         string pricingId)
     {
-        var sut = new RecurringInvoiceBillingScheduleService();
         var recurringBooking = new RecurringBooking
         {
             StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero)

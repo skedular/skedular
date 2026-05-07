@@ -6,7 +6,7 @@ using Location.Api.Services;
 namespace Location.Api.GraphQL.FloorPlan;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<FloorPlanPayload> AddFloorPlanAsync(
@@ -17,7 +17,8 @@ public class RootMutation(IMapper mapper)
         {
             ClientMutationId = input.ClientMutationId,
             FloorPlan =
-                mapper.MapTo(await floorPlanService.AddAsync(mapper.MapTo(input), input.ResourcePositions is not null, cancellationToken))!
+                graphQlMapper.MapTo(await floorPlanService.AddAsync(graphQlMapper.MapTo(input), input.ResourcePositions is not null,
+                    cancellationToken))!
         };
 
     [UseResolverScope]
@@ -28,7 +29,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            FloorPlan = mapper.MapTo(await floorPlanService.UpdateAsync(mapper.MapTo(input), input.ResourcePositions is not null,
+            FloorPlan = graphQlMapper.MapTo(await floorPlanService.UpdateAsync(graphQlMapper.MapTo(input), input.ResourcePositions is not null,
                 cancellationToken))!
         };
 
@@ -39,7 +40,8 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken) =>
         new()
         {
-            ClientMutationId = input.ClientMutationId, FloorPlan = mapper.MapTo(await floorPlanService.DeleteAsync(input.Id, cancellationToken))!
+            ClientMutationId = input.ClientMutationId,
+            FloorPlan = graphQlMapper.MapTo(await floorPlanService.DeleteAsync(input.Id, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -50,7 +52,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            FloorPlan = mapper.MapTo(
-                await floorPlanService.UpdateResourcePositionsAsync(input.FloorPlanId, mapper.MapTo(input).ToList(), cancellationToken))!
+            FloorPlan = graphQlMapper.MapTo(
+                await floorPlanService.UpdateResourcePositionsAsync(input.FloorPlanId, graphQlMapper.MapTo(input).ToList(), cancellationToken))!
         };
 }

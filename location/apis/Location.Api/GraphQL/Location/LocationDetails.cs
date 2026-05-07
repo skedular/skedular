@@ -53,11 +53,11 @@ public class LocationDetails : Node
         DateTimeOffset until,
         [Parent] LocationDetails location,
         [Service] ILocationAnalyticsService locationAnalyticsService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken)
     {
         var locationAnalytics = await locationAnalyticsService.GetAnalyticsAsync(location.Id, from, until, cancellationToken);
-        return mapper.MapTo(
+        return graphQlMapper.MapTo(
             locationAnalytics.Name,
             locationAnalytics.DesksOccupancyPercentage,
             locationAnalytics.DailyBookingsTotal,
@@ -75,7 +75,7 @@ public class LocationDetails : Node
         IEnumerable<ResourceOrderInput>? orderBy,
         [Parent] LocationDetails location,
         [Service] IResourceService resourceService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken)
     {
         if (location.OrganizationCustomDomain == Constants.SkedularPublicLocationsCustomDomainName)
@@ -105,7 +105,7 @@ public class LocationDetails : Node
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }

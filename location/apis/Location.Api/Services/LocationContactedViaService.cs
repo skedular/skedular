@@ -1,7 +1,7 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Database;
-using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
+using Location.Shared.Mappers;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
@@ -22,7 +22,7 @@ public class LocationContactedViaService(
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ILocationOutboxPublisher locationOutboxPublisher,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ICachedLocationService cachedLocationService) : ILocationContactedViaService
 {
     public async Task<Shared.Models.Location> ToggleContactedViaEmailAsync(string locationId, CancellationToken cancellationToken)
@@ -40,7 +40,7 @@ public class LocationContactedViaService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         existingLocation.ContactedViaEmail = !existingLocation.ContactedViaEmail;
-        var location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
+        var location = entityMapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
 
@@ -67,7 +67,7 @@ public class LocationContactedViaService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         existingLocation.ContactedViaCall = !existingLocation.ContactedViaCall;
-        var location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
+        var location = entityMapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
 
@@ -94,7 +94,7 @@ public class LocationContactedViaService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         existingLocation.ContactedViaSms = !existingLocation.ContactedViaSms;
-        var location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
+        var location = entityMapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
 
@@ -121,7 +121,7 @@ public class LocationContactedViaService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         existingLocation.ContactedViaWhatsapp = !existingLocation.ContactedViaWhatsapp;
-        var location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
+        var location = entityMapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
 

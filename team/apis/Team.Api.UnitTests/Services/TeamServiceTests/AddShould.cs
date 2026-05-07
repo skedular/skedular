@@ -2,10 +2,10 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Api.Services.Authorization;
 using Team.Shared.Database.Entities;
+using Team.Shared.Mappers;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Team.Shared.Services.Cache;
@@ -25,7 +25,7 @@ public class AddShould
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
         [Frozen] ITeamOutboxPublisher teamOutboxPublisher,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] ITeamMemberService teamMemberService,
         [Frozen] ICachedTeamService cachedTeamService,
         [Frozen] IOrganizationRepository organizationRepository,
@@ -63,12 +63,12 @@ public class AddShould
         A.CallTo(() => organizationOfferingService.IsMoreInteractionAllowedAsync("org-1", "customer-1", cancellationToken))
             .Returns(new ValueTask<bool>(true));
         A.CallTo(() => randomHelper.Generate()).Returns("team-1");
-        A.CallTo(() => mapper.MapTo(teamToAdd, organizationEntity, null)).Returns(teamEntity);
+        A.CallTo(() => entityMapper.MapTo(teamToAdd, organizationEntity, null)).Returns(teamEntity);
         A.CallTo(() => teamMemberService.BuildMembersAsync(teamToAdd.TeamMembers, teamEntity, "customer-1", organizationEntity, cancellationToken))
             .Returns([]);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => teamRepository.Add(teamEntity)).Returns(teamEntity);
-        A.CallTo(() => mapper.MapTo(teamEntity)).Returns(teamModel);
+        A.CallTo(() => entityMapper.MapTo(teamEntity)).Returns(teamModel);
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).Returns(1);
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).Returns(Task.CompletedTask);
 

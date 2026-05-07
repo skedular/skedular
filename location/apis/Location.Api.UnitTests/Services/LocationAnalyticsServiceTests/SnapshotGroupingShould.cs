@@ -34,7 +34,7 @@ public class SnapshotGroupingShould
         [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ILocationService locationService,
+        LocationAnalyticsService sut,
         CancellationToken cancellationToken)
     {
         // Arrange
@@ -113,8 +113,6 @@ public class SnapshotGroupingShould
                 A<CancellationToken>._))
             .Returns(snapshots);
 
-        var sut = new LocationAnalyticsService(repositoryFactory, locationService, cachedCustomerService, organizationAuthorizationService);
-
         // Act
         var result = await sut.GetAnalyticsAsync(LocationId, from, until, cancellationToken);
 
@@ -142,7 +140,7 @@ public class SnapshotGroupingShould
         [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ILocationService locationService,
+        LocationAnalyticsService sut,
         CancellationToken cancellationToken)
     {
         // Arrange – snapshot repository returns nothing for this location/range
@@ -172,8 +170,6 @@ public class SnapshotGroupingShould
 
         A.CallTo(() => snapshotRepository.GetByLocationIdAndDateRangeAsync(LocationId, from, until, A<string?>._, A<CancellationToken>._))
             .Returns([]);
-
-        var sut = new LocationAnalyticsService(repositoryFactory, locationService, cachedCustomerService, organizationAuthorizationService);
 
         // Act
         var result = await sut.GetAnalyticsAsync(LocationId, from, until, cancellationToken);

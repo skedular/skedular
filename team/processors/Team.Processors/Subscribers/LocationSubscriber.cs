@@ -9,7 +9,7 @@ using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Type;
 
 namespace Team.Processors.Subscribers;
 
-public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
+public class LocationSubscriber(ILogger<LocationSubscriber> logger, IEventMapper eventMapper, IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -20,7 +20,7 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Location.OrganizationId);
 
-                    var location = mapper.MapTo(@event);
+                    var location = eventMapper.MapTo(@event);
                     var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
                     var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, organization, cancellationToken);
                     if (existingLocation.EventRaisedAt > location.EventRaisedAt)
@@ -36,7 +36,7 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
 
             case Type.LocationDeleted:
                 {
-                    var location = mapper.MapTo(@event);
+                    var location = eventMapper.MapTo(@event);
                     var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
                     if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
@@ -64,7 +64,7 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
         Organization organization,
         CancellationToken cancellationToken)
     {
-        _ = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
+        _ = repositoryFactory.LocationRepository.Update(eventMapper.MergeToEntity(location, existingLocation, organization));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 

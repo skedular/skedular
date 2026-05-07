@@ -7,7 +7,7 @@ using Organization.Api.Services;
 namespace Organization.Api.GraphQL.Tag;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<OrganizationTagPayload> AddCustomTagAsync(
@@ -17,7 +17,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationTag = mapper.MapTo(await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken))!
+            OrganizationTag = graphQlMapper.MapTo(await tagService.AddAsync(graphQlMapper.MapTo(input), false, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -28,7 +28,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationTag = mapper.MapTo(await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+            OrganizationTag = graphQlMapper.MapTo(await tagService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -38,7 +38,8 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken) =>
         new()
         {
-            ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(await tagService.DeleteAsync(input.Id, cancellationToken))!
+            ClientMutationId = input.ClientMutationId,
+            OrganizationTag = graphQlMapper.MapTo(await tagService.DeleteAsync(input.Id, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -48,7 +49,10 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
-        return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(mapper.MapTo).ToArray()! };
+        return new OrganizationTagsPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(graphQlMapper.MapTo).ToArray()!
+        };
     }
 
     [UseResolverScope]
@@ -59,7 +63,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationTag = mapper.MapTo(await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken))!
+            OrganizationTag = graphQlMapper.MapTo(await tagService.AddAsync(graphQlMapper.MapTo(input), false, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -70,7 +74,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationTag = mapper.MapTo(await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+            OrganizationTag = graphQlMapper.MapTo(await tagService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -80,7 +84,8 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken) =>
         new()
         {
-            ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(await tagService.DeleteAsync(input.Id, cancellationToken))!
+            ClientMutationId = input.ClientMutationId,
+            OrganizationTag = graphQlMapper.MapTo(await tagService.DeleteAsync(input.Id, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -90,7 +95,10 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
-        return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => mapper.MapTo(item)!) };
+        return new OrganizationTagsPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => graphQlMapper.MapTo(item)!)
+        };
     }
 
     [UseResolverScope]
@@ -101,7 +109,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationTag = mapper.MapTo(await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken))!
+            OrganizationTag = graphQlMapper.MapTo(await tagService.AddAsync(graphQlMapper.MapTo(input), false, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -112,7 +120,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationTag = mapper.MapTo(await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+            OrganizationTag = graphQlMapper.MapTo(await tagService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -122,7 +130,8 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken) =>
         new()
         {
-            ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(await tagService.DeleteAsync(input.Id, cancellationToken))!
+            ClientMutationId = input.ClientMutationId,
+            OrganizationTag = graphQlMapper.MapTo(await tagService.DeleteAsync(input.Id, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -132,6 +141,9 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
-        return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => mapper.MapTo(item)!) };
+        return new OrganizationTagsPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => graphQlMapper.MapTo(item)!)
+        };
     }
 }

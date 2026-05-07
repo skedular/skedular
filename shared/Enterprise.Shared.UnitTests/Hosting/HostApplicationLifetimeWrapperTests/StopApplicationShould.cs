@@ -1,6 +1,5 @@
 using Enterprise.Shared.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.UnitTests.Hosting.HostApplicationLifetimeWrapperTests;
 
@@ -9,12 +8,8 @@ public class StopApplicationShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void Delegate_to_host_application_lifetime(
-        IHostApplicationLifetime lifetime,
-        ILogger<HostApplicationLifetimeWrapper> logger)
+    public void Delegate_to_host_application_lifetime([Frozen] IHostApplicationLifetime lifetime, HostApplicationLifetimeWrapper sut)
     {
-        var sut = new HostApplicationLifetimeWrapper(lifetime, logger);
-
         sut.StopApplication();
 
         A.CallTo(() => lifetime.StopApplication()).MustHaveHappenedOnceExactly();

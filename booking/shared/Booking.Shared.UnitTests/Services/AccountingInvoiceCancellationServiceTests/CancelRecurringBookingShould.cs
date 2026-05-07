@@ -6,7 +6,6 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Database;
-using FakeItEasy;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
@@ -25,22 +24,11 @@ public class CancelRecurringBookingShould
     public async Task Mark_Link_As_Cancelled_Without_Xero_Call_When_Live_Repeating_Template_Does_Not_Exist(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        AccountingInvoiceCancellationService sut,
         string recurringBookingId,
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var sut = new AccountingInvoiceCancellationService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            timeProvider);
         var recurringBooking = new RecurringBookingEntity
         {
             Id = recurringBookingId,
@@ -81,22 +69,12 @@ public class CancelRecurringBookingShould
     public async Task Mark_Link_As_Transition_Required_When_Live_Repeating_Template_Cannot_Be_Cancelled_Because_Xero_Connection_Is_Not_Ready(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        [Frozen] CallInvoker callInvoker,
+        AccountingInvoiceCancellationService sut,
         string recurringBookingId,
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var sut = new AccountingInvoiceCancellationService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            timeProvider);
         var recurringBooking = new RecurringBookingEntity
         {
             Id = recurringBookingId,
@@ -146,11 +124,11 @@ public class CancelRecurringBookingShould
     public async Task Mark_Link_As_Transition_Required_When_Organization_Xero_Connection_Lookup_Fails(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] CallInvoker callInvoker,
         string recurringBookingId,
         string organizationId,
         CancellationToken cancellationToken)
@@ -212,22 +190,12 @@ public class CancelRecurringBookingShould
     public async Task Keep_Cancelled_Link_Terminal_Without_Retrying_Xero_Cancellation(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        [Frozen] CallInvoker callInvoker,
+        AccountingInvoiceCancellationService sut,
         string recurringBookingId,
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var sut = new AccountingInvoiceCancellationService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            timeProvider);
         var recurringBooking = new RecurringBookingEntity
         {
             Id = recurringBookingId,
@@ -278,24 +246,13 @@ public class CancelRecurringBookingShould
     public async Task Create_Local_Cancelled_Link_When_Internal_Recurring_Invoice_Exists_Without_External_Provider_Link(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        AccountingInvoiceCancellationService sut,
         string recurringBookingId,
         string organizationId,
         string invoiceNumber,
         string invoiceUrl,
         CancellationToken cancellationToken)
     {
-        var sut = new AccountingInvoiceCancellationService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            timeProvider);
         var recurringBooking = new RecurringBookingEntity
         {
             Id = recurringBookingId,
@@ -346,15 +303,15 @@ public class CancelRecurringBookingShould
         [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        OrganizationConfiguration organizationConfiguration,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] AccountingApi accountingApi,
         string recurringBookingId,
         string organizationId,
         string accessTokenEncrypted,
         CancellationToken cancellationToken)
     {
-        var accountingApi = A.Fake<AccountingApi>();
         var sut = new TestAccountingInvoiceCancellationService(
             organizationConfiguration,
             new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
@@ -430,15 +387,15 @@ public class CancelRecurringBookingShould
         [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        OrganizationConfiguration organizationConfiguration,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] AccountingApi accountingApi,
         string recurringBookingId,
         string organizationId,
         string accessTokenEncrypted,
         CancellationToken cancellationToken)
     {
-        var accountingApi = A.Fake<AccountingApi>();
         var sut = new TestAccountingInvoiceCancellationService(
             organizationConfiguration,
             new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
@@ -533,22 +490,11 @@ public class CancelRecurringBookingShould
     public async Task Preserve_Existing_Export_Configuration_When_Recurring_Invoice_Is_Already_Paid(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
-        TimeProvider timeProvider,
-        CallInvoker callInvoker,
+        AccountingInvoiceCancellationService sut,
         string recurringBookingId,
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var sut = new AccountingInvoiceCancellationService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            timeProvider);
         var recurringBooking = new RecurringBookingEntity
         {
             Id = recurringBookingId,

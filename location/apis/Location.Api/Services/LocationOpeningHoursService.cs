@@ -1,8 +1,8 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
-using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
+using Location.Shared.Mappers;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
@@ -21,7 +21,7 @@ public class LocationOpeningHoursService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ILocationOutboxPublisher locationOutboxPublisher,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ICachedLocationService cachedLocationService) : ILocationOpeningHoursService
 {
     public async Task<Shared.Models.Location> UpdateOpeningHoursAsync(string id, WeekOpeningHours openingHours, CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ public class LocationOpeningHoursService(
             ? new OpeningHours(openingHours, [], [])
             : existingLocation.OpeningHours with { WeekOpeningHours = openingHours };
 
-        var location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
+        var location = entityMapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
 

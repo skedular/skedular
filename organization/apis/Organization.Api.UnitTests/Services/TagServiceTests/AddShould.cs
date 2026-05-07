@@ -27,7 +27,7 @@ public class AddShould
         IRandomHelper randomHelper,
         ICachedCustomerService cachedCustomerService,
         IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        IMapper mapper,
+        IGraphQlMapper graphQlMapper,
         IOrganizationOutboxPublisher organizationOutboxPublisher,
         ICachedTagService cachedTagService,
         ICachedOrganizationService cachedOrganizationService,
@@ -67,7 +67,7 @@ public class AddShould
             customerService,
             organizationAuthorizationService,
             organizationStripeConnectAccountService,
-            mapper,
+            graphQlMapper,
             organizationOutboxPublisher,
             cachedTagService,
             cachedOrganizationService);

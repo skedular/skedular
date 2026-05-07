@@ -2,10 +2,10 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Api.Services.Authorization;
 using Team.Shared.Database.Entities;
+using Team.Shared.Mappers;
 using Team.Shared.Repositories;
 using Team.Shared.Services;
 using Team.Shared.Services.Cache;
@@ -22,7 +22,7 @@ public class CancelInvitationShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] ITemporalOutboxService temporalOutboxService,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedTeamService cachedTeamService,
@@ -59,7 +59,7 @@ public class CancelInvitationShould
             .Returns(new ValueTask<bool>(true));
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => joinInvitationRepository.Update(invitation)).Returns(invitation);
-        A.CallTo(() => mapper.MapTo(invitation)).Returns(mappedInvitation);
+        A.CallTo(() => entityMapper.MapTo(invitation)).Returns(mappedInvitation);
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).Returns(1);
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).Returns(Task.CompletedTask);
 

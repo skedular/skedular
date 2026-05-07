@@ -1,4 +1,4 @@
-using Customer.Api.Mappers;
+using Customer.Shared.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services;
@@ -17,7 +17,7 @@ public class CustomerFeedbackService(
     IDbTransactionBuilder transactionBuilder,
     ICustomerHelperService customerHelperService,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     ITemporalOutboxService temporalOutboxService) : ICustomerFeedbackService
 {
@@ -31,7 +31,7 @@ public class CustomerFeedbackService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var customerFeedback = mapper.MapTo(repositoryFactory.CustomerFeedbackRepository.Add(mapper.MapTo(feedback, customer)));
+        var customerFeedback = entityMapper.MapTo(repositoryFactory.CustomerFeedbackRepository.Add(entityMapper.MapTo(feedback, customer)));
         temporalOutboxService.StartWorkflowSubmitCustomerFeedback(
             new SubmitCustomerFeedbackInput(customerFeedback.Id),
             repositoryFactory.UnitOfWork);

@@ -1,9 +1,5 @@
-using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Random;
-using Grpc.Core;
 using Location.Shared.Activities;
 using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
@@ -51,11 +47,8 @@ public class DualTaggedResourceNotDoubleCountedShould
         [Frozen] ILocationRepository locationRepository,
         [Frozen] IDailyDeskCountRecordingRepository deskCountRepository,
         [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        TimeProvider timeProvider,
-        ILogger<LocationDailyAnalytics> logger)
+        [Frozen] DailyDeskCountRecording deskCountRecording,
+        LocationDailyAnalytics sut)
     {
         // Arrange – one resource tagged as both desk AND room
         var environment = new ActivityEnvironment();
@@ -70,15 +63,7 @@ public class DualTaggedResourceNotDoubleCountedShould
         var capturedRecordings = new List<DailyDeskCountRecording>();
         A.CallTo(() => deskCountRepository.Add(A<DailyDeskCountRecording>._))
             .Invokes(call => capturedRecordings.Add(call.GetArgument<DailyDeskCountRecording>(0)!))
-            .Returns(A.Fake<DailyDeskCountRecording>());
-
-        var sut = new LocationDailyAnalytics(
-            repositoryFactory,
-            randomHelper,
-            timeProvider,
-            bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker),
-            logger);
+            .Returns(deskCountRecording);
 
         // Act
         var result = await environment.RunAsync(() => sut.RecordLocationDesksCountAsync("loc-1"));
@@ -96,11 +81,9 @@ public class DualTaggedResourceNotDoubleCountedShould
         [Frozen] ILocationRepository locationRepository,
         [Frozen] IDailyDeskCountRecordingRepository deskCountRepository,
         [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        TimeProvider timeProvider,
-        ILogger<LocationDailyAnalytics> logger)
+        [Frozen] ILogger<LocationDailyAnalytics> logger,
+        [Frozen] DailyDeskCountRecording deskCountRecording,
+        LocationDailyAnalytics sut)
     {
         // Arrange
         var environment = new ActivityEnvironment();
@@ -111,15 +94,7 @@ public class DualTaggedResourceNotDoubleCountedShould
         A.CallTo(() => repositoryFactory.DailyDeskCountRecordingRepository).Returns(deskCountRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => locationRepository.GetByIdAsync("loc-warn", environment.CancellationTokenSource.Token)).Returns(location);
-        A.CallTo(() => deskCountRepository.Add(A<DailyDeskCountRecording>._)).Returns(A.Fake<DailyDeskCountRecording>());
-
-        var sut = new LocationDailyAnalytics(
-            repositoryFactory,
-            randomHelper,
-            timeProvider,
-            bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker),
-            logger);
+        A.CallTo(() => deskCountRepository.Add(A<DailyDeskCountRecording>._)).Returns(deskCountRecording);
 
         // Act
         await environment.RunAsync(() => sut.RecordLocationDesksCountAsync("loc-warn"));
@@ -135,11 +110,9 @@ public class DualTaggedResourceNotDoubleCountedShould
         [Frozen] ILocationRepository locationRepository,
         [Frozen] IDailyDeskCountRecordingRepository deskCountRepository,
         [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        TimeProvider timeProvider,
-        ILogger<LocationDailyAnalytics> logger)
+        [Frozen] ILogger<LocationDailyAnalytics> logger,
+        [Frozen] DailyDeskCountRecording deskCountRecording,
+        LocationDailyAnalytics sut)
     {
         // Arrange – resource has only desk tag, no room tag
         var environment = new ActivityEnvironment();
@@ -150,15 +123,7 @@ public class DualTaggedResourceNotDoubleCountedShould
         A.CallTo(() => repositoryFactory.DailyDeskCountRecordingRepository).Returns(deskCountRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => locationRepository.GetByIdAsync("loc-pure", environment.CancellationTokenSource.Token)).Returns(location);
-        A.CallTo(() => deskCountRepository.Add(A<DailyDeskCountRecording>._)).Returns(A.Fake<DailyDeskCountRecording>());
-
-        var sut = new LocationDailyAnalytics(
-            repositoryFactory,
-            randomHelper,
-            timeProvider,
-            bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker),
-            logger);
+        A.CallTo(() => deskCountRepository.Add(A<DailyDeskCountRecording>._)).Returns(deskCountRecording);
 
         // Act
         await environment.RunAsync(() => sut.RecordLocationDesksCountAsync("loc-pure"));

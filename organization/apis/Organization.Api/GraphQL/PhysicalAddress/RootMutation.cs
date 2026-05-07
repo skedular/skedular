@@ -7,7 +7,7 @@ using Organization.Api.Services;
 namespace Organization.Api.GraphQL.PhysicalAddress;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<OrganizationPayload> AddOrganizationPhysicalAddressAsync(
@@ -18,7 +18,7 @@ public class RootMutation(IMapper mapper)
         {
             ClientMutationId = input.ClientMutationId,
             Organization =
-                mapper.MapTo(await organizationPhysicalAddressService.AddAsync(mapper.MapTo(input), cancellationToken))!
+                graphQlMapper.MapTo(await organizationPhysicalAddressService.AddAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -30,6 +30,6 @@ public class RootMutation(IMapper mapper)
         {
             ClientMutationId = input.ClientMutationId,
             Organization =
-                mapper.MapTo(await organizationPhysicalAddressService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+                graphQlMapper.MapTo(await organizationPhysicalAddressService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 }

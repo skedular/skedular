@@ -24,7 +24,7 @@ public class OrganizationTaxDetailsService(
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IDbTransactionBuilder transactionBuilder,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IRandomHelper randomHelper) : IOrganizationTaxDetailsService
@@ -49,16 +49,16 @@ public class OrganizationTaxDetailsService(
         if (organization.OrganizationTaxDetails is null)
         {
             taxDetails.Id = randomHelper.Generate();
-            repositoryFactory.OrganizationTaxDetailsRepository.Add(mapper.MapToEntity(taxDetails, organization));
+            repositoryFactory.OrganizationTaxDetailsRepository.Add(graphQlMapper.MapToEntity(taxDetails, organization));
         }
         else
         {
             taxDetails.Id = organization.OrganizationTaxDetails.Id;
             repositoryFactory.OrganizationTaxDetailsRepository.Update(
-                mapper.MergeToEntity(taxDetails, organization.OrganizationTaxDetails, organization));
+                graphQlMapper.MergeToEntity(taxDetails, organization.OrganizationTaxDetails, organization));
         }
 
-        var mappedOrganization = mapper.MapTo(
+        var mappedOrganization = graphQlMapper.MapTo(
             organization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
@@ -87,7 +87,8 @@ public class OrganizationTaxDetailsService(
 
         if (organization.OrganizationTaxDetails is null)
         {
-            return mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
+            return graphQlMapper.MapTo(organization,
+                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -95,7 +96,7 @@ public class OrganizationTaxDetailsService(
         _ = repositoryFactory.OrganizationTaxDetailsRepository.Remove(organization.OrganizationTaxDetails);
         organization.OrganizationTaxDetails = null;
 
-        var mappedOrganization = mapper.MapTo(
+        var mappedOrganization = graphQlMapper.MapTo(
             organization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);

@@ -7,7 +7,7 @@ using Organization.Api.Services;
 namespace Organization.Api.GraphQL.Xero;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<OrganizationPayload> UpdateOrganizationXeroConnectionAsync(
@@ -17,7 +17,8 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(await organizationXeroConnectionService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+            Organization =
+                graphQlMapper.MapTo(await organizationXeroConnectionService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -28,7 +29,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(await organizationXeroConnectionService.RemoveAsync(
+            Organization = graphQlMapper.MapTo(await organizationXeroConnectionService.RemoveAsync(
                 input.OrganizationId,
                 input.OrganizationCustomDomain,
                 cancellationToken))!

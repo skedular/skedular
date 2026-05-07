@@ -15,7 +15,7 @@ public interface IStripeProductPricingService
 
 public class StripeProductPricingService(
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     ICreatable<Product, ProductCreateOptions> productCreateService,
     ICreatable<Price, PriceCreateOptions> priceCreateService,
@@ -33,7 +33,7 @@ public class StripeProductPricingService(
             {
                 var productId = randomHelper.Generate();
                 var stripeProduct = await productCreateService.CreateAsync(
-                    mapper.MapTo(pricing, productVersion),
+                    entityMapper.MapTo(pricing, productVersion),
                     new RequestOptions { IdempotencyKey = $"{productVersion.Id}-{productId}", StripeAccount = stripeAccountId },
                     cancellationToken);
 
@@ -59,7 +59,7 @@ public class StripeProductPricingService(
 
             var priceId = randomHelper.Generate();
             var stripePrice = await priceCreateService.CreateAsync(
-                mapper.MapTo(pricing, stripeProductEntity),
+                entityMapper.MapTo(pricing, stripeProductEntity),
                 new RequestOptions { IdempotencyKey = $"{productVersion.Id}-{priceId}-price", StripeAccount = stripeAccountId },
                 cancellationToken);
 

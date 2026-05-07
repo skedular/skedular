@@ -35,7 +35,7 @@ public class OrganizationBankAccountService(
     ICustomerService customerService,
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    IMapper mapper) : IOrganizationBankAccountService
+    IGraphQlMapper graphQlMapper) : IOrganizationBankAccountService
 {
     public async Task<OrganizationBankAccount> AddAsync(OrganizationBankAccount organizationBankAccount, CancellationToken cancellationToken)
     {
@@ -70,7 +70,8 @@ public class OrganizationBankAccountService(
         organizationBankAccount.IsDefault = true;
 
         var mappedResource =
-            mapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Add(mapper.MapTo(organizationBankAccount, existingOrganization)));
+            graphQlMapper.MapTo(
+                repositoryFactory.OrganizationBankAccountRepository.Add(graphQlMapper.MapTo(organizationBankAccount, existingOrganization)));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -108,7 +109,7 @@ public class OrganizationBankAccountService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var deletedResource = mapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Remove(existingOrganizationBankAccount));
+        var deletedResource = graphQlMapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Remove(existingOrganizationBankAccount));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -142,7 +143,7 @@ public class OrganizationBankAccountService(
 
         repositoryFactory.OrganizationBankAccountRepository.RemoveRange(resources);
 
-        var deletedOrganizationBankAccounts = resources.Select(mapper.MapTo).ToList();
+        var deletedOrganizationBankAccounts = resources.Select(graphQlMapper.MapTo).ToList();
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -176,7 +177,8 @@ public class OrganizationBankAccountService(
         }
 
         existingOrganizationBankAccount.IsDefault = true;
-        var organizationBankAccount = mapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Update(existingOrganizationBankAccount));
+        var organizationBankAccount =
+            graphQlMapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Update(existingOrganizationBankAccount));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -200,7 +202,7 @@ public class OrganizationBankAccountService(
             throw new UnauthorizedAccessException();
         }
 
-        return mapper.MapTo(existingOrganizationBankAccount);
+        return graphQlMapper.MapTo(existingOrganizationBankAccount);
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationBankAccount>>, int)> GetPaginatedAccountsAsync(
@@ -232,7 +234,8 @@ public class OrganizationBankAccountService(
                 orderByFields,
                 cancellationToken);
 
-        return (paginatedInfo, edges.Select(item => new Edge<OrganizationBankAccount>(mapper.MapTo(item.Node), item.Cursor)).ToList(), totalCount);
+        return (paginatedInfo, edges.Select(item => new Edge<OrganizationBankAccount>(graphQlMapper.MapTo(item.Node), item.Cursor)).ToList(),
+            totalCount);
     }
 
     private async Task<OrganizationBankAccount> UpdateInternalAsync(
@@ -254,9 +257,9 @@ public class OrganizationBankAccountService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         organizationBankAccount.IsDefault = existingOrganizationBankAccount.IsDefault;
-        existingOrganizationBankAccount = mapper.MergeTo(organizationBankAccount, existingOrganizationBankAccount, existingOrganization);
+        existingOrganizationBankAccount = graphQlMapper.MergeTo(organizationBankAccount, existingOrganizationBankAccount, existingOrganization);
 
-        organizationBankAccount = mapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Update(existingOrganizationBankAccount));
+        organizationBankAccount = graphQlMapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Update(existingOrganizationBankAccount));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

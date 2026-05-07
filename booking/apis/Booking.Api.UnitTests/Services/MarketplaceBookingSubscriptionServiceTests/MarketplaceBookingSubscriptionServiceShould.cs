@@ -23,7 +23,7 @@ public class MarketplaceBookingSubscriptionServiceShould
     public async Task GetByIdAsync_Returns_Subscription_For_Involved_Customer(
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
-        [Frozen] IMapper sharedMapper,
+        [Frozen] IEntityMapper sharedEntityMapper,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
@@ -37,7 +37,7 @@ public class MarketplaceBookingSubscriptionServiceShould
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedMarketplaceBookingSubscriptionService.GetByIdAsync(subscription.Id, cancellationToken)).Returns(subscription);
-        A.CallTo(() => sharedMapper.MapTo(subscription)).Returns(mappedSubscription);
+        A.CallTo(() => sharedEntityMapper.MapTo(subscription)).Returns(mappedSubscription);
 
         var result = await sut.GetByIdAsync(subscription.Id, cancellationToken);
 
@@ -52,7 +52,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
-        [Frozen] IMapper sharedMapper,
+        [Frozen] IEntityMapper sharedEntityMapper,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
@@ -78,7 +78,7 @@ public class MarketplaceBookingSubscriptionServiceShould
             .Returns([organization]);
         A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync("org-1", "customer-1", cancellationToken))
             .Returns(true);
-        A.CallTo(() => sharedMapper.MapTo(subscription)).Returns(mappedSubscription);
+        A.CallTo(() => sharedEntityMapper.MapTo(subscription)).Returns(mappedSubscription);
 
         var result = await sut.GetByIdAsync(subscription.Id, cancellationToken);
 

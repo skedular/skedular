@@ -29,10 +29,10 @@ public class GetProcessingAvailabilityAsyncShould
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceExportLinkRepository,
         [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        CallInvoker callInvoker,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
@@ -57,13 +57,9 @@ public class GetProcessingAvailabilityAsyncShould
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             ExternalInvoiceNumber = "TEMPLATE-001"
         };
-        var sut = new TestableXeroRefundService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            TimeProvider.System);
+        var sut = new TestableXeroRefundService(organizationConfiguration,
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker), repositoryFactory, xeroSdkClientFactory,
+            xeroTokenEncryptionService, TimeProvider.System);
 
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceExportLinkRepository);
@@ -92,10 +88,10 @@ public class GetProcessingAvailabilityAsyncShould
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceExportLinkRepository,
         [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        CallInvoker callInvoker,
-        OrganizationConfiguration organizationConfiguration,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
@@ -131,13 +127,9 @@ public class GetProcessingAvailabilityAsyncShould
             ExternalStatus = AccountingStatusConstants.Exported,
             OrganizationId = "org-1"
         };
-        var sut = new TestableXeroRefundService(
-            organizationConfiguration,
-            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
-            repositoryFactory,
-            xeroSdkClientFactory,
-            xeroTokenEncryptionService,
-            TimeProvider.System);
+        var sut = new TestableXeroRefundService(organizationConfiguration,
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker), repositoryFactory, xeroSdkClientFactory,
+            xeroTokenEncryptionService, TimeProvider.System);
 
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceExportLinkRepository);

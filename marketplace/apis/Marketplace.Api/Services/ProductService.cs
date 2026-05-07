@@ -4,8 +4,8 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
-using Marketplace.Api.Mappers;
 using Marketplace.Api.Services.Authorization;
+using Marketplace.Shared.Mappers;
 using Marketplace.Shared.Models;
 using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
@@ -42,7 +42,7 @@ public class ProductService(
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IMarketplaceOutboxPublisher marketplaceOutboxPublisher,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ICachedProductService cachedProductService) : IProductService
 {
     public async Task<Product> AddAsync(
@@ -108,13 +108,13 @@ public class ProductService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var organizationTags = tags.Where(item => tagIds.Contains(item.Id)).ToList();
-        var productEntity = mapper.MapTo(new Product { Id = id, Inactive = true }, existingOrganization);
+        var productEntity = entityMapper.MapTo(new Product { Id = id, Inactive = true }, existingOrganization);
 
-        var productVersionEntity = mapper.MapTo(productVersion, productEntity, organizationTags);
+        var productVersionEntity = entityMapper.MapTo(productVersion, productEntity, organizationTags);
         productEntity.ProductVersions.Add(productVersionEntity);
         repositoryFactory.ProductVersionRepository.Add(productVersionEntity);
 
-        var product = mapper.MapTo(repositoryFactory.ProductRepository.Add(productEntity));
+        var product = entityMapper.MapTo(repositoryFactory.ProductRepository.Add(productEntity));
 
         marketplaceOutboxPublisher.PublishProducts([product], repositoryFactory.UnitOfWork);
 
@@ -152,7 +152,7 @@ public class ProductService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         repositoryFactory.ProductRepository.RemoveRange(existingProducts);
-        var deletedProducts = existingProducts.Select(mapper.MapTo).ToList();
+        var deletedProducts = existingProducts.Select(entityMapper.MapTo).ToList();
 
         marketplaceOutboxPublisher.PublishProducts(deletedProducts, repositoryFactory.UnitOfWork);
 
@@ -172,7 +172,7 @@ public class ProductService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var existingProduct = await cachedProductService.GetByIdAsync(id, cancellationToken);
-        return existingProduct is null ? null : mapper.MapTo(existingProduct);
+        return existingProduct is null ? null : entityMapper.MapTo(existingProduct);
     }
 
     public async Task<IReadOnlyList<Product>> ActivateAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
@@ -206,7 +206,8 @@ public class ProductService(
         }
 
         var updatedProducts = products
-            .Select(product => mapper.MapTo(product, mapper.MapTo(existingOrganizations.Single(item => item.Id == product.Organization.Id))))
+            .Select(product =>
+                entityMapper.MapTo(product, entityMapper.MapTo(existingOrganizations.Single(item => item.Id == product.Organization.Id))))
             .ToList();
 
         marketplaceOutboxPublisher.PublishProducts(updatedProducts, repositoryFactory.UnitOfWork);
@@ -253,7 +254,8 @@ public class ProductService(
         }
 
         var updatedProducts = products
-            .Select(product => mapper.MapTo(product, mapper.MapTo(existingOrganizations.Single(item => item.Id == product.Organization.Id))))
+            .Select(product =>
+                entityMapper.MapTo(product, entityMapper.MapTo(existingOrganizations.Single(item => item.Id == product.Organization.Id))))
             .ToList();
 
         marketplaceOutboxPublisher.PublishProducts(updatedProducts, repositoryFactory.UnitOfWork);
@@ -281,7 +283,7 @@ public class ProductService(
             orderByFields,
             cancellationToken);
 
-        return (paginatedInfo, edges.Select(item => new Edge<Product>(mapper.MapTo(item.Node), item.Cursor)).ToList(), totalCount);
+        return (paginatedInfo, edges.Select(item => new Edge<Product>(entityMapper.MapTo(item.Node), item.Cursor)).ToList(), totalCount);
     }
 
     private async Task<Product> UpdateInternalAsync(
@@ -308,10 +310,10 @@ public class ProductService(
 
         var organizationTags = tags.Where(item => tagIds.Contains(item.Id)).ToList();
 
-        _ = repositoryFactory.ProductVersionRepository.Add(mapper.MapTo(productVersion, existingProduct, organizationTags));
-        existingProduct = mapper.MergeTo(existingProduct, existingProduct.Organization);
+        _ = repositoryFactory.ProductVersionRepository.Add(entityMapper.MapTo(productVersion, existingProduct, organizationTags));
+        existingProduct = entityMapper.MergeTo(existingProduct, existingProduct.Organization);
 
-        var product = mapper.MapTo(repositoryFactory.ProductRepository.Update(existingProduct));
+        var product = entityMapper.MapTo(repositoryFactory.ProductRepository.Update(existingProduct));
 
         marketplaceOutboxPublisher.PublishProducts([product], repositoryFactory.UnitOfWork);
 

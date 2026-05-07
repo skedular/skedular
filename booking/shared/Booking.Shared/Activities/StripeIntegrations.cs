@@ -47,7 +47,7 @@ public class StripeIntegrations(
     IStripeCustomerService stripeCustomerService,
     ICreatable<Session, SessionCreateOptions> sessionCreateService,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
     IGraphQlTopicEventSender graphQlTopicEventSender)
 {
@@ -323,7 +323,7 @@ public class StripeIntegrations(
 
         if (isInArrears)
         {
-            var recurringBookingModel = mapper.MapTo(recurringBooking);
+            var recurringBookingModel = entityMapper.MapTo(recurringBooking);
             var draft = organizationArrearsBillingPlannerService.BuildInitialRecurringInvoiceDraft(
                 recurringBookingModel,
                 productVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle());

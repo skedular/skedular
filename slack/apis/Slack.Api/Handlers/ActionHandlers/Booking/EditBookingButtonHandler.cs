@@ -25,7 +25,7 @@ public class EditBookingButtonHandler(
     SlackConfigurationService slackConfigurationService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IPageNavigator pageNavigator,
     IBookingService bookingService)
     : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
@@ -42,8 +42,8 @@ public class EditBookingButtonHandler(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditBookingContext.Deserialize(action.Value);
         var booking = await bookingService.GetAsync(workspaceMember.Id, context.BookingId, cancellationToken);
         var bookingDate = new SectionBlock { Text = booking.From.ToShortDateWithoutYear().ToPlainTextWithIcon(Icons.Calendar) };
@@ -145,8 +145,8 @@ public class EditBookingButtonHandler(
             viewSubmission.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditBookingContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var booking = await bookingService.GetAsync(workspaceMember.Id, context.BookingId, cancellationToken);
         var values = viewSubmission.View.State.Values;

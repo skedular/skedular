@@ -1,8 +1,8 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
-using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
+using Location.Shared.Mappers;
 using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
@@ -26,7 +26,7 @@ public class ResourceAvailableHoursService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ILocationOutboxPublisher locationOutboxPublisher,
-    IMapper mapper) : IResourceAvailableHoursService
+    IEntityMapper entityMapper) : IResourceAvailableHoursService
 {
     public async Task<Resource> UpdateAvailableHoursAsync(
         string id,
@@ -70,9 +70,9 @@ public class ResourceAvailableHoursService(
             existingResource.AvailableHours = null;
         }
 
-        var resource = mapper.MapTo(repositoryFactory.ResourceRepository.Update(existingResource));
+        var resource = entityMapper.MapTo(repositoryFactory.ResourceRepository.Update(existingResource));
 
-        locationOutboxPublisher.PublishLocations([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
+        locationOutboxPublisher.PublishLocations([entityMapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

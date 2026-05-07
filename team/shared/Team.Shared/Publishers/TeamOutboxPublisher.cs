@@ -18,7 +18,7 @@ public interface ITeamOutboxPublisher
 
 public class TeamOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IContext context,
     IKafkaOutboxEventPublisher<Key, Event> publisher,
     ILogger<TeamOutboxPublisher> logger) : ITeamOutboxPublisher
@@ -36,7 +36,7 @@ public class TeamOutboxPublisher(
                         applicationConfiguration.AppSource,
                         team.IsDeleted() ? Type.TeamDeleted : Type.TeamUpserted,
                         context.GetCorrelationId()),
-                    Data = new Data { Team = mapper.MapTo(team) }
+                    Data = new Data { Team = eventMapper.MapTo(team) }
                 },
                 unitOfWork);
         }

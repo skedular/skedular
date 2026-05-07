@@ -42,7 +42,7 @@ public class CustomTagsPage(
     IOrganizationPermissionsService organizationPermissionsService,
     ICustomTagComponents customTagComponents,
     ICommonComponents commonComponents,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IBookingsPageContextService bookingsPageContextService,
     ICustomerService customerService,
     IOrganizationCustomTagService organizationCustomTagService) :
@@ -68,8 +68,8 @@ public class CustomTagsPage(
                 request.User.Id,
                 cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         switch (action.ActionId)
         {
@@ -142,8 +142,8 @@ public class CustomTagsPage(
                 request.User.Id,
                 cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         if (action.SelectedOption.Value.StartsWith(BookingActionTypes.Bookings))
         {

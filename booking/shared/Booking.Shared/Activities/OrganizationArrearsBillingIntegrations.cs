@@ -61,7 +61,7 @@ public class OrganizationArrearsBillingIntegrations(
     OrganizationService.OrganizationServiceClient organizationServiceClient,
     OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
     IOrganizationArrearsInvoiceService organizationArrearsInvoiceService,
     ITemporalService temporalService,
@@ -141,7 +141,7 @@ public class OrganizationArrearsBillingIntegrations(
             args.BillingPeriod.EndExclusive,
             cancellationToken);
 
-        var bookingModels = bookings.Select(mapper.MapTo).ToList();
+        var bookingModels = bookings.Select(entityMapper.MapTo).ToList();
         var drafts = organizationArrearsBillingPlannerService.BuildInvoiceDrafts(
             args.BillingPeriod,
             args.BillingCycle,

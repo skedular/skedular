@@ -31,7 +31,7 @@ public class MakePaymentNotRequiredAsyncShould
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
         [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
         [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
         [Frozen] IUnitOfWork unitOfWork,
@@ -76,7 +76,7 @@ public class MakePaymentNotRequiredAsyncShould
             .Returns(organization);
         A.CallTo(() => organizationAuthorizationService.CanModifyPaymentMethodAsync(organizationId, customerId, cancellationToken)).Returns(true);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
-        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(mappedBooking);
+        A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(mappedBooking);
 
         var result = await sut.MakePaymentNotRequiredAsync(bookingId, cancellationToken);
 

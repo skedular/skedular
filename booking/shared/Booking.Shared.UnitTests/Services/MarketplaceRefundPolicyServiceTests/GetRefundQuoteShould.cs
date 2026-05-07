@@ -7,10 +7,10 @@ namespace Booking.Shared.UnitTests.Services.MarketplaceRefundPolicyServiceTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class GetRefundQuoteShould
 {
-    [Fact]
-    public void Return_Non_Cancellable_When_Policy_Is_No_Cancellation()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_Non_Cancellable_When_Policy_Is_No_Cancellation(MarketplaceRefundPolicyService sut)
     {
-        var sut = new MarketplaceRefundPolicyService();
         var pricing = CreatePricing(ProductPricingCancellationPolicyType.NoCancellation, []);
 
         var result = sut.GetQuote(
@@ -21,10 +21,11 @@ public class GetRefundQuoteShould
         result.ShouldBe(new MarketplaceRefundQuote(false, false, 0, null));
     }
 
-    [Fact]
-    public void Return_Full_Refund_When_Full_Refund_Before_Cutoff_Has_No_Explicit_Rules_And_Request_Is_Before_Start()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_Full_Refund_When_Full_Refund_Before_Cutoff_Has_No_Explicit_Rules_And_Request_Is_Before_Start(
+        MarketplaceRefundPolicyService sut)
     {
-        var sut = new MarketplaceRefundPolicyService();
         var pricing = CreatePricing(ProductPricingCancellationPolicyType.FullRefundBeforeCutoff, []);
 
         var result = sut.GetQuote(
@@ -36,10 +37,10 @@ public class GetRefundQuoteShould
         result.CalculateRefundAmount(123.45m).ShouldBe(123.45m);
     }
 
-    [Fact]
-    public void Return_Matching_Tiered_Rule_When_Request_Falls_Inside_A_Configured_Window()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_Matching_Tiered_Rule_When_Request_Falls_Inside_A_Configured_Window(MarketplaceRefundPolicyService sut)
     {
-        var sut = new MarketplaceRefundPolicyService();
         var pricing = CreatePricing(
             ProductPricingCancellationPolicyType.TieredRefund,
             [new ProductPricingCancellationRefundRule(180, 100), new ProductPricingCancellationRefundRule(60, 50)]);
@@ -53,10 +54,10 @@ public class GetRefundQuoteShould
         result.CalculateRefundAmount(200m).ShouldBe(100m);
     }
 
-    [Fact]
-    public void Return_Zero_Refund_But_Still_Cancellable_When_A_Zero_Percent_Rule_Matches()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_Zero_Refund_But_Still_Cancellable_When_A_Zero_Percent_Rule_Matches(MarketplaceRefundPolicyService sut)
     {
-        var sut = new MarketplaceRefundPolicyService();
         var pricing = CreatePricing(
             ProductPricingCancellationPolicyType.TieredRefund,
             [new ProductPricingCancellationRefundRule(0, 0)]);
@@ -69,10 +70,10 @@ public class GetRefundQuoteShould
         result.ShouldBe(new MarketplaceRefundQuote(true, false, 0, 0));
     }
 
-    [Fact]
-    public void Return_Not_Cancellable_When_No_Rule_Applies()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_Not_Cancellable_When_No_Rule_Applies(MarketplaceRefundPolicyService sut)
     {
-        var sut = new MarketplaceRefundPolicyService();
         var pricing = CreatePricing(
             ProductPricingCancellationPolicyType.TieredRefund,
             [new ProductPricingCancellationRefundRule(120, 100)]);

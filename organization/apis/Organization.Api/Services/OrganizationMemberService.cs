@@ -40,7 +40,7 @@ public class OrganizationMemberService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     ICachedOrganizationService cachedOrganizationService) : IOrganizationMemberService
 {
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationMember>>, int)> GetPaginatedOrganizationMembersAsync(
@@ -69,9 +69,10 @@ public class OrganizationMemberService(
 
         return (
             paginatedInfo,
-            mapper.MapTo(
+            graphQlMapper.MapTo(
                     edges,
-                    mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)))
+                    graphQlMapper.MapTo(organization,
+                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)))
                 .ToList(),
             totalCount);
     }
@@ -115,9 +116,10 @@ public class OrganizationMemberService(
         var mappedRole = memberRole.ToOrganizationMemberRole();
         if (organizationMember.Role == mappedRole)
         {
-            return mapper.MapTo(
+            return graphQlMapper.MapTo(
                 organizationMember,
-                mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)));
+                graphQlMapper.MapTo(organization,
+                    organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)));
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -126,15 +128,15 @@ public class OrganizationMemberService(
         repositoryFactory.OrganizationMemberRepository.Update(organizationMember);
 
         organizationOutboxPublisher.PublishOrganizations(
-            [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+            [graphQlMapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
             repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        return mapper.MapTo(
+        return graphQlMapper.MapTo(
             organizationMember,
-            mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)));
+            graphQlMapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)));
     }
 
     public async Task<IReadOnlyList<OrganizationMember>> ChangeStatusAsync(
@@ -189,7 +191,7 @@ public class OrganizationMemberService(
 
         organizationOutboxPublisher.PublishOrganizations(
             organizations.Select(item =>
-                mapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))),
+                graphQlMapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))),
             repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -203,9 +205,9 @@ public class OrganizationMemberService(
             .Select(item =>
             {
                 var matchedOrganization = organizations.Single(organization => organization.Id == item.Organization.Id);
-                return mapper.MapTo(
+                return graphQlMapper.MapTo(
                     item,
-                    mapper.MapTo(
+                    graphQlMapper.MapTo(
                         matchedOrganization,
                         organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(matchedOrganization.Id)));
             })
@@ -255,7 +257,7 @@ public class OrganizationMemberService(
         organizationOutboxPublisher.PublishOrganizations(
             organizations.Select(item =>
             {
-                var mapped = mapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id));
+                var mapped = graphQlMapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id));
                 mapped.OrganizationMembers = mapped.OrganizationMembers.Where(organizationMember => organizationMember.DeletedAt is null).ToList();
 
                 return mapped;
@@ -272,9 +274,9 @@ public class OrganizationMemberService(
         return organizationMembers.Select(item =>
         {
             var matchedOrganization = organizations.Single(organization => organization.Id == item.Organization.Id);
-            return mapper.MapTo(
+            return graphQlMapper.MapTo(
                 item,
-                mapper.MapTo(
+                graphQlMapper.MapTo(
                     matchedOrganization,
                     organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(matchedOrganization.Id)));
         }).ToList();
@@ -292,7 +294,8 @@ public class OrganizationMemberService(
                            throw new OrganizationNotFound();
         if (organization.OrganizationMembers.Any(item => item.Id == member.Id))
         {
-            return mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
+            return graphQlMapper.MapTo(organization,
+                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -300,14 +303,14 @@ public class OrganizationMemberService(
         var organizationMember = await repositoryFactory.OrganizationMemberRepository.GetByIdAsync(member.Id, cancellationToken);
         if (organizationMember is null)
         {
-            repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(member, organization, customer));
+            repositoryFactory.OrganizationMemberRepository.Add(graphQlMapper.MapToEntity(member, organization, customer));
         }
         else
         {
-            repositoryFactory.OrganizationMemberRepository.Update(mapper.MergeToEntity(member, organizationMember, organization, customer));
+            repositoryFactory.OrganizationMemberRepository.Update(graphQlMapper.MergeToEntity(member, organizationMember, organization, customer));
         }
 
-        var mappedOrganization = mapper.MapTo(organization,
+        var mappedOrganization = graphQlMapper.MapTo(organization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
 

@@ -19,7 +19,7 @@ public interface IWorkaroundService
 
 public class WorkaroundService(
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IOrganizationPublisher organizationPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     ITemporalService temporalService)
@@ -37,7 +37,7 @@ public class WorkaroundService(
         }
 
         await organizationPublisher.PublishOrganizationsAsync(
-            [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+            [graphQlMapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
             cancellationToken);
     }
 
@@ -46,7 +46,7 @@ public class WorkaroundService(
         var organizations = await repositoryFactory.OrganizationRepository.GetAllUntrackedAsync(cancellationToken);
         await organizationPublisher.PublishOrganizationsAsync(
             organizations.Select(item =>
-                mapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))).ToList(),
+                graphQlMapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))).ToList(),
             cancellationToken);
     }
 

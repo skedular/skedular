@@ -157,7 +157,7 @@ public class MarketplaceBookingServiceShould
         [Frozen] IBookingRepository bookingRepository,
         [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
         [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
         MarketplaceBookingService sut,
@@ -178,7 +178,7 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => bookingRepository.Update(existingBooking)).Returns(existingBooking);
         A.CallTo(() => bookingRepository.Remove(existingBooking)).Returns(existingBooking);
-        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(deletedBooking);
+        A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(deletedBooking);
         A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken))
             .Returns(Task.FromResult<MarketplaceRefund?>(null));
 
@@ -199,7 +199,7 @@ public class MarketplaceBookingServiceShould
         [Frozen] IBookingRepository bookingRepository,
         [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
         [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
         MarketplaceBookingService sut,
@@ -221,7 +221,7 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => bookingRepository.Update(existingBooking)).Returns(existingBooking);
         A.CallTo(() => bookingRepository.Remove(existingBooking)).Returns(existingBooking);
-        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(deletedBooking);
+        A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(deletedBooking);
 
         // Act
         var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, false, true, cancellationToken);
@@ -245,7 +245,7 @@ public class MarketplaceBookingServiceShould
         [Frozen] IBookingRepository bookingRepository,
         [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
         [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
         MarketplaceBookingService sut,
@@ -266,7 +266,7 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => bookingRepository.Update(existingBooking)).Returns(existingBooking);
         A.CallTo(() => bookingRepository.Remove(existingBooking)).Returns(existingBooking);
-        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(deletedBooking);
+        A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(deletedBooking);
 
         var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, true, true, cancellationToken);
 
@@ -288,7 +288,7 @@ public class MarketplaceBookingServiceShould
         [Frozen] IBookingRepository bookingRepository,
         [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
         [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
         MarketplaceBookingService sut,
@@ -310,7 +310,7 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => bookingRepository.Update(existingBooking)).Returns(existingBooking);
         A.CallTo(() => bookingRepository.Remove(existingBooking)).Returns(existingBooking);
-        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(deletedBooking);
+        A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(deletedBooking);
 
         var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, false, false, cancellationToken);
 
@@ -328,7 +328,7 @@ public class MarketplaceBookingServiceShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IMarketplaceEventResourceService marketplaceEventResourceService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
         MarketplaceBookingService sut,
@@ -392,7 +392,7 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => customerRepository.GetByIdsAsync(A<IReadOnlyList<string>>.That.Contains("customer-1"), true, cancellationToken))
             .Returns([lastModifiedByCustomer]);
         A.CallTo(() => productVersionRepository.GetByIdAsync("product-version-1", cancellationToken)).Returns(productVersion);
-        A.CallTo(() => mapper.MergeTo(
+        A.CallTo(() => entityMapper.MergeTo(
                 booking,
                 existingBooking,
                 A<IReadOnlyList<Customer>>._,
@@ -407,7 +407,7 @@ public class MarketplaceBookingServiceShould
                 null))
             .Returns(existingBooking);
         A.CallTo(() => bookingRepository.Update(existingBooking)).Returns(existingBooking);
-        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(booking);
+        A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(booking);
 
         _ = await sut.UpdateAsync(booking, existingBooking, lastModifiedByCustomer, [], [], null, false, cancellationToken);
 

@@ -37,20 +37,21 @@ public class SyncAccountingInvoiceStateAsyncShould
         [Frozen] IAccountingPaymentEventRepository accountingPaymentEventRepository,
         [Frozen] IRecurringBookingRepository recurringBookingRepository,
         [Frozen] IUnitOfWork unitOfWork,
-        CallInvoker callInvoker,
+        [Frozen] CallInvoker callInvoker,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        IDbTransactionBuilder transactionBuilder,
-        IGraphQlTopicEventSender graphQlTopicEventSender,
-        ITemporalService temporalService,
-        ITemporalOutboxService temporalOutboxService,
-        IBookingOutboxPublisher bookingOutboxPublisher,
-        IMapper mapper,
-        IRandomHelper randomHelper,
-        IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
-        IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
-        IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
-        IInvoicePaymentTermsService invoicePaymentTermsService,
+        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen] ITemporalService temporalService,
+        [Frozen] ITemporalOutboxService temporalOutboxService,
+        [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
+        [Frozen] IEntityMapper entityMapper,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
+        [Frozen] IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
+        [Frozen] IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
+        [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
+        [Frozen] AccountingApi accountingApi,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
@@ -75,7 +76,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             temporalService,
             temporalOutboxService,
             bookingOutboxPublisher,
-            mapper,
+            entityMapper,
             randomHelper,
             recurringInvoiceBillingScheduleService,
             xeroRepeatingInvoiceScheduleService,
@@ -122,7 +123,7 @@ public class SyncAccountingInvoiceStateAsyncShould
                 A<Admin_GetXeroConnectionInput>.That.Matches(input => input.OrganizationId == organizationId)))
             .Returns(CreateResponse(xeroConnection));
         A.CallTo(() => xeroTokenEncryptionService.Decrypt("encrypted-access")).Returns("access-token");
-        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(A.Fake<AccountingApi>());
+        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(accountingApi);
         A.CallTo(() => accountingInvoiceInstanceRepository.GetByProviderAndExternalInvoiceIdAsync(
                 AccountingProviderConstants.Xero,
                 generatedInvoiceId,
@@ -175,17 +176,19 @@ public class SyncAccountingInvoiceStateAsyncShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
         [Frozen] ITemporalOutboxService temporalOutboxService,
-        CallInvoker callInvoker,
+        [Frozen] CallInvoker callInvoker,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        ITemporalService temporalService,
-        IBookingOutboxPublisher bookingOutboxPublisher,
-        IMapper mapper,
-        IRandomHelper randomHelper,
-        IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
-        IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
-        IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
-        IInvoicePaymentTermsService invoicePaymentTermsService,
+        [Frozen] ITemporalService temporalService,
+        [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
+        [Frozen] IEntityMapper entityMapper,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
+        [Frozen] IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
+        [Frozen] IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
+        [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
+        [Frozen] IDbContextTransaction transaction,
+        [Frozen] AccountingApi accountingApi,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
@@ -195,7 +198,6 @@ public class SyncAccountingInvoiceStateAsyncShould
         const string generatedInvoiceId = "f6a7c629-af16-4f01-a172-35ce3735f343";
         const string tenantId = "d2576a27-6a2b-4575-8720-0c11eee06fe5";
         var invoice = new Invoice { InvoiceID = Guid.Parse(generatedInvoiceId), InvoiceNumber = "SKD-000202", Status = Invoice.StatusEnum.PAID };
-        var transaction = A.Fake<IDbContextTransaction>();
         var marketplaceBookingSubscription = new MarketplaceBookingSubscription { Id = "subscription-1" };
         var recurringBooking = new RecurringBooking
         {
@@ -222,7 +224,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             temporalService,
             temporalOutboxService,
             bookingOutboxPublisher,
-            mapper,
+            entityMapper,
             randomHelper,
             recurringInvoiceBillingScheduleService,
             xeroRepeatingInvoiceScheduleService,
@@ -271,7 +273,7 @@ public class SyncAccountingInvoiceStateAsyncShould
                 A<Admin_GetXeroConnectionInput>.That.Matches(input => input.OrganizationId == organizationId)))
             .Returns(CreateResponse(xeroConnection));
         A.CallTo(() => xeroTokenEncryptionService.Decrypt("encrypted-access")).Returns("access-token");
-        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(A.Fake<AccountingApi>());
+        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(accountingApi);
         A.CallTo(() => accountingInvoiceInstanceRepository.GetByProviderAndExternalInvoiceIdAsync(
                 AccountingProviderConstants.Xero,
                 generatedInvoiceId,
@@ -335,7 +337,7 @@ public class SyncAccountingInvoiceStateAsyncShould
         ITemporalService temporalService,
         ITemporalOutboxService temporalOutboxService,
         IBookingOutboxPublisher bookingOutboxPublisher,
-        IMapper mapper,
+        IEntityMapper entityMapper,
         IRandomHelper randomHelper,
         IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
         IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
@@ -354,7 +356,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             temporalService,
             temporalOutboxService,
             bookingOutboxPublisher,
-            mapper,
+            entityMapper,
             randomHelper,
             recurringInvoiceBillingScheduleService,
             xeroRepeatingInvoiceScheduleService,

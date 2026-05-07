@@ -41,7 +41,7 @@ public class TeamService(
     ApplicationConfiguration applicationConfiguration,
     TeamConfiguration teamConfiguration,
     Api.Shared.Grpc.Skedular.Team.Core.V1.TeamService.TeamServiceClient teamServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache,
     ICustomerService customerService,
     ILocationService locationService)
@@ -53,7 +53,7 @@ public class TeamService(
     {
         var team = await memoryCache.GetOrCreateAsync(
             CreateKeyById(teamId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await teamServiceClient.Admin_GetAsync(
                     new Admin_GetInput { Id = teamId },
                     teamConfiguration.ApiKey.CreateMetadata(),
@@ -84,7 +84,7 @@ public class TeamService(
     {
         var team = await memoryCache.GetOrCreateAsync(
             CreateKeyById(teamId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await teamServiceClient.GetAsync(
                     new GetInput { Id = teamId },
                     teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -156,7 +156,7 @@ public class TeamService(
             }
         }));
 
-        var mappedTeam = mapper.MapTo(
+        var mappedTeam = grpcMapper.MapTo(
             await teamServiceClient.AddAsync(
                 addInput,
                 teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -229,7 +229,7 @@ public class TeamService(
             }
         }));
 
-        var mappedTeam = mapper.MapTo(
+        var mappedTeam = grpcMapper.MapTo(
             await teamServiceClient.UpdateAsync(
                 updateInput,
                 teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -317,7 +317,7 @@ public class TeamService(
             TotalCount = connection.TotalCount,
             Edges = connection.Edges.Select(item =>
             {
-                var team = mapper.MapTo(item.Node);
+                var team = grpcMapper.MapTo(item.Node);
                 foreach (var member in team.TeamMembers)
                 {
                     var matchingCustomer = customers.FirstOrDefault(customer => customer.Id == member.Customer.Id);

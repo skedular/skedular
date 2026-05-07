@@ -1,17 +1,15 @@
 using Api.Shared.Services.Models;
 using Team.Api.GraphQL.Invitation;
-using Team.Api.Mappers;
 
 namespace Team.Api.UnitTests.GraphQL.Invitation.RootQueryTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class TeamInvitationStatusesShould
 {
-    [Fact]
-    public void Return_All_Invitation_Statuses()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_All_Invitation_Statuses(RootQuery sut)
     {
-        var sut = new RootQuery(A.Fake<IMapper>());
-
         var result = sut.TeamInvitationStatuses().ToList();
 
         result.Count.ShouldBe(5);

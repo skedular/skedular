@@ -22,7 +22,7 @@ public class OrganizationPhysicalAddressService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IOrganizationOutboxPublisher organizationOutboxPublisher) : IOrganizationPhysicalAddressService
 {
     public async Task<Shared.Models.Organization> AddAsync(OrganizationPhysicalAddress organizationPhysicalAddress,
@@ -68,11 +68,11 @@ public class OrganizationPhysicalAddressService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var organizationPhysicalAddressEntity = mapper.MapTo(organizationPhysicalAddress, existingOrganization);
+        var organizationPhysicalAddressEntity = graphQlMapper.MapTo(organizationPhysicalAddress, existingOrganization);
         repositoryFactory.OrganizationPhysicalAddressRepository.Add(organizationPhysicalAddressEntity);
 
         existingOrganization.PhysicalAddress = organizationPhysicalAddressEntity;
-        var mappedOrganization = mapper.MapTo(
+        var mappedOrganization = graphQlMapper.MapTo(
             existingOrganization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
 
@@ -118,12 +118,13 @@ public class OrganizationPhysicalAddressService(
     {
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        existingOrganizationPhysicalAddress = mapper.MergeTo(organizationPhysicalAddress, existingOrganizationPhysicalAddress, existingOrganization);
+        existingOrganizationPhysicalAddress =
+            graphQlMapper.MergeTo(organizationPhysicalAddress, existingOrganizationPhysicalAddress, existingOrganization);
         repositoryFactory.OrganizationPhysicalAddressRepository.Update(existingOrganizationPhysicalAddress);
 
         existingOrganization.PhysicalAddress = existingOrganizationPhysicalAddress;
 
-        var mappedOrganization = mapper.MapTo(
+        var mappedOrganization = graphQlMapper.MapTo(
             existingOrganization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);

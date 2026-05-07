@@ -7,7 +7,7 @@ using Marketplace.Api.Services;
 namespace Marketplace.Api.GraphQL.Product;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<ProductPayload> AddProductAsync(
@@ -17,12 +17,12 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Product = mapper.MapTo(
+            Product = graphQlMapper.MapTo(
                 await productService.AddAsync(
                     input.Id,
                     input.OrganizationId,
                     input.OrganizationCustomDomain,
-                    mapper.MapTo(input),
+                    graphQlMapper.MapTo(input),
                     cancellationToken))!
         };
 
@@ -34,7 +34,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Product = mapper.MapTo(await productService.UpdateAsync(input.Id, mapper.MapTo(input), cancellationToken))!
+            Product = graphQlMapper.MapTo(await productService.UpdateAsync(input.Id, graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -44,7 +44,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var products = await productService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
-        return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(mapper.MapTo)! };
+        return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(graphQlMapper.MapTo)! };
     }
 
     [UseResolverScope]
@@ -54,7 +54,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var products = await productService.ActivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
-        return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(mapper.MapTo)! };
+        return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(graphQlMapper.MapTo)! };
     }
 
     [UseResolverScope]
@@ -64,6 +64,6 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var products = await productService.DeactivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
-        return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(mapper.MapTo)! };
+        return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(graphQlMapper.MapTo)! };
     }
 }

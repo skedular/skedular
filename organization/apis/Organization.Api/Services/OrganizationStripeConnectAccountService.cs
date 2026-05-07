@@ -60,7 +60,7 @@ public class OrganizationStripeConnectAccountService(
     ICreatable<Account, AccountCreateOptions> accountCreateService,
     IRetrievable<Account, AccountGetOptions> accountGetOption,
     ICachedCustomerService cachedCustomerService,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IRandomHelper randomHelper,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IOrganizationStripeConnectAccountLinkService organizationStripeConnectAccountLinkService,
@@ -120,10 +120,11 @@ public class OrganizationStripeConnectAccountService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var stripeConnectAccount = await accountCreateService.CreateAsync(
-            mapper.MapToStripeAccountRequest(organization),
+            graphQlMapper.MapToStripeAccountRequest(organization),
             new RequestOptions { IdempotencyKey = id },
             cancellationToken);
-        var accountEntity = mapper.MapTo(stripeConnectAccount, id, nickname, organization.OrganizationStripeConnectAccounts.Count == 0, organization);
+        var accountEntity = graphQlMapper.MapTo(stripeConnectAccount, id, nickname, organization.OrganizationStripeConnectAccounts.Count == 0,
+            organization);
         var (accountRefreshCodeEntity, url) = await organizationStripeConnectAccountLinkService.CreateLinkAsync(
             stripeConnectAccount.Id,
             redirectUrl,
@@ -133,10 +134,10 @@ public class OrganizationStripeConnectAccountService(
 
         _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
         var account = repositoryFactory.OrganizationStripeConnectAccountRepository.Add(accountEntity);
-        var mappedAccount = mapper.MapTo(account);
+        var mappedAccount = graphQlMapper.MapTo(account);
 
         organizationOutboxPublisher.PublishOrganizations(
-            [mapper.MapTo(organization, GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+            [graphQlMapper.MapTo(organization, GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
             repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -177,10 +178,11 @@ public class OrganizationStripeConnectAccountService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         account = repositoryFactory.OrganizationStripeConnectAccountRepository.Remove(account);
-        var deletedAccount = mapper.MapTo(account);
+        var deletedAccount = graphQlMapper.MapTo(account);
 
         organizationOutboxPublisher.PublishOrganizations(
-            [mapper.MapTo(existingOrganization, GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))], repositoryFactory.UnitOfWork);
+            [graphQlMapper.MapTo(existingOrganization, GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))],
+            repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -214,10 +216,10 @@ public class OrganizationStripeConnectAccountService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         repositoryFactory.OrganizationStripeConnectAccountRepository.RemoveRange(accounts);
-        var deletedAccounts = accounts.Select(mapper.MapTo).ToList();
+        var deletedAccounts = accounts.Select(graphQlMapper.MapTo).ToList();
 
         organizationOutboxPublisher.PublishOrganizations(
-            existingOrganizations.Select(item => mapper.MapTo(item, GetStripeAuthorizeExistingConnectAccountUrl(item.Id))),
+            existingOrganizations.Select(item => graphQlMapper.MapTo(item, GetStripeAuthorizeExistingConnectAccountUrl(item.Id))),
             repositoryFactory.UnitOfWork);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -243,7 +245,7 @@ public class OrganizationStripeConnectAccountService(
 
         account = await ReSyncOnboardingCompletedStateAsync(account, existingOrganizations, cancellationToken);
 
-        return mapper.MapTo(account);
+        return graphQlMapper.MapTo(account);
     }
 
     public async Task<string> GetNewOnboardingUrlAsync(string code, CancellationToken cancellationToken)
@@ -298,10 +300,11 @@ public class OrganizationStripeConnectAccountService(
 
         account.IsDefault = true;
         account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(account);
-        var mappedAccount = mapper.MapTo(account);
+        var mappedAccount = graphQlMapper.MapTo(account);
 
         organizationOutboxPublisher.PublishOrganizations(
-            [mapper.MapTo(existingOrganization, GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))], repositoryFactory.UnitOfWork);
+            [graphQlMapper.MapTo(existingOrganization, GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))],
+            repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -342,7 +345,7 @@ public class OrganizationStripeConnectAccountService(
             await ReSyncOnboardingCompletedStateAsync(account, organization, cancellationToken);
         }
 
-        var mappedAccounts = edges.Select(edge => new Edge<OrganizationStripeConnectAccount>(mapper.MapTo(edge.Node), edge.Cursor)).ToList();
+        var mappedAccounts = edges.Select(edge => new Edge<OrganizationStripeConnectAccount>(graphQlMapper.MapTo(edge.Node), edge.Cursor)).ToList();
 
         return (paginatedInfo, mappedAccounts, totalCount);
     }
@@ -383,7 +386,7 @@ public class OrganizationStripeConnectAccountService(
         var accountEntity = organization.OrganizationStripeConnectAccounts.FirstOrDefault(item => item.StripeAccountId == stripeAccountId);
         if (accountEntity is null)
         {
-            accountEntity = mapper.MergeTo(stripeConnectAccount,
+            accountEntity = graphQlMapper.MergeTo(stripeConnectAccount,
                 new Shared.Database.Entities.OrganizationStripeConnectAccount
                 {
                     Id = randomHelper.Generate(),
@@ -396,12 +399,12 @@ public class OrganizationStripeConnectAccountService(
         }
         else
         {
-            accountEntity = mapper.MergeTo(stripeConnectAccount, accountEntity);
+            accountEntity = graphQlMapper.MergeTo(stripeConnectAccount, accountEntity);
             _ = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(accountEntity);
         }
 
         organizationOutboxPublisher.PublishOrganizations(
-            [mapper.MapTo(organization, GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))], repositoryFactory.UnitOfWork);
+            [graphQlMapper.MapTo(organization, GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -444,10 +447,11 @@ public class OrganizationStripeConnectAccountService(
 
         account.Name = nickname;
         account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(account);
-        var mappedAccount = mapper.MapTo(account);
+        var mappedAccount = graphQlMapper.MapTo(account);
 
         organizationOutboxPublisher.PublishOrganizations(
-            [mapper.MapTo(existingOrganization, GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))], repositoryFactory.UnitOfWork);
+            [graphQlMapper.MapTo(existingOrganization, GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))],
+            repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -475,7 +479,7 @@ public class OrganizationStripeConnectAccountService(
                 new RequestOptions { StripeAccount = account.StripeAccountId },
                 cancellationToken);
 
-            account = mapper.MergeTo(stripeConnectAccount, account);
+            account = graphQlMapper.MergeTo(stripeConnectAccount, account);
 
             if (account.OrganizationStripeConnectAccountAuthorization is null)
             {
@@ -519,7 +523,7 @@ public class OrganizationStripeConnectAccountService(
         account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(account);
 
         organizationOutboxPublisher.PublishOrganizations(
-            [mapper.MapTo(organization, GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+            [graphQlMapper.MapTo(organization, GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
             repositoryFactory.UnitOfWork);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

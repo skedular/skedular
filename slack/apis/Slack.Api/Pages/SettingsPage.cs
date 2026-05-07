@@ -36,7 +36,7 @@ public class SettingsPage(
     SlackConfigurationService slackConfigurationService,
     IWorkspaceMemberService workspaceMemberService,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ICommonComponents commonComponents,
     IOrganizationPermissionsService organizationPermissionsService,
     IWorkspaceChannelService workspaceChannelService,
@@ -113,8 +113,8 @@ public class SettingsPage(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         switch (action.SelectedOption.Value)
         {
             case BillingActionTypes.Billing:

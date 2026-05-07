@@ -49,7 +49,7 @@ public class HomePage(
     ICustomTagsPage customTagsPage,
     IZonesPage zonesPage,
     ISettingsPage settingsPage,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ICommonComponents commonComponents,
     IBookingComponents bookingComponents,
     ICustomerService customerService,
@@ -107,10 +107,10 @@ public class HomePage(
                         appHomeOpenedEvent.User,
                         cancellationToken);
 
-                    var workspace = mapper.MapTo(workspaceEntity);
+                    var workspace = entityMapper.MapTo(workspaceEntity);
                     await RenderAsync(
                         workspace,
-                        mapper.MapTo(workspaceMemberEntity, workspace),
+                        entityMapper.MapTo(workspaceMemberEntity, workspace),
                         appHomeOpenedEvent.View?.Hash,
                         cancellationToken);
                 }
@@ -133,8 +133,8 @@ public class HomePage(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         switch (action.ActionId)
         {
@@ -194,8 +194,8 @@ public class HomePage(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         switch (action.ActionId)
         {
@@ -215,8 +215,8 @@ public class HomePage(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         switch (action.SelectedOption.Value)
         {
@@ -336,8 +336,8 @@ public class HomePage(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         switch (action.ActionId)
         {

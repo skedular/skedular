@@ -35,7 +35,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
     ITemporalService temporalService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
     IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper)
 {
     [Activity]
@@ -275,7 +275,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 return true;
             }
 
-            var booking = mapper.MapTo(recurringBooking, missingBookingDay);
+            var booking = entityMapper.MapTo(recurringBooking, missingBookingDay);
             booking.Id = randomHelper.Generate();
             if (useOpeningHoursWindow)
             {
@@ -308,7 +308,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                     .ToList();
             }
 
-            var marketplaceBooking = mapper.MapTo(recurringBooking.MarketplaceBooking)!;
+            var marketplaceBooking = entityMapper.MapTo(recurringBooking.MarketplaceBooking)!;
             marketplaceBooking.Id = randomHelper.Generate();
             marketplaceBooking.IsPaymentRequired = false;
             marketplaceBooking.PaymentStatus = PaymentStatus.NotSet;

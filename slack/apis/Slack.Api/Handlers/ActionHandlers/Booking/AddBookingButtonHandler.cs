@@ -29,7 +29,7 @@ public class AddBookingButtonHandler(
     ITeamService teamService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
     IPageNavigator pageNavigator,
@@ -48,8 +48,8 @@ public class AddBookingButtonHandler(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var customer = await customerService.GetAsync(workspaceMember.Id, cancellationToken) ?? throw new CustomerNotFound();
         var context = AddBookingContext.Deserialize(action.Value);
         var bookingDate = new InputBlock
@@ -110,8 +110,8 @@ public class AddBookingButtonHandler(
             viewSubmission.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = AddBookingContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var booking = new Shared.Models.Booking
         {

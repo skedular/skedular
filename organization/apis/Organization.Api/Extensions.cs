@@ -12,7 +12,8 @@ public static class Extensions
     extension(IServiceCollection services)
     {
         public IServiceCollection AddMappers() =>
-            services.AddSingleton<IMapper, Mapper>();
+            services.AddSingleton<IGraphQlMapper, GraphQlMapper>()
+                .AddSingleton<IGrpcMapper, GrpcMapper>();
 
         public IServiceCollection AddServices() =>
             services

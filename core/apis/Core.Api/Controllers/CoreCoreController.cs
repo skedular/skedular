@@ -14,7 +14,7 @@ public class CoreCoreController(
     IFileUploaderService fileUploaderService,
     ICdnService cdnService,
     IFileService fileService,
-    IMapper mapper)
+    IOpenApiMapper openApiMapper)
     : CoreCoreControllerBase
 {
     public override Task<ActionResult<Version>> GetVersion(CancellationToken cancellationToken = default)
@@ -32,7 +32,7 @@ public class CoreCoreController(
         await using var memoryStream = new MemoryStream();
         await file.CopyToAsync(memoryStream, cancellationToken);
 
-        return mapper.MapTo(
+        return openApiMapper.MapTo(
             await fileUploaderService.UploadToCdnAsync(memoryStream, file.ContentType, Path.GetExtension(file.FileName), false, cancellationToken));
     }
 
@@ -49,7 +49,7 @@ public class CoreCoreController(
         await using var memoryStream = new MemoryStream();
         await file.CopyToAsync(memoryStream, cancellationToken);
 
-        return mapper.MapTo(
+        return openApiMapper.MapTo(
             await fileUploaderService.UploadToPrivateStorageAsync(
                 memoryStream,
                 file.ContentType,

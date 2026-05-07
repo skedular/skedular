@@ -1,5 +1,5 @@
-using Customer.Api.Mappers;
 using Customer.Api.Services;
+using Customer.Shared.Mappers;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared;
@@ -29,7 +29,7 @@ public class RepublishAllCustomersAsyncTests
     [AutoFakeItEasyData]
     public async Task Map_Customer_Entities_To_Models(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
         IReadOnlyList<Shared.Database.Entities.Customer> customerEntities,
@@ -41,7 +41,7 @@ public class RepublishAllCustomersAsyncTests
         await sut.RepublishAllCustomersAsync(cancellationToken);
 
         Enumerable.Range(0, customerEntities.Count).ForEach(idx =>
-            A.CallTo(() => mapper.MapTo(customerEntities.Skip(idx).First())).MustHaveHappenedOnceExactly());
+            A.CallTo(() => entityMapper.MapTo(customerEntities.Skip(idx).First())).MustHaveHappenedOnceExactly());
     }
 
     [Theory]
@@ -49,7 +49,7 @@ public class RepublishAllCustomersAsyncTests
     public async Task Publish_Customers(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ICustomerPublisher customerPublisher,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
         IReadOnlyList<Shared.Database.Entities.Customer> customerEntities,
@@ -60,7 +60,7 @@ public class RepublishAllCustomersAsyncTests
         A.CallTo(() => customerRepository.GetAllUntrackedAsync(cancellationToken)).Returns(customerEntities);
 
         Enumerable.Range(0, customerEntities.Count).ForEach(idx =>
-            A.CallTo(() => mapper.MapTo(customerEntities.Skip(idx).First())).Returns(customers.Skip(idx).First()));
+            A.CallTo(() => entityMapper.MapTo(customerEntities.Skip(idx).First())).Returns(customers.Skip(idx).First()));
 
         await sut.RepublishAllCustomersAsync(cancellationToken);
 

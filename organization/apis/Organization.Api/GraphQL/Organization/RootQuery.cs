@@ -15,7 +15,7 @@ using Organization.Shared.Services.Cache;
 namespace Organization.Api.GraphQL.Organization;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public IEnumerable<OrganizationTypeDetails> OrganizationTypes() =>
@@ -55,13 +55,13 @@ public class RootQuery(IMapper mapper)
     public async Task<OrganizationTermsOfUse> ActiveOrganizationTermsOfUseAsync(
         [Service] IOrganizationTermsOfUseService organizationTermsOfUseService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await organizationTermsOfUseService.GetActiveTermsOfUseAsync(cancellationToken))!;
+        graphQlMapper.MapTo(await organizationTermsOfUseService.GetActiveTermsOfUseAsync(cancellationToken))!;
 
     [UseResolverScope]
     public async Task<IEnumerable<OrganizationIndustryMainCategoryReferenceDetails>> OrganizationIndustryMainCategoriesReferencesAsync(
         [Service] IIndustryMainCategoryService industryMainCategoryService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await industryMainCategoryService.GetAllAsync(cancellationToken));
+        graphQlMapper.MapTo(await industryMainCategoryService.GetAllAsync(cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationDetails?> OrganizationAsync(
@@ -69,7 +69,7 @@ public class RootQuery(IMapper mapper)
         string? customDomain,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await organizationService.GetByIdOrCustomDomainAsync(id, customDomain, false, cancellationToken));
+        graphQlMapper.MapTo(await organizationService.GetByIdOrCustomDomainAsync(id, customDomain, false, cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationPublicDetails?> OrganizationPublicAsync(
@@ -77,7 +77,7 @@ public class RootQuery(IMapper mapper)
         string? customDomain,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
-        mapper.MapToPublic(await organizationService.GetByIdOrCustomDomainPublicAsync(id, customDomain, cancellationToken));
+        graphQlMapper.MapToPublic(await organizationService.GetByIdOrCustomDomainPublicAsync(id, customDomain, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -86,7 +86,7 @@ public class RootQuery(IMapper mapper)
         [ID] string id,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await organizationService.GetByIdOrCustomDomainAsync(id, null, true, cancellationToken));
+        graphQlMapper.MapTo(await organizationService.GetByIdOrCustomDomainAsync(id, null, true, cancellationToken));
 
     [UseResolverScope]
     public async Task<Connection<OrganizationEdge>> OrganizationsAsync(
@@ -114,7 +114,7 @@ public class RootQuery(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }
@@ -126,5 +126,5 @@ public class RootQuery(IMapper mapper)
         CancellationToken cancellationToken) =>
         !await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
             ? []
-            : mapper.MapTo(await organizationService.GetMyOrganizationsAsync(cancellationToken));
+            : graphQlMapper.MapTo(await organizationService.GetMyOrganizationsAsync(cancellationToken));
 }

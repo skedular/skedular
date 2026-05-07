@@ -26,7 +26,7 @@ public class RecurringBookingPaymentService(
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITemporalOutboxService temporalOutboxService,
-    IMapper sharedMapper,
+    IEntityMapper sharedEntityMapper,
     IGraphQlTopicEventSender graphQlTopicEventSender) : IRecurringBookingPaymentService
 {
     public Task<RecurringBooking> ConfirmPaymentAsync(string id, CancellationToken cancellationToken) =>
@@ -94,7 +94,7 @@ public class RecurringBookingPaymentService(
             await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
         }
 
-        return sharedMapper.MapTo(recurringBooking);
+        return sharedEntityMapper.MapTo(recurringBooking);
     }
 
     private async Task EnsureCustomerCanModifyPaymentAsync(

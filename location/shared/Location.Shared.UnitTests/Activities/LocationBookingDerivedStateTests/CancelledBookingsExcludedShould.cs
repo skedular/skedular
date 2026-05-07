@@ -58,10 +58,16 @@ public class CancelledBookingsExcludedShould
         [Frozen] ILocationRepository locationRepository,
         [Frozen] IResourceRepository resourceRepository,
         [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        ICachedLocationService cachedLocationService)
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] ICachedLocationService cachedLocationService)
     {
+        var sut = new LocationBookingDerivedState(
+            repositoryFactory,
+            bookingConfiguration,
+            new BookingService.BookingServiceClient(callInvoker),
+            randomHelper,
+            cachedLocationService);
         // Arrange
         var environment = new ActivityEnvironment();
         const string LocationId = "loc-test";
@@ -97,11 +103,6 @@ public class CancelledBookingsExcludedShould
                 A<Admin_GetPaginatedBookingsInput>._))
             .Returns(CreateGrpcResponse(bookingResponse));
 
-        var sut = new LocationBookingDerivedState(
-            repositoryFactory, bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker),
-            randomHelper, cachedLocationService);
-
         // Act
         await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
 
@@ -119,10 +120,16 @@ public class CancelledBookingsExcludedShould
         [Frozen] ILocationRepository locationRepository,
         [Frozen] IResourceRepository resourceRepository,
         [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        ICachedLocationService cachedLocationService)
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] ICachedLocationService cachedLocationService)
     {
+        var sut = new LocationBookingDerivedState(
+            repositoryFactory,
+            bookingConfiguration,
+            new BookingService.BookingServiceClient(callInvoker),
+            randomHelper,
+            cachedLocationService);
         // Arrange – server returns empty list (all bookings were cancelled / none exist)
         var environment = new ActivityEnvironment();
         const string LocationId = "loc-empty";
@@ -153,11 +160,6 @@ public class CancelledBookingsExcludedShould
                 A<CallOptions>._,
                 A<Admin_GetPaginatedBookingsInput>._))
             .Returns(CreateGrpcResponse(emptyResponse));
-
-        var sut = new LocationBookingDerivedState(
-            repositoryFactory, bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker),
-            randomHelper, cachedLocationService);
 
         // Act
         await environment.RunAsync(() => sut.RecomputeAsync(LocationId));

@@ -19,7 +19,7 @@ public class GetByMarketplaceBookingIdAsyncShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
         [Frozen] IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
-        [Frozen] IMapper mapper,
+        [Frozen] IGraphQlMapper graphQlMapper,
         [Frozen] IXeroRefundService xeroRefundService,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
@@ -45,7 +45,7 @@ public class GetByMarketplaceBookingIdAsyncShould
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => organizationAuthorizationService.CanModifyPaymentMethodAsync("org-1", "customer-1", cancellationToken)).Returns(true);
         A.CallTo(() => marketplaceRefundEventRepository.GetByMarketplaceRefundIdAsync("refund-1", cancellationToken)).Returns([]);
-        A.CallTo(() => mapper.MapTo(refund)).Returns(mappedRefund);
+        A.CallTo(() => graphQlMapper.MapTo(refund)).Returns(mappedRefund);
         A.CallTo(() => xeroRefundService.GetProcessingAvailabilityAsync(refund, cancellationToken))
             .Returns(new XeroRefundProcessingAvailability(true, null));
 
@@ -60,7 +60,7 @@ public class GetByMarketplaceBookingIdAsyncShould
     public async Task Return_Redacted_Refund_When_Customer_Cannot_Modify_Payment_Method(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMapper mapper,
+        [Frozen] IGraphQlMapper graphQlMapper,
         [Frozen] IXeroRefundService xeroRefundService,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
@@ -92,7 +92,7 @@ public class GetByMarketplaceBookingIdAsyncShould
             .Returns(refund);
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => organizationAuthorizationService.CanModifyPaymentMethodAsync("org-1", "customer-1", cancellationToken)).Returns(false);
-        A.CallTo(() => mapper.MapTo(refund)).Returns(mappedRefund);
+        A.CallTo(() => graphQlMapper.MapTo(refund)).Returns(mappedRefund);
 
         var result = await sut.GetByMarketplaceBookingIdAsync("marketplace-booking-1", cancellationToken);
 
@@ -111,7 +111,7 @@ public class GetByMarketplaceBookingIdAsyncShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
         [Frozen] IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
-        [Frozen] IMapper mapper,
+        [Frozen] IGraphQlMapper graphQlMapper,
         [Frozen] IXeroRefundService xeroRefundService,
         MarketplaceRefundReadService sut,
         CancellationToken cancellationToken)
@@ -127,7 +127,7 @@ public class GetByMarketplaceBookingIdAsyncShould
         var result = await sut.GetByMarketplaceBookingIdAsync("marketplace-booking-1", cancellationToken);
 
         result.ShouldBeNull();
-        A.CallTo(() => mapper.MapTo(A<MarketplaceRefund>._)).MustNotHaveHappened();
+        A.CallTo(() => graphQlMapper.MapTo(A<MarketplaceRefund>._)).MustNotHaveHappened();
         A.CallTo(() => xeroRefundService.GetProcessingAvailabilityAsync(A<MarketplaceRefund>._, cancellationToken)).MustNotHaveHappened();
     }
 }

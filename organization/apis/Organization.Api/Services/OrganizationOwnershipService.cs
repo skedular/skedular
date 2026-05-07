@@ -16,7 +16,7 @@ public class OrganizationOwnershipService(
     IRepositoryFactory repositoryFactory,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-    IMapper mapper) : IOrganizationOwnershipService
+    IGraphQlMapper graphQlMapper) : IOrganizationOwnershipService
 {
     public async Task VerifyAsync(string? organizationId, string? organizationUniqueAlphanumericNam, CancellationToken cancellationToken)
     {
@@ -31,7 +31,7 @@ public class OrganizationOwnershipService(
         organization.IsOwnershipVerified = true;
 
         organizationOutboxPublisher.PublishOrganizations(
-            [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+            [graphQlMapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
             repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

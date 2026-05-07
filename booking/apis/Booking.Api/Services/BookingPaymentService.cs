@@ -27,7 +27,7 @@ public class BookingPaymentService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IBookingOutboxPublisher bookingOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     IGraphQlTopicEventSender graphQlTopicEventSender) : IBookingPaymentService
 {
@@ -99,7 +99,7 @@ public class BookingPaymentService(
 
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
 
-        var booking = mapper.MapTo(existingBooking);
+        var booking = entityMapper.MapTo(existingBooking);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 

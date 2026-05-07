@@ -7,7 +7,7 @@ using HotChocolate.Types;
 namespace Customer.Api.GraphQL.Settings;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<CustomerPayload> CompleteOnboardingAsync(
@@ -16,7 +16,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customer = await customerSettingsService.CompleteOnboardingAsync(cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -30,7 +30,7 @@ public class RootMutation(IMapper mapper)
             null,
             false,
             cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -43,7 +43,7 @@ public class RootMutation(IMapper mapper)
             input.LocationId,
             null,
             cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -58,7 +58,7 @@ public class RootMutation(IMapper mapper)
             null,
             false,
             cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -68,7 +68,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customer = await customerOrganizationSettingsService.ClearCustomerDefaultOrganizationAsync(null, cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -81,7 +81,7 @@ public class RootMutation(IMapper mapper)
             input.OrganizationTagId,
             null,
             cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -94,7 +94,7 @@ public class RootMutation(IMapper mapper)
             input.OrganizationTagId,
             null,
             cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -104,7 +104,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customer = await customerResourceSettingsService.AddCustomerPreferredResourceAsync(input.ResourceId, null, cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -114,7 +114,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customer = await customerResourceSettingsService.RemoveCustomerPreferredResourceAsync(input.ResourceId, null, cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -124,7 +124,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customer = await customerLocationSettingsService.AddCustomerFavouriteLocationAsync(input.LocationId, cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -134,6 +134,6 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customer = await customerLocationSettingsService.RemoveCustomerFavouriteLocationAsync(input.LocationId, cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 }

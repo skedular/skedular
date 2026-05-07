@@ -17,7 +17,7 @@ public interface IMarketplacePublisher
 
 public class MarketplacePublisher(
     ApplicationConfiguration applicationConfiguration,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IContext context,
     IKafkaPublisher<Key, Event> publisher)
     : IMarketplacePublisher
@@ -32,7 +32,7 @@ public class MarketplacePublisher(
                     applicationConfiguration.AppSource,
                     product.IsDeleted() ? Type.ProductDeleted : Type.ProductUpserted,
                     context.GetCorrelationId()),
-                Data = new Data { Product = mapper.MapTo(product) }
+                Data = new Data { Product = eventMapper.MapTo(product) }
             },
             cancellationToken)));
 }

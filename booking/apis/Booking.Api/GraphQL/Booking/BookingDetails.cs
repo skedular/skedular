@@ -37,10 +37,10 @@ public class BookingDetails : Node
 
     public async Task<IEnumerable<OrganizationArrearsInvoiceDetails>> GetArrearsInvoicesAsync(
         [Service] IBookingService bookingService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         [Parent] BookingDetails booking,
         CancellationToken cancellationToken) =>
-        (await bookingService.GetArrearsInvoicesAsync(booking.Id, cancellationToken)).Select(mapper.MapTo);
+        (await bookingService.GetArrearsInvoicesAsync(booking.Id, cancellationToken)).Select(graphQlMapper.MapTo);
 }
 
 [ObjectType<BookingDetails>]

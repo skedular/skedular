@@ -19,7 +19,7 @@ public class EditLocationButtonHandler(
     IWorkspaceMemberService workspaceMemberService,
     ILocationPermissionsService locationPermissionsService,
     IWorkspaceChannelService workspaceChannelService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IPageNavigator pageNavigator,
     ILocationService locationService) : IViewSubmissionHandler
 {
@@ -33,8 +33,8 @@ public class EditLocationButtonHandler(
             viewSubmission.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditLocationContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var permissions = await locationPermissionsService.GetPermissionsAsync(workspaceMember.Id, context.LocationId, cancellationToken);
         if (!permissions.CanModify)

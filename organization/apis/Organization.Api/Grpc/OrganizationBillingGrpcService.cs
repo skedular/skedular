@@ -23,7 +23,7 @@ public class OrganizationBillingGrpcService(
     IOrganizationBankAccountService organizationBankAccountService,
     IOrganizationBillingService organizationBillingService,
     IOrganizationXeroConnectionService organizationXeroConnectionService,
-    IMapper mapper) : GrpcOrganizationBillingService.OrganizationBillingServiceBase
+    IGrpcMapper grpcMapper) : GrpcOrganizationBillingService.OrganizationBillingServiceBase
 {
     public override async Task<StripeConnectAccountConnection> Admin_GetStripeConnectAccounts(
         Admin_GetStripeConnectAccountsInput request,
@@ -66,7 +66,7 @@ public class OrganizationBillingGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
         return connection;
     }
 
@@ -105,7 +105,7 @@ public class OrganizationBillingGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
         return connection;
     }
 
@@ -120,7 +120,7 @@ public class OrganizationBillingGrpcService(
                                context.CancellationToken) ??
                            throw new OrganizationNotFound();
 
-        return mapper.MapToGrpcResponse(organization.OrganizationXeroConnection) ?? new XeroConnection();
+        return grpcMapper.MapToGrpcResponse(organization.OrganizationXeroConnection) ?? new XeroConnection();
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization> Admin_GetByXeroTenantId(
@@ -130,7 +130,7 @@ public class OrganizationBillingGrpcService(
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
         var organization = await organizationService.GetByXeroTenantIdAsync(request.TenantId, context.CancellationToken);
-        return mapper.MapToGrpcResponse(organization ?? new Shared.Models.Organization());
+        return grpcMapper.MapToGrpcResponse(organization ?? new Shared.Models.Organization());
     }
 
     public override async Task<XeroConnection> Admin_RefreshXeroConnectionTokens(
@@ -147,14 +147,14 @@ public class OrganizationBillingGrpcService(
             request.RefreshTokenExpiresAt.ToDateTimeOffset(),
             context.CancellationToken);
 
-        return mapper.MapToGrpcResponse(xeroConnection) ?? new XeroConnection();
+        return grpcMapper.MapToGrpcResponse(xeroConnection) ?? new XeroConnection();
     }
 
     public override async Task<BillingDetails> GetBillingDetails(GetBillingDetailsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await organizationBillingService.GetAsync(
+        return grpcMapper.MapToGrpcResponse(await organizationBillingService.GetAsync(
             request.OrganizationId,
             null,
             context.CancellationToken));
@@ -163,16 +163,16 @@ public class OrganizationBillingGrpcService(
     public override async Task<BillingDetails> AddBillingDetails(AddBillingDetailsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
-        var organization = await organizationBillingService.AddAsync(mapper.MapTo(request), context.CancellationToken);
+        var organization = await organizationBillingService.AddAsync(grpcMapper.MapTo(request), context.CancellationToken);
 
-        return mapper.MapToGrpcResponse(organization.BillingDetails);
+        return grpcMapper.MapToGrpcResponse(organization.BillingDetails);
     }
 
     public override async Task<BillingDetails> UpdateBillingDetails(UpdateBillingDetailsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
-        var organization = await organizationBillingService.UpdateAsync(mapper.MapTo(request), context.CancellationToken);
+        var organization = await organizationBillingService.UpdateAsync(grpcMapper.MapTo(request), context.CancellationToken);
 
-        return mapper.MapToGrpcResponse(organization.BillingDetails);
+        return grpcMapper.MapToGrpcResponse(organization.BillingDetails);
     }
 }

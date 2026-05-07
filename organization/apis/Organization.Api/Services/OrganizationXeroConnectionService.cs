@@ -51,7 +51,7 @@ public class OrganizationXeroConnectionService(
     IXeroSdkClientFactory xeroSdkClientFactory,
     ICachedOrganizationService cachedOrganizationService,
     ITemporalOutboxService temporalOutboxService,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IDbTransactionBuilder transactionBuilder,
     IRandomHelper randomHelper,
     TimeProvider timeProvider) : IOrganizationXeroConnectionService
@@ -279,7 +279,7 @@ public class OrganizationXeroConnectionService(
         {
             xeroConnection.Id = randomHelper.Generate();
             organization.OrganizationXeroConnection =
-                repositoryFactory.OrganizationXeroConnectionRepository.Add(mapper.MapToEntity(xeroConnection, organization));
+                repositoryFactory.OrganizationXeroConnectionRepository.Add(graphQlMapper.MapToEntity(xeroConnection, organization));
         }
         else
         {
@@ -292,7 +292,7 @@ public class OrganizationXeroConnectionService(
 
             xeroConnection.Id = organization.OrganizationXeroConnection.Id;
             organization.OrganizationXeroConnection = repositoryFactory.OrganizationXeroConnectionRepository.Update(
-                mapper.MergeToEntity(xeroConnection, organization.OrganizationXeroConnection, organization));
+                graphQlMapper.MergeToEntity(xeroConnection, organization.OrganizationXeroConnection, organization));
         }
 
         if (organization.OrganizationXeroConnection is not null &&
@@ -332,7 +332,7 @@ public class OrganizationXeroConnectionService(
         await transaction.CommitAsync(cancellationToken);
         await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
 
-        return mapper.MapTo(
+        return graphQlMapper.MapTo(
             organization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
     }
@@ -355,7 +355,7 @@ public class OrganizationXeroConnectionService(
 
         if (organization.OrganizationXeroConnection is null)
         {
-            return mapper.MapTo(
+            return graphQlMapper.MapTo(
                 organization,
                 organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
         }
@@ -369,7 +369,7 @@ public class OrganizationXeroConnectionService(
         await transaction.CommitAsync(cancellationToken);
         await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
 
-        return mapper.MapTo(
+        return graphQlMapper.MapTo(
             organization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
     }

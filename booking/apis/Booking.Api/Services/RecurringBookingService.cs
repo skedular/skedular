@@ -1,6 +1,7 @@
 using Api.Shared.Services;
 using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
@@ -26,8 +27,8 @@ public class RecurringBookingService(
     IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    IMapper mapper,
-    Shared.Mappers.IMapper sharedMapper,
+    IGraphQlMapper graphQlMapper,
+    IEntityMapper sharedEntityMapper,
     ICachedRecurringBookingService cachedRecurringBookingService) : IRecurringBookingService
 {
     public async Task<RecurringBooking> GetByIdAsync(string id, CancellationToken cancellationToken)
@@ -39,7 +40,7 @@ public class RecurringBookingService(
 
         await EnsureCustomerCanViewRecurringBookingAsync(booking, customerId, cancellationToken);
 
-        return sharedMapper.MapTo(booking);
+        return sharedEntityMapper.MapTo(booking);
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsAsync(
@@ -147,7 +148,7 @@ public class RecurringBookingService(
             accessScope,
             cancellationToken);
 
-        return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
+        return (paginatedInfo, edges.Select(graphQlMapper.MapTo).ToList(), totalCount);
     }
 
     private async Task<List<string>> GetCustomerOrganizationIdsAsync(

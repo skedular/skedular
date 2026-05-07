@@ -1,10 +1,10 @@
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Api.Services.Authorization;
 using Team.Shared.Database.Entities;
+using Team.Shared.Mappers;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Team.Shared.Services.Cache;
@@ -21,7 +21,7 @@ public class DeleteShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] ITeamOutboxPublisher teamOutboxPublisher,
         [Frozen] ICachedTeamService cachedTeamService,
         [Frozen] ITeamRepository teamRepository,
@@ -45,7 +45,7 @@ public class DeleteShould
         A.CallTo(() => teamAuthorizationService.CanDeleteAsync(teamEntity, "customer-1", cancellationToken)).Returns(new ValueTask<bool>(true));
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => teamRepository.Remove(teamEntity)).Returns(deletedTeamEntity);
-        A.CallTo(() => mapper.MapTo(deletedTeamEntity)).Returns(deletedTeamModel);
+        A.CallTo(() => entityMapper.MapTo(deletedTeamEntity)).Returns(deletedTeamModel);
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).Returns(1);
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).Returns(Task.CompletedTask);
 

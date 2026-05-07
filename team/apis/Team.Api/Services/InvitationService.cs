@@ -4,8 +4,8 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
-using Team.Api.Mappers;
 using Team.Api.Services.Authorization;
+using Team.Shared.Mappers;
 using Team.Shared.Models;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
@@ -37,7 +37,7 @@ public class InvitationService(
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
     ITeamAuthorizationService teamAuthorizationService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     ITemporalOutboxService temporalOutboxService,
     ITeamOutboxPublisher teamOutboxPublisher,
@@ -109,7 +109,7 @@ public class InvitationService(
                 })
                 : repositoryFactory.JoinInvitationRepository.Update(existingJoinInvitation);
 
-            joinInvitations.Add(mapper.MapTo(existingJoinInvitation));
+            joinInvitations.Add(entityMapper.MapTo(existingJoinInvitation));
 
             temporalOutboxService.StartWorkflowInviteToJoin(
                 new InviteToJoinTeamInput(existingJoinInvitation.Id, matchingCustomerByEmail is null),
@@ -148,7 +148,7 @@ public class InvitationService(
                 Customer = customer
             });
 
-            teamOutboxPublisher.PublishTeams([mapper.MapTo(team)], repositoryFactory.UnitOfWork);
+            teamOutboxPublisher.PublishTeams([entityMapper.MapTo(team)], repositoryFactory.UnitOfWork);
         }
 
         joinInvitation.Status = InvitationStatusConstants.Accepted;
@@ -161,7 +161,7 @@ public class InvitationService(
 
         logger.LogInformation("Invitation {InvitationId} accepted for team {TeamId}", joinInvitation.Id, team.Id);
 
-        return mapper.MapTo(joinInvitation);
+        return entityMapper.MapTo(joinInvitation);
     }
 
     public async Task<JoinInvitation> RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken)
@@ -186,7 +186,7 @@ public class InvitationService(
 
         logger.LogInformation("Invitation {InvitationId} rejected", joinInvitation.Id);
 
-        return mapper.MapTo(joinInvitation);
+        return entityMapper.MapTo(joinInvitation);
     }
 
     public async Task<JoinInvitation> CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken)
@@ -214,7 +214,7 @@ public class InvitationService(
 
         logger.LogInformation("Invitation {InvitationId} cancelled", joinInvitation.Id);
 
-        return mapper.MapTo(joinInvitation);
+        return entityMapper.MapTo(joinInvitation);
     }
 
     public async Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken)
@@ -253,7 +253,7 @@ public class InvitationService(
             logger.LogInformation("Paginated invitations query returned zero results for customer {CustomerId}", customerId);
         }
 
-        return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
+        return (paginatedInfo, edges.Select(entityMapper.MapTo).ToList(), totalCount);
     }
 
     private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(

@@ -13,7 +13,7 @@ public class RaiseGraphqlChangeAsyncShould
     [AutoFakeItEasyData]
     public async Task Forward_The_Request_To_The_Booking_Grpc_Service(
         [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
+        [Frozen] CallInvoker callInvoker,
         string topicName,
         string id,
         string apiKey,

@@ -1,7 +1,7 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using Customer.Api.Mappers;
 using Customer.Api.Services.Authorization;
+using Customer.Shared.Mappers;
 using Customer.Shared.Repositories;
 
 namespace Customer.Api.Services;
@@ -23,7 +23,7 @@ public class CustomerLocationSettingsService(
     ICustomerHelperService customerHelperService,
     ILocationAuthorizationService locationAuthorizationService,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper)
+    IEntityMapper entityMapper)
     : ICustomerLocationSettingsService
 {
     public async Task<Shared.Models.Customer> AddCustomerPreferredLocationAsync(
@@ -46,7 +46,7 @@ public class CustomerLocationSettingsService(
 
         if (customer.PreferredLocations.Any(item => item.Id == locationId))
         {
-            return mapper.MapTo(customer);
+            return entityMapper.MapTo(customer);
         }
 
         customer.PreferredLocations = customer.PreferredLocations.Append(location).ToList();
@@ -78,7 +78,7 @@ public class CustomerLocationSettingsService(
         if (location.Type is null || location.Type != LocationTypeConstants.Marketplace ||
             customer.FavouriteLocations.Any(item => item.Id == locationId))
         {
-            return mapper.MapTo(customer);
+            return entityMapper.MapTo(customer);
         }
 
         customer.FavouriteLocations = customer.FavouriteLocations.Append(location).ToList();

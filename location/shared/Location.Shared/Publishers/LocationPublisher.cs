@@ -16,7 +16,7 @@ public interface ILocationPublisher
 
 public class LocationPublisher(
     ApplicationConfiguration applicationConfiguration,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IContext context,
     IKafkaPublisher<Key, Event> publisher)
     : ILocationPublisher
@@ -31,7 +31,7 @@ public class LocationPublisher(
                     applicationConfiguration.AppSource,
                     location.IsDeleted() ? Type.LocationDeleted : Type.LocationUpserted,
                     context.GetCorrelationId()),
-                Data = new Data { Location = mapper.MapTo(location) }
+                Data = new Data { Location = eventMapper.MapTo(location) }
             },
             cancellationToken)));
 }

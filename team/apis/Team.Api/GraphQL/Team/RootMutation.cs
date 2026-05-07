@@ -6,7 +6,7 @@ using Team.Api.Services;
 namespace Team.Api.GraphQL.Team;
 
 [MutationType]
-public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
+public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> logger)
 {
     [UseResolverScope]
     public async Task<TeamPayload> AddTeamAsync(
@@ -15,9 +15,9 @@ public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
         CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting {OperationName}", nameof(AddTeamAsync));
-        var team = await teamService.AddAsync(mapper.MapTo(input), cancellationToken);
+        var team = await teamService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
         logger.LogInformation("Completed {OperationName}", nameof(AddTeamAsync));
-        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
+        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = graphQlMapper.MapTo(team)! };
     }
 
     [UseResolverScope]
@@ -26,8 +26,8 @@ public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
     {
-        var team = await teamService.UpdateAsync(mapper.MapTo(input), false, cancellationToken);
-        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
+        var team = await teamService.UpdateAsync(graphQlMapper.MapTo(input), false, cancellationToken);
+        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = graphQlMapper.MapTo(team)! };
     }
 
     [UseResolverScope]
@@ -37,7 +37,7 @@ public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
         CancellationToken cancellationToken)
     {
         var team = await teamService.DeleteAsync(input.Id, cancellationToken);
-        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
+        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = graphQlMapper.MapTo(team)! };
     }
 
     [UseResolverScope]
@@ -46,7 +46,7 @@ public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
     {
-        var team = await teamService.UpdateAsync(mapper.MapTo(input), true, cancellationToken);
-        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
+        var team = await teamService.UpdateAsync(graphQlMapper.MapTo(input), true, cancellationToken);
+        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = graphQlMapper.MapTo(team)! };
     }
 }

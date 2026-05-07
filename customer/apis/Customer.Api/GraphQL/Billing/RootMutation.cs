@@ -7,7 +7,7 @@ using HotChocolate.Types;
 namespace Customer.Api.GraphQL.Billing;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<CustomerPayload> AddMyBillingDetailsAsync(
@@ -15,9 +15,9 @@ public class RootMutation(IMapper mapper)
         [Service] IBillingService billingService,
         CancellationToken cancellationToken)
     {
-        var customerBillingDetails = await billingService.AddAsync(mapper.MapTo(input), cancellationToken);
+        var customerBillingDetails = await billingService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
 
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customerBillingDetails) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customerBillingDetails) };
     }
 
     [UseResolverScope]
@@ -26,8 +26,8 @@ public class RootMutation(IMapper mapper)
         [Service] IBillingService billingService,
         CancellationToken cancellationToken)
     {
-        var customerBillingDetails = await billingService.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        var customerBillingDetails = await billingService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken);
 
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customerBillingDetails) };
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customerBillingDetails) };
     }
 }

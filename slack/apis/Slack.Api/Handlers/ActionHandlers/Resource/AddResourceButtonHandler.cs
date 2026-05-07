@@ -23,7 +23,7 @@ public class AddResourceButtonHandler(
     SlackConfigurationService slackConfigurationService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     IPageNavigator pageNavigator,
     IOrganizationZoneService organizationZoneService,
@@ -40,8 +40,8 @@ public class AddResourceButtonHandler(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var resourceType = new InputBlock
         {
             BlockId = OptionLoaderKeys.OrganizationResourceTypeKey,
@@ -185,8 +185,8 @@ public class AddResourceButtonHandler(
             viewSubmission.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = AddResourceContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var deskId = randomHelper.Generate();

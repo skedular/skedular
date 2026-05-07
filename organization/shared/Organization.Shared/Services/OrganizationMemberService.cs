@@ -25,7 +25,7 @@ public interface IOrganizationMemberService
 /// <summary>
 ///     Implementation of the organization member service.
 /// </summary>
-public class OrganizationMemberService(IRepositoryFactory repositoryFactory, IMapper mapper, IOrganizationPublisher organizationPublisher)
+public class OrganizationMemberService(IRepositoryFactory repositoryFactory, IEntityMapper entityMapper, IOrganizationPublisher organizationPublisher)
     : IOrganizationMemberService
 {
     /// <summary>
@@ -49,10 +49,10 @@ public class OrganizationMemberService(IRepositoryFactory repositoryFactory, IMa
         foreach (var member in newMembers)
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(member.Customer.Id, cancellationToken);
-            _ = repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(member, organization, customer));
+            _ = repositoryFactory.OrganizationMemberRepository.Add(entityMapper.MapToEntity(member, organization, customer));
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
+        await organizationPublisher.PublishOrganizationsAsync([entityMapper.MapTo(organization)], cancellationToken);
     }
 }

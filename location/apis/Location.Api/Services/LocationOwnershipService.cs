@@ -1,7 +1,7 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Database;
-using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
+using Location.Shared.Mappers;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services;
@@ -26,7 +26,7 @@ public class LocationOwnershipService(
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     TimeProvider timeProvider,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ILocationOutboxPublisher locationOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
     ICachedLocationService cachedLocationService) : ILocationOwnershipService
@@ -70,7 +70,7 @@ public class LocationOwnershipService(
         existingLocation.Organization = existingOrganization;
         existingLocation.UniqueClaimCode = null;
 
-        var location = mapper.MapTo(existingLocation);
+        var location = entityMapper.MapTo(existingLocation);
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
 

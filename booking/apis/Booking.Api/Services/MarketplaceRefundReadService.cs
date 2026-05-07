@@ -28,7 +28,7 @@ public interface IMarketplaceRefundReadService
 
 public class MarketplaceRefundReadService(
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IXeroRefundService xeroRefundService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ICachedCustomerService cachedCustomerService) : IMarketplaceRefundReadService
@@ -133,7 +133,7 @@ public class MarketplaceRefundReadService(
             return await MapWithAvailabilityAsync(refund, cancellationToken);
         }
 
-        var result = mapper.MapTo(refund);
+        var result = graphQlMapper.MapTo(refund);
         result.Events = [];
         result.RequestedByCustomerName = null;
         result.LastError = null;
@@ -148,7 +148,7 @@ public class MarketplaceRefundReadService(
         IReadOnlyDictionary<string, string> actorsById,
         XeroRefundProcessingAvailability availability)
     {
-        var result = mapper.MapTo(refund);
+        var result = graphQlMapper.MapTo(refund);
         foreach (var refundEvent in refundEvents)
         {
             refundEvent.MarketplaceRefund = refund;
@@ -156,7 +156,7 @@ public class MarketplaceRefundReadService(
 
         result.Events = refundEvents.Select(item =>
         {
-            var mappedEvent = mapper.MapTo(item);
+            var mappedEvent = graphQlMapper.MapTo(item);
             mappedEvent.ActorName = item.ActorCustomerId is not null && actorsById.TryGetValue(item.ActorCustomerId, out var actorName)
                 ? actorName
                 : null;

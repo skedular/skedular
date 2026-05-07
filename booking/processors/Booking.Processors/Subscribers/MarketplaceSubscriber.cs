@@ -1,15 +1,15 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
+using Booking.Processors.Mappers;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
-using IMapper = Booking.Processors.Mappers.IMapper;
 using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using Type = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Type;
 
 namespace Booking.Processors.Subscribers;
 
-public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
+public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IEventMapper eventMapper, IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -20,7 +20,7 @@ public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMappe
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Product.OrganizationId);
 
-                    var product = mapper.MapTo(@event);
+                    var product = eventMapper.MapTo(@event);
                     var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(product.Organization.Id, cancellationToken);
                     var existingProduct = await repositoryFactory.ProductRepository.UpsertNakedAsync(product.Id, organization, cancellationToken);
                     if (existingProduct.EventRaisedAt > product.EventRaisedAt)
@@ -36,7 +36,7 @@ public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMappe
 
             case Type.ProductDeleted:
                 {
-                    var product = mapper.MapTo(@event);
+                    var product = eventMapper.MapTo(@event);
                     var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(product.Id, cancellationToken);
                     if (existingProduct is not null && existingProduct.EventRaisedAt > product.EventRaisedAt)
                     {
@@ -80,14 +80,14 @@ public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMappe
             var productTags = organizationTags.Where(item => productVersion.OrganizationTags.Select(tag => tag.Id).Contains(item.Id)).ToList();
             productVersions.Add(
                 repositoryFactory.ProductVersionRepository.Update(
-                    mapper.MergeToEntity(productVersion, productVersionEntity, existingProduct, productTags)));
+                    eventMapper.MergeToEntity(productVersion, productVersionEntity, existingProduct, productTags)));
         }
 
         var untouchedProductVersions = existingProduct.ProductVersions
             .Where(item => !productVersions.Select(productVersion => productVersion.Id).Contains(item.Id)).ToList();
 
         _ = repositoryFactory.ProductRepository.Update(
-            mapper.MergeToEntity(product, existingProduct, organization, untouchedProductVersions.Concat(productVersions)));
+            eventMapper.MergeToEntity(product, existingProduct, organization, untouchedProductVersions.Concat(productVersions)));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

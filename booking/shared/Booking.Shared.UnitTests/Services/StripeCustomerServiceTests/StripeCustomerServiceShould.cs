@@ -36,7 +36,7 @@ public class StripeCustomerServiceShould
     [AutoFakeItEasyData]
     public async Task Create_New_Stripe_Customer_For_Organization_When_Not_Exists(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IRandomHelper randomHelper,
         [Frozen] ICreatable<Stripe.Customer, CustomerCreateOptions> customerCreateService,
         StripeCustomerService sut,
@@ -53,7 +53,7 @@ public class StripeCustomerServiceShould
         A.CallTo(() => repositoryFactory.StripeCustomerRepository).Returns(stripeCustomerRepository);
         A.CallTo(() => stripeCustomerRepository.GetByOrganizationIdAsync(stripeAccountId, organization.Id, cancellationToken))
             .Returns(Task.FromResult<StripeCustomer?>(null));
-        A.CallTo(() => mapper.MapToCustomerCreateOption(organization)).Returns(customerCreateOptions);
+        A.CallTo(() => entityMapper.MapToCustomerCreateOption(organization)).Returns(customerCreateOptions);
         A.CallTo(() => customerCreateService.CreateAsync(customerCreateOptions, A<RequestOptions>._, cancellationToken))
             .Returns(stripeCustomer);
         A.CallTo(() => randomHelper.Generate()).Returns(generatedId);
@@ -101,7 +101,7 @@ public class StripeCustomerServiceShould
     [AutoFakeItEasyData]
     public async Task Create_New_Stripe_Customer_For_Customer_When_Not_Exists(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IRandomHelper randomHelper,
         [Frozen] ICreatable<Stripe.Customer, CustomerCreateOptions> customerCreateService,
         StripeCustomerService sut,
@@ -118,7 +118,7 @@ public class StripeCustomerServiceShould
         A.CallTo(() => repositoryFactory.StripeCustomerRepository).Returns(stripeCustomerRepository);
         A.CallTo(() => stripeCustomerRepository.GetByCustomerIdAsync(stripeAccountId, customer.Id, cancellationToken))
             .Returns(Task.FromResult<StripeCustomer?>(null));
-        A.CallTo(() => mapper.MapToCustomerCreateOption(customer)).Returns(customerCreateOptions);
+        A.CallTo(() => entityMapper.MapToCustomerCreateOption(customer)).Returns(customerCreateOptions);
         A.CallTo(() => customerCreateService.CreateAsync(customerCreateOptions, A<RequestOptions>._, cancellationToken))
             .Returns(stripeCustomer);
         A.CallTo(() => randomHelper.Generate()).Returns(generatedId);

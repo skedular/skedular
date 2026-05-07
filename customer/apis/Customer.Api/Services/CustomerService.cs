@@ -1,6 +1,6 @@
 ﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using Customer.Api.Mappers;
+using Customer.Shared.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
@@ -44,7 +44,7 @@ public class CustomerService(
     IRepositoryFactory repositoryFactory,
     ICustomerOutboxPublisher customerOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IContext context,
     IRandomHelper randomHelper,
     ICachedCustomerService cachedCustomerService,
@@ -58,7 +58,7 @@ public class CustomerService(
         var customer = await cachedCustomerService.GetNullableAsync(cancellationToken);
         if (customer is not null)
         {
-            return mapper.MapTo(customer);
+            return entityMapper.MapTo(customer);
         }
 
         if (!addCustomerIfNotExist)
@@ -66,7 +66,7 @@ public class CustomerService(
             throw new CustomerNotFound();
         }
 
-        return await AddAsync(mapper.MapTo(context), true, cancellationToken);
+        return await AddAsync(entityMapper.MapTo(context), true, cancellationToken);
     }
 
     public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken)
@@ -77,7 +77,7 @@ public class CustomerService(
         var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ??
                        throw new CustomerNotFound();
 
-        return (mapper.MapTo(customer), customer);
+        return (entityMapper.MapTo(customer), customer);
     }
 
     public async Task<Shared.Models.Customer> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
@@ -85,7 +85,7 @@ public class CustomerService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var customer = await cachedCustomerService.GetByIdAsync(id, cancellationToken) ?? throw new CustomerNotFound();
-        var mappedCustomer = mapper.MapTo(customer);
+        var mappedCustomer = entityMapper.MapTo(customer);
 
         if (ignoreAuthorizationCheck)
         {
@@ -116,13 +116,13 @@ public class CustomerService(
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetByVerifiableTokenAsync(verifiableToken, cancellationToken);
-        return customer is null ? (false, null) : (true, mapper.MapTo(customer));
+        return customer is null ? (false, null) : (true, entityMapper.MapTo(customer));
     }
 
     public async Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByEmailAsync(string email, CancellationToken cancellationToken)
     {
         var customer = await repositoryFactory.CustomerRepository.GetByEmailUntrackedAsync(email, cancellationToken);
-        return customer is null ? (false, null) : (true, mapper.MapTo(customer));
+        return customer is null ? (false, null) : (true, entityMapper.MapTo(customer));
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Customer>>, int)> GetPaginatedCustomersAsync(
@@ -137,7 +137,7 @@ public class CustomerService(
             orderByFields,
             cancellationToken);
 
-        return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
+        return (paginatedInfo, edges.Select(entityMapper.MapTo).ToList(), totalCount);
     }
 
     public async Task<Shared.Models.Customer> AddAsync(
@@ -148,7 +148,7 @@ public class CustomerService(
         var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken);
         if (existingCustomer is not null)
         {
-            return mapper.MapTo(existingCustomer);
+            return entityMapper.MapTo(existingCustomer);
         }
 
         if (string.IsNullOrWhiteSpace(customer.Id))
@@ -213,8 +213,8 @@ public class CustomerService(
 
         if (existingCustomer is null)
         {
-            var identities = mapper.MapToEntity(customer.Identities).ToList();
-            existingCustomer = mapper.MapToEntity(
+            var identities = entityMapper.MapToEntity(customer.Identities).ToList();
+            existingCustomer = entityMapper.MapToEntity(
                 customer,
                 identities,
                 defaultOrganization,
@@ -226,15 +226,15 @@ public class CustomerService(
             repositoryFactory.IdentityRepository.AddRange(identities);
             existingCustomer.Identities = identities;
             existingCustomer = repositoryFactory.CustomerRepository.Add(existingCustomer);
-            customer = mapper.MapTo(existingCustomer);
+            customer = entityMapper.MapTo(existingCustomer);
         }
         else
         {
-            var identity = mapper.MapToIdentity(context);
+            var identity = entityMapper.MapToIdentity(context);
             identity.CreatedAt = timeProvider.GetUtcNow();
             existingCustomer.Identities = existingCustomer.Identities.Append(identity).ToList();
             existingCustomer = repositoryFactory.CustomerRepository.Update(existingCustomer);
-            customer = mapper.MapTo(existingCustomer);
+            customer = entityMapper.MapTo(existingCustomer);
         }
 
         customerOutboxPublisher.PublishCustomers([customer], repositoryFactory.UnitOfWork);
@@ -251,7 +251,7 @@ public class CustomerService(
 
         await cachedCustomerService.UpdateAsync([existingCustomer], cancellationToken);
 
-        return mapper.MapTo(existingCustomer);
+        return entityMapper.MapTo(existingCustomer);
     }
 
     public async Task<Shared.Models.Customer> AddIdentityAsync(Identity identity, CancellationToken cancellationToken)
@@ -267,12 +267,12 @@ public class CustomerService(
         {
             await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-            var identityToAdd = mapper.MapTo(identity, existingCustomer);
+            var identityToAdd = entityMapper.MapTo(identity, existingCustomer);
             repositoryFactory.IdentityRepository.Add(identityToAdd);
             existingCustomer.Identities = existingCustomer.Identities.Append(identityToAdd).ToList();
             existingCustomer = repositoryFactory.CustomerRepository.Update(existingCustomer);
 
-            customerOutboxPublisher.PublishCustomers([mapper.MapTo(existingCustomer)], repositoryFactory.UnitOfWork);
+            customerOutboxPublisher.PublishCustomers([entityMapper.MapTo(existingCustomer)], repositoryFactory.UnitOfWork);
 
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
@@ -282,8 +282,8 @@ public class CustomerService(
             await cachedCustomerService.UpdateAsync([existingCustomerToCache], cancellationToken);
         }
 
-        return mapper.MapTo(existingCustomerToCache ??
-                            (await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identity.Id, cancellationToken))!);
+        return entityMapper.MapTo(existingCustomerToCache ??
+                                  (await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identity.Id, cancellationToken))!);
     }
 
     public async Task<Shared.Models.Customer> UpdateIdentityAsync(Identity identity, CancellationToken cancellationToken)
@@ -301,11 +301,11 @@ public class CustomerService(
         {
             await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-            var identityToUpdate = mapper.MergeTo(identity, matchingIdentityToUpdate, existingCustomer);
+            var identityToUpdate = entityMapper.MergeTo(identity, matchingIdentityToUpdate, existingCustomer);
             repositoryFactory.IdentityRepository.Update(identityToUpdate);
             existingCustomer = repositoryFactory.CustomerRepository.Update(existingCustomer);
 
-            customerOutboxPublisher.PublishCustomers([mapper.MapTo(existingCustomer)], repositoryFactory.UnitOfWork);
+            customerOutboxPublisher.PublishCustomers([entityMapper.MapTo(existingCustomer)], repositoryFactory.UnitOfWork);
 
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
@@ -315,7 +315,7 @@ public class CustomerService(
             await cachedCustomerService.UpdateAsync([existingCustomerToCache], cancellationToken);
         }
 
-        return mapper.MapTo(existingCustomerToCache ??
-                            (await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identity.Id, cancellationToken))!);
+        return entityMapper.MapTo(existingCustomerToCache ??
+                                  (await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identity.Id, cancellationToken))!);
     }
 }

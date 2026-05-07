@@ -19,7 +19,7 @@ namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
 // LOG-003: LogInformation when filter option queries (MarketplaceBookingSubscriptionStatuses / MarketplaceBookingPaymentStatuses) resolve successfully — includes option count.
 
 [QueryType]
-public class RootQuery(IMapper mapper, ILogger<RootQuery> logger)
+public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
 {
     [UseResolverScope]
     public IEnumerable<MarketplaceBookingSubscriptionCancellationModeDetails> MarketplaceBookingSubscriptionCancellationModes() =>
@@ -77,7 +77,7 @@ public class RootQuery(IMapper mapper, ILogger<RootQuery> logger)
         string id,
         [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await marketplaceBookingSubscriptionService.GetByIdAsync(id, cancellationToken));
+        graphQlMapper.MapTo(await marketplaceBookingSubscriptionService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -171,7 +171,7 @@ public class RootQuery(IMapper mapper, ILogger<RootQuery> logger)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }

@@ -13,7 +13,7 @@ public class RemoveResourceButtonHandler(
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ILocationPermissionsService locationPermissionsService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IPageNavigator pageNavigator,
     ILocationResourceService locationResourceService) : IViewSubmissionHandler
 {
@@ -27,8 +27,8 @@ public class RemoveResourceButtonHandler(
             viewSubmission.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = RemoveResourceContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var permissions = await locationPermissionsService.GetPermissionsAsync(workspaceMember.Id, context.LocationId, cancellationToken);
         if (!permissions.CanModify)

@@ -11,7 +11,7 @@ namespace MsTeams.Processors.Subscribers;
 
 public class CustomerSubscriber(
     ILogger<CustomerSubscriber> logger,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService)
     : IEventSubscriber<Key, Event>
@@ -22,7 +22,7 @@ public class CustomerSubscriber(
         {
             case Type.CustomerUpserted:
                 {
-                    var customer = mapper.MapTo(@event);
+                    var customer = eventMapper.MapTo(@event);
                     var existingCustomer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customer.Id, cancellationToken);
                     if (existingCustomer.EventRaisedAt > customer.EventRaisedAt)
                     {
@@ -37,7 +37,7 @@ public class CustomerSubscriber(
 
             case Type.CustomerDeleted:
                 {
-                    var customer = mapper.MapTo(@event);
+                    var customer = eventMapper.MapTo(@event);
                     var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken);
                     if (existingCustomer is not null && existingCustomer.EventRaisedAt > customer.EventRaisedAt)
                     {
@@ -66,7 +66,7 @@ public class CustomerSubscriber(
     {
         _ = RebuildIdentities(customer, existingCustomer);
         existingCustomer =
-            repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
+            repositoryFactory.CustomerRepository.Update(eventMapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -86,14 +86,14 @@ public class CustomerSubscriber(
         var itemsToRemove = existingCustomer.Identities.Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
         var updatedItems = existingCustomer.Identities
             .Where(identity => customer.Identities.Any(item => item.Id == identity.Id))
-            .Select(identity => repositoryFactory.IdentityRepository.Update(mapper.MergeToEntity(
+            .Select(identity => repositoryFactory.IdentityRepository.Update(eventMapper.MergeToEntity(
                 customer.Identities.First(item => item.Id == identity.Id),
                 identity,
                 existingCustomer)))
             .ToList();
         var addedItems = customer.Identities
             .Where(identity => existingCustomer.Identities.All(item => item.Id != identity.Id))
-            .Select(identity => repositoryFactory.IdentityRepository.Add(mapper.MapToEntity(identity, existingCustomer)))
+            .Select(identity => repositoryFactory.IdentityRepository.Add(eventMapper.MapToEntity(identity, existingCustomer)))
             .ToList();
 
         repositoryFactory.IdentityRepository.RemoveRange(itemsToRemove);

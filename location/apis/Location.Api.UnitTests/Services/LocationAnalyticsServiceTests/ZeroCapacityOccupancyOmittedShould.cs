@@ -31,7 +31,7 @@ public class ZeroCapacityOccupancyOmittedShould
         [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ILocationService locationService,
+        LocationAnalyticsService sut,
         CancellationToken cancellationToken)
     {
         // Arrange
@@ -78,9 +78,6 @@ public class ZeroCapacityOccupancyOmittedShould
         // DailyRoomBookingCountRecording — empty
         // (in-memory context has nothing seeded)
 
-        var sut = new LocationAnalyticsService(
-            repositoryFactory, locationService, cachedCustomerService, organizationAuthorizationService);
-
         // Act
         var result = await sut.GetAnalyticsAsync(LocationId, from, until, cancellationToken);
 
@@ -96,7 +93,7 @@ public class ZeroCapacityOccupancyOmittedShould
         [Frozen] ILocationRepository locationRepository,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ILocationService locationService,
+        LocationAnalyticsService sut,
         CancellationToken cancellationToken)
     {
         // Arrange
@@ -113,9 +110,6 @@ public class ZeroCapacityOccupancyOmittedShould
         A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(CustomerId);
         A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrgId, CustomerId, A<CancellationToken>._))
             .Returns(false);
-
-        var sut = new LocationAnalyticsService(
-            repositoryFactory, locationService, cachedCustomerService, organizationAuthorizationService);
 
         var from = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);
         var until = new DateTimeOffset(2026, 4, 7, 0, 0, 0, TimeSpan.Zero);

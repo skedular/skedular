@@ -15,7 +15,7 @@ public class PublishTeamsShould
     [Theory]
     [AutoFakeItEasyData]
     public void Publish_All_Teams_And_Log_Outcome(
-        [Frozen] IMapper mapper,
+        [Frozen] IEventMapper eventMapper,
         [Frozen] IContext context,
         [Frozen] IKafkaOutboxEventPublisher<Key, Event> publisher,
         [Frozen] ILogger<TeamOutboxPublisher> logger,
@@ -25,7 +25,7 @@ public class PublishTeamsShould
         var teams = new List<TeamModel> { new() { Id = "team-1" }, new() { Id = "team-2", DeletedAt = DateTimeOffset.UtcNow } };
 
         A.CallTo(() => context.GetCorrelationId()).Returns("corr-id");
-        A.CallTo(() => mapper.MapTo(A<TeamModel>._)).Returns(new Api.Shared.Clients.Events.Skedular.Team.V1.Team());
+        A.CallTo(() => eventMapper.MapTo(A<TeamModel>._)).Returns(new Api.Shared.Clients.Events.Skedular.Team.V1.Team());
 
         sut.PublishTeams(teams, unitOfWork);
 

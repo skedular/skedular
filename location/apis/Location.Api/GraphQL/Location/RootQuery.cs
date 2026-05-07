@@ -14,7 +14,7 @@ using Location.Shared.Services.Cache;
 namespace Location.Api.GraphQL.Location;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public IEnumerable<LocationTypeDetails> LocationTypes() =>
@@ -25,7 +25,7 @@ public class RootQuery(IMapper mapper)
 
     [UseResolverScope]
     public async Task<LocationDetails?> LocationAsync(string id, [Service] ILocationService locationService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await locationService.GetByIdAsync(id, false, cancellationToken));
+        graphQlMapper.MapTo(await locationService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -34,7 +34,7 @@ public class RootQuery(IMapper mapper)
         [ID] string id,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await locationService.GetByIdAsync(id, true, cancellationToken));
+        graphQlMapper.MapTo(await locationService.GetByIdAsync(id, true, cancellationToken));
 
     [UseResolverScope]
     public async Task<Connection<LocationEdge>> LocationsAsync(
@@ -75,7 +75,7 @@ public class RootQuery(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }
@@ -127,7 +127,7 @@ public class RootQuery(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }
@@ -140,6 +140,6 @@ public class RootQuery(IMapper mapper)
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
-            ? mapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, organizationCustomDomain, cancellationToken))
+            ? graphQlMapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, organizationCustomDomain, cancellationToken))
             : null;
 }

@@ -24,7 +24,7 @@ public class TeamGrpcService(
     IGrpcAuthenticator grpcAuthenticator,
     ITeamService teamService,
     ITeamAuthorizationService teamAuthorizationService,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     ILogger<TeamGrpcService> logger) : TeamService.TeamServiceBase
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
@@ -41,7 +41,7 @@ public class TeamGrpcService(
         var team = await teamService.GetByIdAsync(request.Id, true, context.CancellationToken) ?? throw new TeamNotFound();
         logger.LogInformation("gRPC Admin_Get resolved team {TeamId}", request.Id);
 
-        return mapper.MapToGrpcResponse(team);
+        return grpcMapper.MapToGrpcResponse(team);
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Team.Core.V1.Team> Get(GetInput request, ServerCallContext context)
@@ -51,7 +51,7 @@ public class TeamGrpcService(
         var team = await teamService.GetByIdAsync(request.Id, false, context.CancellationToken) ?? throw new TeamNotFound();
         logger.LogInformation("gRPC Get resolved team {TeamId}", request.Id);
 
-        return mapper.MapToGrpcResponse(team);
+        return grpcMapper.MapToGrpcResponse(team);
     }
 
     public override async Task<TeamConnection> GetPaginatedTeams(GetPaginatedTeamsInput request, ServerCallContext context)
@@ -94,7 +94,7 @@ public class TeamGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
 
         if (totalCount == 0)
         {
@@ -126,10 +126,10 @@ public class TeamGrpcService(
 
         ArgumentException.ThrowIfNullOrEmpty(request.OrganizationId);
 
-        var added = await teamService.AddAsync(mapper.MapTo(request), context.CancellationToken);
+        var added = await teamService.AddAsync(grpcMapper.MapTo(request), context.CancellationToken);
         logger.LogInformation("gRPC Add created team {TeamId}", added.Id);
 
-        return mapper.MapToGrpcResponse(added);
+        return grpcMapper.MapToGrpcResponse(added);
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Team.Core.V1.Team> Update(UpdateInput request, ServerCallContext context)
@@ -138,10 +138,10 @@ public class TeamGrpcService(
 
         ArgumentException.ThrowIfNullOrEmpty(request.OrganizationId);
 
-        var updated = await teamService.UpdateAsync(mapper.MapTo(request), true, context.CancellationToken);
+        var updated = await teamService.UpdateAsync(grpcMapper.MapTo(request), true, context.CancellationToken);
         logger.LogInformation("gRPC Update modified team {TeamId}", updated.Id);
 
-        return mapper.MapToGrpcResponse(updated);
+        return grpcMapper.MapToGrpcResponse(updated);
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Team.Core.V1.Team> Remove(
@@ -153,6 +153,6 @@ public class TeamGrpcService(
         var deleted = await teamService.DeleteAsync(request.Id, context.CancellationToken);
         logger.LogInformation("gRPC Remove deleted team {TeamId}", request.Id);
 
-        return mapper.MapToGrpcResponse(deleted);
+        return grpcMapper.MapToGrpcResponse(deleted);
     }
 }

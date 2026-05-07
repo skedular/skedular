@@ -12,11 +12,11 @@ using Marketplace.Shared.Models;
 namespace Marketplace.Api.GraphQL.Product;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<ProductDetails?> ProductAsync(string id, [Service] IProductService productService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await productService.GetByIdAsync(id, cancellationToken));
+        graphQlMapper.MapTo(await productService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -32,7 +32,7 @@ public class RootQuery(IMapper mapper)
         string id,
         [Service] IProductVersionService productVersionService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await productVersionService.GetByIdAsync(id, cancellationToken));
+        graphQlMapper.MapTo(await productVersionService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -73,7 +73,7 @@ public class RootQuery(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }

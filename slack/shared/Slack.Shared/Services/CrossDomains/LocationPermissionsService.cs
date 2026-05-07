@@ -17,7 +17,7 @@ public class LocationPermissionsService(
     ApplicationConfiguration applicationConfiguration,
     LocationConfiguration locationConfiguration,
     Api.Shared.Grpc.Skedular.Location.Core.V1.LocationService.LocationServiceClient locationServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache)
     : ILocationPermissionsService
 {
@@ -26,7 +26,7 @@ public class LocationPermissionsService(
     public async Task<LocationPermissions> GetPermissionsAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(workspaceMemberId, locationId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await locationServiceClient.GetPermissionsAsync(
                     new GetPermissionsInput { Id = locationId },
                     locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),

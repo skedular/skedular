@@ -16,7 +16,7 @@ public interface IOrganizationPublisher
 
 public class OrganizationPublisher(
     ApplicationConfiguration applicationConfiguration,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IContext context,
     IKafkaPublisher<Key, Event> publisher)
     : IOrganizationPublisher
@@ -32,7 +32,7 @@ public class OrganizationPublisher(
                     applicationConfiguration.AppSource,
                     organization.IsDeleted() ? Type.OrganizationDeleted : Type.OrganizationUpserted,
                     context.GetCorrelationId()),
-                Data = new Data { Organization = mapper.MapTo(organization) }
+                Data = new Data { Organization = eventMapper.MapTo(organization) }
             },
             cancellationToken)));
 }

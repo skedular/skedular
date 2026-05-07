@@ -37,7 +37,7 @@ public class TagService(
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     ICachedTagService cachedTagService,
     ICachedOrganizationService cachedOrganizationService) : ITagService
@@ -62,7 +62,7 @@ public class TagService(
             }
         }
 
-        return mapper.MapTo(tag);
+        return graphQlMapper.MapTo(tag);
     }
 
     public async Task<Tag> AddAsync(Tag tag, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
@@ -119,12 +119,12 @@ public class TagService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var tagEntity = mapper.MapTo(tag, existingOrganization);
+        var tagEntity = graphQlMapper.MapTo(tag, existingOrganization);
         _ = repositoryFactory.TagRepository.Add(tagEntity);
 
         organizationOutboxPublisher.PublishOrganizations(
         [
-            mapper.MapTo(
+            graphQlMapper.MapTo(
                 existingOrganization,
                 organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))
         ], repositoryFactory.UnitOfWork);
@@ -165,9 +165,9 @@ public class TagService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var deletedTag = mapper.MapTo(repositoryFactory.TagRepository.Remove(tag));
+        var deletedTag = graphQlMapper.MapTo(repositoryFactory.TagRepository.Remove(tag));
 
-        var mappedOrganization = mapper.MapTo(
+        var mappedOrganization = graphQlMapper.MapTo(
             existingOrganization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
         mappedOrganization.Tags = mappedOrganization.Tags.Where(item => item.Id != tagId).ToList();
@@ -208,10 +208,10 @@ public class TagService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         repositoryFactory.TagRepository.RemoveRange(tags);
-        var deletedTags = tags.Select(mapper.MapTo).ToList();
+        var deletedTags = tags.Select(graphQlMapper.MapTo).ToList();
 
         var mappedOrganizations = existingOrganizations.Select(item =>
-            mapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))).ToList();
+            graphQlMapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))).ToList();
         foreach (var mappedOrganization in mappedOrganizations)
         {
             mappedOrganization.Tags = mappedOrganization.Tags.Where(item => !ids.Contains(item.Id)).ToList();
@@ -258,9 +258,10 @@ public class TagService(
             cancellationToken);
 
         return (paginatedInfo,
-            mapper.MapTo(
+            graphQlMapper.MapTo(
                     edges,
-                    mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)))
+                    graphQlMapper.MapTo(organization,
+                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)))
                 .ToList(),
             totalCount);
     }
@@ -304,11 +305,11 @@ public class TagService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        tag = mapper.MapTo(repositoryFactory.TagRepository.Update(mapper.MergeTo(tag, existingTag, existingOrganization)));
+        tag = graphQlMapper.MapTo(repositoryFactory.TagRepository.Update(graphQlMapper.MergeTo(tag, existingTag, existingOrganization)));
 
         organizationOutboxPublisher.PublishOrganizations(
         [
-            mapper.MapTo(
+            graphQlMapper.MapTo(
                 existingOrganization,
                 organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))
         ], repositoryFactory.UnitOfWork);

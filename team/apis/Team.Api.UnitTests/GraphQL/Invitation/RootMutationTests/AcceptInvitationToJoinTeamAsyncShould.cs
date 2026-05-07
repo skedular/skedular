@@ -12,7 +12,7 @@ public class AcceptInvitationToJoinTeamAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_information_for_accept_invitation_mutation(
-        [Frozen] IMapper mapper,
+        [Frozen] IGraphQlMapper graphQlMapper,
         [Frozen] IInvitationService invitationService,
         [Frozen] ILogger<RootMutation> logger,
         RootMutation sut,
@@ -23,7 +23,7 @@ public class AcceptInvitationToJoinTeamAsyncShould
         var invitationDetails = new InviteCustomerToJoinTeamDetails();
 
         A.CallTo(() => invitationService.AcceptInvitationToJoinAsync(input.Id, cancellationToken)).Returns(invitation);
-        A.CallTo(() => mapper.MapTo(invitation)).Returns(invitationDetails);
+        A.CallTo(() => graphQlMapper.MapTo(invitation)).Returns(invitationDetails);
 
         await sut.AcceptInvitationToJoinTeamAsync(input, invitationService, cancellationToken);
 

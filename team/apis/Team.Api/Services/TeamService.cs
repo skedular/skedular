@@ -3,8 +3,8 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
-using Team.Api.Mappers;
 using Team.Api.Services.Authorization;
+using Team.Shared.Mappers;
 using Team.Shared.Models;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
@@ -43,7 +43,7 @@ public class TeamService(
     ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ITeamOutboxPublisher teamOutboxPublisher,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ITeamMemberService teamMemberService,
     ICachedTeamService cachedTeamService,
     ILogger<TeamService> logger) : ITeamService
@@ -127,7 +127,7 @@ public class TeamService(
             }
         }
 
-        var teamEntity = mapper.MapTo(team, organization, primaryLocation);
+        var teamEntity = entityMapper.MapTo(team, organization, primaryLocation);
         teamEntity.PrimaryLocation = primaryLocation;
         var rebuiltTeamMembers = await teamMemberService.BuildMembersAsync(team.TeamMembers, teamEntity, customerId, organization, cancellationToken);
 
@@ -137,7 +137,7 @@ public class TeamService(
         teamEntity = repositoryFactory.TeamRepository.Add(teamEntity);
 
         repositoryFactory.TeamMemberRepository.AddRange(rebuiltTeamMembers);
-        team = mapper.MapTo(teamEntity);
+        team = entityMapper.MapTo(teamEntity);
 
         teamOutboxPublisher.PublishTeams([team], repositoryFactory.UnitOfWork);
 
@@ -217,7 +217,7 @@ public class TeamService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var deletedTeam = mapper.MapTo(repositoryFactory.TeamRepository.Remove(existingTeam));
+        var deletedTeam = entityMapper.MapTo(repositoryFactory.TeamRepository.Remove(existingTeam));
 
         teamOutboxPublisher.PublishTeams([deletedTeam], repositoryFactory.UnitOfWork);
 
@@ -352,7 +352,7 @@ public class TeamService(
 
         await cachedTeamService.UpdateAsync(teams, cancellationToken);
 
-        return teams.Select(mapper.MapTo).ToList();
+        return teams.Select(entityMapper.MapTo).ToList();
     }
 
     private async Task<Shared.Models.Team> UpdateInternalAsync(
@@ -396,7 +396,7 @@ public class TeamService(
             existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
         }
 
-        team = mapper.MapTo(repositoryFactory.TeamRepository.Update(mapper.MergeTo(team, existingTeam, organization, primaryLocation)));
+        team = entityMapper.MapTo(repositoryFactory.TeamRepository.Update(entityMapper.MergeTo(team, existingTeam, organization, primaryLocation)));
 
         teamOutboxPublisher.PublishTeams([team], repositoryFactory.UnitOfWork);
 
@@ -418,7 +418,7 @@ public class TeamService(
             throw new UnauthorizedAccessException();
         }
 
-        var mappedTeam = mapper.MapTo(team);
+        var mappedTeam = entityMapper.MapTo(team);
         if (!string.IsNullOrWhiteSpace(customerId))
         {
             mappedTeam.Permissions = new Permissions

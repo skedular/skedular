@@ -18,7 +18,7 @@ public class OrganizationProductTagService(
     ApplicationConfiguration applicationConfiguration,
     OrganizationConfiguration organizationConfiguration,
     OrganizationTagsService.OrganizationTagsServiceClient organizationTagsServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache) : IOrganizationProductTagService
 {
     private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
@@ -26,7 +26,7 @@ public class OrganizationProductTagService(
     public async Task<OrganizationProductTag> AdminGetAsync(string productTagId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(productTagId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await organizationTagsServiceClient.Admin_GetProductTagAsync(
                     new Admin_GetProductTagInput { Id = productTagId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
@@ -36,7 +36,7 @@ public class OrganizationProductTagService(
     public async Task<OrganizationProductTag> GetAsync(string workspaceMemberId, string productTagId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(productTagId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await organizationTagsServiceClient.GetProductTagAsync(
                     new GetProductTagInput { Id = productTagId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),

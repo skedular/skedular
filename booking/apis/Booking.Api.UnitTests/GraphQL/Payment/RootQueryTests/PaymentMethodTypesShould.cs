@@ -6,11 +6,10 @@ namespace Booking.Api.UnitTests.GraphQL.Payment.RootQueryTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class PaymentMethodTypesShould
 {
-    [Fact]
-    public void Return_All_Payment_Method_Types()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_All_Payment_Method_Types(RootQuery sut)
     {
-        var sut = new RootQuery();
-
         var result = sut.PaymentMethodTypes().ToList();
 
         result.Count.ShouldBe(2);

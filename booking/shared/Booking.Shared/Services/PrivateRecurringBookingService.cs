@@ -35,7 +35,7 @@ public interface IPrivateRecurringBookingService
 public class PrivateRecurringBookingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ITemporalOutboxService temporalOutboxService) : IPrivateRecurringBookingService
 {
     public async Task<RecurringBooking> AddAsync(
@@ -63,7 +63,7 @@ public class PrivateRecurringBookingService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var recurringBookingEntity = mapper.MapTo(
+        var recurringBookingEntity = entityMapper.MapTo(
             recurringBooking,
             customerEntities,
             organizations,
@@ -77,7 +77,7 @@ public class PrivateRecurringBookingService(
         recurringBookingEntity.Channel = BookingChannelConstants.Private;
 
         recurringBookingEntity = repositoryFactory.RecurringBookingRepository.Add(recurringBookingEntity);
-        recurringBooking = mapper.MapTo(recurringBookingEntity);
+        recurringBooking = entityMapper.MapTo(recurringBookingEntity);
 
         temporalOutboxService.StartBookPrivateRecurringResources(
             new BookPrivateRecurringResourcesInput(recurringBooking.Id),
@@ -120,7 +120,7 @@ public class PrivateRecurringBookingService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var recurringBookingEntity = mapper.MergeTo(
+        var recurringBookingEntity = entityMapper.MergeTo(
             recurringBooking,
             existingRecurringBooking,
             customerEntities,
@@ -133,7 +133,7 @@ public class PrivateRecurringBookingService(
             null);
 
         recurringBookingEntity = repositoryFactory.RecurringBookingRepository.Update(recurringBookingEntity);
-        recurringBooking = mapper.MapTo(recurringBookingEntity);
+        recurringBooking = entityMapper.MapTo(recurringBookingEntity);
 
         temporalOutboxService.SignalWorkflowBookPrivateRecurringResourcesUpdated(recurringBooking.Id, repositoryFactory.UnitOfWork);
 
@@ -157,7 +157,7 @@ public class PrivateRecurringBookingService(
 
         existingRecurringBooking.DeletedByCustomer = deletedByCustomer;
         existingRecurringBooking = repositoryFactory.RecurringBookingRepository.Update(existingRecurringBooking);
-        var deletedRecurringBooking = mapper.MapTo(repositoryFactory.RecurringBookingRepository.Remove(existingRecurringBooking));
+        var deletedRecurringBooking = entityMapper.MapTo(repositoryFactory.RecurringBookingRepository.Remove(existingRecurringBooking));
 
         temporalOutboxService.SignalWorkflowBookPrivateRecurringResourcesDeleted(existingRecurringBooking.Id, repositoryFactory.UnitOfWork);
 

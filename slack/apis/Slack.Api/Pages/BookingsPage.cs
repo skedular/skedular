@@ -42,7 +42,7 @@ public class BookingsPage(
     ICommonComponents commonComponents,
     IBookingComponents bookingComponents,
     IBookingsPageContextService bookingsPageContextService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     TimeProvider timeProvider,
     IBookingService bookingService) :
     IBookingsPage,
@@ -70,8 +70,8 @@ public class BookingsPage(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         switch (action.ActionId)
         {
@@ -125,8 +125,8 @@ public class BookingsPage(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         switch (action.ActionId)
         {
@@ -158,8 +158,8 @@ public class BookingsPage(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         switch (action.ActionId)
         {

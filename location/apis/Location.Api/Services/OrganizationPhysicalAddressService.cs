@@ -1,8 +1,8 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
-using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
+using Location.Shared.Mappers;
 using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
@@ -22,7 +22,7 @@ public class LocationPhysicalAddressService(
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ILocationOutboxPublisher locationOutboxPublisher,
     ICachedLocationService cachedLocationService) : ILocationPhysicalAddressService
 {
@@ -66,13 +66,13 @@ public class LocationPhysicalAddressService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var locationPhysicalAddressEntity = mapper.MapTo(locationPhysicalAddress, existingLocation);
+        var locationPhysicalAddressEntity = entityMapper.MapTo(locationPhysicalAddress, existingLocation);
         repositoryFactory.LocationPhysicalAddressRepository.Add(locationPhysicalAddressEntity);
 
         existingLocation.PhysicalAddress = locationPhysicalAddressEntity;
-        var mappedLocation = mapper.MapTo(existingLocation);
+        var mappedLocation = entityMapper.MapTo(existingLocation);
 
-        locationOutboxPublisher.PublishLocations([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
+        locationOutboxPublisher.PublishLocations([entityMapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -111,12 +111,12 @@ public class LocationPhysicalAddressService(
     {
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        existingLocationPhysicalAddress = mapper.MergeTo(locationPhysicalAddress, existingLocationPhysicalAddress, existingLocation);
+        existingLocationPhysicalAddress = entityMapper.MergeTo(locationPhysicalAddress, existingLocationPhysicalAddress, existingLocation);
         repositoryFactory.LocationPhysicalAddressRepository.Update(existingLocationPhysicalAddress);
 
         existingLocation.PhysicalAddress = existingLocationPhysicalAddress;
 
-        var mappedLocation = mapper.MapTo(existingLocation);
+        var mappedLocation = entityMapper.MapTo(existingLocation);
         locationOutboxPublisher.PublishLocations([mappedLocation], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

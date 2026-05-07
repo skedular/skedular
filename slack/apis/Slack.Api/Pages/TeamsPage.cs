@@ -44,7 +44,7 @@ public class TeamsPage(
     ITeamPermissionsService teamPermissionsService,
     IBookingPermissionsService bookingPermissionsService,
     ITeamService teamService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IBookingsPageContextService bookingsPageContextService) :
     ITeamsPage,
     IAsyncPageRenderingCallbacks,
@@ -67,8 +67,8 @@ public class TeamsPage(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         switch (action.ActionId)
         {
@@ -120,8 +120,8 @@ public class TeamsPage(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         if (action.SelectedOption.Value.StartsWith(BookingActionTypes.Bookings))
         {
@@ -349,7 +349,7 @@ public class TeamsPage(
             var matchedTeam = teamsWithChannel.FirstOrDefault(replicatedTeam => replicatedTeam.Id == item.Id);
             if (matchedTeam is not null)
             {
-                item.DailyUpdateChannel = mapper.MapTo(matchedTeam.DailyUpdateChannel);
+                item.DailyUpdateChannel = entityMapper.MapTo(matchedTeam.DailyUpdateChannel);
             }
 
             return item;

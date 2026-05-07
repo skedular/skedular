@@ -31,7 +31,7 @@ public class ConfirmPaymentAsyncShould
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
         [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
@@ -75,7 +75,7 @@ public class ConfirmPaymentAsyncShould
             .Returns(organization);
         A.CallTo(() => organizationAuthorizationService.CanModifyPaymentMethodAsync(organizationId, customerId, cancellationToken)).Returns(true);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
-        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(mappedBooking);
+        A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(mappedBooking);
 
         var result = await sut.ConfirmPaymentAsync(bookingId, cancellationToken);
 

@@ -11,7 +11,7 @@ public class AddTeamAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_information_for_add_team_mutation(
-        [Frozen] IMapper mapper,
+        [Frozen] IGraphQlMapper graphQlMapper,
         [Frozen] ITeamService teamService,
         [Frozen] ILogger<RootMutation> logger,
         RootMutation sut,
@@ -21,9 +21,9 @@ public class AddTeamAsyncShould
     {
         var teamDetails = new TeamDetails();
 
-        A.CallTo(() => mapper.MapTo(input)).Returns(team);
+        A.CallTo(() => graphQlMapper.MapTo(input)).Returns(team);
         A.CallTo(() => teamService.AddAsync(team, cancellationToken)).Returns(team);
-        A.CallTo(() => mapper.MapTo(team)).Returns(teamDetails);
+        A.CallTo(() => graphQlMapper.MapTo(team)).Returns(teamDetails);
 
         await sut.AddTeamAsync(input, teamService, cancellationToken);
 

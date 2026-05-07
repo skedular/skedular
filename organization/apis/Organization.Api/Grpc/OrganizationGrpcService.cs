@@ -26,7 +26,7 @@ public class OrganizationGrpcService(
     IOrganizationService organizationService,
     IOrganizationMemberService organizationMemberService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    IMapper mapper) : OrganizationService.OrganizationServiceBase
+    IGrpcMapper grpcMapper) : OrganizationService.OrganizationServiceBase
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
@@ -39,7 +39,7 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await organizationTermsOfUseService.GetActiveTermsOfUseAsync(context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await organizationTermsOfUseService.GetActiveTermsOfUseAsync(context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization> Admin_Get(
@@ -55,7 +55,7 @@ public class OrganizationGrpcService(
                                context.CancellationToken) ??
                            throw new OrganizationNotFound();
 
-        return mapper.MapToGrpcResponse(organization);
+        return grpcMapper.MapToGrpcResponse(organization);
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization> Admin_Add(
@@ -64,9 +64,9 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
+        return grpcMapper.MapToGrpcResponse(
             await organizationService.AddAsync(
-                mapper.MapTo(request),
+                grpcMapper.MapTo(request),
                 request.OfferingCode,
                 true,
                 context.CancellationToken));
@@ -85,7 +85,7 @@ public class OrganizationGrpcService(
                                context.CancellationToken) ??
                            throw new OrganizationNotFound();
 
-        return mapper.MapToGrpcResponse(organization);
+        return grpcMapper.MapToGrpcResponse(organization);
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization> Admin_AddMember(
@@ -94,8 +94,8 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await organizationMemberService.AdminAddMemberAsync(request.Id, mapper.MapTo(request), context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(
+            await organizationMemberService.AdminAddMemberAsync(request.Id, grpcMapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<MemberConnection> GetPaginatedMembers(GetPaginatedMembersInput request, ServerCallContext context)
@@ -138,7 +138,7 @@ public class OrganizationGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
         return connection;
     }
 

@@ -6,7 +6,7 @@ using HotChocolate.Types;
 namespace Booking.Api.GraphQL.Booking;
 
 [MutationType]
-public class MarketplaceRefundRootMutation(IMapper mapper)
+public class MarketplaceRefundRootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<MarketplaceRefundPayload> MarkMarketplaceRefundPendingAccountingAsync(
@@ -19,7 +19,7 @@ public class MarketplaceRefundRootMutation(IMapper mapper)
             input.RefundAmount,
             input.Reason,
             cancellationToken);
-        return new MarketplaceRefundPayload { ClientMutationId = input.ClientMutationId, MarketplaceRefund = mapper.MapTo(refund) };
+        return new MarketplaceRefundPayload { ClientMutationId = input.ClientMutationId, MarketplaceRefund = graphQlMapper.MapTo(refund) };
     }
 
     [UseResolverScope]
@@ -29,7 +29,7 @@ public class MarketplaceRefundRootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var refund = await marketplaceRefundAdminService.CompleteAsync(input.Id, input.Reason, cancellationToken);
-        return new MarketplaceRefundPayload { ClientMutationId = input.ClientMutationId, MarketplaceRefund = mapper.MapTo(refund) };
+        return new MarketplaceRefundPayload { ClientMutationId = input.ClientMutationId, MarketplaceRefund = graphQlMapper.MapTo(refund) };
     }
 
     [UseResolverScope]
@@ -39,7 +39,7 @@ public class MarketplaceRefundRootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var refund = await marketplaceRefundAdminService.MarkManualRequiredAsync(input.Id, input.Reason, cancellationToken);
-        return new MarketplaceRefundPayload { ClientMutationId = input.ClientMutationId, MarketplaceRefund = mapper.MapTo(refund) };
+        return new MarketplaceRefundPayload { ClientMutationId = input.ClientMutationId, MarketplaceRefund = graphQlMapper.MapTo(refund) };
     }
 
     [UseResolverScope]
@@ -49,7 +49,7 @@ public class MarketplaceRefundRootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var refund = await marketplaceRefundAdminService.MarkManualCompletedAsync(input.Id, input.Reason, cancellationToken);
-        return new MarketplaceRefundPayload { ClientMutationId = input.ClientMutationId, MarketplaceRefund = mapper.MapTo(refund) };
+        return new MarketplaceRefundPayload { ClientMutationId = input.ClientMutationId, MarketplaceRefund = graphQlMapper.MapTo(refund) };
     }
 
     [UseResolverScope]
@@ -59,7 +59,7 @@ public class MarketplaceRefundRootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var refund = await marketplaceRefundAdminService.FailAsync(input.Id, input.Reason, cancellationToken);
-        return new MarketplaceRefundPayload { ClientMutationId = input.ClientMutationId, MarketplaceRefund = mapper.MapTo(refund) };
+        return new MarketplaceRefundPayload { ClientMutationId = input.ClientMutationId, MarketplaceRefund = graphQlMapper.MapTo(refund) };
     }
 
     [UseResolverScope]
@@ -69,6 +69,6 @@ public class MarketplaceRefundRootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var refund = await marketplaceRefundAdminService.ProcessInXeroAsync(input.Id, cancellationToken);
-        return new MarketplaceRefundPayload { ClientMutationId = input.ClientMutationId, MarketplaceRefund = mapper.MapTo(refund) };
+        return new MarketplaceRefundPayload { ClientMutationId = input.ClientMutationId, MarketplaceRefund = graphQlMapper.MapTo(refund) };
     }
 }

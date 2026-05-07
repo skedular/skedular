@@ -6,7 +6,7 @@ using Organization.Api.Services;
 namespace Organization.Api.GraphQL.Organization;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<OrganizationPayload> AddOrganizationAsync(
@@ -16,7 +16,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(await organizationService.AddAsync(mapper.MapTo(input), null, false, cancellationToken))!
+            Organization = graphQlMapper.MapTo(await organizationService.AddAsync(graphQlMapper.MapTo(input), null, false, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -27,7 +27,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(await organizationService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+            Organization = graphQlMapper.MapTo(await organizationService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -38,7 +38,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(await organizationService.DeleteAsync(input.Id, input.CustomDomain, cancellationToken))!
+            Organization = graphQlMapper.MapTo(await organizationService.DeleteAsync(input.Id, input.CustomDomain, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -49,7 +49,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(
+            Organization = graphQlMapper.MapTo(
                 await organizationService.UpdateMarketplaceListingMetadataAsync(
                     input.Id,
                     input.CustomDomain,
@@ -65,7 +65,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(
+            Organization = graphQlMapper.MapTo(
                 await organizationService.UpdateOrganizationBillingSettingsAsync(
                     input.Id,
                     input.CustomDomain,

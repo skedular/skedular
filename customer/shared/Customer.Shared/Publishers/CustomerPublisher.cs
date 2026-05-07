@@ -16,7 +16,7 @@ public interface ICustomerPublisher
 
 public class CustomerPublisher(
     ApplicationConfiguration applicationConfiguration,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IContext context,
     IKafkaPublisher<Key, Event> publisher)
     : ICustomerPublisher
@@ -31,7 +31,7 @@ public class CustomerPublisher(
                     applicationConfiguration.AppSource,
                     customer.IsDeleted() ? Type.CustomerDeleted : Type.CustomerUpserted,
                     context.GetCorrelationId()),
-                Data = new Data { Customer = mapper.MapTo(customer) }
+                Data = new Data { Customer = eventMapper.MapTo(customer) }
             },
             cancellationToken)));
 }

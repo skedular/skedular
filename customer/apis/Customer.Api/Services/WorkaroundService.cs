@@ -1,4 +1,4 @@
-using Customer.Api.Mappers;
+using Customer.Shared.Mappers;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 
@@ -10,7 +10,8 @@ public interface IWorkaroundService
     Task RepublishAllCustomersAsync(CancellationToken cancellationToken);
 }
 
-public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper mapper, ICustomerPublisher customerPublisher) : IWorkaroundService
+public class WorkaroundService(IRepositoryFactory repositoryFactory, IEntityMapper entityMapper, ICustomerPublisher customerPublisher)
+    : IWorkaroundService
 {
     public async Task RepublishCustomerAsync(string customerId, CancellationToken cancellationToken)
     {
@@ -20,12 +21,12 @@ public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper map
             return;
         }
 
-        await customerPublisher.PublishCustomersAsync([mapper.MapTo(customer)], cancellationToken);
+        await customerPublisher.PublishCustomersAsync([entityMapper.MapTo(customer)], cancellationToken);
     }
 
     public async Task RepublishAllCustomersAsync(CancellationToken cancellationToken)
     {
         var customers = await repositoryFactory.CustomerRepository.GetAllUntrackedAsync(cancellationToken);
-        await customerPublisher.PublishCustomersAsync(customers.Select(mapper.MapTo).ToList(), cancellationToken);
+        await customerPublisher.PublishCustomersAsync(customers.Select(entityMapper.MapTo).ToList(), cancellationToken);
     }
 }

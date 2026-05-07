@@ -21,7 +21,7 @@ public class RecurringBookingServiceShould
     public async Task GetByIdAsync_Returns_RecurringBooking_For_Involved_Customer(
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedRecurringBookingService cachedRecurringBookingService,
-        [Frozen] IMapper sharedMapper,
+        [Frozen] IEntityMapper sharedEntityMapper,
         RecurringBookingService sut,
         CancellationToken cancellationToken)
     {
@@ -35,7 +35,7 @@ public class RecurringBookingServiceShould
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedRecurringBookingService.GetByIdAsync(booking.Id, cancellationToken)).Returns(booking);
-        A.CallTo(() => sharedMapper.MapTo(booking)).Returns(mappedBooking);
+        A.CallTo(() => sharedEntityMapper.MapTo(booking)).Returns(mappedBooking);
 
         var result = await sut.GetByIdAsync(booking.Id, cancellationToken);
 
@@ -50,7 +50,7 @@ public class RecurringBookingServiceShould
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedRecurringBookingService cachedRecurringBookingService,
-        [Frozen] IMapper sharedMapper,
+        [Frozen] IEntityMapper sharedEntityMapper,
         RecurringBookingService sut,
         CancellationToken cancellationToken)
     {
@@ -76,7 +76,7 @@ public class RecurringBookingServiceShould
             .Returns([organization]);
         A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync("org-1", "customer-1", cancellationToken))
             .Returns(true);
-        A.CallTo(() => sharedMapper.MapTo(booking)).Returns(mappedBooking);
+        A.CallTo(() => sharedEntityMapper.MapTo(booking)).Returns(mappedBooking);
 
         var result = await sut.GetByIdAsync(booking.Id, cancellationToken);
 

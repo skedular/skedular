@@ -50,7 +50,7 @@ public class OrganizationPublicDetails
         IEnumerable<OrganizationTagOrderInput>? orderBy,
         [Parent] OrganizationPublicDetails organization,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
             after,
@@ -64,7 +64,7 @@ public class OrganizationPublicDetails
                 where?.NameContains),
             orderBy,
             tagService,
-            mapper,
+            graphQlMapper,
             cancellationToken);
 
     [UseResolverScope]
@@ -77,7 +77,7 @@ public class OrganizationPublicDetails
         IEnumerable<OrganizationTagOrderInput>? orderBy,
         [Parent] OrganizationPublicDetails organization,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
             after,
@@ -91,7 +91,7 @@ public class OrganizationPublicDetails
                 where?.NameContains),
             orderBy,
             tagService,
-            mapper,
+            graphQlMapper,
             cancellationToken);
 
     private async Task<Connection<OrganizationTagEdge>> OrganizationTagsAsync(
@@ -102,7 +102,7 @@ public class OrganizationPublicDetails
         TagSearchCriteria tagSearchCriteria,
         IEnumerable<OrganizationTagOrderInput>? orderBy,
         ITagService tagService,
-        IMapper mapper,
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
@@ -121,7 +121,7 @@ public class OrganizationPublicDetails
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(graphQlMapper.MapTo),
             TotalCount = totalCount
         };
     }

@@ -1,7 +1,7 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
-using Location.Api.Mappers;
 using Location.Api.Services;
+using Location.Shared.Mappers;
 using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
@@ -24,7 +24,7 @@ public class AddShould
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ILocationOutboxPublisher locationOutboxPublisher,
         [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] ICachedLocationService cachedLocationService,
         [Frozen] IOrganizationRepository organizationRepository,
         [Frozen] IOrganizationTagRepository organizationTagRepository,
@@ -70,11 +70,11 @@ public class AddShould
                 null,
                 cancellationToken))
             .Returns([organizationTagEntity]);
-        A.CallTo(() => mapper.MapTo(locationToAdd, organizationEntity, A<IReadOnlyList<Shared.Database.Entities.OrganizationTag>>._))
+        A.CallTo(() => entityMapper.MapTo(locationToAdd, organizationEntity, A<IReadOnlyList<Shared.Database.Entities.OrganizationTag>>._))
             .Returns(locationEntity);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => locationRepository.Add(locationEntity)).Returns(locationEntity);
-        A.CallTo(() => mapper.MapTo(locationEntity)).Returns(mappedLocation);
+        A.CallTo(() => entityMapper.MapTo(locationEntity)).Returns(mappedLocation);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 4, 19, 12, 0, 0, TimeSpan.Zero));
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).Returns(1);
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).Returns(Task.CompletedTask);

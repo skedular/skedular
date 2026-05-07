@@ -22,7 +22,7 @@ public class AddCustomTagButtonHandler(
     SlackConfigurationService slackConfigurationService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     IPageNavigator pageNavigator,
     IOrganizationCustomTagService organizationCustomTagService)
@@ -37,7 +37,7 @@ public class AddCustomTagButtonHandler(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
+        var workspace = entityMapper.MapTo(workspaceEntity);
         var name = new InputBlock
         {
             BlockId = CustomTagActionTypes.Name,
@@ -91,8 +91,8 @@ public class AddCustomTagButtonHandler(
             viewSubmission.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = AddCustomTagContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var organizationCustomTag = new OrganizationCustomTag

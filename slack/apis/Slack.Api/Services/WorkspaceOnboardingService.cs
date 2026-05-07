@@ -22,7 +22,7 @@ public class WorkspaceOnboardingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ITemporalOutboxService temporalOutboxService,
     IOrganizationService organizationService,
     ILocationService locationService)
@@ -36,8 +36,8 @@ public class WorkspaceOnboardingService(
         var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
         var exitingWorkspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(oauthV2AccessResponse.Team!.Id, cancellationToken);
         var workspace = exitingWorkspace is null
-            ? repositoryFactory.WorkspaceRepository.Add(mapper.MapTo(oauthV2AccessResponse, organization))
-            : repositoryFactory.WorkspaceRepository.Update(mapper.MergeTo(oauthV2AccessResponse, exitingWorkspace, organization));
+            ? repositoryFactory.WorkspaceRepository.Add(entityMapper.MapTo(oauthV2AccessResponse, organization))
+            : repositoryFactory.WorkspaceRepository.Update(entityMapper.MergeTo(oauthV2AccessResponse, exitingWorkspace, organization));
 
         await CreateOrganizationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);
         await CreateLocationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);

@@ -36,7 +36,7 @@ public class OrganizationZoneService(
     ApplicationConfiguration applicationConfiguration,
     OrganizationConfiguration organizationConfiguration,
     OrganizationZonesService.OrganizationZonesServiceClient organizationZonesServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache) : IOrganizationZoneService
 {
     private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
@@ -44,7 +44,7 @@ public class OrganizationZoneService(
     public async Task<OrganizationZone> AdminGetAsync(string zoneId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(zoneId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await organizationZonesServiceClient.Admin_GetZoneAsync(
                     new Admin_GetZoneInput { Id = zoneId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
@@ -53,7 +53,7 @@ public class OrganizationZoneService(
 
     public async Task<OrganizationZone> AddAsync(string workspaceMemberId, OrganizationZone organizationZone, CancellationToken cancellationToken)
     {
-        var mappedOrganizationZone = mapper.MapTo(
+        var mappedOrganizationZone = grpcMapper.MapTo(
             await organizationZonesServiceClient.AddZoneAsync(
                 new AddZoneInput
                 {
@@ -73,7 +73,7 @@ public class OrganizationZoneService(
 
     public async Task<OrganizationZone> UpdateAsync(string workspaceMemberId, OrganizationZone organizationZone, CancellationToken cancellationToken)
     {
-        var mappedOrganizationZone = mapper.MapTo(
+        var mappedOrganizationZone = grpcMapper.MapTo(
             await organizationZonesServiceClient.UpdateZoneAsync(
                 new UpdateZoneInput
                 {
@@ -105,7 +105,7 @@ public class OrganizationZoneService(
     public async Task<OrganizationZone> GetAsync(string workspaceMemberId, string zoneId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(zoneId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await organizationZonesServiceClient.GetZoneAsync(
                     new GetZoneInput { Id = zoneId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -146,7 +146,7 @@ public class OrganizationZoneService(
                         HasPreviousPage = connection.PageInfo.HasPreviousPage
                     },
                     TotalCount = connection.TotalCount,
-                    Edges = connection.Edges.Select(item => new OrganizationZoneEdge(mapper.MapTo(item.Node), item.Cursor)).ToList()
+                    Edges = connection.Edges.Select(item => new OrganizationZoneEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList()
                 };
 
                 Cache(result.Edges.Select(item => item.Node).ToList());
@@ -192,7 +192,7 @@ public class OrganizationZoneService(
                 HasPreviousPage = connection.PageInfo.HasPreviousPage
             },
             TotalCount = connection.TotalCount,
-            Edges = connection.Edges.Select(item => new OrganizationZoneEdge(mapper.MapTo(item.Node), item.Cursor)).ToList()
+            Edges = connection.Edges.Select(item => new OrganizationZoneEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList()
         };
 
         Cache(result.Edges.Select(item => item.Node).ToList());

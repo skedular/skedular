@@ -8,7 +8,7 @@ public interface IWorkspaceService
     Task ReSyncWorkspaceAsync(string workspaceId, CancellationToken cancellationToken);
 }
 
-public class WorkspaceService(IMapper mapper, IRepositoryFactory repositoryFactory) : IWorkspaceService
+public class WorkspaceService(IEntityMapper entityMapper, IRepositoryFactory repositoryFactory) : IWorkspaceService
 {
     public async Task ReSyncWorkspaceAsync(string workspaceId, CancellationToken cancellationToken)
     {
@@ -20,7 +20,7 @@ public class WorkspaceService(IMapper mapper, IRepositoryFactory repositoryFacto
 
         var team = await existingWorkspace.GetApiClient().Team.Info(cancellationToken);
 
-        _ = mapper.MergeToEntity(team, existingWorkspace);
+        _ = entityMapper.MergeToEntity(team, existingWorkspace);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

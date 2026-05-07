@@ -63,20 +63,12 @@ public class RecordDeskAvailabilitySnapshotShould
     public async Task Return_False_When_Location_Not_Found(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ILocationRepository locationRepository,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        TimeProvider timeProvider,
-        ILogger<LocationDailyAnalytics> logger)
+        LocationDailyAnalytics sut)
     {
         var environment = new ActivityEnvironment();
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => locationRepository.GetByIdAsync("loc-1", environment.CancellationTokenSource.Token))
             .Returns((Database.Entities.Location?)null);
-
-        var sut = new LocationDailyAnalytics(
-            repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker), logger);
 
         var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
 
@@ -88,20 +80,12 @@ public class RecordDeskAvailabilitySnapshotShould
     public async Task Return_False_When_Location_Is_Deleted(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ILocationRepository locationRepository,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        TimeProvider timeProvider,
-        ILogger<LocationDailyAnalytics> logger)
+        LocationDailyAnalytics sut)
     {
         var environment = new ActivityEnvironment();
         var deletedLocation = new Database.Entities.Location { Id = "loc-del", Name = "Deleted", DeletedAt = DateTimeOffset.UtcNow };
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => locationRepository.GetByIdAsync("loc-del", environment.CancellationTokenSource.Token)).Returns(deletedLocation);
-
-        var sut = new LocationDailyAnalytics(
-            repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker), logger);
 
         var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-del"));
 
@@ -116,14 +100,17 @@ public class RecordDeskAvailabilitySnapshotShould
         [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        ILogger<LocationDailyAnalytics> logger)
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] ILogger<LocationDailyAnalytics> logger,
+        [Frozen] DailyResourceAvailabilitySnapshot snapshotResult)
     {
+        var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
+            new BookingService.BookingServiceClient(callInvoker), logger);
         var environment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 1, 15, 10, 0, 0, TimeSpan.Zero);
         var snapshotDate = now.StartOfDay();
-        var timeProvider = A.Fake<TimeProvider>();
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
 
         var desk = MakeDeskResource("res-1", "Desk A");
@@ -143,11 +130,7 @@ public class RecordDeskAvailabilitySnapshotShould
         var capturedSnapshots = new List<DailyResourceAvailabilitySnapshot>();
         A.CallTo(() => snapshotRepository.Add(A<DailyResourceAvailabilitySnapshot>._))
             .Invokes(call => capturedSnapshots.Add(call.GetArgument<DailyResourceAvailabilitySnapshot>(0)!))
-            .Returns(A.Fake<DailyResourceAvailabilitySnapshot>());
-
-        var sut = new LocationDailyAnalytics(
-            repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker), logger);
+            .Returns(snapshotResult);
 
         var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
 
@@ -167,13 +150,16 @@ public class RecordDeskAvailabilitySnapshotShould
         [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        ILogger<LocationDailyAnalytics> logger)
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] ILogger<LocationDailyAnalytics> logger,
+        [Frozen] DailyResourceAvailabilitySnapshot snapshotResult)
     {
+        var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
+            new BookingService.BookingServiceClient(callInvoker), logger);
         var environment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 1, 15, 10, 0, 0, TimeSpan.Zero);
-        var timeProvider = A.Fake<TimeProvider>();
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
 
         var inactiveDesk = MakeDeskResource("res-2", "Desk B", true);
@@ -193,11 +179,7 @@ public class RecordDeskAvailabilitySnapshotShould
         var capturedSnapshots = new List<DailyResourceAvailabilitySnapshot>();
         A.CallTo(() => snapshotRepository.Add(A<DailyResourceAvailabilitySnapshot>._))
             .Invokes(call => capturedSnapshots.Add(call.GetArgument<DailyResourceAvailabilitySnapshot>(0)!))
-            .Returns(A.Fake<DailyResourceAvailabilitySnapshot>());
-
-        var sut = new LocationDailyAnalytics(
-            repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker), logger);
+            .Returns(snapshotResult);
 
         var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
 
@@ -214,13 +196,16 @@ public class RecordDeskAvailabilitySnapshotShould
         [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        ILogger<LocationDailyAnalytics> logger)
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] ILogger<LocationDailyAnalytics> logger,
+        [Frozen] DailyResourceAvailabilitySnapshot snapshotResult)
     {
+        var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
+            new BookingService.BookingServiceClient(callInvoker), logger);
         var environment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 1, 15, 10, 0, 0, TimeSpan.Zero);
-        var timeProvider = A.Fake<TimeProvider>();
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
 
         var desk = MakeDeskResource("res-3", "Desk C");
@@ -240,11 +225,7 @@ public class RecordDeskAvailabilitySnapshotShould
         var capturedSnapshots = new List<DailyResourceAvailabilitySnapshot>();
         A.CallTo(() => snapshotRepository.Add(A<DailyResourceAvailabilitySnapshot>._))
             .Invokes(call => capturedSnapshots.Add(call.GetArgument<DailyResourceAvailabilitySnapshot>(0)!))
-            .Returns(A.Fake<DailyResourceAvailabilitySnapshot>());
-
-        var sut = new LocationDailyAnalytics(
-            repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker), logger);
+            .Returns(snapshotResult);
 
         var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
 
@@ -261,13 +242,16 @@ public class RecordDeskAvailabilitySnapshotShould
         [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        ILogger<LocationDailyAnalytics> logger)
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] ILogger<LocationDailyAnalytics> logger,
+        [Frozen] DailyResourceAvailabilitySnapshot snapshotResult)
     {
+        var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
+            new BookingService.BookingServiceClient(callInvoker), logger);
         var environment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 1, 15, 10, 0, 0, TimeSpan.Zero);
-        var timeProvider = A.Fake<TimeProvider>();
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
 
         // Desk+Room dual-tagged: desk wins by priority, classified normally (active, not booked → Available)
@@ -288,11 +272,7 @@ public class RecordDeskAvailabilitySnapshotShould
         var capturedSnapshots = new List<DailyResourceAvailabilitySnapshot>();
         A.CallTo(() => snapshotRepository.Add(A<DailyResourceAvailabilitySnapshot>._))
             .Invokes(call => capturedSnapshots.Add(call.GetArgument<DailyResourceAvailabilitySnapshot>(0)!))
-            .Returns(A.Fake<DailyResourceAvailabilitySnapshot>());
-
-        var sut = new LocationDailyAnalytics(
-            repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker), logger);
+            .Returns(snapshotResult);
 
         var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
 
@@ -311,14 +291,17 @@ public class RecordDeskAvailabilitySnapshotShould
         [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        ILogger<LocationDailyAnalytics> logger)
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] ILogger<LocationDailyAnalytics> logger,
+        [Frozen] DailyResourceAvailabilitySnapshot snapshotResult)
     {
+        var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
+            new BookingService.BookingServiceClient(callInvoker), logger);
         var environment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 1, 15, 10, 0, 0, TimeSpan.Zero);
         var snapshotDate = now.StartOfDay();
-        var timeProvider = A.Fake<TimeProvider>();
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
 
         var desk = MakeDeskResource("res-5", "Desk E");
@@ -335,11 +318,7 @@ public class RecordDeskAvailabilitySnapshotShould
                 A<Admin_GetPaginatedBookingsInput>._))
             .Returns(CreateGrpcResponse(EmptyBookingConnection()));
         A.CallTo(() => snapshotRepository.Add(A<DailyResourceAvailabilitySnapshot>._))
-            .Returns(A.Fake<DailyResourceAvailabilitySnapshot>());
-
-        var sut = new LocationDailyAnalytics(
-            repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker), logger);
+            .Returns(snapshotResult);
 
         await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
 

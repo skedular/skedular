@@ -13,7 +13,7 @@ public interface IOrganizationTermsOfUseService
 
 public class OrganizationTermsOfUseService(
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IGraphQlMapper graphQlMapper,
     IMemoryCache memoryCache,
     TimeProvider timeProvider)
     : IOrganizationTermsOfUseService
@@ -31,7 +31,7 @@ public class OrganizationTermsOfUseService(
         }
 
         var termsOfUse = await repositoryFactory.TermsOfUseRepository.GetActiveUntrackedAsync(cancellationToken);
-        var mappedTermsOfUse = mapper.MapTo(termsOfUse)!;
+        var mappedTermsOfUse = graphQlMapper.MapTo(termsOfUse)!;
 
         memoryCache.Set(
             ActiveTermsOfUseCacheKey,

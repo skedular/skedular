@@ -8,14 +8,14 @@ using HotChocolate.Types;
 namespace Booking.Api.GraphQL.ResourceAvailability;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<IEnumerable<BookingResourceDetails>> AvailableResourcesAsync(
         AvailableResourcesWhereInput where,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(
+        graphQlMapper.MapTo(
             await resourceService.GetAvailableResourcesAsync(
                 where.OrganizationId,
                 where.OrganizationCustomDomain,

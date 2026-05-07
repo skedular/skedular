@@ -13,7 +13,7 @@ public class RemoveTeamButtonHandler(
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ITeamPermissionsService teamPermissionsService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IPageNavigator pageNavigator,
     ITeamService teamService) : IViewSubmissionHandler
 {
@@ -27,8 +27,8 @@ public class RemoveTeamButtonHandler(
             viewSubmission.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = RemoveTeamContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var permissions = await teamPermissionsService.GetPermissionsAsync(workspaceMember.Id, context.TeamId, cancellationToken);
         if (!permissions.CanDelete)

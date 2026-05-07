@@ -14,7 +14,7 @@ public class CoreGrpcService(
     CoreConfiguration coreConfiguration,
     IVersionService versionService,
     IFileUploaderService fileUploaderService,
-    IMapper mapper) : CoreService.CoreServiceBase
+    IGrpcMapper grpcMapper) : CoreService.CoreServiceBase
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
@@ -53,7 +53,7 @@ public class CoreGrpcService(
 
         uploadStream.Seek(0, SeekOrigin.Begin);
 
-        return mapper.MapToGrpcResponse(
+        return grpcMapper.MapToGrpcResponse(
             await fileUploaderService.UploadToPrivateStorageAsync(uploadStream, contentType, extension, true, context.CancellationToken));
     }
 }

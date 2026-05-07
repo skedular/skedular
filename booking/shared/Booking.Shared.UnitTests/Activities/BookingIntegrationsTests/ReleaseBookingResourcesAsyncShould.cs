@@ -1,19 +1,14 @@
-using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
-using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.GraphQL;
-using Grpc.Core;
 using Microsoft.EntityFrameworkCore.Storage;
 using Temporalio.Testing;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
-using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 
 namespace Booking.Shared.UnitTests.Activities.BookingIntegrationsTests;
 
@@ -33,26 +28,10 @@ public class ReleaseBookingResourcesAsyncShould
         [Frozen] IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
         [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
         [Frozen] ICachedBookingService cachedBookingService,
-        [Frozen] IMapper mapper,
-        OrganizationConfiguration organizationConfiguration,
-        CallInvoker callInvoker,
-        IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
-        IGraphQlTopicEventSender graphQlTopicEventSender,
+        BookingIntegrations sut,
         string bookingId)
     {
         var environment = new ActivityEnvironment();
-        var sut = new BookingIntegrations(
-            organizationConfiguration,
-            new OrganizationService.OrganizationServiceClient(callInvoker),
-            repositoryFactory,
-            transactionBuilder,
-            bookingResourceSlotsHelperService,
-            mapper,
-            organizationArrearsBillingPlannerService,
-            bookingOutboxPublisher,
-            cachedBookingService,
-            graphQlTopicEventSender,
-            accountingInvoiceCancellationService);
         var booking = new BookingEntity
         {
             Id = bookingId,

@@ -24,7 +24,7 @@ public class AddTeamButtonHandler(
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IWorkspaceChannelService workspaceChannelService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     IPageNavigator pageNavigator,
     ITeamService teamService)
@@ -39,7 +39,7 @@ public class AddTeamButtonHandler(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
+        var workspace = entityMapper.MapTo(workspaceEntity);
         var name = new InputBlock
         {
             BlockId = TeamActionTypes.Name,
@@ -125,8 +125,8 @@ public class AddTeamButtonHandler(
             viewSubmission.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var team = new Shared.Models.Team { Id = randomHelper.Generate(), Organization = new Organization { Id = workspace.Organization.Id } };

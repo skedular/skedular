@@ -25,7 +25,7 @@ public interface IWorkspaceMemberService
 }
 
 public class WorkspaceMemberService(
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
@@ -59,7 +59,7 @@ public class WorkspaceMemberService(
             .Where(workspaceMember => users.Any(item => item.Id == workspaceMember.Id))
             .Select(workspaceMember =>
             {
-                var updatedWorkspaceMember = mapper.MergeToEntity(
+                var updatedWorkspaceMember = entityMapper.MergeToEntity(
                     users.First(item => item.Id == workspaceMember.Id),
                     workspaceMember,
                     existingWorkspace);
@@ -67,7 +67,7 @@ public class WorkspaceMemberService(
                 return repositoryFactory.WorkspaceMemberRepository.Update(updatedWorkspaceMember);
             }).ToList();
         var addedItems = users.Where(user => workspaceMembers.All(item => item.Id != user.Id))
-            .Select(user => repositoryFactory.WorkspaceMemberRepository.Add(mapper.MapToEntity(user, existingWorkspace)))
+            .Select(user => repositoryFactory.WorkspaceMemberRepository.Add(entityMapper.MapToEntity(user, existingWorkspace)))
             .ToList();
 
         repositoryFactory.WorkspaceMemberRepository.RemoveRange(itemsToRemove);

@@ -152,16 +152,17 @@ public class XeroWebhookServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Resolve_Repeating_Invoice_Webhook_To_Stored_Template_Link(
-        CallInvoker callInvoker,
-        IRepositoryFactory repositoryFactory,
-        IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        ITemporalService temporalService,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
-        ILogger<XeroWebhookService> logger,
-        TimeProvider timeProvider,
-        XeroConfiguration xeroConfiguration,
-        OrganizationConfiguration organizationConfiguration,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] ITemporalService temporalService,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] ILogger<XeroWebhookService> logger,
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] XeroConfiguration xeroConfiguration,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] AccountingApi accountingApi,
         Guid generatedInvoiceId,
         Guid repeatingTemplateId,
         string tenantId,
@@ -243,7 +244,7 @@ public class XeroWebhookServiceShould
                 A<Admin_GetXeroConnectionInput>.That.Matches(input => input.OrganizationId == "org-1")))
             .Returns(CreateResponse(xeroConnection));
         A.CallTo(() => xeroTokenEncryptionService.Decrypt("encrypted-access")).Returns("access-token");
-        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(A.Fake<AccountingApi>());
+        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(accountingApi);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndExternalInvoiceIdsAsync(
                 AccountingProviderConstants.Xero,
                 A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 1 && ids.Contains(repeatingTemplateId.ToString())),
@@ -265,17 +266,18 @@ public class XeroWebhookServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Prefer_Concrete_Repeating_Invoice_Event_Over_Template_Event_When_Both_Appear(
-        CallInvoker callInvoker,
-        IRepositoryFactory repositoryFactory,
-        IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
-        ITemporalService temporalService,
-        IXeroSdkClientFactory xeroSdkClientFactory,
-        IXeroTokenEncryptionService xeroTokenEncryptionService,
-        ILogger<XeroWebhookService> logger,
-        TimeProvider timeProvider,
-        XeroConfiguration xeroConfiguration,
-        OrganizationConfiguration organizationConfiguration,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
+        [Frozen] ITemporalService temporalService,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] ILogger<XeroWebhookService> logger,
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] XeroConfiguration xeroConfiguration,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] AccountingApi accountingApi,
         Guid generatedInvoiceId,
         Guid repeatingTemplateId,
         string tenantId,
@@ -362,7 +364,7 @@ public class XeroWebhookServiceShould
                     ids.Contains(repeatingTemplateId.ToString())),
                 cancellationToken))
             .Returns([generatedInvoiceInstance]);
-        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(A.Fake<AccountingApi>());
+        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(accountingApi);
 
         await sut.ProcessAsync(payloadJson, cancellationToken);
 

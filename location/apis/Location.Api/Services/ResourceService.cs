@@ -4,8 +4,8 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
-using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
+using Location.Shared.Mappers;
 using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
@@ -39,7 +39,7 @@ public class ResourceService(
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ILocationOutboxPublisher locationOutboxPublisher,
     ICachedResourceService cachedResourceService,
     ICachedLocationService cachedLocationService,
@@ -120,8 +120,9 @@ public class ResourceService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var mappedResource = mapper.MapTo(repositoryFactory.ResourceRepository.Add(mapper.MapTo(resource, existingLocation, organizationTags)));
-        locationOutboxPublisher.PublishLocations([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
+        var mappedResource =
+            entityMapper.MapTo(repositoryFactory.ResourceRepository.Add(entityMapper.MapTo(resource, existingLocation, organizationTags)));
+        locationOutboxPublisher.PublishLocations([entityMapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
 
         temporalOutboxService.StartComputeOrganizationLocationsAndProductsRelationships(
             new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),
@@ -171,9 +172,9 @@ public class ResourceService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var deletedResource = mapper.MapTo(repositoryFactory.ResourceRepository.Remove(resource), mapper.MapTo(existingLocation));
+        var deletedResource = entityMapper.MapTo(repositoryFactory.ResourceRepository.Remove(resource), entityMapper.MapTo(existingLocation));
 
-        var mappedLocation = mapper.MapTo(existingLocation);
+        var mappedLocation = entityMapper.MapTo(existingLocation);
         mappedLocation.Resources = mappedLocation.Resources.Where(item => item.Id != id).ToList();
 
         locationOutboxPublisher.PublishLocations([mappedLocation], repositoryFactory.UnitOfWork);
@@ -223,10 +224,10 @@ public class ResourceService(
         repositoryFactory.ResourceRepository.RemoveRange(resources);
 
         var deletedResources = resources
-            .Select(resource => mapper.MapTo(resource, mapper.MapTo(existingLocations.Single(item => item.Id == resource.Location.Id))))
+            .Select(resource => entityMapper.MapTo(resource, entityMapper.MapTo(existingLocations.Single(item => item.Id == resource.Location.Id))))
             .ToList();
 
-        var mappedLocations = existingLocations.Select(mapper.MapTo).ToList();
+        var mappedLocations = existingLocations.Select(entityMapper.MapTo).ToList();
         foreach (var mappedLocation in mappedLocations)
         {
             mappedLocation.Resources = mappedLocation.Resources.Where(item => !ids.Contains(item.Id)).ToList();
@@ -282,10 +283,10 @@ public class ResourceService(
         }
 
         var updatedResources = resources
-            .Select(resource => mapper.MapTo(resource, mapper.MapTo(existingLocations.Single(item => item.Id == resource.Location.Id))))
+            .Select(resource => entityMapper.MapTo(resource, entityMapper.MapTo(existingLocations.Single(item => item.Id == resource.Location.Id))))
             .ToList();
 
-        var mappedLocations = existingLocations.Select(mapper.MapTo).ToList();
+        var mappedLocations = existingLocations.Select(entityMapper.MapTo).ToList();
         foreach (var resource in mappedLocations.SelectMany(mappedLocation => mappedLocation.Resources.Where(item => ids.Contains(item.Id))))
         {
             resource.Inactive = false;
@@ -341,10 +342,10 @@ public class ResourceService(
         }
 
         var updatedResources = resources
-            .Select(resource => mapper.MapTo(resource, mapper.MapTo(existingLocations.Single(item => item.Id == resource.Location.Id))))
+            .Select(resource => entityMapper.MapTo(resource, entityMapper.MapTo(existingLocations.Single(item => item.Id == resource.Location.Id))))
             .ToList();
 
-        var mappedLocations = existingLocations.Select(mapper.MapTo).ToList();
+        var mappedLocations = existingLocations.Select(entityMapper.MapTo).ToList();
         foreach (var resource in mappedLocations.SelectMany(mappedLocation => mappedLocation.Resources.Where(item => ids.Contains(item.Id))))
         {
             resource.Inactive = true;
@@ -387,7 +388,7 @@ public class ResourceService(
             throw new UnauthorizedAccessException();
         }
 
-        return mapper.MapTo(resource);
+        return entityMapper.MapTo(resource);
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
@@ -413,7 +414,7 @@ public class ResourceService(
             orderByFields,
             cancellationToken);
 
-        return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(existingLocation)).ToList(), totalCount);
+        return (paginatedInfo, entityMapper.MapTo(edges, entityMapper.MapTo(existingLocation)).ToList(), totalCount);
     }
 
     private async Task<Resource> UpdateInternalAsync(
@@ -472,15 +473,15 @@ public class ResourceService(
         var originalIsAvailableHoursOverridden = existingResource.IsAvailableHoursOverridden;
         var originalAvailableHours = existingResource.AvailableHours;
 
-        existingResource = mapper.MergeTo(resource, existingResource, existingLocation, organizationTags);
+        existingResource = entityMapper.MergeTo(resource, existingResource, existingLocation, organizationTags);
 
         // Restoring original opening hours
         existingResource.IsAvailableHoursOverridden = originalIsAvailableHoursOverridden;
         existingResource.AvailableHours = originalAvailableHours;
 
-        resource = mapper.MapTo(repositoryFactory.ResourceRepository.Update(existingResource), mapper.MapTo(existingLocation));
+        resource = entityMapper.MapTo(repositoryFactory.ResourceRepository.Update(existingResource), entityMapper.MapTo(existingLocation));
 
-        locationOutboxPublisher.PublishLocations([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
+        locationOutboxPublisher.PublishLocations([entityMapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
 
         temporalOutboxService.StartComputeOrganizationLocationsAndProductsRelationships(
             new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),

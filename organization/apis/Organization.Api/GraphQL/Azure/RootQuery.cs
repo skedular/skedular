@@ -7,7 +7,7 @@ using Organization.Api.Services;
 namespace Organization.Api.GraphQL.Azure;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<bool> IsAzureTenantInstalledAsync([Service] IAzureTenantService azureTenantService, CancellationToken cancellationToken) =>
@@ -23,5 +23,5 @@ public class RootQuery(IMapper mapper)
     public async Task<OrganizationDetails?> AzureTenantOrganizationAsync(
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await organizationService.GetByAzureTenantAsync(cancellationToken));
+        graphQlMapper.MapTo(await organizationService.GetByAzureTenantAsync(cancellationToken));
 }

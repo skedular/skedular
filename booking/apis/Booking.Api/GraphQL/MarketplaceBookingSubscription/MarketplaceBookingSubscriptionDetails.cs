@@ -34,9 +34,9 @@ public class MarketplaceBookingSubscriptionDetails : Node
 
     public async Task<IEnumerable<OrganizationArrearsInvoiceDetails>> GetArrearsInvoices(
         [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
-        [Service] IMapper mapper,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
-        (await marketplaceBookingSubscriptionService.GetArrearsInvoicesAsync(Id, cancellationToken)).Select(mapper.MapTo).ToList();
+        (await marketplaceBookingSubscriptionService.GetArrearsInvoicesAsync(Id, cancellationToken)).Select(graphQlMapper.MapTo).ToList();
 }
 
 [ObjectType<MarketplaceBookingSubscriptionDetails>]

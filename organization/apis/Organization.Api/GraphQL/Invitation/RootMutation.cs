@@ -6,7 +6,7 @@ using Organization.Api.Services;
 namespace Organization.Api.GraphQL.Invitation;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<InvitationsToJoinOrganizationPayload> InviteCustomersToJoinOrganizationAsync(
@@ -16,7 +16,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            InvitesCustomersToJoinOrganization = mapper.MapTo(
+            InvitesCustomersToJoinOrganization = graphQlMapper.MapTo(
                     await invitationService.InviteMembersByEmailsAsync(
                         input.OrganizationId,
                         input.OrganizationCustomDomain,
@@ -34,7 +34,7 @@ public class RootMutation(IMapper mapper)
         {
             ClientMutationId = input.ClientMutationId,
             InviteCustomerToJoinOrganization =
-                mapper.MapTo(await invitationService.AcceptInvitationToJoinAsync(input.Id, cancellationToken))
+                graphQlMapper.MapTo(await invitationService.AcceptInvitationToJoinAsync(input.Id, cancellationToken))
         };
 
     [UseResolverScope]
@@ -46,7 +46,7 @@ public class RootMutation(IMapper mapper)
         {
             ClientMutationId = input.ClientMutationId,
             InviteCustomerToJoinOrganization =
-                mapper.MapTo(await invitationService.RejectInvitationToJoinAsync(input.Id, cancellationToken))
+                graphQlMapper.MapTo(await invitationService.RejectInvitationToJoinAsync(input.Id, cancellationToken))
         };
 
     [UseResolverScope]
@@ -58,6 +58,6 @@ public class RootMutation(IMapper mapper)
         {
             ClientMutationId = input.ClientMutationId,
             InviteCustomerToJoinOrganization =
-                mapper.MapTo(await invitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken))
+                graphQlMapper.MapTo(await invitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken))
         };
 }

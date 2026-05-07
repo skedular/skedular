@@ -30,7 +30,7 @@ public class OrganizationXeroConnectionServiceShould
         IXeroSdkClientFactory xeroSdkClientFactory,
         ICachedOrganizationService cachedOrganizationService,
         ITemporalOutboxService temporalOutboxService,
-        IMapper mapper,
+        IGraphQlMapper graphQlMapper,
         IDbTransactionBuilder transactionBuilder,
         IRandomHelper randomHelper,
         TimeProvider timeProvider,
@@ -66,7 +66,7 @@ public class OrganizationXeroConnectionServiceShould
             xeroSdkClientFactory,
             cachedOrganizationService,
             temporalOutboxService,
-            mapper,
+            graphQlMapper,
             transactionBuilder,
             randomHelper,
             timeProvider);

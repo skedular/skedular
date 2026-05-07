@@ -19,7 +19,7 @@ public class GetByMarketplaceBookingSubscriptionIdAsyncShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
         [Frozen] IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
-        [Frozen] IMapper mapper,
+        [Frozen] IGraphQlMapper graphQlMapper,
         [Frozen] IXeroRefundService xeroRefundService,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
@@ -45,7 +45,7 @@ public class GetByMarketplaceBookingSubscriptionIdAsyncShould
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => organizationAuthorizationService.CanModifyPaymentMethodAsync("org-1", "customer-1", cancellationToken)).Returns(true);
         A.CallTo(() => marketplaceRefundEventRepository.GetByMarketplaceRefundIdAsync("refund-1", cancellationToken)).Returns([]);
-        A.CallTo(() => mapper.MapTo(refund)).Returns(mappedRefund);
+        A.CallTo(() => graphQlMapper.MapTo(refund)).Returns(mappedRefund);
         A.CallTo(() => xeroRefundService.GetProcessingAvailabilityAsync(refund, cancellationToken))
             .Returns(new XeroRefundProcessingAvailability(false, "Concrete invoice instance has not been correlated yet."));
 

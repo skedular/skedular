@@ -45,10 +45,16 @@ public class RecomputeIdempotencyShould
         [Frozen] ILocationRepository locationRepository,
         [Frozen] IResourceRepository resourceRepository,
         [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        ICachedLocationService cachedLocationService)
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] ICachedLocationService cachedLocationService)
     {
+        var sut = new LocationBookingDerivedState(
+            repositoryFactory,
+            bookingConfiguration,
+            new BookingService.BookingServiceClient(callInvoker),
+            randomHelper,
+            cachedLocationService);
         // Arrange
         var environment = new ActivityEnvironment();
         const string LocationId = "loc-idempotent";
@@ -89,11 +95,6 @@ public class RecomputeIdempotencyShould
                 A<Admin_GetPaginatedBookingsInput>._))
             .Returns(CreateGrpcResponse(bookingResponse));
 
-        var sut = new LocationBookingDerivedState(
-            repositoryFactory, bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker),
-            randomHelper, cachedLocationService);
-
         // Act – first invocation
         await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
         var afterFirst = await dbContext.DailyBookingCountRecording.Include(r => r.Location).ToListAsync(TestContext.Current.CancellationToken);
@@ -124,10 +125,16 @@ public class RecomputeIdempotencyShould
         [Frozen] ILocationRepository locationRepository,
         [Frozen] IResourceRepository resourceRepository,
         [Frozen] BookingConfiguration bookingConfiguration,
-        CallInvoker callInvoker,
-        IRandomHelper randomHelper,
-        ICachedLocationService cachedLocationService)
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] ICachedLocationService cachedLocationService)
     {
+        var sut = new LocationBookingDerivedState(
+            repositoryFactory,
+            bookingConfiguration,
+            new BookingService.BookingServiceClient(callInvoker),
+            randomHelper,
+            cachedLocationService);
         // Arrange
         var environment = new ActivityEnvironment();
         const string LocationId = "loc-desk-idem";
@@ -179,11 +186,6 @@ public class RecomputeIdempotencyShould
                 A<CallOptions>._,
                 A<Admin_GetPaginatedBookingsInput>._))
             .Returns(CreateGrpcResponse(bookingResponse));
-
-        var sut = new LocationBookingDerivedState(
-            repositoryFactory, bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker),
-            randomHelper, cachedLocationService);
 
         // Act – run twice
         await environment.RunAsync(() => sut.RecomputeAsync(LocationId));

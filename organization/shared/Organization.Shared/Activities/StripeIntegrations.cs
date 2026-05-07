@@ -14,7 +14,7 @@ public record SetOrganizationPaymentMethodInput(string OrganizationId, string Se
 public class StripeIntegrations(
     ApplicationConfiguration applicationConfiguration,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     IRetrievable<SetupIntent, SetupIntentGetOptions> setupIntentRetrievableService,
     IRetrievable<PaymentMethod, PaymentMethodGetOptions> paymentMethodRetrievableService)
@@ -45,7 +45,7 @@ public class StripeIntegrations(
             ArgumentNullException.ThrowIfNull(paymentMethod);
             ArgumentNullException.ThrowIfNull(paymentMethod.Card);
 
-            var organizationStripePaymentMethod = mapper.MapTo(paymentMethod, args.SetupIntentId, organization);
+            var organizationStripePaymentMethod = entityMapper.MapTo(paymentMethod, args.SetupIntentId, organization);
             organizationStripePaymentMethod.Id = randomHelper.Generate();
             repositoryFactory.OrganizationStripePaymentMethodRepository.Add(organizationStripePaymentMethod);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

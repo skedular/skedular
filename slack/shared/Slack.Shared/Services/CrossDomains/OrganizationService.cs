@@ -20,7 +20,7 @@ public class OrganizationService(
     ApplicationConfiguration applicationConfiguration,
     OrganizationConfiguration organizationConfiguration,
     Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache)
     : IOrganizationService
 {
@@ -29,7 +29,7 @@ public class OrganizationService(
     public async Task<Organization> AdminGetAsync(string organizationId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(organizationId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await organizationServiceClient.Admin_GetAsync(
                     new Admin_GetInput { Id = organizationId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
@@ -43,7 +43,7 @@ public class OrganizationService(
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
-        var mappedOrganization = mapper.MapTo(
+        var mappedOrganization = grpcMapper.MapTo(
             await organizationServiceClient.Admin_AddAsync(
                 new Admin_AddInput
                 {
@@ -66,7 +66,7 @@ public class OrganizationService(
     public async Task<Organization> GetAsync(string workspaceMemberId, string organizationId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(organizationId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await organizationServiceClient.GetAsync(
                     new GetInput { Id = organizationId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),

@@ -38,7 +38,7 @@ public class LocationService(
     ApplicationConfiguration applicationConfiguration,
     LocationConfiguration locationConfiguration,
     Api.Shared.Grpc.Skedular.Location.Core.V1.LocationService.LocationServiceClient locationServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache)
     : ILocationService
 {
@@ -62,7 +62,7 @@ public class LocationService(
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
-        var locations = connection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
+        var locations = connection.Edges.Select(item => grpcMapper.MapTo(item.Node)).ToList();
 
         Cache(locations);
 
@@ -72,7 +72,7 @@ public class LocationService(
     public async Task<Location> AdminGetAsync(string locationId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(locationId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await locationServiceClient.Admin_GetAsync(
                     new Admin_GetInput { Id = locationId },
                     locationConfiguration.ApiKey.CreateMetadata(),
@@ -81,7 +81,7 @@ public class LocationService(
 
     public async Task<Location> AdminAddAsync(Location location, CancellationToken cancellationToken)
     {
-        var mappedLocation = mapper.MapTo(
+        var mappedLocation = grpcMapper.MapTo(
             await locationServiceClient.Admin_AddAsync(
                 new Admin_AddInput
                 {
@@ -106,7 +106,7 @@ public class LocationService(
     public async Task<Location> GetAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(locationId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await locationServiceClient.GetAsync(
                     new GetInput { Id = locationId },
                     locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -115,7 +115,7 @@ public class LocationService(
 
     public async Task<Location> AddAsync(string workspaceMemberId, Location location, CancellationToken cancellationToken)
     {
-        var mappedLocation = mapper.MapTo(
+        var mappedLocation = grpcMapper.MapTo(
             await locationServiceClient.AddAsync(
                 new AddInput
                 {
@@ -146,7 +146,7 @@ public class LocationService(
 
     public async Task<Location> UpdateAsync(string workspaceMemberId, Location location, CancellationToken cancellationToken)
     {
-        var mappedLocation = mapper.MapTo(
+        var mappedLocation = grpcMapper.MapTo(
             await locationServiceClient.UpdateAsync(
                 new UpdateInput
                 {
@@ -223,7 +223,7 @@ public class LocationService(
                 HasPreviousPage = connection.PageInfo.HasPreviousPage
             },
             TotalCount = connection.TotalCount,
-            Edges = connection.Edges.Select(item => new LocationEdge(mapper.MapTo(item.Node), item.Cursor)).ToList()
+            Edges = connection.Edges.Select(item => new LocationEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList()
         };
 
         Cache(result.Edges.Select(item => item.Node).ToList());

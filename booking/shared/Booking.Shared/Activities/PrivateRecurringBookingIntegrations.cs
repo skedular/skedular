@@ -18,7 +18,7 @@ public class PrivateRecurringBookingIntegrations(
     TimeProvider timeProvider,
     IRecurringBookingScheduleService recurringBookingScheduleService,
     IPrivateBookingService privateBookingService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper)
 {
     [Activity]
@@ -69,9 +69,9 @@ public class PrivateRecurringBookingIntegrations(
 
         foreach (var existingBooking in existingBookingsToRefresh)
         {
-            var expectedBooking = mapper.MapTo(
+            var expectedBooking = entityMapper.MapTo(
                 recurringBooking,
-                mapper.MapTo(existingBooking),
+                entityMapper.MapTo(existingBooking),
                 null,
                 DateOnly.FromDateTime(existingBooking.From.UtcDateTime.Date));
 
@@ -87,7 +87,7 @@ public class PrivateRecurringBookingIntegrations(
         }
 
         var bookingsToAdd = reconciliationPlan.MissingBookingDays
-            .Select(missingBookingDay => mapper.MapTo(recurringBooking, missingBookingDay))
+            .Select(missingBookingDay => entityMapper.MapTo(recurringBooking, missingBookingDay))
             .ToList();
 
         foreach (var booking in bookingsToAdd)

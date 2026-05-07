@@ -17,7 +17,7 @@ public interface ICustomerOutboxPublisher
 
 public class CustomerOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IContext context,
     IKafkaOutboxEventPublisher<Key, Event> publisher) : ICustomerOutboxPublisher
 {
@@ -34,7 +34,7 @@ public class CustomerOutboxPublisher(
                         applicationConfiguration.AppSource,
                         customer.IsDeleted() ? Type.CustomerDeleted : Type.CustomerUpserted,
                         context.GetCorrelationId()),
-                    Data = new Data { Customer = mapper.MapTo(customer) }
+                    Data = new Data { Customer = eventMapper.MapTo(customer) }
                 },
                 unitOfWork);
         }

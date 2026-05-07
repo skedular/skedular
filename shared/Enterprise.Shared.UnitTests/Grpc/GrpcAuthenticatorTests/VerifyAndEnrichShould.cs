@@ -1,7 +1,6 @@
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Grpc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using GrpcConstants = Enterprise.Shared.Grpc.Constants;
 
 namespace Enterprise.Shared.UnitTests.Grpc.GrpcAuthenticatorTests;
@@ -9,30 +8,26 @@ namespace Enterprise.Shared.UnitTests.Grpc.GrpcAuthenticatorTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class VerifyAndEnrichShould
 {
-    private static (GrpcAuthenticator Sut, DefaultHttpContext HttpContext, IContext Context) Build()
-    {
-        var httpContext = new DefaultHttpContext();
-        var accessor = A.Fake<IHttpContextAccessor>();
-        A.CallTo(() => accessor.HttpContext).Returns(httpContext);
-        var context = A.Fake<IContext>();
-        var logger = A.Fake<ILogger<GrpcAuthenticator>>();
-        return (new GrpcAuthenticator(accessor, context, logger), httpContext, context);
-    }
-
     [Theory]
     [AutoFakeItEasyData]
-    public void Throw_when_api_key_header_is_missing(string apiKey)
+    public void Throw_when_api_key_header_is_missing([Frozen] IHttpContextAccessor accessor, GrpcAuthenticator sut, string apiKey)
     {
-        var (sut, _, _) = Build();
+        var httpContext = new DefaultHttpContext();
+        A.CallTo(() => accessor.HttpContext).Returns(httpContext);
 
         Should.Throw<UnauthorizedAccessException>(() => sut.VerifyAndEnrich(apiKey));
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Throw_when_api_key_does_not_match(string expectedKey, string receivedKey)
+    public void Throw_when_api_key_does_not_match(
+        [Frozen] IHttpContextAccessor accessor,
+        GrpcAuthenticator sut,
+        string expectedKey,
+        string receivedKey)
     {
-        var (sut, httpContext, _) = Build();
+        var httpContext = new DefaultHttpContext();
+        A.CallTo(() => accessor.HttpContext).Returns(httpContext);
         httpContext.Request.Headers[GrpcConstants.ApiKey] = receivedKey;
 
         Should.Throw<UnauthorizedAccessException>(() => sut.VerifyAndEnrich(expectedKey + "_different"));
@@ -40,9 +35,10 @@ public class VerifyAndEnrichShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Not_throw_when_api_key_matches(string apiKey)
+    public void Not_throw_when_api_key_matches([Frozen] IHttpContextAccessor accessor, GrpcAuthenticator sut, string apiKey)
     {
-        var (sut, httpContext, _) = Build();
+        var httpContext = new DefaultHttpContext();
+        A.CallTo(() => accessor.HttpContext).Returns(httpContext);
         httpContext.Request.Headers[GrpcConstants.ApiKey] = apiKey;
 
         Should.NotThrow(() => sut.VerifyAndEnrich(apiKey));
@@ -50,9 +46,15 @@ public class VerifyAndEnrichShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Set_verifiable_token_when_header_present(string apiKey, string token)
+    public void Set_verifiable_token_when_header_present(
+        [Frozen] IHttpContextAccessor accessor,
+        [Frozen] IContext context,
+        GrpcAuthenticator sut,
+        string apiKey,
+        string token)
     {
-        var (sut, httpContext, context) = Build();
+        var httpContext = new DefaultHttpContext();
+        A.CallTo(() => accessor.HttpContext).Returns(httpContext);
         httpContext.Request.Headers[GrpcConstants.ApiKey] = apiKey;
         httpContext.Request.Headers[GrpcConstants.VerifiableTokenKey] = token;
 
@@ -63,9 +65,16 @@ public class VerifyAndEnrichShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Set_first_verifiable_token_when_multiple_in_header(string apiKey, string token1, string token2)
+    public void Set_first_verifiable_token_when_multiple_in_header(
+        [Frozen] IHttpContextAccessor accessor,
+        [Frozen] IContext context,
+        GrpcAuthenticator sut,
+        string apiKey,
+        string token1,
+        string token2)
     {
-        var (sut, httpContext, context) = Build();
+        var httpContext = new DefaultHttpContext();
+        A.CallTo(() => accessor.HttpContext).Returns(httpContext);
         httpContext.Request.Headers[GrpcConstants.ApiKey] = apiKey;
         httpContext.Request.Headers[GrpcConstants.VerifiableTokenKey] = $"{token1},{token2}";
 
@@ -76,9 +85,14 @@ public class VerifyAndEnrichShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Not_set_verifiable_token_when_header_is_whitespace(string apiKey)
+    public void Not_set_verifiable_token_when_header_is_whitespace(
+        [Frozen] IHttpContextAccessor accessor,
+        [Frozen] IContext context,
+        GrpcAuthenticator sut,
+        string apiKey)
     {
-        var (sut, httpContext, context) = Build();
+        var httpContext = new DefaultHttpContext();
+        A.CallTo(() => accessor.HttpContext).Returns(httpContext);
         httpContext.Request.Headers[GrpcConstants.ApiKey] = apiKey;
         httpContext.Request.Headers[GrpcConstants.VerifiableTokenKey] = "   ";
 

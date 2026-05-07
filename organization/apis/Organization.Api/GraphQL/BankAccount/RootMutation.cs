@@ -7,7 +7,7 @@ using Organization.Api.Services;
 namespace Organization.Api.GraphQL.BankAccount;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<OrganizationBankAccountPayload> AddOrganizationBankAccountAsync(
@@ -17,7 +17,8 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationBankAccount = mapper.MapTo(await organizationBankAccountService.AddAsync(mapper.MapTo(input), cancellationToken))!
+            OrganizationBankAccount =
+                graphQlMapper.MapTo(await organizationBankAccountService.AddAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -28,7 +29,8 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationBankAccount = mapper.MapTo(await organizationBankAccountService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+            OrganizationBankAccount =
+                graphQlMapper.MapTo(await organizationBankAccountService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -39,7 +41,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationBankAccount = mapper.MapTo(await organizationBankAccountService.DeleteAsync(input.Id, cancellationToken))!
+            OrganizationBankAccount = graphQlMapper.MapTo(await organizationBankAccountService.DeleteAsync(input.Id, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -51,7 +53,7 @@ public class RootMutation(IMapper mapper)
         var resources = await organizationBankAccountService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
         return new OrganizationBankAccountsPayload
         {
-            ClientMutationId = input.ClientMutationId, OrganizationBankAccounts = resources.Select(mapper.MapTo)!
+            ClientMutationId = input.ClientMutationId, OrganizationBankAccounts = resources.Select(graphQlMapper.MapTo)!
         };
     }
 
@@ -62,6 +64,9 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var account = await organizationBankAccountService.SetAsDefaultAsync(input.Id, cancellationToken);
-        return new OrganizationBankAccountPayload { ClientMutationId = input.ClientMutationId, OrganizationBankAccount = mapper.MapTo(account)! };
+        return new OrganizationBankAccountPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationBankAccount = graphQlMapper.MapTo(account)!
+        };
     }
 }

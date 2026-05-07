@@ -18,7 +18,7 @@ public static class Extensions
     extension(IServiceCollection services)
     {
         public IServiceCollection AddMappers() =>
-            services.AddSingleton<IMapper, Mapper>();
+            services.AddSingleton<IEntityMapper, EntityMapper>();
 
         public IServiceCollection AddServices() =>
             services

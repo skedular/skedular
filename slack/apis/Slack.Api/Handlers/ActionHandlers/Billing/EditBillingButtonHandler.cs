@@ -17,7 +17,7 @@ namespace Slack.Api.Handlers.ActionHandlers.Billing;
 public class EditBillingButtonHandler(
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IPageNavigator pageNavigator,
     IOrganizationBillingService organizationBillingService) : IViewSubmissionHandler
 {
@@ -31,8 +31,8 @@ public class EditBillingButtonHandler(
             viewSubmission.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var organizationBillingDetails = new OrganizationBillingDetails { Organization = new Organization { Id = workspace.Organization.Id } };

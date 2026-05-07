@@ -1,6 +1,7 @@
 using Api.Shared.Services;
 using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
@@ -27,8 +28,8 @@ public class BookingService(
     IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    IMapper mapper,
-    Shared.Mappers.IMapper sharedMapper,
+    IGraphQlMapper graphQlMapper,
+    IEntityMapper sharedEntityMapper,
     ICachedBookingService cachedBookingService) : IBookingService
 {
     public async Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken)
@@ -40,7 +41,7 @@ public class BookingService(
 
         await EnsureCustomerCanViewBookingAsync(booking, customerId, cancellationToken);
 
-        return sharedMapper.MapTo(booking);
+        return sharedEntityMapper.MapTo(booking);
     }
 
     public async Task<IReadOnlyList<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string bookingId, CancellationToken cancellationToken)
@@ -52,7 +53,7 @@ public class BookingService(
         await EnsureCustomerCanViewBookingAsync(booking, customerId, cancellationToken);
 
         var invoices = await repositoryFactory.OrganizationArrearsInvoiceRepository.GetByBookingIdUntrackedAsync(bookingId, cancellationToken);
-        return invoices.Select(sharedMapper.MapTo).ToList();
+        return invoices.Select(sharedEntityMapper.MapTo).ToList();
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
@@ -187,7 +188,7 @@ public class BookingService(
             accessScope,
             cancellationToken);
 
-        return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
+        return (paginatedInfo, edges.Select(graphQlMapper.MapTo).ToList(), totalCount);
     }
 
     private async Task<List<string>> GetCustomerOrganizationIdsAsync(

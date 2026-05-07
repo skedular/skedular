@@ -10,7 +10,7 @@ public interface IWorkspaceChannelService
     Task ReSyncWorkspaceChannelsAsync(string workspaceId, CancellationToken cancellationToken);
 }
 
-public class WorkspaceChannelService(IMapper mapper, IRepositoryFactory repositoryFactory) : IWorkspaceChannelService
+public class WorkspaceChannelService(IEntityMapper entityMapper, IRepositoryFactory repositoryFactory) : IWorkspaceChannelService
 {
     public async Task ReSyncWorkspaceChannelsAsync(string workspaceId, CancellationToken cancellationToken)
     {
@@ -40,14 +40,14 @@ public class WorkspaceChannelService(IMapper mapper, IRepositoryFactory reposito
             .Where(channel => channels.Any(item => item.Id == channel.Id))
             .Select(channel =>
             {
-                var updatedWorkspaceChannel = mapper.MergeToEntity(channels.First(item => item.Id == channel.Id), channel, existingWorkspace);
+                var updatedWorkspaceChannel = entityMapper.MergeToEntity(channels.First(item => item.Id == channel.Id), channel, existingWorkspace);
                 updatedWorkspaceChannel.DeletedAt = null;
                 return repositoryFactory.WorkspaceChannelRepository.Update(updatedWorkspaceChannel);
             })
             .ToList();
         var addedItems = channels
             .Where(channel => workspaceChannels.All(item => item.Id != channel.Id))
-            .Select(channel => repositoryFactory.WorkspaceChannelRepository.Add(mapper.MapToEntity(channel, existingWorkspace)))
+            .Select(channel => repositoryFactory.WorkspaceChannelRepository.Add(entityMapper.MapToEntity(channel, existingWorkspace)))
             .ToList();
 
         repositoryFactory.WorkspaceChannelRepository.RemoveRange(itemsToRemove);

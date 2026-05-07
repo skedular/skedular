@@ -1,7 +1,5 @@
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.MarketplaceBookingSubscription;
-using Booking.Api.Mappers;
-using Microsoft.Extensions.Logging;
 
 namespace Booking.Api.UnitTests.GraphQL.MarketplaceBookingSubscription.RootQueryTests;
 
@@ -10,12 +8,8 @@ public class MarketplaceBookingSubscriptionStatusesShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void Return_All_Subscription_Status_Options(
-        IMapper mapper,
-        ILogger<RootQuery> logger)
+    public void Return_All_Subscription_Status_Options(RootQuery sut)
     {
-        var sut = new RootQuery(mapper, logger);
-
         var result = sut.MarketplaceBookingSubscriptionStatuses().ToList();
 
         result.Count.ShouldBe(5);
@@ -38,12 +32,8 @@ public class MarketplaceBookingSubscriptionStatusesShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Return_Status_Options_With_Correct_Names(
-        IMapper mapper,
-        ILogger<RootQuery> logger)
+    public void Return_Status_Options_With_Correct_Names(RootQuery sut)
     {
-        var sut = new RootQuery(mapper, logger);
-
         var result = sut.MarketplaceBookingSubscriptionStatuses().ToList();
 
         result.ShouldContain(item =>

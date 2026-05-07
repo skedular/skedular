@@ -6,7 +6,7 @@ using HotChocolate.Types;
 namespace Booking.Api.GraphQL.Booking;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<BookingPayload> AddPrivateBookingAsync(
@@ -14,8 +14,8 @@ public class RootMutation(IMapper mapper)
         [Service] IPrivateBookingService privateBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await privateBookingService.AddAsync(mapper.MapTo(input), cancellationToken);
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
+        var booking = await privateBookingService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
+        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
     }
 
     [UseResolverScope]
@@ -24,8 +24,8 @@ public class RootMutation(IMapper mapper)
         [Service] IPrivateBookingService privateBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await privateBookingService.UpdateAsync(mapper.MapTo(input), cancellationToken);
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
+        var booking = await privateBookingService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken);
+        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
     }
 
     [UseResolverScope]
@@ -35,7 +35,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var booking = await privateBookingService.DeleteAsync(input.Id, cancellationToken);
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
+        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
     }
 
     [UseResolverScope]
@@ -44,8 +44,8 @@ public class RootMutation(IMapper mapper)
         [Service] IMarketplaceBookingService marketplaceBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await marketplaceBookingService.AddAsync(mapper.MapTo(input), cancellationToken);
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
+        var booking = await marketplaceBookingService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
+        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
     }
 
     [UseResolverScope]
@@ -54,8 +54,8 @@ public class RootMutation(IMapper mapper)
         [Service] IMarketplaceBookingService marketplaceBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await marketplaceBookingService.UpdateAsync(mapper.MapTo(input), cancellationToken);
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
+        var booking = await marketplaceBookingService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken);
+        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
     }
 
     [UseResolverScope]
@@ -65,6 +65,6 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var booking = await marketplaceBookingService.DeleteAsync(input.Id, cancellationToken);
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
+        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
     }
 }

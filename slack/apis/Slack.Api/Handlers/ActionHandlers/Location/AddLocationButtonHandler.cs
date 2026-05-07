@@ -24,7 +24,7 @@ public class AddLocationButtonHandler(
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IWorkspaceChannelService workspaceChannelService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     IPageNavigator pageNavigator,
     ILocationService locationService)
@@ -39,7 +39,7 @@ public class AddLocationButtonHandler(
             request.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
+        var workspace = entityMapper.MapTo(workspaceEntity);
         var name = new InputBlock
         {
             BlockId = LocationActionTypes.Name,
@@ -107,8 +107,8 @@ public class AddLocationButtonHandler(
         var (workspaceMemberEntity, _) =
             await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(workspaceEntity, viewSubmission.User.Id, cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var locationId = randomHelper.Generate();

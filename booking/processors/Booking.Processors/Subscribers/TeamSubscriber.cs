@@ -12,7 +12,7 @@ namespace Booking.Processors.Subscribers;
 
 public class TeamSubscriber(
     ILogger<TeamSubscriber> logger,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IRepositoryFactory repositoryFactory,
     ICachedTeamService cachedTeamService) : IEventSubscriber<Key, Event>
 {
@@ -24,7 +24,7 @@ public class TeamSubscriber(
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Team.OrganizationId);
 
-                    var team = mapper.MapTo(@event);
+                    var team = eventMapper.MapTo(@event);
                     var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization!.Id, cancellationToken);
                     var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken);
                     if (existingTeam.EventRaisedAt > team.EventRaisedAt)
@@ -40,7 +40,7 @@ public class TeamSubscriber(
 
             case Type.TeamDeleted:
                 {
-                    var team = mapper.MapTo(@event);
+                    var team = eventMapper.MapTo(@event);
                     var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, true, cancellationToken);
                     if (existingTeam is not null && existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
@@ -65,7 +65,7 @@ public class TeamSubscriber(
     private async Task HandleTeamUpsertedEventAsync(Shared.Models.Team team, Team existingTeam, Organization organization,
         CancellationToken cancellationToken)
     {
-        existingTeam = repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam, organization));
+        existingTeam = repositoryFactory.TeamRepository.Update(eventMapper.MergeToEntity(team, existingTeam, organization));
 
         _ = await RebuildTeamMembersAsync(team, existingTeam, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -93,7 +93,7 @@ public class TeamSubscriber(
         foreach (var teamMember in teamMembers.Where(teamMember => team.TeamMembers.Any(item => item.Id == teamMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(teamMember.Customer.Id, false, cancellationToken);
-            var updatedTeamMember = mapper.MergeToEntity(
+            var updatedTeamMember = eventMapper.MergeToEntity(
                 team.TeamMembers.First(item => item.Id == teamMember.Id),
                 teamMember,
                 existingTeam,
@@ -106,7 +106,7 @@ public class TeamSubscriber(
         foreach (var teamMember in team.TeamMembers.Where(teamMember => teamMembers.All(item => item.Id != teamMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(teamMember.Customer.Id, false, cancellationToken);
-            addedItems.Add(repositoryFactory.TeamMemberRepository.Add(mapper.MapToEntity(teamMember, existingTeam, customer)));
+            addedItems.Add(repositoryFactory.TeamMemberRepository.Add(eventMapper.MapToEntity(teamMember, existingTeam, customer)));
         }
 
         repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);

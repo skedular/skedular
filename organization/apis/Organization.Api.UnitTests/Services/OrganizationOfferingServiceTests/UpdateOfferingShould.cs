@@ -1,15 +1,11 @@
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore.Storage;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
-using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
-using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
-using Organization.Shared.Services;
 
 namespace Organization.Api.UnitTests.Services.OrganizationOfferingServiceTests;
 
@@ -22,16 +18,13 @@ public class UpdateOfferingShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IOrganizationRepository organizationRepository,
         [Frozen] IOrganizationOfferingRepository organizationOfferingRepository,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
         [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IMapper mapper,
+        [Frozen] IGraphQlMapper graphQlMapper,
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
-        IRandomHelper randomHelper,
-        ICustomerService customerService,
-        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen] TimeProvider timeProvider,
+        OrganizationOfferingService sut,
         CancellationToken cancellationToken)
     {
         var now = new DateTimeOffset(2026, 4, 19, 10, 0, 0, TimeSpan.Zero);
@@ -55,7 +48,6 @@ public class UpdateOfferingShould
         };
         var mappedOrganization = new Shared.Models.Organization { Id = organization.Id, Name = organization.Name };
         var stripeUrl = new Uri("https://example.test/authorize");
-        var timeProvider = A.Fake<TimeProvider>();
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationOfferingRepository).Returns(organizationOfferingRepository);
@@ -71,19 +63,7 @@ public class UpdateOfferingShould
                 cancellationToken))
             .Returns(matchingOffering);
         A.CallTo(() => organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)).Returns(stripeUrl);
-        A.CallTo(() => mapper.MapTo(organization, stripeUrl)).Returns(mappedOrganization);
-
-        var sut = new OrganizationOfferingService(
-            transactionBuilder,
-            repositoryFactory,
-            randomHelper,
-            customerService,
-            organizationAuthorizationService,
-            organizationOutboxPublisher,
-            temporalOutboxService,
-            organizationStripeConnectAccountService,
-            mapper,
-            timeProvider);
+        A.CallTo(() => graphQlMapper.MapTo(organization, stripeUrl)).Returns(mappedOrganization);
 
         await sut.UpdateOfferingAsync(organization.Id, null, OfferingCode.FreeTierV1, true, cancellationToken);
 

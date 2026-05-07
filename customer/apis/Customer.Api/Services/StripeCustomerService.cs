@@ -1,6 +1,6 @@
 using Api.Shared.Services;
-using Customer.Api.Mappers;
 using Customer.Shared.Database.Entities;
+using Customer.Shared.Mappers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Random;
 using Stripe;
@@ -14,7 +14,7 @@ public interface IStripeCustomerService
 
 public class StripeCustomerService(
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     ICreatable<Stripe.Customer, CustomerCreateOptions> customerCreateService) : IStripeCustomerService
 {
@@ -27,7 +27,7 @@ public class StripeCustomerService(
         }
 
         var stripeCustomer = await customerCreateService.CreateAsync(
-            mapper.MapToStripeCustomerCreateOption(customer),
+            entityMapper.MapToStripeCustomerCreateOption(customer),
             new RequestOptions { IdempotencyKey = customer.Id, StripeAccount = null },
             cancellationToken);
         customer.StripeCustomer = repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer

@@ -1,5 +1,4 @@
 using Api.Shared.Services.Models;
-using Enterprise.Shared.Version;
 using Marketplace.Api.GraphQL;
 
 namespace Marketplace.Api.UnitTests.GraphQL.RootQueryTests;
@@ -7,11 +6,10 @@ namespace Marketplace.Api.UnitTests.GraphQL.RootQueryTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class CurrenciesShould
 {
-    [Fact]
-    public void Return_All_Currencies()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_All_Currencies(RootQuery sut)
     {
-        var sut = new RootQuery(A.Fake<IVersionService>());
-
         var result = sut.Currencies().ToList();
 
         result.Count.ShouldBe(2);

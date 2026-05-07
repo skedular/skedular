@@ -17,7 +17,7 @@ public static class Extensions
 
         public IServiceCollection AddDomainSharedMappers() =>
             services
-                .AddSingleton<IMapper, Mapper>();
+                .AddSingleton<IEntityMapper, EntityMapper>();
 
         public IServiceCollection AddDomainSharedServices() =>
             services

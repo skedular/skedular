@@ -1,4 +1,4 @@
-using Team.Api.Mappers;
+using Team.Shared.Mappers;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 
@@ -12,7 +12,7 @@ public interface IWorkaroundService
 
 public class WorkaroundService(
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     ITeamPublisher teamPublisher,
     ILogger<WorkaroundService> logger) : IWorkaroundService
 {
@@ -25,14 +25,14 @@ public class WorkaroundService(
             return;
         }
 
-        await teamPublisher.PublishTeamsAsync([mapper.MapTo(team)], cancellationToken);
+        await teamPublisher.PublishTeamsAsync([entityMapper.MapTo(team)], cancellationToken);
         logger.LogInformation("RepublishTeam completed for team {TeamId}", teamId);
     }
 
     public async Task RepublishAllTeamsAsync(CancellationToken cancellationToken)
     {
         var teams = await repositoryFactory.TeamRepository.GetAllUntrackedAsync(cancellationToken);
-        await teamPublisher.PublishTeamsAsync(teams.Select(mapper.MapTo).ToList(), cancellationToken);
+        await teamPublisher.PublishTeamsAsync(teams.Select(entityMapper.MapTo).ToList(), cancellationToken);
         logger.LogInformation("RepublishAllTeams completed for {TeamCount} teams", teams.Count);
     }
 }

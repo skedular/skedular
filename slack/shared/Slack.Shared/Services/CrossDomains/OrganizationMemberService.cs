@@ -30,7 +30,7 @@ public interface IOrganizationMemberService
 public class OrganizationMemberService(
     OrganizationConfiguration organizationConfiguration,
     Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     ICustomerService customerService)
     : IOrganizationMemberService
 {
@@ -105,7 +105,7 @@ public class OrganizationMemberService(
             Edges = connection.Edges
                 .Select(item =>
                 {
-                    var member = mapper.MapTo(item.Node);
+                    var member = grpcMapper.MapTo(item.Node);
                     var matchingCustomer = customers.FirstOrDefault(customer => customer.Id == member.Customer.Id);
                     if (matchingCustomer is not null)
                     {

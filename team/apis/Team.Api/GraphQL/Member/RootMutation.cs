@@ -8,7 +8,7 @@ using Team.Api.Services;
 namespace Team.Api.GraphQL.Member;
 
 [MutationType]
-public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
+public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> logger)
 {
     [UseResolverScope]
     public async Task<TeamPayload> UpdateTeamMembersAsync(
@@ -20,9 +20,9 @@ public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
 
         try
         {
-            var team = await teamMemberService.UpdateMembersAsync(input.Id, mapper.MapToTeamMembers(input), cancellationToken);
+            var team = await teamMemberService.UpdateMembersAsync(input.Id, graphQlMapper.MapToTeamMembers(input), cancellationToken);
             logger.LogInformation("Completed {Operation} for Team {TeamId}", nameof(UpdateTeamMembersAsync), input.Id);
-            return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
+            return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = graphQlMapper.MapTo(team)! };
         }
         catch (Exception ex)
         {
@@ -41,9 +41,9 @@ public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
 
         try
         {
-            var teamMember = await teamMemberService.AddAsync(input.Id, mapper.MapTo(input), cancellationToken);
+            var teamMember = await teamMemberService.AddAsync(input.Id, graphQlMapper.MapTo(input), cancellationToken);
             logger.LogInformation("Completed {Operation} for Team {TeamId}", nameof(AddTeamMemberAsync), input.Id);
-            return new TeamMemberPayload { ClientMutationId = input.ClientMutationId, TeamMember = mapper.MapTo(teamMember) };
+            return new TeamMemberPayload { ClientMutationId = input.ClientMutationId, TeamMember = graphQlMapper.MapTo(teamMember) };
         }
         catch (Exception ex)
         {
@@ -64,7 +64,7 @@ public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
         {
             var teamMember = await teamMemberService.RemoveAsync(input.Id, cancellationToken);
             logger.LogInformation("Completed {Operation} for TeamMember {TeamMemberId}", nameof(RemoveTeamMemberAsync), input.Id);
-            return new TeamMemberPayload { ClientMutationId = input.ClientMutationId, TeamMember = mapper.MapTo(teamMember) };
+            return new TeamMemberPayload { ClientMutationId = input.ClientMutationId, TeamMember = graphQlMapper.MapTo(teamMember) };
         }
         catch (Exception ex)
         {
@@ -85,7 +85,7 @@ public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
         {
             var member = await teamMemberService.ChangeRoleAsync(input.Id, input.Role, cancellationToken);
             logger.LogInformation("Completed {Operation} for TeamMember {TeamMemberId}", nameof(ChangeTeamMemberRoleAsync), input.Id);
-            return new TeamMemberDetailsPayload { ClientMutationId = input.ClientMutationId, Member = mapper.MapTo(member) };
+            return new TeamMemberDetailsPayload { ClientMutationId = input.ClientMutationId, Member = graphQlMapper.MapTo(member) };
         }
         catch (Exception ex)
         {
@@ -109,7 +109,7 @@ public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
             logger.LogInformation("Completed {Operation}", nameof(ChangeTeamMembersStatusAsync));
             return new TeamMembersDetailsPayload
             {
-                ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()
+                ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(graphQlMapper.MapTo).ToArray()
             };
         }
         catch (Exception ex)
@@ -133,7 +133,7 @@ public class RootMutation(IMapper mapper, ILogger<RootMutation> logger)
             logger.LogInformation("Completed {Operation}", nameof(RemoveTeamMembersAsync));
             return new TeamMembersDetailsPayload
             {
-                ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()
+                ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(graphQlMapper.MapTo).ToArray()
             };
         }
         catch (Exception ex)

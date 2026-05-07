@@ -5,7 +5,7 @@ using Temporalio.Activities;
 
 namespace MsTeams.Shared.Activities;
 
-public class MsTeamsIntegrations(IRepositoryFactory repositoryFactory, IMapper mapper, IGraphService graphService)
+public class MsTeamsIntegrations(IRepositoryFactory repositoryFactory, IEntityMapper entityMapper, IGraphService graphService)
 {
     [Activity]
     public async Task<bool> ReSyncTeamsAndChannelsAsync(string tenantId)
@@ -24,11 +24,11 @@ public class MsTeamsIntegrations(IRepositoryFactory repositoryFactory, IMapper m
         var updatedTeams = tenant.AzureTenantTeams
             .Where(azureTenantTeam => azureTenantTeams.Any(item => item.Id == azureTenantTeam.Id))
             .Select(azureTenantTeam => repositoryFactory.AzureTenantTeamRepository.Update(
-                mapper.MergeToEntity(azureTenantTeams.First(item => item.Id == azureTenantTeam.Id), azureTenantTeam, tenant)))
+                entityMapper.MergeToEntity(azureTenantTeams.First(item => item.Id == azureTenantTeam.Id), azureTenantTeam, tenant)))
             .ToList();
         var addedTeams = azureTenantTeams
             .Where(azureTenantTeam => tenant.AzureTenantTeams.All(item => item.Id != azureTenantTeam.Id))
-            .Select(item => repositoryFactory.AzureTenantTeamRepository.Add(mapper.MapTo(item, tenant)))
+            .Select(item => repositoryFactory.AzureTenantTeamRepository.Add(entityMapper.MapTo(item, tenant)))
             .ToList();
 
         repositoryFactory.AzureTenantTeamRepository.RemoveRange(teamsToRemove);
@@ -43,14 +43,14 @@ public class MsTeamsIntegrations(IRepositoryFactory repositoryFactory, IMapper m
             var updatedChannels = existingAzureTenantTeam.AzureTenantTeamChannels
                 .Where(azureTenantTeamChannel => azureTenantTeamChannels.Any(item => item.Id == azureTenantTeamChannel.Id))
                 .Select(azureTenantTeamChannel => repositoryFactory.AzureTenantTeamChannelRepository.Update(
-                    mapper.MergeToEntity(
+                    entityMapper.MergeToEntity(
                         azureTenantTeamChannels.First(item => item.Id == azureTenantTeamChannel.Id),
                         azureTenantTeamChannel,
                         existingAzureTenantTeam)))
                 .ToList();
             var addedChannels = azureTenantTeamChannels
                 .Where(azureTenantTeamChannel => existingAzureTenantTeam.AzureTenantTeamChannels.All(item => item.Id != azureTenantTeamChannel.Id))
-                .Select(item => repositoryFactory.AzureTenantTeamChannelRepository.Add(mapper.MapTo(item, existingAzureTenantTeam)))
+                .Select(item => repositoryFactory.AzureTenantTeamChannelRepository.Add(entityMapper.MapTo(item, existingAzureTenantTeam)))
                 .ToList();
 
             repositoryFactory.AzureTenantTeamChannelRepository.RemoveRange(channelsToRemove);

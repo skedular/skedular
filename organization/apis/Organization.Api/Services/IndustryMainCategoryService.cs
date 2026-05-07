@@ -10,7 +10,11 @@ public interface IIndustryMainCategoryService
     Task<IReadOnlyList<IndustryMainCategory>> GetAllAsync(CancellationToken cancellationToken);
 }
 
-public class IndustryMainCategoryService(IRepositoryFactory repositoryFactory, IMapper mapper, IMemoryCache memoryCache, TimeProvider timeProvider)
+public class IndustryMainCategoryService(
+    IRepositoryFactory repositoryFactory,
+    IGraphQlMapper graphQlMapper,
+    IMemoryCache memoryCache,
+    TimeProvider timeProvider)
     : IIndustryMainCategoryService
 {
     public async Task<IReadOnlyList<IndustryMainCategory>> GetAllAsync(CancellationToken cancellationToken) =>
@@ -22,6 +26,6 @@ public class IndustryMainCategoryService(IRepositoryFactory repositoryFactory, I
                 var industryMainCategories =
                     await repositoryFactory.IndustryMainCategoryRepository.GetAllActiveWithSubCategoriesAsync(cancellationToken);
 
-                return mapper.MapTo(industryMainCategories).ToList();
+                return graphQlMapper.MapTo(industryMainCategories).ToList();
             }))!;
 }

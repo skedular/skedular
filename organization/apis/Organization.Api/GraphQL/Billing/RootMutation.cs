@@ -7,7 +7,7 @@ using Organization.Api.Services;
 namespace Organization.Api.GraphQL.Billing;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<OrganizationPayload> AddOrganizationBillingDetailsAsync(
@@ -15,9 +15,9 @@ public class RootMutation(IMapper mapper)
         [Service] IOrganizationBillingService organizationBillingService,
         CancellationToken cancellationToken)
     {
-        var organizationBillingDetails = await organizationBillingService.AddAsync(mapper.MapTo(input), cancellationToken);
+        var organizationBillingDetails = await organizationBillingService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
 
-        return new OrganizationPayload { ClientMutationId = input.ClientMutationId, Organization = mapper.MapTo(organizationBillingDetails)! };
+        return new OrganizationPayload { ClientMutationId = input.ClientMutationId, Organization = graphQlMapper.MapTo(organizationBillingDetails)! };
     }
 
     [UseResolverScope]
@@ -26,8 +26,8 @@ public class RootMutation(IMapper mapper)
         [Service] IOrganizationBillingService organizationBillingService,
         CancellationToken cancellationToken)
     {
-        var organizationBillingDetails = await organizationBillingService.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        var organizationBillingDetails = await organizationBillingService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken);
 
-        return new OrganizationPayload { ClientMutationId = input.ClientMutationId, Organization = mapper.MapTo(organizationBillingDetails)! };
+        return new OrganizationPayload { ClientMutationId = input.ClientMutationId, Organization = graphQlMapper.MapTo(organizationBillingDetails)! };
     }
 }

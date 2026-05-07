@@ -22,7 +22,7 @@ public class AzureTenantIntegrations(
     LocationConfiguration locationConfiguration,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IGraphService graphService,
     CustomerAdminService.CustomerAdminServiceClient customerAdminServiceClient,
     LocationService.LocationServiceClient locationServiceClient,
@@ -49,7 +49,7 @@ public class AzureTenantIntegrations(
             .Where(azureTenantMember => azureTenantMembers.Any(item => item.Id == azureTenantMember.Id))
             .Select(azureTenantMember =>
             {
-                var updatedAzureTenantMembers = mapper.MergeToEntity(
+                var updatedAzureTenantMembers = entityMapper.MergeToEntity(
                     azureTenantMembers.First(item => item.Id == azureTenantMember.Id),
                     azureTenantMember,
                     tenant);
@@ -59,7 +59,7 @@ public class AzureTenantIntegrations(
             .ToList();
         var addedItems = azureTenantMembers
             .Where(azureTenantMember => existingAzureTenantMembers.All(item => item.Id != azureTenantMember.Id))
-            .Select(item => repositoryFactory.AzureTenantMemberRepository.Add(mapper.MapTo(item, tenant)))
+            .Select(item => repositoryFactory.AzureTenantMemberRepository.Add(entityMapper.MapTo(item, tenant)))
             .ToList();
 
         repositoryFactory.AzureTenantMemberRepository.RemoveRange(itemsToRemove);
@@ -103,7 +103,7 @@ public class AzureTenantIntegrations(
                 customerIdsTenantMembersPair.Add((anyCustomerExistByVerifiableTokenResponse.Customer.Id, tenantMember));
 
                 await customerAdminServiceClient.Admin_UpdateIdentityAsync(
-                    mapper.MapToUpdateIdentityInput(tenantMember, anyCustomerExistByVerifiableTokenResponse.Customer.Id),
+                    entityMapper.MapToUpdateIdentityInput(tenantMember, anyCustomerExistByVerifiableTokenResponse.Customer.Id),
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken);
 
@@ -142,7 +142,7 @@ public class AzureTenantIntegrations(
                 customerIdsTenantMembersPair.Add((anyCustomerExistByEmailTokenResponse.Customer.Id, tenantMember));
 
                 await customerAdminServiceClient.Admin_AddIdentityAsync(
-                    mapper.MapTo(tenantMember, anyCustomerExistByEmailTokenResponse.Customer.Id),
+                    entityMapper.MapTo(tenantMember, anyCustomerExistByEmailTokenResponse.Customer.Id),
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken);
 
@@ -174,7 +174,7 @@ public class AzureTenantIntegrations(
             var customerId = randomHelper.Generate();
             customerIdsTenantMembersPair.Add((customerId, tenantMember));
             await customerAdminServiceClient.Admin_AddAsync(
-                mapper.MapTo(tenantMember, customerId, new Database.Entities.Organization { Id = azureTenant.Organization.Id }),
+                entityMapper.MapTo(tenantMember, customerId, new Database.Entities.Organization { Id = azureTenant.Organization.Id }),
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
         }

@@ -21,7 +21,7 @@ public class OrganizationOfferings(
     IRepositoryFactory repositoryFactory,
     IDbTransactionBuilder transactionBuilder,
     IRandomHelper randomHelper,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     TimeProvider timeProvider,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
@@ -129,7 +129,7 @@ public class OrganizationOfferings(
         repositoryFactory.OrganizationOfferingRepository.Add(newOrganizationOffering);
         repositoryFactory.OrganizationOfferingRepository.Remove(organizationOffering);
 
-        var mappedOrganization = mapper.MapTo(organization);
+        var mappedOrganization = entityMapper.MapTo(organization);
         mappedOrganization.OrganizationOfferings =
         [
             mappedOrganization.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue).OrderByDescending(item => item.End).First()

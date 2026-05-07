@@ -7,7 +7,7 @@ using Organization.Api.Services;
 namespace Organization.Api.GraphQL.Member;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<OrganizationMemberDetailsPayload> ChangeOrganizationMemberRoleAsync(
@@ -17,7 +17,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Member = mapper.MapTo(await organizationMemberService.ChangeRoleAsync(input.Id, input.Role, cancellationToken))
+            Member = graphQlMapper.MapTo(await organizationMemberService.ChangeRoleAsync(input.Id, input.Role, cancellationToken))
         };
 
     [UseResolverScope]
@@ -30,7 +30,7 @@ public class RootMutation(IMapper mapper)
             await organizationMemberService.ChangeStatusAsync(input.Ids.RemoveInvalidIds().ToList(), input.Status, cancellationToken);
         return new OrganizationMembersDetailsPayload
         {
-            ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()
+            ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(graphQlMapper.MapTo).ToArray()
         };
     }
 
@@ -43,7 +43,7 @@ public class RootMutation(IMapper mapper)
         var organizationMembers = await organizationMemberService.RemoveAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
         return new OrganizationMembersDetailsPayload
         {
-            ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()
+            ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(graphQlMapper.MapTo).ToArray()
         };
     }
 

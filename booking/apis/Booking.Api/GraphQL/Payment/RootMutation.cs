@@ -8,7 +8,7 @@ using HotChocolate.Types;
 namespace Booking.Api.GraphQL.Payment;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<BookingPayload> ConfirmBookingPaymentAsync(
@@ -18,7 +18,7 @@ public class RootMutation(IMapper mapper)
     {
         var booking = await bookingPaymentService.ConfirmPaymentAsync(input.Id, cancellationToken);
 
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
+        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
     }
 
     [UseResolverScope]
@@ -29,7 +29,7 @@ public class RootMutation(IMapper mapper)
     {
         var booking = await bookingPaymentService.RejectPaymentAsync(input.Id, cancellationToken);
 
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
+        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
     }
 
     [UseResolverScope]
@@ -40,7 +40,7 @@ public class RootMutation(IMapper mapper)
     {
         var booking = await bookingPaymentService.MakePaymentNotRequiredAsync(input.Id, cancellationToken);
 
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
+        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
     }
 
     [UseResolverScope]
@@ -51,7 +51,7 @@ public class RootMutation(IMapper mapper)
     {
         var recurringBooking = await recurringBookingPaymentService.ConfirmPaymentAsync(input.Id, cancellationToken);
 
-        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking)! };
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = graphQlMapper.MapTo(recurringBooking)! };
     }
 
     [UseResolverScope]
@@ -62,7 +62,7 @@ public class RootMutation(IMapper mapper)
     {
         var recurringBooking = await recurringBookingPaymentService.RejectPaymentAsync(input.Id, cancellationToken);
 
-        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking)! };
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = graphQlMapper.MapTo(recurringBooking)! };
     }
 
     [UseResolverScope]
@@ -73,6 +73,6 @@ public class RootMutation(IMapper mapper)
     {
         var recurringBooking = await recurringBookingPaymentService.MakePaymentNotRequiredAsync(input.Id, cancellationToken);
 
-        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking)! };
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = graphQlMapper.MapTo(recurringBooking)! };
     }
 }

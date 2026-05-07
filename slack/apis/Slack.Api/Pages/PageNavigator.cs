@@ -36,7 +36,7 @@ public class PageNavigator(
     IBillingPage billingPage,
     IWorkspaceMemberService workspaceMemberService,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper) :
+    IEntityMapper entityMapper) :
     IPageNavigator,
     IAsyncPageRenderingCallbacks,
     IBlockActionHandler<ButtonAction>
@@ -49,8 +49,8 @@ public class PageNavigator(
             workspaceEntity,
             request.User.Id,
             cancellationToken);
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
 
         await BackAsync(
             workspace,

@@ -17,7 +17,7 @@ public class TeamPermissionsService(
     ApplicationConfiguration applicationConfiguration,
     TeamConfiguration teamConfiguration,
     Api.Shared.Grpc.Skedular.Team.Core.V1.TeamService.TeamServiceClient teamServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache)
     : ITeamPermissionsService
 {
@@ -26,7 +26,7 @@ public class TeamPermissionsService(
     public async Task<TeamPermissions> GetPermissionsAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(workspaceMemberId, teamId),
-            async ct => mapper.MapTo(
+            async ct => grpcMapper.MapTo(
                 await teamServiceClient.GetPermissionsAsync(
                     new GetPermissionsInput { Id = teamId },
                     teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),

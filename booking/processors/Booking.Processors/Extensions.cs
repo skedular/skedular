@@ -13,7 +13,7 @@ public static class Extensions
     extension(IServiceCollection services)
     {
         public IServiceCollection AddMappers() =>
-            services.AddSingleton<IMapper, Mapper>();
+            services.AddSingleton<IEventMapper, EventMapper>();
 
         public IServiceCollection AddServices() =>
             services

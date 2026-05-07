@@ -8,11 +8,11 @@ using Location.Api.Services;
 namespace Location.Api.GraphQL.Resource;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<ResourceDetails?> ResourceAsync(string id, [Service] IResourceService resourceService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await resourceService.GetByIdAsync(id, false, cancellationToken));
+        graphQlMapper.MapTo(await resourceService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -21,5 +21,5 @@ public class RootQuery(IMapper mapper)
         [ID] string id,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await resourceService.GetByIdAsync(id, true, cancellationToken));
+        graphQlMapper.MapTo(await resourceService.GetByIdAsync(id, true, cancellationToken));
 }

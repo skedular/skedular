@@ -23,7 +23,7 @@ public interface IWorkspaceMemberService
 
 public class WorkspaceMemberService(
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     ICustomerService customerService,
     ICachedCustomerService cachedCustomerService,
@@ -66,7 +66,7 @@ public class WorkspaceMemberService(
             throw new SlackWorkspaceMemberTypeNotSupported();
         }
 
-        workspaceMember = repositoryFactory.WorkspaceMemberRepository.Add(mapper.MapToEntity(user, workspace));
+        workspaceMember = repositoryFactory.WorkspaceMemberRepository.Add(entityMapper.MapToEntity(user, workspace));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 

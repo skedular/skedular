@@ -94,7 +94,7 @@ public class MarketplaceBookingService(
     IRepositoryFactory repositoryFactory,
     IBookingOutboxPublisher bookingOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     ICachedBookingService cachedBookingService,
     IResourceService resourceService,
@@ -233,7 +233,7 @@ public class MarketplaceBookingService(
 
         repositoryFactory.ResourceBookingSlotRepository.UpdateRange(slots);
 
-        var marketplaceBookingEntity = mapper.MapTo(marketplaceBooking, customer, null, productVersion, null);
+        var marketplaceBookingEntity = entityMapper.MapTo(marketplaceBooking, customer, null, productVersion, null);
         var paymentExpiry = timeProvider
             .GetUtcNow()
             .TrimAllAfterSeconds()
@@ -242,7 +242,7 @@ public class MarketplaceBookingService(
         marketplaceBookingEntity.PaymentExpiry = paymentExpiry;
         marketplaceBookingEntity = repositoryFactory.MarketplaceBookingRepository.Add(marketplaceBookingEntity);
 
-        var bookingEntity = mapper.MapTo(
+        var bookingEntity = entityMapper.MapTo(
             booking,
             customerEntities,
             organizations,
@@ -259,7 +259,7 @@ public class MarketplaceBookingService(
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
 
-        booking = mapper.MapTo(bookingEntity);
+        booking = entityMapper.MapTo(bookingEntity);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
@@ -457,7 +457,7 @@ public class MarketplaceBookingService(
 
         repositoryFactory.ResourceBookingSlotRepository.UpdateRange(slots);
 
-        var bookingEntity = mapper.MergeTo(
+        var bookingEntity = entityMapper.MergeTo(
             booking,
             existingBooking,
             customerEntities,
@@ -480,7 +480,7 @@ public class MarketplaceBookingService(
         bookingEntity.MarketplaceBooking.StripeCheckoutSession = existingStripeCheckoutSession;
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
-        booking = mapper.MapTo(bookingEntity);
+        booking = entityMapper.MapTo(bookingEntity);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
@@ -530,7 +530,7 @@ public class MarketplaceBookingService(
         existingBooking.InvolvedResources.Clear();
         existingBooking.DeletedByCustomer = deletedByCustomer;
         existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
-        var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
+        var deletedBooking = entityMapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
 
         bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
 
@@ -656,7 +656,7 @@ public class MarketplaceBookingService(
 
         _ = repositoryFactory.BookingRepository.Update(booking);
 
-        bookingOutboxPublisher.PublishBookings([mapper.MapTo(booking)], repositoryFactory.UnitOfWork);
+        bookingOutboxPublisher.PublishBookings([entityMapper.MapTo(booking)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

@@ -27,7 +27,7 @@ public class BookingIntegrations(
     IRepositoryFactory repositoryFactory,
     IDbTransactionBuilder transactionBuilder,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
     IBookingOutboxPublisher bookingOutboxPublisher,
     ICachedBookingService cachedBookingService,
@@ -108,7 +108,7 @@ public class BookingIntegrations(
         }
 
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
-        bookingOutboxPublisher.PublishBookings([mapper.MapTo(booking)], repositoryFactory.UnitOfWork);
+        bookingOutboxPublisher.PublishBookings([entityMapper.MapTo(booking)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -147,7 +147,7 @@ public class BookingIntegrations(
 
         if (marketplaceBooking.BillingMode.ToProductPricingBillingMode() == ProductPricingBillingMode.InArrears)
         {
-            var recurringBookingModel = mapper.MapTo(recurringBooking);
+            var recurringBookingModel = entityMapper.MapTo(recurringBooking);
             var draft = organizationArrearsBillingPlannerService.BuildInitialRecurringInvoiceDraft(
                 recurringBookingModel,
                 marketplaceBooking.ProductVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle());
@@ -222,7 +222,7 @@ public class BookingIntegrations(
 
         bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking);
 
-        bookingOutboxPublisher.PublishBookings([mapper.MapTo(booking)], repositoryFactory.UnitOfWork);
+        bookingOutboxPublisher.PublishBookings([entityMapper.MapTo(booking)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

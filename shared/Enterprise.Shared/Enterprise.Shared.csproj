@@ -37,7 +37,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.7"/>
 
         <!-- AWS -->
-        <PackageReference Include="AWSSDK.S3" Version="4.0.22.2"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.23"/>
         <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.27"/>
 
         <!-- gRPC / Protobuf -->
@@ -119,11 +119,11 @@
         <PackageReference Include="Google.Apis.Auth" Version="1.74.0"/>
         <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.7"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0"/>
-        <PackageReference Include="WorkOS.net" Version="3.1.0"/>
+        <PackageReference Include="WorkOS.net" Version="4.0.0"/>
 
         <!-- Payments / Accounting -->
         <PackageReference Include="Stripe.net" Version="51.1.0"/>
-        <PackageReference Include="Xero.NetStandard.OAuth2" Version="14.0.1"/>
+        <PackageReference Include="Xero.NetStandard.OAuth2" Version="15.0.0"/>
         <PackageReference Include="Xero.NetStandard.OAuth2Client" Version="1.6.0"/>
 
         <!-- Geospatial -->
@@ -148,6 +148,7 @@
         <PackageReference Include="SimpleBase" Version="5.6.0"/>
         <PackageReference Include="System.Reactive" Version="6.1.0"/>
         <PackageReference Include="YamlDotNet" Version="17.1.0"/>
+        <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.22.2"/>
 
         <!-- Azure / AI / MCP -->
         <PackageReference Include="Azure.AI.OpenAI" Version="2.1.0"/>

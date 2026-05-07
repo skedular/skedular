@@ -21,7 +21,7 @@ public class EditTeamButtonHandler(
     ITeamService teamService,
     ITeamPermissionsService teamPermissionsService,
     IWorkspaceChannelService workspaceChannelService,
-    IMapper mapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
     IPageNavigator pageNavigator) : IViewSubmissionHandler
 {
@@ -35,8 +35,8 @@ public class EditTeamButtonHandler(
             viewSubmission.User.Id,
             cancellationToken);
 
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var workspace = entityMapper.MapTo(workspaceEntity);
+        var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditTeamContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var permissions = await teamPermissionsService.GetPermissionsAsync(workspaceMember.Id, context.TeamId, cancellationToken);
         if (!permissions.CanModify)

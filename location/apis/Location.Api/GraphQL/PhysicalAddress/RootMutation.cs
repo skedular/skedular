@@ -7,7 +7,7 @@ using Location.Api.Services;
 namespace Location.Api.GraphQL.PhysicalAddress;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<LocationPayload> AddLocationPhysicalAddressAsync(
@@ -17,7 +17,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Location = mapper.MapTo(await organizationPhysicalAddressService.AddAsync(mapper.MapTo(input), cancellationToken))!
+            Location = graphQlMapper.MapTo(await organizationPhysicalAddressService.AddAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -28,6 +28,6 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Location = mapper.MapTo(await organizationPhysicalAddressService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+            Location = graphQlMapper.MapTo(await organizationPhysicalAddressService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 }

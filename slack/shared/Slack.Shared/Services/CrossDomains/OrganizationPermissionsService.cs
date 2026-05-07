@@ -17,7 +17,7 @@ public class OrganizationPermissionsService(
     ApplicationConfiguration applicationConfiguration,
     OrganizationConfiguration organizationConfiguration,
     Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache)
     : IOrganizationPermissionsService
 {
@@ -29,7 +29,7 @@ public class OrganizationPermissionsService(
         CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(workspaceMemberId, organizationId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await organizationServiceClient.GetPermissionsAsync(
                     new GetPermissionsInput { Id = organizationId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),

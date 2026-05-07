@@ -1,17 +1,15 @@
 using Api.Shared.Services.Models;
 using Organization.Api.GraphQL.Organization;
-using Organization.Api.Mappers;
 
 namespace Organization.Api.UnitTests.GraphQL.Organization.RootQueryTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class OrganizationTypesShould
 {
-    [Fact]
-    public void Return_All_Organization_Types()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_All_Organization_Types(RootQuery sut)
     {
-        var sut = new RootQuery(A.Fake<IMapper>());
-
         var result = sut.OrganizationTypes().ToList();
 
         result.Count.ShouldBe(3);

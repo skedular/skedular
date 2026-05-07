@@ -9,7 +9,7 @@ public interface IGraphService
     Task<IReadOnlyCollection<AzureTenantMember>> GetAzureTenantMembersAsync(string tenantId, CancellationToken cancellationToken);
 }
 
-public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, IMapper mapper) : IGraphService
+public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, IEntityMapper entityMapper) : IGraphService
 {
     public async Task<IReadOnlyCollection<AzureTenantMember>> GetAzureTenantMembersAsync(string tenantId, CancellationToken cancellationToken)
     {
@@ -42,7 +42,7 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, 
             {
                 ArgumentNullException.ThrowIfNull(response.Value);
                 skipCount += response.Value.Count;
-                users.AddRange(response.Value.Select(mapper.MapTo));
+                users.AddRange(response.Value.Select(entityMapper.MapTo));
             }
 
             if (response is null || string.IsNullOrWhiteSpace(response.OdataNextLink))

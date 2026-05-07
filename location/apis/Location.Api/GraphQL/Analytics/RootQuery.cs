@@ -9,7 +9,7 @@ using Location.Shared.Models;
 namespace Location.Api.GraphQL.Analytics;
 
 [QueryType]
-public class RootQuery(IMapper mapper)
+public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<IEnumerable<LocationAnalytics>> LocationsAnalyticsAsync(
@@ -41,7 +41,7 @@ public class RootQuery(IMapper mapper)
 
         return locationsAnalytics
             .Select(locationAnalytics =>
-                mapper.MapTo(
+                graphQlMapper.MapTo(
                     locationAnalytics.Name,
                     locationAnalytics.DesksOccupancyPercentage,
                     locationAnalytics.DailyBookingsTotal,

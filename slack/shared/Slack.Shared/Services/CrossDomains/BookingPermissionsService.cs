@@ -22,7 +22,7 @@ public class BookingPermissionsService(
     ApplicationConfiguration applicationConfiguration,
     BookingConfiguration bookingConfiguration,
     Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingService.BookingServiceClient bookingServiceClient,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IMemoryCache memoryCache) : IBookingPermissionsService
 {
     private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
@@ -33,7 +33,7 @@ public class BookingPermissionsService(
         CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateOrganizationKeyById(workspaceMemberId, organizationId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await bookingServiceClient.GetOrganizationPermissionsAsync(
                     new GetOrganizationPermissionsInput { OrganizationId = organizationId },
                     bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
@@ -43,7 +43,7 @@ public class BookingPermissionsService(
     public async Task<TeamBookingPermissions> GetTeamPermissionsAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateTeamKeyById(workspaceMemberId, teamId),
-            async _ => mapper.MapTo(
+            async _ => grpcMapper.MapTo(
                 await bookingServiceClient.GetTeamPermissionsAsync(
                     new GetTeamPermissionsInput { TeamId = teamId },
                     bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),

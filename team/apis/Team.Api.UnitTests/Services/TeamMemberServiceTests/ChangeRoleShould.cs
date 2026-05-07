@@ -2,10 +2,10 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Api.Services.Authorization;
 using Team.Shared.Database.Entities;
+using Team.Shared.Mappers;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Team.Shared.Services.Cache;
@@ -25,7 +25,7 @@ public class ChangeRoleShould
         [Frozen] ICachedTeamService cachedTeamService,
         [Frozen] ITeamAuthorizationService teamAuthorizationService,
         [Frozen] ITeamOutboxPublisher teamOutboxPublisher,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] ITeamMemberRepository teamMemberRepository,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
@@ -56,8 +56,8 @@ public class ChangeRoleShould
         A.CallTo(() => cachedTeamService.GetByIdAsync("team-1", cancellationToken)).Returns(team);
         A.CallTo(() => teamAuthorizationService.CanModifyAsync(team, "customer-1", cancellationToken)).Returns(new ValueTask<bool>(true));
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
-        A.CallTo(() => mapper.MapTo(team)).Returns(mappedTeam);
-        A.CallTo(() => mapper.MapTo(memberToUpdate, mappedTeam)).Returns(mappedMember);
+        A.CallTo(() => entityMapper.MapTo(team)).Returns(mappedTeam);
+        A.CallTo(() => entityMapper.MapTo(memberToUpdate, mappedTeam)).Returns(mappedMember);
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).Returns(1);
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).Returns(Task.CompletedTask);
 

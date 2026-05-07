@@ -17,7 +17,7 @@ public interface IOrganizationOutboxPublisher
 
 public class OrganizationOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IContext context,
     IKafkaOutboxEventPublisher<Key, Event> publisher)
     : IOrganizationOutboxPublisher
@@ -35,7 +35,7 @@ public class OrganizationOutboxPublisher(
                         applicationConfiguration.AppSource,
                         organization.IsDeleted() ? Type.OrganizationDeleted : Type.OrganizationUpserted,
                         context.GetCorrelationId()),
-                    Data = new Data { Organization = mapper.MapTo(organization) }
+                    Data = new Data { Organization = eventMapper.MapTo(organization) }
                 },
                 unitOfWork);
         }

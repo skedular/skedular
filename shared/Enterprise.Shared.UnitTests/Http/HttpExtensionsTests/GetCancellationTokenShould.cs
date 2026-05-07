@@ -25,10 +25,10 @@ public class GetCancellationTokenShould
         result.ShouldBe(cts.Token);
     }
 
-    [Fact]
-    public void Return_none_when_accessor_http_context_is_null()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_none_when_accessor_http_context_is_null([Frozen] IHttpContextAccessor accessor)
     {
-        var accessor = A.Fake<IHttpContextAccessor>();
         A.CallTo(() => accessor.HttpContext).Returns(null);
 
         var result = accessor.GetCancellationToken();
@@ -36,12 +36,12 @@ public class GetCancellationTokenShould
         result.ShouldBe(CancellationToken.None);
     }
 
-    [Fact]
-    public void Return_token_from_accessor_http_context()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_token_from_accessor_http_context([Frozen] IHttpContextAccessor accessor)
     {
         using var cts = new CancellationTokenSource();
         var httpContext = new DefaultHttpContext { RequestAborted = cts.Token };
-        var accessor = A.Fake<IHttpContextAccessor>();
         A.CallTo(() => accessor.HttpContext).Returns(httpContext);
 
         var result = accessor.GetCancellationToken();

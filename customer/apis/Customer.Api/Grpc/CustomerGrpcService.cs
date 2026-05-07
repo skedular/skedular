@@ -21,7 +21,7 @@ public class CustomerGrpcService(
     ICustomerFeedbackService customerFeedbackService,
     ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
     ICustomerResourceSettingsService customerResourceSettingsService,
-    IMapper mapper,
+    IGrpcMapper grpcMapper,
     IGrpcAuthenticator grpcAuthenticator) : CustomerService.CustomerServiceBase
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
@@ -35,7 +35,7 @@ public class CustomerGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await customerService.GetMeAsync(false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await customerService.GetMeAsync(false, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Customer.Core.V1.Customer> GetById(GetByIdInput request,
@@ -43,7 +43,7 @@ public class CustomerGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await customerService.GetByIdAsync(request.CustomerId, false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await customerService.GetByIdAsync(request.CustomerId, false, context.CancellationToken));
     }
 
     public override async Task<Feedback> SubmitFeedback(SubmitFeedbackInput request, ServerCallContext context)
@@ -75,7 +75,7 @@ public class CustomerGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
+        return grpcMapper.MapToGrpcResponse(
             await customerLocationSettingsService.AddCustomerPreferredLocationAsync(request.LocationId, null, false, context.CancellationToken));
     }
 
@@ -85,7 +85,7 @@ public class CustomerGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
+        return grpcMapper.MapToGrpcResponse(
             await customerLocationSettingsService.RemoveCustomerPreferredLocationAsync(request.LocationId, null, context.CancellationToken));
     }
 
@@ -95,7 +95,7 @@ public class CustomerGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
+        return grpcMapper.MapToGrpcResponse(
             await customerOrganizationTagSettingsService.AddCustomerPreferredOrganizationTagAsync(
                 request.OrganizationTagId,
                 null,
@@ -108,7 +108,7 @@ public class CustomerGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
+        return grpcMapper.MapToGrpcResponse(
             await customerOrganizationTagSettingsService.RemoveCustomerPreferredOrganizationTagAsync(
                 request.OrganizationTagId,
                 null,
@@ -121,7 +121,7 @@ public class CustomerGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
+        return grpcMapper.MapToGrpcResponse(
             await customerResourceSettingsService.AddCustomerPreferredResourceAsync(request.ResourceId, null, context.CancellationToken));
     }
 
@@ -131,7 +131,7 @@ public class CustomerGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
+        return grpcMapper.MapToGrpcResponse(
             await customerResourceSettingsService.RemoveCustomerPreferredResourceAsync(request.ResourceId, null, context.CancellationToken));
     }
 }

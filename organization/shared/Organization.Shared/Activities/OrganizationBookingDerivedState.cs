@@ -23,7 +23,7 @@ public class OrganizationBookingDerivedState(
     IRandomHelper randomHelper,
     ICachedOrganizationService cachedOrganizationService,
     IOrganizationPublisher organizationPublisher,
-    IMapper mapper)
+    IEntityMapper entityMapper)
 {
     [Activity]
     public async Task RecomputeAsync(string organizationId)
@@ -49,7 +49,7 @@ public class OrganizationBookingDerivedState(
 
         if (activeMembersChanged)
         {
-            await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
+            await organizationPublisher.PublishOrganizationsAsync([entityMapper.MapTo(organization)], cancellationToken);
         }
     }
 

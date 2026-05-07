@@ -10,7 +10,7 @@ public class MapToRecurringBookingShould
     [Fact]
     public void Preserve_Recurring_Duration_When_Mapping_Missing_Booking_Day()
     {
-        var sut = new Mapper(TimeProvider.System);
+        var sut = new EntityMapper(TimeProvider.System);
         var recurringBooking = new RecurringBooking
         {
             From = new DateTimeOffset(2026, 4, 10, 22, 0, 0, TimeSpan.Zero),
@@ -34,7 +34,7 @@ public class MapToRecurringBookingShould
     [Fact]
     public void Preserve_Recurring_Duration_When_Remapping_Existing_Booking_To_A_Different_Day()
     {
-        var sut = new Mapper(TimeProvider.System);
+        var sut = new EntityMapper(TimeProvider.System);
         var recurringBooking = new RecurringBooking
         {
             From = new DateTimeOffset(2026, 4, 10, 22, 0, 0, TimeSpan.Zero),

@@ -1,17 +1,15 @@
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Booking;
-using Booking.Api.Mappers;
 
 namespace Booking.Api.UnitTests.GraphQL.Booking.RootQueryTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class MarketplaceBookingCategoriesShould
 {
-    [Fact]
-    public void Return_All_Marketplace_Booking_Categories()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_All_Marketplace_Booking_Categories(RootQuery sut)
     {
-        var sut = new RootQuery(A.Fake<IMapper>());
-
         var result = sut.MarketplaceBookingCategories().ToList();
 
         result.Count.ShouldBe(3);

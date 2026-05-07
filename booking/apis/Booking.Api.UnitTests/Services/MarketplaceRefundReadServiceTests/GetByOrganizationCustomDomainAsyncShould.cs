@@ -25,7 +25,7 @@ public class GetByOrganizationCustomDomainAsyncShould
         [Frozen] ICustomerRepository customerRepository,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMapper mapper,
+        [Frozen] IGraphQlMapper graphQlMapper,
         [Frozen] IXeroRefundService xeroRefundService,
         MarketplaceRefundReadService sut,
         CancellationToken cancellationToken)
@@ -58,8 +58,8 @@ public class GetByOrganizationCustomDomainAsyncShould
                 A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 2 && ids.Contains("actor-1") && ids.Contains("requester-1")), true,
                 cancellationToken))
             .Returns(customers);
-        A.CallTo(() => mapper.MapTo(refund)).Returns(mappedRefund);
-        A.CallTo(() => mapper.MapTo(refundEvent)).Returns(mappedEvent);
+        A.CallTo(() => graphQlMapper.MapTo(refund)).Returns(mappedRefund);
+        A.CallTo(() => graphQlMapper.MapTo(refundEvent)).Returns(mappedEvent);
         A.CallTo(() => xeroRefundService.GetProcessingAvailabilityAsync(refund, cancellationToken))
             .Returns(new XeroRefundProcessingAvailability(false, "Blocked"));
 

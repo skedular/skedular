@@ -17,7 +17,7 @@ public interface ILocationOutboxPublisher
 
 public class LocationOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
-    IMapper mapper,
+    IEventMapper eventMapper,
     IContext context,
     IKafkaOutboxEventPublisher<Key, Event> publisher) : ILocationOutboxPublisher
 {
@@ -34,7 +34,7 @@ public class LocationOutboxPublisher(
                         applicationConfiguration.AppSource,
                         location.IsDeleted() ? Type.LocationDeleted : Type.LocationUpserted,
                         context.GetCorrelationId()),
-                    Data = new Data { Location = mapper.MapTo(location) }
+                    Data = new Data { Location = eventMapper.MapTo(location) }
                 },
                 unitOfWork);
         }

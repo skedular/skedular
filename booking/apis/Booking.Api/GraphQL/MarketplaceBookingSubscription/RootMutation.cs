@@ -6,7 +6,7 @@ using HotChocolate.Types;
 namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
 
 [MutationType]
-public class RootMutation(IMapper mapper)
+public class RootMutation(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<MarketplaceBookingSubscriptionPayload> AddMarketplaceBookingSubscriptionAsync(
@@ -14,10 +14,10 @@ public class RootMutation(IMapper mapper)
         [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken)
     {
-        var subscription = await marketplaceBookingSubscriptionService.AddAsync(mapper.MapTo(input), cancellationToken);
+        var subscription = await marketplaceBookingSubscriptionService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
         return new MarketplaceBookingSubscriptionPayload
         {
-            ClientMutationId = input.ClientMutationId, MarketplaceBookingSubscription = mapper.MapTo(subscription)
+            ClientMutationId = input.ClientMutationId, MarketplaceBookingSubscription = graphQlMapper.MapTo(subscription)
         };
     }
 
@@ -30,7 +30,7 @@ public class RootMutation(IMapper mapper)
         var subscription = await marketplaceBookingSubscriptionService.DeleteAsync(input.Id, input.CancellationMode, cancellationToken);
         return new MarketplaceBookingSubscriptionPayload
         {
-            ClientMutationId = input.ClientMutationId, MarketplaceBookingSubscription = mapper.MapTo(subscription)
+            ClientMutationId = input.ClientMutationId, MarketplaceBookingSubscription = graphQlMapper.MapTo(subscription)
         };
     }
 }

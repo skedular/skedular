@@ -3,9 +3,9 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Shared.Database.Entities;
+using Team.Shared.Mappers;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Team.Shared.Services;
@@ -22,7 +22,7 @@ public class AcceptInvitationShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ICustomerService customerService,
-        [Frozen] IMapper mapper,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] IRandomHelper randomHelper,
         [Frozen] ITemporalOutboxService temporalOutboxService,
         [Frozen] ITeamOutboxPublisher teamOutboxPublisher,
@@ -61,8 +61,8 @@ public class AcceptInvitationShould
         A.CallTo(() => joinInvitationRepository.Update(A<JoinInvitation>._))
             .Invokes((JoinInvitation inv) => inv.Status = InvitationStatusConstants.Accepted)
             .Returns(invitation);
-        A.CallTo(() => mapper.MapTo(team)).Returns(mappedTeam);
-        A.CallTo(() => mapper.MapTo(invitation)).Returns(mappedInvitation);
+        A.CallTo(() => entityMapper.MapTo(team)).Returns(mappedTeam);
+        A.CallTo(() => entityMapper.MapTo(invitation)).Returns(mappedInvitation);
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).Returns(1);
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).Returns(Task.CompletedTask);
 

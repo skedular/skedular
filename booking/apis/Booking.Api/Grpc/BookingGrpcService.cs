@@ -28,7 +28,7 @@ public class BookingGrpcService(
     IResourceService resourceService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
-    IMapper mapper)
+    IGrpcMapper grpcMapper)
     : BookingService.BookingServiceBase
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
@@ -98,7 +98,7 @@ public class BookingGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
         return connection;
     }
 
@@ -162,7 +162,7 @@ public class BookingGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
+        connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
         return connection;
     }
 
@@ -199,7 +199,7 @@ public class BookingGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await bookingService.GetByIdAsync(request.Id, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await bookingService.GetByIdAsync(request.Id, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking> AddPrivate(
@@ -208,7 +208,7 @@ public class BookingGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await privateBookingService.AddAsync(mapper.MapTo(request), context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await privateBookingService.AddAsync(grpcMapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking> UpdatePrivate(
@@ -217,7 +217,7 @@ public class BookingGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await privateBookingService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await privateBookingService.UpdateAsync(grpcMapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking> DeletePrivate(
@@ -226,7 +226,7 @@ public class BookingGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await privateBookingService.DeleteAsync(request.Id, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(await privateBookingService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
     public override async Task<AvailableResources> GetAvailableResources(GetAvailableResourcesInput request, ServerCallContext context)
