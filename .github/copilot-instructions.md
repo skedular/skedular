@@ -49,3 +49,8 @@ C# on .NET 10: Follow standard conventions
 - **Typography Rule**: Use `@skedular/ui` wrappers (e.g. `BodyIconTypography`, `SmallIconTypography`) — never `@mui/material/Typography` directly in app or page components.
 - **Webapp**: Imports both packages. `@/libs/providers/` only contains `integrated-platform-hook.tsx` (MS Teams, deferred).
 <!-- MANUAL ADDITIONS END -->
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
