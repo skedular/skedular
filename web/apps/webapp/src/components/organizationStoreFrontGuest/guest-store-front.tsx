@@ -3,9 +3,9 @@ import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { useKnownParams } from '@skedular/shared';
 import { convertCalendarDayToStartOfDay, endOfWeek } from '@skedular/shared';
-import type { guestStoreFrontProductsRefetchQuery } from '@/queries/__generated__/guestStoreFrontProductsRefetchQuery.graphql';
 import type { guestStoreFrontProducts_query$key } from '@/queries/__generated__/guestStoreFrontProducts_query.graphql';
 import type { guestStoreFront_rootQuery } from '@/queries/__generated__/guestStoreFront_rootQuery.graphql';
+import type { guestStoreFrontSelectedLocationProductsQuery } from '@/queries/__generated__/guestStoreFrontSelectedLocationProductsQuery.graphql';
 import Container from '@mui/material/Container';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/system/Box';
@@ -13,7 +13,7 @@ import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import dayjs from 'dayjs';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
+import { graphql, PreloadedQuery, useFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import GuestStoreFrontFooter from './guest-store-front-footer';
 import GuestStoreFrontActiveSubscriptionsStrip from './guest-store-front-active-subscriptions-strip';
 import GuestStoreFrontLocationsStrip from './guest-store-front-locations-strip';
@@ -69,28 +69,70 @@ const RootQuery = graphql`
   }
 `;
 
+const SelectedLocationProductsQuery = graphql`
+  query guestStoreFrontSelectedLocationProductsQuery($locationId: String!) {
+    location(id: $locationId) {
+      products {
+        id
+        pricingOptions {
+          index
+        }
+        ...guestStoreFrontProductCard_product
+      }
+    }
+  }
+`;
+
+type ProductListProps = {
+  organizationCustomDomain: string;
+  products: ReadonlyArray<NonNullable<guestStoreFrontProducts_query$key[' $data']>['products']['edges'][number]['node']>;
+  rootData: guestStoreFront_rootQuery['response'];
+};
+
+const sortProducts = <T extends { readonly pricingOptions: ReadonlyArray<{ readonly index: number }> }>(products: ReadonlyArray<T>) =>
+  products.toSorted((left, right) => {
+    const leftIndex = left.pricingOptions[0]?.index ?? Number.MAX_SAFE_INTEGER;
+    const rightIndex = right.pricingOptions[0]?.index ?? Number.MAX_SAFE_INTEGER;
+
+    return leftIndex - rightIndex;
+  });
+
+const ProductList = ({ products, rootData, organizationCustomDomain }: ProductListProps) => (
+  <Box
+    sx={{
+      display: 'grid',
+      gap: 3,
+      gridTemplateColumns: {
+        xs: '1fr',
+        sm: '1fr 1fr',
+        lg: 'repeat(4, minmax(0, 1fr))',
+      },
+    }}
+  >
+    {sortProducts(products).map((product) => (
+      <GuestStoreFrontProductCard key={product.id} rootDataRelay={rootData} productRelay={product} organizationCustomDomain={organizationCustomDomain} />
+    ))}
+  </Box>
+);
+
+type SelectedLocationProductsProps = {
+  queryReference: PreloadedQuery<guestStoreFrontSelectedLocationProductsQuery, Record<string, unknown>>;
+  rootData: guestStoreFront_rootQuery['response'];
+  organizationCustomDomain: string;
+};
+
+const SelectedLocationProducts = ({ queryReference, rootData, organizationCustomDomain }: SelectedLocationProductsProps) => {
+  const selectedLocationData = usePreloadedQuery<guestStoreFrontSelectedLocationProductsQuery>(SelectedLocationProductsQuery, queryReference);
+
+  return <ProductList products={selectedLocationData.location?.products ?? []} rootData={rootData} organizationCustomDomain={organizationCustomDomain} />;
+};
+
 const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<guestStoreFront_rootQuery>(RootQuery, queryReference);
-  const [productsData, refetchProducts] = useRefetchableFragment<guestStoreFrontProductsRefetchQuery, guestStoreFrontProducts_query$key>(
+  const productsData = useFragment<guestStoreFrontProducts_query$key>(
     graphql`
-      fragment guestStoreFrontProducts_query on Query
-      @refetchable(queryName: "guestStoreFrontProductsRefetchQuery")
-      @argumentDefinitions(organizationCustomDomain: { type: "String!" }, locationSelected: { type: "Boolean", defaultValue: false }) {
-        marketplaceLocations(where: { organizationCustomDomain: $organizationCustomDomain }) @include(if: $locationSelected) {
-          edges {
-            node {
-              id
-              products {
-                id
-                pricingOptions {
-                  index
-                }
-                ...guestStoreFrontProductCard_product
-              }
-            }
-          }
-        }
-        products(where: { organizationCustomDomains: [$organizationCustomDomain], includeInactive: false }) @skip(if: $locationSelected) {
+      fragment guestStoreFrontProducts_query on Query @argumentDefinitions(organizationCustomDomain: { type: "String!" }) {
+        products(where: { organizationCustomDomains: [$organizationCustomDomain], includeInactive: false }) {
           edges {
             node {
               id
@@ -107,32 +149,25 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
   );
 
   const [selectedLocationId, setSelectedLocationId] = useState('');
-
-  const displayedProducts = useMemo(
-    () =>
-      (selectedLocationId
-        ? (productsData.marketplaceLocations?.edges.find((edge) => edge.node.id === selectedLocationId)?.node.products ?? [])
-        : (productsData.products?.edges.map((edge) => edge.node) ?? [])
-      ).toSorted((left, right) => {
-        const leftIndex = left.pricingOptions[0]?.index ?? Number.MAX_SAFE_INTEGER;
-        const rightIndex = right.pricingOptions[0]?.index ?? Number.MAX_SAFE_INTEGER;
-
-        return leftIndex - rightIndex;
-      }),
-    [productsData.marketplaceLocations?.edges, productsData.products?.edges, selectedLocationId],
-  );
+  const [selectedLocationProductsQueryReference, loadSelectedLocationProductsQuery, disposeSelectedLocationProductsQuery] =
+    useQueryLoader<guestStoreFrontSelectedLocationProductsQuery>(SelectedLocationProductsQuery);
+  const defaultProducts = useMemo(() => productsData.products.edges.map((edge) => edge.node), [productsData.products.edges]);
 
   useEffect(() => {
-    refetchProducts(
+    if (!selectedLocationId) {
+      disposeSelectedLocationProductsQuery();
+      return;
+    }
+
+    loadSelectedLocationProductsQuery(
       {
-        organizationCustomDomain,
-        locationSelected: selectedLocationId !== '',
+        locationId: selectedLocationId,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [organizationCustomDomain, refetchProducts, selectedLocationId]);
+  }, [disposeSelectedLocationProductsQuery, loadSelectedLocationProductsQuery, selectedLocationId]);
 
   if (!rootData.organizationPublic) {
     return null;
@@ -214,21 +249,11 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
           )}
         </Box>
 
-        <Box
-          sx={{
-            display: 'grid',
-            gap: 3,
-            gridTemplateColumns: {
-              xs: '1fr',
-              sm: '1fr 1fr',
-              lg: 'repeat(4, minmax(0, 1fr))',
-            },
-          }}
-        >
-          {displayedProducts.map((product) => (
-            <GuestStoreFrontProductCard key={product.id} rootDataRelay={rootData} productRelay={product} organizationCustomDomain={organizationCustomDomain} />
-          ))}
-        </Box>
+        {selectedLocationId && selectedLocationProductsQueryReference ? (
+          <SelectedLocationProducts queryReference={selectedLocationProductsQueryReference} rootData={rootData} organizationCustomDomain={organizationCustomDomain} />
+        ) : (
+          <ProductList products={defaultProducts} rootData={rootData} organizationCustomDomain={organizationCustomDomain} />
+        )}
       </Container>
 
       <GuestStoreFrontFooter rootDataRelay={rootData} />
