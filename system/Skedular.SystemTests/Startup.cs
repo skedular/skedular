@@ -108,6 +108,12 @@ public class Startup
         var teamApiClient = distributedApp.CreateHttpClient("teamapi");
         var gatewayClient = distributedApp.CreateHttpClient("gateway");
 
+#pragma warning disable VSTHRD002
+        gatewayClient.WaitForGraphQlAsync(TestContext.Current.CancellationToken).Wait();
+#pragma warning restore VSTHRD002
+
+        ArgumentNullException.ThrowIfNull(gatewayClient.BaseAddress);
+
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
 
         services.TryAddSingleton(TimeProvider.System);
