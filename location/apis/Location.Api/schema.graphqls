@@ -204,6 +204,7 @@ type LocationDetails {
   amenities: [OrganizationTagDetails!]!
   resourceTypes: [OrganizationTagDetails!]!
   featureImages: [CdnImageFile!]!
+  floorPlanCount: Int!
   extraMetadata: LocationExtraMetadata
   uniqueClaimCode: String
   contactedViaEmail: Boolean!

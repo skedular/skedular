@@ -66,6 +66,7 @@ public class GraphQlMapper : IGraphQlMapper
                 Type = new LocationTypeDetails { Type = src.Type, Name = src.Type.ToLocationTypeName() },
                 ExtraMetadata = src.ExtraMetadata,
                 FeatureImages = src.FeatureImages,
+                FloorPlanCount = src.FloorPlans.Count,
                 OpeningHours = MapTo(src.OpeningHours),
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,

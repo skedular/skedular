@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bbf39f927df5bc9fcc3a5b8c147d404a>>
+ * @generated SignedSource<<ca4834faf3666001fe2089c4a0f4c09c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type guestStoreFrontLocationsStrip_query$data = {
   readonly marketplaceLocations: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly floorPlanCount: number;
         readonly id: string;
         readonly name: string;
         readonly openingHours: {
@@ -186,6 +187,13 @@ return {
                 {
                   "alias": null,
                   "args": null,
+                  "kind": "ScalarField",
+                  "name": "floorPlanCount",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
                   "concreteType": "LocationPhysicalAddressDetails",
                   "kind": "LinkedField",
                   "name": "physicalAddress",
@@ -308,6 +316,6 @@ return {
 };
 })();
 
-(node as any).hash = "bcb3a873f908dc5574463c9c127a0bb4";
+(node as any).hash = "f7e144161e26a8c86b853670b46917ae";
 
 export default node;

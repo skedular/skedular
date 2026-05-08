@@ -126,6 +126,7 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
               id
               name
               timezone
+              floorPlanCount
               physicalAddress {
                 formattedAddress
               }
@@ -236,25 +237,27 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
               <Box sx={{ mt: 1, pt: 1, borderTop: 1, borderColor: (theme) => theme.palette.divider }}>
                 <CaptionIconTypography label={`Opening Hours: ${openState.label}`} sx={{ opacity: 0.9 }} />
               </Box>
-              <Box sx={{ mt: 1.5, display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 1 }}>
-                <Button
-                  variant="contained"
-                  size="medium"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    router.push(getMarketplaceLocationFloorPlansLink(integratedPlatrform, location.id));
-                  }}
-                  sx={{
-                    textTransform: 'none',
-                    borderRadius: 2,
-                    backgroundColor: 'success.main',
-                    '&:hover': {
-                      backgroundColor: 'success.dark',
-                    },
-                  }}
-                >
-                  View floor plan
-                </Button>
+              <Box sx={{ mt: 1.5, display: 'grid', gridTemplateColumns: location.floorPlanCount > 0 ? 'repeat(2, minmax(0, 1fr))' : '1fr', gap: 1 }}>
+                {location.floorPlanCount > 0 ? (
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      router.push(getMarketplaceLocationFloorPlansLink(integratedPlatrform, location.id));
+                    }}
+                    sx={{
+                      textTransform: 'none',
+                      borderRadius: 2,
+                      backgroundColor: 'success.main',
+                      '&:hover': {
+                        backgroundColor: 'success.dark',
+                      },
+                    }}
+                  >
+                    View floor plan
+                  </Button>
+                ) : null}
                 <Button
                   variant="outlined"
                   size="medium"

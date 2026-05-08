@@ -38,6 +38,7 @@ public class LocationDetails : Node
     [GraphQLName("amenities")] public IEnumerable<OrganizationTagDetails> Amenities { get; set; } = [];
     [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
+    [GraphQLName("floorPlanCount")] public int FloorPlanCount { get; set; }
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
     [GraphQLName("uniqueClaimCode")] public string? UniqueClaimCode { get; set; }
     [GraphQLName("contactedViaEmail")] public bool ContactedViaEmail { get; set; }

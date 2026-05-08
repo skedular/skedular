@@ -19,6 +19,7 @@ const locationFragmentData = {
   resources: { totalCount: 4 },
   physicalAddress: { multilinesFormattedAddress: '10 Main St\nMelbourne VIC 3000', latitude: -37.8, longitude: 144.9 },
   featureImages: [],
+  floorPlanCount: 1,
   canModify: true,
   canDelete: true,
   organization: { customDomain: 'acme' },
@@ -124,5 +125,37 @@ describe('LocationCard', () => {
     expect(screen.getByText('Address')).toBeInTheDocument();
     expect(screen.queryByText('Shared With')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Book Now' })).toBeInTheDocument();
+  });
+
+  it('hides the view floor plan action when the location has no floor plans', () => {
+    useFragmentMock.mockImplementation((fragment: string) => {
+      if (fragment.includes('fragment locationCard_query')) {
+        return rootFragmentData;
+      }
+
+      if (fragment.includes('fragment locationCard_LocationDetails')) {
+        return {
+          ...locationFragmentData,
+          floorPlanCount: 0,
+        };
+      }
+
+      return undefined;
+    });
+
+    render(
+      <LocationCard
+        rootDataRelay={{} as never}
+        locationDetailsRelay={{} as never}
+        onReloadRequired={vi.fn()}
+        organizationCustomDomain="acme"
+        connectionIds={[]}
+        availableResourcesCount={2}
+        availablePercentage={50}
+        defaultDate={{} as never}
+      />,
+    );
+
+    expect(screen.queryByRole('button', { name: 'View floor plan' })).not.toBeInTheDocument();
   });
 });

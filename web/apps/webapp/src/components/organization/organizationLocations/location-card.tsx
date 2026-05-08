@@ -100,6 +100,7 @@ const LocationCard = ({
             url
           }
         }
+        floorPlanCount
         canDelete
         organization {
           customDomain
@@ -314,6 +315,7 @@ const LocationCard = ({
   };
 
   const resourcesCount = locationDetails.resources.totalCount;
+  const hasFloorPlans = locationDetails.floorPlanCount > 0;
   const zones = locationDetails.zones.map(({ id, name, color }) => ({ id, name, color }));
   const primaryFeatureImage = locationDetails.featureImages[0]?.thumbnail?.url ?? locationDetails.featureImages[0]?.original?.url;
   const safeAvailablePercentage = Number.isFinite(availablePercentage) ? Math.max(0, Math.min(100, availablePercentage)) : 0;
@@ -386,11 +388,13 @@ const LocationCard = ({
               </StackColumn>
 
               <StackRow sx={{ gap: 0.5, flexWrap: 'nowrap' }}>
-                <Tooltip title="View floor plan">
-                  <IconButton onClick={handleViewFloorPlanClick} aria-label="View floor plan">
-                    <FloorPlanIcon />
-                  </IconButton>
-                </Tooltip>
+                {hasFloorPlans && (
+                  <Tooltip title="View floor plan">
+                    <IconButton onClick={handleViewFloorPlanClick} aria-label="View floor plan">
+                      <FloorPlanIcon />
+                    </IconButton>
+                  </Tooltip>
+                )}
 
                 {moreActionsOption.length > 0 && (
                   <IconButton onClick={handleMoreActionsMenuClick} aria-label="Open location actions">

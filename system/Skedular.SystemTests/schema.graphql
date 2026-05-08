@@ -1842,6 +1842,7 @@ type LocationDetails
   deskCapacity: Int! @fusion__field(schema: LOCATION_API)
   extraMetadata: LocationExtraMetadata @fusion__field(schema: LOCATION_API)
   featureImages: [CdnImageFile!]! @fusion__field(schema: LOCATION_API)
+  floorPlanCount: Int! @fusion__field(schema: LOCATION_API)
   id: ID!
     @fusion__field(schema: CUSTOMER_API)
     @fusion__field(schema: LOCATION_API)

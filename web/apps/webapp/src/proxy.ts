@@ -3,7 +3,7 @@ import { authkit, handleAuthkitHeaders } from '@workos-inc/authkit-nextjs';
 import type { NextRequest } from 'next/server';
 
 const isUnauthenticatedPath = (pathname: string) => {
-  if (pathname === '/' || pathname === '/marketplace') {
+  if (pathname === '/' || pathname === '/marketplace' || pathname.startsWith('/auth/')) {
     return true;
   }
 
@@ -34,6 +34,7 @@ export const config = {
     '/settings',
     '/marketplace',
     '/marketplace/:path*',
+    '/auth/:path*',
     '/organizations',
     '/organizations/:path*',
     '/notifications',

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a5f22bc0faf88a5267ea388007c66cf4>>
+ * @generated SignedSource<<0f0cac2325a17135d7083ea805f0b2af>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,7 @@ export type locationCard_LocationDetails$data = {
       readonly url: string;
     } | null | undefined;
   }>;
+  readonly floorPlanCount: number;
   readonly id: string;
   readonly name: string;
   readonly organization: {
@@ -167,6 +168,13 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "floorPlanCount",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "canDelete",
       "storageKey": null
     },
@@ -201,6 +209,6 @@ return {
 };
 })();
 
-(node as any).hash = "f3a0fbd33db364873104d967d9792efc";
+(node as any).hash = "089ce522b61b2727ee3afa515ab2797a";
 
 export default node;
