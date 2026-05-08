@@ -1,1 +1,0 @@
-namespace Location.Shared.Mappers;

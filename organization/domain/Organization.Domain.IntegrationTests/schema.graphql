@@ -824,6 +824,7 @@ input AddOrganizationInput {
   customDomain: String
   name: String!
   website: String
+  logoUrl: String
   customerFacingTermsAndConditionsUrl: String
   type: OrganizationType!
   billingCycle: OrganizationBillingCycle!
@@ -1167,6 +1168,7 @@ input UpdateOrganizationInput {
   customDomain: String
   name: String!
   website: String
+  logoUrl: String
   customerFacingTermsAndConditionsUrl: String
   billingCycle: OrganizationBillingCycle!
   invoiceDueInDays: Int!

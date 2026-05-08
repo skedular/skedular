@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<16839cd5789b2b5b3fa0ddc1801ab540>>
+ * @generated SignedSource<<8b05709133f69c38619b91bc7ad51959>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,7 @@ export type UpdateOrganizationInput = {
   industrySubCategoryIds: ReadonlyArray<string>;
   invoiceDueInDays: number;
   listingMetadata?: ListingMetadataInput | null | undefined;
+  logoUrl?: string | null | undefined;
   marketplaceListingMetadata?: ListingMetadataInput | null | undefined;
   name: string;
   refundNotificationEmails: ReadonlyArray<string>;
@@ -79,6 +80,7 @@ export type organizationAdminSetupSection_updateOrganizationMutation$data = {
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
+      readonly logoUrl: string | null | undefined;
       readonly marketplaceListingMetadata: {
         readonly about: string | null | undefined;
         readonly includedFeatures: ReadonlyArray<string> | null | undefined;
@@ -125,6 +127,7 @@ export type organizationAdminSetupSection_updateOrganizationMutation$rawResponse
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
+      readonly logoUrl: string | null | undefined;
       readonly marketplaceListingMetadata: {
         readonly about: string | null | undefined;
         readonly includedFeatures: ReadonlyArray<string> | null | undefined;
@@ -253,6 +256,13 @@ v7 = [
               (v4/*: any*/),
               (v5/*: any*/)
             ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "logoUrl",
             "storageKey": null
           },
           {
@@ -406,16 +416,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "064642bb12995df45b8ec62d3b2e670e",
+    "cacheID": "05457baa29efbe18c4d963a6583451d0",
     "id": null,
     "metadata": {},
     "name": "organizationAdminSetupSection_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdminSetupSection_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      refundNotificationEmails\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      billingCycle {\n        type\n        name\n      }\n      invoiceDueInDays\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminSetupSection_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      logoUrl\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      refundNotificationEmails\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      billingCycle {\n        type\n        name\n      }\n      invoiceDueInDays\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "439d41145450323480dba1fae02fedbd";
+(node as any).hash = "788ab11eaf4769c152e070bf95b0606c";
 
 export default node;

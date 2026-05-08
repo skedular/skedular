@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0e8af7332ca12f72d8946373ca0e4f9c>>
+ * @generated SignedSource<<f36028ea66fb5869dd2e1882d2e48ed7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -52,6 +52,7 @@ export type organizationAdminSetupSectionQuery$data = {
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };
+    readonly logoUrl: string | null | undefined;
     readonly marketplaceListingMetadata: {
       readonly about: string | null | undefined;
       readonly includedFeatures: ReadonlyArray<string> | null | undefined;
@@ -247,6 +248,13 @@ v11 = {
     {
       "alias": null,
       "args": null,
+      "kind": "ScalarField",
+      "name": "logoUrl",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "ListingMetadata",
       "kind": "LinkedField",
       "name": "marketplaceListingMetadata",
@@ -401,16 +409,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b0ff64502876b76dd5038f1d75b2e295",
+    "cacheID": "0804f4cadd18d5f5ddb45a7ece544c59",
     "id": null,
     "metadata": {},
     "name": "organizationAdminSetupSectionQuery",
     "operationKind": "query",
-    "text": "query organizationAdminSetupSectionQuery(\n  $organizationCustomDomain: String!\n) {\n  emailsToShowLatestCapabilities\n  me {\n    id\n    emails\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    customDomain\n    name\n    billingCycle {\n      type\n      name\n    }\n    invoiceDueInDays\n    listingMetadata {\n      about\n      title\n      subTitle\n    }\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    website\n    customerFacingTermsAndConditionsUrl\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    refundNotificationEmails\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...organizationMultipleChoicesIndustries_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "query organizationAdminSetupSectionQuery(\n  $organizationCustomDomain: String!\n) {\n  emailsToShowLatestCapabilities\n  me {\n    id\n    emails\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    customDomain\n    name\n    billingCycle {\n      type\n      name\n    }\n    invoiceDueInDays\n    listingMetadata {\n      about\n      title\n      subTitle\n    }\n    logoUrl\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    website\n    customerFacingTermsAndConditionsUrl\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    refundNotificationEmails\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...organizationMultipleChoicesIndustries_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2254e303831410d5d45b52acf8e6d66f";
+(node as any).hash = "6c4f9b21d3826a4bbc020ed12c01b426";
 
 export default node;

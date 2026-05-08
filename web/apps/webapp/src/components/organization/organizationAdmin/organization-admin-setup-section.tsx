@@ -59,6 +59,7 @@ const RootQuery = graphql`
         title
         subTitle
       }
+      logoUrl
       marketplaceListingMetadata {
         about
         title
@@ -105,6 +106,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
             title
             subTitle
           }
+          logoUrl
           marketplaceListingMetadata {
             about
             title
@@ -164,6 +166,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
   const debounceSetOrganizationSubTitle = useDebounceCallback(setOrganizationSubTitle, keyboardTextFieldDebounceTimeout);
   const [organizationWebsite, setOrganizationWebsite] = useState(organization?.website);
   const debounceSetOrganizationWebsite = useDebounceCallback(setOrganizationWebsite, keyboardTextFieldDebounceTimeout);
+  const [organizationLogoUrl, setOrganizationLogoUrl] = useState<string | null>(organization?.logoUrl ?? null);
   const [organizationCustomerFacingTermsAndConditionsUrl, setOrganizationCustomerFacingTermsAndConditionsUrl] = useState(organization?.customerFacingTermsAndConditionsUrl);
   const debounceSetOrganizationCustomerFacingTermsAndConditionsUrl = useDebounceCallback(setOrganizationCustomerFacingTermsAndConditionsUrl, keyboardTextFieldDebounceTimeout);
   const [organizationIndustrySubCategoryIds, setOrganizationIndustrySubCategoryIds] = useState<string[]>(organization?.industrySubCategories.map(({ id }) => id) ?? []);
@@ -213,6 +216,10 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
     setFeatureImages((prev) => [image, ...prev.filter((item) => item.original?.url !== image.original?.url)]);
   };
 
+  const handleLogoUploadCompleted = (response: FileUploadResponse) => {
+    setOrganizationLogoUrl(response.original?.url ?? response.thumbnail?.url ?? null);
+  };
+
   const handleOrganizationDetailUpdateClick = ({
     customDomain,
     name,
@@ -248,6 +255,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
           },
           marketplaceListingMetadata: organization.marketplaceListingMetadata,
           website,
+          logoUrl: organizationLogoUrl,
           customerFacingTermsAndConditionsUrl,
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
           contactEmail,
@@ -292,6 +300,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
             },
             marketplaceListingMetadata: organization.marketplaceListingMetadata,
             website,
+            logoUrl: organizationLogoUrl,
             customerFacingTermsAndConditionsUrl,
             industrySubCategories: rootData.organizationIndustryMainCategoriesReferences
               .flatMap((mainCategory) => mainCategory.subCategories)
@@ -344,6 +353,39 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
               <StackColumn spacing={2}>
                 <SettingsSectionCard title="Organization setup" description="Edit identity, presentation, domain, industry, and customer-facing details.">
                   <StackColumn sx={formColumnSx}>
+                    <FormFieldLabel label="Logo">
+                      <StackColumn>
+                        {organizationLogoUrl ? (
+                          <Box
+                            sx={{
+                              width: 128,
+                              height: 128,
+                              borderRadius: 2,
+                              border: 1,
+                              borderColor: 'divider',
+                              backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                              display: 'grid',
+                              placeItems: 'center',
+                              overflow: 'hidden',
+                              p: 1,
+                            }}
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={organizationLogoUrl} alt={`${organization.name} logo`} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                          </Box>
+                        ) : null}
+
+                        <StackRow>
+                          <ImageFileUploaderWithCropper helperText="Upload a square logo or icon for organisation branding." onUploadCompleted={handleLogoUploadCompleted} />
+                          {organizationLogoUrl ? (
+                            <Button variant="outlined" size="small" onClick={() => setOrganizationLogoUrl(null)} sx={{ textTransform: 'none' }}>
+                              Remove logo
+                            </Button>
+                          ) : null}
+                        </StackRow>
+                      </StackColumn>
+                    </FormFieldLabel>
+
                     <FormFieldLabel label="Feature Images">
                       <StackColumn>
                         <Box

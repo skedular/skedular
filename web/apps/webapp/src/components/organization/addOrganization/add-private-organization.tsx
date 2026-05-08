@@ -77,6 +77,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           id
           customDomain
           name
+          logoUrl
           listingMetadata {
             about
             title
@@ -109,6 +110,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
 
   const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>([]);
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(null);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
 
   const handleOrganizationAddClick = ({ customDomain, name, about, website, customerFacingTermsAndConditionsUrl }: OrganizationDetails) => {
     const id = uuid();
@@ -125,6 +127,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           id,
           customDomain,
           name,
+          logoUrl,
           listingMetadata: {
             about: about ?? '',
             title: '',
@@ -173,6 +176,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
             id,
             customDomain,
             name,
+            logoUrl,
             listingMetadata: {
               about: about ?? '',
               title: '',
@@ -208,6 +212,10 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
   const handleSetPrimaryFeatureImage = (image: FileUploadResponse) => {
     setPrimaryFeatureImage(image);
     setFeatureImages((prev) => [image, ...prev.filter((item) => item.original?.url !== image.original?.url)]);
+  };
+
+  const handleLogoUploadCompleted = (response: FileUploadResponse) => {
+    setLogoUrl(response.original?.url ?? response.thumbnail?.url ?? null);
   };
 
   return (
@@ -260,6 +268,39 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
                 description="Set the name, domain, and profile copy that will represent the organization across the private workspace."
               >
                 <StackColumn>
+                  <FormFieldLabel label="Logo">
+                    <StackColumn>
+                      {logoUrl ? (
+                        <Box
+                          sx={{
+                            width: 128,
+                            height: 128,
+                            borderRadius: 2,
+                            border: 1,
+                            borderColor: 'divider',
+                            backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                            display: 'grid',
+                            placeItems: 'center',
+                            overflow: 'hidden',
+                            p: 1,
+                          }}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={logoUrl} alt="Organisation logo" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                        </Box>
+                      ) : null}
+
+                      <StackRow>
+                        <ImageFileUploaderWithCropper helperText="Upload a square logo or icon for organisation branding." onUploadCompleted={handleLogoUploadCompleted} />
+                        {logoUrl ? (
+                          <Button variant="outlined" size="small" onClick={() => setLogoUrl(null)} sx={{ textTransform: 'none' }}>
+                            Remove logo
+                          </Button>
+                        ) : null}
+                      </StackRow>
+                    </StackColumn>
+                  </FormFieldLabel>
+
                   <FormFieldLabel label="Feature Images">
                     <StackColumn>
                       <Box

@@ -11,6 +11,7 @@ public class UpdateOrganizationInput
     [GraphQLName("customDomain")] public string? CustomDomain { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("website")] public string? Website { get; set; }
+    [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
 
     [GraphQLName("customerFacingTermsAndConditionsUrl")]
     public string? CustomerFacingTermsAndConditionsUrl { get; set; }

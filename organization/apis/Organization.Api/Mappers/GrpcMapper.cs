@@ -65,9 +65,7 @@ public interface IGrpcMapper
 
 public class GrpcMapper : IGrpcMapper
 {
-    public TermsOfUse MapToGrpcResponse(Shared.Models.TermsOfUse src) =>
-        new() { Id = src.Id, Terms = src.Terms };
-
+    public TermsOfUse MapToGrpcResponse(Shared.Models.TermsOfUse src) => new() { Id = src.Id, Terms = src.Terms };
 
     public Shared.Models.Organization MapTo(Admin_AddInput src) =>
         new()
@@ -195,9 +193,7 @@ public class GrpcMapper : IGrpcMapper
 
     public OrganizationMember MapTo(Admin_AddMemberInput src) => MapTo(src.Member, new Shared.Models.Organization { Id = src.Id });
 
-
     public MemberEdge MapToGrpcResponse(Edge<OrganizationMember> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
-
 
     public global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag MapToGrpcResponseTag(Tag src) =>
         new()
@@ -212,13 +208,10 @@ public class GrpcMapper : IGrpcMapper
 
     public TagEdge MapToGrpcResponseTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseTag(src.Node) };
 
-
     public CustomTag MapToGrpcResponseCustomTag(Tag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
-
     public CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseCustomTag(src.Node) };
-
 
     public Tag MapTo(AddCustomTagInput src) =>
         new()
@@ -231,7 +224,6 @@ public class GrpcMapper : IGrpcMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-
     public Tag MapTo(UpdateCustomTagInput src) =>
         new()
         {
@@ -242,13 +234,10 @@ public class GrpcMapper : IGrpcMapper
             Color = src.Color
         };
 
-
     public Zone MapToGrpcResponseZone(Tag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
-
     public ZoneEdge MapToGrpcResponseZone(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseZone(src.Node) };
-
 
     public Tag MapTo(AddZoneInput src) =>
         new()
@@ -261,17 +250,13 @@ public class GrpcMapper : IGrpcMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-
     public Tag MapTo(UpdateZoneInput src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Type = OrganizationTagType.Zone };
-
 
     public ProductTag MapToGrpcResponseProductTag(Tag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
-
     public ProductTagEdge MapToGrpcResponseProductTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseProductTag(src.Node) };
-
 
     public Tag MapTo(AddProductTagInput src) =>
         new()
@@ -284,7 +269,6 @@ public class GrpcMapper : IGrpcMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-
     public Tag MapTo(UpdateProductTagInput src) =>
         new()
         {
@@ -294,7 +278,6 @@ public class GrpcMapper : IGrpcMapper
             Type = OrganizationTagType.Product,
             Color = src.Color
         };
-
 
     public BillingDetails MapToGrpcResponse(OrganizationBillingDetails? src) =>
         src is null
@@ -319,10 +302,8 @@ public class GrpcMapper : IGrpcMapper
                 Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
             };
 
-
     public StripeConnectAccountEdge MapToGrpcResponse(Edge<OrganizationStripeConnectAccount> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
-
 
     public BankAccountEdge MapToGrpcResponse(Edge<OrganizationBankAccount> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
@@ -381,20 +362,16 @@ public class GrpcMapper : IGrpcMapper
             CountryCode = src.CountryCode
         };
 
-
     private static IEnumerable<global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
 
-
     private static global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag MapToGrpcResponse(Tag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
-
 
     private static IEnumerable<ResourceType> MapToGrpcResponseResourceType(IEnumerable<Tag> src) =>
         src
             .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
             .Select(MapToGrpcResponseResourceType);
-
 
     private static ResourceType MapToGrpcResponseResourceType(Tag src) =>
         new()
@@ -405,7 +382,6 @@ public class GrpcMapper : IGrpcMapper
             Color = src.Color.ToSafeString(),
             TagType = src.Type.ToOrganizationTagType()
         };
-
 
     private static Member MapToGrpcResponse(OrganizationMember src) =>
         new()
@@ -428,9 +404,7 @@ public class GrpcMapper : IGrpcMapper
             CustomerId = src.Customer.Id
         };
 
-
     private static IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
-
 
     private static OrganizationMember MapTo(Member src, Shared.Models.Organization organization) =>
         new()
@@ -453,7 +427,6 @@ public class GrpcMapper : IGrpcMapper
             Customer = new Customer { Id = src.CustomerId },
             Organization = organization
         };
-
 
     private static StripeConnectAccount MapToGrpcResponse(OrganizationStripeConnectAccount src) =>
         new()
@@ -480,7 +453,6 @@ public class GrpcMapper : IGrpcMapper
             OnboardingCompleted = src.IsOnboardingCompleted()
         };
 
-
     private static BankAccount MapToGrpcResponse(OrganizationBankAccount src) =>
         new()
         {
@@ -493,12 +465,10 @@ public class GrpcMapper : IGrpcMapper
             Country = src.Country.ToSafeString()
         };
 
-
     private static TaxDetails? MapToGrpcResponse(OrganizationTaxDetails? src) =>
         src is null
             ? null
             : new TaxDetails { Id = src.Id, TaxId = src.TaxId.ToSafeString(), TaxRatePercentage = Convert.ToDouble(src.TaxRatePercentage) };
-
 
     private static PhysicalAddress? MapToGrpcResponse(OrganizationPhysicalAddress? src) =>
         src is null
@@ -525,22 +495,17 @@ public class GrpcMapper : IGrpcMapper
     private static IEnumerable<CdnImageFile> MapTo(IEnumerable<global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnImageFile> src) =>
         src.Select(MapTo);
 
-
     private static CdnImageFile MapTo(global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnImageFile src) =>
         new(MapTo(src.Original), MapTo(src.Thumbnail));
-
 
     private static CdnFile? MapTo(global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnFile? src) =>
         src is null ? null : new CdnFile(src.Url, src.Height.FromNullInt(), src.Width.FromNullInt());
 
-
     private static IEnumerable<global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnImageFile> MapTo(IEnumerable<CdnImageFile> src) =>
         src.Select(MapTo);
 
-
     private static global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnImageFile MapTo(CdnImageFile src) =>
         new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
-
 
     private static global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnFile? MapTo(CdnFile? src) =>
         src is null
@@ -550,13 +515,11 @@ public class GrpcMapper : IGrpcMapper
                 Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt()
             };
 
-
     private static ListingMetadata MapTo(global::Api.Shared.Grpc.Skedular.Organization.Core.V1.ListingMetadata? src) =>
         src is null
             ? ListingMetadata.Empty
             : new ListingMetadata(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(),
                 src.IncludedFeatures.ToSafeCollection());
-
 
     private static global::Api.Shared.Grpc.Skedular.Organization.Core.V1.ListingMetadata MapTo(ListingMetadata src)
     {
