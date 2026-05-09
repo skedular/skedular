@@ -376,7 +376,7 @@ public class EntityMapper : IEntityMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Location = MapTo(src.Location)!
+                Location = src.Location is null ? null : new Location { Id = src.Location.Id }
             };
 
     private static StripeCustomer? MapTo(Database.Entities.StripeCustomer? src) =>
