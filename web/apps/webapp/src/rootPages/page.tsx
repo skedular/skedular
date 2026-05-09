@@ -28,11 +28,7 @@ const RootQuery = graphql`
 
 const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageHome_rootQuery>(RootQuery, queryReference);
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return null;
-  }
+  const { user } = useAuth();
 
   if (user) {
     return (

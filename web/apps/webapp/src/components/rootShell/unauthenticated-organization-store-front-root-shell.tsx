@@ -1,11 +1,12 @@
 import { UnauthenticatedOrganizationStoreFrontAppBar } from '@/components/appBar';
 import { Loading } from '@/components/loading';
 import { UnathenticatedObservability } from '@/components/observability';
+import StoreFrontBrowserMetadata from '@/components/organizationStoreFrontGuest/store-front-browser-metadata';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useKnownParams } from '@skedular/shared';
 import type { unauthenticatedOrganizationStoreFrontRootShell_rootQuery } from '@/queries/__generated__/unauthenticatedOrganizationStoreFrontRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
+import { useKnownParams } from '@skedular/shared';
 import type { PropsWithChildren } from 'react';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -19,6 +20,10 @@ type Props = {
 
 const RootQuery = graphql`
   query unauthenticatedOrganizationStoreFrontRootShell_rootQuery($organizationCustomDomain: String!) {
+    organizationPublic(customDomain: $organizationCustomDomain) {
+      name
+      logoUrl
+    }
     ...unauthenticatedOrganizationStoreFrontAppBar_query
   }
 `;
@@ -28,6 +33,7 @@ const UnauthenticatedOrganizationStoreFrontRootShell = ({ children, queryReferen
 
   return (
     <>
+      {rootData.organizationPublic && <StoreFrontBrowserMetadata organizationName={rootData.organizationPublic.name} organizationLogoUrl={rootData.organizationPublic.logoUrl} />}
       <UnathenticatedObservability />
       <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: (theme) => theme.palette.background.default }}>
         <CssBaseline enableColorScheme />
@@ -69,11 +75,9 @@ const UnauthenticatedOrganizationStoreFrontRootShellWithRelay = ({ children }: P
     });
   };
 
-  if (!queryReference) {
-    return <Loading />;
-  }
-
-  return (
+  return !queryReference ? (
+    <Loading />
+  ) : (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoUnauthenticatedOrganizationStoreFrontRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired}>
         {children}

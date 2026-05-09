@@ -1,4 +1,3 @@
-import { BodyIconTypography, LeadIconTypography } from '@skedular/ui';
 import { getSignInLink } from '@/components/links';
 import { GuestStoreFrontSubscriptions } from '@/components/organizationStoreFrontGuest';
 import { OrganizationStoreFrontRootShell, UnauthenticatedOrganizationStoreFrontRootShell } from '@/components/rootShell';
@@ -6,16 +5,13 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
+import { BodyIconTypography, LeadIconTypography } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import Link from 'next/link';
 import { memo } from 'react';
 
 const RootPage = () => {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return null;
-  }
+  const { user } = useAuth();
 
   if (user) {
     return (

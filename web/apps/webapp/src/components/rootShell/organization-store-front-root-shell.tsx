@@ -1,15 +1,16 @@
 import { OrganizationStoreFrontAppBar } from '@/components/appBar';
-import { SmallHeadingIconTypography } from '@skedular/ui';
 import { SignOutIcon } from '@/components/icons';
 import { getSignOutReturnToLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { Observability } from '@/components/observability';
+import StoreFrontBrowserMetadata from '@/components/organizationStoreFrontGuest/store-front-browser-metadata';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useKnownParams } from '@skedular/shared';
 import type { organizationStoreFrontRootShell_rootQuery } from '@/queries/__generated__/organizationStoreFrontRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
+import { useKnownParams } from '@skedular/shared';
+import { SmallHeadingIconTypography } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import type { PropsWithChildren } from 'react';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -35,6 +36,10 @@ const RootQuery = graphql`
     slackCustomerRecordSynced
     teamCustomerRecordSynced
     coreCustomerRecordSynced
+    organizationPublic(customDomain: $organizationCustomDomain) {
+      name
+      logoUrl
+    }
     ...organizationStoreFrontAppBar_query
     ...observability_query
   }
@@ -76,23 +81,38 @@ const OrganizationStoreFrontRootShell = ({ queryReference, children, onReloadReq
     await signOut({ returnTo: getSignOutReturnToLink() });
   };
 
+  // Always render metadata regardless of sync state so title/icon are set
+  // immediately when org data arrives, not gated behind customer record syncing.
+  const browserMetadata = rootData.organizationPublic ? (
+    <StoreFrontBrowserMetadata organizationName={rootData.organizationPublic.name} organizationLogoUrl={rootData.organizationPublic.logoUrl} />
+  ) : null;
+
   if (reloadCount === maxRetryAttemptsToReload) {
     return (
-      <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        <SmallHeadingIconTypography label="There was an issue activating your account. Kindly sign out and then sign back in to resolve the problem." />
-        <Button variant="contained" startIcon={<SignOutIcon />} onClick={handleSignOutClick}>
-          Sign out
-        </Button>
-      </Box>
+      <>
+        {browserMetadata}
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+          <SmallHeadingIconTypography label="There was an issue activating your account. Kindly sign out and then sign back in to resolve the problem." />
+          <Button variant="contained" startIcon={<SignOutIcon />} onClick={handleSignOutClick}>
+            Sign out
+          </Button>
+        </Box>
+      </>
     );
   }
 
   if (!areCustomerRecordsSync) {
-    return <Loading message="Kindly hold on as we proceed to activate your account..." />;
+    return (
+      <>
+        {browserMetadata}
+        <Loading message="Kindly hold on as we proceed to activate your account..." />
+      </>
+    );
   }
 
   return (
     <>
+      {browserMetadata}
       <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: (theme) => theme.palette.background.default }}>
         <CssBaseline enableColorScheme />
@@ -132,11 +152,9 @@ const OrganizationStoreFrontRootShellWithRelay = ({ children }: PropsWithChildre
     });
   };
 
-  if (!queryReference) {
-    return <Loading />;
-  }
-
-  return (
+  return !queryReference ? (
+    <Loading />
+  ) : (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoOrganizationStoreFrontRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired}>
         {children}

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
+import { headers } from 'next/headers';
 import type { PropsWithChildren } from 'react';
 import ClientRootLayout from './client-root-layout';
 import './fonts.css';
@@ -23,11 +24,28 @@ const barlow = localFont({
   adjustFontFallback: false,
 });
 
-export const metadata: Metadata = {
-  title: 'Skedular',
-  description: 'The premier solution for modern workspace management ',
-  icons: '/images/skedular-icon-primary.svg',
-};
+const knownHosts = ['skedular.app', 'staging.skedular.app', 'www.skedular.app', 'localhost', '127.0.0.1'];
+
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers();
+  const host = headersList.get('host') ?? '';
+  const isCustomDomain = host !== '' && !knownHosts.some((known) => host === known || host.startsWith(`${known}:`));
+
+  if (isCustomDomain) {
+    // Omit title and icons entirely so the browser never flashes "Skedular"
+    // or the Skedular favicon on custom domain pages. The client-side
+    // StoreFrontBrowserMetadata component fills them in once org data loads.
+    return {
+      description: 'The premier solution for modern workspace management',
+    };
+  }
+
+  return {
+    title: 'Skedular',
+    description: 'The premier solution for modern workspace management',
+    icons: '/images/skedular-icon-primary.svg',
+  };
+}
 
 export const viewport: Viewport = {
   width: 'device-width',

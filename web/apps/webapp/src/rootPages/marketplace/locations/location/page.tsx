@@ -2,8 +2,8 @@ import { Loading } from '@/components/loading';
 import { MarketplaceLocation } from '@/components/location/marketplaceLocation';
 import { RelayError, toRootError } from '@/components/relayError';
 import { NoOrganizationRootShell, OrganizationStoreFrontRootShell, UnauthenticatedOrganizationStoreFrontRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
 import type { pageMarketplaceLocation_rootQuery } from '@/queries/__generated__/pageMarketplaceLocation_rootQuery.graphql';
+import { useKnownParams } from '@skedular/shared';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -23,12 +23,8 @@ const RootQuery = graphql`
 
 const RootPage = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<pageMarketplaceLocation_rootQuery>(RootQuery, queryReference);
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const { isCustomDomain } = useKnownParams();
-
-  if (loading) {
-    return null;
-  }
 
   if (user) {
     if (isCustomDomain) {

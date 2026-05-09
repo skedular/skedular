@@ -4,11 +4,7 @@ import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { memo } from 'react';
 
 const RootPage = () => {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return null;
-  }
+  const { user } = useAuth();
 
   if (user) {
     return (
