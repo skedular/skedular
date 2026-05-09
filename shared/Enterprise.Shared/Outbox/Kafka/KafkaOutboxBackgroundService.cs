@@ -5,6 +5,7 @@ using Enterprise.Shared.Database.Interceptors;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Telemetry;
+using Enterprise.Shared.Telemetry.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -25,6 +26,7 @@ public class KafkaOutboxBackgroundService<TDbContext>(
     IActivityAccessor activityAccessor,
     KafkaConfiguration kafkaConfiguration,
     ILogger<KafkaOutboxBackgroundService<TDbContext>> logger,
+    OpenTelemetryConfiguration openTelemetryConfiguration,
     TimeProvider timeProvider,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator)
     : BackgroundService where TDbContext : DbContext, IKafkaOutboxStore
@@ -65,11 +67,25 @@ public class KafkaOutboxBackgroundService<TDbContext>(
 
     private async Task ProcessOutboxAsync(CancellationToken cancellationToken)
     {
+        var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.KafkaActivitySourceName);
+
         while (!cancellationToken.IsCancellationRequested)
         {
             // Claim a batch up front so Kafka network calls happen after the database
             // transaction has already committed.
-            var outboxEvents = await TryClaimOutboxEventsAsync(cancellationToken);
+            List<ClaimedOutboxEvent> outboxEvents;
+            if (openTelemetryConfiguration.ExcludeOutboxTelemetry)
+            {
+                using (activitySource.StartActivity(TelemetryKeys.KafkaEventPoll))
+                {
+                    outboxEvents = await TryClaimOutboxEventsAsync(cancellationToken);
+                }
+            }
+            else
+            {
+                outboxEvents = await TryClaimOutboxEventsAsync(cancellationToken);
+            }
+
             if (outboxEvents.Count == 0)
             {
                 await Task.Delay(_retryTime, cancellationToken);

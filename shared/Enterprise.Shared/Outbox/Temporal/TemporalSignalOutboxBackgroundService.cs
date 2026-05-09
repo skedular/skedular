@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Enterprise.Shared.Database.Interceptors;
 using Enterprise.Shared.Telemetry;
+using Enterprise.Shared.Telemetry.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +24,7 @@ public class TemporalSignalOutboxBackgroundService<TDbContext>(
     IOutboxDbContextAccessor<TDbContext> contextAccessor,
     IActivityAccessor activityAccessor,
     ILogger<TemporalSignalOutboxBackgroundService<TDbContext>> logger,
+    OpenTelemetryConfiguration openTelemetryConfiguration,
     TimeProvider timeProvider,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     IServiceProvider serviceProvider)
@@ -63,11 +65,25 @@ public class TemporalSignalOutboxBackgroundService<TDbContext>(
 
     private async Task ProcessOutboxAsync(CancellationToken cancellationToken)
     {
+        var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.TemporalSignalActivitySourceName);
+
         while (!cancellationToken.IsCancellationRequested)
         {
             // Claim first, then do remote work outside the transaction. This is the key
             // change from the older implementation that held a transaction open across RPCs.
-            var outboxEvents = await TryClaimOutboxEventsAsync(cancellationToken);
+            List<ClaimedOutboxEvent> outboxEvents;
+            if (openTelemetryConfiguration.ExcludeOutboxTelemetry)
+            {
+                using (activitySource.StartActivity(TelemetryKeys.TemporalSignalEventPoll))
+                {
+                    outboxEvents = await TryClaimOutboxEventsAsync(cancellationToken);
+                }
+            }
+            else
+            {
+                outboxEvents = await TryClaimOutboxEventsAsync(cancellationToken);
+            }
+
             if (outboxEvents.Count == 0)
             {
                 await Task.Delay(_retryTime, cancellationToken);

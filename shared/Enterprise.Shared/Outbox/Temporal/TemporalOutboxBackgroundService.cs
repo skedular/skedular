@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Enterprise.Shared.Database.Interceptors;
 using Enterprise.Shared.Telemetry;
+using Enterprise.Shared.Telemetry.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,6 +22,7 @@ public class TemporalOutboxBackgroundService<TDbContext>(
     IOutboxDbContextAccessor<TDbContext> contextAccessor,
     IActivityAccessor activityAccessor,
     ILogger<TemporalOutboxBackgroundService<TDbContext>> logger,
+    OpenTelemetryConfiguration openTelemetryConfiguration,
     TimeProvider timeProvider,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     IServiceProvider serviceProvider)
@@ -60,11 +62,25 @@ public class TemporalOutboxBackgroundService<TDbContext>(
 
     private async Task ProcessOutboxAsync(CancellationToken cancellationToken)
     {
+        var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.TemporalActivitySourceName);
+
         while (!cancellationToken.IsCancellationRequested)
         {
             // Claim rows first so the expensive remote workflow-start call happens after
             // database locks are released.
-            var outboxEvents = await TryClaimOutboxEventsAsync(cancellationToken);
+            List<ClaimedOutboxEvent> outboxEvents;
+            if (openTelemetryConfiguration.ExcludeOutboxTelemetry)
+            {
+                using (activitySource.StartActivity(TelemetryKeys.TemporalEventPoll))
+                {
+                    outboxEvents = await TryClaimOutboxEventsAsync(cancellationToken);
+                }
+            }
+            else
+            {
+                outboxEvents = await TryClaimOutboxEventsAsync(cancellationToken);
+            }
+
             if (outboxEvents.Count == 0)
             {
                 await Task.Delay(_retryTime, cancellationToken);

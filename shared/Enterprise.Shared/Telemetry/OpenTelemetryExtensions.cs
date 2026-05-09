@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -20,6 +22,7 @@ public static class OpenTelemetryExtensions
         {
             var openTelemetryConfiguration = configuration.GetSection(OpenTelemetryConfiguration.Key).Get<OpenTelemetryConfiguration>();
             ArgumentNullException.ThrowIfNull(openTelemetryConfiguration);
+            var otlpEndpoint = configuration["OTEL_EXPORTER_OTLP_ENDPOINT"];
 
             services
                 .AddSingleton(openTelemetryConfiguration)
@@ -32,58 +35,92 @@ public static class OpenTelemetryExtensions
                 .AddSingleton<IPropagatorFunctionProvider<IDictionary<string, string>>, StringDictionaryPropagatorFunctions>()
                 .AddSingleton<IPropagatorFunctionProvider<IPropagatorEntity>, PropagatorEntityFunctions>();
 
-            var telemetryBuilder =
-                services
-                    .AddOpenTelemetry()
-                    .WithLogging()
-                    .WithMetrics(metrics =>
-                        {
-                            metrics
-                                .AddAspNetCoreInstrumentation()
-                                .AddHttpClientInstrumentation()
-                                .AddRuntimeInstrumentation();
-
-                            if (openTelemetryConfiguration.MetricsIngestEnabled)
-                            {
-                                metrics.AddMeter(openTelemetryConfiguration.MeterProviderName, MeterProviderNaming.MeterProviderVersion);
-                            }
-
-                            if (openTelemetryConfiguration.ConsoleEnabled)
-                            {
-                                metrics.AddConsoleExporter();
-                            }
-                        }
-                    )
-                    .WithTracing(tracing =>
+            services
+                .AddOpenTelemetry()
+                .WithLogging(logging =>
+                {
+                    if (!string.IsNullOrWhiteSpace(otlpEndpoint))
                     {
-                        // Service
-                        tracing.SetResourceBuilder(
-                            ResourceBuilder.CreateDefault()
-                                .AddService(appName)
-                                .AddTelemetrySdk()
-                                .AddEnvironmentVariableDetector());
-
-                        // Instrumentation
-                        tracing.AddAspNetCoreInstrumentation(options =>
+                        logging.AddOtlpExporter(options =>
                         {
-                            options.Filter = context =>
-                                !context.Request.Path.StartsWithSegments(HealthCheck.Constants.ReadinessPath)
-                                && !context.Request.Path.StartsWithSegments(HealthCheck.Constants.LivenessPath);
+                            options.Endpoint = new Uri(otlpEndpoint);
+                            options.Protocol = OtlpExportProtocol.Grpc;
                         });
+                    }
+                })
+                .WithMetrics(metrics =>
+                {
+                    metrics
+                        .AddAspNetCoreInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        .AddRuntimeInstrumentation();
 
-                        tracing
-                            .AddHttpClientInstrumentation();
+                    if (openTelemetryConfiguration.MetricsIngestEnabled)
+                    {
+                        metrics.AddMeter(openTelemetryConfiguration.MeterProviderName, MeterProviderNaming.MeterProviderVersion);
+                    }
 
-                        if (openTelemetryConfiguration.ConsoleEnabled)
+                    if (openTelemetryConfiguration.ConsoleEnabled)
+                    {
+                        metrics.AddConsoleExporter();
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                    {
+                        metrics.AddOtlpExporter(options =>
                         {
-                            tracing.AddConsoleExporter();
-                        }
+                            options.Endpoint = new Uri(otlpEndpoint);
+                            options.Protocol = OtlpExportProtocol.Grpc;
+                        });
+                    }
+                })
+                .WithTracing(tracing =>
+                {
+                    // Service
+                    tracing.SetResourceBuilder(
+                        ResourceBuilder.CreateDefault()
+                            .AddService(appName)
+                            .AddTelemetrySdk()
+                            .AddEnvironmentVariableDetector());
+
+                    // Instrumentation
+                    tracing.AddAspNetCoreInstrumentation(options =>
+                    {
+                        options.Filter = context =>
+                            !context.Request.Path.StartsWithSegments(HealthCheck.Constants.ReadinessPath)
+                            && !context.Request.Path.StartsWithSegments(HealthCheck.Constants.LivenessPath);
                     });
 
-            if (!string.IsNullOrWhiteSpace(configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]))
-            {
-                telemetryBuilder.UseOtlpExporter();
-            }
+                    tracing
+                        .AddHttpClientInstrumentation();
+
+                    if (openTelemetryConfiguration.ConsoleEnabled)
+                    {
+                        tracing.AddConsoleExporter();
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                    {
+                        if (openTelemetryConfiguration.ExcludeOutboxTelemetry)
+                        {
+                            tracing.AddProcessor(
+                                new OutboxTraceFilteringProcessor(
+                                    new BatchActivityExportProcessor(
+                                        new OtlpTraceExporter(new OtlpExporterOptions
+                                        {
+                                            Endpoint = new Uri(otlpEndpoint), Protocol = OtlpExportProtocol.Grpc
+                                        }))));
+                        }
+                        else
+                        {
+                            tracing.AddOtlpExporter(options =>
+                            {
+                                options.Endpoint = new Uri(otlpEndpoint);
+                                options.Protocol = OtlpExportProtocol.Grpc;
+                            });
+                        }
+                    }
+                });
 
             return services;
         }
