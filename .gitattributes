@@ -3,4 +3,5 @@
 *.png binary
 *.ico binary
 *.zip binary
+*.far binary
 *.cer binary
