@@ -48,7 +48,6 @@ public class WorkOSTokenService(
             var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
             if (issuer is null || (_configuration.Issuer != issuer && _configuration.OtherIssuers.All(item => item.ToString() != issuer)))
             {
-                logger.LogWarning("WorkOS token issuer mismatch. Issuer={Issuer}", issuer);
                 return;
             }
 

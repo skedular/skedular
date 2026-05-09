@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.UnitTests.Extensions.DecimalExtensionsTests;
+namespace Enterprise.Shared.UnitTests.ExtensionsTests.DecimalExtensionsTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class FromRoundedPriceShould

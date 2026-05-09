@@ -27,7 +27,6 @@ public class GoogleTokenService(
             var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
             if (issuer is not null && _googleConfiguration.Issuer != issuer)
             {
-                logger.LogWarning("Google token issuer mismatch. Issuer={Issuer}", issuer);
                 return;
             }
 

@@ -478,9 +478,9 @@ public static class Extensions
         }
 
         /// <summary>
-        ///     Opinionated bundle: calls <see cref="AddCoreServices{TProgram}" />,
-        ///     <see cref="AddIdentityTokenProviders" />, <see cref="AddHybridCaching" />,
-        ///     <see cref="AddApiControllers{TProgram}" />, and <see cref="AddSerilogLogging{TProgram}" />
+        ///     Opinionated bundle: calls <see cref="AddSerilogLogging{TProgram}" />,
+        ///     <see cref="AddCoreServices{TProgram}" />, <see cref="AddIdentityTokenProviders" />,
+        ///     <see cref="AddHybridCaching" />, and <see cref="AddApiControllers{TProgram}" />
         ///     in the expected order.
         ///     <para>
         ///         External consumers of Enterprise.Shared should compose only the modules they need
@@ -490,12 +490,12 @@ public static class Extensions
         /// </summary>
         public WebApplicationBuilder AddDefaultServices<TProgram>(bool enableHttpResilience = false) where TProgram : class =>
             builder
+                .AddSerilogLogging<TProgram>()
                 .AddCoreServices<TProgram>(enableHttpResilience)
                 .AddIdentityTokenProviders()
                 .AddCookieServices()
                 .AddHybridCaching()
-                .AddApiControllers<TProgram>()
-                .AddSerilogLogging<TProgram>();
+                .AddApiControllers<TProgram>();
     }
 
     extension(WebApplication app)

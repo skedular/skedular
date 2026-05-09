@@ -32,7 +32,6 @@ public class AzureEntraTokenService(
             var tenantId = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "tid")?.Value;
             if (tenantId is null)
             {
-                logger.LogWarning("Azure Entra token missing tenant id claim");
                 return;
             }
 

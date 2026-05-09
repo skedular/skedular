@@ -47,7 +47,6 @@ public class CognitoTokenService(
             var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
             if (issuer is not null && _cognitoConfiguration.Issuer != issuer)
             {
-                logger.LogWarning("Cognito token issuer mismatch. Issuer={Issuer}", issuer);
                 return;
             }
 
