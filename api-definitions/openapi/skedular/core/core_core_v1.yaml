@@ -11,7 +11,7 @@ servers:
     description: staging
   - url: http://localhost:9000
     description: local gateway
-  - url: http://localhost:11000
+  - url: http://localhost:11100
     description: local
 
 paths:
