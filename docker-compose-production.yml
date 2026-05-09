@@ -2,7 +2,6 @@ networks:
   skedular_network:
 
 volumes:
-  skedular_postgres17_data:
   skedular_postgres18_data:
   skedular_redis_data:
   skedular_kafka1_data:
@@ -17,21 +16,6 @@ services:
     networks:
       - skedular_network
 
-  postgres17:
-    image: postgis/postgis:17-master
-    command: postgres -c 'max_connections=10000' -c
-      'shared_preload_libraries=pg_stat_statements'
-    restart: unless-stopped
-    volumes:
-      - skedular_postgres17_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: ${SKEDULAR_POSTGRES_USERNAME}
-      POSTGRES_PASSWORD: ${SKEDULAR_POSTGRES_PASSWORD}
-    ports:
-      - "13451:5432"
-    networks:
-      - skedular_network
-
   postgres18:
     image: postgis/postgis:18-master
     command: postgres -c 'max_connections=10000' -c
@@ -43,7 +27,7 @@ services:
       POSTGRES_USER: ${SKEDULAR_POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${SKEDULAR_POSTGRES_PASSWORD}
     ports:
-      - "13452:5432"
+      - "13451:5432"
     networks:
       - skedular_network
 
@@ -53,7 +37,7 @@ services:
     volumes:
       - skedular_redis_data:/data
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -157,10 +141,10 @@ services:
     image: temporalio/auto-setup:latest
     restart: unless-stopped
     depends_on:
-      - postgres17
+      - postgres18
     environment:
       - DB=postgres12
-      - POSTGRES_SEEDS=postgres17
+      - POSTGRES_SEEDS=postgres18
       - DB_PORT=5432
       - DBNAME=temporal
       - VISIBILITY_DBNAME=temporal_visibility
@@ -387,8 +371,8 @@ services:
       Graphql__AllowErrorHandlingModeOverride: false
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f
+          "CMD-SHELL",
+          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f
           http://localhost:10000/health/readiness || exit 1 && curl -f
           http://localhost:10200/health/readiness || exit 1 && curl -f
           http://localhost:10300/health/readiness || exit 1 && curl -f
@@ -397,7 +381,7 @@ services:
           http://localhost:10700/health/readiness || exit 1 && curl -f
           http://localhost:10900/health/readiness || exit 1 && curl -f
           http://localhost:11000/health/readiness || exit 1",
-      ]
+        ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -501,8 +485,8 @@ services:
       Stripe__OAuthClientId: ${STAGING_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:10030/health/readiness || exit 1 && curl
+          "CMD-SHELL",
+          "curl -f http://localhost:10030/health/readiness || exit 1 && curl
           -f http://localhost:10230/health/readiness || exit 1 && curl -f
           http://localhost:10330/health/readiness || exit 1 && curl -f
           http://localhost:10530/health/readiness || exit 1 && curl -f
@@ -510,7 +494,7 @@ services:
           http://localhost:10730/health/readiness || exit 1 && curl -f
           http://localhost:10930/health/readiness || exit 1 && curl -f
           http://localhost:11030/health/readiness || exit 1",
-      ]
+        ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -614,8 +598,8 @@ services:
       Stripe__OAuthClientId: ${STAGING_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:10020/health/readiness || exit 1 && curl
+          "CMD-SHELL",
+          "curl -f http://localhost:10020/health/readiness || exit 1 && curl
           -f http://localhost:10220/health/readiness || exit 1 && curl -f
           http://localhost:10320/health/readiness || exit 1 && curl -f
           http://localhost:10520/health/readiness || exit 1 && curl -f
@@ -623,7 +607,7 @@ services:
           http://localhost:10720/health/readiness || exit 1 && curl -f
           http://localhost:10920/health/readiness || exit 1 && curl -f
           http://localhost:11020/health/readiness || exit 1",
-      ]
+        ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -821,8 +805,8 @@ services:
       Graphql__AllowErrorHandlingModeOverride: false
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f
+          "CMD-SHELL",
+          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f
           http://localhost:10000/health/readiness || exit 1 && curl -f
           http://localhost:10200/health/readiness || exit 1 && curl -f
           http://localhost:10300/health/readiness || exit 1 && curl -f
@@ -831,7 +815,7 @@ services:
           http://localhost:10700/health/readiness || exit 1  && curl -f
           http://localhost:10900/health/readiness || exit 1 && curl -f
           http://localhost:11000/health/readiness || exit 1",
-      ]
+        ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -935,8 +919,8 @@ services:
       Stripe__OAuthClientId: ${PRODUCTION_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:10030/health/readiness || exit 1 && curl
+          "CMD-SHELL",
+          "curl -f http://localhost:10030/health/readiness || exit 1 && curl
           -f http://localhost:10230/health/readiness || exit 1 && curl -f
           http://localhost:10330/health/readiness || exit 1 && curl -f
           http://localhost:10530/health/readiness || exit 1 && curl -f
@@ -944,7 +928,7 @@ services:
           http://localhost:10730/health/readiness || exit 1 && curl -f
           http://localhost:10930/health/readiness || exit 1 && curl -f
           http://localhost:11030/health/readiness || exit 1",
-      ]
+        ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -1048,8 +1032,8 @@ services:
       Stripe__OAuthClientId: ${PRODUCTION_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:10020/health/readiness || exit 1 && curl
+          "CMD-SHELL",
+          "curl -f http://localhost:10020/health/readiness || exit 1 && curl
           -f http://localhost:10220/health/readiness || exit 1 && curl -f
           http://localhost:10320/health/readiness || exit 1 && curl -f
           http://localhost:10520/health/readiness || exit 1 && curl -f
@@ -1057,7 +1041,7 @@ services:
           http://localhost:10720/health/readiness || exit 1 && curl -f
           http://localhost:10920/health/readiness || exit 1 && curl -f
           http://localhost:11020/health/readiness || exit 1",
-      ]
+        ]
       interval: 30s
       timeout: 5s
       retries: 100
