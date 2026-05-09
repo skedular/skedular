@@ -1,3 +1,5 @@
+'use client';
+
 import { getSignInLink } from '@/components/links';
 import { GuestStoreFrontSubscriptions } from '@/components/organizationStoreFrontGuest';
 import { OrganizationStoreFrontRootShell, UnauthenticatedOrganizationStoreFrontRootShell } from '@/components/rootShell';
