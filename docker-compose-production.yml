@@ -3,6 +3,7 @@ networks:
 
 volumes:
   skedular_postgres17_data:
+  skedular_postgres18_data:
   skedular_redis_data:
   skedular_kafka1_data:
 
@@ -28,6 +29,21 @@ services:
       POSTGRES_PASSWORD: ${SKEDULAR_POSTGRES_PASSWORD}
     ports:
       - "13451:5432"
+    networks:
+      - skedular_network
+
+  postgres18:
+    image: postgis/postgis:18-master
+    command: postgres -c 'max_connections=10000' -c
+      'shared_preload_libraries=pg_stat_statements'
+    restart: unless-stopped
+    volumes:
+      - skedular_postgres18_data:/var/lib/postgresql
+    environment:
+      POSTGRES_USER: ${SKEDULAR_POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${SKEDULAR_POSTGRES_PASSWORD}
+    ports:
+      - "13452:5432"
     networks:
       - skedular_network
 
@@ -87,7 +103,8 @@ services:
       KAFKA_JMX_HOSTNAME: localhost
       KAFKA_PROCESS_ROLES: "broker,controller"
       KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka1:29093"
-      KAFKA_LISTENERS: "PLAINTEXT://kafka1:29092,CONTROLLER://kafka1:29093,PLAINTEXT_\
+      KAFKA_LISTENERS:
+        "PLAINTEXT://kafka1:29092,CONTROLLER://kafka1:29093,PLAINTEXT_\
         HOST://0.0.0.0:19092"
       KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
       KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
@@ -124,7 +141,11 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka1:29092"
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:9100
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:9100/subjects >/dev/null || exit 1" ]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:9100/subjects >/dev/null || exit 1",
+        ]
       interval: 30s
       timeout: 5s
       retries: 20
@@ -365,19 +386,18 @@ services:
       Graphql__CollectOperationPlanTelemetry: false
       Graphql__AllowErrorHandlingModeOverride: false
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f
-            http://localhost:10000/health/readiness || exit 1 && curl -f
-            http://localhost:10200/health/readiness || exit 1 && curl -f
-            http://localhost:10300/health/readiness || exit 1 && curl -f
-            http://localhost:10500/health/readiness || exit 1 && curl -f
-            http://localhost:10600/health/readiness || exit 1 && curl -f
-            http://localhost:10700/health/readiness || exit 1 && curl -f
-            http://localhost:10900/health/readiness || exit 1 && curl -f
-            http://localhost:11000/health/readiness || exit 1",
-        ]
+      test: [
+        "CMD-SHELL",
+        "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f
+          http://localhost:10000/health/readiness || exit 1 && curl -f
+          http://localhost:10200/health/readiness || exit 1 && curl -f
+          http://localhost:10300/health/readiness || exit 1 && curl -f
+          http://localhost:10500/health/readiness || exit 1 && curl -f
+          http://localhost:10600/health/readiness || exit 1 && curl -f
+          http://localhost:10700/health/readiness || exit 1 && curl -f
+          http://localhost:10900/health/readiness || exit 1 && curl -f
+          http://localhost:11000/health/readiness || exit 1",
+      ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -480,18 +500,17 @@ services:
       Stripe__BookingConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
       Stripe__OAuthClientId: ${STAGING_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -f http://localhost:10030/health/readiness || exit 1 && curl
-            -f http://localhost:10230/health/readiness || exit 1 && curl -f
-            http://localhost:10330/health/readiness || exit 1 && curl -f
-            http://localhost:10530/health/readiness || exit 1 && curl -f
-            http://localhost:10630/health/readiness || exit 1 && curl -f
-            http://localhost:10730/health/readiness || exit 1 && curl -f
-            http://localhost:10930/health/readiness || exit 1 && curl -f
-            http://localhost:11030/health/readiness || exit 1",
-        ]
+      test: [
+        "CMD-SHELL",
+        "curl -f http://localhost:10030/health/readiness || exit 1 && curl
+          -f http://localhost:10230/health/readiness || exit 1 && curl -f
+          http://localhost:10330/health/readiness || exit 1 && curl -f
+          http://localhost:10530/health/readiness || exit 1 && curl -f
+          http://localhost:10630/health/readiness || exit 1 && curl -f
+          http://localhost:10730/health/readiness || exit 1 && curl -f
+          http://localhost:10930/health/readiness || exit 1 && curl -f
+          http://localhost:11030/health/readiness || exit 1",
+      ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -594,18 +613,17 @@ services:
       Stripe__BookingConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
       Stripe__OAuthClientId: ${STAGING_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -f http://localhost:10020/health/readiness || exit 1 && curl
-            -f http://localhost:10220/health/readiness || exit 1 && curl -f
-            http://localhost:10320/health/readiness || exit 1 && curl -f
-            http://localhost:10520/health/readiness || exit 1 && curl -f
-            http://localhost:10620/health/readiness || exit 1 && curl -f
-            http://localhost:10720/health/readiness || exit 1 && curl -f
-            http://localhost:10920/health/readiness || exit 1 && curl -f
-            http://localhost:11020/health/readiness || exit 1",
-        ]
+      test: [
+        "CMD-SHELL",
+        "curl -f http://localhost:10020/health/readiness || exit 1 && curl
+          -f http://localhost:10220/health/readiness || exit 1 && curl -f
+          http://localhost:10320/health/readiness || exit 1 && curl -f
+          http://localhost:10520/health/readiness || exit 1 && curl -f
+          http://localhost:10620/health/readiness || exit 1 && curl -f
+          http://localhost:10720/health/readiness || exit 1 && curl -f
+          http://localhost:10920/health/readiness || exit 1 && curl -f
+          http://localhost:11020/health/readiness || exit 1",
+      ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -802,19 +820,18 @@ services:
       Graphql__CollectOperationPlanTelemetry: false
       Graphql__AllowErrorHandlingModeOverride: false
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f
-            http://localhost:10000/health/readiness || exit 1 && curl -f
-            http://localhost:10200/health/readiness || exit 1 && curl -f
-            http://localhost:10300/health/readiness || exit 1 && curl -f
-            http://localhost:10500/health/readiness || exit 1 && curl -f
-            http://localhost:10600/health/readiness || exit 1 && curl -f
-            http://localhost:10700/health/readiness || exit 1  && curl -f
-            http://localhost:10900/health/readiness || exit 1 && curl -f
-            http://localhost:11000/health/readiness || exit 1",
-        ]
+      test: [
+        "CMD-SHELL",
+        "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f
+          http://localhost:10000/health/readiness || exit 1 && curl -f
+          http://localhost:10200/health/readiness || exit 1 && curl -f
+          http://localhost:10300/health/readiness || exit 1 && curl -f
+          http://localhost:10500/health/readiness || exit 1 && curl -f
+          http://localhost:10600/health/readiness || exit 1 && curl -f
+          http://localhost:10700/health/readiness || exit 1  && curl -f
+          http://localhost:10900/health/readiness || exit 1 && curl -f
+          http://localhost:11000/health/readiness || exit 1",
+      ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -917,18 +934,17 @@ services:
       Stripe__BookingConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
       Stripe__OAuthClientId: ${PRODUCTION_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -f http://localhost:10030/health/readiness || exit 1 && curl
-            -f http://localhost:10230/health/readiness || exit 1 && curl -f
-            http://localhost:10330/health/readiness || exit 1 && curl -f
-            http://localhost:10530/health/readiness || exit 1 && curl -f
-            http://localhost:10630/health/readiness || exit 1 && curl -f
-            http://localhost:10730/health/readiness || exit 1 && curl -f
-            http://localhost:10930/health/readiness || exit 1 && curl -f
-            http://localhost:11030/health/readiness || exit 1",
-        ]
+      test: [
+        "CMD-SHELL",
+        "curl -f http://localhost:10030/health/readiness || exit 1 && curl
+          -f http://localhost:10230/health/readiness || exit 1 && curl -f
+          http://localhost:10330/health/readiness || exit 1 && curl -f
+          http://localhost:10530/health/readiness || exit 1 && curl -f
+          http://localhost:10630/health/readiness || exit 1 && curl -f
+          http://localhost:10730/health/readiness || exit 1 && curl -f
+          http://localhost:10930/health/readiness || exit 1 && curl -f
+          http://localhost:11030/health/readiness || exit 1",
+      ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -1031,18 +1047,17 @@ services:
       Stripe__BookingConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
       Stripe__OAuthClientId: ${PRODUCTION_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -f http://localhost:10020/health/readiness || exit 1 && curl
-            -f http://localhost:10220/health/readiness || exit 1 && curl -f
-            http://localhost:10320/health/readiness || exit 1 && curl -f
-            http://localhost:10520/health/readiness || exit 1 && curl -f
-            http://localhost:10620/health/readiness || exit 1 && curl -f
-            http://localhost:10720/health/readiness || exit 1 && curl -f
-            http://localhost:10920/health/readiness || exit 1 && curl -f
-            http://localhost:11020/health/readiness || exit 1",
-        ]
+      test: [
+        "CMD-SHELL",
+        "curl -f http://localhost:10020/health/readiness || exit 1 && curl
+          -f http://localhost:10220/health/readiness || exit 1 && curl -f
+          http://localhost:10320/health/readiness || exit 1 && curl -f
+          http://localhost:10520/health/readiness || exit 1 && curl -f
+          http://localhost:10620/health/readiness || exit 1 && curl -f
+          http://localhost:10720/health/readiness || exit 1 && curl -f
+          http://localhost:10920/health/readiness || exit 1 && curl -f
+          http://localhost:11020/health/readiness || exit 1",
+      ]
       interval: 30s
       timeout: 5s
       retries: 100
