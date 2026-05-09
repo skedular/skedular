@@ -1,5 +1,5 @@
 locals {
-  dns_records_dev_tools = ["contabo", "kowl", "dozzle", "crm", "temporal", "zipkin", "jaeger", "redisinsight"]
+  dns_records_dev_tools = ["contabo", "kowl", "dozzle", "crm", "temporal", "zipkin", "jaeger", "redisinsight", "aspire"]
 }
 
 locals {

@@ -83,3 +83,7 @@ napp.skedular.app {
 napi.skedular.app {
 	reverse_proxy localhost:7000
 }
+
+aspire.skedular.app {
+	reverse_proxy localhost:18888
+}
