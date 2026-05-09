@@ -31,7 +31,7 @@ services:
     volumes:
       - skedular_redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -69,7 +69,7 @@ services:
       - "9100:9100"
     healthcheck:
       test:
-        ["CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true' || exit 1"]
+        [ "CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true' || exit 1" ]
       interval: 15s
       timeout: 3s
       retries: 5
@@ -133,5 +133,17 @@ services:
       - 8080:8080
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
+    networks:
+      - skedular_network
+
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+    restart: unless-stopped
+    environment:
+      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: "true"
+      Logging__LogLevel__Aspire.Dashboard.Otlp.Storage: "Error"
+    ports:
+      - "18888:18888"
+      - "18889:18889"
     networks:
       - skedular_network
