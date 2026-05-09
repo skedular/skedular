@@ -4,7 +4,7 @@ using OpenTelemetry;
 
 namespace Enterprise.Shared.Telemetry;
 
-internal sealed class OutboxTraceFilteringProcessor(BaseProcessor<Activity> innerProcessor) : BaseProcessor<Activity>
+public sealed class OutboxTraceFilteringProcessor(BaseProcessor<Activity> innerProcessor) : BaseProcessor<Activity>
 {
     public override void OnStart(Activity data) => innerProcessor.OnStart(data);
 
@@ -16,11 +16,9 @@ internal sealed class OutboxTraceFilteringProcessor(BaseProcessor<Activity> inne
         }
     }
 
-    protected override bool OnShutdown(int timeoutMilliseconds)
-        => innerProcessor.Shutdown(timeoutMilliseconds);
+    protected override bool OnShutdown(int timeoutMilliseconds) => innerProcessor.Shutdown(timeoutMilliseconds);
 
-    protected override bool OnForceFlush(int timeoutMilliseconds)
-        => innerProcessor.ForceFlush(timeoutMilliseconds);
+    protected override bool OnForceFlush(int timeoutMilliseconds) => innerProcessor.ForceFlush(timeoutMilliseconds);
 
     protected override void Dispose(bool disposing)
     {

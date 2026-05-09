@@ -25,17 +25,7 @@ public static class OutboxTelemetryFilter
     {
         ArgumentNullException.ThrowIfNull(activity);
 
-        if (HasError(activity))
-        {
-            return true;
-        }
-
-        if (IsOutboxActivity(activity) || HasOutboxParent(activity))
-        {
-            return false;
-        }
-
-        return true;
+        return HasError(activity) || (!IsOutboxActivity(activity) && !HasOutboxParent(activity));
     }
 
     private static bool IsOutboxActivity(Activity activity) =>
