@@ -15,6 +15,100 @@ namespace Enterprise.Shared.Telemetry;
 
 public static class OpenTelemetryExtensions
 {
+    private const string LogsOtlpSignalName = "LOGS";
+    private const string MetricsOtlpSignalName = "METRICS";
+    private const string TracesOtlpSignalName = "TRACES";
+
+    private static bool IsOtlpExporterConfigured(IConfiguration configuration, string signalName) =>
+        !string.IsNullOrWhiteSpace(configuration[$"OTEL_EXPORTER_OTLP_{signalName}_ENDPOINT"])
+        || !string.IsNullOrWhiteSpace(configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
+
+    private static OtlpExporterOptions CreateOtlpExporterOptions(IConfiguration configuration, string signalName)
+    {
+        var options = new OtlpExporterOptions();
+        ConfigureOtlpExporter(configuration, options, signalName);
+        return options;
+    }
+
+    private static void ConfigureOtlpExporter(IConfiguration configuration, OtlpExporterOptions options, string signalName)
+    {
+        ConfigureOtlpProtocol(configuration, options, signalName);
+        ConfigureOtlpEndpoint(configuration, options, signalName);
+        ConfigureOtlpHeaders(configuration, options, signalName);
+        ConfigureOtlpTimeout(configuration, options, signalName);
+    }
+
+    private static void ConfigureOtlpEndpoint(IConfiguration configuration, OtlpExporterOptions options, string signalName)
+    {
+        var signalEndpoint = configuration[$"OTEL_EXPORTER_OTLP_{signalName}_ENDPOINT"];
+        if (!string.IsNullOrWhiteSpace(signalEndpoint))
+        {
+            options.Endpoint = new Uri(signalEndpoint);
+            return;
+        }
+
+        var endpoint = configuration["OTEL_EXPORTER_OTLP_ENDPOINT"];
+        if (!string.IsNullOrWhiteSpace(endpoint))
+        {
+            var endpointUri = new Uri(endpoint);
+            options.Endpoint = options.Protocol == OtlpExportProtocol.HttpProtobuf
+                ? AppendOtlpHttpSignalPath(endpointUri, signalName)
+                : endpointUri;
+        }
+    }
+
+    private static Uri AppendOtlpHttpSignalPath(Uri endpoint, string signalName)
+    {
+        var signalPath = signalName switch
+        {
+            LogsOtlpSignalName => "v1/logs",
+            MetricsOtlpSignalName => "v1/metrics",
+            TracesOtlpSignalName => "v1/traces",
+            _ => throw new ArgumentOutOfRangeException(nameof(signalName), signalName, null)
+        };
+
+        return new Uri($"{endpoint.ToString().TrimEnd('/')}/{signalPath}");
+    }
+
+    private static void ConfigureOtlpProtocol(IConfiguration configuration, OtlpExporterOptions options, string signalName)
+    {
+        var protocol = GetSignalOrDefaultOtlpConfigurationValue(configuration, signalName, "PROTOCOL");
+        if (string.IsNullOrWhiteSpace(protocol))
+        {
+            return;
+        }
+
+        options.Protocol = protocol.Trim().ToLowerInvariant() switch
+        {
+            "grpc" => OtlpExportProtocol.Grpc,
+            "http/protobuf" or "http_protobuf" or "httpprotobuf" => OtlpExportProtocol.HttpProtobuf,
+            _ when Enum.TryParse<OtlpExportProtocol>(protocol, true, out var parsedProtocol) => parsedProtocol,
+            _ => options.Protocol
+        };
+    }
+
+    private static void ConfigureOtlpHeaders(IConfiguration configuration, OtlpExporterOptions options, string signalName)
+    {
+        var headers = GetSignalOrDefaultOtlpConfigurationValue(configuration, signalName, "HEADERS");
+        if (!string.IsNullOrWhiteSpace(headers))
+        {
+            options.Headers = headers;
+        }
+    }
+
+    private static void ConfigureOtlpTimeout(IConfiguration configuration, OtlpExporterOptions options, string signalName)
+    {
+        var timeout = GetSignalOrDefaultOtlpConfigurationValue(configuration, signalName, "TIMEOUT");
+        if (int.TryParse(timeout, out var timeoutMilliseconds))
+        {
+            options.TimeoutMilliseconds = timeoutMilliseconds;
+        }
+    }
+
+    private static string? GetSignalOrDefaultOtlpConfigurationValue(IConfiguration configuration, string signalName, string optionName) =>
+        configuration[$"OTEL_EXPORTER_OTLP_{signalName}_{optionName}"]
+        ?? configuration[$"OTEL_EXPORTER_OTLP_{optionName}"];
+
     /// <param name="services"></param>
     extension(IServiceCollection services)
     {
@@ -22,7 +116,6 @@ public static class OpenTelemetryExtensions
         {
             var openTelemetryConfiguration = configuration.GetSection(OpenTelemetryConfiguration.Key).Get<OpenTelemetryConfiguration>();
             ArgumentNullException.ThrowIfNull(openTelemetryConfiguration);
-            var otlpEndpoint = configuration["OTEL_EXPORTER_OTLP_ENDPOINT"];
 
             services
                 .AddSingleton(openTelemetryConfiguration)
@@ -39,13 +132,9 @@ public static class OpenTelemetryExtensions
                 .AddOpenTelemetry()
                 .WithLogging(logging =>
                 {
-                    if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                    if (IsOtlpExporterConfigured(configuration, LogsOtlpSignalName))
                     {
-                        logging.AddOtlpExporter(options =>
-                        {
-                            options.Endpoint = new Uri(otlpEndpoint);
-                            options.Protocol = OtlpExportProtocol.Grpc;
-                        });
+                        logging.AddOtlpExporter(options => ConfigureOtlpExporter(configuration, options, LogsOtlpSignalName));
                     }
                 })
                 .WithMetrics(metrics =>
@@ -65,13 +154,9 @@ public static class OpenTelemetryExtensions
                         metrics.AddConsoleExporter();
                     }
 
-                    if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                    if (IsOtlpExporterConfigured(configuration, MetricsOtlpSignalName))
                     {
-                        metrics.AddOtlpExporter(options =>
-                        {
-                            options.Endpoint = new Uri(otlpEndpoint);
-                            options.Protocol = OtlpExportProtocol.Grpc;
-                        });
+                        metrics.AddOtlpExporter(options => ConfigureOtlpExporter(configuration, options, MetricsOtlpSignalName));
                     }
                 })
                 .WithTracing(tracing =>
@@ -96,28 +181,31 @@ public static class OpenTelemetryExtensions
 
                     if (openTelemetryConfiguration.ConsoleEnabled)
                     {
-                        tracing.AddConsoleExporter();
+                        if (openTelemetryConfiguration.ExcludeOutboxTelemetry)
+                        {
+                            tracing.AddProcessor(
+                                new OutboxTraceFilteringProcessor(
+                                    new SimpleActivityExportProcessor(
+                                        new ConsoleActivityExporter(new ConsoleExporterOptions()))));
+                        }
+                        else
+                        {
+                            tracing.AddConsoleExporter();
+                        }
                     }
 
-                    if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                    if (IsOtlpExporterConfigured(configuration, TracesOtlpSignalName))
                     {
                         if (openTelemetryConfiguration.ExcludeOutboxTelemetry)
                         {
                             tracing.AddProcessor(
                                 new OutboxTraceFilteringProcessor(
                                     new BatchActivityExportProcessor(
-                                        new OtlpTraceExporter(new OtlpExporterOptions
-                                        {
-                                            Endpoint = new Uri(otlpEndpoint), Protocol = OtlpExportProtocol.Grpc
-                                        }))));
+                                        new OtlpTraceExporter(CreateOtlpExporterOptions(configuration, TracesOtlpSignalName)))));
                         }
                         else
                         {
-                            tracing.AddOtlpExporter(options =>
-                            {
-                                options.Endpoint = new Uri(otlpEndpoint);
-                                options.Protocol = OtlpExportProtocol.Grpc;
-                            });
+                            tracing.AddOtlpExporter(options => ConfigureOtlpExporter(configuration, options, TracesOtlpSignalName));
                         }
                     }
                 });
