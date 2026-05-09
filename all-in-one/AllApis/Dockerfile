@@ -13,7 +13,17 @@ RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet restore && dotnet tool re
 FROM build AS test
 RUN mkdir -p /coverage/reports
 
-FROM test AS publish
+# Verify gateway.far is a valid, fully readable zip before publishing.
+# A truncated or corrupted gateway.far causes the Fusion gateway to fail
+# at startup (502 on all GraphQL requests) with no obvious error message.
+# Catching it here aborts the build immediately with a clear failure.
+FROM build AS gateway-verify
+RUN apt-get update -y && apt-get install -y --no-install-recommends unzip \
+    && bash /src/.github/actions/build-test-push/verify-gateway-far.sh \
+    /src/gateway/apis/Gateway/gateway.far \
+    true
+
+FROM gateway-verify AS publish
 RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet publish "AllApis.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
