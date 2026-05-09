@@ -11,7 +11,7 @@ public class SqlServerConfigurationFixtureCustomizer : IFixtureCustomizer
         new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["ConnectionStrings:main"] = "Server=localhost;Database=test;User Id=sa;Password=Password123!;TrustServerCertificate=True",
+                ["ConnectionStrings:main"] = "Server=localhost;Database=local.test;User Id=sa;Password=Password123!;TrustServerCertificate=True",
                 [$"{ApplicationConfiguration.Key}:{nameof(ApplicationConfiguration.QuerySplittingBehavior)}"] =
                     nameof(QuerySplittingBehavior.SplitQuery)
             })

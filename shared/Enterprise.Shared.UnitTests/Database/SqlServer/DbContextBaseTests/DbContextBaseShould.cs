@@ -11,7 +11,7 @@ public class DbContextBaseShould
     private static SqlServerTestDbContext BuildRelationalContext(bool isPooled = false)
     {
         var options = new DbContextOptionsBuilder<SqlServerTestDbContext>()
-            .UseSqlServer("Server=localhost;Database=test;User Id=sa;Password=Password123!;TrustServerCertificate=True")
+            .UseSqlServer("Server=localhost;Database=local.test;User Id=sa;Password=Password123!;TrustServerCertificate=True")
             .Options;
         var customOptions = new CustomDbContextOptions<SqlServerTestDbContext> { IsPooled = isPooled };
         return new SqlServerTestDbContext(options, customOptions);

@@ -54,7 +54,7 @@ public class WithPostgreSqlDbContextShould
         services.WithPooledPostgreSqlDbContextFactoryWithConnectionString<PostgresTestDbContext>(
             configuration,
             environment,
-            "Host=localhost;Database=test;Username=test;Password=test",
+            "Host=localhost;Database=local.test;Username=test;Password=test",
             true,
             "postgres-factory");
 

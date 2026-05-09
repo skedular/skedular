@@ -54,7 +54,7 @@ public class WithSqlServerDbContextShould
         services.WithPooledSqlServerDbContextFactoryWithConnectionString<SqlServerTestDbContext>(
             configuration,
             environment,
-            "Server=localhost;Database=test;User Id=sa;Password=Password123!;TrustServerCertificate=True",
+            "Server=localhost;Database=local.test;User Id=sa;Password=Password123!;TrustServerCertificate=True",
             "sqlserver-factory");
 
         var provider = services.BuildServiceProvider();

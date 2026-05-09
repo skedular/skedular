@@ -11,7 +11,7 @@ public class PostgresConfigurationFixtureCustomizer : IFixtureCustomizer
         new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["ConnectionStrings:main"] = "Host=localhost;Database=test;Username=test;Password=test",
+                ["ConnectionStrings:main"] = "Host=localhost;Database=local.test;Username=test;Password=test",
                 [$"{ApplicationConfiguration.Key}:{nameof(ApplicationConfiguration.QuerySplittingBehavior)}"] =
                     nameof(QuerySplittingBehavior.SplitQuery)
             })

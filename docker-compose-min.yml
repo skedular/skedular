@@ -2,19 +2,19 @@ networks:
   skedular_network:
 
 volumes:
-  skedular_postgres_data:
+  skedular_postgres18_data:
   skedular_redis_data:
   skedular_kafka1_data:
   skedular_temporal_data:
 
 services:
   postgres:
-    image: postgis/postgis:17-master
+    image: postgis/postgis:18-master
     platform: linux/amd64
     command: postgres -c 'max_connections=10000' -c 'shared_preload_libraries=pg_stat_statements'
     restart: unless-stopped
     volumes:
-      - skedular_postgres_data:/var/lib/postgresql/data
+      - skedular_postgres18_data:/var/lib/postgresql
     environment:
       POSTGRES_USER: "8b974997c3c54b10a556f089377505d7"
       POSTGRES_PASSWORD: "123456"

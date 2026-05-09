@@ -18,7 +18,7 @@ public class RepositoryFactoryBaseShould
     {
         var context = new SqlServerTestDbContext(
             new DbContextOptionsBuilder<SqlServerTestDbContext>()
-                .UseSqlServer("Server=localhost;Database=test;User Id=sa;Password=Password123!;TrustServerCertificate=True")
+                .UseSqlServer("Server=localhost;Database=local.test;User Id=sa;Password=Password123!;TrustServerCertificate=True")
                 .Options,
             new CustomDbContextOptions<SqlServerTestDbContext>());
         sut.SetDbContext(context);

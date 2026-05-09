@@ -13,7 +13,7 @@ public class AddDatabaseHealthCheckShould
     [AutoFakeItEasyData([typeof(ServiceCollectionFixtureCustomizer)])]
     public void Register_health_check_with_readiness_tag(ServiceCollection services, string uniqueId)
     {
-        var dataSource = $"Host=localhost;Database=test_{uniqueId};Username=test;Password=test".BuildDataSource(false);
+        var dataSource = $"Host=localhost;Database=local.test_{uniqueId};Username=test;Password=test".BuildDataSource(false);
 
         services.AddDatabaseHealthCheck(dataSource, "postgres");
 

@@ -17,7 +17,7 @@ public class RepositoryFactoryBaseShould
     public async Task Dispose_and_clear_db_context(PostgresTestRepositoryFactory sut)
     {
         var context = new PostgresTestDbContext(
-            new DbContextOptionsBuilder<PostgresTestDbContext>().UseNpgsql("Host=localhost;Database=test;Username=test;Password=test").Options,
+            new DbContextOptionsBuilder<PostgresTestDbContext>().UseNpgsql("Host=localhost;Database=local.test;Username=test;Password=test").Options,
             new CustomDbContextOptions<PostgresTestDbContext>());
 
         sut.SetDbContext(context);
