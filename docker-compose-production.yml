@@ -71,31 +71,27 @@ services:
       - skedular_network
 
   kafka1:
-    image: confluentinc/cp-kafka:latest
+    image: redpandadata/redpanda:latest
+    restart: unless-stopped
+    command:
+      - redpanda
+      - start
+      - --kafka-addr internal://0.0.0.0:29092,external://0.0.0.0:19092
+      - --advertise-kafka-addr internal://kafka1:29092,external://localhost:19092
+      - --schema-registry-addr internal://0.0.0.0:8081,external://0.0.0.0:9100
+      - --rpc-addr kafka1:33145
+      - --advertise-rpc-addr kafka1:33145
+      - --smp 1
+      - --default-log-level=info
     volumes:
-      - skedular_kafka1_data:/var/lib/kafka/data
-    environment:
-      KAFKA_NODE_ID: 1
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
-      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka1:29092,PLAINTEXT_HOST://localhost:19092"
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: "kafka1:19092"
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_JMX_PORT: 9101
-      KAFKA_JMX_HOSTNAME: localhost
-      KAFKA_PROCESS_ROLES: "broker,controller"
-      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka1:29093"
-      KAFKA_LISTENERS:
-        "PLAINTEXT://kafka1:29092,CONTROLLER://kafka1:29093,PLAINTEXT_\
-        HOST://0.0.0.0:19092"
-      KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
-      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
-      KAFKA_LOG_DIRS: "/var/lib/kafka/data"
-      # Replace CLUSTER_ID with a unique base64 UUID using "bin/kafka-storage.sh random-uuid"
-      # See https://docs.confluent.io/kafka/operations-tools/kafka-tools.html#kafka-storage-sh
-      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+      - skedular_kafka1_data:/var/lib/redpanda/data
+    healthcheck:
+      test:
+        ["CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true' || exit 1"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+      start_period: 90s
     networks:
       - skedular_network
 
@@ -103,37 +99,13 @@ services:
     image: redpandadata/console:latest
     restart: unless-stopped
     depends_on:
-      - schema-registry
       - kafka1
     environment:
       KAFKA_BROKERS: "kafka1:29092"
       SCHEMAREGISTRY_ENABLED: "true"
-      SCHEMAREGISTRY_URLS: "http://schema-registry:9100"
+      SCHEMAREGISTRY_URLS: "http://kafka1:8081"
     ports:
       - 8888:8080
-    networks:
-      - skedular_network
-
-  schema-registry:
-    image: confluentinc/cp-schema-registry:latest
-    depends_on:
-      - kafka1
-    ports:
-      - "9100:9100"
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka1:29092"
-      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:9100
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -f http://localhost:9100/subjects >/dev/null || exit 1",
-        ]
-      interval: 30s
-      timeout: 5s
-      retries: 20
-      start_period: 5s
     networks:
       - skedular_network
 
@@ -184,7 +156,7 @@ services:
     image: ghcr.io/unityhubio/allinfra:latest
     restart: on-failure
     depends_on:
-      schema-registry:
+      kafka1:
         condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Production
@@ -202,7 +174,7 @@ services:
       Application__Environment: staging
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__UseSchemaRegistry: true
-      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__Url: "http://kafka1:8081"
       Kafka__SchemaRegistry__ApiKey: ${STAGING_SCHEMA_REGISTRY_APIKEY:-}
       Kafka__SchemaRegistry__SecretKey: ${STAGING_SCHEMA_REGISTRY_SECRETKEY:-}
       Kafka__SchemaRegistry__AutoRegisterSchema: false
@@ -296,7 +268,7 @@ services:
       ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__UseSchemaRegistry: true
-      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__Url: "http://kafka1:8081"
       Kafka__SchemaRegistry__ApiKey: ${STAGING_SCHEMA_REGISTRY_APIKEY:-}
       Kafka__SchemaRegistry__SecretKey: ${STAGING_SCHEMA_REGISTRY_SECRETKEY:-}
       Kafka__SchemaRegistry__AutoRegisterSchema: false
@@ -420,7 +392,7 @@ services:
       ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__UseSchemaRegistry: true
-      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__Url: "http://kafka1:8081"
       Kafka__SchemaRegistry__ApiKey: ${STAGING_SCHEMA_REGISTRY_APIKEY:-}
       Kafka__SchemaRegistry__SecretKey: ${STAGING_SCHEMA_REGISTRY_SECRETKEY:-}
       Kafka__SchemaRegistry__AutoRegisterSchema: false
@@ -533,7 +505,7 @@ services:
       ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__UseSchemaRegistry: true
-      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__Url: "http://kafka1:8081"
       Kafka__SchemaRegistry__ApiKey: ${STAGING_SCHEMA_REGISTRY_APIKEY:-}
       Kafka__SchemaRegistry__SecretKey: ${STAGING_SCHEMA_REGISTRY_SECRETKEY:-}
       Kafka__SchemaRegistry__AutoRegisterSchema: false
@@ -618,7 +590,7 @@ services:
     image: ghcr.io/unityhubio/allinfra:latest
     restart: on-failure
     depends_on:
-      schema-registry:
+      kafka1:
         condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Production
@@ -636,7 +608,7 @@ services:
       Application__Environment: prod
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__UseSchemaRegistry: true
-      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__Url: "http://kafka1:8081"
       Kafka__SchemaRegistry__ApiKey: ${PRODUCTION_SCHEMA_REGISTRY_APIKEY:-}
       Kafka__SchemaRegistry__SecretKey: ${PRODUCTION_SCHEMA_REGISTRY_SECRETKEY:-}
       Kafka__SchemaRegistry__AutoRegisterSchema: false
@@ -730,7 +702,7 @@ services:
       ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__UseSchemaRegistry: true
-      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__Url: "http://kafka1:8081"
       Kafka__SchemaRegistry__ApiKey: ${PRODUCTION_SCHEMA_REGISTRY_APIKEY:-}
       Kafka__SchemaRegistry__SecretKey: ${PRODUCTION_SCHEMA_REGISTRY_SECRETKEY:-}
       Kafka__SchemaRegistry__AutoRegisterSchema: false
@@ -854,7 +826,7 @@ services:
       ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__UseSchemaRegistry: true
-      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__Url: "http://kafka1:8081"
       Kafka__SchemaRegistry__ApiKey: ${PRODUCTION_SCHEMA_REGISTRY_APIKEY:-}
       Kafka__SchemaRegistry__SecretKey: ${PRODUCTION_SCHEMA_REGISTRY_SECRETKEY:-}
       Kafka__SchemaRegistry__AutoRegisterSchema: false
@@ -967,7 +939,7 @@ services:
       ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__UseSchemaRegistry: true
-      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__Url: "http://kafka1:8081"
       Kafka__SchemaRegistry__ApiKey: ${PRODUCTION_SCHEMA_REGISTRY_APIKEY:-}
       Kafka__SchemaRegistry__SecretKey: ${PRODUCTION_SCHEMA_REGISTRY_SECRETKEY:-}
       Kafka__SchemaRegistry__AutoRegisterSchema: false
