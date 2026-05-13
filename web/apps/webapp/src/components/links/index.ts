@@ -236,6 +236,8 @@ export const getOrganizationAnalyticsBaseLink = (integratedPlatrform: string | u
   `${getOrganizationBaseLink(integratedPlatrform, id)}/analytics?section=organization`;
 export const getOrganizationLocationsAnalyticsLocationsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/analytics?section=locations`;
+export const getOrganizationAvailabilityDashboardBaseLink = (integratedPlatrform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/availability-dashboard`;
 
 export const getOrganizationAdminSetupBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=setup`;
 export const getOrganizationAdminPhysicalAddressBaseLink = (integratedPlatrform: string | undefined, id: string) =>

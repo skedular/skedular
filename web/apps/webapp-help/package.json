@@ -12,7 +12,7 @@
     "format": "prettier --write --single-quote true --trailing-comma all --print-width 180 ./src && pnpm lint-fix"
   },
   "dependencies": {
-    "next": "^16.2.5",
+    "next": "^16.2.6",
     "nextra": "^4.6.1",
     "nextra-theme-docs": "^4.6.1",
     "react": "19.2.6",
@@ -20,12 +20,12 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.7.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "cross-env": "^10.1.0",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.2.5",
+    "eslint-config-next": "^16.2.6",
     "prettier": "^3.8.3",
     "typescript": "^6.0.3"
   }

@@ -19,7 +19,7 @@ public interface IBookingService
     Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
-        IEnumerable<BookingOrder> orderByFields,
+        IReadOnlyList<BookingOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
@@ -59,7 +59,7 @@ public class BookingService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
-        IEnumerable<BookingOrder> orderByFields,
+        IReadOnlyList<BookingOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {

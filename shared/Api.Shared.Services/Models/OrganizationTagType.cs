@@ -351,6 +351,18 @@ public static class OrganizationTagTypeConstants
     public const string AmenitySpecializedToolsEquipment = "AMENITY_SPECIALIZED_TOOLS_EQUIPMENT";
     public const string AmenitySafetyComplianceKit = "AMENITY_SAFETY_COMPLIANCE_KIT";
 
+    /// <summary>
+    ///     The set of all resource-type tag type constants.
+    ///     Use for <c>Contains</c> checks rather than re-declaring the set in each consumer.
+    /// </summary>
+    public static readonly HashSet<string> ResourceTagTypes =
+    [
+        ResourceDesk,
+        ResourceRoom,
+        ResourceParking,
+        ResourceOthers
+    ];
+
     public static readonly IReadOnlyList<OrganizationTagType> ResourceTypes =
     [
         OrganizationTagType.ResourceDesk,

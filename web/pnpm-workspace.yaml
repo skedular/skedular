@@ -1,3 +1,10 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+allowBuilds:
+  '@mui/x-telemetry': true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+patchedDependencies:
+  globalize@1.7.1: patches/globalize@1.7.1.patch

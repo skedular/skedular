@@ -1,0 +1,10 @@
+subscription OnResourceAvailabilityChanged($subscriptionKey: String!, $filter: ResourceAvailabilityFilterInput!) {
+    resourceAvailability(subscriptionKey: $subscriptionKey, filter: $filter) {
+        subscriptionKey
+        items {
+            resourceId
+            resourceName
+            status
+        }
+    }
+}

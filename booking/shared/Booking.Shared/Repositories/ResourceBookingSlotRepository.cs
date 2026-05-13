@@ -12,6 +12,11 @@ public interface IResourceBookingSlotRepository : IRepository<ResourceBookingSlo
     void Update(ResourceBookingSlot resourceBookingSlot);
     void UpdateRange(IEnumerable<ResourceBookingSlot> resourceBookingSlots);
     Task<IReadOnlyList<ResourceBookingSlot>> GetByResourceIdAsync(string resourceId, DateTimeOffset from, CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<ResourceBookingSlot>> GetByResourceIdsAndDayAsync(
+        IReadOnlyList<string> resourceIds,
+        DateTimeOffset dayStart,
+        DateTimeOffset dayEnd, CancellationToken cancellationToken);
 }
 
 public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -54,4 +59,24 @@ public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvi
             .Include(query => query.Resource)
             .ThenInclude(query => query.Location)
             .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<ResourceBookingSlot>> GetByResourceIdsAndDayAsync(
+        IReadOnlyList<string> resourceIds,
+        DateTimeOffset dayStart,
+        DateTimeOffset dayEnd,
+        CancellationToken cancellationToken)
+    {
+        if (resourceIds.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.ResourceBookingSlot
+            .Where(item => resourceIds.Contains(item.ResourceId) && item.Start >= dayStart && item.Start < dayEnd)
+            .Include(item => item.Bookings.Where(booking => booking.DeletedByCustomer == null))
+            .ThenInclude(item => item.CreatedByCustomer)
+            .Include(item => item.Bookings.Where(booking => booking.DeletedByCustomer == null))
+            .ThenInclude(item => item.RecurringBooking)
+            .ToListAsync(cancellationToken);
+    }
 }

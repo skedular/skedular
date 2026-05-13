@@ -1,14 +1,14 @@
-import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { FloorPlans } from '@/components/floorPlan/floorPlans';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
-import { endOfDay, startOfDay } from '@skedular/shared';
 import type { pageFloorPlans_rootQuery } from '@/queries/__generated__/pageFloorPlans_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
+import { endOfDay, startOfDay, useKnownParams } from '@skedular/shared';
+import { BodyIconTypography, StackColumn } from '@skedular/ui';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -58,11 +58,24 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
     return null;
   }
 
+  const availabilityDashboardUrl = `/organizations/${organizationCustomDomain}/availability-dashboard`;
+
   const breadcrumbs = (
     <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-        {'< back'}
-      </Button>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
+          {'< back'}
+        </Button>
+        <Button
+          component={Link}
+          href={availabilityDashboardUrl}
+          variant="text"
+          aria-label="View availability dashboard for this location"
+          sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}
+        >
+          Availability Dashboard
+        </Button>
+      </Box>
       <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
         <Breadcrumbs>
           <BodyIconTypography label="Location" />

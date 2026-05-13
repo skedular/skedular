@@ -1,8 +1,8 @@
-import { BodyIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
 import {
   AnalyticsIcon,
   BookingIcon,
   CollpaseDrawerIcon,
+  GridViewIcon,
   HomeIcon,
   LocationIcon,
   MembersIcon,
@@ -16,6 +16,7 @@ import {
 import {
   getOrganizationAdminSetupBaseLink,
   getOrganizationAnalyticsBaseLink,
+  getOrganizationAvailabilityDashboardBaseLink,
   getOrganizationBaseLink,
   getOrganizationBookingsBaseLink,
   getOrganizationLocationsBaseLink,
@@ -26,8 +27,6 @@ import {
   getOrganizationUsersBaseLink,
 } from '@/components/links';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
-import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
-import { coal, defaultPadding, emerald, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@skedular/ui';
 import type { leftSideNavigationMenuContent_query$key } from '@/queries/__generated__/leftSideNavigationMenuContent_query.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -36,6 +35,18 @@ import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
+import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  coal,
+  defaultPadding,
+  emerald,
+  getSelectedListItemBorderRadius,
+  sandstone,
+  selectedListItemPaddings,
+  SmallIconTypography,
+  StackColumn,
+} from '@skedular/ui';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -140,6 +151,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationAvailabilityDashboardBaseLink = getOrganizationAvailabilityDashboardBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationMarketplaceSetupBaseLink = getOrganizationMarketplaceSetupBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationProductsBaseLink = getOrganizationProductsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationSubscriptionsBaseLink = getOrganizationSubscriptionsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
@@ -209,6 +221,30 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                     startElement={!hideIcons && <BookingIcon excludeTooltip color="inherit" />}
                     spacing={3}
                     invertDefaultColor={pathName === organizationBookingsBaseLink && paletteMode === 'dark'}
+                  />
+                )}
+              </ListItemButton>
+            </Link>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <Link component={NextLink} href={organizationAvailabilityDashboardBaseLink}>
+              <ListItemButton
+                selected={pathName.startsWith(organizationAvailabilityDashboardBaseLink)}
+                sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAvailabilityDashboardBaseLink)) }}
+              >
+                {collapsed && (
+                  <BodyIconTypography
+                    startElement={!hideIcons && <GridViewIcon color="inherit" />}
+                    invertDefaultColor={pathName.startsWith(organizationAvailabilityDashboardBaseLink) && paletteMode === 'dark'}
+                  />
+                )}
+                {!collapsed && (
+                  <BodyIconTypography
+                    label="Availability"
+                    startElement={!hideIcons && <GridViewIcon color="inherit" />}
+                    spacing={3}
+                    invertDefaultColor={pathName.startsWith(organizationAvailabilityDashboardBaseLink) && paletteMode === 'dark'}
                   />
                 )}
               </ListItemButton>

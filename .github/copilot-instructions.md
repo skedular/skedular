@@ -1,8 +1,11 @@
 # unityhubio Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-29
+Auto-generated from all feature plans. Last updated: 2026-05-10
 
 ## Active Technologies
+- C# .NET 10 (backend); TypeScript 6 / React 19 / Next.js 16 App Router (frontend) (007-resource-availability-dashboard)
+- PostgreSQL via EF Core — no new migration required for the query path; the existing `DailyResourceAvailabilitySnapshot` table (from 006) supports analytics but the dashboard queries live booking data at request time via gRPC (007-resource-availability-dashboard)
+
 - C# .NET 10 (backend), TypeScript 6 / React 19 / Next.js 16 App Router (frontend) + HotChocolate (GraphQL), Entity Framework Core, Relay, MUI v9, `mui-rff` Autocomplete, `useSearchParams`/`useRouter` (Next.js) (005-subscription-landing-page-filter)
 - PostgreSQL — no new migrations; filtering via existing indexed `Status` and `MarketplaceBooking.PaymentStatus` columns (005-subscription-landing-page-filter)
 - C# on .NET 10 + Temporal (workflows/activities), HotChocolate (GraphQL), Entity Framework Core, gRPC (booking data via `BookingService.BookingServiceClient`), `Enterprise.Shared.Database` repository pattern, `IRepositoryFactory`, `IWorkflowIdService` (006-desk-availability-analytics)
@@ -35,10 +38,10 @@ team/
 C# on .NET 10: Follow standard conventions
 
 ## Recent Changes
+- 007-resource-availability-dashboard: Added C# .NET 10 (backend); TypeScript 6 / React 19 / Next.js 16 App Router (frontend)
+
 - 006-desk-availability-analytics: Added C# on .NET 10 + Temporal (workflows/activities), HotChocolate (GraphQL), Entity Framework Core, gRPC (booking data via `BookingService.BookingServiceClient`), `Enterprise.Shared.Database` repository pattern, `IRepositoryFactory`, `IWorkflowIdService`
 - 005-subscription-landing-page-filter: Added C# .NET 10 (backend), TypeScript 6 / React 19 / Next.js 16 App Router (frontend) + HotChocolate (GraphQL), Entity Framework Core, Relay, MUI v9, `mui-rff` Autocomplete, `useSearchParams`/`useRouter` (Next.js)
-- 005-subscription-landing-page-filter: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
-
 
 <!-- MANUAL ADDITIONS START -->
 
@@ -51,6 +54,9 @@ C# on .NET 10: Follow standard conventions
 <!-- MANUAL ADDITIONS END -->
 
 <!-- SPECKIT START -->
+
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
+at `specs/007-resource-availability-dashboard/plan.md`.
+
 <!-- SPECKIT END -->

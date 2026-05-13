@@ -100,6 +100,11 @@ public class Startup
 
         services
             .AddSkedularGraphQLV1()
-            .ConfigureHttpClient(httpClient => httpClient.BaseAddress = bookingApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
+            .ConfigureHttpClient(httpClient => httpClient.BaseAddress = bookingApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri())
+            .ConfigureWebSocketClient(webSocketClient =>
+            {
+                var wsUri = new UriBuilder(bookingApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri()) { Scheme = "ws" }.Uri;
+                webSocketClient.Uri = wsUri;
+            });
     }
 }

@@ -100,7 +100,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where.TeamIds.ToSafeCollection(),
                 where.CustomerIds.ToSafeCollection(),
                 where.RecurringBookingIds.ToSafeCollection()),
-            orderBy.ToSafeCollection().Select(item => new BookingOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new BookingOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
 

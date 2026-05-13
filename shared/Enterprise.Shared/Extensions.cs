@@ -108,6 +108,7 @@ public static class Extensions
                     registration.Tags.Contains(HealthCheck.Constants.ReadinessTag) || registration.Name.Contains("services")
             });
 
+        app.UseWebSockets();
         app.UseRouting();
 
         // UseAuthentication must appear between UseRouting and UseEndpoints

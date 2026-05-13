@@ -11,16 +11,12 @@ public class MapToLocationShould
     public void Map_Floor_Plan_Count()
     {
         var sut = new GraphQlMapper();
-        var location = new Location.Shared.Models.Location
+        var location = new Shared.Models.Location
         {
             Id = "location-1",
             Name = "HQ",
             Type = LocationType.Private,
-            Organization = new Organization
-            {
-                Id = "organization-1",
-                CustomDomain = "acme"
-            },
+            Organization = new Organization { Id = "organization-1", CustomDomain = "acme" },
             FloorPlans =
             [
                 new FloorPlan { Id = "floor-plan-1" },

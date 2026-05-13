@@ -77,7 +77,13 @@ public static class Extensions
                 .AddScoped<IMarketplaceBookingService, MarketplaceBookingService>()
                 .AddScoped<ISkedularInvoiceService, SkedularInvoiceService>()
                 .AddScoped<IXeroInvoiceService, XeroInvoiceService>()
-                .AddScoped<IXeroRefundService, XeroRefundService>();
+                .AddScoped<IXeroRefundService, XeroRefundService>()
+                .AddSingleton<IResourceAvailabilityClassifier, ResourceAvailabilityClassifier>()
+                .AddSingleton<IResourceDayViewBookingVisibilityFilter, ResourceDayViewBookingVisibilityFilter>()
+                .AddSingleton<ISubscriptionKeyService, SubscriptionKeyService>()
+                .AddOptions<ResourceAvailabilityOptions>()
+                .Services
+                .AddScoped<IResourceAvailabilityDayViewService, ResourceAvailabilityDayViewService>();
 
         public IServiceCollection AddRepositoryFactory() =>
             services.AddScoped<IRepositoryFactory, RepositoryFactory>();

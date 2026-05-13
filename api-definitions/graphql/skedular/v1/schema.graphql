@@ -456,6 +456,15 @@ type Query
     @cost(weight: "10")
     @fusion__cost(schema: LOCATION_API, weight: "10")
     @fusion__field(schema: LOCATION_API)
+  resourceAvailabilityStatuses: [ResourceAvailabilityClassificationDetails!]!
+    @fusion__field(schema: BOOKING_API)
+  resourceDayViews(
+    filter: ResourceAvailabilityFilterInput! @fusion__inputField(schema: BOOKING_API)
+    orderBy: [ResourceAvailabilityOrderByInput!]! @fusion__inputField(schema: BOOKING_API)
+  ): ResourceDayViewConnection!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   resourceTypes: [OrganizationTagTypeDetails!]!
     @fusion__field(schema: ORGANIZATION_API)
   roomResourceType: OrganizationTagType!
@@ -1295,6 +1304,10 @@ type Subscription @fusion__type(schema: BOOKING_API) {
   marketplaceBookingSubscription(
     id: String! @fusion__inputField(schema: BOOKING_API)
   ): MarketplaceBookingSubscriptionDetails! @fusion__field(schema: BOOKING_API)
+  resourceAvailability(
+    filter: ResourceAvailabilityFilterInput! @fusion__inputField(schema: BOOKING_API)
+    subscriptionKey: String! @fusion__inputField(schema: BOOKING_API)
+  ): ResourceDayViewConnection! @fusion__field(schema: BOOKING_API)
 }
 
 type AddCustomerPaymentMethodIntentPayload @fusion__type(schema: CUSTOMER_API) {
@@ -1396,6 +1409,17 @@ type BookingResourceDetails @fusion__type(schema: BOOKING_API) {
   customers: [CustomerDetails!]! @fusion__field(schema: BOOKING_API)
   location: Booking_LocationDetails @fusion__field(schema: BOOKING_API)
   resource: ResourceDetails! @fusion__field(schema: BOOKING_API)
+}
+
+type BookingWindowDetails @fusion__type(schema: BOOKING_API) {
+  bookedByName: String @fusion__field(schema: BOOKING_API)
+  bookedByUserId: String @fusion__field(schema: BOOKING_API)
+  bookingId: String! @fusion__field(schema: BOOKING_API)
+  from: DateTime! @fusion__field(schema: BOOKING_API)
+  isCheckedIn: Boolean! @fusion__field(schema: BOOKING_API)
+  isRecurring: Boolean! @fusion__field(schema: BOOKING_API)
+  notes: String @fusion__field(schema: BOOKING_API)
+  until: DateTime! @fusion__field(schema: BOOKING_API)
 }
 
 type CancelOrganizationOfferingPayload @fusion__type(schema: ORGANIZATION_API) {
@@ -3022,6 +3046,12 @@ type RemoveOrganizationPaymentMethodPayload
   clientMutationId: String @fusion__field(schema: ORGANIZATION_API)
 }
 
+type ResourceAvailabilityClassificationDetails
+  @fusion__type(schema: BOOKING_API) {
+  name: String! @fusion__field(schema: BOOKING_API)
+  type: ResourceAvailabilityClassification! @fusion__field(schema: BOOKING_API)
+}
+
 type ResourceAvailabilityDailySnapshot @fusion__type(schema: LOCATION_API) {
   availableCount: Int! @fusion__field(schema: LOCATION_API)
   availableResourceNames: [String!]! @fusion__field(schema: LOCATION_API)
@@ -3031,6 +3061,31 @@ type ResourceAvailabilityDailySnapshot @fusion__type(schema: LOCATION_API) {
   resourceType: String! @fusion__field(schema: LOCATION_API)
   unavailableCount: Int! @fusion__field(schema: LOCATION_API)
   unavailableResourceNames: [String!]! @fusion__field(schema: LOCATION_API)
+}
+
+type ResourceDayViewConnection @fusion__type(schema: BOOKING_API) {
+  items: [ResourceDayViewDetails!]! @fusion__field(schema: BOOKING_API)
+  subscriptionKey: String! @fusion__field(schema: BOOKING_API)
+}
+
+type ResourceDayViewDetails @fusion__type(schema: BOOKING_API) {
+  bookedMinutes: Int! @fusion__field(schema: BOOKING_API)
+  bookingWindows: [BookingWindowDetails!]! @fusion__field(schema: BOOKING_API)
+  date: LocalDate! @fusion__field(schema: BOOKING_API)
+  floorId: String @fusion__field(schema: BOOKING_API)
+  floorName: String @fusion__field(schema: BOOKING_API)
+  locationId: String! @fusion__field(schema: BOOKING_API)
+  locationName: String! @fusion__field(schema: BOOKING_API)
+  openingFrom: LocalTime @fusion__field(schema: BOOKING_API)
+  openingUntil: LocalTime @fusion__field(schema: BOOKING_API)
+  resourceId: String! @fusion__field(schema: BOOKING_API)
+  resourceName: String! @fusion__field(schema: BOOKING_API)
+  resourceType: String! @fusion__field(schema: BOOKING_API)
+  status: ResourceAvailabilityClassification!
+    @fusion__field(schema: BOOKING_API)
+  totalOpeningMinutes: Int! @fusion__field(schema: BOOKING_API)
+  zoneId: String @fusion__field(schema: BOOKING_API)
+  zoneName: String @fusion__field(schema: BOOKING_API)
 }
 
 type ResourceDetails
@@ -4380,6 +4435,21 @@ input RemoveTeamMemberInput @fusion__type(schema: TEAM_API) {
 input RemoveTeamMembersInput @fusion__type(schema: TEAM_API) {
   clientMutationId: String @fusion__inputField(schema: TEAM_API)
   ids: [String!]! @fusion__inputField(schema: TEAM_API)
+}
+
+input ResourceAvailabilityFilterInput @fusion__type(schema: BOOKING_API) {
+  date: LocalDate! @fusion__inputField(schema: BOOKING_API)
+  floorId: String @fusion__inputField(schema: BOOKING_API)
+  locationIds: [String!]! @fusion__inputField(schema: BOOKING_API)
+  organizationCustomDomain: String! @fusion__inputField(schema: BOOKING_API)
+  resourceType: String @fusion__inputField(schema: BOOKING_API)
+  statuses: [ResourceAvailabilityClassification!]! @fusion__inputField(schema: BOOKING_API)
+  zoneId: String @fusion__inputField(schema: BOOKING_API)
+}
+
+input ResourceAvailabilityOrderByInput @fusion__type(schema: BOOKING_API) {
+  direction: OrderDirection! @fusion__inputField(schema: BOOKING_API)
+  field: ResourceAvailabilityOrderByField! @fusion__inputField(schema: BOOKING_API)
 }
 
 input ResourceOrderInput @fusion__type(schema: LOCATION_API) {
@@ -6251,6 +6321,22 @@ enum RecurringBookingOrderField @fusion__type(schema: BOOKING_API) {
   TO @fusion__enumValue(schema: BOOKING_API)
 }
 
+enum ResourceAvailabilityClassification @fusion__type(schema: BOOKING_API) {
+  AVAILABLE @fusion__enumValue(schema: BOOKING_API)
+  BLOCKED @fusion__enumValue(schema: BOOKING_API)
+  FULLY_BOOKED @fusion__enumValue(schema: BOOKING_API)
+  OCCUPIED @fusion__enumValue(schema: BOOKING_API)
+  PARTIALLY_BOOKED @fusion__enumValue(schema: BOOKING_API)
+  UNAVAILABLE @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum ResourceAvailabilityOrderByField @fusion__type(schema: BOOKING_API) {
+  LOCATION_NAME @fusion__enumValue(schema: BOOKING_API)
+  RESOURCE_NAME @fusion__enumValue(schema: BOOKING_API)
+  RESOURCE_TYPE @fusion__enumValue(schema: BOOKING_API)
+  ZONE_NAME @fusion__enumValue(schema: BOOKING_API)
+}
+
 enum ResourceOrderField @fusion__type(schema: LOCATION_API) {
   NAME @fusion__enumValue(schema: LOCATION_API)
 }
@@ -6356,6 +6442,21 @@ scalar fusion__FieldSelectionPath
 "The fusion__FieldSelectionSet scalar is used to represent a GraphQL selection set. To simplify the syntax, the outermost selection set is not wrapped in curly braces."
 scalar fusion__FieldSelectionSet
 
+"The `LocalDate` scalar type represents a date without time or time zone information."
+scalar LocalDate
+  @serializeAs(type: STRING, pattern: "\"^\\\\d{4}-\\\\d{2}-\\\\d{2}$\"")
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/local-date.html")
+  @fusion__type(schema: BOOKING_API)
+
+"The `LocalTime` scalar type represents a time of day without date or time zone information."
+scalar LocalTime
+  @serializeAs(
+    type: STRING
+    pattern: "\"^\\\\d{2}:\\\\d{2}:\\\\d{2}(?:\\\\.\\\\d{1,9})?$\""
+  )
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/local-time.html")
+  @fusion__type(schema: BOOKING_API)
+
 directive @cost(weight: String!) on
   | SCALAR
   | OBJECT
@@ -6363,6 +6464,12 @@ directive @cost(weight: String!) on
   | ARGUMENT_DEFINITION
   | ENUM
   | INPUT_FIELD_DEFINITION
+
+"The @fusion__connector directive declares which connector kind handles a source schema."
+directive @fusion__connector(
+  "The kind of connector that handles the source schema represented by this enum value."
+  kind: String!
+) on ENUM_VALUE
 
 "The @fusion__cost directive specifies cost metadata for each source schema."
 directive @fusion__cost(

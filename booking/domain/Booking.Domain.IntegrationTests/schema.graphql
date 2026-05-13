@@ -69,6 +69,11 @@ type Query {
   ): ConnectionOfRecurringBookingEdge! @cost(weight: "10")
   allRecurringBookings(where: RecurringBookingWhereInput!): [RecurringBookingDetails!]!
     @cost(weight: "10")
+  resourceAvailabilityStatuses: [ResourceAvailabilityClassificationDetails!]!
+  resourceDayViews(
+    filter: ResourceAvailabilityFilterInput!
+    orderBy: [ResourceAvailabilityOrderByInput!]!
+  ): ResourceDayViewConnection! @cost(weight: "10")
   availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]!
     @cost(weight: "10")
   availableResourcesCount(where: AvailableResourcesCountWhereInput!): Int!
@@ -138,6 +143,10 @@ type Mutation {
 type Subscription {
   booking(id: String!): BookingDetails!
   marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails!
+  resourceAvailability(
+    subscriptionKey: String!
+    filter: ResourceAvailabilityFilterInput!
+  ): ResourceDayViewConnection!
 }
 
 type Booking_LocationDetails {
@@ -205,6 +214,17 @@ type BookingResourceDetails {
   customers: [CustomerDetails!]!
   resource: ResourceDetails!
   location: Booking_LocationDetails
+}
+
+type BookingWindowDetails {
+  bookingId: String!
+  from: DateTime!
+  until: DateTime!
+  isRecurring: Boolean!
+  isCheckedIn: Boolean!
+  bookedByName: String
+  bookedByUserId: String
+  notes: String
 }
 
 type ConnectionOfBookingEdge {
@@ -506,6 +526,35 @@ type RecurringBookingEdge {
 type RecurringBookingPayload {
   clientMutationId: String
   recurringBooking: RecurringBookingDetails!
+}
+
+type ResourceAvailabilityClassificationDetails {
+  type: ResourceAvailabilityClassification!
+  name: String!
+}
+
+type ResourceDayViewConnection {
+  items: [ResourceDayViewDetails!]!
+  subscriptionKey: String!
+}
+
+type ResourceDayViewDetails {
+  resourceId: String!
+  resourceName: String!
+  resourceType: String!
+  locationId: String!
+  locationName: String!
+  floorId: String
+  floorName: String
+  zoneId: String
+  zoneName: String
+  date: LocalDate!
+  status: ResourceAvailabilityClassification!
+  openingFrom: LocalTime
+  openingUntil: LocalTime
+  totalOpeningMinutes: Int!
+  bookedMinutes: Int!
+  bookingWindows: [BookingWindowDetails!]!
 }
 
 type ResourceDetails @key(fields: "id") @shareable {
@@ -814,6 +863,21 @@ input RejectBookingPaymentInput {
 input RejectRecurringBookingPaymentInput {
   id: String!
   clientMutationId: String
+}
+
+input ResourceAvailabilityFilterInput {
+  date: LocalDate!
+  organizationCustomDomain: String!
+  locationIds: [String!]!
+  floorId: String
+  zoneId: String
+  resourceType: String
+  statuses: [ResourceAvailabilityClassification!]!
+}
+
+input ResourceAvailabilityOrderByInput {
+  direction: OrderDirection!
+  field: ResourceAvailabilityOrderByField!
 }
 
 input UpdateMarketplaceBookingInput {
@@ -1169,6 +1233,22 @@ enum RecurringBookingOrderField {
   CHANNEL
 }
 
+enum ResourceAvailabilityClassification {
+  AVAILABLE
+  UNAVAILABLE
+  PARTIALLY_BOOKED
+  FULLY_BOOKED
+  OCCUPIED
+  BLOCKED
+}
+
+enum ResourceAvailabilityOrderByField {
+  RESOURCE_NAME
+  RESOURCE_TYPE
+  LOCATION_NAME
+  ZONE_NAME
+}
+
 enum ScalarSerializationType {
   STRING
   BOOLEAN
@@ -1192,6 +1272,16 @@ scalar Decimal
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/decimal.html")
 
 scalar FieldSelectionSet
+
+"The `LocalDate` scalar type represents a date without time or time zone information."
+scalar LocalDate
+  @serializeAs(type: STRING, pattern: "^\\d{4}-\\d{2}-\\d{2}$")
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/local-date.html")
+
+"The `LocalTime` scalar type represents a time of day without date or time zone information."
+scalar LocalTime
+  @serializeAs(type: STRING, pattern: "^\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,9})?$")
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/local-time.html")
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost(

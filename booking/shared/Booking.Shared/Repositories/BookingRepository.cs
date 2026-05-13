@@ -46,7 +46,7 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
     Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Booking>>, int)> GetPaginatedBookingsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
-        IEnumerable<BookingOrder> orderByFields,
+        IReadOnlyList<BookingOrder> orderByFields,
         BookingAccessScope? accessScope,
         CancellationToken cancellationToken);
 }
@@ -378,7 +378,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Booking>>, int)> GetPaginatedBookingsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
-        IEnumerable<BookingOrder> orderByFields,
+        IReadOnlyList<BookingOrder> orderByFields,
         BookingAccessScope? accessScope,
         CancellationToken cancellationToken) =>
         await DbContext.Booking
@@ -386,7 +386,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
             .AddSingleBookingMinimumDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Database.Entities.Booking>> GetPaginationFields(IEnumerable<BookingOrder> orderByFields)
+    private static List<KeysetPaginationField<Database.Entities.Booking>> GetPaginationFields(IReadOnlyList<BookingOrder> orderByFields)
     {
         if (!orderByFields.Any())
         {

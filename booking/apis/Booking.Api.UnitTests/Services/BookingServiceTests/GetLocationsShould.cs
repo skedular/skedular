@@ -60,9 +60,7 @@ public class GetLocationsShould
             .MustHaveHappenedOnceExactly();
     }
 
-    private static BookingSearchCriteria CreateSearchCriteria(
-        IReadOnlyList<string> locationIds,
-        IReadOnlyList<string> teamIds) =>
+    private static BookingSearchCriteria CreateSearchCriteria(IReadOnlyList<string> locationIds, IReadOnlyList<string> teamIds) =>
         new(
             null,
             null,

@@ -1,5 +1,5 @@
 diff --git a/dist/globalize/currency.js b/dist/globalize/currency.js
-index c4296c6613339ed72df29aad7a611d1aa8d6b385..39b292404cc94c55dce5b5c36665a6fe3713f7e5 100644
+index da52a564a7b96f691bcc48205a9ec653a9470631..4f6bf016c12a839ee5840ab91b1bc5a4b8b1a6bd 100644
 --- a/dist/globalize/currency.js
 +++ b/dist/globalize/currency.js
 @@ -12,7 +12,7 @@
@@ -12,7 +12,7 @@ index c4296c6613339ed72df29aad7a611d1aa8d6b385..39b292404cc94c55dce5b5c36665a6fe
  		// AMD
  		define([
 diff --git a/dist/globalize/date.js b/dist/globalize/date.js
-index 0daa8dc3d4aee4002b1cf71dd63c47dec345d8a1..507f766135926d687857b2e7f765c4fa5894fc2f 100644
+index c856c4fbd0ea7c65559ee552c3262daa94843068..1bce9b2dd7640ea77ccf421d3d09d840b56d37cb 100644
 --- a/dist/globalize/date.js
 +++ b/dist/globalize/date.js
 @@ -16,7 +16,7 @@
@@ -25,7 +25,7 @@ index 0daa8dc3d4aee4002b1cf71dd63c47dec345d8a1..507f766135926d687857b2e7f765c4fa
  		// AMD
  		define([
 diff --git a/dist/globalize/message.js b/dist/globalize/message.js
-index ec875eae5bd4697a1650109860c292992f6cb112..a5dea406dea5624af3d44a479709fe7739e2d928 100644
+index c85a230471e1354208339bec98773b8e138b6057..0a7af9bb0e8f0b4386b9625b7340cae54bc09470 100644
 --- a/dist/globalize/message.js
 +++ b/dist/globalize/message.js
 @@ -16,7 +16,7 @@
@@ -38,7 +38,7 @@ index ec875eae5bd4697a1650109860c292992f6cb112..a5dea406dea5624af3d44a479709fe77
  		// AMD
  		define([
 diff --git a/dist/globalize/number.js b/dist/globalize/number.js
-index 989d198b0d97473b4c92679b96514838e430af54..c0203b225e603075d92ffedf345427a8537a3111 100644
+index 3b3000d184fa2daa1450ddb1b22998b9d20979e8..b92a19a26104091244eaafc79e1276418cf8470a 100644
 --- a/dist/globalize/number.js
 +++ b/dist/globalize/number.js
 @@ -16,7 +16,7 @@
@@ -51,7 +51,7 @@ index 989d198b0d97473b4c92679b96514838e430af54..c0203b225e603075d92ffedf345427a8
  		// AMD
  		define([
 diff --git a/dist/globalize/plural.js b/dist/globalize/plural.js
-index 8484af5c53f60e5918079239bcd09af81378ab8d..6201f3e5b6ebdb4aa8b8bb9e52a4362ff3490ed5 100644
+index 12494baa1a4cadb309855b9bb734f5a6cd1fdc35..a2a0e93153acada0322a38211627e71e20bd598c 100644
 --- a/dist/globalize/plural.js
 +++ b/dist/globalize/plural.js
 @@ -16,7 +16,7 @@
@@ -64,7 +64,7 @@ index 8484af5c53f60e5918079239bcd09af81378ab8d..6201f3e5b6ebdb4aa8b8bb9e52a4362f
  		// AMD
  		define([
 diff --git a/dist/globalize/relative-time.js b/dist/globalize/relative-time.js
-index 2a2238b073d418f3925230c3701e073cd7890fd8..9862e3bca44657f135fd5c2083ba003fb66efb0d 100644
+index a26a43bab82c145c8be0e01027893624537151ac..090bfbd940ac44bab3bc44da67448cc6cb02e84b 100644
 --- a/dist/globalize/relative-time.js
 +++ b/dist/globalize/relative-time.js
 @@ -16,7 +16,7 @@
@@ -77,7 +77,7 @@ index 2a2238b073d418f3925230c3701e073cd7890fd8..9862e3bca44657f135fd5c2083ba003f
  		// AMD
  		define([
 diff --git a/dist/globalize/unit.js b/dist/globalize/unit.js
-index 61a69145d460464281fe599facc1f9c883551e93..eff7f6922e563db7537c9fdfc768acbb66142510 100644
+index 62e16945393cd57aa4c9d4bfd5fd239c6f579d3a..79320d2456524db6c31d1e7b8635a1f517de44ca 100644
 --- a/dist/globalize/unit.js
 +++ b/dist/globalize/unit.js
 @@ -16,7 +16,7 @@
@@ -89,8 +89,112 @@ index 61a69145d460464281fe599facc1f9c883551e93..eff7f6922e563db7537c9fdfc768acbb
  
  		// AMD
  		define([
+diff --git a/dist/globalize-runtime/currency.js b/dist/globalize-runtime/currency.js
+index 804c51942475ada3e3b12ac3334c660fc1c09ef6..fa4374edee47e6af179c9034388b8495f9ad965a 100644
+--- a/dist/globalize-runtime/currency.js
++++ b/dist/globalize-runtime/currency.js
+@@ -18,7 +18,7 @@
+ 	"use strict";
+ 
+ 	// UMD returnExports
+-	if ( typeof define === "function" && define.amd ) {
++	if ( false ) {
+ 
+ 		// AMD
+ 		define([
+diff --git a/dist/globalize-runtime/date.js b/dist/globalize-runtime/date.js
+index b7a871b34848bee403608e009ba55872501cd1bf..6f110cbd6db870cf6934ce978ad01314ff299ba5 100644
+--- a/dist/globalize-runtime/date.js
++++ b/dist/globalize-runtime/date.js
+@@ -18,7 +18,7 @@
+ 	"use strict";
+ 
+ 	// UMD returnExports
+-	if ( typeof define === "function" && define.amd ) {
++	if ( false ) {
+ 
+ 		// AMD
+ 		define([
+diff --git a/dist/globalize-runtime/message.js b/dist/globalize-runtime/message.js
+index d85912af03e1c40a82b3a4f842005862971c2271..b2ca1d89b86eb63b0ae59dfa540f42bf6831bd3f 100644
+--- a/dist/globalize-runtime/message.js
++++ b/dist/globalize-runtime/message.js
+@@ -18,7 +18,7 @@
+ 	"use strict";
+ 
+ 	// UMD returnExports
+-	if ( typeof define === "function" && define.amd ) {
++	if ( false ) {
+ 
+ 		// AMD
+ 		define([
+diff --git a/dist/globalize-runtime/number.js b/dist/globalize-runtime/number.js
+index 85c4ac95e1896d9e3949e221d6c28b9bc7ab55ca..c829aa8735cb3938a2f2305694f4040159092128 100644
+--- a/dist/globalize-runtime/number.js
++++ b/dist/globalize-runtime/number.js
+@@ -18,7 +18,7 @@
+ 	"use strict";
+ 
+ 	// UMD returnExports
+-	if ( typeof define === "function" && define.amd ) {
++	if ( false ) {
+ 
+ 		// AMD
+ 		define([
+diff --git a/dist/globalize-runtime/plural.js b/dist/globalize-runtime/plural.js
+index 55659963c876301a303d28c0ccaf5e3e7127ae52..fe5106727067ae885eb4d2f2ae4e7a04887e5a5e 100644
+--- a/dist/globalize-runtime/plural.js
++++ b/dist/globalize-runtime/plural.js
+@@ -18,7 +18,7 @@
+ 	"use strict";
+ 
+ 	// UMD returnExports
+-	if ( typeof define === "function" && define.amd ) {
++	if ( false ) {
+ 
+ 		// AMD
+ 		define([
+diff --git a/dist/globalize-runtime/relative-time.js b/dist/globalize-runtime/relative-time.js
+index 3f678586f4206e4b4325e6c1da2fc12e60e14ff9..859329ab2ef2ce941bbb3b91bb1f480622f1b760 100644
+--- a/dist/globalize-runtime/relative-time.js
++++ b/dist/globalize-runtime/relative-time.js
+@@ -18,7 +18,7 @@
+ 	"use strict";
+ 
+ 	// UMD returnExports
+-	if ( typeof define === "function" && define.amd ) {
++	if ( false ) {
+ 
+ 		// AMD
+ 		define([
+diff --git a/dist/globalize-runtime/unit.js b/dist/globalize-runtime/unit.js
+index 6b45575894458b7f0e23b0f731c121d0d901362d..91ba8f9d894e23e3c47ebb2d93fcef02ee17df92 100644
+--- a/dist/globalize-runtime/unit.js
++++ b/dist/globalize-runtime/unit.js
+@@ -18,7 +18,7 @@
+ 	"use strict";
+ 
+ 	// UMD returnExports
+-	if ( typeof define === "function" && define.amd ) {
++	if ( false ) {
+ 
+ 		// AMD
+ 		define([
+diff --git a/dist/globalize-runtime.js b/dist/globalize-runtime.js
+index a75c3f1519c6e79e7222f0588af530485a9a3e42..44365f3dc379a75e7808cea0dad4f9c13db34a4d 100644
+--- a/dist/globalize-runtime.js
++++ b/dist/globalize-runtime.js
+@@ -18,7 +18,7 @@
+ 	"use strict";
+ 
+ 	// UMD returnExports
+-	if ( typeof define === "function" && define.amd ) {
++	if ( false ) {
+ 
+ 		// AMD
+ 		define( factory );
 diff --git a/dist/globalize.js b/dist/globalize.js
-index eac59501e9baac80ec032bf31fc1cf142b95ccc3..bf7e33ce848477dab85eb5a40cb0cf75a34e5417 100644
+index f02fe5f11c50adb9ca7e3f0e9c5b07e3f0eba445..1d0e855955e48d9103202469835f83d3c669040c 100644
 --- a/dist/globalize.js
 +++ b/dist/globalize.js
 @@ -16,7 +16,7 @@
@@ -102,15 +206,3 @@ index eac59501e9baac80ec032bf31fc1cf142b95ccc3..bf7e33ce848477dab85eb5a40cb0cf75
  
  		// AMD
  		define([
-diff --git a/examples/amd-bower/.gitignore b/examples/amd-bower/.gitignore
-deleted file mode 100644
-index fbe05fc93b33973daa4d521b88dbfe45b0f695d7..0000000000000000000000000000000000000000
-diff --git a/examples/app-npm-webpack/.gitignore b/examples/app-npm-webpack/.gitignore
-deleted file mode 100644
-index 1b4210d4efb2cdcc5fade3f819231239eaf1c814..0000000000000000000000000000000000000000
-diff --git a/examples/globalize-compiler/.gitignore b/examples/globalize-compiler/.gitignore
-deleted file mode 100644
-index 9537a1c27d24025f67600fcbdadd0ce0c37ed606..0000000000000000000000000000000000000000
-diff --git a/examples/plain-javascript/.gitignore b/examples/plain-javascript/.gitignore
-deleted file mode 100644
-index 39f8b6658db9930265153d1d507dba553f46b48a..0000000000000000000000000000000000000000

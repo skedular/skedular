@@ -1,0 +1,29 @@
+query ResourceDayViews($filter: ResourceAvailabilityFilterInput!, $orderBy: [ResourceAvailabilityOrderByInput!]!) {
+    resourceDayViews(filter: $filter, orderBy: $orderBy) {
+        subscriptionKey
+        items {
+            resourceId
+            resourceName
+            resourceType
+            locationId
+            locationName
+            floorId
+            floorName
+            zoneId
+            zoneName
+            status
+            totalOpeningMinutes
+            bookedMinutes
+            bookingWindows {
+                bookingId
+                from
+                until
+                isRecurring
+                isCheckedIn
+                bookedByName
+                bookedByUserId
+                notes
+            }
+        }
+    }
+}

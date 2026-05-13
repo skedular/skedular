@@ -28,8 +28,7 @@ public class AddDefaultServicesShould
     {
         var builder = WebApplication.CreateBuilder(new WebApplicationOptions
         {
-            ApplicationName = typeof(AddDefaultServicesShould).Assembly.GetName().Name,
-            EnvironmentName = Environments.Development
+            ApplicationName = typeof(AddDefaultServicesShould).Assembly.GetName().Name, EnvironmentName = Environments.Development
         });
 
         builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
