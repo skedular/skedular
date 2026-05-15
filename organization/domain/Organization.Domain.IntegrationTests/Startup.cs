@@ -44,12 +44,6 @@ public class Startup
 
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationDbConnectionString);
 
-        var pgadmin = distributedApp.GetEndpoint("pgadmin");
-        var kafkaUi = distributedApp.GetEndpoint("kafka-ui");
-
-        Console.WriteLine($"pgadmin: {pgadmin}");
-        Console.WriteLine($"kafkaUi: {kafkaUi}");
-
         var organizationApiGrpcEndpoint = distributedApp.GetEndpoint("organizationapi", "Grpc").ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationApiGrpcEndpoint);
 

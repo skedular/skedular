@@ -6,6 +6,7 @@ using Location.Shared.Repositories;
 using NanoidDotNet;
 using LocationEntity = Location.Shared.Database.Entities.Location;
 using ResourceAvailabilityClassificationConstants = Location.Shared.Models.ResourceAvailabilityClassificationConstants;
+using ResourceEntity = Location.Shared.Database.Entities.Resource;
 
 namespace Location.Domain.IntegrationTests.Api.GraphQL.Analytics;
 
@@ -22,16 +23,16 @@ public class LocationDeskAvailabilityAnalyticsShould(
     /// </summary>
     private async Task SeedSnapshotDataAsync(int dayCount, CancellationToken cancellationToken)
     {
-        var orgId = await Nanoid.GenerateAsync();
+        var organizationId = await Nanoid.GenerateAsync();
         var locationId = await Nanoid.GenerateAsync();
         var now = timeProvider.GetUtcNow();
 
-        var organization = new Organization { Id = orgId, CreatedAt = now };
+        var organization = new Organization { Id = organizationId, CreatedAt = now };
         var location = new LocationEntity
         {
             Id = locationId,
             Name = "Analytics Integration Test Location",
-            OrganizationId = orgId,
+            OrganizationId = organizationId,
             Type = LocationTypeConstants.Private,
             CreatedAt = now
         };
@@ -46,7 +47,7 @@ public class LocationDeskAvailabilityAnalyticsShould(
             {
                 Id = await Nanoid.GenerateAsync(), Type = OrganizationTagTypeConstants.ResourceDesk, CreatedAt = now, Organization = organization
             };
-            var resource = new Resource
+            var resource = new ResourceEntity
             {
                 Id = resourceId,
                 Name = $"Desk {d + 1:D2}",
@@ -77,8 +78,8 @@ public class LocationDeskAvailabilityAnalyticsShould(
         // Seed known snapshots so that if auth were bypassed, data would be returned
         await SeedSnapshotDataAsync(3, cancellationToken);
 
-        var from = DateTimeOffset.UtcNow.AddDays(-7);
-        var until = DateTimeOffset.UtcNow;
+        var from = TimeProvider.System.GetUtcNow().AddDays(-7);
+        var until = TimeProvider.System.GetUtcNow();
 
         var result = await resourceAvailabilitySnapshotsQuery.ExecuteAsync(from, until, cancellationToken);
 
@@ -95,8 +96,8 @@ public class LocationDeskAvailabilityAnalyticsShould(
     {
         // Seed a location with no snapshots — verifies the field is wired correctly
         // (unauthenticated call returns empty regardless, but confirms schema is correct)
-        var from = DateTimeOffset.UtcNow.AddDays(-30);
-        var until = DateTimeOffset.UtcNow;
+        var from = TimeProvider.System.GetUtcNow().AddDays(-30);
+        var until = TimeProvider.System.GetUtcNow();
 
         var result = await resourceAvailabilitySnapshotsQuery.ExecuteAsync(from, until, cancellationToken);
 

@@ -22,7 +22,7 @@ public class PublishTeamsShould
         TeamOutboxPublisher sut,
         IUnitOfWork unitOfWork)
     {
-        var teams = new List<TeamModel> { new() { Id = "team-1" }, new() { Id = "team-2", DeletedAt = DateTimeOffset.UtcNow } };
+        var teams = new List<TeamModel> { new() { Id = "team-1" }, new() { Id = "team-2", DeletedAt = TimeProvider.System.GetUtcNow() } };
 
         A.CallTo(() => context.GetCorrelationId()).Returns("corr-id");
         A.CallTo(() => eventMapper.MapTo(A<TeamModel>._)).Returns(new Api.Shared.Clients.Events.Skedular.Team.V1.Team());

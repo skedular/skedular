@@ -112,7 +112,8 @@ public class ConfigurationPocoShould
     [Fact]
     public void XeroTokenRefreshResult_roundtrip()
     {
-        var result = new XeroTokenRefreshResult(true, false, "access", "refresh", DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(30), null);
+        var result = new XeroTokenRefreshResult(true, false, "access", "refresh", TimeProvider.System.GetUtcNow(),
+            TimeProvider.System.GetUtcNow().AddDays(30), null);
         result.IsSuccessful.ShouldBeTrue();
         result.NeedsReconnect.ShouldBeFalse();
         result.AccessTokenEncrypted.ShouldBe("access");
@@ -217,7 +218,7 @@ public class ConfigurationPocoShould
     [Fact]
     public void KafkaOutbox_defaults()
     {
-        var outbox = new KafkaOutbox { Id = "1", Topic = "t", Timestamp = DateTimeOffset.UtcNow };
+        var outbox = new KafkaOutbox { Id = "1", Topic = "t", Timestamp = TimeProvider.System.GetUtcNow() };
         outbox.RetryCount.ShouldBe(0);
         outbox.Headers.ShouldBeEmpty();
         outbox.Key.ShouldBeEmpty();
@@ -228,7 +229,7 @@ public class ConfigurationPocoShould
     [Fact]
     public void TemporalOutbox_defaults()
     {
-        var outbox = new TemporalOutbox { Id = "1", WorkflowType = "wf", Timestamp = DateTimeOffset.UtcNow };
+        var outbox = new TemporalOutbox { Id = "1", WorkflowType = "wf", Timestamp = TimeProvider.System.GetUtcNow() };
         outbox.RetryCount.ShouldBe(0);
         outbox.ProcessingErrors.ShouldBeNull();
     }

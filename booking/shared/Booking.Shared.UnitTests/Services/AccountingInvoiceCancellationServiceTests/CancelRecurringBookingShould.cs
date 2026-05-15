@@ -348,7 +348,7 @@ public class CancelRecurringBookingShould
             HasRefreshToken = true,
             TenantId = Guid.CreateVersion7().ToString(),
             AccessTokenEncrypted = accessTokenEncrypted,
-            AccessTokenExpiresAt = DateTimeOffset.UtcNow.AddHours(1).ToTimestamp()
+            AccessTokenExpiresAt = TimeProvider.System.GetUtcNow().AddHours(1).ToTimestamp()
         };
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
@@ -449,7 +449,7 @@ public class CancelRecurringBookingShould
             HasRefreshToken = true,
             TenantId = Guid.CreateVersion7().ToString(),
             AccessTokenEncrypted = accessTokenEncrypted,
-            AccessTokenExpiresAt = DateTimeOffset.UtcNow.AddHours(1).ToTimestamp()
+            AccessTokenExpiresAt = TimeProvider.System.GetUtcNow().AddHours(1).ToTimestamp()
         };
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);

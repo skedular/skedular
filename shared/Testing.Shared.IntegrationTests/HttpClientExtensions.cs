@@ -12,10 +12,10 @@ public static class HttpClientExtensions
         timeout ??= TimeSpan.FromSeconds(30);
         pollInterval ??= TimeSpan.FromMilliseconds(250);
 
-        var deadline = DateTimeOffset.UtcNow.Add(timeout.Value);
+        var deadline = TimeProvider.System.GetUtcNow().Add(timeout.Value);
         Exception? lastException = null;
 
-        while (DateTimeOffset.UtcNow < deadline)
+        while (TimeProvider.System.GetUtcNow() < deadline)
         {
             cancellationToken.ThrowIfCancellationRequested();
 

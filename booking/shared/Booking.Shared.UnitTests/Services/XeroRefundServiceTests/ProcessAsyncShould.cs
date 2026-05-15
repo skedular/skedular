@@ -137,7 +137,7 @@ public class ProcessAsyncShould
             TenantId = "tenant-1",
             IsActive = true,
             AccessTokenEncrypted = "encrypted-access",
-            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(DateTimeOffset.UtcNow.AddMinutes(30))
+            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30))
         };
         var sut = new TestableXeroRefundService(
             organizationConfiguration,
@@ -247,7 +247,7 @@ public class ProcessAsyncShould
             TenantId = "tenant-1",
             IsActive = true,
             AccessTokenEncrypted = "encrypted-access",
-            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(DateTimeOffset.UtcNow.AddMinutes(30))
+            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30))
         };
         var sut = new TestableXeroRefundService(
             organizationConfiguration,
@@ -427,7 +427,7 @@ public class ProcessAsyncShould
             TenantId = "tenant-1",
             IsActive = true,
             AccessTokenEncrypted = "encrypted-access",
-            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(DateTimeOffset.UtcNow.AddMinutes(30))
+            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30))
         };
         var sut = new TestableXeroRefundService(
             organizationConfiguration,
@@ -534,7 +534,7 @@ public class ProcessAsyncShould
             TenantId = "tenant-1",
             IsActive = true,
             AccessTokenEncrypted = "encrypted-access",
-            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(DateTimeOffset.UtcNow.AddMinutes(30)),
+            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30)),
             DefaultSalesAccountCode = "200"
         };
         var sut = new TestableXeroRefundService(

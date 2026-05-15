@@ -24,6 +24,7 @@ public static class Extensions
                 .AddScoped<ILocationOpeningHoursService, LocationOpeningHoursService>()
                 .AddScoped<IResourceAvailableHoursService, ResourceAvailableHoursService>()
                 .AddScoped<IResourceService, ResourceService>()
+                .AddScoped<IBulkAddResourcesService, BulkAddResourcesService>()
                 .AddScoped<ILocationAnalyticsService, LocationAnalyticsService>()
                 .AddScoped<IWorkaroundService, WorkaroundService>()
                 .AddScoped<IFloorPlanService, FloorPlanService>()

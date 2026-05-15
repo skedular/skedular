@@ -43,13 +43,6 @@ public class Startup
 #pragma warning restore VSTHRD104
 
         ArgumentException.ThrowIfNullOrWhiteSpace(customerDbConnectionString);
-
-        var pgadmin = distributedApp.GetEndpoint("pgadmin");
-        var kafkaUi = distributedApp.GetEndpoint("kafka-ui");
-
-        Console.WriteLine($"pgadmin: {pgadmin}");
-        Console.WriteLine($"kafkaUi: {kafkaUi}");
-
         var customerApiGrpcEndpoint = distributedApp.GetEndpoint("customerapi", "Grpc").ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(customerApiGrpcEndpoint);
 

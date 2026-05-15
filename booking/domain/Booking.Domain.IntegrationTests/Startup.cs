@@ -47,12 +47,6 @@ public class Startup
 
         ArgumentException.ThrowIfNullOrWhiteSpace(bookingDbConnectionString);
 
-        var pgadmin = distributedApp.GetEndpoint("pgadmin");
-        var kafkaUi = distributedApp.GetEndpoint("kafka-ui");
-
-        Console.WriteLine($"pgadmin: {pgadmin}");
-        Console.WriteLine($"kafkaUi: {kafkaUi}");
-
         var infrastructureSharedGrpcEndpoint = distributedApp.GetEndpoint("bookingfakedependencies", "Grpc").ToString();
         var bookingApiGrpcEndpoint = distributedApp.GetEndpoint("bookingapi", "Grpc").ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(infrastructureSharedGrpcEndpoint);

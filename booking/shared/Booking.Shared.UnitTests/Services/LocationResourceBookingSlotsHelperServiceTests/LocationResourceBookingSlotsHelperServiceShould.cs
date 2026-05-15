@@ -12,7 +12,7 @@ public class LocationResourceBookingSlotsHelperServiceShould
     public void GetStartPeriod_Returns_14_Days_Ago_From_Current_Day([Frozen] TimeProvider timeProvider, LocationResourceBookingSlotsHelperService sut)
     {
         // Arrange
-        var currentTime = DateTimeOffset.UtcNow;
+        var currentTime = TimeProvider.System.GetUtcNow();
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(currentTime);
 
         // Act
@@ -29,7 +29,7 @@ public class LocationResourceBookingSlotsHelperServiceShould
         LocationResourceBookingSlotsHelperService sut)
     {
         // Arrange
-        A.CallTo(() => timeProvider.GetUtcNow()).Returns(DateTimeOffset.UtcNow);
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(TimeProvider.System.GetUtcNow());
         var resource = new Resource { Id = "resource-1", Name = "Test Resource" };
 
         // Act

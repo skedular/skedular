@@ -36,12 +36,12 @@ public class ZeroCapacityOccupancyOmittedShould
     {
         // Arrange
         const string LocationId = "loc-zero";
-        const string OrgId = "org-1";
+        const string OrganizationId = "org-1";
         const string CustomerId = "cust-1";
 
         await using var dbContext = CreateInMemoryContext();
 
-        var location = new LocationEntity { Id = LocationId, Name = "Zero Desk Office", OrganizationId = OrgId };
+        var location = new LocationEntity { Id = LocationId, Name = "Zero Desk Office", OrganizationId = OrganizationId };
         var from = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);
         var until = new DateTimeOffset(2026, 4, 3, 0, 0, 0, TimeSpan.Zero);
 
@@ -58,7 +58,7 @@ public class ZeroCapacityOccupancyOmittedShould
 
         A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(CustomerId);
-        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrgId, CustomerId, A<CancellationToken>._)).Returns(true);
+        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrganizationId, CustomerId, A<CancellationToken>._)).Returns(true);
 
         // Repository returns both desk count recordings (one zero, one non-zero)
         A.CallTo(() => deskCountRepository.GetByLocationIdsAndDateRangeAsync(
@@ -98,17 +98,17 @@ public class ZeroCapacityOccupancyOmittedShould
     {
         // Arrange
         const string LocationId = "loc-noauth";
-        const string OrgId = "org-noauth";
+        const string OrganizationId = "org-noauth";
         const string CustomerId = "cust-noauth";
 
         await using var dbContext = CreateInMemoryContext();
-        var location = new LocationEntity { Id = LocationId, Name = "No Auth Office", OrganizationId = OrgId };
+        var location = new LocationEntity { Id = LocationId, Name = "No Auth Office", OrganizationId = OrganizationId };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);
         A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(CustomerId);
-        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrgId, CustomerId, A<CancellationToken>._))
+        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrganizationId, CustomerId, A<CancellationToken>._))
             .Returns(false);
 
         var from = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);

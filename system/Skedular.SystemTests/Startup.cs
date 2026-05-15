@@ -91,12 +91,6 @@ public class Startup
         ArgumentException.ThrowIfNullOrWhiteSpace(slackDbConnectionString);
         ArgumentException.ThrowIfNullOrWhiteSpace(teamDbConnectionString);
 
-        var pgadmin = distributedApp.GetEndpoint("pgadmin");
-        var kafkaUi = distributedApp.GetEndpoint("kafka-ui");
-
-        Console.WriteLine($"pgadmin: {pgadmin}");
-        Console.WriteLine($"kafkaUi: {kafkaUi}");
-
         var bookingApiClient = distributedApp.CreateHttpClient("bookingapi");
         var coreApiClient = distributedApp.CreateHttpClient("coreapi");
         var customerApiClient = distributedApp.CreateHttpClient("customerapi");

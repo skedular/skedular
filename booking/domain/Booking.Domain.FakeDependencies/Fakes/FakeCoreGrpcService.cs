@@ -3,7 +3,7 @@ using Grpc.Core;
 
 namespace Booking.Domain.FakeDependencies.Fakes;
 
-public class FakeCoreGrpcService(FakeCoreGrpcState state) : CoreService.CoreServiceBase
+public class FakeCoreGrpcService(FakeCoreGrpcState state, TimeProvider timeProvider) : CoreService.CoreServiceBase
 {
     public override async Task<FileUploadResponse> Admin_UploadToPrivateStorage(
         IAsyncStreamReader<UploadFileRequest> requestStream,
@@ -33,7 +33,7 @@ public class FakeCoreGrpcService(FakeCoreGrpcState state) : CoreService.CoreServ
 
         state.UploadToPrivateStorageRequests.Enqueue(
             new RecordedUploadToPrivateStorageRequest(
-                DateTimeOffset.UtcNow,
+                timeProvider.GetUtcNow(),
                 extension,
                 string.IsNullOrWhiteSpace(contentType) ? null : contentType,
                 uploadStream.ToArray()));

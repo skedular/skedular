@@ -43,12 +43,6 @@ public class Startup
 
         ArgumentException.ThrowIfNullOrWhiteSpace(marketplaceDbConnectionString);
 
-        var pgadmin = distributedApp.GetEndpoint("pgadmin");
-        var kafkaUi = distributedApp.GetEndpoint("kafka-ui");
-
-        Console.WriteLine($"pgadmin: {pgadmin}");
-        Console.WriteLine($"kafkaUi: {kafkaUi}");
-
         var marketplaceApiGrpcEndpoint = distributedApp.GetEndpoint("marketplaceapi", "Grpc").ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(marketplaceApiGrpcEndpoint);
 

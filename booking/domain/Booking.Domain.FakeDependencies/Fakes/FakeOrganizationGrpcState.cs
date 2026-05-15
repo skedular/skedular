@@ -23,7 +23,7 @@ public class FakeOrganizationGrpcState
     {
         RefreshXeroConnectionTokensRequests.Enqueue(
             new RecordedRefreshXeroConnectionTokensRequest(
-                DateTimeOffset.UtcNow,
+                TimeProvider.System.GetUtcNow(),
                 organizationId,
                 !string.IsNullOrWhiteSpace(accessTokenEncrypted),
                 !string.IsNullOrWhiteSpace(refreshTokenEncrypted),

@@ -8,6 +8,10 @@ using Location.Api.GraphQL.PhysicalAddress;
 using Location.Api.GraphQL.Resource;
 using Location.Shared.Models;
 using NetTopologySuite.Geometries;
+using BulkAddResourceRowResult = Location.Api.GraphQL.Resource.BulkAddResourceRowResult;
+using BulkAddResources = Location.Api.Models.BulkAddResources;
+using BulkAddResourceRow = Location.Api.Models.BulkAddResourceRow;
+using BulkAddRowResult = Location.Api.Models.BulkAddRowResult;
 using LocationDesksOccupancyPercentage = Location.Shared.Models.LocationDesksOccupancyPercentage;
 using LocationEdge = Location.Api.GraphQL.Location.LocationEdge;
 using LocationDailyBookingsTotal = Location.Shared.Models.LocationDailyBookingsTotal;
@@ -50,6 +54,8 @@ public interface IGraphQlMapper
     IEnumerable<ResourcePosition> MapTo(UpdateResourcePositionsInput src);
     LocationPhysicalAddress MapTo(AddLocationPhysicalAddressInput src);
     LocationPhysicalAddress MapTo(UpdateLocationPhysicalAddressInput src);
+    BulkAddResources MapTo(BulkAddResourcesInput src);
+    BulkAddResourceRowResult MapTo(BulkAddRowResult src);
 }
 
 public class GraphQlMapper : IGraphQlMapper
@@ -300,6 +306,20 @@ public class GraphQlMapper : IGraphQlMapper
             Country = src.Country,
             CountryCode = src.CountryCode
         };
+
+    public BulkAddResources MapTo(BulkAddResourcesInput src) =>
+        new(
+            src.LocationId,
+            src.Rows.Select((row, _) => new BulkAddResourceRow(
+                row.OrganizationResourceTypeTagId,
+                row.BaseName,
+                row.Quantity,
+                row.CustomTagIds,
+                row.ZoneIds,
+                row.ProductTagIds)).ToList());
+
+    public BulkAddResourceRowResult MapTo(BulkAddRowResult src) =>
+        new() { RowIndex = src.RowIndex, CreatedResources = src.CreatedResources.Select(MapTo), FailureReason = src.FailureReason };
 
     private static GraphQL.Location.OpeningHours MapTo(OpeningHours? src)
     {

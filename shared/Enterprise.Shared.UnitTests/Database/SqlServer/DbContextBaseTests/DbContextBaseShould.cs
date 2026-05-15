@@ -66,7 +66,7 @@ public class DbContextBaseShould
     {
         using var ctx = BuildInMemoryContext();
 
-        var entity = new ParentEntity { Id = Guid.CreateVersion7().ToString(), CreatedAt = DateTimeOffset.UtcNow, Name = "before" };
+        var entity = new ParentEntity { Id = Guid.CreateVersion7().ToString(), CreatedAt = TimeProvider.System.GetUtcNow(), Name = "before" };
 
         ctx.Parents.Add(entity);
         ctx.SaveChanges();

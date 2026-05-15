@@ -83,7 +83,7 @@ public class RecordDeskAvailabilitySnapshotShould
         LocationDailyAnalytics sut)
     {
         var environment = new ActivityEnvironment();
-        var deletedLocation = new Database.Entities.Location { Id = "loc-del", Name = "Deleted", DeletedAt = DateTimeOffset.UtcNow };
+        var deletedLocation = new Database.Entities.Location { Id = "loc-del", Name = "Deleted", DeletedAt = TimeProvider.System.GetUtcNow() };
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => locationRepository.GetByIdAsync("loc-del", environment.CancellationTokenSource.Token)).Returns(deletedLocation);
 

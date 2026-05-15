@@ -87,4 +87,14 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
                     graphQlMapper.MapTo(input.AvailableHours),
                     cancellationToken))
         };
+
+    [UseResolverScope]
+    public async Task<BulkAddResourcesPayload> BulkAddResourcesAsync(
+        BulkAddResourcesInput input,
+        [Service] IBulkAddResourcesService bulkAddResourcesService,
+        CancellationToken cancellationToken)
+    {
+        var results = await bulkAddResourcesService.ImportAsync(graphQlMapper.MapTo(input), cancellationToken);
+        return new BulkAddResourcesPayload { ClientMutationId = input.ClientMutationId, Results = results.Select(graphQlMapper.MapTo) };
+    }
 }

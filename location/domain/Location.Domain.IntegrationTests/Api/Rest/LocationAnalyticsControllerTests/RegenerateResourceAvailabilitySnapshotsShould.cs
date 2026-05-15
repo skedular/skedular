@@ -17,16 +17,16 @@ public class RegenerateResourceAvailabilitySnapshotsShould(
 {
     private async Task<string> SeedLocationAsync(CancellationToken cancellationToken)
     {
-        var orgId = await Nanoid.GenerateAsync();
+        var organizationId = await Nanoid.GenerateAsync();
         var locationId = await Nanoid.GenerateAsync();
         var now = timeProvider.GetUtcNow();
 
-        repositoryFactory.DbContext.Organization.Add(new Organization { Id = orgId, CreatedAt = now });
+        repositoryFactory.DbContext.Organization.Add(new Organization { Id = organizationId, CreatedAt = now });
         repositoryFactory.DbContext.Location.Add(new LocationEntity
         {
             Id = locationId,
             Name = "Backfill Test Location",
-            OrganizationId = orgId,
+            OrganizationId = organizationId,
             Type = LocationTypeConstants.Private,
             CreatedAt = now
         });

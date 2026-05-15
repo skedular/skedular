@@ -44,12 +44,6 @@ public class Startup
 
         ArgumentException.ThrowIfNullOrWhiteSpace(slackDbConnectionString);
 
-        var pgadmin = distributedApp.GetEndpoint("pgadmin");
-        var kafkaUi = distributedApp.GetEndpoint("kafka-ui");
-
-        Console.WriteLine($"pgadmin: {pgadmin}");
-        Console.WriteLine($"kafkaUi: {kafkaUi}");
-
         var slackApiGrpcEndpoint = distributedApp.GetEndpoint("slackapi", "Grpc").ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(slackApiGrpcEndpoint);
 

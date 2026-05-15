@@ -90,11 +90,24 @@ type Mutation {
   updateLocationResourceAvailableHours(
     input: UpdateLocationResourceAvailableHoursInput!
   ): ResourcePayload! @cost(weight: "10")
+  bulkAddResources(input: BulkAddResourcesInput!): BulkAddResourcesPayload!
+    @cost(weight: "10")
 }
 
 type AreaRange {
   fromInSqm: String!
   toInSqm: String!
+}
+
+type BulkAddResourceRowResult {
+  rowIndex: Int!
+  createdResources: [ResourceDetails!]!
+  failureReason: String
+}
+
+type BulkAddResourcesPayload {
+  clientMutationId: String
+  results: [BulkAddResourceRowResult!]!
 }
 
 type CdnFile @shareable {
@@ -444,6 +457,21 @@ input AddResourceInput {
 input AreaRangeInput {
   fromInSqm: String!
   toInSqm: String!
+}
+
+input BulkAddResourceRowInput {
+  organizationResourceTypeTagId: String!
+  baseName: String
+  quantity: Int!
+  customTagIds: [String!]!
+  zoneIds: [String!]!
+  productTagIds: [String!]!
+}
+
+input BulkAddResourcesInput {
+  clientMutationId: String
+  locationId: String!
+  rows: [BulkAddResourceRowInput!]!
 }
 
 input CdnFileInput {

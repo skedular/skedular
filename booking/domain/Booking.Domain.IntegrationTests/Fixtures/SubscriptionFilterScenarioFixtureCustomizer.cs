@@ -105,7 +105,7 @@ public class SubscriptionFilterScenarioFixtureCustomizer : IFixtureCustomizer
         var subscription = new MarketplaceBookingSubscriptionEntity
         {
             Id = subscriptionId,
-            StartedAt = DateTimeOffset.UtcNow,
+            StartedAt = TimeProvider.System.GetUtcNow(),
             Status = status,
             AutoRenew = false,
             CancelAtPeriodEnd = false,
@@ -122,7 +122,7 @@ public class SubscriptionFilterScenarioFixtureCustomizer : IFixtureCustomizer
             ProductPricing = pricing,
             ProductVersion = productVersion,
             PaymentMethod = PaymentMethod.BankTransfer.ToPaymentMethod(),
-            PaymentExpiry = DateTimeOffset.UtcNow.AddDays(30),
+            PaymentExpiry = TimeProvider.System.GetUtcNow().AddDays(30),
             TotalAmountExcludeTax = 10m,
             TotalAmount = 10m,
             Currency = Currency.Nzd.ToCurrency(),

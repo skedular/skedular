@@ -33,7 +33,7 @@ This file applies to `booking/domain/Booking.Domain.IntegrationTests`.
 
 - These tests currently share one `Booking.Domain.FakeDependencies` instance for the project run.
 - Keep tests in the same xUnit collection unless the project-level parallelism rules are changed deliberately.
-- Use the printed `pgadmin` and `kafka-ui` endpoints from startup when local debugging needs direct DB or Kafka access.
+- Use the Aspire resource endpoints from startup when local debugging needs direct DB or Kafka access.
 
 ## Dependency Rule
 

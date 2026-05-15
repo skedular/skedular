@@ -694,6 +694,12 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
+  bulkAddResources(
+    input: BulkAddResourcesInput! @fusion__inputField(schema: LOCATION_API)
+  ): BulkAddResourcesPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: LOCATION_API, weight: "10")
+    @fusion__field(schema: LOCATION_API)
   cancelInvitationToJoinOrganization(
     input: CancelInvitationToJoinOrganizationInput! @fusion__inputField(schema: ORGANIZATION_API)
   ): InvitationToJoinOrganizationPayload!
@@ -1420,6 +1426,17 @@ type BookingWindowDetails @fusion__type(schema: BOOKING_API) {
   isRecurring: Boolean! @fusion__field(schema: BOOKING_API)
   notes: String @fusion__field(schema: BOOKING_API)
   until: DateTime! @fusion__field(schema: BOOKING_API)
+}
+
+type BulkAddResourceRowResult @fusion__type(schema: LOCATION_API) {
+  createdResources: [ResourceDetails!]! @fusion__field(schema: LOCATION_API)
+  failureReason: String @fusion__field(schema: LOCATION_API)
+  rowIndex: Int! @fusion__field(schema: LOCATION_API)
+}
+
+type BulkAddResourcesPayload @fusion__type(schema: LOCATION_API) {
+  clientMutationId: String @fusion__field(schema: LOCATION_API)
+  results: [BulkAddResourceRowResult!]! @fusion__field(schema: LOCATION_API)
 }
 
 type CancelOrganizationOfferingPayload @fusion__type(schema: ORGANIZATION_API) {
@@ -3764,6 +3781,21 @@ input BookingWhereInput @fusion__type(schema: BOOKING_API) {
   toGte: DateTime @fusion__inputField(schema: BOOKING_API)
   toLt: DateTime @fusion__inputField(schema: BOOKING_API)
   toLte: DateTime @fusion__inputField(schema: BOOKING_API)
+}
+
+input BulkAddResourceRowInput @fusion__type(schema: LOCATION_API) {
+  baseName: String @fusion__inputField(schema: LOCATION_API)
+  customTagIds: [String!]! @fusion__inputField(schema: LOCATION_API)
+  organizationResourceTypeTagId: String! @fusion__inputField(schema: LOCATION_API)
+  productTagIds: [String!]! @fusion__inputField(schema: LOCATION_API)
+  quantity: Int! @fusion__inputField(schema: LOCATION_API)
+  zoneIds: [String!]! @fusion__inputField(schema: LOCATION_API)
+}
+
+input BulkAddResourcesInput @fusion__type(schema: LOCATION_API) {
+  clientMutationId: String @fusion__inputField(schema: LOCATION_API)
+  locationId: String! @fusion__inputField(schema: LOCATION_API)
+  rows: [BulkAddResourceRowInput!]! @fusion__inputField(schema: LOCATION_API)
 }
 
 input CancelInvitationToJoinOrganizationInput

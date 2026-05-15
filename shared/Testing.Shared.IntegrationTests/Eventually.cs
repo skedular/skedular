@@ -27,10 +27,10 @@ public class Eventually : IEventually
         duration ??= TimeSpan.FromSeconds(3);
         pollInterval ??= TimeSpan.FromMilliseconds(250);
 
-        var deadline = DateTimeOffset.UtcNow.Add(duration.Value);
+        var deadline = TimeProvider.System.GetUtcNow().Add(duration.Value);
         Exception? lastException = null;
 
-        while (DateTimeOffset.UtcNow < deadline)
+        while (TimeProvider.System.GetUtcNow() < deadline)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -64,9 +64,9 @@ public class Eventually : IEventually
         timeout ??= TimeSpan.FromSeconds(30);
         pollInterval ??= TimeSpan.FromMilliseconds(250);
 
-        var deadline = DateTimeOffset.UtcNow.Add(timeout.Value);
+        var deadline = TimeProvider.System.GetUtcNow().Add(timeout.Value);
 
-        while (DateTimeOffset.UtcNow < deadline)
+        while (TimeProvider.System.GetUtcNow() < deadline)
         {
             cancellationToken.ThrowIfCancellationRequested();
 

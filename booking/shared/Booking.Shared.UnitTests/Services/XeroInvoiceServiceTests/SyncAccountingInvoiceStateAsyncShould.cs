@@ -99,7 +99,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             TenantId = tenantId,
             IsActive = true,
             AccessTokenEncrypted = "encrypted-access",
-            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(DateTimeOffset.UtcNow.AddMinutes(30))
+            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30))
         };
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
@@ -247,7 +247,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             TenantId = tenantId,
             IsActive = true,
             AccessTokenEncrypted = "encrypted-access",
-            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(DateTimeOffset.UtcNow.AddMinutes(30))
+            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30))
         };
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);

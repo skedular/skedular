@@ -1,4 +1,4 @@
-import { PushToRight, StackColumn, StackRow } from '@skedular/ui';
+import { NewIcon } from '@/components/icons';
 import { getOrganizationLocationResourceBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -6,10 +6,8 @@ import { CustomTagSelector } from '@/components/organization/customTagSelector';
 import OrganizationLocationResourceManagementList from '@/components/organization/organizationLocation/organization-location-resource-management-list';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
 import { AddResourceButton } from '@/components/resource/addResource';
+import { BulkAddResourcesDialog } from '@/components/resource/bulkAddResources';
 import { Search } from '@/components/search';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationLocationManageResourcesSectionQuery } from '@/queries/__generated__/organizationLocationManageResourcesSectionQuery.graphql';
 import type { organizationLocationManageResourcesSection_activateResourcesMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_activateResourcesMutation.graphql';
 import type { organizationLocationManageResourcesSection_addCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_addCustomerPreferredResourceMutation.graphql';
@@ -17,7 +15,9 @@ import type { organizationLocationManageResourcesSection_deactivateResourcesMuta
 import type { organizationLocationManageResourcesSection_deleteResourcesMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_deleteResourcesMutation.graphql';
 import type { organizationLocationManageResourcesSection_removeCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_removeCustomerPreferredResourceMutation.graphql';
 import Box from '@mui/material/Box';
-import { SettingsSectionCard } from '@skedular/ui';
+import Button from '@mui/material/Button';
+import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { defaultPadding, LeadIconTypography, PushToRight, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useMemo, useState } from 'react';
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
@@ -139,6 +139,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
   const [resourceZoneIds, setResourceZoneIds] = useState<string[]>([]);
   const [selectedResourceId, setSelectedResourceId] = useState<null | string>(null);
   const [selectedResourceIds, setSelectedResourceIds] = useState<string[]>([]);
+  const [isBulkAddDialogOpen, setIsBulkAddDialogOpen] = useState(false);
   const [resourceMoreActionsAnchorEl, setResourceMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const resourceMoreActionsMenuOpen = Boolean(resourceMoreActionsAnchorEl);
 
@@ -522,12 +523,17 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
           title="Manage Resources"
           description="Search, filter, and operate on the resources assigned to this location."
           actions={
-            <AddResourceButton
-              onReloadRequired={onReloadRequired}
-              organizationCustomDomain={organizationCustomDomain}
-              locationId={locationId}
-              connectionIds={resourcesConnectionIds}
-            />
+            <StackRow sx={{ gap: 1 }}>
+              <AddResourceButton
+                onReloadRequired={onReloadRequired}
+                organizationCustomDomain={organizationCustomDomain}
+                locationId={locationId}
+                connectionIds={resourcesConnectionIds}
+              />
+              <Button variant="text" onClick={() => setIsBulkAddDialogOpen(true)} sx={{ textTransform: 'none' }}>
+                <LeadIconTypography label="Bulk add resources" endElement={<NewIcon fontSize="large" />} />
+              </Button>
+            </StackRow>
           }
         >
           <StackColumn spacing={2}>
@@ -570,6 +576,14 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
         open={resourceMoreActionsMenuOpen}
         onMenuItemClick={handleResourceMoreActionsMenuItemClick}
         options={resourceMoreActionsOption}
+      />
+
+      <BulkAddResourcesDialog
+        locationId={locationId}
+        organizationCustomDomain={organizationCustomDomain}
+        isDialogOpen={isBulkAddDialogOpen}
+        onReloadRequired={onReloadRequired}
+        onCancel={() => setIsBulkAddDialogOpen(false)}
       />
     </>
   );

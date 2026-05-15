@@ -1,13 +1,16 @@
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
+using Enterprise.Shared.Context;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Sso;
+using Enterprise.Shared.Security.Token;
 using Enterprise.Shared.Temporal;
 using Location.Api.Grpc;
+using Location.Api.Services;
 using Location.Shared;
 using Location.Shared.Database;
 
@@ -46,6 +49,15 @@ public class Program
             .AddSharedCrossDomainClients(configuration)
             .AddTemporalClient(configuration, "temporal")
             .AddGrpc();
+
+        // When running with FAKE_DEPENDENCIES=true (integration tests), replace the
+        // empty token-service list with a pass-through that accepts any bearer token
+        // value directly as the verifiable token — no external identity provider needed.
+        if (DomainAppHostEnvironmentVariables.IsFakeDependenciesEnabled())
+        {
+            services.AddSingleton<IEnumerable<ITokenService>>(sp =>
+                [new FakeTokenService(sp.GetRequiredService<IContext>())]);
+        }
 
         var app = builder
             .Build()

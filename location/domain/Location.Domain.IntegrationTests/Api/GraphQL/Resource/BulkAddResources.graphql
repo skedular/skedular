@@ -1,0 +1,17 @@
+mutation BulkAddResources($locationId: String!, $rows: [BulkAddResourceRowInput!]!) {
+    bulkAddResources(
+        input: {
+            locationId: $locationId
+            rows: $rows
+        }
+    ) {
+        results {
+            rowIndex
+            createdResources {
+                id
+                name
+            }
+            failureReason
+        }
+    }
+}

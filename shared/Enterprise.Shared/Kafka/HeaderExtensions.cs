@@ -63,6 +63,6 @@ public static class HeaderExtensions
             message.Timestamp.UtcDateTime;
 
         public void SetTimestamp() =>
-            message.Timestamp = new Timestamp(DateTimeOffset.UtcNow);
+            message.Timestamp = new Timestamp(TimeProvider.System.GetUtcNow());
     }
 }

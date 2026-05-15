@@ -44,13 +44,6 @@ public class Startup
 #pragma warning restore VSTHRD104
 
         ArgumentException.ThrowIfNullOrWhiteSpace(locationDbConnectionString);
-
-        var pgadmin = distributedApp.GetEndpoint("pgadmin");
-        var kafkaUi = distributedApp.GetEndpoint("kafka-ui");
-
-        Console.WriteLine($"pgadmin: {pgadmin}");
-        Console.WriteLine($"kafkaUi: {kafkaUi}");
-
         var locationApiGrpcEndpoint = distributedApp.GetEndpoint("locationapi", "Grpc").ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(locationApiGrpcEndpoint);
 
@@ -88,8 +81,12 @@ public class Startup
             .AddSingleton<ILocationWorkaroundClient>(_ => new LocationWorkaroundClient(locationApiClient))
             .AddSingleton<ILocationAnalyticsClient>(_ => new LocationAnalyticsClient(locationApiClient));
 
+        services.AddTransient<TestBearerTokenHandler>();
+
         services
             .AddSkedularGraphQLV1()
-            .ConfigureHttpClient(httpClient => httpClient.BaseAddress = locationApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
+            .ConfigureHttpClient(
+                httpClient => httpClient.BaseAddress = locationApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri(),
+                builder => builder.AddHttpMessageHandler<TestBearerTokenHandler>());
     }
 }

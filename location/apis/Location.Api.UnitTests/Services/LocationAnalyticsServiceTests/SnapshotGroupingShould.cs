@@ -39,12 +39,12 @@ public class SnapshotGroupingShould
     {
         // Arrange
         const string LocationId = "loc-snap";
-        const string OrgId = "org-snap";
+        const string OrganizationId = "org-snap";
         const string CustomerId = "cust-snap";
 
         await using var dbContext = CreateInMemoryContext();
 
-        var location = new LocationEntity { Id = LocationId, Name = "Snap Office", OrganizationId = OrgId };
+        var location = new LocationEntity { Id = LocationId, Name = "Snap Office", OrganizationId = OrganizationId };
         var from = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);
         var until = new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero);
         var day1 = from;
@@ -95,7 +95,7 @@ public class SnapshotGroupingShould
 
         A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(CustomerId);
-        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrgId, CustomerId, A<CancellationToken>._))
+        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrganizationId, CustomerId, A<CancellationToken>._))
             .Returns(true);
 
         A.CallTo(() => deskCountRepository.GetByLocationIdsAndDateRangeAsync(A<IReadOnlyList<string>>._, from, until, A<CancellationToken>._))
@@ -145,11 +145,11 @@ public class SnapshotGroupingShould
     {
         // Arrange – snapshot repository returns nothing for this location/range
         const string LocationId = "loc-no-snap";
-        const string OrgId = "org-no-snap";
+        const string OrganizationId = "org-no-snap";
         const string CustomerId = "cust-no-snap";
 
         await using var dbContext = CreateInMemoryContext();
-        var location = new LocationEntity { Id = LocationId, Name = "No Snap Office", OrganizationId = OrgId };
+        var location = new LocationEntity { Id = LocationId, Name = "No Snap Office", OrganizationId = OrganizationId };
         var from = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);
         var until = new DateTimeOffset(2026, 4, 7, 0, 0, 0, TimeSpan.Zero);
 
@@ -161,7 +161,7 @@ public class SnapshotGroupingShould
 
         A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(CustomerId);
-        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrgId, CustomerId, A<CancellationToken>._)).Returns(true);
+        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrganizationId, CustomerId, A<CancellationToken>._)).Returns(true);
         A.CallTo(() => deskCountRepository.GetByLocationIdsAndDateRangeAsync(A<IReadOnlyList<string>>._, from, until, A<CancellationToken>._))
             .Returns([]);
 

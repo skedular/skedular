@@ -27,6 +27,14 @@ public interface IResourceRepository : IRepository<Resource>
         ResourceSearchCriteria searchCriteria,
         IEnumerable<ResourceOrder> orderByFields,
         CancellationToken cancellationToken);
+
+    /// <summary>
+    ///     Returns the names of all active (non-deleted) resources for the given location.
+    ///     Used by the bulk import service to pre-load existing names for conflict-free name generation.
+    /// </summary>
+    Task<IReadOnlyList<string>> GetActiveNamesByLocationIdAsync(
+        string locationId,
+        CancellationToken cancellationToken);
 }
 
 public static class ResourceExtensions
@@ -166,6 +174,15 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    public async Task<IReadOnlyList<string>> GetActiveNamesByLocationIdAsync(
+        string locationId,
+        CancellationToken cancellationToken) =>
+        await DbContext.Resource
+            .AsNoTracking()
+            .Where(r => !r.DeletedAt.HasValue && r.Location.Id == locationId)
+            .Select(r => r.Name)
+            .ToListAsync(cancellationToken);
 
     private static List<KeysetPaginationField<Resource>> GetPaginationFields(IEnumerable<ResourceOrder> orderByFields)
     {

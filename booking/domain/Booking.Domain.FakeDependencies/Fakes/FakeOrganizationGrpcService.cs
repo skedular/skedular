@@ -8,13 +8,14 @@ public class FakeOrganizationGrpcService : OrganizationService.OrganizationServi
 {
 }
 
-public class FakeOrganizationBillingGrpcService(FakeOrganizationGrpcState state) : OrganizationBillingService.OrganizationBillingServiceBase
+public class FakeOrganizationBillingGrpcService(FakeOrganizationGrpcState state, TimeProvider timeProvider)
+    : OrganizationBillingService.OrganizationBillingServiceBase
 {
     public override Task<XeroConnection> Admin_GetXeroConnection(Admin_GetXeroConnectionInput request, ServerCallContext context)
     {
         state.GetXeroConnectionRequests.Enqueue(
             new RecordedGetXeroConnectionRequest(
-                DateTimeOffset.UtcNow,
+                timeProvider.GetUtcNow(),
                 request.OrganizationId,
                 request.OrganizationCustomDomain));
         return Task.FromResult(state.XeroConnectionResponse);
