@@ -1,6 +1,5 @@
 'use client';
 
-import { BodyIconTypography, DefaultDialogTitle, StackColumn, StackRow, SubtitleIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
 import { getOrganizationBaseLink, getOrganizationSubscriptionsBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import {
@@ -14,9 +13,6 @@ import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketpl
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
-import { defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { pageOrganizationSubscriptionDetail_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_confirmRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptionDetail_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { pageOrganizationSubscriptionDetail_makeRecurringBookingPaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_makeRecurringBookingPaymentNotRequiredMutation.graphql';
@@ -27,14 +23,15 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
-import { PageHeaderPanel } from '@skedular/ui';
+import { getRelayErrorMessage, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { BodyIconTypography, DefaultDialogTitle, defaultPadding, PageHeaderPanel, StackColumn, StackRow, SubtitleIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -443,7 +440,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
           <Box sx={{ ...surfaceSx, width: '100%', maxWidth: 1200, px: 3, py: 4 }}>
-            <BodyIconTypography label="You do not have permission to manage subscription payments for this organisation." />
+            <BodyIconTypography label="You do not have permission to manage subscription payments for this organization." />
           </Box>
         </Box>
       </RootShell>

@@ -24,7 +24,7 @@ Input row submitted to `IBulkImportResourcesService`.
 | `OrganizationResourceTypeTagId` | `string`                | ID of the resource-type `OrganizationTag`. Required.              |
 | `BaseName`                      | `string?`               | Optional base name. Null/empty → derived from resource type name. |
 | `Quantity`                      | `int`                   | Number of resources to create. Must be ≥ 1.                       |
-| `CustomTagIds`                  | `IReadOnlyList<string>` | IDs of custom (non-type) organisation tags.                       |
+| `CustomTagIds`                  | `IReadOnlyList<string>` | IDs of custom (non-type) organization tags.                       |
 | `ZoneIds`                       | `IReadOnlyList<string>` | IDs of zone tags.                                                 |
 | `ProductTagIds`                 | `IReadOnlyList<string>` | IDs of product tags.                                              |
 

@@ -1,10 +1,10 @@
 import { CustomerAvatar, TeamAvatar } from '@/components/avatars';
-import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
-import { getCustomerFullName } from '@skedular/shared';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
+import { getCustomerFullName } from '@skedular/shared';
+import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { memo } from 'react';
 
 export type OrganizationUserTeamListItem = {
@@ -30,7 +30,7 @@ const OrganizationUserTeamList = ({ items }: Props) => {
     return (
       <StackColumn spacing={0.5}>
         <LeadIconTypography label="No teams found" />
-        <SmallIconTypography label="This user is not currently assigned to any teams in this organisation." />
+        <SmallIconTypography label="This user is not currently assigned to any teams in this organization." />
       </StackColumn>
     );
   }
@@ -39,7 +39,7 @@ const OrganizationUserTeamList = ({ items }: Props) => {
     <StackColumn spacing={1.5}>
       <StackColumn spacing={0.5}>
         <LeadIconTypography label="User Teams" />
-        <SmallIconTypography label="Teams in this organisation that include this user." />
+        <SmallIconTypography label="Teams in this organization that include this user." />
       </StackColumn>
 
       <Divider />

@@ -639,7 +639,7 @@ public class XeroInvoiceService(
                 100,
                 cancellationToken);
             var existingXeroContact =
-                contactsByName._Contacts?.FirstOrDefault(item => string.Equals(item.Name, displayName, StringComparison.OrdinalIgnoreCase));
+                contactsByName._Contacts?.FirstOrDefault(item => string.Equals(item.Name, displayName, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingXeroContact is null && !string.IsNullOrWhiteSpace(email))
             {
@@ -657,7 +657,8 @@ public class XeroInvoiceService(
                     100,
                     cancellationToken);
                 existingXeroContact =
-                    contactsByEmail._Contacts?.FirstOrDefault(item => string.Equals(item.EmailAddress, email, StringComparison.OrdinalIgnoreCase));
+                    contactsByEmail._Contacts?.FirstOrDefault(item =>
+                        string.Equals(item.EmailAddress, email, StringComparison.InvariantCultureIgnoreCase));
             }
 
             if (existingXeroContact?.ContactID is not null)

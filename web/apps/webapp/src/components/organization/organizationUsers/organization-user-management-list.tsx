@@ -1,20 +1,24 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
-import {
-  compactManagementActionButtonSx,
-  compactManagementIconButtonSx,
-  compactManagementNeutralChipSx,
-  compactManagementWarningChipSx,
-  defaultButtonStyle,
-  defaultGridActionPadding,
-} from '@skedular/ui';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
+import {
+  BodyIconTypography,
+  compactManagementActionButtonSx,
+  compactManagementIconButtonSx,
+  compactManagementNeutralChipSx,
+  compactManagementWarningChipSx,
+  defaultButtonStyle,
+  defaultGridActionPadding,
+  LeadIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import { memo, useState } from 'react';
 
 export type OrganizationUserManagementListItem = {
@@ -79,7 +83,7 @@ const OrganizationUserManagementList = ({
         }}
       >
         <LeadIconTypography label="No users found" />
-        <SmallIconTypography label="Adjust the filters or invite a new person to the organisation." />
+        <SmallIconTypography label="Adjust the filters or invite a new person to the organization." />
       </Box>
     );
   }

@@ -1,16 +1,16 @@
 'use client';
 
-import { BodyIconTypography, LargeHeadingIconTypography, SmallIconTypography } from '@skedular/ui';
+import GoogleIcon from '@mui/icons-material/Google';
+import WindowIcon from '@mui/icons-material/Window';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { alpha, type Theme } from '@mui/material/styles';
 import type { SxProps } from '@mui/material/styles';
-import GoogleIcon from '@mui/icons-material/Google';
-import WindowIcon from '@mui/icons-material/Window';
+import { alpha, type Theme } from '@mui/material/styles';
+import { BodyIconTypography, LargeHeadingIconTypography, SmallIconTypography } from '@skedular/ui';
 import NextLink from 'next/link';
 import { memo } from 'react';
 
@@ -122,7 +122,7 @@ const CustomOrganizationAuthPage = ({ mode, organizationName, organizationLogoUr
             >
               {organizationLogoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={organizationLogoUrl} alt={`${organizationName ?? 'Organisation'} logo`} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                <img src={organizationLogoUrl} alt={`${organizationName ?? 'Organization'} logo`} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
               ) : (
                 <SmallIconTypography label={(organizationName ?? 'Skedular').slice(0, 2).toUpperCase()} />
               )}

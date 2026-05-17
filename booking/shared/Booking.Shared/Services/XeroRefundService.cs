@@ -544,7 +544,7 @@ public class XeroRefundService(
 
         var matchingByNumber = !string.IsNullOrWhiteSpace(marketplaceBooking.InvoiceNumber)
             ? accountingInvoiceInstances.FirstOrDefault(item =>
-                string.Equals(item.ExternalInvoiceNumber, marketplaceBooking.InvoiceNumber, StringComparison.OrdinalIgnoreCase))
+                string.Equals(item.ExternalInvoiceNumber, marketplaceBooking.InvoiceNumber, StringComparison.InvariantCultureIgnoreCase))
             : null;
         if (matchingByNumber is not null)
         {
@@ -553,7 +553,7 @@ public class XeroRefundService(
 
         var matchingByUrl = !string.IsNullOrWhiteSpace(marketplaceBooking.InvoiceUrl)
             ? accountingInvoiceInstances.FirstOrDefault(item =>
-                string.Equals(item.ExternalInvoiceUrl, marketplaceBooking.InvoiceUrl, StringComparison.OrdinalIgnoreCase))
+                string.Equals(item.ExternalInvoiceUrl, marketplaceBooking.InvoiceUrl, StringComparison.InvariantCultureIgnoreCase))
             : null;
         if (matchingByUrl is not null)
         {

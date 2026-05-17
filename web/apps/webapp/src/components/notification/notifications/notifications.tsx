@@ -1,10 +1,6 @@
-import { LeadIconTypography, PageHeaderPanel, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { PaletteModeContext } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
-import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
 import type { notifications_acceptInvitationToJoinOrganizationMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinOrganizationMutation.graphql';
 import type { notifications_acceptInvitationToJoinTeamMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinTeamMutation.graphql';
 import type { notifications_rejectInvitationToJoinOrganizationMutation } from '@/queries/__generated__/notifications_rejectInvitationToJoinOrganizationMutation.graphql';
@@ -14,6 +10,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
+import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import { defaultButtonStyle, defaultPadding, LeadIconTypography, PageHeaderPanel, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -160,7 +158,7 @@ const Notifications = ({ queryReference }: Props) => {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Rejecting the invitation to join organisation '${invitation.organization?.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Rejecting the invitation to join organization '${invitation.organization?.name}'...`} />, infoNotificationOptions);
 
     commitRejectInvitationToJoinOrganization({
       variables: {
@@ -173,7 +171,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't reject the invitation to join organisation '${invitation.organization?.name}'. ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't reject the invitation to join organization '${invitation.organization?.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -181,13 +179,13 @@ const Notifications = ({ queryReference }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`The invitation to join organisation '${invitation.organization?.name}' has been rejected.`} />,
+          render: <NotificationContent content={`The invitation to join organization '${invitation.organization?.name}' has been rejected.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't reject the invitation to join organisation '${invitation.organization?.name}'. ${error.message}`} />,
+          render: <NotificationContent content={`We couldn't reject the invitation to join organization '${invitation.organization?.name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -210,7 +208,7 @@ const Notifications = ({ queryReference }: Props) => {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Accepting the invitation to join organisation '${invitation.organization?.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Accepting the invitation to join organization '${invitation.organization?.name}'...`} />, infoNotificationOptions);
 
     commitAcceptInvitationToJoinOrganization({
       variables: {
@@ -223,7 +221,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't accept the invitation to join organisation '${invitation.organization?.name}'. ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't accept the invitation to join organization '${invitation.organization?.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -231,13 +229,13 @@ const Notifications = ({ queryReference }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`The invitation to join organisation '${invitation.organization?.name}' has been accepted.`} />,
+          render: <NotificationContent content={`The invitation to join organization '${invitation.organization?.name}' has been accepted.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't accept the invitation to join organisation '${invitation.organization?.name}'. ${error.message}`} />,
+          render: <NotificationContent content={`We couldn't accept the invitation to join organization '${invitation.organization?.name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -367,10 +365,10 @@ const Notifications = ({ queryReference }: Props) => {
           gap: 2,
         }}
       >
-        <PageHeaderPanel eyebrow="Notifications" title="Notifications" description="Review pending invitations to join organisations and teams.">
+        <PageHeaderPanel eyebrow="Notifications" title="Notifications" description="Review pending invitations to join organizations and teams.">
           <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
             <Chip size="small" label={`${pendingInvitationCount} pending`} />
-            <Chip size="small" label={`${myInvitationsToJoinOrganizations.length} organisation invitation${myInvitationsToJoinOrganizations.length === 1 ? '' : 's'}`} />
+            <Chip size="small" label={`${myInvitationsToJoinOrganizations.length} organization invitation${myInvitationsToJoinOrganizations.length === 1 ? '' : 's'}`} />
             <Chip size="small" label={`${myInvitationsToJoinTeams.length} team invitation${myInvitationsToJoinTeams.length === 1 ? '' : 's'}`} />
           </StackRow>
         </PageHeaderPanel>
@@ -389,7 +387,7 @@ const Notifications = ({ queryReference }: Props) => {
           <StackColumn spacing={2}>
             <StackColumn spacing={0.5}>
               <LeadIconTypography label="Pending Invitations" />
-              <SmallIconTypography label="Accept or reject outstanding organisation and team invitations." />
+              <SmallIconTypography label="Accept or reject outstanding organization and team invitations." />
             </StackColumn>
 
             <Divider />
@@ -397,19 +395,19 @@ const Notifications = ({ queryReference }: Props) => {
             {pendingInvitationCount === 0 && (
               <StackColumn spacing={0.5}>
                 <LeadIconTypography label="No pending notifications" />
-                <SmallIconTypography label="You do not have any organisation or team invitations to review." />
+                <SmallIconTypography label="You do not have any organization or team invitations to review." />
               </StackColumn>
             )}
 
             {myInvitationsToJoinOrganizations.length > 0 && (
               <StackColumn spacing={1.5}>
-                <LeadIconTypography label="Organisation Invitations" />
+                <LeadIconTypography label="Organization Invitations" />
                 {myInvitationsToJoinOrganizations.map((invitation, index) => (
                   <StackColumn key={invitation.id} spacing={1.5}>
                     {index > 0 && <Divider />}
                     <StackRow sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 2, flexWrap: 'wrap' }}>
                       <StackColumn spacing={0.5}>
-                        <SmallIconTypography label={`"${getCustomerFullName(invitation.createdBy)}" has invited you to join organisation "${invitation.organization.name}"`} />
+                        <SmallIconTypography label={`"${getCustomerFullName(invitation.createdBy)}" has invited you to join organization "${invitation.organization.name}"`} />
                         <SmallIconTypography label={`Status: ${invitation.status.name}`} />
                       </StackColumn>
 

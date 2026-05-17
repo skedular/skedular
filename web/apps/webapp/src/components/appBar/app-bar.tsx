@@ -1,5 +1,4 @@
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { NewFeedbackDialog } from '@/components/feedback';
 import {
   AddIcon,
@@ -13,7 +12,6 @@ import {
   SignOutIcon,
   SystemModeIcon,
 } from '@/components/icons';
-import { ClaimLocationOwnershipDialog } from '@/components/location';
 import {
   getBillingAndPaymentLink,
   getNotificationsLink,
@@ -23,9 +21,8 @@ import {
   getSettingsLink,
   getSignOutReturnToLink,
 } from '@/components/links';
+import { ClaimLocationOwnershipDialog } from '@/components/location';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { PaletteModeContext, SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
-import { getCustomerFullName, localNow, toLongDateTime } from '@skedular/shared';
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -40,6 +37,17 @@ import type { SelectChangeEvent } from '@mui/material/Select';
 import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
+import {
+  getCustomerFullName,
+  localNow,
+  PaletteModeContext,
+  SelectedPaletteModeContext,
+  toLongDateTime,
+  UpdatePaletteModeContext,
+  useIntegratedPlatrform,
+  useKnownParams,
+} from '@skedular/shared';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -223,10 +231,10 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                   return (
                     <>
                       <BodyIconTypography
-                        label="Please select an organisation"
+                        label="Please select an organization"
                         sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
                       />
-                      <OrganizationIcon tip="Please select an organisation" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
+                      <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
                     </>
                   );
                 }
@@ -236,10 +244,10 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                   return (
                     <>
                       <BodyIconTypography
-                        label="Please select an organisation"
+                        label="Please select an organization"
                         sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
                       />
-                      <OrganizationIcon tip="Please select an organisation" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
+                      <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
                     </>
                   );
                 }
@@ -267,7 +275,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                     <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
                     <StackColumn spacing={-0.5}>
                       <LeadIconTypography label={organization.name} />
-                      <CaptionIconTypography label="Organisation" sx={{ display: { xs: 'none', sm: 'block' } }} />
+                      <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
                     </StackColumn>
                   </StackRow>
                 </MenuItem>
@@ -276,7 +284,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
               {rootData.myOrganizations.length !== 0 && <Divider />}
 
               <MenuItem value={createOrganizationId}>
-                <LeadIconTypography label="Create organisation" startElement={<AddIcon />} />
+                <LeadIconTypography label="Create organization" startElement={<AddIcon />} />
               </MenuItem>
             </Select>
           )}

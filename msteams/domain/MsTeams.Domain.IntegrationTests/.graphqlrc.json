@@ -5,7 +5,7 @@
     "strawberryShake": {
       "name": "SkedularGraphQLV1",
       "namespace": "MsTeams.Domain.IntegrationTests.Skedular.GraphQL.V1",
-      "url": "../../apis/MsTeams.Api/schema.graphql",
+      "url": "../../apis/MsTeams.Api/schema.graphqls",
       "records": {
         "inputs": false,
         "entities": false

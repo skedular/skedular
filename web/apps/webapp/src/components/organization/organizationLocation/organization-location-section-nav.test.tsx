@@ -42,6 +42,7 @@ vi.mock('@/components/links', () => ({
   getOrganizationLocationOpeningHoursBaseLink: () => '/organizations/acme/locations/location-1?section=opening-hours',
   getOrganizationLocationFloorPlansBaseLink: () => '/organizations/acme/locations/location-1?section=floor-plans',
   getOrganizationLocationManageResourcesBaseLink: () => '/organizations/acme/locations/location-1?section=manage-resources',
+  getOrganizationLocationRestrictedInformationBaseLink: () => '/organizations/acme/locations/location-1?section=restricted-information',
   getOrganizationLocationManageLocationBaseLink: () => '/organizations/acme/locations/location-1?section=manage-location',
 }));
 

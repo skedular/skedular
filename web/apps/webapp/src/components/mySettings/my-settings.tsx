@@ -1,18 +1,28 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { CaptionIconTypography, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
-import { PaletteModeContext } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding, EditorActionBar, PageHeaderPanel } from '@skedular/ui';
-import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
 import type { mySettings_rootQuery } from '@/queries/__generated__/mySettings_rootQuery.graphql';
 import type { mySettings_updateCustomerDetailsMutation, PersonalInformationVisibility } from '@/queries/__generated__/mySettings_updateCustomerDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import {
+  CaptionIconTypography,
+  defaultButtonStyle,
+  defaultPadding,
+  EditorActionBar,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  PageHeaderPanel,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -233,7 +243,7 @@ const MySettings = ({ queryReference }: Props) => {
                 <StackColumn spacing={2}>
                   <StackColumn spacing={0.5}>
                     <LeadIconTypography label="Profile" />
-                    <SmallIconTypography label="Edit the details shown across your account and organisations." />
+                    <SmallIconTypography label="Edit the details shown across your account and organizations." />
                   </StackColumn>
 
                   <Divider />

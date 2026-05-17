@@ -17,7 +17,7 @@ public class AddShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Load_Organisation_Tags_Through_The_Repository_Method(
+    public async Task Load_Organization_Tags_Through_The_Repository_Method(
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IRandomHelper randomHelper,

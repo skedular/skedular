@@ -1,19 +1,17 @@
 import { Address, PhysicalAddress } from '@/components/address';
-import { BodyIconTypography, CreditCard, FormFieldLabel, FormStackColumn, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon, NewIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { BillingDetails, billingSchema } from '@/components/organization/organizationAdmin/organization-admin-shared';
-import { PaletteModeContext } from '@skedular/shared';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import type { organizationAdminBillingPaymentSectionQuery } from '@/queries/__generated__/organizationAdminBillingPaymentSectionQuery.graphql';
 import type { organizationAdminBillingPaymentSection_addOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdminBillingPaymentSection_addOrganizationBillingDetailsMutation.graphql';
 import type { organizationAdminBillingPaymentSection_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdminBillingPaymentSection_removeOrganizationPaymentMethodMutation.graphql';
 import type { organizationAdminBillingPaymentSection_updateOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdminBillingPaymentSection_updateOrganizationBillingDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { EditorActionBar, SettingsSectionCard } from '@skedular/ui';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext } from '@skedular/shared';
+import { BodyIconTypography, CreditCard, EditorActionBar, FormFieldLabel, FormStackColumn, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -234,7 +232,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't update billing for organisation '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
+              render: <NotificationContent content={`We couldn't update billing for organization '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
             });
 
             return;
@@ -242,13 +240,13 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
 
           toast.update(toastId, {
             ...successNotificationOptions,
-            render: <NotificationContent content={`Billing for organisation '${organization.name}' has been updated.`} />,
+            render: <NotificationContent content={`Billing for organization '${organization.name}' has been updated.`} />,
           });
         },
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update billing for organisation '${organization.name}'. ${error.message}`} />,
+            render: <NotificationContent content={`We couldn't update billing for organization '${organization.name}'. ${error.message}`} />,
           });
         },
         optimisticResponse: {
@@ -283,7 +281,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
     }
 
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding billing for organisation '${organization.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Adding billing for organization '${organization.name}'...`} />, infoNotificationOptions);
 
     commitAddOrganizationBillingDetails({
       variables: {
@@ -313,7 +311,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't add billing for organisation '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't add billing for organization '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -321,13 +319,13 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Billing for organisation '${organization.name}' has been added.`} />,
+          render: <NotificationContent content={`Billing for organization '${organization.name}' has been added.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't add billing for organisation '${organization.name}'. ${error.message}`} />,
+          render: <NotificationContent content={`We couldn't add billing for organization '${organization.name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {

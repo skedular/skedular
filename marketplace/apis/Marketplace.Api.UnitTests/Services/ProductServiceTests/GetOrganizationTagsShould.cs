@@ -20,7 +20,7 @@ public class GetOrganizationTagsShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Load_Organisation_Tags_Through_The_Repository_Method_When_Adding_A_Product(
+    public async Task Load_Organization_Tags_Through_The_Repository_Method_When_Adding_A_Product(
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IRandomHelper randomHelper,

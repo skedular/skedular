@@ -66,7 +66,7 @@ input BulkImportResourceRowInput {
   quantity: Int!
 
   """
-  IDs of custom (non-type) organisation tags to assign to all resources in this row.
+  IDs of custom (non-type) organization tags to assign to all resources in this row.
   """
   customTagIds: [String!]!
 
@@ -130,7 +130,7 @@ type BulkImportResourceRowResult {
 | `quantity < 1`                                                       | `"Quantity must be at least 1."`                                              |
 | `organizationResourceTypeTagId` not found or not a resource-type tag | `"Resource type not found or invalid."`                                       |
 | More than one resource-type tag included in the merged tag list      | `"Only a single resource type is allowed per row."`                           |
-| Any tag ID not found or not active for the organisation              | `"One or more tag identifiers are invalid."`                                  |
+| Any tag ID not found or not active for the organization              | `"One or more tag identifiers are invalid."`                                  |
 | `sum(quantities)` across all rows > 100                              | Top-level input validation — mutation returns error before processing any row |
 | `rows` list is empty                                                 | Top-level input validation — mutation returns error                           |
 

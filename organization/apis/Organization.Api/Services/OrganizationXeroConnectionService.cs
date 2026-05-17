@@ -285,7 +285,8 @@ public class OrganizationXeroConnectionService(
         {
             if (!string.IsNullOrWhiteSpace(organization.OrganizationXeroConnection.RefreshTokenEncrypted) &&
                 !string.IsNullOrWhiteSpace(organization.OrganizationXeroConnection.TenantId) &&
-                !string.Equals(organization.OrganizationXeroConnection.TenantId, xeroConnection.TenantId, StringComparison.OrdinalIgnoreCase))
+                !string.Equals(organization.OrganizationXeroConnection.TenantId, xeroConnection.TenantId,
+                    StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new XeroTenantReconnectRequiredException();
             }
@@ -416,8 +417,8 @@ public class OrganizationXeroConnectionService(
         var accessToken = await EnsureValidAccessTokenAsync(organizationXeroConnection, cancellationToken);
         var connections = await xeroSdkClientFactory.CreateIdentityApi().GetConnectionsAsync(accessToken, null, cancellationToken);
         var matchingConnection = connections
-            .Where(item => string.Equals(item.TenantType, "ORGANISATION", StringComparison.OrdinalIgnoreCase))
-            .FirstOrDefault(item => string.Equals(item.TenantId?.ToString(), tenantId, StringComparison.OrdinalIgnoreCase));
+            .Where(item => string.Equals(item.TenantType, "ORGANISATION", StringComparison.InvariantCultureIgnoreCase))
+            .FirstOrDefault(item => string.Equals(item.TenantId?.ToString(), tenantId, StringComparison.InvariantCultureIgnoreCase));
         if (matchingConnection is null)
         {
             throw new UnavailableXeroTenantSelectionException();
@@ -460,7 +461,7 @@ public class OrganizationXeroConnectionService(
     private static TenantConnectionSelection SelectTenantConnection(string? existingTenantId, IReadOnlyList<Connection> connections)
     {
         var organizationConnections = connections
-            .Where(item => string.Equals(item.TenantType, "ORGANISATION", StringComparison.OrdinalIgnoreCase))
+            .Where(item => string.Equals(item.TenantType, "ORGANISATION", StringComparison.InvariantCultureIgnoreCase))
             .ToList();
         var tenantOptions = organizationConnections
             .Where(item => item.TenantId.HasValue)
@@ -470,7 +471,7 @@ public class OrganizationXeroConnectionService(
         if (!string.IsNullOrWhiteSpace(existingTenantId))
         {
             var existingConnection = organizationConnections.FirstOrDefault(item =>
-                string.Equals(item.TenantId.ToString(), existingTenantId, StringComparison.OrdinalIgnoreCase));
+                string.Equals(item.TenantId.ToString(), existingTenantId, StringComparison.InvariantCultureIgnoreCase));
             if (existingConnection is not null)
             {
                 return new TenantConnectionSelection(existingConnection, []);

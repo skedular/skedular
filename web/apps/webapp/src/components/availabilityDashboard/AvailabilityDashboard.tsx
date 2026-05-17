@@ -73,7 +73,7 @@ const AvailabilityDashboard = ({ dataRef, locationsRef, statusesRef, filters, on
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', pb: defaultPadding }}>
       <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
-        <PageHeaderPanel title="Availability Dashboard" description="View resource availability across the organisation for the selected day." />
+        <PageHeaderPanel title="Availability Dashboard" description="View resource availability across the organization for the selected day." />
 
         {subscriptionError && (
           <Alert

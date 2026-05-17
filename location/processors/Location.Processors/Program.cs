@@ -55,7 +55,6 @@ public class Program
             .AddPublishers()
             .AddMappers()
             .AddJobs()
-            .AddSharedCrossDomainClients(configuration)
             .AddTemporalClient(configuration, "temporal");
 
         return builder.Build().UseWebApplicationDefaults<Program>();

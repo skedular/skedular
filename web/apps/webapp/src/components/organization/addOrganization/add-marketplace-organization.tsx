@@ -1,13 +1,9 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon } from '@/components/icons';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationTermsOfUse } from '@/components/organization';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { PaletteModeContext } from '@skedular/shared';
-import { defaultButtonStyle } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { addMarketplaceOrganization_addOrganizationMutation } from '@/queries/__generated__/addMarketplaceOrganization_addOrganizationMutation.graphql';
 import type { addMarketplaceOrganization_query$key } from '@/queries/__generated__/addMarketplaceOrganization_query.graphql';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -20,7 +16,20 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import { EditorActionBar, SettingsSectionCard, SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  defaultButtonStyle,
+  EditorActionBar,
+  FormFieldLabel,
+  FormStackColumn,
+  HelperText,
+  SettingsSectionCard,
+  SetupFeatureCard,
+  SetupSplitLayout,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -295,12 +304,12 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
                           }}
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={logoUrl} alt="Organisation logo" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                          <img src={logoUrl} alt="Organization logo" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
                         </Box>
                       ) : null}
 
                       <StackRow>
-                        <ImageFileUploaderWithCropper helperText="Upload a square logo or icon for organisation branding." onUploadCompleted={handleLogoUploadCompleted} />
+                        <ImageFileUploaderWithCropper helperText="Upload a square logo or icon for organization branding." onUploadCompleted={handleLogoUploadCompleted} />
                         {logoUrl ? (
                           <Button variant="outlined" size="small" onClick={() => setLogoUrl(null)} sx={{ textTransform: 'none' }}>
                             Remove logo

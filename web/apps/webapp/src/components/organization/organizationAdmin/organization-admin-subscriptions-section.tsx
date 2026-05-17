@@ -1,11 +1,7 @@
-import { BodyIconTypography, CreditCard, ExtraLargeHeadingIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon, ErrorIcon, NewIcon, TickIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
-import { PaletteModeContext } from '@skedular/shared';
-import { coal, defaultButtonStyle, emerald } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationAdminSubscriptionsSectionQuery } from '@/queries/__generated__/organizationAdminSubscriptionsSectionQuery.graphql';
 import type { organizationAdminSubscriptionsSection_cancelOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdminSubscriptionsSection_cancelOrganizationOfferingMutation.graphql';
 import type { organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation.graphql';
@@ -20,7 +16,19 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { SettingsSectionCard } from '@skedular/ui';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  coal,
+  CreditCard,
+  defaultButtonStyle,
+  emerald,
+  ExtraLargeHeadingIconTypography,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import { memo, useContext, useEffect, useState } from 'react';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -155,7 +163,7 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
 
   const handleCancelActiveOfferingClick = () => {
     const name = organization.name;
-    const toastId = themedToast(<NotificationContent content={`Cancelling the active plan for organisation '${name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Cancelling the active plan for organization '${name}'...`} />, infoNotificationOptions);
 
     commitCancelOrganizationOffering({
       variables: {
@@ -168,7 +176,7 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't cancel the active plan for organisation '${name}'. ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't cancel the active plan for organization '${name}'. ${getRelayErrorMessage(errors)}`} />,
           });
           onReloadRequired();
           return;
@@ -176,14 +184,14 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`The active plan for organisation '${name}' has been cancelled.`} />,
+          render: <NotificationContent content={`The active plan for organization '${name}' has been cancelled.`} />,
         });
         onReloadRequired();
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't cancel the active plan for organisation '${name}'. ${error.message}`} />,
+          render: <NotificationContent content={`We couldn't cancel the active plan for organization '${name}'. ${error.message}`} />,
         });
         onReloadRequired();
       },
@@ -192,7 +200,7 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
 
   const handleUpgradeOfferingClick = (code: string) => {
     const name = organization.name;
-    const toastId = themedToast(<NotificationContent content={`Updating the active plan for organisation '${name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Updating the active plan for organization '${name}'...`} />, infoNotificationOptions);
 
     commitUpdateOrganizationOffering({
       variables: {
@@ -206,7 +214,7 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update the active plan for organisation '${name}'. ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't update the active plan for organization '${name}'. ${getRelayErrorMessage(errors)}`} />,
           });
           onReloadRequired();
           return;
@@ -214,14 +222,14 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`The active plan for organisation '${name}' has been updated.`} />,
+          render: <NotificationContent content={`The active plan for organization '${name}' has been updated.`} />,
         });
         onReloadRequired();
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update the active plan for organisation '${name}'. ${error.message}`} />,
+          render: <NotificationContent content={`We couldn't update the active plan for organization '${name}'. ${error.message}`} />,
         });
         onReloadRequired();
       },
@@ -231,7 +239,7 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
   return (
     <>
       <Box sx={{ pb: 2 }}>
-        <SettingsSectionCard title="Subscriptions" description="Review the active plan and the available upgrades for the organisation.">
+        <SettingsSectionCard title="Subscriptions" description="Review the active plan and the available upgrades for the organization.">
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(auto-fit, minmax(280px, 320px))' }, gap: 2, justifyContent: 'center' }}>
             {activeOffering && (
               <Grid>

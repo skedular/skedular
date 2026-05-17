@@ -158,7 +158,7 @@ Tests should cover:
 - [ ] Subscription pushes status change within 5 s of a booking being made.
 - [ ] Restricted user (Marketplace/Individual org, non-admin) sees booking windows as opaque blocks only.
 - [ ] Admin of the same org sees full booking detail.
-- [ ] No resources from other organisations appear regardless of filter manipulation.
+- [ ] No resources from other organizations appear regardless of filter manipulation.
 - [ ] GraphQL schema files regenerated and committed (no hand-edits).
 - [ ] All unit and integration tests pass.
 - [ ] British spelling used in all user-facing copy.

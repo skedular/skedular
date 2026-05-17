@@ -6,7 +6,7 @@ import { DeleteIcon } from '@/components/icons';
 import { getOrganizationLocationsBaseLink } from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
-import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationType } from '@/components/location';
+import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationRestrictedInformationCategory, SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesAmenities } from '@/components/organization';
 import OrganizationLocationFloorPlansSection from '@/components/organization/organizationLocation/organization-location-floor-plans-section';
@@ -18,11 +18,17 @@ import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, stringCollectionToString, stringToMultiLines } from '@skedular/shared';
 import type { organizationLocation_addLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_addLocationPhysicalAddressMutation.graphql';
+import type {
+  LocationRestrictedInformationCategory,
+  organizationLocation_addLocationRestrictedInformationMutation,
+} from '@/queries/__generated__/organizationLocation_addLocationRestrictedInformationMutation.graphql';
 import type { organizationLocation_deleteLocationMutation } from '@/queries/__generated__/organizationLocation_deleteLocationMutation.graphql';
+import type { organizationLocation_deleteLocationRestrictedInformationMutation } from '@/queries/__generated__/organizationLocation_deleteLocationRestrictedInformationMutation.graphql';
 import type { organizationLocation_query$key } from '@/queries/__generated__/organizationLocation_query.graphql';
 import type { LocationType, organizationLocation_updateLocationMutation } from '@/queries/__generated__/organizationLocation_updateLocationMutation.graphql';
 import type { organizationLocation_updateLocationOpeningHoursMutation } from '@/queries/__generated__/organizationLocation_updateLocationOpeningHoursMutation.graphql';
 import type { organizationLocation_updateLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_updateLocationPhysicalAddressMutation.graphql';
+import type { organizationLocation_updateLocationRestrictedInformationMutation } from '@/queries/__generated__/organizationLocation_updateLocationRestrictedInformationMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -79,6 +85,18 @@ type PhysicalAddressDetails = {
   countryCode: string;
 };
 
+type RestrictedInformationDetails = {
+  title: string;
+  category: LocationRestrictedInformationCategory;
+  content: string;
+  active: boolean;
+  sortOrder: number;
+};
+
+type RestrictedInformationItem = RestrictedInformationDetails & {
+  id: string;
+};
+
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   ...listingMetadataSchemaShape,
@@ -99,6 +117,12 @@ const locationSchema = object({
   amenityIds: array().nullable(),
 });
 
+const restrictedInformationSchema = object({
+  title: string().required('Title is required'),
+  category: string().required('Category is required'),
+  content: string().required('Content is required'),
+});
+
 const physicalAddressSchema = object({
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
@@ -109,7 +133,15 @@ const physicalAddressSchema = object({
   countryCode: string().required('Country is required'),
 });
 
-const validSections: OrganizationLocationSection[] = ['setup', 'physical-address-setup', 'opening-hours', 'floor-plans', 'manage-resources', 'manage-location'];
+const validSections: OrganizationLocationSection[] = [
+  'setup',
+  'physical-address-setup',
+  'opening-hours',
+  'floor-plans',
+  'manage-resources',
+  'restricted-information',
+  'manage-location',
+];
 
 const getActiveSection = (value: string | null): OrganizationLocationSection => {
   if (value && validSections.includes(value as OrganizationLocationSection)) {
@@ -250,9 +282,18 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
               }
             }
           }
+          restrictedInformation {
+            id
+            title
+            category
+            content
+            active
+            sortOrder
+          }
         }
         ...weekOpeningHours_query
         ...singleChoiceLocationType_query
+        ...singleChoiceLocationRestrictedInformationCategory_query
         ...multipleChoicesLocationSpaceTypes_query
         ...multipleChoicesAmenities_query
       }
@@ -437,6 +478,57 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       }
     }
   `);
+  const [commitAddLocationRestrictedInformation] = useMutation<organizationLocation_addLocationRestrictedInformationMutation>(graphql`
+    mutation organizationLocation_addLocationRestrictedInformationMutation($input: AddLocationRestrictedInformationInput!) {
+      addLocationRestrictedInformation(input: $input) {
+        location {
+          id
+          restrictedInformation {
+            id
+            title
+            category
+            content
+            active
+            sortOrder
+          }
+        }
+      }
+    }
+  `);
+  const [commitUpdateLocationRestrictedInformation] = useMutation<organizationLocation_updateLocationRestrictedInformationMutation>(graphql`
+    mutation organizationLocation_updateLocationRestrictedInformationMutation($input: UpdateLocationRestrictedInformationInput!) {
+      updateLocationRestrictedInformation(input: $input) {
+        location {
+          id
+          restrictedInformation {
+            id
+            title
+            category
+            content
+            active
+            sortOrder
+          }
+        }
+      }
+    }
+  `);
+  const [commitDeleteLocationRestrictedInformation] = useMutation<organizationLocation_deleteLocationRestrictedInformationMutation>(graphql`
+    mutation organizationLocation_deleteLocationRestrictedInformationMutation($input: DeleteLocationRestrictedInformationInput!) {
+      deleteLocationRestrictedInformation(input: $input) {
+        location {
+          id
+          restrictedInformation {
+            id
+            title
+            category
+            content
+            active
+            sortOrder
+          }
+        }
+      }
+    }
+  `);
 
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
@@ -447,6 +539,8 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   const [stickyTop, setStickyTop] = useState(0);
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
+  const validateRestrictedInformation = makeValidate(restrictedInformationSchema);
+  const requiredRestrictedInformationFields = makeRequired(restrictedInformationSchema);
   const validatePhysicalAddress = makeValidate(physicalAddressSchema);
   const requiredPhysicalAddressFields = makeRequired(physicalAddressSchema);
 
@@ -560,6 +654,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   }
 
   const location = rootData.location;
+  const restrictedInformation = location.restrictedInformation as RestrictedInformationItem[];
 
   const formColumnSx = {
     width: '100%',
@@ -916,6 +1011,115 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     });
   };
 
+  const handleAddRestrictedInformationClick = ({ title, category, content, active, sortOrder }: RestrictedInformationDetails) => {
+    const toastId = themedToast(<NotificationContent content={`Adding restricted information for '${location.name}'...`} />, infoNotificationOptions);
+    commitAddLocationRestrictedInformation({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          locationId: location.id,
+          title,
+          category,
+          content,
+          active,
+          sortOrder: Number(sortOrder) || 0,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add restricted information. Error: ${getRelayErrorMessage(errors)}.`} />,
+          });
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content="Restricted information added." />,
+        });
+        onReloadRequired();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to add restricted information. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleUpdateRestrictedInformationClick = (id: string, { title, category, content, active, sortOrder }: RestrictedInformationDetails) => {
+    const toastId = themedToast(<NotificationContent content="Updating restricted information..." />, infoNotificationOptions);
+    commitUpdateLocationRestrictedInformation({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id,
+          title,
+          category,
+          content,
+          active,
+          sortOrder: Number(sortOrder) || 0,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update restricted information. Error: ${getRelayErrorMessage(errors)}.`} />,
+          });
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content="Restricted information updated." />,
+        });
+        onReloadRequired();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update restricted information. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleDeleteRestrictedInformationClick = (item: RestrictedInformationItem) => {
+    const toastId = themedToast(<NotificationContent content={`Removing '${item.title}'...`} />, infoNotificationOptions);
+    commitDeleteLocationRestrictedInformation({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: item.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove restricted information. Error: ${getRelayErrorMessage(errors)}.`} />,
+          });
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content="Restricted information removed." />,
+        });
+        onReloadRequired();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove restricted information. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   const handleRemoveLocationClicked = () => {
     const toastId = themedToast(<NotificationContent content={`Removing location '${location.name}'...`} />, infoNotificationOptions);
     commitDeleteLocation({
@@ -1246,6 +1450,100 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     </Box>
   );
 
+  const renderRestrictedInformationFields = () => (
+    <StackColumn>
+      <FormFieldLabel label="Title" required={requiredRestrictedInformationFields.title}>
+        <TextField name="title" required={requiredRestrictedInformationFields.title} />
+      </FormFieldLabel>
+      <FormFieldLabel label="Category" required={requiredRestrictedInformationFields.category}>
+        <SingleChoiceLocationRestrictedInformationCategory rootDataRelay={rootData} name="category" required={requiredRestrictedInformationFields.category} />
+      </FormFieldLabel>
+      <FormFieldLabel label="Details" required={requiredRestrictedInformationFields.content}>
+        <TextField name="content" required={requiredRestrictedInformationFields.content} multiline rows={6} />
+      </FormFieldLabel>
+      <FormFieldLabel label="Sort Order">
+        <TextField name="sortOrder" type="number" />
+      </FormFieldLabel>
+    </StackColumn>
+  );
+
+  const renderRestrictedInformationSection = () => (
+    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: { xs: 2, xl: 2 }, pb: defaultPadding }}>
+      <StackColumn spacing={3}>
+        <SettingsSectionCard title="Restricted Information" description="Manage private details shown only to organization members or customers with bookings at this location.">
+          <StackColumn spacing={3}>
+            {restrictedInformation.length === 0 ? (
+              <BodyIconTypography label="No restricted information has been added for this location." />
+            ) : (
+              restrictedInformation.map((item) => (
+                <Form
+                  key={item.id}
+                  onSubmit={(values) => handleUpdateRestrictedInformationClick(item.id, values as RestrictedInformationDetails)}
+                  initialValues={{
+                    title: item.title,
+                    category: item.category,
+                    content: item.content,
+                    active: item.active,
+                    sortOrder: item.sortOrder,
+                  }}
+                  validate={validateRestrictedInformation}
+                  render={({ handleSubmit }) => (
+                    <FormStackColumn onSubmit={handleSubmit}>
+                      <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 2 }}>
+                        <StackColumn>
+                          {renderRestrictedInformationFields()}
+                          <StackRow sx={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                            <Button color="error" variant="outlined" onClick={() => handleDeleteRestrictedInformationClick(item)} sx={defaultButtonStyle}>
+                              Remove
+                            </Button>
+                            <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                              Update
+                            </Button>
+                          </StackRow>
+                        </StackColumn>
+                      </Box>
+                    </FormStackColumn>
+                  )}
+                />
+              ))
+            )}
+          </StackColumn>
+        </SettingsSectionCard>
+
+        <SettingsSectionCard
+          title="Add Restricted Information"
+          description="Create a new private note for access, Wi-Fi, cleaning, security, parking, or other operational details."
+        >
+          <Form
+            onSubmit={(values) => handleAddRestrictedInformationClick(values as RestrictedInformationDetails)}
+            initialValues={{
+              title: '',
+              category: 'OTHER',
+              content: '',
+              active: true,
+              sortOrder: restrictedInformation.length,
+            }}
+            validate={validateRestrictedInformation}
+            render={({ handleSubmit }) => (
+              <FormStackColumn onSubmit={handleSubmit}>
+                {renderRestrictedInformationFields()}
+                <EditorActionBar
+                  primaryAction={
+                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                      Add
+                    </Button>
+                  }
+                />
+              </FormStackColumn>
+            )}
+          />
+        </SettingsSectionCard>
+      </StackColumn>
+
+      {renderLocationSummaryRail()}
+    </Box>
+  );
+
   const renderManageLocationSection = () => (
     <Box sx={{ pb: defaultPadding }}>
       <SettingsSectionCard title="Manage Location" description="Use destructive actions here only when the location should be removed permanently.">
@@ -1278,6 +1576,8 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
             <OrganizationLocationManageResourcesSection onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} locationId={locationId} />
           </Suspense>
         );
+      case 'restricted-information':
+        return renderRestrictedInformationSection();
       case 'manage-location':
         return renderManageLocationSection();
       case 'setup':

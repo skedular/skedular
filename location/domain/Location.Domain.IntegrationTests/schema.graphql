@@ -1,971 +1,1048 @@
 schema {
-  query: Query
-  mutation: Mutation
+    query: Query
+    mutation: Mutation
 }
 
 type Query {
-  locationsAnalytics(
-    from: DateTime!
-    until: DateTime!
-    where: LocationWhereInput
-    orderBy: [LocationOrderInput!]
-  ): [LocationAnalytics!]! @cost(weight: "10")
-  floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
-  floorPlanById(id: ID!): FloorPlanDetails @lookup @internal @cost(weight: "10")
-  floorPlans(
-    after: String
-    first: Int
-    before: String
-    last: Int
-    where: FloorPlanWhereInput!
-    orderBy: [FloorPlanOrderInput!]
-  ): ConnectionOfFloorPlanEdge! @cost(weight: "10")
-  locationTypes: [LocationTypeDetails!]!
-  location(id: String!): LocationDetails @cost(weight: "10")
-  locationById(id: ID!): LocationDetails @lookup @internal @cost(weight: "10")
-  locations(
-    after: String
-    first: Int
-    before: String
-    last: Int
-    where: LocationWhereInput!
-    orderBy: [LocationOrderInput!]
-  ): ConnectionOfLocationEdge! @cost(weight: "10")
-  marketplaceLocations(
-    after: String
-    first: Int
-    before: String
-    last: Int
-    where: MarketplaceLocationWhereInput!
-    orderBy: [LocationOrderInput!]
-  ): ConnectionOfLocationEdge! @cost(weight: "10")
-  myLocations(organizationId: String, organizationCustomDomain: String): [LocationDetails!]
+    locationsAnalytics(
+        from: DateTime!
+        until: DateTime!
+        where: LocationWhereInput
+        orderBy: [LocationOrderInput!]
+    ): [LocationAnalytics!]! @cost(weight: "10")
+    floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
+    floorPlanById(id: ID!): FloorPlanDetails @lookup @internal @cost(weight: "10")
+    floorPlans(
+        after: String
+        first: Int
+        before: String
+        last: Int
+        where: FloorPlanWhereInput!
+        orderBy: [FloorPlanOrderInput!]
+    ): ConnectionOfFloorPlanEdge! @cost(weight: "10")
+    locationTypes: [LocationTypeDetails!]!
+    locationRestrictedInformationCategories: [LocationRestrictedInformationCategoryDetails!]!
+    location(id: String!): LocationDetails @cost(weight: "10")
+    locationById(id: ID!): LocationDetails @lookup @internal @cost(weight: "10")
+    locations(
+        after: String
+        first: Int
+        before: String
+        last: Int
+        where: LocationWhereInput!
+        orderBy: [LocationOrderInput!]
+    ): ConnectionOfLocationEdge! @cost(weight: "10")
+    marketplaceLocations(
+        after: String
+        first: Int
+        before: String
+        last: Int
+        where: MarketplaceLocationWhereInput!
+        orderBy: [LocationOrderInput!]
+    ): ConnectionOfLocationEdge! @cost(weight: "10")
+    myLocations(organizationId: String, organizationCustomDomain: String): [LocationDetails!]
     @cost(weight: "10")
-  resource(id: String!): ResourceDetails @cost(weight: "10")
-  resourceById(id: ID!): ResourceDetails @lookup @internal @cost(weight: "10")
-  locationVersion: Version!
-  locationCustomerRecordSynced: Boolean! @cost(weight: "10")
+    resource(id: String!): ResourceDetails @cost(weight: "10")
+    resourceById(id: ID!): ResourceDetails @lookup @internal @cost(weight: "10")
+    locationVersion: Version!
+    locationCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
 type Mutation {
-  toggleContactedViaEmail(input: ToggleContactedViaEmailInput!): LocationPayload!
+    toggleContactedViaEmail(input: ToggleContactedViaEmailInput!): LocationPayload!
     @cost(weight: "10")
-  toggleContactedViaCall(input: ToggleContactedViaCallInput!): LocationPayload!
+    toggleContactedViaCall(input: ToggleContactedViaCallInput!): LocationPayload!
     @cost(weight: "10")
-  toggleContactedViaSms(input: ToggleContactedViaSmsInput!): LocationPayload!
+    toggleContactedViaSms(input: ToggleContactedViaSmsInput!): LocationPayload!
     @cost(weight: "10")
-  toggleContactedViaWhatsapp(input: ToggleContactedViaWhatsappInput!): LocationPayload!
+    toggleContactedViaWhatsapp(input: ToggleContactedViaWhatsappInput!): LocationPayload!
     @cost(weight: "10")
-  addFloorPlan(input: AddFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
-  updateFloorPlan(input: UpdateFloorPlanInput!): FloorPlanPayload!
+    addFloorPlan(input: AddFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
+    updateFloorPlan(input: UpdateFloorPlanInput!): FloorPlanPayload!
     @cost(weight: "10")
-  deleteFloorPlan(input: DeleteFloorPlanInput!): FloorPlanPayload!
+    deleteFloorPlan(input: DeleteFloorPlanInput!): FloorPlanPayload!
     @cost(weight: "10")
-  updateResourcePositions(input: UpdateResourcePositionsInput!): FloorPlanPayload!
+    updateResourcePositions(input: UpdateResourcePositionsInput!): FloorPlanPayload!
     @cost(weight: "10")
-  addLocation(input: AddLocationInput!): LocationPayload! @cost(weight: "10")
-  updateLocation(input: UpdateLocationInput!): LocationPayload!
+    addLocation(input: AddLocationInput!): LocationPayload! @cost(weight: "10")
+    updateLocation(input: UpdateLocationInput!): LocationPayload!
     @cost(weight: "10")
-  deleteLocation(input: DeleteLocationInput!): LocationPayload!
+    deleteLocation(input: DeleteLocationInput!): LocationPayload!
     @cost(weight: "10")
-  updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload!
+    updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload!
     @cost(weight: "10")
-  claimLocationOwnership(input: ClaimLocationOwnershipInput!): LocationPayload!
+    addLocationRestrictedInformation(
+        input: AddLocationRestrictedInformationInput!
+    ): LocationPayload! @cost(weight: "10")
+    updateLocationRestrictedInformation(
+        input: UpdateLocationRestrictedInformationInput!
+    ): LocationPayload! @cost(weight: "10")
+    deleteLocationRestrictedInformation(
+        input: DeleteLocationRestrictedInformationInput!
+    ): LocationPayload! @cost(weight: "10")
+    claimLocationOwnership(input: ClaimLocationOwnershipInput!): LocationPayload!
     @cost(weight: "10")
-  addLocationPhysicalAddress(input: AddLocationPhysicalAddressInput!): LocationPayload!
+    addLocationPhysicalAddress(input: AddLocationPhysicalAddressInput!): LocationPayload!
     @cost(weight: "10")
-  updateLocationPhysicalAddress(input: UpdateLocationPhysicalAddressInput!): LocationPayload!
+    updateLocationPhysicalAddress(input: UpdateLocationPhysicalAddressInput!): LocationPayload!
     @cost(weight: "10")
-  addResource(input: AddResourceInput!): ResourcePayload! @cost(weight: "10")
-  updateResource(input: UpdateResourceInput!): ResourcePayload!
+    addResource(input: AddResourceInput!): ResourcePayload! @cost(weight: "10")
+    updateResource(input: UpdateResourceInput!): ResourcePayload!
     @cost(weight: "10")
-  deleteResource(input: DeleteResourceInput!): ResourcePayload!
+    deleteResource(input: DeleteResourceInput!): ResourcePayload!
     @cost(weight: "10")
-  deleteResources(input: DeleteResourcesInput!): ResourcesPayload!
+    deleteResources(input: DeleteResourcesInput!): ResourcesPayload!
     @cost(weight: "10")
-  activateResources(input: ActivateResourcesInput!): ResourcesPayload!
+    activateResources(input: ActivateResourcesInput!): ResourcesPayload!
     @cost(weight: "10")
-  deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload!
+    deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload!
     @cost(weight: "10")
-  updateLocationResourceAvailableHours(
-    input: UpdateLocationResourceAvailableHoursInput!
-  ): ResourcePayload! @cost(weight: "10")
-  bulkAddResources(input: BulkAddResourcesInput!): BulkAddResourcesPayload!
+    updateLocationResourceAvailableHours(
+        input: UpdateLocationResourceAvailableHoursInput!
+    ): ResourcePayload! @cost(weight: "10")
+    bulkAddResources(input: BulkAddResourcesInput!): BulkAddResourcesPayload!
     @cost(weight: "10")
 }
 
 type AreaRange {
-  fromInSqm: String!
-  toInSqm: String!
+    fromInSqm: String!
+    toInSqm: String!
 }
 
 type BulkAddResourceRowResult {
-  rowIndex: Int!
-  createdResources: [ResourceDetails!]!
-  failureReason: String
+    rowIndex: Int!
+    createdResources: [ResourceDetails!]!
+    failureReason: String
 }
 
 type BulkAddResourcesPayload {
-  clientMutationId: String
-  results: [BulkAddResourceRowResult!]!
+    clientMutationId: String
+    results: [BulkAddResourceRowResult!]!
 }
 
 type CdnFile @shareable {
-  url: String!
-  height: Int
-  width: Int
+    url: String!
+    height: Int
+    width: Int
 }
 
 type CdnImageFile @shareable {
-  original: CdnFile
-  thumbnail: CdnFile
+    original: CdnFile
+    thumbnail: CdnFile
 }
 
 type ConnectionOfFloorPlanEdge {
-  pageInfo: PageInfo!
-  edges: [FloorPlanEdge!]!
-  totalCount: Int!
+    pageInfo: PageInfo!
+    edges: [FloorPlanEdge!]!
+    totalCount: Int!
 }
 
 type ConnectionOfLocationEdge {
-  pageInfo: PageInfo!
-  edges: [LocationEdge!]!
-  totalCount: Int!
+    pageInfo: PageInfo!
+    edges: [LocationEdge!]!
+    totalCount: Int!
 }
 
 type ConnectionOfResourceEdge {
-  pageInfo: PageInfo!
-  edges: [ResourceEdge!]!
-  totalCount: Int!
+    pageInfo: PageInfo!
+    edges: [ResourceEdge!]!
+    totalCount: Int!
 }
 
 type ContactDetails {
-  contactPeople: [String!]
-  contactEmails: [String!]
-  contactPhones: [String!]
+    contactPeople: [String!]
+    contactEmails: [String!]
+    contactPhones: [String!]
 }
 
 type DesksOccupancyPercentage {
-  date: DateTime!
-  percentage: Float!
+    date: DateTime!
+    percentage: Float!
 }
 
 type FloorPlanDetails {
-  name: String!
-  image: CdnImageFile!
-  resourcePositions: [ResourcePositionDetails!]!
-  resourceCount: Int!
-  id: ID!
+    name: String!
+    image: CdnImageFile!
+    resourcePositions: [ResourcePositionDetails!]!
+    resourceCount: Int!
+    id: ID!
 }
 
 type FloorPlanEdge {
-  node: FloorPlanDetails!
-  cursor: String!
+    node: FloorPlanDetails!
+    cursor: String!
 }
 
 type FloorPlanPayload {
-  clientMutationId: String
-  floorPlan: FloorPlanDetails!
+    clientMutationId: String
+    floorPlan: FloorPlanDetails!
 }
 
 type ListingMetadata @shareable {
-  about: String
-  title: String
-  subTitle: String
-  includedFeatures: [String!]
+    about: String
+    title: String
+    subTitle: String
+    includedFeatures: [String!]
 }
 
 type LocationAnalytics {
-  name: String!
-  desksOccupancyPercentage: [DesksOccupancyPercentage!]!
-  roomsOccupancyPercentage: [RoomsOccupancyPercentage!]!
-  dailyBookingsTotals: [LocationDailyBookingsTotal!]!
-  resourceAvailabilitySnapshots: [ResourceAvailabilityDailySnapshot!]!
+    name: String!
+    desksOccupancyPercentage: [DesksOccupancyPercentage!]!
+    roomsOccupancyPercentage: [RoomsOccupancyPercentage!]!
+    dailyBookingsTotals: [LocationDailyBookingsTotal!]!
+    resourceAvailabilitySnapshots: [ResourceAvailabilityDailySnapshot!]!
 }
 
 type LocationDailyBookingsTotal {
-  date: DateTime!
-  total: Int!
+    date: DateTime!
+    total: Int!
 }
 
 type LocationDetails {
-  organization: OrganizationDetails!
-  products: [ProductDetails!]!
-  analytics(from: DateTime!, until: DateTime!): LocationAnalytics!
+    organization: OrganizationDetails!
+    products: [ProductDetails!]!
+    analytics(from: DateTime!, until: DateTime!): LocationAnalytics!
     @cost(weight: "10")
-  resources(
-    after: String
-    first: Int
-    before: String
-    last: Int
-    where: ResourceWhereInput
-    orderBy: [ResourceOrderInput!]
-  ): ConnectionOfResourceEdge! @cost(weight: "10")
-  name: String!
-  timezone: String
-  type: LocationTypeDetails!
-  openingHours: OpeningHours!
-  deskCapacity: Int!
-  roomCapacity: Int!
-  canModify: Boolean!
-  canDelete: Boolean!
-  canViewAnalytics: Boolean!
-  physicalAddress: LocationPhysicalAddressDetails
-  customTags: [OrganizationTagDetails!]!
-  zones: [OrganizationTagDetails!]!
-  spaceTypes: [OrganizationTagDetails!]!
-  amenities: [OrganizationTagDetails!]!
-  resourceTypes: [OrganizationTagDetails!]!
-  featureImages: [CdnImageFile!]!
-  floorPlanCount: Int!
-  extraMetadata: LocationExtraMetadata
-  uniqueClaimCode: String
-  contactedViaEmail: Boolean!
-  contactedViaSms: Boolean!
-  contactedViaCall: Boolean!
-  contactedViaWhatsapp: Boolean!
-  listingMetadata: ListingMetadata!
-  id: ID!
+    resources(
+        after: String
+        first: Int
+        before: String
+        last: Int
+        where: ResourceWhereInput
+        orderBy: [ResourceOrderInput!]
+    ): ConnectionOfResourceEdge! @cost(weight: "10")
+    name: String!
+    timezone: String
+    type: LocationTypeDetails!
+    openingHours: OpeningHours!
+    deskCapacity: Int!
+    roomCapacity: Int!
+    canModify: Boolean!
+    canDelete: Boolean!
+    canViewAnalytics: Boolean!
+    physicalAddress: LocationPhysicalAddressDetails
+    customTags: [OrganizationTagDetails!]!
+    zones: [OrganizationTagDetails!]!
+    spaceTypes: [OrganizationTagDetails!]!
+    amenities: [OrganizationTagDetails!]!
+    resourceTypes: [OrganizationTagDetails!]!
+    featureImages: [CdnImageFile!]!
+    floorPlanCount: Int!
+    extraMetadata: LocationExtraMetadata
+    uniqueClaimCode: String
+    contactedViaEmail: Boolean!
+    contactedViaSms: Boolean!
+    contactedViaCall: Boolean!
+    contactedViaWhatsapp: Boolean!
+    listingMetadata: ListingMetadata!
+    restrictedInformation: [LocationRestrictedInformationDetails!]!
+    id: ID!
 }
 
 type LocationEdge {
-  node: LocationDetails!
-  cursor: String!
+    node: LocationDetails!
+    cursor: String!
 }
 
 type LocationExtraMetadata {
-  contactDetails: ContactDetails
-  areaRange: AreaRange
-  peopleCapacity: PeopleCapacity
-  website: String
-  relatedImageLinks: [String!]
-  relatedVideoLinks: [String!]
-  otherLinks: [String!]
+    contactDetails: ContactDetails
+    areaRange: AreaRange
+    peopleCapacity: PeopleCapacity
+    website: String
+    relatedImageLinks: [String!]
+    relatedVideoLinks: [String!]
+    otherLinks: [String!]
 }
 
 type LocationPayload {
-  clientMutationId: String
-  location: LocationDetails!
+    clientMutationId: String
+    location: LocationDetails!
 }
 
 type LocationPhysicalAddressDetails {
-  osmType: String
-  osmId: String
-  placeId: String
-  longitude: Float
-  latitude: Float
-  formattedAddress: String
-  multilinesFormattedAddress: String
-  addressLine1: String!
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String!
-  country: String!
-  countryCode: String
-  organization: LocationDetails!
-  id: ID!
+    osmType: String
+    osmId: String
+    placeId: String
+    longitude: Float
+    latitude: Float
+    formattedAddress: String
+    multilinesFormattedAddress: String
+    addressLine1: String!
+    addressLine2: String
+    suburb: String
+    city: String
+    province: String
+    zipcode: String!
+    country: String!
+    countryCode: String
+    organization: LocationDetails!
+    id: ID!
+}
+
+type LocationRestrictedInformationCategoryDetails {
+    category: LocationRestrictedInformationCategory!
+    name: String!
+}
+
+type LocationRestrictedInformationDetails {
+    title: String!
+    category: LocationRestrictedInformationCategory!
+    content: String!
+    active: Boolean!
+    sortOrder: Int!
+    locationId: String!
+    id: ID!
 }
 
 type LocationTypeDetails {
-  type: LocationType!
-  name: String!
+    type: LocationType!
+    name: String!
 }
 
 type OpeningHours {
-  weekOpeningHours: WeekOpeningHours!
-  closedDates: [DateTime!]!
-  datesWithVariedOpeningHours: [VariedDateOpeningHours!]!
+    weekOpeningHours: WeekOpeningHours!
+    closedDates: [DateTime!]!
+    datesWithVariedOpeningHours: [VariedDateOpeningHours!]!
 }
 
 type OpeningHoursDetails {
-  closed: Boolean!
-  openAllDay: Boolean!
-  from: String
-  until: String
+    closed: Boolean!
+    openAllDay: Boolean!
+    from: String
+    until: String
 }
 
 type OrganizationDetails @key(fields: "id") @shareable {
-  customDomain: String
-  id: ID!
+    customDomain: String
+    id: ID!
 }
 
 type OrganizationTagDetails @key(fields: "id") @shareable {
-  name: String!
-  type: OrganizationTagType
-  color: String
-  id: ID!
+    name: String!
+    type: OrganizationTagType
+    color: String
+    id: ID!
 }
 
 type PageInfo @shareable {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
 }
 
 type PeopleCapacity {
-  from: String!
-  to: String!
+    from: String!
+    to: String!
 }
 
 type ProductDetails @key(fields: "id") {
-  id: ID!
+    id: ID!
 }
 
 type ResourceAvailabilityDailySnapshot {
-  date: DateTime!
-  resourceType: String!
-  availableCount: Int!
-  unavailableCount: Int!
-  bookedCount: Int!
-  availableResourceNames: [String!]!
-  unavailableResourceNames: [String!]!
-  bookedResourceNames: [String!]!
+    date: DateTime!
+    resourceType: String!
+    availableCount: Int!
+    unavailableCount: Int!
+    bookedCount: Int!
+    availableResourceNames: [String!]!
+    unavailableResourceNames: [String!]!
+    bookedResourceNames: [String!]!
 }
 
 type ResourceDetails @key(fields: "id") @shareable {
-  name: String!
-  inactive: Boolean!
-  requireBookingApproval: Boolean!
-  color: String
-  capacity: Int!
-  customTags: [OrganizationTagDetails!]!
-  zones: [OrganizationTagDetails!]!
-  productTags: [OrganizationTagDetails!]!
-  resourceType: OrganizationTagDetails!
-  isAvailableHoursOverridden: Boolean!
-  availableHours: OpeningHours
-  id: ID!
+    name: String!
+    inactive: Boolean!
+    requireBookingApproval: Boolean!
+    color: String
+    capacity: Int!
+    customTags: [OrganizationTagDetails!]!
+    zones: [OrganizationTagDetails!]!
+    productTags: [OrganizationTagDetails!]!
+    resourceType: OrganizationTagDetails!
+    isAvailableHoursOverridden: Boolean!
+    availableHours: OpeningHours
+    id: ID!
 }
 
 type ResourceEdge {
-  node: ResourceDetails!
-  cursor: String!
+    node: ResourceDetails!
+    cursor: String!
 }
 
 type ResourcePayload {
-  clientMutationId: String
-  resource: ResourceDetails!
+    clientMutationId: String
+    resource: ResourceDetails!
 }
 
 type ResourcePositionDetails {
-  x: Int!
-  y: Int!
-  resource: ResourceDetails!
-  id: ID!
+    x: Int!
+    y: Int!
+    resource: ResourceDetails!
+    id: ID!
 }
 
 type ResourcesPayload {
-  clientMutationId: String
-  resources: [ResourceDetails!]!
+    clientMutationId: String
+    resources: [ResourceDetails!]!
 }
 
 type RoomsOccupancyPercentage {
-  date: DateTime!
-  percentage: Float!
+    date: DateTime!
+    percentage: Float!
 }
 
 type VariedDateOpeningHours {
-  date: DateTime!
-  openingHoursDetails: OpeningHoursDetails!
+    date: DateTime!
+    openingHoursDetails: OpeningHoursDetails!
 }
 
 type Version @shareable {
-  major: Int!
-  minor: Int!
-  build: Int!
-  revision: Int!
+    major: Int!
+    minor: Int!
+    build: Int!
+    revision: Int!
 }
 
 type WeekOpeningHours {
-  monday: OpeningHoursDetails!
-  tuesday: OpeningHoursDetails!
-  wednesday: OpeningHoursDetails!
-  thursday: OpeningHoursDetails!
-  friday: OpeningHoursDetails!
-  saturday: OpeningHoursDetails!
-  sunday: OpeningHoursDetails!
+    monday: OpeningHoursDetails!
+    tuesday: OpeningHoursDetails!
+    wednesday: OpeningHoursDetails!
+    thursday: OpeningHoursDetails!
+    friday: OpeningHoursDetails!
+    saturday: OpeningHoursDetails!
+    sunday: OpeningHoursDetails!
 }
 
 input ActivateResourcesInput {
-  clientMutationId: String
-  ids: [String!]!
+    clientMutationId: String
+    ids: [String!]!
 }
 
 input AddFloorPlanInput {
-  clientMutationId: String
-  id: String
-  locationId: String!
-  name: String!
-  image: CdnImageFileInput!
-  resourcePositions: [ResourcePositionInput!]
+    clientMutationId: String
+    id: String
+    locationId: String!
+    name: String!
+    image: CdnImageFileInput!
+    resourcePositions: [ResourcePositionInput!]
 }
 
 input AddLocationInput {
-  clientMutationId: String
-  id: String
-  name: String!
-  organizationId: String
-  organizationCustomDomain: String
-  timezone: String
-  type: LocationType!
-  tagIds: [String!]!
-  featureImages: [CdnImageFileInput!]
-  physicalAddress: LocationPhysicalAddressInput
-  extraMetadata: LocationExtraMetadataInput
-  weekOpeningHours: WeekOpeningHoursInput
-  listingMetadata: ListingMetadataInput
+    clientMutationId: String
+    id: String
+    name: String!
+    organizationId: String
+    organizationCustomDomain: String
+    timezone: String
+    type: LocationType!
+    tagIds: [String!]!
+    featureImages: [CdnImageFileInput!]
+    physicalAddress: LocationPhysicalAddressInput
+    extraMetadata: LocationExtraMetadataInput
+    weekOpeningHours: WeekOpeningHoursInput
+    listingMetadata: ListingMetadataInput
 }
 
 input AddLocationPhysicalAddressInput {
-  clientMutationId: String
-  id: String
-  locationId: String!
-  osmType: String
-  osmId: String
-  placeId: String
-  longitude: Float
-  latitude: Float
-  formattedAddress: String
-  addressLine1: String!
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String!
-  country: String!
-  countryCode: String
+    clientMutationId: String
+    id: String
+    locationId: String!
+    osmType: String
+    osmId: String
+    placeId: String
+    longitude: Float
+    latitude: Float
+    formattedAddress: String
+    addressLine1: String!
+    addressLine2: String
+    suburb: String
+    city: String
+    province: String
+    zipcode: String!
+    country: String!
+    countryCode: String
+}
+
+input AddLocationRestrictedInformationInput {
+    clientMutationId: String
+    locationId: String!
+    title: String!
+    category: LocationRestrictedInformationCategory!
+    content: String!
+    active: Boolean!
+    sortOrder: Int!
 }
 
 input AddResourceInput {
-  clientMutationId: String
-  id: String
-  name: String!
-  inactive: Boolean!
-  locationId: String!
-  customTagIds: [String!]!
-  zoneIds: [String!]!
-  productTagIds: [String!]!
-  requireBookingApproval: Boolean!
-  color: String
-  capacity: Int!
-  organizationResourceTypeId: String!
+    clientMutationId: String
+    id: String
+    name: String!
+    inactive: Boolean!
+    locationId: String!
+    customTagIds: [String!]!
+    zoneIds: [String!]!
+    productTagIds: [String!]!
+    requireBookingApproval: Boolean!
+    color: String
+    capacity: Int!
+    organizationResourceTypeId: String!
 }
 
 input AreaRangeInput {
-  fromInSqm: String!
-  toInSqm: String!
+    fromInSqm: String!
+    toInSqm: String!
 }
 
 input BulkAddResourceRowInput {
-  organizationResourceTypeTagId: String!
-  baseName: String
-  quantity: Int!
-  customTagIds: [String!]!
-  zoneIds: [String!]!
-  productTagIds: [String!]!
+    organizationResourceTypeTagId: String!
+    baseName: String
+    quantity: Int!
+    customTagIds: [String!]!
+    zoneIds: [String!]!
+    productTagIds: [String!]!
 }
 
 input BulkAddResourcesInput {
-  clientMutationId: String
-  locationId: String!
-  rows: [BulkAddResourceRowInput!]!
+    clientMutationId: String
+    locationId: String!
+    rows: [BulkAddResourceRowInput!]!
 }
 
 input CdnFileInput {
-  url: String!
-  height: Int
-  width: Int
+    url: String!
+    height: Int
+    width: Int
 }
 
 input CdnImageFileInput {
-  original: CdnFileInput
-  thumbnail: CdnFileInput
+    original: CdnFileInput
+    thumbnail: CdnFileInput
 }
 
 input ClaimLocationOwnershipInput {
-  clientMutationId: String
-  id: String
-  uniqueClaimCode: String!
-  organizationId: String
-  organizationCustomDomain: String
+    clientMutationId: String
+    id: String
+    uniqueClaimCode: String!
+    organizationId: String
+    organizationCustomDomain: String
 }
 
 input ContactDetailsInput {
-  contactPeople: [String!]
-  contactEmails: [String!]
-  contactPhones: [String!]
+    contactPeople: [String!]
+    contactEmails: [String!]
+    contactPhones: [String!]
 }
 
 input DeactivateResourcesInput {
-  clientMutationId: String
-  ids: [String!]!
+    clientMutationId: String
+    ids: [String!]!
 }
 
 input DeleteFloorPlanInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input DeleteLocationInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
+}
+
+input DeleteLocationRestrictedInformationInput {
+    clientMutationId: String
+    id: String!
 }
 
 input DeleteResourceInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input DeleteResourcesInput {
-  clientMutationId: String
-  ids: [String!]!
+    clientMutationId: String
+    ids: [String!]!
 }
 
 input FloorPlanOrderInput {
-  direction: OrderDirection!
-  field: FloorPlanOrderField!
+    direction: OrderDirection!
+    field: FloorPlanOrderField!
 }
 
 input FloorPlanWhereInput {
-  locationId: String!
+    locationId: String!
 }
 
 input ListingMetadataInput {
-  about: String
-  title: String
-  subTitle: String
-  includedFeatures: [String!]
+    about: String
+    title: String
+    subTitle: String
+    includedFeatures: [String!]
 }
 
 input LocationExtraMetadataInput {
-  contactDetails: ContactDetailsInput
-  areaRange: AreaRangeInput
-  peopleCapacity: PeopleCapacityInput
-  website: String
-  relatedImageLinks: [String!]
-  relatedVideoLinks: [String!]
-  otherLinks: [String!]
+    contactDetails: ContactDetailsInput
+    areaRange: AreaRangeInput
+    peopleCapacity: PeopleCapacityInput
+    website: String
+    relatedImageLinks: [String!]
+    relatedVideoLinks: [String!]
+    otherLinks: [String!]
 }
 
 input LocationOrderInput {
-  direction: OrderDirection!
-  field: LocationOrderField!
+    direction: OrderDirection!
+    field: LocationOrderField!
 }
 
 input LocationPhysicalAddressInput {
-  osmType: String
-  osmId: String
-  placeId: String
-  longitude: Float
-  latitude: Float
-  formattedAddress: String
-  addressLine1: String!
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String!
-  country: String!
-  countryCode: String
+    osmType: String
+    osmId: String
+    placeId: String
+    longitude: Float
+    latitude: Float
+    formattedAddress: String
+    addressLine1: String!
+    addressLine2: String
+    suburb: String
+    city: String
+    province: String
+    zipcode: String!
+    country: String!
+    countryCode: String
 }
 
 input LocationWhereInput {
-  organizationCustomDomain: String
-  locationIds: [String!]
-  nameContains: String
-  customTagIds: [String!]
-  zoneIds: [String!]
-  types: [LocationType!]
-  searchBoundaries: PolygonInput
-  notContactedYet: Boolean
-  resourceType: OrganizationTagType
-  productIds: [String!]
+    organizationCustomDomain: String
+    locationIds: [String!]
+    nameContains: String
+    customTagIds: [String!]
+    zoneIds: [String!]
+    types: [LocationType!]
+    searchBoundaries: PolygonInput
+    notContactedYet: Boolean
+    resourceType: OrganizationTagType
+    productIds: [String!]
 }
 
 input MarketplaceLocationWhereInput {
-  organizationId: String
-  organizationCustomDomain: String
-  locationIds: [String!]
-  nameContains: String
-  customTagIds: [String!]
-  zoneIds: [String!]
-  searchBoundaries: PolygonInput
-  resourceType: OrganizationTagType
-  productIds: [String!]
+    organizationId: String
+    organizationCustomDomain: String
+    locationIds: [String!]
+    nameContains: String
+    customTagIds: [String!]
+    zoneIds: [String!]
+    searchBoundaries: PolygonInput
+    resourceType: OrganizationTagType
+    productIds: [String!]
 }
 
 input OpeningHoursDetailsInput {
-  closed: Boolean!
-  openAllDay: Boolean!
-  from: String
-  until: String
+    closed: Boolean!
+    openAllDay: Boolean!
+    from: String
+    until: String
 }
 
 input PeopleCapacityInput {
-  from: String!
-  to: String!
+    from: String!
+    to: String!
 }
 
 input PointCoordinatesInput {
-  longitude: Float!
-  latitude: Float!
+    longitude: Float!
+    latitude: Float!
 }
 
 input PolygonInput {
-  northEast: PointCoordinatesInput!
-  southWest: PointCoordinatesInput!
+    northEast: PointCoordinatesInput!
+    southWest: PointCoordinatesInput!
 }
 
 input ResourceOrderInput {
-  direction: OrderDirection!
-  field: ResourceOrderField!
+    direction: OrderDirection!
+    field: ResourceOrderField!
 }
 
 input ResourcePositionInput {
-  resourceId: String!
-  x: Int!
-  y: Int!
+    resourceId: String!
+    x: Int!
+    y: Int!
 }
 
 input ResourceWhereInput {
-  nameContains: String
-  customTagIds: [String!]
-  zoneIds: [String!]
-  productTagIds: [String!]
-  floorPlanId: String
+    nameContains: String
+    customTagIds: [String!]
+    zoneIds: [String!]
+    productTagIds: [String!]
+    floorPlanId: String
 }
 
 input ToggleContactedViaCallInput {
-  clientMutationId: String
-  locationId: String!
+    clientMutationId: String
+    locationId: String!
 }
 
 input ToggleContactedViaEmailInput {
-  clientMutationId: String
-  locationId: String!
+    clientMutationId: String
+    locationId: String!
 }
 
 input ToggleContactedViaSmsInput {
-  clientMutationId: String
-  locationId: String!
+    clientMutationId: String
+    locationId: String!
 }
 
 input ToggleContactedViaWhatsappInput {
-  clientMutationId: String
-  locationId: String!
+    clientMutationId: String
+    locationId: String!
 }
 
 input UpdateFloorPlanInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  image: CdnImageFileInput!
-  resourcePositions: [ResourcePositionInput!]
+    clientMutationId: String
+    id: String!
+    name: String!
+    image: CdnImageFileInput!
+    resourcePositions: [ResourcePositionInput!]
 }
 
 input UpdateLocationInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  timezone: String
-  type: LocationType!
-  tagIds: [String!]!
-  featureImages: [CdnImageFileInput!]
-  extraMetadata: LocationExtraMetadataInput
-  listingMetadata: ListingMetadataInput
+    clientMutationId: String
+    id: String!
+    name: String!
+    timezone: String
+    type: LocationType!
+    tagIds: [String!]!
+    featureImages: [CdnImageFileInput!]
+    extraMetadata: LocationExtraMetadataInput
+    listingMetadata: ListingMetadataInput
 }
 
 input UpdateLocationOpeningHoursInput {
-  clientMutationId: String
-  id: String!
-  weekOpeningHours: WeekOpeningHoursInput!
+    clientMutationId: String
+    id: String!
+    weekOpeningHours: WeekOpeningHoursInput!
 }
 
 input UpdateLocationPhysicalAddressInput {
-  clientMutationId: String
-  id: String!
-  osmType: String
-  osmId: String
-  placeId: String
-  longitude: Float
-  latitude: Float
-  formattedAddress: String
-  addressLine1: String!
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String!
-  country: String!
-  countryCode: String
+    clientMutationId: String
+    id: String!
+    osmType: String
+    osmId: String
+    placeId: String
+    longitude: Float
+    latitude: Float
+    formattedAddress: String
+    addressLine1: String!
+    addressLine2: String
+    suburb: String
+    city: String
+    province: String
+    zipcode: String!
+    country: String!
+    countryCode: String
 }
 
 input UpdateLocationResourceAvailableHoursInput {
-  clientMutationId: String
-  id: String!
-  overrideAvailableHours: Boolean!
-  availableHours: WeekOpeningHoursInput
+    clientMutationId: String
+    id: String!
+    overrideAvailableHours: Boolean!
+    availableHours: WeekOpeningHoursInput
+}
+
+input UpdateLocationRestrictedInformationInput {
+    clientMutationId: String
+    id: String!
+    title: String!
+    category: LocationRestrictedInformationCategory!
+    content: String!
+    active: Boolean!
+    sortOrder: Int!
 }
 
 input UpdateResourceInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  inactive: Boolean!
-  requireBookingApproval: Boolean!
-  color: String
-  capacity: Int!
-  customTagIds: [String!]!
-  zoneIds: [String!]!
-  productTagIds: [String!]!
-  organizationResourceTypeId: String!
+    clientMutationId: String
+    id: String!
+    name: String!
+    inactive: Boolean!
+    requireBookingApproval: Boolean!
+    color: String
+    capacity: Int!
+    customTagIds: [String!]!
+    zoneIds: [String!]!
+    productTagIds: [String!]!
+    organizationResourceTypeId: String!
 }
 
 input UpdateResourcePositionsInput {
-  clientMutationId: String
-  floorPlanId: String!
-  resourcePositions: [ResourcePositionInput!]!
+    clientMutationId: String
+    floorPlanId: String!
+    resourcePositions: [ResourcePositionInput!]!
 }
 
 input WeekOpeningHoursInput {
-  monday: OpeningHoursDetailsInput!
-  tuesday: OpeningHoursDetailsInput!
-  wednesday: OpeningHoursDetailsInput!
-  thursday: OpeningHoursDetailsInput!
-  friday: OpeningHoursDetailsInput!
-  saturday: OpeningHoursDetailsInput!
-  sunday: OpeningHoursDetailsInput!
+    monday: OpeningHoursDetailsInput!
+    tuesday: OpeningHoursDetailsInput!
+    wednesday: OpeningHoursDetailsInput!
+    thursday: OpeningHoursDetailsInput!
+    friday: OpeningHoursDetailsInput!
+    saturday: OpeningHoursDetailsInput!
+    sunday: OpeningHoursDetailsInput!
 }
 
 enum FloorPlanOrderField {
-  NAME
+    NAME
 }
 
 enum LocationOrderField {
-  NAME
-  TIMEZONE
-  TYPE
+    NAME
+    TIMEZONE
+    TYPE
+}
+
+enum LocationRestrictedInformationCategory {
+    OTHER
+    WIFI
+    ACCESS
+    PARKING
+    CHECK_IN
+    CHECK_OUT
+    AFTER_HOURS
+    DELIVERIES
+    GUESTS
+    EQUIPMENT
+    KITCHEN
+    MEETING_ROOMS
+    NOISE
+    MAINTENANCE
+    ACCESSIBILITY
+    STORAGE
+    CLEANING
+    WASTE
+    SECURITY
+    EVACUATION
+    PETS
+    SMOKING
+    HOUSE_RULES
 }
 
 enum LocationType {
-  PRIVATE
-  MARKETPLACE
+    PRIVATE
+    MARKETPLACE
 }
 
 enum OrderDirection {
-  ASCENDING
-  DESCENDING
+    ASCENDING
+    DESCENDING
 }
 
 enum OrganizationTagType {
-  CUSTOM
-  ZONE
-  PRODUCT
-  RESOURCE_DESK
-  RESOURCE_ROOM
-  RESOURCE_PARKING
-  RESOURCE_OTHERS
-  LOCATION_SPACE_TYPE_CAR_PARK_SPACE
-  LOCATION_SPACE_TYPE_EVENT_SPACE
-  LOCATION_SPACE_TYPE_MEETING_SPACE
-  LOCATION_SPACE_TYPE_OFFICE_SPACE
-  LOCATION_SPACE_TYPE_RETAIL_SPACE
-  LOCATION_SPACE_TYPE_STORAGE_SPACE
-  LOCATION_SPACE_TYPE_STUDIO_SPACE
-  LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
-  LOCATION_SPACE_TYPE_SHOOT_LOCATION
-  LOCATION_SPACE_TYPE_OTHERS
-  AMENITY_HIGH_SPEED_WIFI
-  AMENITY_DEDICATED_VLAN
-  AMENITY_WIRED_ETHERNET
-  AMENITY_GUEST_NETWORK
-  AMENITY_VPN_SUPPORT
-  AMENITY_BACKUP_INTERNET
-  AMENITY_NETWORK_PRINTING
-  AMENITY_SECURE_SSID
-  AMENITY_PUBLIC_IP_OPTION
-  AMENITY_STANDARD_POWER_OUTLETS
-  AMENITY_USB_A_PORTS
-  AMENITY_USB_C_PORTS
-  AMENITY_WIRELESS_CHARGING
-  AMENITY_POWER_STRIPS
-  AMENITY_UPS_BACKED_POWER
-  AMENITY_MONITOR_DOCKING_STATION
-  AMENITY_LAPTOP_STAND_AVAILABILITY
-  AMENITY_ADJUSTABLE_DESK
-  AMENITY_STANDING_DESK
-  AMENITY_FIXED_DESK
-  AMENITY_ERGONOMIC_CHAIR
-  AMENITY_EXECUTIVE_CHAIR
-  AMENITY_DUAL_MONITOR_SETUP
-  AMENITY_PRIVACY_DESK_DIVIDER
-  AMENITY_LOCKABLE_PEDESTAL
-  AMENITY_WHITEBOARD_AT_DESK
-  AMENITY_TASK_LAMP
-  AMENITY_WHITEBOARD
-  AMENITY_GLASS_BOARD
-  AMENITY_FLIP_CHART
-  AMENITY_MARKERS_INCLUDED
-  AMENITY_PROJECTOR
-  AMENITY_LARGE_DISPLAY
-  AMENITY_HDMI_USB_C_CASTING
-  AMENITY_VIDEO_CONFERENCING_KIT
-  AMENITY_SPEAKERPHONE
-  AMENITY_ROOM_CAMERA
-  AMENITY_CONFERENCE_TABLE
-  AMENITY_BREAKOUT_AREA
-  AMENITY_ACOUSTIC_TREATMENT
-  AMENITY_SOUNDPROOF_ROOM
-  AMENITY_PHONE_BOOTH
-  AMENITY_QUIET_ZONE
-  AMENITY_FOCUS_ROOM
-  AMENITY_CONFIDENTIAL_MEETING_ROOM
-  AMENITY_NOISE_CANCELLING_PANELS
-  AMENITY_AIR_CONDITIONING
-  AMENITY_HEATING
-  AMENITY_FRESH_AIR_VENTILATION
-  AMENITY_OPERABLE_WINDOWS
-  AMENITY_NATURAL_LIGHT
-  AMENITY_BLACKOUT_BLINDS
-  AMENITY_AMBIENT_LIGHTING_CONTROLS
-  AMENITY_TEMPERATURE_CONTROLS
-  AMENITY_AIR_PURIFIER
-  AMENITY_HUMIDITY_CONTROL
-  AMENITY_COFFEE_MACHINE
-  AMENITY_TEA_STATION
-  AMENITY_FILTERED_WATER
-  AMENITY_SPARKLING_WATER
-  AMENITY_SNACK_BAR
-  AMENITY_KITCHENETTE
-  AMENITY_FULL_KITCHEN
-  AMENITY_REFRIGERATOR
-  AMENITY_MICROWAVE
-  AMENITY_DISHWASHER
-  AMENITY_CATERING_SUPPORT
-  AMENITY_WHEELCHAIR_ACCESSIBLE_ENTRANCE
-  AMENITY_ELEVATOR_ACCESS
-  AMENITY_ACCESSIBLE_RESTROOM
-  AMENITY_ACCESSIBLE_DESK_HEIGHT
-  AMENITY_BRAILLE_SIGNAGE
-  AMENITY_HEARING_LOOP
-  AMENITY_STEP_FREE_PATH
-  AMENITY_WIDE_DOORWAYS
-  AMENITY_GENDER_NEUTRAL_RESTROOM
-  AMENITY_PRAYER_ROOM
-  AMENITY_ACCESS247
-  AMENITY_BUSINESS_HOURS_ACCESS
-  AMENITY_KEYCARD_ENTRY
-  AMENITY_BIOMETRIC_ENTRY
-  AMENITY_RECEPTION_DESK
-  AMENITY_VISITOR_MANAGEMENT
-  AMENITY_CCTV
-  AMENITY_ON_SITE_SECURITY
-  AMENITY_LOCKABLE_ROOM
-  AMENITY_LOCKER_STORAGE
-  AMENITY_ALARM_SYSTEM
-  AMENITY_RESTROOMS_NEARBY
-  AMENITY_SHOWER_FACILITIES
-  AMENITY_END_OF_TRIP_FACILITIES
-  AMENITY_BIKE_STORAGE
-  AMENITY_LOADING_DOCK_ACCESS
-  AMENITY_FREIGHT_ELEVATOR
-  AMENITY_MAIL_HANDLING
-  AMENITY_PACKAGE_RECEIVING
-  AMENITY_STORAGE_ROOM
-  AMENITY_WASTE_RECYCLING_STATION
-  AMENITY_ON_SITE_PARKING
-  AMENITY_RESERVED_PARKING
-  AMENITY_EV_CHARGING
-  AMENITY_STREET_PARKING_NEARBY
-  AMENITY_PUBLIC_TRANSIT_NEARBY
-  AMENITY_TAXI_RIDESHARE_ZONE
-  AMENITY_BICYCLE_FRIENDLY_ACCESS
-  AMENITY_GYM_ACCESS
-  AMENITY_WELLNESS_ROOM
-  AMENITY_NAP_POD_ROOM
-  AMENITY_OUTDOOR_TERRACE
-  AMENITY_GARDEN_PATIO
-  AMENITY_GAME_LOUNGE_AREA
-  AMENITY_STANDING_MEETING_ZONE
-  AMENITY_MEDITATION_ROOM
-  AMENITY_CHILDCARE_NEARBY
-  AMENITY_FAMILY_ROOM
-  AMENITY_LACTATION_ROOM
-  AMENITY_PET_FRIENDLY
-  AMENITY_SERVICE_ANIMAL_READY
-  AMENITY_IT_SUPPORT_ON_SITE
-  AMENITY_FRONT_DESK_SUPPORT
-  AMENITY_COMMUNITY_MANAGER
-  AMENITY_CLEANING_SERVICE
-  AMENITY_AFTER_HOURS_SUPPORT
-  AMENITY_FACILITIES_HELPDESK
-  AMENITY_ON_DEMAND_SETUP
-  AMENITY_HOURLY_BOOKABLE
-  AMENITY_DAILY_PASS
-  AMENITY_MONTHLY_MEMBERSHIP
-  AMENITY_MINIMUM_BOOKING_DURATION
-  AMENITY_MAX_CAPACITY
-  AMENITY_CANCELLATION_FLEXIBILITY
-  AMENITY_REFUNDABLE_BOOKING
-  AMENITY_DEPOSIT_REQUIRED
-  AMENITY_LEAD_TIME_REQUIREMENT
-  AMENITY_CHECK_IN_REQUIRED
-  AMENITY_HOST_APPROVAL_REQUIRED
-  AMENITY_DESK_PHONE
-  AMENITY_KEYBOARD_MOUSE_INCLUDED
-  AMENITY_MONITOR_ARM
-  AMENITY_BOARDROOM_LAYOUT
-  AMENITY_CLASSROOM_LAYOUT
-  AMENITY_HYBRID_READY
-  AMENITY_RECORDING_ENABLED
-  AMENITY_STAGE
-  AMENITY_PA_SYSTEM
-  AMENITY_LIGHTING_RIG
-  AMENITY_MOVABLE_SEATING
-  AMENITY_EVENT_STAFF_SUPPORT
-  AMENITY_SOUND_BOOTH
-  AMENITY_GREEN_SCREEN
-  AMENITY_SPECIALIZED_TOOLS_EQUIPMENT
-  AMENITY_SAFETY_COMPLIANCE_KIT
+    CUSTOM
+    ZONE
+    PRODUCT
+    RESOURCE_DESK
+    RESOURCE_ROOM
+    RESOURCE_PARKING
+    RESOURCE_OTHERS
+    LOCATION_SPACE_TYPE_CAR_PARK_SPACE
+    LOCATION_SPACE_TYPE_EVENT_SPACE
+    LOCATION_SPACE_TYPE_MEETING_SPACE
+    LOCATION_SPACE_TYPE_OFFICE_SPACE
+    LOCATION_SPACE_TYPE_RETAIL_SPACE
+    LOCATION_SPACE_TYPE_STORAGE_SPACE
+    LOCATION_SPACE_TYPE_STUDIO_SPACE
+    LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
+    LOCATION_SPACE_TYPE_SHOOT_LOCATION
+    LOCATION_SPACE_TYPE_OTHERS
+    AMENITY_HIGH_SPEED_WIFI
+    AMENITY_DEDICATED_VLAN
+    AMENITY_WIRED_ETHERNET
+    AMENITY_GUEST_NETWORK
+    AMENITY_VPN_SUPPORT
+    AMENITY_BACKUP_INTERNET
+    AMENITY_NETWORK_PRINTING
+    AMENITY_SECURE_SSID
+    AMENITY_PUBLIC_IP_OPTION
+    AMENITY_STANDARD_POWER_OUTLETS
+    AMENITY_USB_A_PORTS
+    AMENITY_USB_C_PORTS
+    AMENITY_WIRELESS_CHARGING
+    AMENITY_POWER_STRIPS
+    AMENITY_UPS_BACKED_POWER
+    AMENITY_MONITOR_DOCKING_STATION
+    AMENITY_LAPTOP_STAND_AVAILABILITY
+    AMENITY_ADJUSTABLE_DESK
+    AMENITY_STANDING_DESK
+    AMENITY_FIXED_DESK
+    AMENITY_ERGONOMIC_CHAIR
+    AMENITY_EXECUTIVE_CHAIR
+    AMENITY_DUAL_MONITOR_SETUP
+    AMENITY_PRIVACY_DESK_DIVIDER
+    AMENITY_LOCKABLE_PEDESTAL
+    AMENITY_WHITEBOARD_AT_DESK
+    AMENITY_TASK_LAMP
+    AMENITY_WHITEBOARD
+    AMENITY_GLASS_BOARD
+    AMENITY_FLIP_CHART
+    AMENITY_MARKERS_INCLUDED
+    AMENITY_PROJECTOR
+    AMENITY_LARGE_DISPLAY
+    AMENITY_HDMI_USB_C_CASTING
+    AMENITY_VIDEO_CONFERENCING_KIT
+    AMENITY_SPEAKERPHONE
+    AMENITY_ROOM_CAMERA
+    AMENITY_CONFERENCE_TABLE
+    AMENITY_BREAKOUT_AREA
+    AMENITY_ACOUSTIC_TREATMENT
+    AMENITY_SOUNDPROOF_ROOM
+    AMENITY_PHONE_BOOTH
+    AMENITY_QUIET_ZONE
+    AMENITY_FOCUS_ROOM
+    AMENITY_CONFIDENTIAL_MEETING_ROOM
+    AMENITY_NOISE_CANCELLING_PANELS
+    AMENITY_AIR_CONDITIONING
+    AMENITY_HEATING
+    AMENITY_FRESH_AIR_VENTILATION
+    AMENITY_OPERABLE_WINDOWS
+    AMENITY_NATURAL_LIGHT
+    AMENITY_BLACKOUT_BLINDS
+    AMENITY_AMBIENT_LIGHTING_CONTROLS
+    AMENITY_TEMPERATURE_CONTROLS
+    AMENITY_AIR_PURIFIER
+    AMENITY_HUMIDITY_CONTROL
+    AMENITY_COFFEE_MACHINE
+    AMENITY_TEA_STATION
+    AMENITY_FILTERED_WATER
+    AMENITY_SPARKLING_WATER
+    AMENITY_SNACK_BAR
+    AMENITY_KITCHENETTE
+    AMENITY_FULL_KITCHEN
+    AMENITY_REFRIGERATOR
+    AMENITY_MICROWAVE
+    AMENITY_DISHWASHER
+    AMENITY_CATERING_SUPPORT
+    AMENITY_WHEELCHAIR_ACCESSIBLE_ENTRANCE
+    AMENITY_ELEVATOR_ACCESS
+    AMENITY_ACCESSIBLE_RESTROOM
+    AMENITY_ACCESSIBLE_DESK_HEIGHT
+    AMENITY_BRAILLE_SIGNAGE
+    AMENITY_HEARING_LOOP
+    AMENITY_STEP_FREE_PATH
+    AMENITY_WIDE_DOORWAYS
+    AMENITY_GENDER_NEUTRAL_RESTROOM
+    AMENITY_PRAYER_ROOM
+    AMENITY_ACCESS247
+    AMENITY_BUSINESS_HOURS_ACCESS
+    AMENITY_KEYCARD_ENTRY
+    AMENITY_BIOMETRIC_ENTRY
+    AMENITY_RECEPTION_DESK
+    AMENITY_VISITOR_MANAGEMENT
+    AMENITY_CCTV
+    AMENITY_ON_SITE_SECURITY
+    AMENITY_LOCKABLE_ROOM
+    AMENITY_LOCKER_STORAGE
+    AMENITY_ALARM_SYSTEM
+    AMENITY_RESTROOMS_NEARBY
+    AMENITY_SHOWER_FACILITIES
+    AMENITY_END_OF_TRIP_FACILITIES
+    AMENITY_BIKE_STORAGE
+    AMENITY_LOADING_DOCK_ACCESS
+    AMENITY_FREIGHT_ELEVATOR
+    AMENITY_MAIL_HANDLING
+    AMENITY_PACKAGE_RECEIVING
+    AMENITY_STORAGE_ROOM
+    AMENITY_WASTE_RECYCLING_STATION
+    AMENITY_ON_SITE_PARKING
+    AMENITY_RESERVED_PARKING
+    AMENITY_EV_CHARGING
+    AMENITY_STREET_PARKING_NEARBY
+    AMENITY_PUBLIC_TRANSIT_NEARBY
+    AMENITY_TAXI_RIDESHARE_ZONE
+    AMENITY_BICYCLE_FRIENDLY_ACCESS
+    AMENITY_GYM_ACCESS
+    AMENITY_WELLNESS_ROOM
+    AMENITY_NAP_POD_ROOM
+    AMENITY_OUTDOOR_TERRACE
+    AMENITY_GARDEN_PATIO
+    AMENITY_GAME_LOUNGE_AREA
+    AMENITY_STANDING_MEETING_ZONE
+    AMENITY_MEDITATION_ROOM
+    AMENITY_CHILDCARE_NEARBY
+    AMENITY_FAMILY_ROOM
+    AMENITY_LACTATION_ROOM
+    AMENITY_PET_FRIENDLY
+    AMENITY_SERVICE_ANIMAL_READY
+    AMENITY_IT_SUPPORT_ON_SITE
+    AMENITY_FRONT_DESK_SUPPORT
+    AMENITY_COMMUNITY_MANAGER
+    AMENITY_CLEANING_SERVICE
+    AMENITY_AFTER_HOURS_SUPPORT
+    AMENITY_FACILITIES_HELPDESK
+    AMENITY_ON_DEMAND_SETUP
+    AMENITY_HOURLY_BOOKABLE
+    AMENITY_DAILY_PASS
+    AMENITY_MONTHLY_MEMBERSHIP
+    AMENITY_MINIMUM_BOOKING_DURATION
+    AMENITY_MAX_CAPACITY
+    AMENITY_CANCELLATION_FLEXIBILITY
+    AMENITY_REFUNDABLE_BOOKING
+    AMENITY_DEPOSIT_REQUIRED
+    AMENITY_LEAD_TIME_REQUIREMENT
+    AMENITY_CHECK_IN_REQUIRED
+    AMENITY_HOST_APPROVAL_REQUIRED
+    AMENITY_DESK_PHONE
+    AMENITY_KEYBOARD_MOUSE_INCLUDED
+    AMENITY_MONITOR_ARM
+    AMENITY_BOARDROOM_LAYOUT
+    AMENITY_CLASSROOM_LAYOUT
+    AMENITY_HYBRID_READY
+    AMENITY_RECORDING_ENABLED
+    AMENITY_STAGE
+    AMENITY_PA_SYSTEM
+    AMENITY_LIGHTING_RIG
+    AMENITY_MOVABLE_SEATING
+    AMENITY_EVENT_STAFF_SUPPORT
+    AMENITY_SOUND_BOOTH
+    AMENITY_GREEN_SCREEN
+    AMENITY_SPECIALIZED_TOOLS_EQUIPMENT
+    AMENITY_SAFETY_COMPLIANCE_KIT
 }
 
 enum ResourceOrderField {
-  NAME
+    NAME
 }
 
 enum ScalarSerializationType {
-  STRING
-  BOOLEAN
-  INT
-  FLOAT
-  OBJECT
-  LIST
+    STRING
+    BOOLEAN
+    INT
+    FLOAT
+    OBJECT
+    LIST
 }
 
 "The `DateTime` scalar type represents a date and time with time zone offset information."
 scalar DateTime
-  @serializeAs(
+@serializeAs(
     type: STRING
     pattern: "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,9})?(?:[Zz]|[+-]\\d{2}:\\d{2})$"
-  )
-  @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+)
+@specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
 
 scalar FieldSelectionSet
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost(
-  "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
-  weight: String!
+    "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
+    weight: String!
 ) on
-  | SCALAR
-  | OBJECT
-  | FIELD_DEFINITION
-  | ARGUMENT_DEFINITION
-  | ENUM
-  | INPUT_FIELD_DEFINITION
+    | SCALAR
+    | OBJECT
+    | FIELD_DEFINITION
+    | ARGUMENT_DEFINITION
+    | ENUM
+    | INPUT_FIELD_DEFINITION
 
 directive @internal on OBJECT | FIELD_DEFINITION
 
@@ -975,8 +1052,8 @@ which identifies how to uniquely reference an instance of
 an entity across different source schemas.
 """
 directive @key("The field selection set syntax." fields: FieldSelectionSet!) on
-  | OBJECT
-  | INTERFACE
+    | OBJECT
+    | INTERFACE
 
 """
 The @lookup directive is used within a source schema to specify output fields
@@ -986,10 +1063,10 @@ a stable key.
 directive @lookup on FIELD_DEFINITION
 
 directive @serializeAs(
-  "The primitive type a scalar is serialized to."
-  type: [ScalarSerializationType!]!
-  "The ECMA-262 regex pattern that the serialized scalar value conforms to."
-  pattern: String
+    "The primitive type a scalar is serialized to."
+    type: [ScalarSerializationType!]!
+    "The ECMA-262 regex pattern that the serialized scalar value conforms to."
+    pattern: String
 ) on SCALAR
 
 directive @shareable repeatable on OBJECT | FIELD_DEFINITION

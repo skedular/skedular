@@ -36,6 +36,9 @@ public static class Constants
     public const int MaxOrganizationIndustrySubCategoryNameLength = 100;
 
     public const int MaxLocationNameLength = 2000;
+    public const int MaxLocationRestrictedInformationTitleLength = 200;
+    public const int MaxLocationRestrictedInformationCategoryLength = 50;
+    public const int MaxLocationRestrictedInformationContentLength = 100000;
     public const int MaxResourceNameLength = 200;
     public const int MaxResourceAvailabilityClassificationLength = 32;
 

@@ -1,9 +1,7 @@
-import { BodyIconTypography, CaptionIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
 import type { pageOrganizationRefunds_rootQuery } from '@/queries/__generated__/pageOrganizationRefunds_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Alert from '@mui/material/Alert';
@@ -12,6 +10,8 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
+import { useKnownParams } from '@skedular/shared';
+import { BodyIconTypography, CaptionIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -102,7 +102,7 @@ const RootPage = ({ queryReference }: Props) => {
   if (!rootData.organizationBookingPermissions?.canModifyPaymentMethod) {
     return (
       <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-        <Alert severity="warning">You do not have permission to manage refunds for this organisation.</Alert>
+        <Alert severity="warning">You do not have permission to manage refunds for this organization.</Alert>
       </RootShell>
     );
   }

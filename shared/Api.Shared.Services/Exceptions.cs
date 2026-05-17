@@ -2,17 +2,17 @@ namespace Api.Shared.Services;
 
 public class CustomerNotFound() : Exception("We couldn't find that customer.");
 
-public class OrganizationNotFound() : Exception("We couldn't find that organisation.");
+public class OrganizationNotFound() : Exception("We couldn't find that organization.");
 
-public class OrganizationBillingDetailsNotFound() : Exception("We couldn't find the billing details for this organisation.");
+public class OrganizationBillingDetailsNotFound() : Exception("We couldn't find the billing details for this organization.");
 
 public class CustomerBillingDetailsNotFound() : Exception("We couldn't find the billing details for this customer.");
 
-public class OrganizationSsoIsNotYetSetup() : Exception("Single sign-on has not been set up for this organisation yet.");
+public class OrganizationSsoIsNotYetSetup() : Exception("Single sign-on has not been set up for this organization yet.");
 
-public class OrganizationMemberNotFound() : Exception("We couldn't find that organisation member.");
+public class OrganizationMemberNotFound() : Exception("We couldn't find that organization member.");
 
-public class OrganizationJoinInvitationNotFound() : Exception("We couldn't find that organisation invitation.");
+public class OrganizationJoinInvitationNotFound() : Exception("We couldn't find that organization invitation.");
 
 public class LocationNotFound() : Exception("We couldn't find that location.");
 
@@ -34,7 +34,7 @@ public class ResourceTypeRequired() : Exception("Please choose a resource type."
 
 public class OnlySingleResourceTypeAllowed() : Exception("Please choose only one resource type.");
 
-public class OrganizationTermsOfUseAgreementMissing() : Exception("You need to accept the organisation's terms before continuing.");
+public class OrganizationTermsOfUseAgreementMissing() : Exception("You need to accept the organization's terms before continuing.");
 
 public class ActiveTermsOfUseNotFoundException() : InvalidOperationException("No active terms of use record was found.");
 
@@ -59,16 +59,16 @@ public class SlackWorkspaceNotFound() : Exception("We couldn't find that Slack w
 
 public class SlackWorkspaceMemberTypeNotSupported() : Exception("This Slack member type isn't supported.");
 
-public class OrganizationTagNotFound() : Exception("We couldn't find that organisation tag.");
+public class OrganizationTagNotFound() : Exception("We couldn't find that organization tag.");
 
 public class CustomTagWithSameNameExist() : Exception("A tag with this name already exists.");
 
 public class ZoneWithSameNameExist() : Exception("A zone with this name already exists.");
 
-public class OrganizationTagWithSameNameExist() : Exception("An organisation tag with this name already exists.");
+public class OrganizationTagWithSameNameExist() : Exception("An organization tag with this name already exists.");
 
 public class TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization()
-    : Exception("The team's main location must belong to the same organisation as the team.");
+    : Exception("The team's main location must belong to the same organization as the team.");
 
 public class ProductNotFound() : Exception("We couldn't find that product.");
 
@@ -79,13 +79,13 @@ public class ProductVersionNotFound() : Exception("We couldn't find that product
 public class OrganizationStripeConnectAccountNotFound() : Exception("We couldn't find that Stripe Connect account.");
 
 public class OrganizationStripeConnectAccountRefreshCodeNotFound()
-    : Exception("We couldn't find the Stripe Connect refresh code for this organisation.");
+    : Exception("We couldn't find the Stripe Connect refresh code for this organization.");
 
-public class OrganizationStripeCustomerRelationshipIsNotSetYet() : Exception("This organisation's Stripe customer account has not been set up yet.");
+public class OrganizationStripeCustomerRelationshipIsNotSetYet() : Exception("This organization's Stripe customer account has not been set up yet.");
 
 public class InvalidSsoConfiguration() : Exception("The single sign-on setup is incomplete or invalid.");
 
-public class OrganizationPaymentMethodNotFound() : Exception("We couldn't find that organisation payment method.");
+public class OrganizationPaymentMethodNotFound() : Exception("We couldn't find that organization payment method.");
 
 public class ResourceAndFloorPlanLocationMismatch() : Exception("The resource and floor plan must belong to the same location.");
 
@@ -112,7 +112,7 @@ public class MarketplaceBookingSubscriptionAutoRenewalNotSupported()
 public class ProductPricingBillingModeRequired()
     : Exception("Please choose a billing option for this pricing plan.");
 
-public class OrganizationPhysicalAddressNotFound() : Exception("We couldn't find this organisation's address.");
+public class OrganizationPhysicalAddressNotFound() : Exception("We couldn't find this organization's address.");
 
 public class LocationPhysicalAddressNotFound() : Exception("We couldn't find this location's address.");
 
@@ -131,7 +131,7 @@ public class MarketplaceBookingSubscriptionNotFound() : Exception("We couldn't f
 
 public class MarketplaceBookingSubscriptionCannotBeUpdated() : Exception("This subscription can't be updated.");
 
-public class ProductOrganizationDidNotMatch() : Exception("This product does not belong to this organisation.");
+public class ProductOrganizationDidNotMatch() : Exception("This product does not belong to this organization.");
 
 public class ProductPricingCancellationPolicyInvalid() : Exception("The cancellation policy for this pricing option is incomplete or invalid.");
 
@@ -171,7 +171,7 @@ public class ProductPricingMaxDurationMustNotBeLessThanMinDuration()
     : Exception("Maximum booking length can't be shorter than the minimum booking length.");
 
 public class OrganizationXeroConnectionUnauthorizedException()
-    : UnauthorizedAccessException("You don't have permission to change this organisation's Xero connection.");
+    : UnauthorizedAccessException("You don't have permission to change this organization's Xero connection.");
 
 public class InvalidXeroAuthorizeStateException() : InvalidOperationException("The Xero sign-in session is invalid. Please try connecting again.");
 
@@ -213,3 +213,5 @@ public class OrganizationLookupRequiresIdsOrCustomDomainsException()
     : InvalidOperationException("Please provide either IDs or custom domains.");
 
 public class InvoiceDueInDaysMustBeBetween1And999() : ArgumentException("Invoice due days must be between 1 and 999.");
+
+public class LocationRestrictedInformationNotFound : Exception;

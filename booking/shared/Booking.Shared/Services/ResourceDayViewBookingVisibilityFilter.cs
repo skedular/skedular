@@ -48,8 +48,8 @@ public class ResourceDayViewBookingVisibilityFilter : IResourceDayViewBookingVis
         }
 
         return userRoles.Any(item =>
-            string.Equals(item, AdminRole, StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(item, OwnerRole, StringComparison.OrdinalIgnoreCase));
+            string.Equals(item, AdminRole, StringComparison.InvariantCultureIgnoreCase) ||
+            string.Equals(item, OwnerRole, StringComparison.InvariantCultureIgnoreCase));
     }
 
     private static BookingWindow Redact(BookingWindow window) =>

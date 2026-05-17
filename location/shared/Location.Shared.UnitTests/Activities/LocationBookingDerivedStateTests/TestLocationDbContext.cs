@@ -15,7 +15,7 @@ internal sealed class TestLocationDbContext(
     CustomDbContextOptions<LocationDbContext> customDbContextOptions)
     : LocationDbContext(options, customDbContextOptions)
 {
-    private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions s_serializerOptions = new(JsonSerializerDefaults.Web);
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -25,7 +25,7 @@ internal sealed class TestLocationDbContext(
         {
             foreach (var property in entityType.GetProperties().ToList())
             {
-                if (!string.Equals(property.GetColumnType(), "jsonb", StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(property.GetColumnType(), "jsonb", StringComparison.InvariantCultureIgnoreCase))
                 {
                     continue;
                 }
@@ -39,6 +39,6 @@ internal sealed class TestLocationDbContext(
     }
 
     private sealed class JsonStringConverter<T>() : ValueConverter<T, string>(
-        value => JsonSerializer.Serialize(value, SerializerOptions),
-        value => JsonSerializer.Deserialize<T>(value, SerializerOptions)!);
+        value => JsonSerializer.Serialize(value, s_serializerOptions),
+        value => JsonSerializer.Deserialize<T>(value, s_serializerOptions)!);
 }

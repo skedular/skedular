@@ -55,9 +55,9 @@ public class XeroTokenRefreshClient(
             var errorContent = ex.ErrorContent?.ToString() ?? string.Empty;
             var needsReconnect =
                 ex.ErrorCode is 400 or 401 &&
-                (errorContent.Contains("invalid_grant", StringComparison.OrdinalIgnoreCase) ||
-                 errorContent.Contains("invalid_token", StringComparison.OrdinalIgnoreCase) ||
-                 errorContent.Contains("unauthorized_client", StringComparison.OrdinalIgnoreCase));
+                (errorContent.Contains("invalid_grant", StringComparison.InvariantCultureIgnoreCase) ||
+                 errorContent.Contains("invalid_token", StringComparison.InvariantCultureIgnoreCase) ||
+                 errorContent.Contains("unauthorized_client", StringComparison.InvariantCultureIgnoreCase));
 
             return new XeroTokenRefreshResult(
                 false,

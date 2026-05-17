@@ -21,6 +21,7 @@ type Query {
     orderBy: [FloorPlanOrderInput!]
   ): ConnectionOfFloorPlanEdge! @cost(weight: "10")
   locationTypes: [LocationTypeDetails!]!
+  locationRestrictedInformationCategories: [LocationRestrictedInformationCategoryDetails!]!
   location(id: String!): LocationDetails @cost(weight: "10")
   locationById(id: ID!): LocationDetails @lookup @internal @cost(weight: "10")
   locations(
@@ -70,6 +71,15 @@ type Mutation {
     @cost(weight: "10")
   updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload!
     @cost(weight: "10")
+  addLocationRestrictedInformation(
+    input: AddLocationRestrictedInformationInput!
+  ): LocationPayload! @cost(weight: "10")
+  updateLocationRestrictedInformation(
+    input: UpdateLocationRestrictedInformationInput!
+  ): LocationPayload! @cost(weight: "10")
+  deleteLocationRestrictedInformation(
+    input: DeleteLocationRestrictedInformationInput!
+  ): LocationPayload! @cost(weight: "10")
   claimLocationOwnership(input: ClaimLocationOwnershipInput!): LocationPayload!
     @cost(weight: "10")
   addLocationPhysicalAddress(input: AddLocationPhysicalAddressInput!): LocationPayload!
@@ -225,6 +235,7 @@ type LocationDetails {
   contactedViaCall: Boolean!
   contactedViaWhatsapp: Boolean!
   listingMetadata: ListingMetadata!
+  restrictedInformation: [LocationRestrictedInformationDetails!]!
   id: ID!
 }
 
@@ -265,6 +276,21 @@ type LocationPhysicalAddressDetails {
   country: String!
   countryCode: String
   organization: LocationDetails!
+  id: ID!
+}
+
+type LocationRestrictedInformationCategoryDetails {
+  category: LocationRestrictedInformationCategory!
+  name: String!
+}
+
+type LocationRestrictedInformationDetails {
+  title: String!
+  category: LocationRestrictedInformationCategory!
+  content: String!
+  active: Boolean!
+  sortOrder: Int!
+  locationId: String!
   id: ID!
 }
 
@@ -439,6 +465,16 @@ input AddLocationPhysicalAddressInput {
   countryCode: String
 }
 
+input AddLocationRestrictedInformationInput {
+  clientMutationId: String
+  locationId: String!
+  title: String!
+  category: LocationRestrictedInformationCategory!
+  content: String!
+  active: Boolean!
+  sortOrder: Int!
+}
+
 input AddResourceInput {
   clientMutationId: String
   id: String
@@ -510,6 +546,11 @@ input DeleteFloorPlanInput {
 }
 
 input DeleteLocationInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteLocationRestrictedInformationInput {
   clientMutationId: String
   id: String!
 }
@@ -710,6 +751,16 @@ input UpdateLocationResourceAvailableHoursInput {
   availableHours: WeekOpeningHoursInput
 }
 
+input UpdateLocationRestrictedInformationInput {
+  clientMutationId: String
+  id: String!
+  title: String!
+  category: LocationRestrictedInformationCategory!
+  content: String!
+  active: Boolean!
+  sortOrder: Int!
+}
+
 input UpdateResourceInput {
   clientMutationId: String
   id: String!
@@ -748,6 +799,32 @@ enum LocationOrderField {
   NAME
   TIMEZONE
   TYPE
+}
+
+enum LocationRestrictedInformationCategory {
+  OTHER
+  WIFI
+  ACCESS
+  PARKING
+  CHECK_IN
+  CHECK_OUT
+  AFTER_HOURS
+  DELIVERIES
+  GUESTS
+  EQUIPMENT
+  KITCHEN
+  MEETING_ROOMS
+  NOISE
+  MAINTENANCE
+  ACCESSIBILITY
+  STORAGE
+  CLEANING
+  WASTE
+  SECURITY
+  EVACUATION
+  PETS
+  SMOKING
+  HOUSE_RULES
 }
 
 enum LocationType {

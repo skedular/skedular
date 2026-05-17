@@ -174,7 +174,7 @@ Current recommendation:
 1. Product add/edit
 1. Location add/edit
 1. Resource add/edit
-1. Organisation settings/admin
+1. Organization settings/admin
 
 ### Phase 4: Operations
 
@@ -191,7 +191,7 @@ Current recommendation:
 
 ### Phase 5: Setup / Onboarding
 
-1. Add organisation flows
+1. Add organization flows
 1. Marketplace setup
 1. Getting started and installation flows
 

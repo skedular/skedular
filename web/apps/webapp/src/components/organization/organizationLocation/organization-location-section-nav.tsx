@@ -5,6 +5,7 @@ import {
   getOrganizationLocationManageResourcesBaseLink,
   getOrganizationLocationOpeningHoursBaseLink,
   getOrganizationLocationPhysicalAddressSetupBaseLink,
+  getOrganizationLocationRestrictedInformationBaseLink,
   getOrganizationLocationSetupBaseLink,
 } from '@/components/links';
 import { useIntegratedPlatrform } from '@skedular/shared';
@@ -17,7 +18,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import NextLink from 'next/link';
 import { memo, useState, type MouseEvent } from 'react';
 
-export type OrganizationLocationSection = 'setup' | 'physical-address-setup' | 'opening-hours' | 'floor-plans' | 'manage-resources' | 'manage-location';
+export type OrganizationLocationSection = 'setup' | 'physical-address-setup' | 'opening-hours' | 'floor-plans' | 'manage-resources' | 'restricted-information' | 'manage-location';
 
 type Props = {
   activeSection: OrganizationLocationSection;
@@ -32,6 +33,7 @@ const sectionLabels: Record<OrganizationLocationSection, string> = {
   'opening-hours': 'Opening Hours',
   'floor-plans': 'Floor Plans',
   'manage-resources': 'Resources',
+  'restricted-information': 'Restricted Info',
   'manage-location': 'Manage',
 };
 
@@ -47,6 +49,7 @@ const OrganizationLocationSectionNav = ({ activeSection, organizationCustomDomai
     'opening-hours': getOrganizationLocationOpeningHoursBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
     'floor-plans': getOrganizationLocationFloorPlansBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
     'manage-resources': getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
+    'restricted-information': getOrganizationLocationRestrictedInformationBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
     'manage-location': getOrganizationLocationManageLocationBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
   };
 

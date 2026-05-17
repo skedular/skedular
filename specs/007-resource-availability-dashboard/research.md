@@ -32,7 +32,7 @@ Extend `ResourceAvailabilityClassification` from the location domain (additive s
 | Per-resource day view with individual booking windows                                              | No existing query returns booking time windows alongside resources                                     |
 | Opening-hours-relative coverage calculation                                                        | Opening hours are modelled on `Location` and inherited by resources, but no coverage calculator exists |
 | GraphQL query: `resourceDayViews(date, filters, pagination)`                                       | Not implemented                                                                                        |
-| GraphQL subscription: `onResourceAvailabilityChanged(locationId/organisationId)`                   | Not implemented in Location domain                                                                     |
+| GraphQL subscription: `onResourceAvailabilityChanged(locationId/organizationId)`                   | Not implemented in Location domain                                                                     |
 | Booking detail visibility filtering by org type + user role                                        | Not implemented at the dashboard query layer                                                           |
 | Frontend dashboard page + components                                                               | Not implemented                                                                                        |
 
@@ -136,7 +136,7 @@ No Kafka. No cross-process hop. No extra consumer. The sender is called in the s
 
 ---
 
-## 5. Organisation Type — Booking Visibility Rule
+## 5. Organization Type — Booking Visibility Rule
 
 ### Decision
 

@@ -217,7 +217,7 @@ const RootShell = ({
                     <InfoIcon color="warning" excludeTooltip sx={{ mt: 0.25 }} />
                     <StackColumn sx={{ gap: 0.25 }}>
                       <BodyIconTypography label="Ownership verification in progress" />
-                      <CaptionIconTypography label="We need to verify ownership for your organisation. We will get back to you within 24 hours." />
+                      <CaptionIconTypography label="We need to verify ownership for your organization. We will get back to you within 24 hours." />
                     </StackColumn>
                   </StackRow>
                 </Box>

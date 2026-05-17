@@ -4,11 +4,10 @@ import { errorNotificationOptions, NotificationContent } from '@/components/noti
 import { AddMarketplaceOrganization } from '@/components/organization/addOrganization';
 import { RelayError, toRootError } from '@/components/relayError';
 import { NoOrganizationRootShell } from '@/components/rootShell';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { pageAddMarketplaceOrganization_claimLocationOwnershipMutation } from '@/queries/__generated__/pageAddMarketplaceOrganization_claimLocationOwnershipMutation.graphql';
 import type { pageAddMarketplaceOrganization_completeOnboardingMutation } from '@/queries/__generated__/pageAddMarketplaceOrganization_completeOnboardingMutation.graphql';
 import type { pageAddMarketplaceOrganization_rootQuery } from '@/queries/__generated__/pageAddMarketplaceOrganization_rootQuery.graphql';
+import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -198,7 +197,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
         onCancel={handleCancelled}
         onReloadRequired={onReloadRequired}
         cancelLabel="Go back"
-        createLabel="Create organisation"
+        createLabel="Create organization"
       />
     </NoOrganizationRootShell>
   );

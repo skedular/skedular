@@ -121,7 +121,7 @@ public class XeroWebhookService(
         var invoiceInstanceLookup = invoiceInstances
             .Where(invoiceInstance => !string.IsNullOrWhiteSpace(invoiceInstance.ExternalInvoiceId))
             .ToDictionary(invoiceInstance => invoiceInstance.ExternalInvoiceId, StringComparer.Ordinal);
-        var tenantCache = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+        var tenantCache = new Dictionary<string, string?>(StringComparer.InvariantCultureIgnoreCase);
         var syncTargets = new Dictionary<string, XeroWebhookSyncTarget>(StringComparer.Ordinal);
 
         foreach (var eventElement in eventElements)
@@ -197,7 +197,7 @@ public class XeroWebhookService(
             return externalInvoiceId;
         }
 
-        return string.Equals(accountingInvoiceLink.ExternalInvoiceId, externalInvoiceId, StringComparison.OrdinalIgnoreCase)
+        return string.Equals(accountingInvoiceLink.ExternalInvoiceId, externalInvoiceId, StringComparison.InvariantCultureIgnoreCase)
             ? null
             : externalInvoiceId;
     }
@@ -292,19 +292,19 @@ public class XeroWebhookService(
         }
 
         return string.IsNullOrWhiteSpace(expectedTenantId) ||
-               string.Equals(expectedTenantId, tenantId, StringComparison.OrdinalIgnoreCase);
+               string.Equals(expectedTenantId, tenantId, StringComparison.InvariantCultureIgnoreCase);
     }
 
     private static bool IsInvoiceEvent(JsonElement eventElement)
     {
         var eventCategory = GetOptionalString(eventElement, "eventCategory");
-        if (string.Equals(eventCategory, "INVOICE", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(eventCategory, "INVOICE", StringComparison.InvariantCultureIgnoreCase))
         {
             return true;
         }
 
         var resourceType = GetOptionalString(eventElement, "resourceType");
-        return string.Equals(resourceType, "INVOICE", StringComparison.OrdinalIgnoreCase);
+        return string.Equals(resourceType, "INVOICE", StringComparison.InvariantCultureIgnoreCase);
     }
 
     private static string? GetOptionalString(JsonElement element, string propertyName) =>

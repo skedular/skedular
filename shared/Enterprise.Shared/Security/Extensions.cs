@@ -41,9 +41,9 @@ public static class Extensions
                     var isDevelopmentEnvironment = string.Equals(
                         configuration["ASPNETCORE_ENVIRONMENT"],
                         Environments.Development,
-                        StringComparison.OrdinalIgnoreCase);
+                        StringComparison.InvariantCultureIgnoreCase);
                     var isHttpsIssuer = Uri.TryCreate(authenticationConfiguration.Jwt.Issuer, UriKind.Absolute, out var authorityUri)
-                                        && string.Equals(authorityUri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase);
+                                        && string.Equals(authorityUri.Scheme, Uri.UriSchemeHttps, StringComparison.InvariantCultureIgnoreCase);
 
                     options.RequireHttpsMetadata = !isDevelopmentEnvironment || isHttpsIssuer;
                     options.Authority = authenticationConfiguration.Jwt.Issuer;

@@ -1,5 +1,4 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
-import { FormFieldLabel, FormStackColumn, HelperText, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon } from '@/components/icons';
 import { ListingMetadata } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
@@ -7,15 +6,14 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { OrganizationMultipleChoicesIndustries } from '@/components/organization';
 import { OrganizationDetails, organizationSchema, splitNotificationEmails } from '@/components/organization/organizationAdmin/organization-admin-shared';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { PaletteModeContext } from '@skedular/shared';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import type { organizationAdminSetupSectionQuery } from '@/queries/__generated__/organizationAdminSetupSectionQuery.graphql';
 import type { organizationAdminSetupSection_updateOrganizationMutation } from '@/queries/__generated__/organizationAdminSetupSection_updateOrganizationMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import { EditorActionBar, SettingsSectionCard } from '@skedular/ui';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext } from '@skedular/shared';
+import { EditorActionBar, FormFieldLabel, FormStackColumn, HelperText, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -270,7 +268,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update organisation '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
+            render: <NotificationContent content={`We couldn't update organization '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -278,13 +276,13 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`The details for organisation '${name}' have been updated.`} />,
+          render: <NotificationContent content={`The details for organization '${name}' have been updated.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update organisation '${organization.name}'. ${error.message}`} />,
+          render: <NotificationContent content={`We couldn't update organization '${organization.name}'. ${error.message}`} />,
         });
       },
       optimisticResponse: {
@@ -376,7 +374,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                         ) : null}
 
                         <StackRow>
-                          <ImageFileUploaderWithCropper helperText="Upload a square logo or icon for organisation branding." onUploadCompleted={handleLogoUploadCompleted} />
+                          <ImageFileUploaderWithCropper helperText="Upload a square logo or icon for organization branding." onUploadCompleted={handleLogoUploadCompleted} />
                           {organizationLogoUrl ? (
                             <Button variant="outlined" size="small" onClick={() => setOrganizationLogoUrl(null)} sx={{ textTransform: 'none' }}>
                               Remove logo

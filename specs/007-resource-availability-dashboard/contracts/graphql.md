@@ -27,7 +27,7 @@ enum ResourceAvailabilityStatus {
 """
 Computed availability view for a single resource on a selected date.
 BookingWindows are filtered based on the requesting user's role and the
-organisation type (see FR-009a in the spec).
+organization type (see FR-009a in the spec).
 """
 type ResourceDayView {
   resourceId: String!
@@ -55,7 +55,7 @@ type ResourceDayView {
 """
 One booking time window within a resource day view.
 Detail fields (bookedByName, bookedByUserId, notes) are null when the
-requesting user does not have visibility rights per the organisation type rule.
+requesting user does not have visibility rights per the organization type rule.
 """
 type BookingWindow {
   bookingId: String!
@@ -75,7 +75,7 @@ type BookingWindow {
 ```graphql
 input ResourceAvailabilityDayFilterInput {
   date: Date!
-  organisationId: String
+  organizationId: String
   locationId: String
   floorId: String
   zoneId: String
@@ -133,8 +133,8 @@ extend type Query {
   specified order. The full filtered result set is returned in a single response
   (no pagination).
 
-  Tenancy: Only resources belonging to organisations accessible to the requesting
-  user are returned. Booking detail visibility is governed by the organisation type
+  Tenancy: Only resources belonging to organizations accessible to the requesting
+  user are returned. Booking detail visibility is governed by the organization type
   and the user's role.
 
   Sorting: defaults to RESOURCE_NAME ASC when orderBy is omitted.

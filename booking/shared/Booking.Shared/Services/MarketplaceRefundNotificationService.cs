@@ -254,11 +254,11 @@ public class MarketplaceRefundNotificationService(
         string? customerEmail,
         IReadOnlyList<string> organizationSpecificEmails)
     {
-        var emails = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var emails = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
 
         if (!string.IsNullOrWhiteSpace(organization.ContactEmail) &&
             IsValidEmailAddress(organization.ContactEmail) &&
-            !string.Equals(organization.ContactEmail, customerEmail, StringComparison.OrdinalIgnoreCase))
+            !string.Equals(organization.ContactEmail, customerEmail, StringComparison.InvariantCultureIgnoreCase))
         {
             emails.Add(organization.ContactEmail);
         }
@@ -271,7 +271,7 @@ public class MarketplaceRefundNotificationService(
                      .Where(item => !string.IsNullOrWhiteSpace(item.Email) && item.EmailVerified == true && IsValidEmailAddress(item.Email!))
                      .Select(item => item.Email!))
         {
-            if (!string.Equals(email, customerEmail, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(email, customerEmail, StringComparison.InvariantCultureIgnoreCase))
             {
                 emails.Add(email);
             }
@@ -281,7 +281,7 @@ public class MarketplaceRefundNotificationService(
         {
             if (!string.IsNullOrWhiteSpace(email) &&
                 IsValidEmailAddress(email) &&
-                !string.Equals(email, customerEmail, StringComparison.OrdinalIgnoreCase))
+                !string.Equals(email, customerEmail, StringComparison.InvariantCultureIgnoreCase))
             {
                 emails.Add(email);
             }

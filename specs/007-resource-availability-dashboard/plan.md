@@ -5,7 +5,7 @@
 
 ## Summary
 
-A new Resource Availability Dashboard enabling co-working space owners and organisation administrators to select any date and view the availability status of all accessible resources (desks, rooms, etc.) for that date. Each resource displays its individual bookings alongside a computed day-level status (Available, Partially Booked, Fully Booked, Occupied, Unavailable, Blocked) derived from the resource's effective opening hours and all bookings/blocks for the day. Users can filter by location, floor, zone, resource type, and status. Real-time updates are delivered via GraphQL subscriptions (not polling), following the existing booking-domain subscription pattern. Booking detail visibility is governed by organisation type (Private: all users; Marketplace/Individual: owners and admins only).
+A new Resource Availability Dashboard enabling co-working space owners and organization administrators to select any date and view the availability status of all accessible resources (desks, rooms, etc.) for that date. Each resource displays its individual bookings alongside a computed day-level status (Available, Partially Booked, Fully Booked, Occupied, Unavailable, Blocked) derived from the resource's effective opening hours and all bookings/blocks for the day. Users can filter by location, floor, zone, resource type, and status. Real-time updates are delivered via GraphQL subscriptions (not polling), following the existing booking-domain subscription pattern. Booking detail visibility is governed by organization type (Private: all users; Marketplace/Individual: owners and admins only).
 
 The backend extends `Booking.Api` and `Booking.Shared` with a new `ResourceDayView` query and a new GraphQL subscription scoped to location. The booking domain has direct DB access to all booking data and already hosts the subscription infrastructure (`ITopicEventSender`/`ITopicEventReceiver`) — no cross-domain hop is needed. The frontend adds a new Next.js App Router page with Relay fragments and components following the existing webapp patterns.
 
@@ -19,8 +19,8 @@ The backend extends `Booking.Api` and `Booking.Shared` with a new `ResourceDayVi
 **Target Platform**: Linux server (API); web browser desktop/tablet (frontend)  
 **Project Type**: Full-stack feature across existing microservice domains + web app  
 **Performance Goals**: First page of results ≤ 3 s; filtered queries ≤ 2 s; subscription push ≤ 5 s after server-side change  
-**Constraints**: Unbounded queries prohibited (cursor-based pagination enforced); booking detail visibility filtered per organisation type and user role at the API layer; no raw DbContext access in integration tests  
-**Scale/Scope**: ≥ 500 resources per location; multi-tenancy (multiple organisations); three web products (webapp, webapp-teams, webapp-spaces)
+**Constraints**: Unbounded queries prohibited (cursor-based pagination enforced); booking detail visibility filtered per organization type and user role at the API layer; no raw DbContext access in integration tests  
+**Scale/Scope**: ≥ 500 resources per location; multi-tenancy (multiple organizations); three web products (webapp, webapp-teams, webapp-spaces)
 
 ## Constitution Check
 

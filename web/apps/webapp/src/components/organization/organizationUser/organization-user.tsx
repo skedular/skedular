@@ -1,13 +1,9 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { CaptionIconTypography, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
 import { getOrganizationUsersBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding, EditorActionBar, PageHeaderPanel } from '@skedular/ui';
-import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
 import type { organizationUser_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUser_changeOrganizationUsersStatusMutation.graphql';
 import type { organizationUser_query$key } from '@/queries/__generated__/organizationUser_query.graphql';
 import type { organizationUser_removeOrganizationUsersMutation } from '@/queries/__generated__/organizationUser_removeOrganizationUsersMutation.graphql';
@@ -15,6 +11,20 @@ import type { organizationUser_updateCustomerDetailsMutation, PersonalInformatio
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import {
+  CaptionIconTypography,
+  defaultButtonStyle,
+  defaultPadding,
+  EditorActionBar,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  PageHeaderPanel,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useContext, useEffect, useMemo, useState } from 'react';
@@ -556,7 +566,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
       <StackColumn spacing={2}>
         <StackColumn spacing={0.5}>
           <LeadIconTypography label="Manage User" />
-          <SmallIconTypography label="Change this user's status or remove them from this organisation." />
+          <SmallIconTypography label="Change this user's status or remove them from this organization." />
         </StackColumn>
 
         <Divider />

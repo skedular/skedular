@@ -2,12 +2,14 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
 using Location.Shared.Database.Entities;
+using static Location.Shared.Models.LocationRestrictedInformationCategoryExtensions;
 using DailyDeskCountRecording = Location.Shared.Models.DailyDeskCountRecording;
 using DailyRoomCountRecording = Location.Shared.Models.DailyRoomCountRecording;
 using Organization = Location.Shared.Database.Entities.Organization;
 using Resource = Location.Shared.Database.Entities.Resource;
 using LocationPhysicalAddress = Location.Shared.Database.Entities.LocationPhysicalAddress;
 using FloorPlan = Location.Shared.Models.FloorPlan;
+using LocationRestrictedInformation = Location.Shared.Models.LocationRestrictedInformation;
 using PrecomputedLocationProduct = Location.Shared.Models.PrecomputedLocationProduct;
 using Product = Location.Shared.Models.Product;
 
@@ -100,7 +102,12 @@ public class EntityMapper : IEntityMapper
             ContactedViaSms = src.ContactedViaSms,
             ContactedViaCall = src.ContactedViaCall,
             ContactedViaWhatsapp = src.ContactedViaWhatsapp,
-            PrecomputedLocationProducts = MapTo(src.PrecomputedLocationProducts).ToList()
+            PrecomputedLocationProducts = MapTo(src.PrecomputedLocationProducts).ToList(),
+            RestrictedInformation = src.RestrictedInformation
+                .OrderBy(item => item.SortOrder)
+                .ThenBy(item => item.Title)
+                .Select(MapTo)
+                .ToList()
         };
 
         location.DailyDeskCountRecordings = MapTo(src.DailyDeskCountRecordings, location).ToList();
@@ -485,4 +492,17 @@ public class EntityMapper : IEntityMapper
 
     private static Product MapTo(Database.Entities.Product src) =>
         new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, DeletedAt = src.DeletedAt };
+
+    private static LocationRestrictedInformation MapTo(Database.Entities.LocationRestrictedInformation src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            Title = src.Title,
+            Category = src.Category.ToLocationRestrictedInformationCategory(),
+            Content = src.Content,
+            Active = src.Active,
+            SortOrder = src.SortOrder
+        };
 }

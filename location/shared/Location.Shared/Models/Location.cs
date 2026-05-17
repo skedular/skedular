@@ -47,4 +47,5 @@ public class Location : ModelBaseWithDeleted
     public LocationPhysicalAddress? PhysicalAddress { get; set; }
     public Permissions Permissions { get; set; } = new();
     public IReadOnlyList<PrecomputedLocationProduct> PrecomputedLocationProducts { get; set; } = [];
+    public IReadOnlyList<LocationRestrictedInformation> RestrictedInformation { get; set; } = [];
 }

@@ -90,7 +90,7 @@ After submission, the admin sees a results summary distinguishing which resource
 - **FR-007**: When the base name is empty or omitted, the system MUST derive a default base name from the resource type tag's `Name` property for name generation.
 - **FR-008**: When any generated name conflicts with an existing resource name at that location, the system MUST increment the numeric suffix until a unique name is found; no generated resource name MUST be rejected solely due to a naming conflict.
 - **FR-009**: The UI MUST provide a dynamic row-based form allowing the admin to add, remove, and edit rows before submission.
-- **FR-010**: The UI MUST allow the admin to select tags from the available tags for the organisation on a per-row basis, using organisation-wide tag queries consistent with existing tag selectors in the application.
+- **FR-010**: The UI MUST allow the admin to select tags from the available tags for the organization on a per-row basis, using organization-wide tag queries consistent with existing tag selectors in the application.
 - **FR-011**: The UI MUST display per-row success and failure feedback after submission, including the rejection reason for each failed row.
 - **FR-012**: The UI MUST prevent form submission when the batch has no rows.
 - **FR-013**: The UI MUST allow the admin to retry only the failed rows from a previous submission, pre-populated with their last entered values.
@@ -107,7 +107,7 @@ After submission, the admin sees a results summary distinguishing which resource
 
 - **Resource**: A bookable unit within a location. Has a name, a type, and belongs to one location. Can have zero or more tags assigned.
 - **ResourceType**: A predefined classification for a resource (e.g., desk, meeting room, phone booth). Determines how the resource appears and is booked.
-- **Location**: An existing organisational venue to which resources belong. Identified by its identifier in the bulk import input.
+- **Location**: An existing organizational venue to which resources belong. Identified by its identifier in the bulk import input.
 - **Tag**: A label that can be assigned to a resource. Tags belong to the system and are referenced by identifier in the bulk import input.
 - **BulkImportResourcesInput** / **BulkImportResourceRowInput**: The per-row input payload: optional base name, resource type, quantity, location identifier, list of tag identifiers. Tags are applied uniformly to every resource generated from this row.
 - **BulkImportResourceRowResult**: The per-row outcome (GraphQL type); **BulkImportRowResult** (service model): resource identifier (if created), success flag, and optional failure reason.

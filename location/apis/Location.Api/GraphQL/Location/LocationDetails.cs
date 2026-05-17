@@ -47,6 +47,7 @@ public class LocationDetails : Node
     [GraphQLName("contactedViaWhatsapp")] public bool ContactedViaWhatsapp { get; set; }
     [GraphQLName("productIds")] public IEnumerable<string> ProductIds { get; set; } = [];
     [GraphQLName("listingMetadata")] public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
+    [GraphQLName("restrictedInformation")] public IEnumerable<LocationRestrictedInformationDetails> RestrictedInformation { get; set; } = [];
 
     [UseResolverScope]
     public async Task<LocationAnalytics> AnalyticsAsync(

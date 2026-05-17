@@ -1,11 +1,10 @@
-import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
 import { NotificationContent, errorNotificationOptions, infoNotificationOptions, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation } from '@/queries/__generated__/invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
+import { PaletteModeContext, getRelayErrorMessage } from '@skedular/shared';
+import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
@@ -113,8 +112,8 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
           validate={validate}
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
-              <LeadIconTypography label="Invite people to join this organisation" />
-              <SmallIconTypography label="Enter the email addresses of the people you want to invite to this organisation." />
+              <LeadIconTypography label="Invite people to join this organization" />
+              <SmallIconTypography label="Enter the email addresses of the people you want to invite to this organization." />
 
               <FormFieldLabel label="Emails">
                 <TextField name="emails" required={requiredFields.emails} helperText="member1@example.com,member2@example.com" />

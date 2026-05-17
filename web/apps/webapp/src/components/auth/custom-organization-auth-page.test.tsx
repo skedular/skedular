@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import CustomOrganizationAuthPage from './custom-organization-auth-page';
 
 describe('CustomOrganizationAuthPage', () => {
-  it('renders organisation branding and posts sign in through custom WorkOS password auth', () => {
+  it('renders organization branding and posts sign in through custom WorkOS password auth', () => {
     const { container } = render(
       <CustomOrganizationAuthPage mode="sign-in" organizationName="Mapp" organizationLogoUrl="https://cdn.example.com/mapp.png" returnTo="/marketplace/bookings" />,
     );

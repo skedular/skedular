@@ -43,6 +43,8 @@ public interface IGraphQlMapper
 
     Shared.Models.Location MapTo(AddLocationInput src);
     Shared.Models.Location MapTo(UpdateLocationInput src);
+    LocationRestrictedInformation MapTo(AddLocationRestrictedInformationInput src);
+    LocationRestrictedInformation MapTo(UpdateLocationRestrictedInformationInput src);
     LocationEdge MapTo(Edge<Shared.Models.Location> src);
     Resource MapTo(AddResourceInput src);
     Resource MapTo(UpdateResourceInput src);
@@ -93,7 +95,11 @@ public class GraphQlMapper : IGraphQlMapper
                 ContactedViaSms = src.ContactedViaSms,
                 ContactedViaCall = src.ContactedViaCall,
                 ContactedViaWhatsapp = src.ContactedViaWhatsapp,
-                ProductIds = src.PrecomputedLocationProducts.Select(item => item.Product.Id)
+                ProductIds = src.PrecomputedLocationProducts.Select(item => item.Product.Id),
+                RestrictedInformation = src.RestrictedInformation
+                    .OrderBy(item => item.SortOrder)
+                    .ThenBy(item => item.Title)
+                    .Select(item => MapTo(item, src.Id))
             };
 
     public ResourceDetails MapTo(Resource src) =>
@@ -188,6 +194,28 @@ public class GraphQlMapper : IGraphQlMapper
             ExtraMetadata = src.ExtraMetadata,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+        };
+
+    public LocationRestrictedInformation MapTo(AddLocationRestrictedInformationInput src) =>
+        new()
+        {
+            Title = src.Title,
+            Category = src.Category,
+            Content = src.Content,
+            Active = src.Active,
+            SortOrder = src.SortOrder,
+            Location = new Shared.Models.Location { Id = src.LocationId }
+        };
+
+    public LocationRestrictedInformation MapTo(UpdateLocationRestrictedInformationInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Title = src.Title,
+            Category = src.Category,
+            Content = src.Content,
+            Active = src.Active,
+            SortOrder = src.SortOrder
         };
 
     public LocationEdge MapTo(Edge<Shared.Models.Location> src) => new(MapTo(src.Node)!, src.Cursor);
@@ -440,4 +468,16 @@ public class GraphQlMapper : IGraphQlMapper
 
     private static OrganizationTagDetails MapTo(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color, Type = src.Type };
+
+    private static LocationRestrictedInformationDetails MapTo(LocationRestrictedInformation src, string locationId) =>
+        new()
+        {
+            Id = src.Id,
+            Title = src.Title,
+            Category = src.Category,
+            Content = src.Content,
+            Active = src.Active,
+            SortOrder = src.SortOrder,
+            LocationId = locationId
+        };
 }

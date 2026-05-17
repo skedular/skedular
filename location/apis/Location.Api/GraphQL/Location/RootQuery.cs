@@ -24,6 +24,126 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     ];
 
     [UseResolverScope]
+    public IEnumerable<LocationRestrictedInformationCategoryDetails> LocationRestrictedInformationCategories() =>
+    [
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Wifi,
+            Name = LocationRestrictedInformationCategory.Wifi.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Access,
+            Name = LocationRestrictedInformationCategory.Access.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Parking,
+            Name = LocationRestrictedInformationCategory.Parking.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.CheckIn,
+            Name = LocationRestrictedInformationCategory.CheckIn.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.CheckOut,
+            Name = LocationRestrictedInformationCategory.CheckOut.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.AfterHours,
+            Name = LocationRestrictedInformationCategory.AfterHours.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Deliveries,
+            Name = LocationRestrictedInformationCategory.Deliveries.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Guests,
+            Name = LocationRestrictedInformationCategory.Guests.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Equipment,
+            Name = LocationRestrictedInformationCategory.Equipment.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Kitchen,
+            Name = LocationRestrictedInformationCategory.Kitchen.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.MeetingRooms,
+            Name = LocationRestrictedInformationCategory.MeetingRooms.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Noise,
+            Name = LocationRestrictedInformationCategory.Noise.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Maintenance,
+            Name = LocationRestrictedInformationCategory.Maintenance.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Accessibility,
+            Name = LocationRestrictedInformationCategory.Accessibility.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Storage,
+            Name = LocationRestrictedInformationCategory.Storage.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Cleaning,
+            Name = LocationRestrictedInformationCategory.Cleaning.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Waste,
+            Name = LocationRestrictedInformationCategory.Waste.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Security,
+            Name = LocationRestrictedInformationCategory.Security.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Evacuation,
+            Name = LocationRestrictedInformationCategory.Evacuation.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Pets,
+            Name = LocationRestrictedInformationCategory.Pets.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Smoking,
+            Name = LocationRestrictedInformationCategory.Smoking.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.HouseRules,
+            Name = LocationRestrictedInformationCategory.HouseRules.ToLocationRestrictedInformationCategoryName()
+        },
+        new()
+        {
+            Category = LocationRestrictedInformationCategory.Other,
+            Name = LocationRestrictedInformationCategory.Other.ToLocationRestrictedInformationCategoryName()
+        }
+    ];
+
+    [UseResolverScope]
     public async Task<LocationDetails?> LocationAsync(string id, [Service] ILocationService locationService, CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await locationService.GetByIdAsync(id, false, cancellationToken));
 

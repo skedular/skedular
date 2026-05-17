@@ -134,7 +134,7 @@ public class BulkAddResourcesService(
             cancellationToken);
 
         // Allocated-name set starts with existing names; grows as we assign names within this batch
-        var allocatedNames = new HashSet<string>(existingNames, StringComparer.OrdinalIgnoreCase);
+        var allocatedNames = new HashSet<string>(existingNames, StringComparer.InvariantCultureIgnoreCase);
 
         // Compute next suffix per base name (always-append strategy)
         var maxSuffixByBase = ComputeMaxSuffixes(existingNames);
@@ -276,7 +276,7 @@ public class BulkAddResourcesService(
     /// </summary>
     private static Dictionary<string, int> ComputeMaxSuffixes(IReadOnlyList<string> existingNames)
     {
-        var maxSuffixByBase = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var maxSuffixByBase = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
 
         foreach (var name in existingNames)
         {

@@ -126,7 +126,7 @@ query ValidateEmptyFilter($orgDomain: String!) {
 
 ## Validate Frontend Filter Controls
 
-1. Open the Management Portal subscription list page for an organisation.
+1. Open the Management Portal subscription list page for an organization.
 2. Confirm the **subscription status** multi-select combo box is visible with options populated from the backend.
 3. Confirm the **payment status** multi-select combo box is visible with options populated from the backend.
 4. Select one subscription status → confirm the URL updates (e.g. `?statuses=ACTIVE`) and the list refreshes.

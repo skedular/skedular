@@ -52,4 +52,37 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             Location = graphQlMapper.MapTo(
                 await locationOpeningHoursService.UpdateOpeningHoursAsync(input.Id, graphQlMapper.MapTo(input.WeekOpeningHours)!, cancellationToken))!
         };
+
+    [UseResolverScope]
+    public async Task<LocationPayload> AddLocationRestrictedInformationAsync(
+        AddLocationRestrictedInformationInput input,
+        [Service] ILocationRestrictedInformationService locationRestrictedInformationService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Location = graphQlMapper.MapTo(await locationRestrictedInformationService.AddAsync(graphQlMapper.MapTo(input), cancellationToken))!
+        };
+
+    [UseResolverScope]
+    public async Task<LocationPayload> UpdateLocationRestrictedInformationAsync(
+        UpdateLocationRestrictedInformationInput input,
+        [Service] ILocationRestrictedInformationService locationRestrictedInformationService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Location = graphQlMapper.MapTo(await locationRestrictedInformationService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
+        };
+
+    [UseResolverScope]
+    public async Task<LocationPayload> DeleteLocationRestrictedInformationAsync(
+        DeleteLocationRestrictedInformationInput input,
+        [Service] ILocationRestrictedInformationService locationRestrictedInformationService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Location = graphQlMapper.MapTo(await locationRestrictedInformationService.DeleteAsync(input.Id, cancellationToken))!
+        };
 }

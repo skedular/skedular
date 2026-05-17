@@ -12,8 +12,8 @@ This guide describes how to validate the bulk resource import end-to-end after i
 ## Prerequisites
 
 - Local dev stack running (`docker-compose up` or Aspire host).
-- A seeded organisation with at least one location and at least one resource-type tag.
-- Admin credentials for that organisation.
+- A seeded organization with at least one location and at least one resource-type tag.
+- Admin credentials for that organization.
 - `gh` CLI authenticated (optional, for schema inspection).
 
 ---

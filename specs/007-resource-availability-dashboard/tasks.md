@@ -35,12 +35,12 @@
 - [x] T003 [P] Create `ResourceAvailabilityClassification.cs` (new 6-state enum: `Available`, `PartiallyBooked`, `FullyBooked`, `Occupied`, `Unavailable`, `Blocked` plus string constants) in `booking/shared/Booking.Shared/Models/ResourceAvailabilityClassification.cs` — do NOT modify `Location.Shared` enum
 - [x] T004 [P] Create `BookingWindow.cs` (computed record: `BookingId`, `From`, `Until`, `IsRecurring`, `IsCheckedIn`, `BookedByName?`, `BookedByUserId?`, `Notes?`) in `booking/shared/Booking.Shared/Models/BookingWindow.cs`
 - [x] T005 [P] Create `ResourceDayView.cs` (computed record: resource metadata, `Date`, `Status`, `OpeningFrom?`, `OpeningUntil?`, `TotalOpeningMinutes`, `BookedMinutes`, `IReadOnlyList<BookingWindow>`) in `booking/shared/Booking.Shared/Models/ResourceDayView.cs`
-- [x] T006 [P] Create `ResourceAvailabilityDayFilter.cs` (filter record: `Date`, `OrganisationId?`, `LocationId?`, `FloorId?`, `ZoneId?`, `ResourceType?`, `Status?`) in `booking/shared/Booking.Shared/Models/ResourceAvailabilityDayFilter.cs`
+- [x] T006 [P] Create `ResourceAvailabilityDayFilter.cs` (filter record: `Date`, `OrganizationId?`, `LocationId?`, `FloorId?`, `ZoneId?`, `ResourceType?`, `Status?`) in `booking/shared/Booking.Shared/Models/ResourceAvailabilityDayFilter.cs`
 - [x] T007 [P] Create `ResourceDayViewResult.cs` (result wrapper record: `IReadOnlyList<ResourceDayView> Items`, `string SubscriptionKey`) in `booking/shared/Booking.Shared/Models/ResourceDayViewResult.cs`
 - [x] T007b [P] Create `ResourceAvailabilityOrderBy.cs` (sort record: `ResourceAvailabilityOrderByField Field`, `bool Descending = false`; enum values: `ResourceName`, `ResourceType`, `LocationName`, `FloorName`, `ZoneName`, `Status`) in `booking/shared/Booking.Shared/Models/ResourceAvailabilityOrderBy.cs`
 - [x] T008 Define `IResourceAvailabilityDayViewService` interface (method: `GetAsync(filter, orderBy, requestingUserId, requestingUserRoles, ct) → ResourceDayViewResult`) in `booking/shared/Booking.Shared/Services/IResourceAvailabilityDayViewService.cs`
 - [x] T008b [P] [FR-017] Add XML `<summary>` doc-comments to all public API surfaces in `Booking.Shared`: `IResourceAvailabilityDayViewService`, `SubscriptionKeyService` (`Compute`, `AffectedKeys`), `ResourceDayView`, `BookingWindow`, `ResourceDayViewResult`, `ResourceAvailabilityDayFilter`, `ResourceAvailabilityOrderBy`, `ResourceAvailabilityClassification` enum — comments must describe intent and any non-obvious invariants (e.g. opaque key contract, precedence rule); no PII
-- [x] T009 [P] Create `SubscriptionKeyService.cs` (deterministic opaque key generator: SHA-256 of canonical filter JSON, URL-safe base64; `Compute(filter)` and `AffectedKeys(organisationId, locationId, floorId, zoneId, resourceType, date)` returning all null-dimension permutations) in `booking/shared/Booking.Shared/Services/SubscriptionKeyService.cs`
+- [x] T009 [P] Create `SubscriptionKeyService.cs` (deterministic opaque key generator: SHA-256 of canonical filter JSON, URL-safe base64; `Compute(filter)` and `AffectedKeys(organizationId, locationId, floorId, zoneId, resourceType, date)` returning all null-dimension permutations) in `booking/shared/Booking.Shared/Services/SubscriptionKeyService.cs`
 
 **Checkpoint**: All model definitions compile — US1–US5 implementation can begin in parallel.
 
@@ -70,9 +70,9 @@
 
 ## Phase 4: User Story 5 – Authorised Access and Booking Visibility (Priority: P1)
 
-**Goal**: Only resources in the requesting user's authorised organisations/locations are returned. Booking detail visibility is governed by org type + user role (Private: full detail; Marketplace/Individual: owners/admins see full detail, regular users see redacted windows).
+**Goal**: Only resources in the requesting user's authorised organizations/locations are returned. Booking detail visibility is governed by org type + user role (Private: full detail; Marketplace/Individual: owners/admins see full detail, regular users see redacted windows).
 
-**Independent Test**: Log in as a regular user of a Marketplace organisation, query `resourceDayViews`, and confirm `bookedByName`, `bookedByUserId`, and `notes` are null for all booking windows. Log in as an admin and confirm all fields are populated.
+**Independent Test**: Log in as a regular user of a Marketplace organization, query `resourceDayViews`, and confirm `bookedByName`, `bookedByUserId`, and `notes` are null for all booking windows. Log in as an admin and confirm all fields are populated.
 
 - [x] T020 [US5] Implement tenancy guard in `ResourceAvailabilityDayViewService.GetPageAsync`
 - [x] T021 [US5] Create `ResourceDayViewBookingVisibilityFilter.cs`

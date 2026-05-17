@@ -19,7 +19,7 @@ Upgrade the coworking space owner Management Portal subscription list page from 
 **Project Type**: Full-stack feature (booking domain API + management portal webapp)  
 **Performance Goals**: Backend query result within normal p95 for the subscription list; no client-side data loading for filtering  
 **Constraints**: No new DB migrations; multi-select filter must reuse the existing `multiple-choices-*` component shape; Relay artefacts must be regenerated, not hand-edited  
-**Scale/Scope**: Per-organisation subscription list, typically tens to hundreds of rows
+**Scale/Scope**: Per-organization subscription list, typically tens to hundreds of rows
 
 ## Constitution Check
 

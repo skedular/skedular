@@ -53,6 +53,7 @@ public static class LocationExtensions
             .ThenInclude(query => query.ResourcePositions)
             .ThenInclude(query => query.Resource)
             .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.RestrictedInformation)
             .Include(query => query.PrecomputedLocationProducts)
             .ThenInclude(query => query.Product);
 

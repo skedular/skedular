@@ -61,11 +61,11 @@ public static class OutboxTelemetryFilter
             switch (tag.Key)
             {
                 case "error.type" when tag.Value is not null:
-                case "otel.status_code" when string.Equals(tag.Value?.ToString(), "ERROR", StringComparison.OrdinalIgnoreCase):
+                case "otel.status_code" when string.Equals(tag.Value?.ToString(), "ERROR", StringComparison.InvariantCultureIgnoreCase):
                     return true;
             }
         }
 
-        return activity.Events.Any(activityEvent => string.Equals(activityEvent.Name, "exception", StringComparison.OrdinalIgnoreCase));
+        return activity.Events.Any(activityEvent => string.Equals(activityEvent.Name, "exception", StringComparison.InvariantCultureIgnoreCase));
     }
 }

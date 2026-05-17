@@ -735,11 +735,11 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
 
           {!rootData.organizationBookingPermissions.canModifyPaymentMethod ? (
             <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
-              <SmallIconTypography label="You do not have permission to manage subscription payments for this organisation." />
+              <SmallIconTypography label="You do not have permission to manage subscription payments for this organization." />
             </Box>
           ) : subscriptions.length === 0 ? (
             <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
-              <SmallIconTypography label="This organisation does not have any subscriptions yet." sx={{ opacity: 0.78 }} />
+              <SmallIconTypography label="This organization does not have any subscriptions yet." sx={{ opacity: 0.78 }} />
             </Box>
           ) : filteredSubscriptions.length === 0 ? (
             <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>

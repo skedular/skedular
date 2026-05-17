@@ -8,7 +8,7 @@
 
 ### User Story 1 – View Resource Availability for a Selected Date (Priority: P1)
 
-A co-working space owner or organisation administrator opens the Resource Availability Dashboard, selects a date (today, a past date, or a future date), and immediately sees the availability state of every resource and desk for that date. Each resource is clearly labelled as available, booked, occupied, unavailable, or blocked.
+A co-working space owner or organization administrator opens the Resource Availability Dashboard, selects a date (today, a past date, or a future date), and immediately sees the availability state of every resource and desk for that date. Each resource is clearly labelled as available, booked, occupied, unavailable, or blocked.
 
 **Why this priority**: This is the core value of the dashboard. Without date-based availability visibility, the feature does not exist.
 
@@ -29,7 +29,7 @@ A co-working space owner or organisation administrator opens the Resource Availa
 
 The user opens the dashboard and sees all accessible resources immediately, with all filter controls visible but empty. They then apply one or more filters to narrow the list, reducing noise for large co-working spaces.
 
-**Why this priority**: Large organisations and co-working spaces can have hundreds or thousands of resources. Filtering is essential for usability at scale, but the full unfiltered view must remain the starting point so users can explore without being forced to know the location hierarchy upfront.
+**Why this priority**: Large organizations and co-working spaces can have hundreds or thousands of resources. Filtering is essential for usability at scale, but the full unfiltered view must remain the starting point so users can explore without being forced to know the location hierarchy upfront.
 
 **Independent Test**: Open the dashboard and confirm all accessible resources are shown; then apply a single filter (e.g., a specific location) and confirm the dashboard shows only resources belonging to that location with correct statuses.
 
@@ -80,20 +80,20 @@ When a location or space contains a large number of resources, the dashboard loa
 
 ### User Story 5 – Authorised Access and Booking Visibility (Tenancy and Role Enforcement) (Priority: P1)
 
-A user can only view resources that belong to their organisation or the locations they are authorised to access. Additionally, the level of booking detail visible depends on the organisation type and the user's role.
+A user can only view resources that belong to their organization or the locations they are authorised to access. Additionally, the level of booking detail visible depends on the organization type and the user's role.
 
 **Why this priority**: Multi-tenancy data isolation and role-scoped booking visibility are non-negotiable security requirements.
 
-**Independent Test**: Log in as a regular user of a co-working space organisation, open the dashboard, and confirm that booked windows appear as unavailable but no other user's booking details are shown. Log in as an administrator of the same organisation and confirm all booking details are visible.
+**Independent Test**: Log in as a regular user of a co-working space organization, open the dashboard, and confirm that booked windows appear as unavailable but no other user's booking details are shown. Log in as an administrator of the same organization and confirm all booking details are visible.
 
 **Acceptance Scenarios**:
 
-1. **Given** a user belongs to Organisation A, **When** they open the dashboard, **Then** only resources within Organisation A's accessible locations are visible.
+1. **Given** a user belongs to Organization A, **When** they open the dashboard, **Then** only resources within Organization A's accessible locations are visible.
 2. **Given** a user does not have access to a specific location, **When** they attempt to filter by that location, **Then** no resources are returned and no data from that location leaks.
 3. **Given** a read-only user role, **When** they open the dashboard, **Then** they can view resource availability but cannot initiate bookings or changes from the dashboard.
-4. **Given** the organisation is of type **Private**, **When** any user opens the dashboard, **Then** all booking details for all resources are visible to all users within that organisation.
-5. **Given** the organisation is of type **Co-working Space**, **Marketplace**, or **Individual**, **When** a regular (non-admin, non-owner) user opens the dashboard, **Then** booked time windows appear as occupied/unavailable but the identity and details of those bookings are not shown.
-6. **Given** the organisation is of type **Co-working Space**, **Marketplace**, or **Individual**, **When** an owner or administrator opens the dashboard, **Then** full booking details across all users are visible.
+4. **Given** the organization is of type **Private**, **When** any user opens the dashboard, **Then** all booking details for all resources are visible to all users within that organization.
+5. **Given** the organization is of type **Co-working Space**, **Marketplace**, or **Individual**, **When** a regular (non-admin, non-owner) user opens the dashboard, **Then** booked time windows appear as occupied/unavailable but the identity and details of those bookings are not shown.
+6. **Given** the organization is of type **Co-working Space**, **Marketplace**, or **Individual**, **When** an owner or administrator opens the dashboard, **Then** full booking details across all users are visible.
 
 ---
 
@@ -120,11 +120,11 @@ A user can only view resources that belong to their organisation or the location
 - **FR-005**: Filters MUST be combinable (AND logic) and individually clearable without resetting other active filters. Clearing all filters returns the view to the full unfiltered resource list.
 - **FR-006**: The backend MUST expose the dashboard data via GraphQL, including filtering and sorting. The query returns all matching resources in a single response; no pagination is applied.
 - **FR-007**: ~~Removed~~ — pagination is not implemented; the query always returns the full filtered result set. Performance is managed via efficient DB queries and the filter dimensions (location, floor, zone, type, status) that naturally scope the result set.
-- **FR-008**: The dashboard MUST support real-time availability updates via GraphQL subscriptions. When a booking is created, modified, or cancelled, or when a resource's blocked/maintenance state changes, the server MUST push the updated day-level status of the affected resource(s) to all subscribed clients. The subscription MUST be scoped to an organisation or location so clients receive only updates relevant to the resources currently displayed. Existing GraphQL subscription implementations in the booking domain MUST be reviewed and reused or followed as the pattern.
-- **FR-009**: Tenancy boundaries MUST be enforced at the API layer so a user can only query resources belonging to their authorised organisations and locations.
-- **FR-009a**: Booking visibility on the dashboard MUST be governed by the organisation type of the resource's owning organisation:
-  - **Private organisation**: all users within the organisation can see all bookings for resources.
-  - **Co-working Space, Marketplace, or Individual organisation**: only owners and administrators can see the full booking details for all users. Regular users can see that a resource is booked (i.e., unavailable during that window) but MUST NOT see booking details belonging to other users.
+- **FR-008**: The dashboard MUST support real-time availability updates via GraphQL subscriptions. When a booking is created, modified, or cancelled, or when a resource's blocked/maintenance state changes, the server MUST push the updated day-level status of the affected resource(s) to all subscribed clients. The subscription MUST be scoped to an organization or location so clients receive only updates relevant to the resources currently displayed. Existing GraphQL subscription implementations in the booking domain MUST be reviewed and reused or followed as the pattern.
+- **FR-009**: Tenancy boundaries MUST be enforced at the API layer so a user can only query resources belonging to their authorised organizations and locations.
+- **FR-009a**: Booking visibility on the dashboard MUST be governed by the organization type of the resource's owning organization:
+  - **Private organization**: all users within the organization can see all bookings for resources.
+  - **Co-working Space, Marketplace, or Individual organization**: only owners and administrators can see the full booking details for all users. Regular users can see that a resource is booked (i.e., unavailable during that window) but MUST NOT see booking details belonging to other users.
 - **FR-010**: Role-based access control MUST be applied; read-only users can view the dashboard but cannot perform booking actions from it.
 - **FR-011**: The backend availability logic MUST be consolidated with or reused from existing floor plan and analytics availability logic to avoid duplicate implementations.
 - **FR-012**: The dashboard UI MUST follow the design system and frontend architecture patterns currently used in the project (typography wrappers, MUI v9, Relay, Next.js App Router).
@@ -146,9 +146,9 @@ A user can only view resources that belong to their organisation or the location
 
 - **Resource**: A bookable asset (desk, meeting room, hot desk, locker, etc.) belonging to a location. Has a type, floor, zone, active/inactive state, and optionally its own opening hours that override the location's opening hours.
 - **OpeningHours**: The time window during which a resource (or its parent location) is operational on a given day or day-of-week. A resource's effective opening hours are its own override if set, otherwise the location's opening hours. Availability and "Fully Booked" status are evaluated against effective opening hours only.
-- **ResourceDayView**: A computed representation of a resource for a selected date, containing: the day-level status, the effective opening hours, and the list of all individual booking windows and blocks for that date. The booking detail content within this view is filtered according to the requesting user's role and the organisation type.
-- **Organisation**: The owning tenant for a set of locations and resources. Has a type that governs booking visibility rules: **Private** (all users see all bookings), **Co-working Space** (only owners/admins see full booking details), **Marketplace** (only owners/admins see full booking details), or **Individual** (only owners/admins see full booking details).
-- **Location**: A physical space (building, floor, zone) that organises resources under a tenant/organisation. Defines default opening hours for all resources within it.
+- **ResourceDayView**: A computed representation of a resource for a selected date, containing: the day-level status, the effective opening hours, and the list of all individual booking windows and blocks for that date. The booking detail content within this view is filtered according to the requesting user's role and the organization type.
+- **Organization**: The owning tenant for a set of locations and resources. Has a type that governs booking visibility rules: **Private** (all users see all bookings), **Co-working Space** (only owners/admins see full booking details), **Marketplace** (only owners/admins see full booking details), or **Individual** (only owners/admins see full booking details).
+- **Location**: A physical space (building, floor, zone) that organises resources under a tenant/organization. Defines default opening hours for all resources within it.
 - **Booking**: A confirmed reservation of a resource for a specific time window. May be of any duration (minutes to full day). May be one-off or recurring.
 - **RecurringBooking**: A repeating schedule that generates booking instances on matching dates. Affects availability on those dates.
 - **BlockedPeriod**: An explicit block applied to a resource (e.g., maintenance, internal hold) that renders the resource unavailable regardless of bookings. Takes precedence over all booking states.
@@ -194,5 +194,5 @@ A user can only view resources that belong to their organisation or the location
 - Q: Should the dashboard show availability at day granularity only, or at time-slot granularity within the day? → A: Day granularity primary view; individual time-slot detail revealed on resource selection or hover.
 - Q: When a user arrives at the dashboard, should the active location be pre-selected from navigation context, or should all filters start empty? → A: All filters start empty and all accessible resources are displayed immediately; applying a filter narrows the results.
 - Q: When a resource is only partially booked during the selected day, what should the day-level status badge display? → A: The dashboard shows each resource with all its individual bookings listed against it for the day. A resource is considered "Fully Booked" only when all its effective opening hours are covered by bookings. Opening hours are inherited from the location or overridden at the resource level. Status must be evaluated against opening hours, not the full 24-hour day.
-- Q: When a co-working space owner views the dashboard, should they see all bookings from all member organisations on each resource? → A: Booking visibility is governed by organisation type. In a **Private** organisation, all users can see all bookings for resources. In a **Co-working Space**, **Marketplace**, or **Individual** organisation, only owners and administrators can see all bookings; regular users cannot see other users' bookings.
-- Q: Should real-time refresh use polling or another mechanism? → A: Use GraphQL subscriptions, not polling. When a booking or resource status changes, the server pushes the updated resource status back to the client. The subscription scope is at the organisation or location level (subscribe to all resources under an organisation or location). Existing subscription implementations in the booking domain should be reviewed and reused or followed as the pattern.
+- Q: When a co-working space owner views the dashboard, should they see all bookings from all member organizations on each resource? → A: Booking visibility is governed by organization type. In a **Private** organization, all users can see all bookings for resources. In a **Co-working Space**, **Marketplace**, or **Individual** organization, only owners and administrators can see all bookings; regular users cannot see other users' bookings.
+- Q: Should real-time refresh use polling or another mechanism? → A: Use GraphQL subscriptions, not polling. When a booking or resource status changes, the server pushes the updated resource status back to the client. The subscription scope is at the organization or location level (subscribe to all resources under an organization or location). Existing subscription implementations in the booking domain should be reviewed and reused or followed as the pattern.

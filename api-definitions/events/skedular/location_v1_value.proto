@@ -31,18 +31,19 @@ message Data {
 }
 
 message Location {
-  string                    id              = 1;
-  google.protobuf.Timestamp deletedAt       = 2;
-  string                    name            = 3;
-  ListingMetadata           listingMetadata = 4;
-  string                    organizationId  = 5;
-  string                    timezone        = 6;
-  repeated Resource         resources       = 7;
-  repeated string           tagIds          = 8;
-  OpeningHours              openingHours    = 9;
-  PhysicalAddress           physicalAddress = 10;
-  repeated CdnImageFile     featureImages   = 11;
-  LocationType              type            = 12;
+  string                         id                    = 1;
+  google.protobuf.Timestamp      deletedAt             = 2;
+  string                         name                  = 3;
+  ListingMetadata                listingMetadata       = 4;
+  string                         organizationId        = 5;
+  string                         timezone              = 6;
+  repeated Resource              resources             = 7;
+  repeated string                tagIds                = 8;
+  OpeningHours                   openingHours          = 9;
+  PhysicalAddress                physicalAddress       = 10;
+  repeated CdnImageFile          featureImages         = 11;
+  LocationType                   type                  = 12;
+  repeated RestrictedInformation restrictedInformation = 13;
 }
 
 enum LocationType {
@@ -128,4 +129,13 @@ message ListingMetadata {
   string          title            = 2;
   string          subTitle         = 3;
   repeated string includedFeatures = 4;
+}
+
+message RestrictedInformation {
+  string id        = 1;
+  string title     = 2;
+  string category  = 3;
+  string content   = 4;
+  bool   active    = 5;
+  int32  sortOrder = 6;
 }

@@ -33,14 +33,14 @@ public class OrganizationAuthorizationService(
         if (allowed)
         {
             logger.LogInformation(
-                "Organisation view permission granted for customer {CustomerId} in organization {OrganizationId}",
+                "Organization view permission granted for customer {CustomerId} in organization {OrganizationId}",
                 customerId,
                 organizationId);
         }
         else
         {
             logger.LogWarning(
-                "Organisation view permission denied for customer {CustomerId} in organization {OrganizationId}",
+                "Organization view permission denied for customer {CustomerId} in organization {OrganizationId}",
                 customerId,
                 organizationId);
         }
@@ -62,14 +62,14 @@ public class OrganizationAuthorizationService(
         if (allowed)
         {
             logger.LogInformation(
-                "Organisation modify permission granted for customer {CustomerId} in organization {OrganizationId}",
+                "Organization modify permission granted for customer {CustomerId} in organization {OrganizationId}",
                 customerId,
                 organizationId);
         }
         else
         {
             logger.LogWarning(
-                "Organisation modify permission denied for customer {CustomerId} in organization {OrganizationId}",
+                "Organization modify permission denied for customer {CustomerId} in organization {OrganizationId}",
                 customerId,
                 organizationId);
         }
@@ -91,14 +91,14 @@ public class OrganizationAuthorizationService(
         if (allowed)
         {
             logger.LogInformation(
-                "Organisation delete permission granted for customer {CustomerId} in organization {OrganizationId}",
+                "Organization delete permission granted for customer {CustomerId} in organization {OrganizationId}",
                 customerId,
                 organizationId);
         }
         else
         {
             logger.LogWarning(
-                "Organisation delete permission denied for customer {CustomerId} in organization {OrganizationId}",
+                "Organization delete permission denied for customer {CustomerId} in organization {OrganizationId}",
                 customerId,
                 organizationId);
         }
@@ -120,14 +120,14 @@ public class OrganizationAuthorizationService(
         if (allowed)
         {
             logger.LogInformation(
-                "Organisation invite permission granted for customer {CustomerId} in organization {OrganizationId}",
+                "Organization invite permission granted for customer {CustomerId} in organization {OrganizationId}",
                 customerId,
                 organizationId);
         }
         else
         {
             logger.LogWarning(
-                "Organisation invite permission denied for customer {CustomerId} in organization {OrganizationId}",
+                "Organization invite permission denied for customer {CustomerId} in organization {OrganizationId}",
                 customerId,
                 organizationId);
         }
@@ -152,14 +152,14 @@ public class OrganizationAuthorizationService(
         if (allowed)
         {
             logger.LogInformation(
-                "Organisation invitation-cancellation permission granted for customer {CustomerId} in organization {OrganizationId}",
+                "Organization invitation-cancellation permission granted for customer {CustomerId} in organization {OrganizationId}",
                 customerId,
                 organizationId);
         }
         else
         {
             logger.LogWarning(
-                "Organisation invitation-cancellation permission denied for customer {CustomerId} in organization {OrganizationId}",
+                "Organization invitation-cancellation permission denied for customer {CustomerId} in organization {OrganizationId}",
                 customerId,
                 organizationId);
         }

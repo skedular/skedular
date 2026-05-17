@@ -52,7 +52,8 @@ public class LocationService(
     IEntityMapper entityMapper,
     TimeProvider timeProvider,
     IContext context,
-    ICachedLocationService cachedLocationService) : ILocationService
+    ICachedLocationService cachedLocationService,
+    ILocationBookingAccessService locationBookingAccessService) : ILocationService
 {
     public async Task<Shared.Models.Location> AddAsync(
         Shared.Models.Location location,
@@ -417,8 +418,11 @@ public class LocationService(
         CancellationToken cancellationToken)
     {
         var isMarketplace = location.Type.ToLocationType() == LocationType.Marketplace;
+        var hasBookingAccess = customer is not null &&
+                               await locationBookingAccessService.HasCurrentCustomerAccessToLocationAsync(location.Id, cancellationToken);
         if (!isMarketplace && customer is not null &&
-            !await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken))
+            !await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken) &&
+            !hasBookingAccess)
         {
             throw new UnauthorizedAccessException();
         }
@@ -427,18 +431,31 @@ public class LocationService(
 
         if (customer is null || location.Organization.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName)
         {
+            mappedLocation.RestrictedInformation = [];
             return mappedLocation;
         }
 
+        var organizationCanView = await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken);
+        var canView = isMarketplace || organizationCanView;
+        var canViewRestrictedInformation = organizationCanView || hasBookingAccess;
+
         mappedLocation.Permissions = new Permissions
         {
-            CanView =
-                isMarketplace || await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken),
+            CanView = canView,
             CanModify = await organizationAuthorizationService.CanModifyAsync(location.OrganizationId, customer.Id, cancellationToken),
             CanDelete = await organizationAuthorizationService.CanDeleteAsync(location.OrganizationId, customer.Id, cancellationToken),
             CanViewAnalytics =
                 await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken)
         };
+
+        if (!canViewRestrictedInformation)
+        {
+            mappedLocation.RestrictedInformation = [];
+        }
+        else if (!mappedLocation.Permissions.CanModify)
+        {
+            mappedLocation.RestrictedInformation = mappedLocation.RestrictedInformation.Where(item => item.Active).ToList();
+        }
 
         if (!mappedLocation.Permissions.CanModify)
         {

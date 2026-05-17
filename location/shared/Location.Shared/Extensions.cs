@@ -40,7 +40,8 @@ public static class Extensions
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>()
                 .AddScoped<ICachedLocationService, CachedLocationService>()
-                .AddScoped<ICachedResourceService, CachedResourceService>();
+                .AddScoped<ICachedResourceService, CachedResourceService>()
+                .AddScoped<ICachedLocationBookingAccessService, CachedLocationBookingAccessService>();
 
         public IServiceCollection AddRepositoryFactory() =>
             services
@@ -62,7 +63,9 @@ public static class Extensions
                 .AddScoped<IFloorPlanRepository, FloorPlanRepository>()
                 .AddScoped<IProductRepository, ProductRepository>()
                 .AddScoped<IProductVersionRepository, ProductVersionRepository>()
-                .AddScoped<IPrecomputedLocationProductRepository, PrecomputedLocationProductRepository>();
+                .AddScoped<IPrecomputedLocationProductRepository, PrecomputedLocationProductRepository>()
+                .AddScoped<ILocationRestrictedInformationRepository, LocationRestrictedInformationRepository>()
+                .AddScoped<ILocationBookingAccessRepository, LocationBookingAccessRepository>();
 
         public IServiceCollection AddPublishers() =>
             services

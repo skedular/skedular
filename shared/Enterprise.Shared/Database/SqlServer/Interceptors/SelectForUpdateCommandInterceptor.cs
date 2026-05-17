@@ -76,7 +76,7 @@ public class SelectForUpdateCommandInterceptor : DbCommandInterceptor
 
     private static string ReplaceFromWithLockHint(string commandText, string lockHints)
     {
-        var fromIndex = commandText.IndexOf("FROM ", StringComparison.OrdinalIgnoreCase);
+        var fromIndex = commandText.IndexOf("FROM ", StringComparison.InvariantCultureIgnoreCase);
         if (fromIndex == -1)
         {
             return commandText;
@@ -85,7 +85,7 @@ public class SelectForUpdateCommandInterceptor : DbCommandInterceptor
         var afterFrom = fromIndex + 5;
         var nextSpace = commandText.IndexOf(' ', afterFrom);
         var nextComma = commandText.IndexOf(',', afterFrom);
-        var nextJoin = commandText.IndexOf("JOIN", afterFrom, StringComparison.OrdinalIgnoreCase);
+        var nextJoin = commandText.IndexOf("JOIN", afterFrom, StringComparison.InvariantCultureIgnoreCase);
 
         var endIndex = int.MaxValue;
         if (nextSpace > 0)

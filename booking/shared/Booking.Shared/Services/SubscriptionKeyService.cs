@@ -30,7 +30,7 @@ public interface ISubscriptionKeyService
     ///     <paramref name="zoneId" />, and <paramref name="resourceType" /> (2³ = 8 keys)
     ///     so that subscribers using partial filters still receive the event.
     /// </summary>
-    /// <param name="organizationCustomDomain">The custom domain of the organisation that owns the booking.</param>
+    /// <param name="organizationCustomDomain">The custom domain of the organization that owns the booking.</param>
     /// <param name="locationId">The location of the booking.</param>
     /// <param name="floorId">The floor of the booking (may be null).</param>
     /// <param name="zoneId">The zone of the booking (may be null).</param>

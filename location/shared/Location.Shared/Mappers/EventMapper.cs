@@ -10,6 +10,7 @@ using LocationType = Api.Shared.Services.Models.LocationType;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
 using Resource = Api.Shared.Clients.Events.Skedular.Location.V1.Resource;
+using RestrictedInformation = Api.Shared.Clients.Events.Skedular.Location.V1.RestrictedInformation;
 using WeekOpeningHours = Api.Shared.Services.Models.WeekOpeningHours;
 
 namespace Location.Shared.Mappers;
@@ -62,6 +63,7 @@ public class EventMapper : IEventMapper
 
         location.TagIds.AddRange(src.SpaceTypes.Select(tag => tag.Id));
         location.FeatureImages.AddRange(MapTo(src.FeatureImages));
+        location.RestrictedInformation.AddRange(src.RestrictedInformation.Select(MapTo));
 
         return location;
     }
@@ -160,4 +162,15 @@ public class EventMapper : IEventMapper
 
         return listingMetadata;
     }
+
+    private static RestrictedInformation MapTo(LocationRestrictedInformation src) =>
+        new()
+        {
+            Id = src.Id,
+            Title = src.Title.ToSafeString(),
+            Category = src.Category.ToLocationRestrictedInformationCategory(),
+            Content = src.Content.ToSafeString(),
+            Active = src.Active,
+            SortOrder = src.SortOrder
+        };
 }

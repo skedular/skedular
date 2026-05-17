@@ -29,6 +29,8 @@ public interface IRepositoryFactory
     IProductVersionRepository ProductVersionRepository { get; }
     IPrecomputedLocationProductRepository PrecomputedLocationProductRepository { get; }
     IDailyResourceAvailabilitySnapshotRepository DailyResourceAvailabilitySnapshotRepository { get; }
+    ILocationRestrictedInformationRepository LocationRestrictedInformationRepository { get; }
+    ILocationBookingAccessRepository LocationBookingAccessRepository { get; }
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepositoryFactory
@@ -57,6 +59,8 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
         ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
         PrecomputedLocationProductRepository = new PrecomputedLocationProductRepository(_dbContext, timeProvider);
         DailyResourceAvailabilitySnapshotRepository = new DailyResourceAvailabilitySnapshotRepository(_dbContext, timeProvider);
+        LocationRestrictedInformationRepository = new LocationRestrictedInformationRepository(_dbContext, timeProvider);
+        LocationBookingAccessRepository = new LocationBookingAccessRepository(_dbContext, timeProvider);
     }
 
     public ILocationPhysicalAddressRepository LocationPhysicalAddressRepository { get; }
@@ -79,4 +83,6 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
     public IProductVersionRepository ProductVersionRepository { get; }
     public IPrecomputedLocationProductRepository PrecomputedLocationProductRepository { get; }
     public IDailyResourceAvailabilitySnapshotRepository DailyResourceAvailabilitySnapshotRepository { get; }
+    public ILocationRestrictedInformationRepository LocationRestrictedInformationRepository { get; }
+    public ILocationBookingAccessRepository LocationBookingAccessRepository { get; }
 }

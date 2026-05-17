@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c9020b67ab8f904a33e05110d32c4986>>
+ * @generated SignedSource<<619111cc2b6a444abf4911aec405043f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type LocationRestrictedInformationCategory = "ACCESS" | "ACCESSIBILITY" | "AFTER_HOURS" | "CHECK_IN" | "CHECK_OUT" | "CLEANING" | "DELIVERIES" | "EQUIPMENT" | "EVACUATION" | "GUESTS" | "HOUSE_RULES" | "KITCHEN" | "MAINTENANCE" | "MEETING_ROOMS" | "NOISE" | "OTHER" | "PARKING" | "PETS" | "SECURITY" | "SMOKING" | "STORAGE" | "WASTE" | "WIFI" | "%future added value";
 export type LocationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
@@ -121,6 +122,14 @@ export type organizationLocation_query$data = {
       readonly suburb: string | null | undefined;
       readonly zipcode: string;
     } | null | undefined;
+    readonly restrictedInformation: ReadonlyArray<{
+      readonly active: boolean;
+      readonly category: LocationRestrictedInformationCategory;
+      readonly content: string;
+      readonly id: string;
+      readonly sortOrder: number;
+      readonly title: string;
+    }>;
     readonly spaceTypes: ReadonlyArray<{
       readonly color: string | null | undefined;
       readonly id: string;
@@ -141,7 +150,7 @@ export type organizationLocation_query$data = {
       readonly type: OrganizationType;
     };
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesLocationSpaceTypes_query" | "singleChoiceLocationType_query" | "weekOpeningHours_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesLocationSpaceTypes_query" | "singleChoiceLocationRestrictedInformationCategory_query" | "singleChoiceLocationType_query" | "weekOpeningHours_query">;
   readonly " $fragmentType": "organizationLocation_query";
 };
 export type organizationLocation_query$key = {
@@ -175,10 +184,17 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "from",
   "storageKey": null
 },
-v4 = [
+v5 = [
   {
     "alias": null,
     "args": null,
@@ -201,7 +217,7 @@ v4 = [
     "storageKey": null
   }
 ],
-v5 = [
+v6 = [
   (v0/*: any*/),
   (v2/*: any*/),
   {
@@ -212,7 +228,7 @@ v5 = [
     "storageKey": null
   }
 ],
-v6 = [
+v7 = [
   {
     "alias": null,
     "args": null,
@@ -227,7 +243,7 @@ v6 = [
     "name": "openAllDay",
     "storageKey": null
   },
-  (v3/*: any*/),
+  (v4/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -330,13 +346,7 @@ return {
           "name": "listingMetadata",
           "plural": false,
           "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "title",
-              "storageKey": null
-            },
+            (v3/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -447,7 +457,7 @@ return {
               "name": "peopleCapacity",
               "plural": false,
               "selections": [
-                (v3/*: any*/),
+                (v4/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -504,7 +514,7 @@ return {
               "kind": "LinkedField",
               "name": "original",
               "plural": false,
-              "selections": (v4/*: any*/),
+              "selections": (v5/*: any*/),
               "storageKey": null
             },
             {
@@ -514,7 +524,7 @@ return {
               "kind": "LinkedField",
               "name": "thumbnail",
               "plural": false,
-              "selections": (v4/*: any*/),
+              "selections": (v5/*: any*/),
               "storageKey": null
             }
           ],
@@ -637,7 +647,7 @@ return {
           "kind": "LinkedField",
           "name": "spaceTypes",
           "plural": true,
-          "selections": (v5/*: any*/),
+          "selections": (v6/*: any*/),
           "storageKey": null
         },
         {
@@ -647,7 +657,7 @@ return {
           "kind": "LinkedField",
           "name": "amenities",
           "plural": true,
-          "selections": (v5/*: any*/),
+          "selections": (v6/*: any*/),
           "storageKey": null
         },
         {
@@ -673,7 +683,7 @@ return {
                   "kind": "LinkedField",
                   "name": "monday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v7/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -683,7 +693,7 @@ return {
                   "kind": "LinkedField",
                   "name": "tuesday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v7/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -693,7 +703,7 @@ return {
                   "kind": "LinkedField",
                   "name": "wednesday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v7/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -703,7 +713,7 @@ return {
                   "kind": "LinkedField",
                   "name": "thursday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v7/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -713,7 +723,7 @@ return {
                   "kind": "LinkedField",
                   "name": "friday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v7/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -723,7 +733,7 @@ return {
                   "kind": "LinkedField",
                   "name": "saturday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v7/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -733,10 +743,51 @@ return {
                   "kind": "LinkedField",
                   "name": "sunday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v7/*: any*/),
                   "storageKey": null
                 }
               ],
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "LocationRestrictedInformationDetails",
+          "kind": "LinkedField",
+          "name": "restrictedInformation",
+          "plural": true,
+          "selections": [
+            (v0/*: any*/),
+            (v3/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "category",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "content",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "active",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "sortOrder",
               "storageKey": null
             }
           ],
@@ -758,6 +809,11 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
+      "name": "singleChoiceLocationRestrictedInformationCategory_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
       "name": "multipleChoicesLocationSpaceTypes_query"
     },
     {
@@ -771,6 +827,6 @@ return {
 };
 })();
 
-(node as any).hash = "f5e5babf00d9a621992bb49b96abda1b";
+(node as any).hash = "aa2831a5670b585ff0e0252262db69ec";
 
 export default node;

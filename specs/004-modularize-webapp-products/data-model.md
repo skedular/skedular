@@ -77,11 +77,11 @@ This is the **single centralised package** for all cross-product runtime modules
 | `src/app/signin/`, `src/app/callback/`                        | `CS`     | Auth entry points — shared by all products per FR-013 |
 | `src/app/settings/`, `src/app/notifications/`                 | `CS`     | Account management — shared entry points per FR-013   |
 | `src/app/marketplace/`                                        | `CS`     | Skedular marketplace domain                           |
-| `src/app/organizations/`                                      | `CS`     | Organisation management                               |
+| `src/app/organizations/`                                      | `CS`     | Organization management                               |
 | `src/app/billing-and-payment/`                                | `CS`     | Billing domain                                        |
 | `src/components/booking/`                                     | `CS`     | Booking feature components                            |
 | `src/components/marketplace*/`                                | `CS`     | Marketplace feature components                        |
-| `src/components/organization*/`                               | `CS`     | Organisation feature components                       |
+| `src/components/organization*/`                               | `CS`     | Organization feature components                       |
 | `src/components/location/`, `resource/`, `zone/`              | `CS`     | Location and resource management                      |
 | `src/components/team/`                                        | `CS`     | Team management within Skedular scheduler             |
 | `src/components/product*/`                                    | `CS`     | Product catalogue components                          |

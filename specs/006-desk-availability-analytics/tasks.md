@@ -128,7 +128,7 @@
 
 ## Phase 8: Web UI — Desk Availability Insight
 
-**Goal**: Display per-day desk availability data in the organisation analytics web application, in the existing Location Insights section, as a stacked bar chart with three series (available, unavailable, booked). Follows the identical component pattern used by `LocationDeskOccupancyInsight`.
+**Goal**: Display per-day desk availability data in the organization analytics web application, in the existing Location Insights section, as a stacked bar chart with three series (available, unavailable, booked). Follows the identical component pattern used by `LocationDeskOccupancyInsight`.
 
 **Independent Test**: After the backend schema is exported and Relay artifacts are regenerated, the component renders correctly for a location with seeded snapshot data: the stacked bar chart shows three coloured series per day and the date range selector defaults to six months.
 

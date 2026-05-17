@@ -85,7 +85,7 @@ public class BookingService(
 
         if (requestedOtherCustomersBookings && scopedOrganization is null)
         {
-            throw new InvalidOperationException("To view other people's bookings, narrow your search to a specific organisation first.");
+            throw new InvalidOperationException("To view other people's bookings, narrow your search to a specific organization first.");
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) &&

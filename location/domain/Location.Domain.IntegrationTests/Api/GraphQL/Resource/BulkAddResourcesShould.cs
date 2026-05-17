@@ -20,7 +20,7 @@ public class BulkAddResourcesShould(
     // ─── Helpers ─────────────────────────────────────────────────────────────
 
     /// <summary>
-    ///     Seeds a minimal organisation + location + resource-type tag so the mutation has valid IDs to work with.
+    ///     Seeds a minimal organization + location + resource-type tag so the mutation has valid IDs to work with.
     ///     Also seeds a customer with an identity whose ID becomes the bearer token for authenticated calls.
     /// </summary>
     private async Task<(string LocationId, string ResourceTypeTagId, string VerifiableToken)> SeedLocationWithResourceTypeTagAsync(
@@ -42,10 +42,7 @@ public class BulkAddResourcesShould(
             CreatedAt = now,
             Offering = new Offering
             {
-                Id = await Nanoid.GenerateAsync(),
-                Code = OfferingCode.EnterpriseCustomV1,
-                Start = now.AddYears(-1),
-                End = now.AddYears(1)
+                Id = await Nanoid.GenerateAsync(), Code = OfferingCode.EnterpriseCustomV1, Start = now.AddYears(-1), End = now.AddYears(1)
             }
         };
         var location = new LocationEntity

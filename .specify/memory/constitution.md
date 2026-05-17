@@ -63,7 +63,7 @@ that the appropriate generator was run and its outputs are committed.
 
 ### II. Domain Ownership and Architecture Boundaries
 
-Each domain (booking, organisation, location, marketplace, etc.) owns its own data, services,
+Each domain (booking, organization, location, marketplace, etc.) owns its own data, services,
 workflows, and Kafka event definitions. Cross-domain collaboration MUST go through public
 service or event interfaces, never through direct database or internal-class access. GraphQL
 federation is the primary client-facing integration surface; REST/OpenAPI is secondary; gRPC is

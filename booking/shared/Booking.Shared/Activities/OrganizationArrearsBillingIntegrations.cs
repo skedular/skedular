@@ -163,7 +163,7 @@ public class OrganizationArrearsBillingIntegrations(
             var recipients = draftBookingModels
                 .SelectMany(booking => booking.MarketplaceBooking?.InvoiceEmailList ?? [])
                 .Where(email => !string.IsNullOrWhiteSpace(email))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Distinct(StringComparer.InvariantCultureIgnoreCase)
                 .ToList();
 
             var invoiceNumber = await organizationInvoiceCounterService.GetNextInvoiceNumberIdAsync(args.OrganizationId, cancellationToken);
@@ -622,7 +622,8 @@ public class OrganizationArrearsBillingIntegrations(
                 100,
                 cancellationToken);
             var existingXeroContact =
-                contactsByName._Contacts?.FirstOrDefault(item => string.Equals(item.Name, xeroContactName, StringComparison.OrdinalIgnoreCase));
+                contactsByName._Contacts?.FirstOrDefault(item =>
+                    string.Equals(item.Name, xeroContactName, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingXeroContact is null && !string.IsNullOrWhiteSpace(email))
             {
@@ -640,7 +641,8 @@ public class OrganizationArrearsBillingIntegrations(
                     100,
                     cancellationToken);
                 existingXeroContact =
-                    contactsByEmail._Contacts?.FirstOrDefault(item => string.Equals(item.EmailAddress, email, StringComparison.OrdinalIgnoreCase));
+                    contactsByEmail._Contacts?.FirstOrDefault(item =>
+                        string.Equals(item.EmailAddress, email, StringComparison.InvariantCultureIgnoreCase));
             }
 
             if (existingXeroContact?.ContactID is not null)
