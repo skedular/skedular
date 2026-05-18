@@ -9,8 +9,9 @@ public interface ICachedOrganizationService
 {
     ValueTask<Database.Entities.Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 
-    ValueTask<IReadOnlyList<Database.Entities.Organization>>
-        GetMyOrganizationsByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
+    ValueTask<IReadOnlyList<Database.Entities.Organization>> GetMyOrganizationsByCustomerIdAsync(
+        string customerId,
+        CancellationToken cancellationToken);
 
     ValueTask UpdateByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
     ValueTask RemoveMyOrganizationsByCustomerIdsAsync(IReadOnlyList<string> customerIds, CancellationToken cancellationToken);

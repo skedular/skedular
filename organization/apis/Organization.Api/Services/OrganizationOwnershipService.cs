@@ -3,12 +3,13 @@ using Enterprise.Shared.Database;
 using Organization.Api.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services.Cache;
 
 namespace Organization.Api.Services;
 
 public interface IOrganizationOwnershipService
 {
-    Task VerifyAsync(string? organizationId, string? organizationUniqueAlphanumericNam, CancellationToken cancellationToken);
+    Task VerifyAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 }
 
 public class OrganizationOwnershipService(
@@ -16,14 +17,12 @@ public class OrganizationOwnershipService(
     IRepositoryFactory repositoryFactory,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-    IGraphQlMapper graphQlMapper) : IOrganizationOwnershipService
+    IGraphQlMapper graphQlMapper,
+    ICachedOrganizationService cachedOrganizationService) : IOrganizationOwnershipService
 {
-    public async Task VerifyAsync(string? organizationId, string? organizationUniqueAlphanumericNam, CancellationToken cancellationToken)
+    public async Task VerifyAsync(string? id, string? customDomain, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                               organizationId,
-                               organizationUniqueAlphanumericNam,
-                               cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(id, customDomain, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -36,5 +35,7 @@ public class OrganizationOwnershipService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
     }
 }
