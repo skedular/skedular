@@ -59,7 +59,7 @@ public class OrganizationCoreController(
         return Ok();
     }
 
-    public override async Task<IActionResult> VerifyOrganizationOwnership(
+    public override async Task<IActionResult> VerifyOrganizationOwnershipById(
         string organizationId,
         // ReSharper disable once InconsistentNaming
         string x_API_Key,
@@ -71,6 +71,22 @@ public class OrganizationCoreController(
         }
 
         await organizationOwnershipService.VerifyAsync(organizationId, null, cancellationToken);
+
+        return Ok();
+    }
+
+    public override async Task<IActionResult> VerifyOrganizationOwnershipByCustomDomain(
+        string customDomain,
+        // ReSharper disable once InconsistentNaming
+        string x_API_Key,
+        CancellationToken cancellationToken = default)
+    {
+        if (x_API_Key != organizationConfiguration.ApiKey)
+        {
+            return Unauthorized();
+        }
+
+        await organizationOwnershipService.VerifyAsync(null, customDomain, cancellationToken);
 
         return Ok();
     }

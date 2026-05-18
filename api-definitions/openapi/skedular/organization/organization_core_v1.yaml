@@ -75,17 +75,49 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
-  /v1/organization/{organizationId}/ownership/verify:
+  /v1/organization/ownership/verifyById/{organizationId}:
     put:
       tags:
         - v1
         - organization
         - ownership
-      summary: verify organization ownership
-      operationId: verifyOrganizationOwnership
+      summary: verify organization ownership by id
+      operationId: verifyOrganizationOwnershipById
       parameters:
         - in: path
           name: organizationId
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: X-API-Key
+          schema:
+            type: string
+          required: true
+          description: API Key
+
+      responses:
+        "200":
+          description: the status of verifying organization ownership
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/ownership/verifyByCustomDomain/{customDomain}:
+    put:
+      tags:
+        - v1
+        - organization
+        - ownership
+      summary: verify organization ownership by custom domain
+      operationId: verifyOrganizationOwnershipByCustomDomain
+      parameters:
+        - in: path
+          name: customDomain
           schema:
             type: string
           required: true

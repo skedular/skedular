@@ -54,15 +54,26 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ChangeOrganizationOffering(string organizationId, string offeringCode, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
-        /// verify organization ownership
+        /// verify organization ownership by id
         /// </summary>
         /// <param name="x_API_Key">API Key</param>
         /// <returns>the status of verifying organization ownership</returns>
 
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/ownership/verify")]
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/ownership/verifyById/{organizationId}")]
         [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("verify organization ownership")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> VerifyOrganizationOwnership(string organizationId, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [System.ComponentModel.Description("verify organization ownership by id")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> VerifyOrganizationOwnershipById(string organizationId, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// verify organization ownership by custom domain
+        /// </summary>
+        /// <param name="x_API_Key">API Key</param>
+        /// <returns>the status of verifying organization ownership</returns>
+
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/ownership/verifyByCustomDomain/{customDomain}")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("verify organization ownership by custom domain")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> VerifyOrganizationOwnershipByCustomDomain(string customDomain, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// generate an admin consent Url for the given tenant
