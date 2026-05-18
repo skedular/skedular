@@ -37,5 +37,8 @@ public class OrganizationOwnershipService(
         await transaction.CommitAsync(cancellationToken);
 
         await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
+        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
+            organization.OrganizationMembers.Select(item => item.CustomerId).ToList(),
+            cancellationToken);
     }
 }
