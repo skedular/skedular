@@ -1,7 +1,5 @@
-import { EditMarketplaceBooking } from '@/components/booking/editMarketplaceBooking';
 import { EditPrivateBooking } from '@/components/booking/editPrivateBooking';
 import { EditPrivateRecurringBooking } from '@/components/booking/editPrivateRecurringBooking';
-import { PayMarketplaceBooking } from '@/components/booking/payMarketplaceBooking';
 import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
@@ -14,7 +12,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
 import dayjs from 'dayjs';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
@@ -41,12 +39,6 @@ const RootQuery = graphql`
       recurringBooking {
         id
       }
-      marketplaceBooking {
-        isPaymentRequired
-        paymentStatus {
-          type
-        }
-      }
     }
     ...editPrivateBooking_query
     ...editPrivateRecurringBooking_query
@@ -56,32 +48,18 @@ const RootQuery = graphql`
     ...editPrivateRecurringBooking_organizationMembers_query
     ...editPrivateRecurringBooking_customerTeams_query
     ...editPrivateRecurringBooking_availableResources_query
-    ...editMarketplaceBooking_query
-    ...editMarketplaceBooking_booking_query
-    ...editMarketplaceBooking_organizationMembers_query
-    ...editMarketplaceBooking_customerTeams_query
-    ...payMarketplaceBooking_booking_query
   }
 `;
 
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationBooking_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationCustomDomain: string;
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationBooking_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const shouldPay = useMemo(() => {
-    if (!rootData.booking?.marketplaceBooking) {
-      return false;
-    }
-
-    const marketplaceBooking = rootData.booking.marketplaceBooking;
-    return marketplaceBooking.isPaymentRequired && (!marketplaceBooking.paymentStatus || marketplaceBooking.paymentStatus.type === 'PENDING');
-  }, [rootData.booking]);
 
   const handleBackClick = () => {
     router.back();
@@ -91,8 +69,12 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     return null;
   }
 
+  if (rootData.booking.channel.channel !== 'PRIVATE') {
+    return null;
+  }
+
   const editMode = searchParams.get('editMode');
-  const showRecurringPrivateBookingEditor = rootData.booking.channel.channel === 'PRIVATE' && !!rootData.booking.recurringBooking && editMode === 'recurring';
+  const showRecurringPrivateBookingEditor = !!rootData.booking.recurringBooking && editMode === 'recurring';
 
   const date = dayjs(rootData.booking.from);
 
@@ -112,36 +94,23 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      {rootData.booking.channel.channel === 'MARKETPLACE' && shouldPay && (
-        <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
-      )}
-      {rootData.booking.channel.channel === 'MARKETPLACE' && !shouldPay && (
-        <EditMarketplaceBooking
+      {showRecurringPrivateBookingEditor ? (
+        <EditPrivateRecurringBooking
           rootDataRelay={rootData}
-          rootDataBookingRelay={rootData}
           rootDataTeamsRelay={rootData}
           rootDataOrganizationMembersRelay={rootData}
+          rootDataAvailableResourcesRelay={rootData}
+          onReloadRequired={onReloadRequired}
+        />
+      ) : (
+        <EditPrivateBooking
+          rootDataRelay={rootData}
+          rootDataTeamsRelay={rootData}
+          rootDataOrganizationMembersRelay={rootData}
+          rootDataAvailableResourcesRelay={rootData}
           onReloadRequired={onReloadRequired}
         />
       )}
-      {rootData.booking.channel.channel === 'PRIVATE' &&
-        (showRecurringPrivateBookingEditor ? (
-          <EditPrivateRecurringBooking
-            rootDataRelay={rootData}
-            rootDataTeamsRelay={rootData}
-            rootDataOrganizationMembersRelay={rootData}
-            rootDataAvailableResourcesRelay={rootData}
-            onReloadRequired={onReloadRequired}
-          />
-        ) : (
-          <EditPrivateBooking
-            rootDataRelay={rootData}
-            rootDataTeamsRelay={rootData}
-            rootDataOrganizationMembersRelay={rootData}
-            rootDataAvailableResourcesRelay={rootData}
-            onReloadRequired={onReloadRequired}
-          />
-        ))}
     </RootShell>
   );
 };
@@ -213,7 +182,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };

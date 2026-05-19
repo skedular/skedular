@@ -21,28 +21,12 @@ type Props = {
   actions?: ReactNode;
 };
 
-type MarketplaceSubscriptionLookup = Record<string, string>;
-
 const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomain, from, to, locationIds, teamIds, customerIds, toolbar, actions }: Props) => {
   const rootData = useFragment<bookings_query$key>(
     graphql`
       fragment bookings_query on Query {
         me {
           id
-        }
-        marketplaceBookingSubscriptionCancellationModes {
-          type
-          name
-        }
-        marketplaceBookingSubscriptions(first: 100, where: { organizationCustomDomain: $organizationCustomDomain }) {
-          edges {
-            node {
-              id
-              recurringBookings {
-                id
-              }
-            }
-          }
         }
         ...bookingCard_query
       }
@@ -65,6 +49,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
             customerIds: $customerIds
             fromGte: $bookingsSearchCriteriaFrom
             fromLte: $bookingsSearchCriteriaTo
+            channel: PRIVATE
           }
           orderBy: [{ field: FROM, direction: ASCENDING }]
         ) @connection(key: "bookings_bookings") {
@@ -89,21 +74,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
 
   const bookings = useMemo(() => rootDataRefetchable.bookings.edges.map((edge) => edge.node), [rootDataRefetchable.bookings]);
   const connectionIds = useMemo(() => [rootDataRefetchable.bookings.__id], [rootDataRefetchable.bookings]);
-  const recurringMarketplaceSubscriptionIds = useMemo(() => {
-    return rootData.marketplaceBookingSubscriptions.edges.reduce((lookup, edge) => {
-      const subscription = edge.node;
-
-      if (!subscription) {
-        return lookup;
-      }
-
-      subscription.recurringBookings.forEach((recurringBooking) => {
-        lookup[recurringBooking.id] = subscription.id;
-      });
-
-      return lookup;
-    }, {} as MarketplaceSubscriptionLookup);
-  }, [rootData.marketplaceBookingSubscriptions.edges]);
 
   const handleRefetch = useCallback(
     (from: Dayjs, to: Dayjs, locationIds: string[], teamIds: string[], customerIds: string[]) => {
@@ -165,7 +135,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
               organizationCustomDomain={organizationCustomDomain}
               connectionIds={connectionIds}
               canJoinBooking={canJoinBooking}
-              recurringMarketplaceSubscriptionIds={recurringMarketplaceSubscriptionIds}
             />
           );
         })}

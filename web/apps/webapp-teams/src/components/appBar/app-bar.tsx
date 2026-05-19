@@ -79,7 +79,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
           familyName
           photoUrl
         }
-        myOrganizations {
+        myOrganizations(types: [PRIVATE]) {
           uniqueId
           customDomain
           logoUrl

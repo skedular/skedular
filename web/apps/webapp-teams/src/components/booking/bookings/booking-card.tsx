@@ -2,9 +2,8 @@ import { CustomerAvatar } from '@/components/avatars';
 import RecurringBookingDeleteConfirmationDialog from '@/components/booking/recurring-booking-delete-confirmation-dialog';
 import { CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
-import { CalendarIcon, EllipseMenuIcon, JoinIcon, NotesIcon, PaymentStatusIcon, PdfIcon, TeamIcon } from '@/components/icons';
+import { CalendarIcon, EllipseMenuIcon, JoinIcon, NotesIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
-import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Resources } from '@/components/resource';
@@ -14,14 +13,9 @@ import { coal } from '@skedular/ui';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, toShortDate } from '@skedular/shared';
 import type { bookingCard_addPrivateBookingMutation } from '@/queries/__generated__/bookingCard_addPrivateBookingMutation.graphql';
 import type { bookingCard_BookingDetails$key } from '@/queries/__generated__/bookingCard_BookingDetails.graphql';
-import type { bookingCard_confirmBookingPaymentMutation } from '@/queries/__generated__/bookingCard_confirmBookingPaymentMutation.graphql';
-import type { bookingCard_deleteMarketplaceBookingMutation } from '@/queries/__generated__/bookingCard_deleteMarketplaceBookingMutation.graphql';
-import type { bookingCard_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/bookingCard_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { bookingCard_deletePrivateBookingMutation } from '@/queries/__generated__/bookingCard_deletePrivateBookingMutation.graphql';
 import type { bookingCard_deletePrivateRecurringBookingMutation } from '@/queries/__generated__/bookingCard_deletePrivateRecurringBookingMutation.graphql';
-import type { bookingCard_makeBookingPaymentNotRequiredMutation } from '@/queries/__generated__/bookingCard_makeBookingPaymentNotRequiredMutation.graphql';
 import type { bookingCard_query$key } from '@/queries/__generated__/bookingCard_query.graphql';
-import type { bookingCard_rejectBookingPaymentMutation } from '@/queries/__generated__/bookingCard_rejectBookingPaymentMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -46,7 +40,6 @@ type Props = {
   organizationCustomDomain: string;
   connectionIds: string[];
   canJoinBooking: boolean;
-  recurringMarketplaceSubscriptionIds?: Record<string, string>;
 };
 
 type CustomTagDetails = {
@@ -63,9 +56,6 @@ type ZoneDetails = {
 
 type PendingRecurringDeleteAction = 'occurrence' | 'series' | null;
 
-const isConfirmedPaymentStatus = (paymentStatusType: string) => paymentStatusType === 'CONFIRMED' || paymentStatusType === 'PAID';
-const isPendingPaymentStatus = (paymentStatusType: string) => paymentStatusType === 'PENDING';
-
 const sectionSx: SxProps<Theme> = {
   border: 1,
   borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
@@ -74,7 +64,7 @@ const sectionSx: SxProps<Theme> = {
   backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.02)' : 'transparent'),
 };
 
-const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDomain, connectionIds, canJoinBooking, recurringMarketplaceSubscriptionIds = {} }: Props) => {
+const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDomain, connectionIds, canJoinBooking }: Props) => {
   const rootData = useFragment<bookingCard_query$key>(
     graphql`
       fragment bookingCard_query on Query {
@@ -85,13 +75,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
           middleName
           familyName
           photoUrl
-        }
-        organizationBookingPermissions(organizationCustomDomain: $organizationCustomDomain) {
-          canModifyPaymentMethod
-        }
-        paymentStatuses {
-          type
-          name
         }
       }
     `,
@@ -149,46 +132,12 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
             }
           }
         }
-        marketplaceBooking {
-          id
-          isPaymentRequired
-          paymentStatus {
-            type
-            name
-          }
-          invoiceUrl
-          refund {
-            id
-            currency {
-              type
-              name
-            }
-            status {
-              type
-              name
-            }
-            requestedAt
-            lastProcessedAt
-            refundAmount
-            refundPercentage
-            currencyToDisplay
-            reason
-            lastError
-            externalRefundNumber
-            requestedByCustomerName
-            canProcessInXero
-            xeroProcessingBlockedReason
-          }
-        }
         recurringBooking {
           id
           startDate
           endDate
           frequency {
             name
-          }
-          marketplaceBooking {
-            id
           }
         }
       }
@@ -206,37 +155,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     }
   `);
 
-  const [commitDeleteMarketplaceBooking] = useMutation<bookingCard_deleteMarketplaceBookingMutation>(graphql`
-    mutation bookingCard_deleteMarketplaceBookingMutation($connectionIds: [ID!]!, $input: DeleteMarketplaceBookingInput!) {
-      deleteMarketplaceBooking(input: $input) {
-        booking {
-          id @deleteEdge(connections: $connectionIds)
-        }
-      }
-    }
-  `);
-
   const [commitDeletePrivateRecurringBooking] = useMutation<bookingCard_deletePrivateRecurringBookingMutation>(graphql`
     mutation bookingCard_deletePrivateRecurringBookingMutation($input: DeletePrivateRecurringBookingInput!) {
       deletePrivateRecurringBooking(input: $input) {
         recurringBooking {
           id
-        }
-      }
-    }
-  `);
-
-  const [commitDeleteMarketplaceBookingSubscription] = useMutation<bookingCard_deleteMarketplaceBookingSubscriptionMutation>(graphql`
-    mutation bookingCard_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
-      deleteMarketplaceBookingSubscription(input: $input) {
-        marketplaceBookingSubscription {
-          id
-          cancelAtPeriodEnd
-          nextRenewalAt
-          status {
-            type
-            name
-          }
         }
       }
     }
@@ -295,57 +218,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     }
   `);
 
-  const [commitConfirmBookingPayment] = useMutation<bookingCard_confirmBookingPaymentMutation>(graphql`
-    mutation bookingCard_confirmBookingPaymentMutation($input: ConfirmBookingPaymentInput!) @raw_response_type {
-      confirmBookingPayment(input: $input) {
-        booking {
-          id
-          marketplaceBooking {
-            id
-            paymentStatus {
-              type
-              name
-            }
-          }
-        }
-      }
-    }
-  `);
-
-  const [commitRejectBookingPayment] = useMutation<bookingCard_rejectBookingPaymentMutation>(graphql`
-    mutation bookingCard_rejectBookingPaymentMutation($input: RejectBookingPaymentInput!) @raw_response_type {
-      rejectBookingPayment(input: $input) {
-        booking {
-          id
-          marketplaceBooking {
-            id
-            paymentStatus {
-              type
-              name
-            }
-          }
-        }
-      }
-    }
-  `);
-
-  const [commitMakeBookingPaymentNotRequired] = useMutation<bookingCard_makeBookingPaymentNotRequiredMutation>(graphql`
-    mutation bookingCard_makeBookingPaymentNotRequiredMutation($input: MakeBookingPaymentNotRequiredInput!) @raw_response_type {
-      makeBookingPaymentNotRequired(input: $input) {
-        booking {
-          id
-          marketplaceBooking {
-            id
-            paymentStatus {
-              type
-              name
-            }
-          }
-        }
-      }
-    }
-  `);
-
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
@@ -354,13 +226,8 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
   const [pendingRecurringDeleteAction, setPendingRecurringDeleteAction] = useState<PendingRecurringDeleteAction>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const shortDateFormatFrom = toShortDate(bookingDetails.from);
-  const refund = bookingDetails.marketplaceBooking?.refund;
-  const primaryCustomer = bookingDetails.involvedCustomers[0];
-  const refundEntityLabel = `booking ${primaryCustomer ? getCustomerFullName(primaryCustomer) : 'customer'} on ${shortDateFormatFrom}`;
-  const canManageRefund = rootData.organizationBookingPermissions.canModifyPaymentMethod && !!refund;
   const recurringBooking = bookingDetails.recurringBooking;
-  const isMarketplaceRecurringBooking = !!recurringBooking?.marketplaceBooking;
-  const canDeleteRecurringOccurrence = !!recurringBooking && !isMarketplaceRecurringBooking && bookingDetails.channel.channel === 'PRIVATE';
+  const canDeleteRecurringOccurrence = !!recurringBooking && bookingDetails.channel.channel === 'PRIVATE';
   const canEditRecurringSeries = canDeleteRecurringOccurrence;
   const recurringSeriesLabel = recurringBooking ? `${recurringBooking.frequency.name} recurring booking` : null;
   const recurringSeriesDateLabel = recurringBooking
@@ -372,15 +239,14 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
   const recurringSeriesActionLabel = recurringBooking ? 'Remove recurring series' : null;
   const recurringOccurrenceActionLabel = canDeleteRecurringOccurrence ? 'Remove this occurrence' : null;
   const recurringDeleteConfirmationMessage = recurringBooking
-    ? `This booking is part of a recurring series. ${isMarketplaceRecurringBooking ? 'If you continue, the full recurring series will be cancelled' : 'If you continue, the full recurring series will be removed'}, not just this booking.`
+    ? 'This booking is part of a recurring series. If you continue, the full recurring series will be removed, not just this booking.'
     : null;
   const recurringOccurrenceDeleteConfirmationMessage = canDeleteRecurringOccurrence
     ? 'Only this booking will be removed. The rest of the recurring series will stay active.'
     : null;
   const recurringDeleteDialogTitle = pendingRecurringDeleteAction === 'occurrence' ? 'Remove This Booking' : 'Remove Recurring Series';
   const recurringDeleteDialogDescription = pendingRecurringDeleteAction === 'occurrence' ? recurringOccurrenceDeleteConfirmationMessage : recurringDeleteConfirmationMessage;
-  const recurringDeleteDialogPrimaryLabel =
-    pendingRecurringDeleteAction === 'occurrence' ? 'Remove this booking' : isMarketplaceRecurringBooking ? 'Cancel series' : 'Remove series';
+  const recurringDeleteDialogPrimaryLabel = pendingRecurringDeleteAction === 'occurrence' ? 'Remove this booking' : 'Remove series';
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     canEditRecurringSeries
@@ -411,21 +277,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     });
   }
 
-  if (
-    rootData.organizationBookingPermissions.canModifyPaymentMethod &&
-    bookingDetails.marketplaceBooking &&
-    bookingDetails.marketplaceBooking.isPaymentRequired &&
-    bookingDetails.marketplaceBooking.paymentStatus.type !== 'REJECTED' &&
-    bookingDetails.marketplaceBooking.paymentStatus.type !== 'EXPIRED' &&
-    bookingDetails.marketplaceBooking.paymentStatus.type !== 'RECORD_NEVER_CREATED'
-  ) {
-    moreActionsOption.push(
-      moreActionsMenuAllOptions[MoreActionsMenuOptionType.ConfirmBookingPayment],
-      moreActionsMenuAllOptions[MoreActionsMenuOptionType.RejectBookingPayment],
-      moreActionsMenuAllOptions[MoreActionsMenuOptionType.MakeBookingPaymentNotRequired],
-    );
-  }
-
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
   };
@@ -450,17 +301,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         handleRemoveRecurringBookingClick();
         break;
 
-      case MoreActionsMenuOptionType.ConfirmBookingPayment:
-        handleConfirmPaymentClick();
-        break;
-
-      case MoreActionsMenuOptionType.RejectBookingPayment:
-        handleRejectPaymentClick();
-        break;
-
-      case MoreActionsMenuOptionType.MakeBookingPaymentNotRequired:
-        handleMakePaymentNotRequiredClick();
-        break;
     }
   };
 
@@ -501,65 +341,32 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
 
     const toastId = themedToast(<NotificationContent content={`Removing booking ${bookingDetailsInfo}...`} />, infoNotificationOptions);
 
-    if (bookingDetails.channel.channel === 'PRIVATE') {
-      commitDeletePrivateBooking({
-        variables: { connectionIds, input: { clientMutationId: uuid(), id: bookingDetails.id } },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />,
-            });
-
-            return;
-          }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Booking ${bookingDetailsInfo} has been removed.${canDeleteRecurringOccurrence ? ' The rest of the recurring series will stay active.' : ''}`}
-              />
-            ),
-          });
-        },
-        onError: (error) => {
+    commitDeletePrivateBooking({
+      variables: { connectionIds, input: { clientMutationId: uuid(), id: bookingDetails.id } },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />,
+            render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />,
           });
-        },
-      });
-    } else {
-      commitDeleteMarketplaceBooking({
-        variables: { connectionIds, input: { clientMutationId: uuid(), id: bookingDetails.id } },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />,
-            });
 
-            return;
-          }
+          return;
+        }
 
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Booking ${bookingDetailsInfo} has been removed.${canDeleteRecurringOccurrence ? ' The rest of the recurring series will stay active.' : ''}`}
-              />
-            ),
-          });
-        },
-        onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />,
-          });
-        },
-      });
-    }
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: (
+            <NotificationContent content={`Booking ${bookingDetailsInfo} has been removed.${canDeleteRecurringOccurrence ? ' The rest of the recurring series will stay active.' : ''}`} />
+          ),
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />,
+        });
+      },
+    });
   };
 
   const handleRemoveRecurringBookingClick = () => {
@@ -575,57 +382,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`${isMarketplaceRecurringBooking ? 'Cancelling' : 'Removing'} ${recurringSeriesLabel.toLowerCase()}...`} />,
-      infoNotificationOptions,
-    );
-
-    if (isMarketplaceRecurringBooking) {
-      const subscriptionId = recurringMarketplaceSubscriptionIds[recurringBooking.id];
-
-      if (!subscriptionId) {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content="We couldn't find the recurring series for this booking." />,
-        });
-
-        return;
-      }
-
-      commitDeleteMarketplaceBookingSubscription({
-        variables: {
-          input: {
-            clientMutationId: uuid(),
-            id: subscriptionId,
-            cancellationMode: 'IMMEDIATE',
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(errors)}`} />,
-            });
-
-            return;
-          }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`${recurringSeriesLabel} has been cancelled. This applies to the full recurring series, not just this booking.`} />,
-          });
-          router.refresh();
-        },
-        onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(error)}`} />,
-          });
-        },
-      });
-
-      return;
-    }
+    const toastId = themedToast(<NotificationContent content={`Removing ${recurringSeriesLabel.toLowerCase()}...`} />, infoNotificationOptions);
 
     commitDeletePrivateRecurringBooking({
       variables: {
@@ -749,150 +506,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     });
   };
 
-  const handleConfirmPaymentClick = () => {
-    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
-    if (bookingDetails.involvedLocations.length > 0) {
-      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
-    }
-    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
-
-    const toastId = themedToast(<NotificationContent content={`Confirming payment for booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
-
-    commitConfirmBookingPayment({
-      variables: { input: { clientMutationId: uuid(), id: bookingDetails.id } },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment confirmed.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to confirm payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
-      },
-      optimisticResponse: {
-        confirmBookingPayment: {
-          booking: {
-            id: bookingDetails.id,
-            marketplaceBooking: {
-              id: bookingDetails.marketplaceBooking?.id ?? uuid(),
-              paymentStatus: {
-                type: 'CONFIRMED',
-                name: rootData.paymentStatuses.find((status) => status.type === 'CONFIRMED')!.name,
-              },
-            },
-          },
-        },
-      },
-    });
-  };
-
-  const handleRejectPaymentClick = () => {
-    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
-    if (bookingDetails.involvedLocations.length > 0) {
-      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
-    }
-    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
-
-    const toastId = themedToast(<NotificationContent content={`Rejecting payment for booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
-
-    commitRejectBookingPayment({
-      variables: { input: { clientMutationId: uuid(), id: bookingDetails.id } },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment rejected.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to reject payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
-      },
-      optimisticResponse: {
-        rejectBookingPayment: {
-          booking: {
-            id: bookingDetails.id,
-            marketplaceBooking: {
-              id: bookingDetails.marketplaceBooking?.id ?? uuid(),
-              paymentStatus: {
-                type: 'REJECTED',
-                name: rootData.paymentStatuses.find((status) => status.type === 'REJECTED')!.name,
-              },
-            },
-          },
-        },
-      },
-    });
-  };
-
-  const handleMakePaymentNotRequiredClick = () => {
-    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
-    if (bookingDetails.involvedLocations.length > 0) {
-      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
-    }
-    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
-
-    const toastId = themedToast(<NotificationContent content={`Making payment for booking '${bookingDetailsInfo}' not required...`} />, infoNotificationOptions);
-
-    commitMakeBookingPaymentNotRequired({
-      variables: { input: { clientMutationId: uuid(), id: bookingDetails.id } },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment made not required.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to make payment for booking '${shortDateFormatFrom}' not required. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
-      },
-      optimisticResponse: {
-        makeBookingPaymentNotRequired: {
-          booking: {
-            id: bookingDetails.id,
-            marketplaceBooking: {
-              id: bookingDetails.marketplaceBooking?.id ?? uuid(),
-              paymentStatus: {
-                type: 'NO_PAYMENT_REQUIRED',
-                name: rootData.paymentStatuses.find((status) => status.type === 'NO_PAYMENT_REQUIRED')!.name,
-              },
-            },
-          },
-        },
-      },
-    });
-  };
-
   const customTags = bookingDetails.bookingResources
     .flatMap(({ resource }) => resource.customTags)
     .reduce((acc: CustomTagDetails[], customTag) => {
@@ -973,30 +586,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
                   <Chip label="Recurring" size="small" variant="outlined" />
                 </Tooltip>
               ) : null}
-              {bookingDetails.marketplaceBooking?.isPaymentRequired ? (
-                <Chip
-                  label={bookingDetails.marketplaceBooking.paymentStatus.name}
-                  size="small"
-                  icon={<PaymentStatusIcon />}
-                  color={
-                    isConfirmedPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type)
-                      ? 'success'
-                      : isPendingPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type)
-                        ? 'warning'
-                        : 'default'
-                  }
-                  variant={
-                    isConfirmedPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type) || isPendingPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type)
-                      ? 'filled'
-                      : 'outlined'
-                  }
-                />
-              ) : null}
-              {bookingDetails.marketplaceBooking?.invoiceUrl ? (
-                <Link component={NextLink} href={bookingDetails.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer" underline="none">
-                  <Chip label="View Invoice" size="small" icon={<PdfIcon />} clickable />
-                </Link>
-              ) : null}
             </StackRow>
 
             <StackRow sx={{ alignItems: 'center', gap: 1, minWidth: 0 }}>
@@ -1011,12 +600,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
                 </Box>
               </Tooltip>
             </StackRow>
-
-            {canManageRefund && refund ? (
-              <Box sx={sectionSx}>
-                <MarketplaceRefundAdminPanel entityLabel={refundEntityLabel} refund={refund} />
-              </Box>
-            ) : null}
 
             <Divider />
 

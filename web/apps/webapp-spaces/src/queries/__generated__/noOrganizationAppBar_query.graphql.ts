@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ba88867d5879b5bb73e6566312f71e1c>>
+ * @generated SignedSource<<d254a3423fb57a3ac95152ad37d00794>>
  * @lightSyntaxTransform
  */
 
@@ -103,7 +103,16 @@ const node: ReaderFragment = {
     },
     {
       "alias": null,
-      "args": null,
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "types",
+          "value": [
+            "MARKETPLACE",
+            "INDIVIDUAL"
+          ]
+        }
+      ],
       "concreteType": "MyOrganizationDetails",
       "kind": "LinkedField",
       "name": "myOrganizations",
@@ -138,7 +147,7 @@ const node: ReaderFragment = {
           "storageKey": null
         }
       ],
-      "storageKey": null
+      "storageKey": "myOrganizations(types:[\"MARKETPLACE\",\"INDIVIDUAL\"])"
     },
     {
       "alias": null,
@@ -164,6 +173,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "301b152da14ba4685450d18620d91967";
+(node as any).hash = "e34c1529770908574dc0a0f37698d83c";
 
 export default node;

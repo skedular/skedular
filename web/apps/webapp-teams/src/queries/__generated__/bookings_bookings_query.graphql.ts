@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<48bbf0153c421f3a7ceffd2d41dba02b>>
+ * @generated SignedSource<<705a88568582b78a38a11213f53be459>>
  * @lightSyntaxTransform
  */
 
@@ -122,6 +122,11 @@ return {
         },
         {
           "fields": [
+            {
+              "kind": "Literal",
+              "name": "channel",
+              "value": "PRIVATE"
+            },
             {
               "kind": "Variable",
               "name": "customerIds",
@@ -283,6 +288,6 @@ return {
 };
 })();
 
-(node as any).hash = "56cd74af3957cf4f94aea5490516aa2c";
+(node as any).hash = "9d6fbee63353d1c6bf49f416601e61a9";
 
 export default node;

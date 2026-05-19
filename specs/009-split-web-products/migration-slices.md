@@ -171,6 +171,54 @@ Owner: Product web split review
 - Ready for user review: yes
 - Accepted before next slice: no
 
+## Slice: teams-marketplace-route-pruning
+
+Target app: WebApp Teams  
+Journey: private organisation app route surface  
+Owner: Product web split review
+
+### Scope
+
+- Included: remove Teams app routes and navigation entries for marketplace discovery, marketplace organisation creation, marketplace setup, products, subscriptions, Stripe Connect, bank accounts, customer-facing subdomain handling, and marketplace location creation.
+- Included: keep Teams root, welcome, setup, and no-organisation flows focused on private organisation entry and private organisation selection.
+- Included: filter the no-organisation app bar selector to private organisations and route organisation creation directly to private organisation creation.
+- Included: limit Teams organisation booking list/detail routes to private booking flows.
+- Excluded: deleting the original WebApp routes, changing backend return URL contracts, or fully deleting every copied but currently unused marketplace component/test module from the Teams source tree.
+
+### Ownership Moves
+
+- App-owned code moved: none from WebApp in this slice; this slice prunes the Teams mirror after the full source copy.
+- Shared UI foundations moved: none.
+- Shared application foundations moved: none.
+- Transitional adapters retained: original WebApp marketplace/product/subscription/payment return routes remain available.
+
+### Route Retirement
+
+- Old routes: no WebApp routes retired.
+- Teams routes removed: `/marketplace/**`, `/organizations/add-marketplace`, `/organizations/[organizationCustomDomain]/products/**`, `/organizations/[organizationCustomDomain]/subscriptions/**`, `/organizations/[organizationCustomDomain]/setup-marketplace`, `/organizations/[organizationCustomDomain]/stripe-connect-accounts/**`, `/organizations/[organizationCustomDomain]/bank-accounts/**`, `/organizations/[organizationCustomDomain]/locations/add-marketplace`, and matching Microsoft Teams marketplace/operator routes.
+- Action: delete from Teams only; keep in WebApp and Spaces for side-by-side review.
+- Backend-originated return URL audit: not applicable for the old WebApp route surface because those routes were not removed from WebApp. Any future retirement of WebApp payment/product/subscription return routes still requires backend URL audit first.
+
+### Verification
+
+- Relay: `pnpm --filter webapp-teams relay` passed from `web/`.
+- Lint: `pnpm webapp-teams#lint` passed from `web/`.
+- Tests: `pnpm webapp-teams#test` passed from `web/`.
+- Build: `pnpm webapp-teams#build` passed from `web/`.
+- Route scan: no Teams app route files remain under marketplace/product/subscription/Stripe Connect/bank-account/customer-facing route names.
+- Manual review: inspect Teams `http://localhost:15002`, private organisation creation, organisation selector, sidebar navigation, bookings list, and booking detail routes.
+
+### Acceptance
+
+- Ready for user review: yes
+- Accepted before next slice: no
+
+### Component Cleanup
+
+- Completed: removed unused Teams copies of marketplace/product/subscription/storefront/refund/bank-account/Stripe Connect component folders and their isolated tests.
+- Completed: removed marketplace payment/refund/subscription branches from the Teams booking card, leaving private booking behaviour only.
+- Retained: product-tag selectors remain because active Teams resource-management screens still import and render product tag fields. Removing those requires a separate resource model cleanup rather than deleting unused code.
+
 ## Slice: teams-team-management-shell
 
 Target app: WebApp Teams  

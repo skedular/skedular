@@ -1,18 +1,4 @@
-import {
-  AnalyticsIcon,
-  BookingIcon,
-  CollpaseDrawerIcon,
-  GridViewIcon,
-  HomeIcon,
-  LocationIcon,
-  MembersIcon,
-  ProductIcon,
-  SettingsIcon,
-  SetupMarketplaceIcon,
-  SubscriptionsIcon,
-  TeamIcon,
-  UpgradeIcon,
-} from '@/components/icons';
+import { AnalyticsIcon, BookingIcon, CollpaseDrawerIcon, GridViewIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon } from '@/components/icons';
 import {
   getOrganizationAdminSetupBaseLink,
   getOrganizationAnalyticsBaseLink,
@@ -20,16 +6,12 @@ import {
   getOrganizationBaseLink,
   getOrganizationBookingsBaseLink,
   getOrganizationLocationsBaseLink,
-  getOrganizationMarketplaceSetupBaseLink,
-  getOrganizationProductsBaseLink,
-  getOrganizationSubscriptionsBaseLink,
   getOrganizationTeamsBaseLink,
   getOrganizationUsersBaseLink,
 } from '@/components/links';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import type { leftSideNavigationMenuContent_query$key } from '@/queries/__generated__/leftSideNavigationMenuContent_query.graphql';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
@@ -69,15 +51,8 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
         organization(customDomain: $organizationCustomDomain) {
           id
           customDomain
-          type {
-            type
-          }
           canModify
           canViewAnalytics
-          activeOffering {
-            free
-            earlyBird
-          }
         }
       }
     `,
@@ -152,9 +127,6 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAvailabilityDashboardBaseLink = getOrganizationAvailabilityDashboardBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationMarketplaceSetupBaseLink = getOrganizationMarketplaceSetupBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationProductsBaseLink = getOrganizationProductsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationSubscriptionsBaseLink = getOrganizationSubscriptionsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, rootData.organization.customDomain!);
 
   return (
@@ -323,84 +295,6 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             </Link>
           </ListItem>
 
-          {rootData.organization.canModify && rootData.organization.type.type === 'MARKETPLACE' && (
-            <ListItem disablePadding>
-              <Link component={NextLink} href={organizationMarketplaceSetupBaseLink}>
-                <ListItemButton
-                  selected={pathName.startsWith(organizationMarketplaceSetupBaseLink)}
-                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationMarketplaceSetupBaseLink)) }}
-                >
-                  {collapsed && (
-                    <BodyIconTypography
-                      startElement={!hideIcons && <SetupMarketplaceIcon color="inherit" />}
-                      invertDefaultColor={pathName.startsWith(organizationMarketplaceSetupBaseLink) && paletteMode === 'dark'}
-                    />
-                  )}
-                  {!collapsed && (
-                    <BodyIconTypography
-                      label="Setup Marketplace"
-                      startElement={!hideIcons && <SetupMarketplaceIcon color="inherit" />}
-                      spacing={3}
-                      invertDefaultColor={pathName.startsWith(organizationMarketplaceSetupBaseLink) && paletteMode === 'dark'}
-                    />
-                  )}
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          )}
-
-          {rootData.organization.type.type === 'MARKETPLACE' && (
-            <ListItem disablePadding>
-              <Link component={NextLink} href={organizationProductsBaseLink}>
-                <ListItemButton
-                  selected={pathName.startsWith(organizationProductsBaseLink)}
-                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationProductsBaseLink)) }}
-                >
-                  {collapsed && (
-                    <BodyIconTypography
-                      startElement={!hideIcons && <ProductIcon color="inherit" />}
-                      invertDefaultColor={pathName.startsWith(organizationProductsBaseLink) && paletteMode === 'dark'}
-                    />
-                  )}
-                  {!collapsed && (
-                    <BodyIconTypography
-                      label="Products"
-                      startElement={!hideIcons && <ProductIcon color="inherit" />}
-                      spacing={3}
-                      invertDefaultColor={pathName.startsWith(organizationProductsBaseLink) && paletteMode === 'dark'}
-                    />
-                  )}
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          )}
-
-          {rootData.organization.canModify && rootData.organization.type.type === 'MARKETPLACE' && (
-            <ListItem disablePadding>
-              <Link component={NextLink} href={organizationSubscriptionsBaseLink}>
-                <ListItemButton
-                  selected={pathName.startsWith(organizationSubscriptionsBaseLink)}
-                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationSubscriptionsBaseLink)) }}
-                >
-                  {collapsed && (
-                    <BodyIconTypography
-                      startElement={!hideIcons && <SubscriptionsIcon color="inherit" />}
-                      invertDefaultColor={pathName.startsWith(organizationSubscriptionsBaseLink) && paletteMode === 'dark'}
-                    />
-                  )}
-                  {!collapsed && (
-                    <BodyIconTypography
-                      label="Subscriptions"
-                      startElement={!hideIcons && <SubscriptionsIcon color="inherit" />}
-                      spacing={3}
-                      invertDefaultColor={pathName.startsWith(organizationSubscriptionsBaseLink) && paletteMode === 'dark'}
-                    />
-                  )}
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          )}
-
           {rootData.organization.canModify && (
             <ListItem disablePadding>
               <Link component={NextLink} href={organizationAdminSetupBaseLink}>
@@ -460,12 +354,6 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ backgroundColor: paletteMode === 'dark' ? emerald : coal, position: 'absolute', bottom: 0, width: '100%' }}>
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
-              {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
-                <Button href={organizationSubscriptionsBaseLink} variant="contained" color="secondary" sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}>
-                  <BodyIconTypography label="Upgrade Plan" endElement={<UpgradeIcon fontSize="medium" />} color="inherit" />
-                </Button>
-              )}
-
               <InvitePeopleToJoinOrganizationButton
                 variant="contained"
                 organizationCustomDomain={organizationCustomDomain}

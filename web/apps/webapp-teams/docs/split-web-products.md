@@ -23,12 +23,17 @@ Inspect `http://localhost:15002`.
 
 Current review routes:
 
-- The full WebApp route surface is currently available in Teams because `web/apps/webapp-teams/src` is an exact mirror of `web/apps/webapp/src`.
-- Start with `http://localhost:15002`, then compare any route against the matching WebApp route on `http://localhost:15000`.
+- The Teams source started as a full mirror of `web/apps/webapp/src`.
+- The Teams app route surface has now been pruned so marketplace discovery, marketplace organisation creation, marketplace setup, products, subscriptions, Stripe Connect, bank accounts, customer-facing subdomain handling, and marketplace location creation are not available as Teams routes.
+- Start with `http://localhost:15002`, then compare private organisation routes against the matching WebApp route on `http://localhost:15000`.
 
 ## Slice Notes
 
 - WebApp Teams owns private organisation and team journeys.
 - The current baseline intentionally copies all WebApp source before pruning.
-- Teams will remove or block marketplace/co-working operator and customer-facing routes in later reviewed slices.
-- Relay artefacts were copied from WebApp as part of the full source mirror. Relay generation was not required because no GraphQL operation text changed.
+- Teams now removes marketplace/co-working operator and customer-facing route entry points from the Teams app surface while keeping the original WebApp routes untouched for review.
+- Teams organisation selection filters to private organisations.
+- Teams booking list/detail routes are limited to private booking flows.
+- Unused Teams copies of marketplace/product/subscription/storefront/refund/bank-account/Stripe Connect components and tests have been removed.
+- Product-tag selectors are still present because active Teams resource-management screens still use product tag fields. Treat that as a separate resource model cleanup if product tags should also disappear from private organisation resources.
+- Relay artefacts were regenerated after Teams-specific GraphQL operation changes.

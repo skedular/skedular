@@ -15,14 +15,6 @@ const queryFragmentData = {
     familyName: 'Carter',
     photoUrl: null,
   },
-  organizationBookingPermissions: {
-    canModifyPaymentMethod: true,
-  },
-  paymentStatuses: [
-    { type: 'CONFIRMED', name: 'Confirmed' },
-    { type: 'REJECTED', name: 'Rejected' },
-    { type: 'NO_PAYMENT_REQUIRED', name: 'No payment required' },
-  ],
 };
 
 const bookingFragmentData = {
@@ -31,7 +23,7 @@ const bookingFragmentData = {
   until: '2026-04-12T11:00:00.000Z',
   notes: 'Needs projector access',
   category: { category: 'PRIVATE', name: 'Private' },
-  channel: { channel: 'MARKETPLACE', name: 'Marketplace' },
+  channel: { channel: 'PRIVATE', name: 'Private' },
   involvedCustomers: [
     { id: 'customer-1', givenName: 'Sam', middleName: null, familyName: 'Carter', name: 'Sam Carter', photoUrl: null },
     { id: 'customer-2', givenName: 'Alex', middleName: null, familyName: 'Ng', name: 'Alex Ng', photoUrl: null },
@@ -50,19 +42,11 @@ const bookingFragmentData = {
       },
     },
   ],
-  marketplaceBooking: {
-    id: 'marketplace-booking-1',
-    isPaymentRequired: true,
-    paymentStatus: { type: 'CONFIRMED', name: 'Confirmed' },
-    invoiceUrl: 'https://example.com/invoice.pdf',
-    refund: null,
-  },
   recurringBooking: {
     id: 'recurring-booking-1',
     startDate: '2026-04-01T09:00:00.000Z',
     endDate: '2026-06-30T11:00:00.000Z',
     frequency: { name: 'Weekly' },
-    marketplaceBooking: null,
   },
 };
 
@@ -101,18 +85,12 @@ vi.mock('@/components/moreActionsMenu', () => ({
     EditRecurringBooking: { id: 'EditRecurringBooking', label: 'Edit recurring booking' },
     DeleteBooking: { id: 'DeleteBooking', label: 'Delete Booking' },
     DeleteRecurringBooking: { id: 'DeleteRecurringBooking', label: 'Remove recurring series' },
-    ConfirmBookingPayment: { id: 'ConfirmBookingPayment', label: 'Confirm Booking Payment' },
-    RejectBookingPayment: { id: 'RejectBookingPayment', label: 'Reject Booking Payment' },
-    MakeBookingPaymentNotRequired: { id: 'MakeBookingPaymentNotRequired', label: 'Make Booking Payment Not Required' },
   },
   MoreActionsMenuOptionType: {
     EditBooking: 'EditBooking',
     EditRecurringBooking: 'EditRecurringBooking',
     DeleteBooking: 'DeleteBooking',
     DeleteRecurringBooking: 'DeleteRecurringBooking',
-    ConfirmBookingPayment: 'ConfirmBookingPayment',
-    RejectBookingPayment: 'RejectBookingPayment',
-    MakeBookingPaymentNotRequired: 'MakeBookingPaymentNotRequired',
   },
 }));
 
@@ -121,8 +99,6 @@ vi.mock('@/components/icons', () => ({
   EllipseMenuIcon: () => <span>menu</span>,
   JoinIcon: () => <span>join-icon</span>,
   NotesIcon: () => <span>notes-icon</span>,
-  PaymentStatusIcon: () => <span>payment-icon</span>,
-  PdfIcon: () => <span>pdf-icon</span>,
   TeamIcon: () => <span>team-icon</span>,
 }));
 
@@ -136,10 +112,6 @@ vi.mock('@/components/customTag', () => ({
 
 vi.mock('@/components/zone', () => ({
   Zones: ({ zones }: { zones: Array<{ name: string }> }) => <div>{zones.map((item) => item.name).join(', ')}</div>,
-}));
-
-vi.mock('@/components/marketplaceRefund/marketplace-refund-admin-panel', () => ({
-  default: () => <div>Refund panel</div>,
 }));
 
 vi.mock('react-relay', () => ({
@@ -170,13 +142,11 @@ describe('BookingCard', () => {
         organizationCustomDomain="acme"
         connectionIds={[]}
         canJoinBooking
-        recurringMarketplaceSubscriptionIds={{}}
       />,
     );
 
     expect(screen.getByText('HQ Level 3')).toBeInTheDocument();
     expect(screen.getByText('Operations')).toBeInTheDocument();
-    expect(screen.getByText('Confirmed')).toBeInTheDocument();
     expect(screen.getByText('Recurring')).toBeInTheDocument();
     expect(screen.queryByText('People')).not.toBeInTheDocument();
     expect(screen.getByText('Booking details')).toBeInTheDocument();
@@ -185,7 +155,6 @@ describe('BookingCard', () => {
     expect(screen.getByText('Monitor')).toBeInTheDocument();
     expect(screen.getByText('North Wing')).toBeInTheDocument();
     expect(screen.getByText('Needs projector access')).toBeInTheDocument();
-    expect(screen.getByText('View Invoice')).toBeInTheDocument();
     expect(screen.queryByText('Weekly recurring booking')).not.toBeInTheDocument();
     expect(screen.queryByText('Recurring booking')).not.toBeInTheDocument();
     expect(screen.queryByText('Open booking')).not.toBeInTheDocument();
@@ -200,7 +169,6 @@ describe('BookingCard', () => {
       return {
         ...bookingFragmentData,
         channel: { channel: 'PRIVATE', name: 'Private' },
-        marketplaceBooking: null,
       };
     });
 
@@ -211,7 +179,6 @@ describe('BookingCard', () => {
         organizationCustomDomain="acme"
         connectionIds={[]}
         canJoinBooking
-        recurringMarketplaceSubscriptionIds={{}}
       />,
     );
 

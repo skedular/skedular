@@ -283,7 +283,9 @@ type Query
     @cost(weight: "10")
     @fusion__cost(schema: LOCATION_API, weight: "10")
     @fusion__field(schema: LOCATION_API)
-  myOrganizations: [MyOrganizationDetails!]!
+  myOrganizations(
+    types: [OrganizationType!] @fusion__inputField(schema: ORGANIZATION_API)
+  ): [MyOrganizationDetails!]!
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)

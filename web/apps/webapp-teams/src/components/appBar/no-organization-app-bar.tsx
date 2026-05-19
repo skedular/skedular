@@ -11,7 +11,14 @@ import {
   SignOutIcon,
   SystemModeIcon,
 } from '@/components/icons';
-import { getBillingAndPaymentLink, getNotificationsLink, getOrganizationBaseLink, getOrganizationSetupLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
+import {
+  getBillingAndPaymentLink,
+  getNotificationsLink,
+  getOrganizationAddPrivateLink,
+  getOrganizationBaseLink,
+  getSettingsLink,
+  getSignOutReturnToLink,
+} from '@/components/links';
 import { NoOrganizationMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import type { noOrganizationAppBar_query$key } from '@/queries/__generated__/noOrganizationAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -60,7 +67,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
           familyName
           photoUrl
         }
-        myOrganizations {
+        myOrganizations(types: [PRIVATE]) {
           uniqueId
           customDomain
           logoUrl
@@ -92,7 +99,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
     const id = event.target.value as string;
 
     if (id === createOrganizationId) {
-      router.push(getOrganizationSetupLink(integratedPlatrform));
+      router.push(getOrganizationAddPrivateLink(integratedPlatrform));
     } else {
       router.push(getOrganizationBaseLink(integratedPlatrform, id));
     }

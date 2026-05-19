@@ -1,4 +1,4 @@
-import { getOrganizationAddIndividualLink, getOrganizationAddMarketplaceLink, getOrganizationAddPrivateLink, getRootLink } from '@/components/links';
+import { getOrganizationAddPrivateLink, getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
@@ -55,14 +55,6 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
         router.push(getOrganizationAddPrivateLink(integratedPlatrform));
         break;
 
-      case 'marketplace':
-        router.push(getOrganizationAddMarketplaceLink(integratedPlatrform));
-        break;
-
-      case 'individual-organization':
-        router.push(getOrganizationAddIndividualLink(integratedPlatrform));
-        break;
-
       case 'individual-user':
         {
           if (rootData.me.isOnboardingDone) {
@@ -108,7 +100,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
 
   return (
     <NoOrganizationRootShell hideOrganizationSelector collapsed>
-      <SetupFlow onUserTypeClick={handleUserTypeClick} userTypesToShow={['private', 'marketplace', 'individual-organization', 'individual-user']} />
+      <SetupFlow onUserTypeClick={handleUserTypeClick} userTypesToShow={['private', 'individual-user']} />
     </NoOrganizationRootShell>
   );
 };

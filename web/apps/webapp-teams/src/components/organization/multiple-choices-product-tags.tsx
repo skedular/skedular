@@ -1,5 +1,4 @@
 import { BodyIconTypography } from '@skedular/ui';
-import { AddOrganizationProductTagButton } from '@/components/organization/addOrganizationProductTag';
 import type { multipleChoicesProductTags_query$key } from '@/queries/__generated__/multipleChoicesProductTags_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
@@ -10,7 +9,7 @@ type Props = {
   rootDataRelay: multipleChoicesProductTags_query$key;
   name: string;
   required?: boolean;
-  organizationCustomDomain: string;
+  organizationCustomDomain?: string;
 };
 
 type ProductTagDetails = {
@@ -19,7 +18,7 @@ type ProductTagDetails = {
   color: string | null | undefined;
 };
 
-const MultipleChoicesProductTags = ({ rootDataRelay, name, required, organizationCustomDomain }: Props) => {
+const MultipleChoicesProductTags = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment<multipleChoicesProductTags_query$key>(
     graphql`
       fragment multipleChoicesProductTags_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
@@ -42,11 +41,10 @@ const MultipleChoicesProductTags = ({ rootDataRelay, name, required, organizatio
   );
 
   const items = useMemo<ProductTagDetails[]>(() => (rootData.organization ? rootData.organization.productTags.edges.map(({ node }) => node) : []), [rootData.organization]);
-  const connectionIds = useMemo(() => (rootData.organization ? [rootData.organization.productTags.__id] : []), [rootData.organization]);
   const filter = createFilterOptions<ProductTagDetails>();
 
   if (items.length === 0) {
-    return <AddOrganizationProductTagButton organizationCustomDomain={organizationCustomDomain} connectionIds={connectionIds} size="medium" />;
+    return null;
   }
 
   return (

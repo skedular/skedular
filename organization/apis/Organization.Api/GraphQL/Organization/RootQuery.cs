@@ -121,10 +121,21 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
 
     [UseResolverScope]
     public async Task<IEnumerable<MyOrganizationDetails>> MyOrganizationsAsync(
+        IEnumerable<OrganizationType>? types,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationService organizationService,
-        CancellationToken cancellationToken) =>
-        !await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
-            ? []
-            : graphQlMapper.MapTo(await organizationService.GetMyOrganizationsAsync(cancellationToken));
+        CancellationToken cancellationToken)
+    {
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
+        {
+            return [];
+        }
+
+        var organizations = graphQlMapper.MapTo(await organizationService.GetMyOrganizationsAsync(cancellationToken));
+        var typeFilters = types?.ToHashSet();
+
+        return typeFilters is null || typeFilters.Count == 0
+            ? organizations
+            : organizations.Where(organization => typeFilters.Contains(organization.Type.Type));
+    }
 }
