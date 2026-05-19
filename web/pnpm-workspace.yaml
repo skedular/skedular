@@ -7,13 +7,6 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
 minimumReleaseAgeExclude:
-  - '@stripe/react-stripe-js@6.4.0'
-  - '@stripe/stripe-js@9.6.0'
-  - '@types/node@25.9.0'
-  - date-fns@4.2.1
-  - react-relay@21.0.0
-  - relay-compiler@21.0.0
-  - relay-runtime@21.0.0
   - '@types/react@19.2.15'
   - react-svg-credit-card-payment-icons@6.0.3
 overrides:
