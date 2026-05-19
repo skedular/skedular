@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2026.1.1",
+      "version": "2026.1.2",
       "commands": [
         "jb"
       ],
@@ -24,14 +24,14 @@
       "rollForward": false
     },
     "chillicream.nitro.commandline": {
-      "version": "16.0.3",
+      "version": "16.0.5",
       "commands": [
         "nitro"
       ],
       "rollForward": false
     },
     "strawberryshake.tools": {
-      "version": "16.0.3",
+      "version": "16.0.5",
       "commands": [
         "dotnet-graphql"
       ],

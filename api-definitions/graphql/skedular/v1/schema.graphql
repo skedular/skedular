@@ -5029,35 +5029,35 @@ input ZoneOrganizationTagWhereInput @fusion__type(schema: ORGANIZATION_API) {
 }
 
 enum BookingCategory @fusion__type(schema: BOOKING_API) {
-  ANNUAL_LEAVE @fusion__enumValue(schema: BOOKING_API)
-  CLIENT_OFFICE @fusion__enumValue(schema: BOOKING_API)
-  NON_WORKING_DAY @fusion__enumValue(schema: BOOKING_API)
-  SICK_LEAVE @fusion__enumValue(schema: BOOKING_API)
-  TRAVELING_FOR_WORK @fusion__enumValue(schema: BOOKING_API)
-  VACATION @fusion__enumValue(schema: BOOKING_API)
-  WELLBEING_LEAVE @fusion__enumValue(schema: BOOKING_API)
-  WORKING_FROM_COWORKING_SPACE @fusion__enumValue(schema: BOOKING_API)
   WORKING_FROM_HOME @fusion__enumValue(schema: BOOKING_API)
   WORKING_FROM_OFFICE @fusion__enumValue(schema: BOOKING_API)
+  WORKING_FROM_COWORKING_SPACE @fusion__enumValue(schema: BOOKING_API)
+  SICK_LEAVE @fusion__enumValue(schema: BOOKING_API)
+  ANNUAL_LEAVE @fusion__enumValue(schema: BOOKING_API)
+  WELLBEING_LEAVE @fusion__enumValue(schema: BOOKING_API)
+  CLIENT_OFFICE @fusion__enumValue(schema: BOOKING_API)
+  VACATION @fusion__enumValue(schema: BOOKING_API)
+  TRAVELING_FOR_WORK @fusion__enumValue(schema: BOOKING_API)
+  NON_WORKING_DAY @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum BookingChannel @fusion__type(schema: BOOKING_API) {
-  MARKETPLACE @fusion__enumValue(schema: BOOKING_API)
   PRIVATE @fusion__enumValue(schema: BOOKING_API)
+  MARKETPLACE @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum BookingFrequency @fusion__type(schema: BOOKING_API) {
   DAILY @fusion__enumValue(schema: BOOKING_API)
-  MONTHLY @fusion__enumValue(schema: BOOKING_API)
   WEEKLY @fusion__enumValue(schema: BOOKING_API)
+  MONTHLY @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum BookingOrderField @fusion__type(schema: BOOKING_API) {
+  FROM @fusion__enumValue(schema: BOOKING_API)
+  TO @fusion__enumValue(schema: BOOKING_API)
+  NOTES @fusion__enumValue(schema: BOOKING_API)
   CATEGORY @fusion__enumValue(schema: BOOKING_API)
   CHANNEL @fusion__enumValue(schema: BOOKING_API)
-  FROM @fusion__enumValue(schema: BOOKING_API)
-  NOTES @fusion__enumValue(schema: BOOKING_API)
-  TO @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum Currency
@@ -5073,14 +5073,14 @@ enum Currency
 
 enum CustomerOrderField @fusion__type(schema: CUSTOMER_API) {
   DESIGNATION @fusion__enumValue(schema: CUSTOMER_API)
-  FAMILY_NAME @fusion__enumValue(schema: CUSTOMER_API)
-  GIVEN_NAME @fusion__enumValue(schema: CUSTOMER_API)
-  LOCALE @fusion__enumValue(schema: CUSTOMER_API)
-  MIDDLE_NAME @fusion__enumValue(schema: CUSTOMER_API)
-  NAME @fusion__enumValue(schema: CUSTOMER_API)
-  PHONE_NUMBER @fusion__enumValue(schema: CUSTOMER_API)
-  TIMEZONE @fusion__enumValue(schema: CUSTOMER_API)
   TITLE @fusion__enumValue(schema: CUSTOMER_API)
+  NAME @fusion__enumValue(schema: CUSTOMER_API)
+  GIVEN_NAME @fusion__enumValue(schema: CUSTOMER_API)
+  MIDDLE_NAME @fusion__enumValue(schema: CUSTOMER_API)
+  FAMILY_NAME @fusion__enumValue(schema: CUSTOMER_API)
+  TIMEZONE @fusion__enumValue(schema: CUSTOMER_API)
+  LOCALE @fusion__enumValue(schema: CUSTOMER_API)
+  PHONE_NUMBER @fusion__enumValue(schema: CUSTOMER_API)
 }
 
 enum CustomerType @fusion__type(schema: CUSTOMER_API) {
@@ -5089,19 +5089,19 @@ enum CustomerType @fusion__type(schema: CUSTOMER_API) {
 }
 
 enum DayOfWeek @fusion__type(schema: BOOKING_API) {
-  FRIDAY @fusion__enumValue(schema: BOOKING_API)
-  MONDAY @fusion__enumValue(schema: BOOKING_API)
-  SATURDAY @fusion__enumValue(schema: BOOKING_API)
   SUNDAY @fusion__enumValue(schema: BOOKING_API)
-  THURSDAY @fusion__enumValue(schema: BOOKING_API)
+  MONDAY @fusion__enumValue(schema: BOOKING_API)
   TUESDAY @fusion__enumValue(schema: BOOKING_API)
   WEDNESDAY @fusion__enumValue(schema: BOOKING_API)
+  THURSDAY @fusion__enumValue(schema: BOOKING_API)
+  FRIDAY @fusion__enumValue(schema: BOOKING_API)
+  SATURDAY @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum FeedbackChannelType @fusion__type(schema: CUSTOMER_API) {
-  MS_TEAMS @fusion__enumValue(schema: CUSTOMER_API)
-  SLACK @fusion__enumValue(schema: CUSTOMER_API)
   WEB @fusion__enumValue(schema: CUSTOMER_API)
+  SLACK @fusion__enumValue(schema: CUSTOMER_API)
+  MS_TEAMS @fusion__enumValue(schema: CUSTOMER_API)
 }
 
 enum FloorPlanOrderField @fusion__type(schema: LOCATION_API) {
@@ -5124,19 +5124,19 @@ enum fusion__Schema {
 enum InvitationStatus
   @fusion__type(schema: ORGANIZATION_API)
   @fusion__type(schema: TEAM_API) {
+  PENDING
+    @fusion__enumValue(schema: ORGANIZATION_API)
+    @fusion__enumValue(schema: TEAM_API)
   ACCEPTED
+    @fusion__enumValue(schema: ORGANIZATION_API)
+    @fusion__enumValue(schema: TEAM_API)
+  REJECTED
     @fusion__enumValue(schema: ORGANIZATION_API)
     @fusion__enumValue(schema: TEAM_API)
   CANCELLED
     @fusion__enumValue(schema: ORGANIZATION_API)
     @fusion__enumValue(schema: TEAM_API)
   EXPIRED
-    @fusion__enumValue(schema: ORGANIZATION_API)
-    @fusion__enumValue(schema: TEAM_API)
-  PENDING
-    @fusion__enumValue(schema: ORGANIZATION_API)
-    @fusion__enumValue(schema: TEAM_API)
-  REJECTED
     @fusion__enumValue(schema: ORGANIZATION_API)
     @fusion__enumValue(schema: TEAM_API)
 }
@@ -5159,46 +5159,46 @@ enum LocationOrderField @fusion__type(schema: LOCATION_API) {
 }
 
 enum LocationRestrictedInformationCategory @fusion__type(schema: LOCATION_API) {
+  OTHER @fusion__enumValue(schema: LOCATION_API)
+  WIFI @fusion__enumValue(schema: LOCATION_API)
   ACCESS @fusion__enumValue(schema: LOCATION_API)
-  ACCESSIBILITY @fusion__enumValue(schema: LOCATION_API)
-  AFTER_HOURS @fusion__enumValue(schema: LOCATION_API)
+  PARKING @fusion__enumValue(schema: LOCATION_API)
   CHECK_IN @fusion__enumValue(schema: LOCATION_API)
   CHECK_OUT @fusion__enumValue(schema: LOCATION_API)
-  CLEANING @fusion__enumValue(schema: LOCATION_API)
+  AFTER_HOURS @fusion__enumValue(schema: LOCATION_API)
   DELIVERIES @fusion__enumValue(schema: LOCATION_API)
-  EQUIPMENT @fusion__enumValue(schema: LOCATION_API)
-  EVACUATION @fusion__enumValue(schema: LOCATION_API)
   GUESTS @fusion__enumValue(schema: LOCATION_API)
-  HOUSE_RULES @fusion__enumValue(schema: LOCATION_API)
+  EQUIPMENT @fusion__enumValue(schema: LOCATION_API)
   KITCHEN @fusion__enumValue(schema: LOCATION_API)
-  MAINTENANCE @fusion__enumValue(schema: LOCATION_API)
   MEETING_ROOMS @fusion__enumValue(schema: LOCATION_API)
   NOISE @fusion__enumValue(schema: LOCATION_API)
-  OTHER @fusion__enumValue(schema: LOCATION_API)
-  PARKING @fusion__enumValue(schema: LOCATION_API)
-  PETS @fusion__enumValue(schema: LOCATION_API)
-  SECURITY @fusion__enumValue(schema: LOCATION_API)
-  SMOKING @fusion__enumValue(schema: LOCATION_API)
+  MAINTENANCE @fusion__enumValue(schema: LOCATION_API)
+  ACCESSIBILITY @fusion__enumValue(schema: LOCATION_API)
   STORAGE @fusion__enumValue(schema: LOCATION_API)
+  CLEANING @fusion__enumValue(schema: LOCATION_API)
   WASTE @fusion__enumValue(schema: LOCATION_API)
-  WIFI @fusion__enumValue(schema: LOCATION_API)
+  SECURITY @fusion__enumValue(schema: LOCATION_API)
+  EVACUATION @fusion__enumValue(schema: LOCATION_API)
+  PETS @fusion__enumValue(schema: LOCATION_API)
+  SMOKING @fusion__enumValue(schema: LOCATION_API)
+  HOUSE_RULES @fusion__enumValue(schema: LOCATION_API)
 }
 
 enum LocationType @fusion__type(schema: LOCATION_API) {
-  MARKETPLACE @fusion__enumValue(schema: LOCATION_API)
   PRIVATE @fusion__enumValue(schema: LOCATION_API)
+  MARKETPLACE @fusion__enumValue(schema: LOCATION_API)
 }
 
 enum MarketplaceBookingSubscriptionCancellationMode
   @fusion__type(schema: BOOKING_API) {
-  AT_PERIOD_END @fusion__enumValue(schema: BOOKING_API)
   IMMEDIATE @fusion__enumValue(schema: BOOKING_API)
+  AT_PERIOD_END @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum MarketplaceBookingSubscriptionOrderField @fusion__type(schema: BOOKING_API) {
+  STARTED_AT @fusion__enumValue(schema: BOOKING_API)
   CANCELLED_AT @fusion__enumValue(schema: BOOKING_API)
   NEXT_RENEWAL_AT @fusion__enumValue(schema: BOOKING_API)
-  STARTED_AT @fusion__enumValue(schema: BOOKING_API)
   STATUS @fusion__enumValue(schema: BOOKING_API)
 }
 
@@ -5206,8 +5206,8 @@ enum MarketplaceBookingSubscriptionStatus @fusion__type(schema: BOOKING_API) {
   ACTIVE @fusion__enumValue(schema: BOOKING_API)
   CANCELLED @fusion__enumValue(schema: BOOKING_API)
   EXPIRED @fusion__enumValue(schema: BOOKING_API)
-  PAUSED @fusion__enumValue(schema: BOOKING_API)
   RENEWAL_FAILED @fusion__enumValue(schema: BOOKING_API)
+  PAUSED @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum OrderDirection
@@ -5238,25 +5238,25 @@ enum OrganizationBankAccountOrderField @fusion__type(schema: ORGANIZATION_API) {
 }
 
 enum OrganizationBillingCycle @fusion__type(schema: ORGANIZATION_API) {
+  WEEKLY @fusion__enumValue(schema: ORGANIZATION_API)
   FORTNIGHTLY @fusion__enumValue(schema: ORGANIZATION_API)
   MONTHLY @fusion__enumValue(schema: ORGANIZATION_API)
-  WEEKLY @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum OrganizationMemberOrderField @fusion__type(schema: ORGANIZATION_API) {
-  FAMILY_NAME @fusion__enumValue(schema: ORGANIZATION_API)
-  GIVEN_NAME @fusion__enumValue(schema: ORGANIZATION_API)
-  MIDDLE_NAME @fusion__enumValue(schema: ORGANIZATION_API)
-  NAME @fusion__enumValue(schema: ORGANIZATION_API)
-  PHONE_NUMBER @fusion__enumValue(schema: ORGANIZATION_API)
   ROLE @fusion__enumValue(schema: ORGANIZATION_API)
   STATUS @fusion__enumValue(schema: ORGANIZATION_API)
+  NAME @fusion__enumValue(schema: ORGANIZATION_API)
+  GIVEN_NAME @fusion__enumValue(schema: ORGANIZATION_API)
+  MIDDLE_NAME @fusion__enumValue(schema: ORGANIZATION_API)
+  FAMILY_NAME @fusion__enumValue(schema: ORGANIZATION_API)
+  PHONE_NUMBER @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum OrganizationMemberRole @fusion__type(schema: ORGANIZATION_API) {
+  OWNER @fusion__enumValue(schema: ORGANIZATION_API)
   ADMINISTRATOR @fusion__enumValue(schema: ORGANIZATION_API)
   MEMBER @fusion__enumValue(schema: ORGANIZATION_API)
-  OWNER @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum OrganizationMemberStatus @fusion__type(schema: ORGANIZATION_API) {
@@ -5274,8 +5274,8 @@ enum OrganizationStripeConnectAccountOrderField
 }
 
 enum OrganizationTagOrderField @fusion__type(schema: ORGANIZATION_API) {
-  DESCRIPTION @fusion__enumValue(schema: ORGANIZATION_API)
   NAME @fusion__enumValue(schema: ORGANIZATION_API)
+  DESCRIPTION @fusion__enumValue(schema: ORGANIZATION_API)
   TYPE @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
@@ -5285,931 +5285,49 @@ enum OrganizationTagType
   @fusion__type(schema: LOCATION_API)
   @fusion__type(schema: MARKETPLACE_API)
   @fusion__type(schema: ORGANIZATION_API) {
-  AMENITY_ACCESS247
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_ACCESSIBLE_DESK_HEIGHT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_ACCESSIBLE_RESTROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_ACOUSTIC_TREATMENT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_ADJUSTABLE_DESK
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_AFTER_HOURS_SUPPORT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_AIR_CONDITIONING
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_AIR_PURIFIER
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_ALARM_SYSTEM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_AMBIENT_LIGHTING_CONTROLS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_BACKUP_INTERNET
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_BICYCLE_FRIENDLY_ACCESS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_BIKE_STORAGE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_BIOMETRIC_ENTRY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_BLACKOUT_BLINDS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_BOARDROOM_LAYOUT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_BRAILLE_SIGNAGE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_BREAKOUT_AREA
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_BUSINESS_HOURS_ACCESS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_CANCELLATION_FLEXIBILITY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_CATERING_SUPPORT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_CCTV
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_CHECK_IN_REQUIRED
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_CHILDCARE_NEARBY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_CLASSROOM_LAYOUT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_CLEANING_SERVICE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_COFFEE_MACHINE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_COMMUNITY_MANAGER
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_CONFERENCE_TABLE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_CONFIDENTIAL_MEETING_ROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_DAILY_PASS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_DEDICATED_VLAN
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_DEPOSIT_REQUIRED
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_DESK_PHONE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_DISHWASHER
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_DUAL_MONITOR_SETUP
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_ELEVATOR_ACCESS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_END_OF_TRIP_FACILITIES
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_ERGONOMIC_CHAIR
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_EV_CHARGING
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_EVENT_STAFF_SUPPORT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_EXECUTIVE_CHAIR
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_FACILITIES_HELPDESK
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_FAMILY_ROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_FILTERED_WATER
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_FIXED_DESK
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_FLIP_CHART
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_FOCUS_ROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_FREIGHT_ELEVATOR
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_FRESH_AIR_VENTILATION
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_FRONT_DESK_SUPPORT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_FULL_KITCHEN
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_GAME_LOUNGE_AREA
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_GARDEN_PATIO
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_GENDER_NEUTRAL_RESTROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_GLASS_BOARD
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_GREEN_SCREEN
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_GUEST_NETWORK
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_GYM_ACCESS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_HDMI_USB_C_CASTING
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_HEARING_LOOP
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_HEATING
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_HIGH_SPEED_WIFI
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_HOST_APPROVAL_REQUIRED
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_HOURLY_BOOKABLE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_HUMIDITY_CONTROL
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_HYBRID_READY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_IT_SUPPORT_ON_SITE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_KEYBOARD_MOUSE_INCLUDED
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_KEYCARD_ENTRY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_KITCHENETTE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_LACTATION_ROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_LAPTOP_STAND_AVAILABILITY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_LARGE_DISPLAY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_LEAD_TIME_REQUIREMENT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_LIGHTING_RIG
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_LOADING_DOCK_ACCESS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_LOCKABLE_PEDESTAL
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_LOCKABLE_ROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_LOCKER_STORAGE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_MAIL_HANDLING
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_MARKERS_INCLUDED
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_MAX_CAPACITY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_MEDITATION_ROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_MICROWAVE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_MINIMUM_BOOKING_DURATION
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_MONITOR_ARM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_MONITOR_DOCKING_STATION
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_MONTHLY_MEMBERSHIP
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_MOVABLE_SEATING
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_NAP_POD_ROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_NATURAL_LIGHT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_NETWORK_PRINTING
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_NOISE_CANCELLING_PANELS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_ON_DEMAND_SETUP
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_ON_SITE_PARKING
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_ON_SITE_SECURITY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_OPERABLE_WINDOWS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_OUTDOOR_TERRACE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_PA_SYSTEM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_PACKAGE_RECEIVING
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_PET_FRIENDLY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_PHONE_BOOTH
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_POWER_STRIPS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_PRAYER_ROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_PRIVACY_DESK_DIVIDER
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_PROJECTOR
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_PUBLIC_IP_OPTION
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_PUBLIC_TRANSIT_NEARBY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_QUIET_ZONE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_RECEPTION_DESK
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_RECORDING_ENABLED
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_REFRIGERATOR
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_REFUNDABLE_BOOKING
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_RESERVED_PARKING
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_RESTROOMS_NEARBY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_ROOM_CAMERA
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_SAFETY_COMPLIANCE_KIT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_SECURE_SSID
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_SERVICE_ANIMAL_READY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_SHOWER_FACILITIES
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_SNACK_BAR
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_SOUND_BOOTH
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_SOUNDPROOF_ROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_SPARKLING_WATER
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_SPEAKERPHONE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_SPECIALIZED_TOOLS_EQUIPMENT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_STAGE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_STANDARD_POWER_OUTLETS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_STANDING_DESK
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_STANDING_MEETING_ZONE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_STEP_FREE_PATH
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_STORAGE_ROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_STREET_PARKING_NEARBY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_TASK_LAMP
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_TAXI_RIDESHARE_ZONE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_TEA_STATION
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_TEMPERATURE_CONTROLS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_UPS_BACKED_POWER
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_USB_A_PORTS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_USB_C_PORTS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_VIDEO_CONFERENCING_KIT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_VISITOR_MANAGEMENT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_VPN_SUPPORT
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_WASTE_RECYCLING_STATION
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_WELLNESS_ROOM
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_WHEELCHAIR_ACCESSIBLE_ENTRANCE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_WHITEBOARD
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_WHITEBOARD_AT_DESK
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_WIDE_DOORWAYS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_WIRED_ETHERNET
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  AMENITY_WIRELESS_CHARGING
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
   CUSTOM
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
-  LOCATION_SPACE_TYPE_CAR_PARK_SPACE
+  ZONE
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
-  LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
+  PRODUCT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  RESOURCE_DESK
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  RESOURCE_ROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  RESOURCE_PARKING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  RESOURCE_OTHERS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  LOCATION_SPACE_TYPE_CAR_PARK_SPACE
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
@@ -6233,19 +5351,7 @@ enum OrganizationTagType
     @fusion__enumValue(schema: LOCATION_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
-  LOCATION_SPACE_TYPE_OTHERS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
   LOCATION_SPACE_TYPE_RETAIL_SPACE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: CUSTOMER_API)
-    @fusion__enumValue(schema: LOCATION_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-    @fusion__enumValue(schema: ORGANIZATION_API)
-  LOCATION_SPACE_TYPE_SHOOT_LOCATION
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
@@ -6263,37 +5369,931 @@ enum OrganizationTagType
     @fusion__enumValue(schema: LOCATION_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
-  PRODUCT
+  LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
-  RESOURCE_DESK
+  LOCATION_SPACE_TYPE_SHOOT_LOCATION
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
-  RESOURCE_OTHERS
+  LOCATION_SPACE_TYPE_OTHERS
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
-  RESOURCE_PARKING
+  AMENITY_HIGH_SPEED_WIFI
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
-  RESOURCE_ROOM
+  AMENITY_DEDICATED_VLAN
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
-  ZONE
+  AMENITY_WIRED_ETHERNET
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_GUEST_NETWORK
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_VPN_SUPPORT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_BACKUP_INTERNET
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_NETWORK_PRINTING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_SECURE_SSID
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_PUBLIC_IP_OPTION
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_STANDARD_POWER_OUTLETS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_USB_A_PORTS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_USB_C_PORTS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_WIRELESS_CHARGING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_POWER_STRIPS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_UPS_BACKED_POWER
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_MONITOR_DOCKING_STATION
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_LAPTOP_STAND_AVAILABILITY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_ADJUSTABLE_DESK
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_STANDING_DESK
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_FIXED_DESK
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_ERGONOMIC_CHAIR
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_EXECUTIVE_CHAIR
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_DUAL_MONITOR_SETUP
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_PRIVACY_DESK_DIVIDER
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_LOCKABLE_PEDESTAL
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_WHITEBOARD_AT_DESK
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_TASK_LAMP
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_WHITEBOARD
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_GLASS_BOARD
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_FLIP_CHART
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_MARKERS_INCLUDED
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_PROJECTOR
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_LARGE_DISPLAY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_HDMI_USB_C_CASTING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_VIDEO_CONFERENCING_KIT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_SPEAKERPHONE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_ROOM_CAMERA
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_CONFERENCE_TABLE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_BREAKOUT_AREA
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_ACOUSTIC_TREATMENT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_SOUNDPROOF_ROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_PHONE_BOOTH
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_QUIET_ZONE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_FOCUS_ROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_CONFIDENTIAL_MEETING_ROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_NOISE_CANCELLING_PANELS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_AIR_CONDITIONING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_HEATING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_FRESH_AIR_VENTILATION
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_OPERABLE_WINDOWS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_NATURAL_LIGHT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_BLACKOUT_BLINDS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_AMBIENT_LIGHTING_CONTROLS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_TEMPERATURE_CONTROLS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_AIR_PURIFIER
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_HUMIDITY_CONTROL
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_COFFEE_MACHINE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_TEA_STATION
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_FILTERED_WATER
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_SPARKLING_WATER
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_SNACK_BAR
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_KITCHENETTE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_FULL_KITCHEN
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_REFRIGERATOR
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_MICROWAVE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_DISHWASHER
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_CATERING_SUPPORT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_WHEELCHAIR_ACCESSIBLE_ENTRANCE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_ELEVATOR_ACCESS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_ACCESSIBLE_RESTROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_ACCESSIBLE_DESK_HEIGHT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_BRAILLE_SIGNAGE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_HEARING_LOOP
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_STEP_FREE_PATH
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_WIDE_DOORWAYS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_GENDER_NEUTRAL_RESTROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_PRAYER_ROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_ACCESS247
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_BUSINESS_HOURS_ACCESS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_KEYCARD_ENTRY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_BIOMETRIC_ENTRY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_RECEPTION_DESK
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_VISITOR_MANAGEMENT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_CCTV
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_ON_SITE_SECURITY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_LOCKABLE_ROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_LOCKER_STORAGE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_ALARM_SYSTEM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_RESTROOMS_NEARBY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_SHOWER_FACILITIES
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_END_OF_TRIP_FACILITIES
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_BIKE_STORAGE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_LOADING_DOCK_ACCESS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_FREIGHT_ELEVATOR
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_MAIL_HANDLING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_PACKAGE_RECEIVING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_STORAGE_ROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_WASTE_RECYCLING_STATION
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_ON_SITE_PARKING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_RESERVED_PARKING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_EV_CHARGING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_STREET_PARKING_NEARBY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_PUBLIC_TRANSIT_NEARBY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_TAXI_RIDESHARE_ZONE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_BICYCLE_FRIENDLY_ACCESS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_GYM_ACCESS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_WELLNESS_ROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_NAP_POD_ROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_OUTDOOR_TERRACE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_GARDEN_PATIO
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_GAME_LOUNGE_AREA
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_STANDING_MEETING_ZONE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_MEDITATION_ROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_CHILDCARE_NEARBY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_FAMILY_ROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_LACTATION_ROOM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_PET_FRIENDLY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_SERVICE_ANIMAL_READY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_IT_SUPPORT_ON_SITE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_FRONT_DESK_SUPPORT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_COMMUNITY_MANAGER
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_CLEANING_SERVICE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_AFTER_HOURS_SUPPORT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_FACILITIES_HELPDESK
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_ON_DEMAND_SETUP
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_HOURLY_BOOKABLE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_DAILY_PASS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_MONTHLY_MEMBERSHIP
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_MINIMUM_BOOKING_DURATION
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_MAX_CAPACITY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_CANCELLATION_FLEXIBILITY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_REFUNDABLE_BOOKING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_DEPOSIT_REQUIRED
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_LEAD_TIME_REQUIREMENT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_CHECK_IN_REQUIRED
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_HOST_APPROVAL_REQUIRED
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_DESK_PHONE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_KEYBOARD_MOUSE_INCLUDED
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_MONITOR_ARM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_BOARDROOM_LAYOUT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_CLASSROOM_LAYOUT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_HYBRID_READY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_RECORDING_ENABLED
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_STAGE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_PA_SYSTEM
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_LIGHTING_RIG
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_MOVABLE_SEATING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_EVENT_STAFF_SUPPORT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_SOUND_BOOTH
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_GREEN_SCREEN
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_SPECIALIZED_TOOLS_EQUIPMENT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  AMENITY_SAFETY_COMPLIANCE_KIT
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
@@ -6302,9 +6302,9 @@ enum OrganizationTagType
 }
 
 enum OrganizationType @fusion__type(schema: ORGANIZATION_API) {
-  INDIVIDUAL @fusion__enumValue(schema: ORGANIZATION_API)
-  MARKETPLACE @fusion__enumValue(schema: ORGANIZATION_API)
   PRIVATE @fusion__enumValue(schema: ORGANIZATION_API)
+  MARKETPLACE @fusion__enumValue(schema: ORGANIZATION_API)
+  INDIVIDUAL @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum OrganizationXeroBillingMode @fusion__type(schema: ORGANIZATION_API) {
@@ -6316,27 +6316,27 @@ enum OrganizationXeroBillingMode @fusion__type(schema: ORGANIZATION_API) {
 enum PaymentMethod
   @fusion__type(schema: BOOKING_API)
   @fusion__type(schema: MARKETPLACE_API) {
-  BANK_TRANSFER
+  CARD
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
-  CARD
+  BANK_TRANSFER
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
 }
 
 enum PaymentStatus @fusion__type(schema: BOOKING_API) {
-  CONFIRMED @fusion__enumValue(schema: BOOKING_API)
-  EXPIRED @fusion__enumValue(schema: BOOKING_API)
-  NO_PAYMENT_REQUIRED @fusion__enumValue(schema: BOOKING_API)
   NOT_SET @fusion__enumValue(schema: BOOKING_API)
   PENDING @fusion__enumValue(schema: BOOKING_API)
-  RECORD_NEVER_CREATED @fusion__enumValue(schema: BOOKING_API)
   REJECTED @fusion__enumValue(schema: BOOKING_API)
+  CONFIRMED @fusion__enumValue(schema: BOOKING_API)
+  EXPIRED @fusion__enumValue(schema: BOOKING_API)
+  RECORD_NEVER_CREATED @fusion__enumValue(schema: BOOKING_API)
+  NO_PAYMENT_REQUIRED @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum PersonalInformationVisibility @fusion__type(schema: CUSTOMER_API) {
-  REDACTED @fusion__enumValue(schema: CUSTOMER_API)
   VISIBLE @fusion__enumValue(schema: CUSTOMER_API)
+  REDACTED @fusion__enumValue(schema: CUSTOMER_API)
 }
 
 enum ProductOrderField @fusion__type(schema: MARKETPLACE_API) {
@@ -6346,13 +6346,13 @@ enum ProductOrderField @fusion__type(schema: MARKETPLACE_API) {
 enum ProductPricingBillingMode
   @fusion__type(schema: BOOKING_API)
   @fusion__type(schema: MARKETPLACE_API) {
-  IN_ARREARS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
   NOT_SET
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   UPFRONT
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  IN_ARREARS
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
 }
@@ -6360,34 +6360,28 @@ enum ProductPricingBillingMode
 enum ProductPricingCadence
   @fusion__type(schema: BOOKING_API)
   @fusion__type(schema: MARKETPLACE_API) {
-  DAILY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  FIVE_MONTHS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  FORTNIGHTLY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  FOUR_MONTHS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  HALF_DAY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  MONTHLY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
   NOT_SET
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   ONE_TIME
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
+  PER_MINUTE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
   PER_HOUR
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
-  PER_MINUTE
+  DAILY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  WEEKLY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  MONTHLY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  HALF_DAY
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   PER15_MINUTES
@@ -6396,19 +6390,25 @@ enum ProductPricingCadence
   PER30_MINUTES
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
+  TWO_MONTHS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
   QUARTERLY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  FOUR_MONTHS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  FIVE_MONTHS
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   SIX_MONTHS
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
-  TWO_MONTHS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  WEEKLY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
   YEARLY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  FORTNIGHTLY
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
 }
@@ -6416,13 +6416,13 @@ enum ProductPricingCadence
 enum ProductPricingCancellationPolicyType
   @fusion__type(schema: BOOKING_API)
   @fusion__type(schema: MARKETPLACE_API) {
-  FULL_REFUND_BEFORE_CUTOFF
+  NOT_SET
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   NO_CANCELLATION
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
-  NOT_SET
+  FULL_REFUND_BEFORE_CUTOFF
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   TIERED_REFUND
@@ -6431,36 +6431,36 @@ enum ProductPricingCancellationPolicyType
 }
 
 enum ProductType @fusion__type(schema: MARKETPLACE_API) {
-  EVENT @fusion__enumValue(schema: MARKETPLACE_API)
   RESOURCE @fusion__enumValue(schema: MARKETPLACE_API)
+  EVENT @fusion__enumValue(schema: MARKETPLACE_API)
 }
 
 enum RecurringBookingEndType @fusion__type(schema: BOOKING_API) {
-  AFTER_OCCURRENCES @fusion__enumValue(schema: BOOKING_API)
   NEVER @fusion__enumValue(schema: BOOKING_API)
   UNTIL_DATE @fusion__enumValue(schema: BOOKING_API)
+  AFTER_OCCURRENCES @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum RecurringBookingOrderField @fusion__type(schema: BOOKING_API) {
-  CATEGORY @fusion__enumValue(schema: BOOKING_API)
-  CHANNEL @fusion__enumValue(schema: BOOKING_API)
   FROM @fusion__enumValue(schema: BOOKING_API)
   TO @fusion__enumValue(schema: BOOKING_API)
+  CATEGORY @fusion__enumValue(schema: BOOKING_API)
+  CHANNEL @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum ResourceAvailabilityClassification @fusion__type(schema: BOOKING_API) {
   AVAILABLE @fusion__enumValue(schema: BOOKING_API)
-  BLOCKED @fusion__enumValue(schema: BOOKING_API)
+  UNAVAILABLE @fusion__enumValue(schema: BOOKING_API)
+  PARTIALLY_BOOKED @fusion__enumValue(schema: BOOKING_API)
   FULLY_BOOKED @fusion__enumValue(schema: BOOKING_API)
   OCCUPIED @fusion__enumValue(schema: BOOKING_API)
-  PARTIALLY_BOOKED @fusion__enumValue(schema: BOOKING_API)
-  UNAVAILABLE @fusion__enumValue(schema: BOOKING_API)
+  BLOCKED @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum ResourceAvailabilityOrderByField @fusion__type(schema: BOOKING_API) {
-  LOCATION_NAME @fusion__enumValue(schema: BOOKING_API)
   RESOURCE_NAME @fusion__enumValue(schema: BOOKING_API)
   RESOURCE_TYPE @fusion__enumValue(schema: BOOKING_API)
+  LOCATION_NAME @fusion__enumValue(schema: BOOKING_API)
   ZONE_NAME @fusion__enumValue(schema: BOOKING_API)
 }
 
@@ -6474,13 +6474,13 @@ enum ScalarSerializationType
   @fusion__type(schema: LOCATION_API)
   @fusion__type(schema: MARKETPLACE_API)
   @fusion__type(schema: ORGANIZATION_API) {
-  BOOLEAN
+  STRING
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
-  FLOAT
+  BOOLEAN
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
@@ -6492,7 +6492,7 @@ enum ScalarSerializationType
     @fusion__enumValue(schema: LOCATION_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
-  LIST
+  FLOAT
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
@@ -6504,7 +6504,7 @@ enum ScalarSerializationType
     @fusion__enumValue(schema: LOCATION_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
-  STRING
+  LIST
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
@@ -6513,18 +6513,18 @@ enum ScalarSerializationType
 }
 
 enum TeamMemberOrderField @fusion__type(schema: TEAM_API) {
-  FAMILY_NAME @fusion__enumValue(schema: TEAM_API)
-  GIVEN_NAME @fusion__enumValue(schema: TEAM_API)
-  MIDDLE_NAME @fusion__enumValue(schema: TEAM_API)
-  NAME @fusion__enumValue(schema: TEAM_API)
   ROLE @fusion__enumValue(schema: TEAM_API)
   STATUS @fusion__enumValue(schema: TEAM_API)
+  NAME @fusion__enumValue(schema: TEAM_API)
+  GIVEN_NAME @fusion__enumValue(schema: TEAM_API)
+  MIDDLE_NAME @fusion__enumValue(schema: TEAM_API)
+  FAMILY_NAME @fusion__enumValue(schema: TEAM_API)
 }
 
 enum TeamMemberRole @fusion__type(schema: TEAM_API) {
+  OWNER @fusion__enumValue(schema: TEAM_API)
   ADMINISTRATOR @fusion__enumValue(schema: TEAM_API)
   MEMBER @fusion__enumValue(schema: TEAM_API)
-  OWNER @fusion__enumValue(schema: TEAM_API)
 }
 
 enum TeamMemberStatus @fusion__type(schema: TEAM_API) {
@@ -6533,8 +6533,8 @@ enum TeamMemberStatus @fusion__type(schema: TEAM_API) {
 }
 
 enum TeamOrderField @fusion__type(schema: TEAM_API) {
-  ABOUT @fusion__enumValue(schema: TEAM_API)
   NAME @fusion__enumValue(schema: TEAM_API)
+  ABOUT @fusion__enumValue(schema: TEAM_API)
 }
 
 "The `DateTime` scalar type represents a date and time with time zone offset information."
