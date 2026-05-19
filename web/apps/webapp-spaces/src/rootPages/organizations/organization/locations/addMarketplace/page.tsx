@@ -1,0 +1,42 @@
+import { AddMarketplaceLocation } from '@/components/location/addLocation';
+import { RootShell } from '@/components/rootShell';
+import { useKnownParams } from '@skedular/shared';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { memo } from 'react';
+
+const RootPage = () => {
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get('redirectUrl');
+  const router = useRouter();
+  const { organizationCustomDomain } = useKnownParams();
+
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
+  }
+
+  const handleAdded = () => {
+    if (redirectUrl) {
+      router.push(redirectUrl);
+    } else {
+      router.back();
+    }
+  };
+
+  const handleCancelled = () => {
+    if (redirectUrl) {
+      router.push(redirectUrl);
+    } else {
+      router.back();
+    }
+  };
+
+  const handleReloadRequired = () => {};
+
+  return (
+    <RootShell collapsed>
+      <AddMarketplaceLocation organizationCustomDomain={organizationCustomDomain} onAdded={handleAdded} onCancel={handleCancelled} onReloadRequired={handleReloadRequired} />
+    </RootShell>
+  );
+};
+
+export default memo(RootPage);

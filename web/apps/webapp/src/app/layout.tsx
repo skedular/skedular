@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import { headers } from 'next/headers';
+import { getProductAppDefinition } from '@skedular/shared';
 import type { PropsWithChildren } from 'react';
 import ClientRootLayout from './client-root-layout';
 import './fonts.css';
@@ -25,6 +26,7 @@ const barlow = localFont({
 });
 
 const knownHosts = ['skedular.app', 'staging.skedular.app', 'www.skedular.app', 'localhost', '127.0.0.1'];
+const appDefinition = getProductAppDefinition('webapp');
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
@@ -54,7 +56,7 @@ export const viewport: Viewport = {
 };
 
 const RootLayout = ({ children }: PropsWithChildren) => (
-  <html lang="en" dir="ltr" suppressHydrationWarning className={`${inter.variable} ${barlow.variable}`}>
+  <html lang="en" dir="ltr" suppressHydrationWarning className={`${inter.variable} ${barlow.variable}`} data-product-app={appDefinition.id}>
     <body>
       <ClientRootLayout>{children}</ClientRootLayout>
     </body>

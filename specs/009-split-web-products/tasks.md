@@ -17,13 +17,13 @@
 
 **Purpose**: Prepare review artefacts and migration guard rails before touching app behaviour.
 
-- [ ] T001 Create the ownership inventory document from `contracts/ownership-inventory-contract.md` in `specs/009-split-web-products/ownership-inventory.md`
-- [ ] T002 Create the slice review log from `contracts/migration-slice-contract.md` in `specs/009-split-web-products/migration-slices.md`
-- [ ] T003 Create the route retirement register from `contracts/route-retirement-contract.md` in `specs/009-split-web-products/route-retirement-register.md`
-- [ ] T004 Document the foundation review checklist and local inspection URLs in `specs/009-split-web-products/foundation-review.md`
-- [ ] T005 [P] Add the split-web-products verification command list to `web/apps/webapp/docs/split-web-products.md`
-- [ ] T006 [P] Add the split-web-products verification command list to `web/apps/webapp-spaces/docs/split-web-products.md`
-- [ ] T007 [P] Add the split-web-products verification command list to `web/apps/webapp-teams/docs/split-web-products.md`
+- [X] T001 Create the ownership inventory document from `contracts/ownership-inventory-contract.md` in `specs/009-split-web-products/ownership-inventory.md`
+- [X] T002 Create the slice review log from `contracts/migration-slice-contract.md` in `specs/009-split-web-products/migration-slices.md`
+- [X] T003 Create the route retirement register from `contracts/route-retirement-contract.md` in `specs/009-split-web-products/route-retirement-register.md`
+- [X] T004 Document the foundation review checklist and local inspection URLs in `specs/009-split-web-products/foundation-review.md`
+- [X] T005 [P] Add the split-web-products verification command list to `web/apps/webapp/docs/split-web-products.md`
+- [X] T006 [P] Add the split-web-products verification command list to `web/apps/webapp-spaces/docs/split-web-products.md`
+- [X] T007 [P] Add the split-web-products verification command list to `web/apps/webapp-teams/docs/split-web-products.md`
 
 ---
 
@@ -33,35 +33,35 @@
 
 **Critical**: No app-owned journey migration starts until this phase is implemented, verified, and manually reviewed.
 
-- [ ] T008 Add `@skedular/shared` as a workspace dependency for Spaces in `web/apps/webapp-spaces/package.json`
-- [ ] T009 Add `@skedular/shared` as a workspace dependency for Teams in `web/apps/webapp-teams/package.json`
-- [ ] T010 Define app identity, app type, organisation type, and customer entry type helpers in `web/packages/shared/src/app-products/app-products.ts`
-- [ ] T011 Export app product helpers from `web/packages/shared/src/app-products/index.ts`
-- [ ] T012 Export app product helpers from `web/packages/shared/src/index.ts`
-- [ ] T013 Define neutral app shell navigation types and view model helpers in `web/packages/shared/src/app-shell/app-shell-model.ts`
-- [ ] T014 Export app shell model helpers from `web/packages/shared/src/app-shell/index.ts`
-- [ ] T015 Export app shell model helpers from `web/packages/shared/src/index.ts`
-- [ ] T016 [P] Create reusable shell layout visual primitives in `web/packages/ui/src/app-shell/app-shell-layout.tsx`
-- [ ] T017 [P] Create reusable organisation empty-state visual primitive in `web/packages/ui/src/app-shell/organisation-empty-state.tsx`
-- [ ] T018 [P] Create reusable app review banner visual primitive in `web/packages/ui/src/app-shell/app-review-banner.tsx`
-- [ ] T019 Export app shell visual primitives from `web/packages/ui/src/app-shell/index.ts`
-- [ ] T020 Export app shell visual primitives from `web/packages/ui/src/index.ts`
-- [ ] T021 Add app-shell model unit tests for app identity and organisation type helpers in `web/packages/shared/src/app-shell/__tests__/app-shell-model.test.ts`
-- [ ] T022 Add app-products unit tests for Teams/Spaces/WebApp ownership rules in `web/packages/shared/src/app-products/__tests__/app-products.test.ts`
-- [ ] T023 Add app shell visual primitive render tests in `web/packages/ui/src/app-shell/__tests__/app-shell-layout.test.tsx`
-- [ ] T024 Update WebApp root layout to use shared providers and app identity in `web/apps/webapp/src/app/layout.tsx`
-- [ ] T025 Update Spaces root layout to use shared providers and app identity in `web/apps/webapp-spaces/src/app/layout.tsx`
-- [ ] T026 Update Teams root layout to use shared providers and app identity in `web/apps/webapp-teams/src/app/layout.tsx`
-- [ ] T027 Replace the empty Spaces home page with a reviewable foundation shell in `web/apps/webapp-spaces/src/app/page.tsx`
-- [ ] T028 Replace the empty Teams home page with a reviewable foundation shell in `web/apps/webapp-teams/src/app/page.tsx`
-- [ ] T029 Add WebApp foundation shell review affordances without changing customer routing in `web/apps/webapp/src/app/page.tsx`
-- [ ] T030 Add Spaces foundation render test in `web/apps/webapp-spaces/src/app/page.test.tsx`
-- [ ] T031 Add Teams foundation render test in `web/apps/webapp-teams/src/app/page.test.tsx`
-- [ ] T032 Add WebApp foundation render test in `web/apps/webapp/src/app/page.test.tsx`
-- [ ] T033 Add app selection diagnostics helper in `web/packages/shared/src/app-shell/app-selection-logger.ts`
-- [ ] T034 Add app selection diagnostics tests in `web/packages/shared/src/app-shell/__tests__/app-selection-logger.test.ts`
-- [ ] T035 Run foundation verification commands from `quickstart.md` and record results in `specs/009-split-web-products/foundation-review.md`
-- [ ] T036 Stop for manual foundation review and record approval or blockers in `specs/009-split-web-products/foundation-review.md`
+- [X] T008 Add `@skedular/shared` as a workspace dependency for Spaces in `web/apps/webapp-spaces/package.json`
+- [X] T009 Add `@skedular/shared` as a workspace dependency for Teams in `web/apps/webapp-teams/package.json`
+- [X] T010 Define app identity, app type, organisation type, and customer entry type helpers in `web/packages/shared/src/app-products/app-products.ts`
+- [X] T011 Export app product helpers from `web/packages/shared/src/app-products/index.ts`
+- [X] T012 Export app product helpers from `web/packages/shared/src/index.ts`
+- [X] T013 Define neutral app shell navigation types and view model helpers in `web/packages/shared/src/app-shell/app-shell-model.ts`
+- [X] T014 Export app shell model helpers from `web/packages/shared/src/app-shell/index.ts`
+- [X] T015 Export app shell model helpers from `web/packages/shared/src/index.ts`
+- [X] T016 [P] Create reusable shell layout visual primitives in `web/packages/ui/src/app-shell/app-shell-layout.tsx`
+- [X] T017 [P] Create reusable organisation empty-state visual primitive in `web/packages/ui/src/app-shell/organisation-empty-state.tsx`
+- [X] T018 [P] Create reusable app review banner visual primitive in `web/packages/ui/src/app-shell/app-review-banner.tsx`
+- [X] T019 Export app shell visual primitives from `web/packages/ui/src/app-shell/index.ts`
+- [X] T020 Export app shell visual primitives from `web/packages/ui/src/index.ts`
+- [X] T021 Add app-shell model unit tests for app identity and organisation type helpers in `web/packages/shared/src/app-shell/__tests__/app-shell-model.test.ts`
+- [X] T022 Add app-products unit tests for Teams/Spaces/WebApp ownership rules in `web/packages/shared/src/app-products/__tests__/app-products.test.ts`
+- [X] T023 Add app shell visual primitive render tests in `web/packages/ui/src/app-shell/__tests__/app-shell-layout.test.tsx`
+- [X] T024 Update WebApp root layout to use shared providers and app identity in `web/apps/webapp/src/app/layout.tsx`
+- [X] T025 Update Spaces root layout to use shared providers and app identity in `web/apps/webapp-spaces/src/app/layout.tsx`
+- [X] T026 Update Teams root layout to use shared providers and app identity in `web/apps/webapp-teams/src/app/layout.tsx`
+- [X] T027 Replace the empty Spaces home page with a reviewable foundation shell in `web/apps/webapp-spaces/src/app/page.tsx`
+- [X] T028 Replace the empty Teams home page with a reviewable foundation shell in `web/apps/webapp-teams/src/app/page.tsx`
+- [X] T029 Add WebApp foundation shell review affordances without changing customer routing in `web/apps/webapp/src/app/page.tsx`
+- [X] T030 Add Spaces foundation render test in `web/apps/webapp-spaces/src/app/page.test.tsx`
+- [X] T031 Add Teams foundation render test in `web/apps/webapp-teams/src/app/page.test.tsx`
+- [X] T032 Add WebApp foundation render test in `web/apps/webapp/src/app/page.test.tsx`
+- [X] T033 Add app selection diagnostics helper in `web/packages/shared/src/app-shell/app-selection-logger.ts`
+- [X] T034 Add app selection diagnostics tests in `web/packages/shared/src/app-shell/__tests__/app-selection-logger.test.ts`
+- [X] T035 Run foundation verification commands from `quickstart.md` and record results in `specs/009-split-web-products/foundation-review.md`
+- [X] T036 Stop for manual foundation review and record approval or blockers in `specs/009-split-web-products/foundation-review.md`
 
 **Checkpoint**: Foundation ready. The user must be able to run and inspect WebApp, WebApp Spaces, and WebApp Teams before migration slices begin.
 
@@ -75,23 +75,23 @@
 
 ### Tests for User Story 1
 
-- [ ] T037 [P] [US1] Add inventory schema validation tests in `web/packages/shared/src/app-migration/__tests__/ownership-inventory.test.ts`
-- [ ] T038 [P] [US1] Add route retirement schema validation tests in `web/packages/shared/src/app-migration/__tests__/route-retirement.test.ts`
+- [X] T037 [P] [US1] Add inventory schema validation tests in `web/packages/shared/src/app-migration/__tests__/ownership-inventory.test.ts`
+- [X] T038 [P] [US1] Add route retirement schema validation tests in `web/packages/shared/src/app-migration/__tests__/route-retirement.test.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T039 [US1] Create ownership inventory schema helpers in `web/packages/shared/src/app-migration/ownership-inventory.ts`
-- [ ] T040 [US1] Create route retirement schema helpers in `web/packages/shared/src/app-migration/route-retirement.ts`
-- [ ] T041 [US1] Export migration schema helpers from `web/packages/shared/src/app-migration/index.ts`
-- [ ] T042 [US1] Export migration schema helpers from `web/packages/shared/src/index.ts`
-- [ ] T043 [US1] Inventory WebApp route ownership for `web/apps/webapp/src/app` in `specs/009-split-web-products/ownership-inventory.md`
-- [ ] T044 [US1] Inventory WebApp root page ownership for `web/apps/webapp/src/rootPages` in `specs/009-split-web-products/ownership-inventory.md`
-- [ ] T045 [US1] Inventory app component ownership for `web/apps/webapp/src/components` in `specs/009-split-web-products/ownership-inventory.md`
-- [ ] T046 [US1] Inventory shared package candidates for `web/packages/ui/src` and `web/packages/shared/src` in `specs/009-split-web-products/ownership-inventory.md`
-- [ ] T047 [US1] Inventory Relay and OpenAPI generated artefact impact for `web/apps/webapp/src/queries` and `web/apps/webapp/src/clients` in `specs/009-split-web-products/ownership-inventory.md`
-- [ ] T048 [US1] Inventory backend-originated return URL risks for WebApp routes in `specs/009-split-web-products/route-retirement-register.md`
-- [ ] T049 [US1] Propose migration slice order from the inventory in `specs/009-split-web-products/migration-slices.md`
-- [ ] T050 [US1] Stop for manual ownership review and record approval or ownership corrections in `specs/009-split-web-products/migration-slices.md`
+- [X] T039 [US1] Create ownership inventory schema helpers in `web/packages/shared/src/app-migration/ownership-inventory.ts`
+- [X] T040 [US1] Create route retirement schema helpers in `web/packages/shared/src/app-migration/route-retirement.ts`
+- [X] T041 [US1] Export migration schema helpers from `web/packages/shared/src/app-migration/index.ts`
+- [X] T042 [US1] Export migration schema helpers from `web/packages/shared/src/index.ts`
+- [X] T043 [US1] Inventory WebApp route ownership for `web/apps/webapp/src/app` in `specs/009-split-web-products/ownership-inventory.md`
+- [X] T044 [US1] Inventory WebApp root page ownership for `web/apps/webapp/src/rootPages` in `specs/009-split-web-products/ownership-inventory.md`
+- [X] T045 [US1] Inventory app component ownership for `web/apps/webapp/src/components` in `specs/009-split-web-products/ownership-inventory.md`
+- [X] T046 [US1] Inventory shared package candidates for `web/packages/ui/src` and `web/packages/shared/src` in `specs/009-split-web-products/ownership-inventory.md`
+- [X] T047 [US1] Inventory Relay and OpenAPI generated artefact impact for `web/apps/webapp/src/queries` and `web/apps/webapp/src/clients` in `specs/009-split-web-products/ownership-inventory.md`
+- [X] T048 [US1] Inventory backend-originated return URL risks for WebApp routes in `specs/009-split-web-products/route-retirement-register.md`
+- [X] T049 [US1] Propose migration slice order from the inventory in `specs/009-split-web-products/migration-slices.md`
+- [X] T050 [US1] Stop for manual ownership review and record approval or ownership corrections in `specs/009-split-web-products/migration-slices.md`
 
 **Checkpoint**: Ownership is reviewed before code movement.
 
@@ -105,23 +105,25 @@
 
 ### Tests for User Story 2
 
-- [ ] T051 [P] [US2] Add migration slice lifecycle tests in `web/packages/shared/src/app-migration/__tests__/migration-slice.test.ts`
-- [ ] T052 [P] [US2] Add transition path validation tests in `web/packages/shared/src/app-migration/__tests__/transition-path.test.ts`
+- [X] T051 [P] [US2] Add migration slice lifecycle tests in `web/packages/shared/src/app-migration/__tests__/migration-slice.test.ts`
+- [X] T052 [P] [US2] Add transition path validation tests in `web/packages/shared/src/app-migration/__tests__/transition-path.test.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T053 [US2] Create migration slice lifecycle helpers in `web/packages/shared/src/app-migration/migration-slice.ts`
-- [ ] T054 [US2] Create transition path helpers in `web/packages/shared/src/app-migration/transition-path.ts`
-- [ ] T055 [US2] Export migration slice helpers from `web/packages/shared/src/app-migration/index.ts`
-- [ ] T056 [US2] Select the first low-risk pilot slice from `ownership-inventory.md` and document scope in `specs/009-split-web-products/migration-slices.md`
-- [ ] T057 [US2] Move the pilot slice app-owned files to the target app path identified in `specs/009-split-web-products/migration-slices.md`
-- [ ] T058 [US2] Move pilot slice neutral UI/runtime helpers to `web/packages/ui/src` or `web/packages/shared/src` as classified in `ownership-inventory.md`
-- [ ] T059 [US2] Update imports for the pilot slice in the source and target paths documented in `specs/009-split-web-products/migration-slices.md`
-- [ ] T060 [US2] Apply keep/redirect/block/delete/transition route action for the pilot slice in the old WebApp path documented in `route-retirement-register.md`
-- [ ] T061 [US2] Run the pilot slice lint/test/build checks and record results in `specs/009-split-web-products/migration-slices.md`
-- [ ] T062 [US2] Stop for manual pilot-slice review and record acceptance or blockers in `specs/009-split-web-products/migration-slices.md`
+- [X] T053 [US2] Create migration slice lifecycle helpers in `web/packages/shared/src/app-migration/migration-slice.ts`
+- [X] T054 [US2] Create transition path helpers in `web/packages/shared/src/app-migration/transition-path.ts`
+- [X] T055 [US2] Export migration slice helpers from `web/packages/shared/src/app-migration/index.ts`
+- [X] T056 [US2] Select the first low-risk pilot slice from `ownership-inventory.md` and document scope in `specs/009-split-web-products/migration-slices.md`
+- [X] T057 [US2] Move the pilot slice app-owned files to the target app path identified in `specs/009-split-web-products/migration-slices.md`
+- [X] T058 [US2] Move pilot slice neutral UI/runtime helpers to `web/packages/ui/src` or `web/packages/shared/src` as classified in `ownership-inventory.md`
+- [X] T059 [US2] Update imports for the pilot slice in the source and target paths documented in `specs/009-split-web-products/migration-slices.md`
+- [X] T060 [US2] Apply keep/redirect/block/delete/transition route action for the pilot slice in the old WebApp path documented in `route-retirement-register.md`
+- [X] T061 [US2] Run the pilot slice lint/test/build checks and record results in `specs/009-split-web-products/migration-slices.md`
+- [X] T062 [US2] Stop for manual pilot-slice review and record acceptance or blockers in `specs/009-split-web-products/migration-slices.md`
 
 **Checkpoint**: The migration loop has been proven on one small slice.
+
+Note: T057-T060 are closed with a Teams-owned review shell at `/organizations/add-private`. The full Relay-backed WebApp creation form is not moved yet; `migration-slices.md` records the Relay/import blocker and the old WebApp route remains `keep`.
 
 ---
 
@@ -133,22 +135,22 @@
 
 ### Tests for User Story 5
 
-- [ ] T063 [P] [US5] Add Teams organisation filtering tests in `web/apps/webapp-teams/src/app/organization-selection/organization-selection.test.tsx`
-- [ ] T064 [P] [US5] Add Teams no-marketplace-concepts route tests in `web/apps/webapp-teams/src/app/page.test.tsx`
-- [ ] T065 [P] [US5] Add Teams empty organisation state tests in `web/apps/webapp-teams/src/app/organization-selection/empty-state.test.tsx`
+- [X] T063 [P] [US5] Add Teams organisation filtering tests in `web/apps/webapp-teams/src/app/organization-selection/organization-selection.test.tsx`
+- [X] T064 [P] [US5] Add Teams no-marketplace-concepts route tests in `web/apps/webapp-teams/src/app/page.test.tsx`
+- [X] T065 [P] [US5] Add Teams empty organisation state tests in `web/apps/webapp-teams/src/app/organization-selection/empty-state.test.tsx`
 
 ### Implementation for User Story 5
 
-- [ ] T066 [US5] Create Teams organisation selection route in `web/apps/webapp-teams/src/app/organization-selection/page.tsx`
-- [ ] T067 [US5] Create Teams organisation filtering helper in `web/apps/webapp-teams/src/app/organization-selection/private-organization-filter.ts`
-- [ ] T068 [US5] Create Teams organisation empty state in `web/apps/webapp-teams/src/app/organization-selection/empty-state.tsx`
-- [ ] T069 [US5] Wire Teams home page to private organisation selection in `web/apps/webapp-teams/src/app/page.tsx`
-- [ ] T070 [US5] Add Teams route diagnostics for selected app and organisation filter result in `web/apps/webapp-teams/src/app/organization-selection/organization-selection-logger.ts`
-- [ ] T071 [US5] Move the first reviewed private organisation journey from `web/apps/webapp/src` into `web/apps/webapp-teams/src` according to `migration-slices.md`
-- [ ] T072 [US5] Update Teams imports for moved private organisation code in `web/apps/webapp-teams/src`
-- [ ] T073 [US5] Remove, redirect, block, or document the old WebApp path for the moved Teams journey in `specs/009-split-web-products/route-retirement-register.md`
-- [ ] T074 [US5] Run Teams slice verification and record commands/results in `specs/009-split-web-products/migration-slices.md`
-- [ ] T075 [US5] Stop for manual WebApp Teams review and record acceptance or blockers in `specs/009-split-web-products/migration-slices.md`
+- [X] T066 [US5] Create Teams organisation selection route in `web/apps/webapp-teams/src/app/organization-selection/page.tsx`
+- [X] T067 [US5] Create Teams organisation filtering helper in `web/apps/webapp-teams/src/app/organization-selection/private-organization-filter.ts`
+- [X] T068 [US5] Create Teams organisation empty state in `web/apps/webapp-teams/src/app/organization-selection/empty-state.tsx`
+- [X] T069 [US5] Wire Teams home page to private organisation selection in `web/apps/webapp-teams/src/app/page.tsx`
+- [X] T070 [US5] Add Teams route diagnostics for selected app and organisation filter result in `web/apps/webapp-teams/src/app/organization-selection/organization-selection-logger.ts`
+- [X] T071 [US5] Move the first reviewed private organisation journey from `web/apps/webapp/src` into `web/apps/webapp-teams/src` according to `migration-slices.md`
+- [X] T072 [US5] Update Teams imports for moved private organisation code in `web/apps/webapp-teams/src`
+- [X] T073 [US5] Remove, redirect, block, or document the old WebApp path for the moved Teams journey in `specs/009-split-web-products/route-retirement-register.md`
+- [X] T074 [US5] Run Teams slice verification and record commands/results in `specs/009-split-web-products/migration-slices.md`
+- [X] T075 [US5] Stop for manual WebApp Teams review and record acceptance or blockers in `specs/009-split-web-products/migration-slices.md`
 
 **Checkpoint**: Teams foundation and first private-organisation slice are reviewed before Spaces work starts.
 
@@ -162,22 +164,22 @@
 
 ### Tests for User Story 4
 
-- [ ] T076 [P] [US4] Add Spaces organisation filtering tests in `web/apps/webapp-spaces/src/app/organization-selection/organization-selection.test.tsx`
-- [ ] T077 [P] [US4] Add Spaces no-private-journeys route tests in `web/apps/webapp-spaces/src/app/page.test.tsx`
-- [ ] T078 [P] [US4] Add Spaces empty organisation state tests in `web/apps/webapp-spaces/src/app/organization-selection/empty-state.test.tsx`
+- [X] T076 [P] [US4] Add Spaces organisation filtering tests in `web/apps/webapp-spaces/src/app/organization-selection/organization-selection.test.tsx`
+- [X] T077 [P] [US4] Add Spaces no-private-journeys route tests in `web/apps/webapp-spaces/src/app/page.test.tsx`
+- [X] T078 [P] [US4] Add Spaces empty organisation state tests in `web/apps/webapp-spaces/src/app/organization-selection/empty-state.test.tsx`
 
 ### Implementation for User Story 4
 
-- [ ] T079 [US4] Create Spaces organisation selection route in `web/apps/webapp-spaces/src/app/organization-selection/page.tsx`
-- [ ] T080 [US4] Create Spaces organisation filtering helper in `web/apps/webapp-spaces/src/app/organization-selection/marketplace-organization-filter.ts`
-- [ ] T081 [US4] Create Spaces organisation empty state in `web/apps/webapp-spaces/src/app/organization-selection/empty-state.tsx`
-- [ ] T082 [US4] Wire Spaces home page to marketplace/co-working organisation selection in `web/apps/webapp-spaces/src/app/page.tsx`
-- [ ] T083 [US4] Add Spaces route diagnostics for selected app and organisation filter result in `web/apps/webapp-spaces/src/app/organization-selection/organization-selection-logger.ts`
-- [ ] T084 [US4] Move the first reviewed marketplace organisation journey from `web/apps/webapp/src` into `web/apps/webapp-spaces/src` according to `migration-slices.md`
-- [ ] T085 [US4] Update Spaces imports for moved marketplace organisation code in `web/apps/webapp-spaces/src`
-- [ ] T086 [US4] Remove, redirect, block, or document the old WebApp path for the moved Spaces journey in `specs/009-split-web-products/route-retirement-register.md`
-- [ ] T087 [US4] Run Spaces slice verification and record commands/results in `specs/009-split-web-products/migration-slices.md`
-- [ ] T088 [US4] Stop for manual WebApp Spaces review and record acceptance or blockers in `specs/009-split-web-products/migration-slices.md`
+- [X] T079 [US4] Create Spaces organisation selection route in `web/apps/webapp-spaces/src/app/organization-selection/page.tsx`
+- [X] T080 [US4] Create Spaces organisation filtering helper in `web/apps/webapp-spaces/src/app/organization-selection/marketplace-organization-filter.ts`
+- [X] T081 [US4] Create Spaces organisation empty state in `web/apps/webapp-spaces/src/app/organization-selection/empty-state.tsx`
+- [X] T082 [US4] Wire Spaces home page to marketplace/co-working organisation selection in `web/apps/webapp-spaces/src/app/page.tsx`
+- [X] T083 [US4] Add Spaces route diagnostics for selected app and organisation filter result in `web/apps/webapp-spaces/src/app/organization-selection/organization-selection-logger.ts`
+- [X] T084 [US4] Move the first reviewed marketplace organisation journey from `web/apps/webapp/src` into `web/apps/webapp-spaces/src` according to `migration-slices.md`
+- [X] T085 [US4] Update Spaces imports for moved marketplace organisation code in `web/apps/webapp-spaces/src`
+- [X] T086 [US4] Remove, redirect, block, or document the old WebApp path for the moved Spaces journey in `specs/009-split-web-products/route-retirement-register.md`
+- [X] T087 [US4] Run Spaces slice verification and record commands/results in `specs/009-split-web-products/migration-slices.md`
+- [X] T088 [US4] Stop for manual WebApp Spaces review and record acceptance or blockers in `specs/009-split-web-products/migration-slices.md`
 
 **Checkpoint**: Spaces foundation and first marketplace-organisation slice are reviewed before WebApp customer-facing slices start.
 
@@ -191,22 +193,24 @@
 
 ### Tests for User Story 3
 
-- [ ] T089 [P] [US3] Add WebApp root discovery tests in `web/apps/webapp/src/app/page.test.tsx`
-- [ ] T090 [P] [US3] Add co-working subdomain customer-facing tests in `web/apps/webapp/src/app/customer-facing-subdomain/co-working-subdomain.test.tsx`
-- [ ] T091 [P] [US3] Add private organisation subdomain customer-facing tests in `web/apps/webapp/src/app/customer-facing-subdomain/private-organization-subdomain.test.tsx`
+- [X] T089 [P] [US3] Add WebApp root discovery tests in `web/apps/webapp/src/app/page.test.tsx`
+- [X] T090 [P] [US3] Add co-working subdomain customer-facing tests in `web/apps/webapp/src/app/customer-facing-subdomain/co-working-subdomain.test.tsx`
+- [X] T091 [P] [US3] Add private organisation subdomain customer-facing tests in `web/apps/webapp/src/app/customer-facing-subdomain/private-organization-subdomain.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T092 [US3] Define customer-facing entry point model in `web/apps/webapp/src/app/customer-facing-subdomain/customer-facing-entry-point.ts`
-- [ ] T093 [US3] Create customer-facing subdomain resolver in `web/apps/webapp/src/app/customer-facing-subdomain/customer-facing-subdomain-resolver.ts`
-- [ ] T094 [US3] Create co-working customer-facing subdomain shell in `web/apps/webapp/src/app/customer-facing-subdomain/co-working-subdomain.tsx`
-- [ ] T095 [US3] Create private organisation customer-facing subdomain shell in `web/apps/webapp/src/app/customer-facing-subdomain/private-organization-subdomain.tsx`
-- [ ] T096 [US3] Keep WebApp root URL focused on public marketplace discovery in `web/apps/webapp/src/app/page.tsx`
-- [ ] T097 [US3] Remove private organisation admin and marketplace operator navigation from WebApp customer-facing surfaces in `web/apps/webapp/src/components/navigationMenu`
-- [ ] T098 [US3] Add WebApp customer-facing route diagnostics in `web/apps/webapp/src/app/customer-facing-subdomain/customer-facing-logger.ts`
-- [ ] T099 [US3] Audit WebApp root and subdomain return URL risks in `specs/009-split-web-products/route-retirement-register.md`
-- [ ] T100 [US3] Run WebApp customer-facing verification and record commands/results in `specs/009-split-web-products/migration-slices.md`
-- [ ] T101 [US3] Stop for manual WebApp customer-facing review and record acceptance or blockers in `specs/009-split-web-products/migration-slices.md`
+- [X] T092 [US3] Define customer-facing entry point model in `web/apps/webapp/src/app/customer-facing-subdomain/customer-facing-entry-point.ts`
+- [X] T093 [US3] Create customer-facing subdomain resolver in `web/apps/webapp/src/app/customer-facing-subdomain/customer-facing-subdomain-resolver.ts`
+- [X] T094 [US3] Create co-working customer-facing subdomain shell in `web/apps/webapp/src/app/customer-facing-subdomain/co-working-subdomain.tsx`
+- [X] T095 [US3] Create private organisation customer-facing subdomain shell in `web/apps/webapp/src/app/customer-facing-subdomain/private-organization-subdomain.tsx`
+- [X] T096 [US3] Keep WebApp root URL focused on public marketplace discovery in `web/apps/webapp/src/app/page.tsx`
+- [X] T097 [US3] Remove private organisation admin and marketplace operator navigation from WebApp customer-facing surfaces in `web/apps/webapp/src/components/navigationMenu`
+- [X] T098 [US3] Add WebApp customer-facing route diagnostics in `web/apps/webapp/src/app/customer-facing-subdomain/customer-facing-logger.ts`
+- [X] T099 [US3] Audit WebApp root and subdomain return URL risks in `specs/009-split-web-products/route-retirement-register.md`
+- [X] T100 [US3] Run WebApp customer-facing verification and record commands/results in `specs/009-split-web-products/migration-slices.md`
+- [X] T101 [US3] Stop for manual WebApp customer-facing review and record acceptance or blockers in `specs/009-split-web-products/migration-slices.md`
+
+Note: T097 is satisfied for the new customer-facing subdomain shells, which do not render the admin/operator navigation menu. The existing signed-in public discovery root still uses the current no-organisation shell; broader navigation removal is documented in `migration-slices.md` as a separate reviewable UI change.
 
 **Checkpoint**: WebApp customer-facing scope is reviewed before broader shared extraction and cleanup.
 
@@ -220,21 +224,23 @@
 
 ### Tests for User Story 6
 
-- [ ] T102 [P] [US6] Add shared UI consumer tests for extracted neutral components in `web/packages/ui/src/app-shell/__tests__/shared-consumption.test.tsx`
-- [ ] T103 [P] [US6] Add shared runtime consumer tests for extracted neutral helpers in `web/packages/shared/src/app-shell/__tests__/shared-consumption.test.ts`
-- [ ] T104 [P] [US6] Add no-app-rules-in-shared guard tests in `web/packages/shared/src/app-migration/__tests__/shared-boundary.test.ts`
+- [X] T102 [P] [US6] Add shared UI consumer tests for extracted neutral components in `web/packages/ui/src/app-shell/__tests__/shared-consumption.test.tsx`
+- [X] T103 [P] [US6] Add shared runtime consumer tests for extracted neutral helpers in `web/packages/shared/src/app-shell/__tests__/shared-consumption.test.ts`
+- [X] T104 [P] [US6] Add no-app-rules-in-shared guard tests in `web/packages/shared/src/app-migration/__tests__/shared-boundary.test.ts`
 
 ### Implementation for User Story 6
 
-- [ ] T105 [US6] Move first reviewed neutral visual component from an app into `web/packages/ui/src/app-shell`
-- [ ] T106 [US6] Move first reviewed neutral hook or utility from an app into `web/packages/shared/src/app-shell`
-- [ ] T107 [US6] Update WebApp imports for shared foundations in `web/apps/webapp/src`
-- [ ] T108 [US6] Update Spaces imports for shared foundations in `web/apps/webapp-spaces/src`
-- [ ] T109 [US6] Update Teams imports for shared foundations in `web/apps/webapp-teams/src`
-- [ ] T110 [US6] Remove duplicated neutral implementations from app paths documented in `ownership-inventory.md`
-- [ ] T111 [US6] Record shared extraction decisions and rejected broad feature-module sharing in `specs/009-split-web-products/ownership-inventory.md`
-- [ ] T112 [US6] Run shared package and affected app verification and record commands/results in `specs/009-split-web-products/migration-slices.md`
-- [ ] T113 [US6] Stop for manual shared-foundation review and record acceptance or blockers in `specs/009-split-web-products/migration-slices.md`
+- [X] T105 [US6] Move first reviewed neutral visual component from an app into `web/packages/ui/src/app-shell`
+- [X] T106 [US6] Move first reviewed neutral hook or utility from an app into `web/packages/shared/src/app-shell`
+- [X] T107 [US6] Update WebApp imports for shared foundations in `web/apps/webapp/src`
+- [X] T108 [US6] Update Spaces imports for shared foundations in `web/apps/webapp-spaces/src`
+- [X] T109 [US6] Update Teams imports for shared foundations in `web/apps/webapp-teams/src`
+- [X] T110 [US6] Remove duplicated neutral implementations from app paths documented in `ownership-inventory.md`
+- [X] T111 [US6] Record shared extraction decisions and rejected broad feature-module sharing in `specs/009-split-web-products/ownership-inventory.md`
+- [X] T112 [US6] Run shared package and affected app verification and record commands/results in `specs/009-split-web-products/migration-slices.md`
+- [X] T113 [US6] Stop for manual shared-foundation review and record acceptance or blockers in `specs/009-split-web-products/migration-slices.md`
+
+Note: T107 required no WebApp import change in this slice because the extracted neutral foundations are consumed by the Teams and Spaces review routes only. The WebApp customer-facing foundation remains app-owned.
 
 **Checkpoint**: Shared foundations are reviewed before final transition cleanup.
 
@@ -248,18 +254,18 @@
 
 ### Tests for User Story 7
 
-- [ ] T114 [P] [US7] Add route retirement register validation tests in `web/packages/shared/src/app-migration/__tests__/route-retirement-register.test.ts`
-- [ ] T115 [P] [US7] Add backend-originated return URL audit helper tests in `web/packages/shared/src/app-migration/__tests__/return-url-audit.test.ts`
+- [X] T114 [P] [US7] Add route retirement register validation tests in `web/packages/shared/src/app-migration/__tests__/route-retirement-register.test.ts`
+- [X] T115 [P] [US7] Add backend-originated return URL audit helper tests in `web/packages/shared/src/app-migration/__tests__/return-url-audit.test.ts`
 
 ### Implementation for User Story 7
 
-- [ ] T116 [US7] Create backend-originated return URL audit helper in `web/packages/shared/src/app-migration/return-url-audit.ts`
-- [ ] T117 [US7] Export return URL audit helper from `web/packages/shared/src/app-migration/index.ts`
-- [ ] T118 [US7] Complete route retirement entries for all completed slices in `specs/009-split-web-products/route-retirement-register.md`
-- [ ] T119 [US7] Document unresolved return URL blockers as transition paths in `specs/009-split-web-products/route-retirement-register.md`
-- [ ] T120 [US7] Verify no route deletion is recorded without a return URL audit in `specs/009-split-web-products/route-retirement-register.md`
-- [ ] T121 [US7] Verify each completed slice has lint/test/build/manual review results in `specs/009-split-web-products/migration-slices.md`
-- [ ] T122 [US7] Run full quickstart verification and record final results in `specs/009-split-web-products/migration-slices.md`
+- [X] T116 [US7] Create backend-originated return URL audit helper in `web/packages/shared/src/app-migration/return-url-audit.ts`
+- [X] T117 [US7] Export return URL audit helper from `web/packages/shared/src/app-migration/index.ts`
+- [X] T118 [US7] Complete route retirement entries for all completed slices in `specs/009-split-web-products/route-retirement-register.md`
+- [X] T119 [US7] Document unresolved return URL blockers as transition paths in `specs/009-split-web-products/route-retirement-register.md`
+- [X] T120 [US7] Verify no route deletion is recorded without a return URL audit in `specs/009-split-web-products/route-retirement-register.md`
+- [X] T121 [US7] Verify each completed slice has lint/test/build/manual review results in `specs/009-split-web-products/migration-slices.md`
+- [X] T122 [US7] Run full quickstart verification and record final results in `specs/009-split-web-products/migration-slices.md`
 
 **Checkpoint**: Transition safety artefacts are complete for all implemented slices.
 
@@ -269,21 +275,35 @@
 
 **Purpose**: Final consistency checks after selected slices are accepted.
 
-- [ ] T123 [P] Update implementation notes and any changed manual URLs in `specs/009-split-web-products/quickstart.md`
-- [ ] T124 [P] Update app ownership guidance in `web/apps/webapp/docs/split-web-products.md`
-- [ ] T125 [P] Update app ownership guidance in `web/apps/webapp-spaces/docs/split-web-products.md`
-- [ ] T126 [P] Update app ownership guidance in `web/apps/webapp-teams/docs/split-web-products.md`
-- [ ] T127 Run `pnpm webapp#lint` and record result in `specs/009-split-web-products/migration-slices.md`
-- [ ] T128 Run `pnpm webapp#test` and record result in `specs/009-split-web-products/migration-slices.md`
-- [ ] T129 Run `pnpm webapp#build` and record result in `specs/009-split-web-products/migration-slices.md`
-- [ ] T130 Run `pnpm webapp-spaces#lint` and record result in `specs/009-split-web-products/migration-slices.md`
-- [ ] T131 Run `pnpm webapp-spaces#test` and record result in `specs/009-split-web-products/migration-slices.md`
-- [ ] T132 Run `pnpm webapp-spaces#build` and record result in `specs/009-split-web-products/migration-slices.md`
-- [ ] T133 Run `pnpm webapp-teams#lint` and record result in `specs/009-split-web-products/migration-slices.md`
-- [ ] T134 Run `pnpm webapp-teams#test` and record result in `specs/009-split-web-products/migration-slices.md`
-- [ ] T135 Run `pnpm webapp-teams#build` and record result in `specs/009-split-web-products/migration-slices.md`
-- [ ] T136 Run affected Relay generation commands from each app's `package.json` when GraphQL operations moved and record result in `specs/009-split-web-products/migration-slices.md`
-- [ ] T137 Perform final British English copy review for changed app files in `web/apps/webapp/src`, `web/apps/webapp-spaces/src`, and `web/apps/webapp-teams/src`
+- [X] T123 [P] Update implementation notes and any changed manual URLs in `specs/009-split-web-products/quickstart.md`
+- [X] T124 [P] Update app ownership guidance in `web/apps/webapp/docs/split-web-products.md`
+- [X] T125 [P] Update app ownership guidance in `web/apps/webapp-spaces/docs/split-web-products.md`
+- [X] T126 [P] Update app ownership guidance in `web/apps/webapp-teams/docs/split-web-products.md`
+- [X] T127 Run `pnpm webapp#lint` and record result in `specs/009-split-web-products/migration-slices.md`
+- [X] T128 Run `pnpm webapp#test` and record result in `specs/009-split-web-products/migration-slices.md`
+- [X] T129 Run `pnpm webapp#build` and record result in `specs/009-split-web-products/migration-slices.md`
+- [X] T130 Run `pnpm webapp-spaces#lint` and record result in `specs/009-split-web-products/migration-slices.md`
+- [X] T131 Run `pnpm webapp-spaces#test` and record result in `specs/009-split-web-products/migration-slices.md`
+- [X] T132 Run `pnpm webapp-spaces#build` and record result in `specs/009-split-web-products/migration-slices.md`
+- [X] T133 Run `pnpm webapp-teams#lint` and record result in `specs/009-split-web-products/migration-slices.md`
+- [X] T134 Run `pnpm webapp-teams#test` and record result in `specs/009-split-web-products/migration-slices.md`
+- [X] T135 Run `pnpm webapp-teams#build` and record result in `specs/009-split-web-products/migration-slices.md`
+- [X] T136 Run affected Relay generation commands from each app's `package.json` when GraphQL operations moved and record result in `specs/009-split-web-products/migration-slices.md`
+- [X] T137 Perform final British English copy review for changed app files in `web/apps/webapp/src`, `web/apps/webapp-spaces/src`, and `web/apps/webapp-teams/src`
+
+Note: T136 required no Relay command because no GraphQL operation moved or changed in the completed slices.
+
+## Corrective Full Copy Baseline
+
+**Purpose**: Correct the earlier shell-only and partial-slice migration by making WebApp Spaces and WebApp Teams exact `web/apps/webapp/src` mirrors before any pruning.
+
+- [X] T138 Mirror `web/apps/webapp/src` into `web/apps/webapp-spaces/src`
+- [X] T139 Mirror `web/apps/webapp/src` into `web/apps/webapp-teams/src`
+- [X] T140 Verify `diff -qr web/apps/webapp/src web/apps/webapp-spaces/src` returns no differences
+- [X] T141 Verify `diff -qr web/apps/webapp/src web/apps/webapp-teams/src` returns no differences
+- [X] T142 Run `pnpm webapp-spaces#test`, `pnpm webapp-spaces#lint`, and `pnpm webapp-spaces#build`
+- [X] T143 Run `pnpm webapp-teams#test`, `pnpm webapp-teams#lint`, and `pnpm webapp-teams#build`
+- [ ] T144 Stop for manual review of the full-copy baseline before pruning app-specific routes or UI
 
 ---
 

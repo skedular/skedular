@@ -1,0 +1,147 @@
+import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { DialogTransition } from '@/components/transitions';
+import { PaletteModeContext } from '@skedular/shared';
+import { getRelayErrorMessage } from '@skedular/shared';
+import type { addOrganizationZoneDialog_addZoneMutation } from '@/queries/__generated__/addOrganizationZoneDialog_addZoneMutation.graphql';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import { memo, useContext, useState } from 'react';
+import { Form } from 'react-final-form';
+import { graphql, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
+import { object, string } from 'yup';
+
+type Props = {
+  organizationCustomDomain: string;
+  connectionIds: string[];
+  isDialogOpen: boolean;
+  onAddClicked: () => void;
+  onCancel: () => void;
+};
+
+type ZoneDetails = {
+  name: string;
+  description: string | null | undefined;
+};
+
+const zoneSchema = object({
+  name: string().required('Zone name is required'),
+  description: string().nullable(),
+});
+
+const AddOrganizationZoneDialog = ({ organizationCustomDomain, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+  const [commitAddZone] = useMutation<addOrganizationZoneDialog_addZoneMutation>(graphql`
+    mutation addOrganizationZoneDialog_addZoneMutation($connectionIds: [ID!]!, $input: AddZoneInput!) @raw_response_type {
+      addZone(input: $input) {
+        organizationTag @appendNode(connections: $connectionIds, edgeTypeName: "OrganizationTagDetails") {
+          id
+          name
+          description
+          color
+        }
+      }
+    }
+  `);
+
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
+  const validate = makeValidate(zoneSchema);
+  const requiredFields = makeRequired(zoneSchema);
+  const [selectedColor, setSelectedColor] = useState('');
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+  };
+
+  const handleAddClick = ({ name, description }: ZoneDetails) => {
+    const id = uuid();
+    const toastId = themedToast(<NotificationContent content={`Adding zone '${name}'...`} />, infoNotificationOptions);
+
+    commitAddZone({
+      variables: {
+        connectionIds,
+        input: {
+          clientMutationId: uuid(),
+          id,
+          organizationCustomDomain,
+          name,
+          description,
+          color: selectedColor,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add zone '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Zone ${name} added.`} />,
+        });
+
+        onAddClicked();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to add zone '${name}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        addZone: {
+          organizationTag: {
+            id,
+            name,
+            description,
+            color: selectedColor,
+          },
+        },
+      },
+    });
+  };
+
+  return (
+    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
+      <DefaultDialogTitle title="Add Zone" />
+      <DialogContent sx={{ marginTop: 2 }}>
+        <Form
+          onSubmit={handleAddClick}
+          initialValues={{}}
+          validate={validate}
+          render={({ handleSubmit }) => {
+            return (
+              <FormStackColumn onSubmit={handleSubmit}>
+                <LeadIconTypography label="Add zone to this organization" />
+                <SmallIconTypography label="Enter the name of the zone to add to this organization." />
+
+                <FormFieldLabel label="Name">
+                  <TextField name="name" required={requiredFields.name} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Description">
+                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Color">
+                  <ColorPicker onChange={handleColorChange} />
+                </FormFieldLabel>
+
+                <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
+              </FormStackColumn>
+            );
+          }}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default memo(AddOrganizationZoneDialog);

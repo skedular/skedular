@@ -31,6 +31,15 @@
       ],
       "@skedular/ui/*": [
         "../../packages/ui/src/*"
+      ],
+      "@skedular/shared": [
+        "../../packages/shared/src/index.ts"
+      ],
+      "@skedular/shared/*": [
+        "../../packages/shared/src/*"
+      ],
+      "@webapp/*": [
+        "../webapp/src/*"
       ]
     }
   },

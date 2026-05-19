@@ -1,0 +1,100 @@
+import { AnalyticsDaterangeSelector, AnalyticsInsightCard } from '@/components/analytics';
+import { toDayAndMonthDate } from '@skedular/shared';
+import type { locationBookingInsight_locationAnalytics_query$key } from '@/queries/__generated__/locationBookingInsight_locationAnalytics_query.graphql';
+import type { locationBookingInsight_query$key } from '@/queries/__generated__/locationBookingInsight_query.graphql';
+import { BarChart } from '@mui/x-charts/BarChart';
+import { Dayjs } from 'dayjs';
+import { memo, useCallback, useTransition } from 'react';
+import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
+
+type Props = {
+  rootDataRelay: locationBookingInsight_query$key;
+  rootDataLocationAnalyticsRelay: locationBookingInsight_locationAnalytics_query$key;
+};
+
+const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay }: Props) => {
+  const rootData = useFragment(
+    graphql`
+      fragment locationBookingInsight_query on Query {
+        location(id: $locationId) {
+          id
+          name
+          organization {
+            id
+          }
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const [rootDataLocationAnalytics, refetch] = useRefetchableFragment(
+    graphql`
+      fragment locationBookingInsight_locationAnalytics_query on Query @refetchable(queryName: "locationBookingInsight_locationAnalytics_refetchableFragment") {
+        location(id: $locationId) {
+          analytics(from: $from, until: $to) {
+            dailyBookingsTotals {
+              date
+              total
+            }
+          }
+        }
+      }
+    `,
+    rootDataLocationAnalyticsRelay,
+  );
+
+  const [, startTransition] = useTransition();
+
+  const handleRefetch = useCallback(
+    (from: Dayjs, to: Dayjs) => {
+      startTransition(() => {
+        refetch(
+          {
+            from: from.toISOString(),
+            to: to.toISOString(),
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [startTransition, refetch],
+  );
+
+  const handleDateRangeChange = (from: Dayjs, until: Dayjs) => {
+    handleRefetch(from, until);
+  };
+
+  if (!rootDataLocationAnalytics.location || !rootData.location) {
+    return null;
+  }
+
+  const dataset =
+    rootDataLocationAnalytics.location.analytics.dailyBookingsTotals.length === 0
+      ? [{ date: 'No data available', percentage: 0 }]
+      : rootDataLocationAnalytics.location.analytics.dailyBookingsTotals.map(({ date, total }) => ({
+          date: toDayAndMonthDate(date),
+          total,
+        }));
+
+  const chartSettings = {
+    yAxis: [
+      {
+        label: 'Total Bookings',
+      },
+    ],
+    width: 440,
+    height: 300,
+  };
+
+  return (
+    <AnalyticsInsightCard title="Booking Insights">
+      <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
+      <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'total' }]} {...chartSettings} />
+    </AnalyticsInsightCard>
+  );
+};
+
+export default memo(LocationBookingInsight);

@@ -57,6 +57,21 @@ For each migrated slice:
 9. Run Relay generation/checks if GraphQL operations moved or changed.
 10. Stop for user review before the next slice.
 
+## Current Review URLs
+
+- WebApp public discovery: `http://localhost:15000`
+- WebApp co-working custom-domain storefront: existing custom domain mapped to WebApp
+- WebApp Teams full-copy baseline: `http://localhost:15002`
+- WebApp Spaces full-copy baseline: `http://localhost:15004`
+- Any WebApp route can currently be compared with the same path on Teams and Spaces because both target app `src` directories exactly mirror `web/apps/webapp/src`.
+
+## Current Route Transition Rules
+
+- The original WebApp routes remain available while the full-copy Teams and Spaces baselines are reviewed.
+- Later pruning slices must compare the route on WebApp, Teams, and Spaces before any old-route transition.
+- No existing WebApp route should be redirected, blocked, or deleted until the user approves the target-app route and the backend-originated return URL audit passes.
+- No Relay generation is required for the full-copy baseline because no GraphQL operation changed.
+
 ## Route Retirement Search
 
 Before deleting a route, search for frontend and backend-originated URL references:

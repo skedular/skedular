@@ -24,6 +24,14 @@ export default defineConfig({
         find: /^@skedular\/ui\/(.*)$/,
         replacement: path.resolve(__dirname, '../../packages/ui/src/$1'),
       },
+      {
+        find: '@skedular/shared',
+        replacement: path.resolve(__dirname, '../../packages/shared/src/index.ts'),
+      },
+      {
+        find: /^@skedular\/shared\/(.*)$/,
+        replacement: path.resolve(__dirname, '../../packages/shared/src/$1'),
+      },
     ],
   },
 });

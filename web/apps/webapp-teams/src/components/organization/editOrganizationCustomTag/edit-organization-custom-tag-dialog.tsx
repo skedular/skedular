@@ -1,0 +1,228 @@
+import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
+import { Loading } from '@/components/loading';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { RelayError, toRootError } from '@/components/relayError';
+import { DialogTransition } from '@/components/transitions';
+import { PaletteModeContext } from '@skedular/shared';
+import { getRelayErrorMessage } from '@skedular/shared';
+import type { editOrganizationCustomTagDialog_rootQuery } from '@/queries/__generated__/editOrganizationCustomTagDialog_rootQuery.graphql';
+import type { editOrganizationCustomTagDialog_updateCustomTagMutation } from '@/queries/__generated__/editOrganizationCustomTagDialog_updateCustomTagMutation.graphql';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { Form } from 'react-final-form';
+import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
+import { object, string } from 'yup';
+
+type Props = {
+  queryReference: PreloadedQuery<editOrganizationCustomTagDialog_rootQuery, Record<string, unknown>>;
+  onReloadRequired?: () => void;
+  customTagId: string;
+  isDialogOpen: boolean;
+  onAddClicked: () => void;
+  onCancel: () => void;
+};
+
+const RootQuery = graphql`
+  query editOrganizationCustomTagDialog_rootQuery($customTagId: String!) {
+    customTag(id: $customTagId) {
+      id
+      name
+      description
+      color
+    }
+  }
+`;
+
+type CustomTagDetails = {
+  name: string;
+  description: string | null | undefined;
+};
+
+const customTagSchema = object({
+  name: string().required('Tag name is required'),
+  description: string().nullable(),
+});
+
+const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialogOpen, onAddClicked, onCancel }: Props) => {
+  const rootData = usePreloadedQuery<editOrganizationCustomTagDialog_rootQuery>(RootQuery, queryReference);
+
+  const [commitUpdateCustomTag] = useMutation<editOrganizationCustomTagDialog_updateCustomTagMutation>(graphql`
+    mutation editOrganizationCustomTagDialog_updateCustomTagMutation($input: UpdateCustomTagInput!) @raw_response_type {
+      updateCustomTag(input: $input) {
+        organizationTag {
+          id
+          name
+          description
+          color
+        }
+      }
+    }
+  `);
+
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
+  const validate = makeValidate(customTagSchema);
+  const requiredFields = makeRequired(customTagSchema);
+  const [selectedColor, setSelectedColor] = useState(rootData.customTag?.color);
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+  };
+
+  const handleAddClick = ({ name, description }: CustomTagDetails) => {
+    if (!rootData.customTag) {
+      return;
+    }
+
+    const oldName = rootData.customTag.name;
+    const toastId = themedToast(<NotificationContent content={`Updating tag '${oldName}'...`} />, infoNotificationOptions);
+
+    commitUpdateCustomTag({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: customTagId,
+          name,
+          description,
+          color: selectedColor,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update tag '${oldName}'. Error: ${getRelayErrorMessage(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Tag ${name} updated.`} />,
+        });
+
+        onAddClicked();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update tag '${oldName}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        updateCustomTag: {
+          organizationTag: {
+            id: customTagId,
+            name,
+            description,
+            color: selectedColor,
+          },
+        },
+      },
+    });
+  };
+
+  if (!rootData.customTag) {
+    return null;
+  }
+
+  return (
+    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
+      <DefaultDialogTitle title="Edit Tag" />
+      <DialogContent sx={{ marginTop: 2 }}>
+        <Form
+          onSubmit={handleAddClick}
+          initialValues={{
+            name: rootData.customTag.name,
+            description: rootData.customTag.description,
+          }}
+          validate={validate}
+          render={({ handleSubmit }) => {
+            return (
+              <FormStackColumn onSubmit={handleSubmit}>
+                <LeadIconTypography label="Edit tag details" />
+                <SmallIconTypography label="Enter the name of the tag to update." />
+
+                <FormFieldLabel label="Name">
+                  <TextField name="name" required={requiredFields.name} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Description">
+                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Color">
+                  <ColorPicker onChange={handleColorChange} defaultColor={rootData.customTag?.color} />
+                </FormFieldLabel>
+
+                <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Save" secondaryLabel="Cancel" />
+              </FormStackColumn>
+            );
+          }}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const MemoEditOrganizationCustomTagDialog = memo(EditOrganizationCustomTagDialog);
+
+type RelayProps = {
+  onReloadRequired?: () => void;
+  customTagId: string;
+  isDialogOpen: boolean;
+  onAddClicked: () => void;
+  onCancel: () => void;
+};
+
+const EditOrganizationCustomTagDialogWithRelay = ({ onReloadRequired, customTagId, isDialogOpen, onAddClicked, onCancel }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<editOrganizationCustomTagDialog_rootQuery>(RootQuery);
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {
+        customTagId,
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReloadId, customTagId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReloadId(uuid());
+
+      if (onReloadRequired) {
+        onReloadRequired();
+      }
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
+      <MemoEditOrganizationCustomTagDialog
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        customTagId={customTagId}
+        isDialogOpen={isDialogOpen}
+        onAddClicked={onAddClicked}
+        onCancel={onCancel}
+      />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(EditOrganizationCustomTagDialogWithRelay);

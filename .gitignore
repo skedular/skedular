@@ -165,6 +165,8 @@ build/Release
 
 # Dependency directories
 node_modules/
+.pnpm-store/
+.playwright-mcp/
 jspm_packages/
 
 # TypeScript cache

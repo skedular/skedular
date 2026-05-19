@@ -1,3 +1,4 @@
+export * from './app-shell/index';
 export * from './commons/index';
 export { default as EditorActionBar } from './editor-action-bar';
 export { default as GuidedEditorProgress } from './guided-editor-progress';
