@@ -14,9 +14,10 @@ minimumReleaseAgeExclude:
   - react-relay@21.0.0
   - relay-compiler@21.0.0
   - relay-runtime@21.0.0
-  - '@types/node@25.9.1'
   - '@types/react@19.2.15'
   - react-svg-credit-card-payment-icons@6.0.3
+overrides:
+  '@types/node': 25.9.0
 patchedDependencies:
   globalize@1.7.1: patches/globalize@1.7.1.patch
   nextra-theme-docs@4.6.1: patches/nextra-theme-docs@4.6.1.patch
