@@ -303,10 +303,15 @@ This file applies to the whole repository.
 
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+shell commands, and other important information, read the current plan:
+`specs/009-split-web-products/plan.md`
 <!-- SPECKIT END -->
 
 ## Active Technologies
+
+- TypeScript 6.0.3, React 19.2.6, Next.js 16.2.6 App Router + Relay 20.1.1, MUI 9, `@skedular/ui`, `@skedular/shared`,
+  Vitest, React Testing Library, Turbo, pnpm 11.1.2 (009-split-web-products)
+- N/A for this feature; backend persistence remains unchanged (009-split-web-products)
 
 - C# .NET 10 (backend); TypeScript 6 / React 19 / Next.js 16 App Router (frontend) (007-resource-availability-dashboard)
 - PostgreSQL via EF Core — no new migration required for the query path; the existing

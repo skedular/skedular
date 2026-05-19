@@ -122,7 +122,7 @@
 
         <!-- Payments / Accounting -->
         <PackageReference Include="Stripe.net" Version="51.1.0"/>
-        <PackageReference Include="Xero.NetStandard.OAuth2" Version="15.0.0"/>
+        <PackageReference Include="Xero.NetStandard.OAuth2" Version="16.0.0"/>
         <PackageReference Include="Xero.NetStandard.OAuth2Client" Version="1.6.0"/>
 
         <!-- Geospatial -->
