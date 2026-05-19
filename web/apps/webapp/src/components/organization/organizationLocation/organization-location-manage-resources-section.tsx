@@ -531,7 +531,7 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
                 connectionIds={resourcesConnectionIds}
               />
               <Button variant="text" onClick={() => setIsBulkAddDialogOpen(true)} sx={{ textTransform: 'none' }}>
-                <LeadIconTypography label="Bulk add resources" endElement={<NewIcon fontSize="large" />} />
+                <LeadIconTypography label="Bulk Add Resources" endElement={<NewIcon fontSize="large" />} />
               </Button>
             </StackRow>
           }

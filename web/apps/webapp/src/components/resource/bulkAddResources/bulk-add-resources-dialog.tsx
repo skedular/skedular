@@ -263,7 +263,7 @@ const BulkAddResourcesDialogInner = ({ queryReference, locationId, organizationC
 
   return (
     <Dialog slots={{ transition: DialogTransition }} open={true} onClose={onCancel} fullWidth maxWidth="md">
-      <DefaultDialogTitle title="Bulk add resources" />
+      <DefaultDialogTitle title="Bulk Add Resources" />
       <DialogContent sx={{ marginTop: 2 }}>
         <Form<FormValues>
           key={formKey}
