@@ -135,15 +135,7 @@ describe('BookingCard', () => {
   });
 
   it('renders the compact organization booking card layout', () => {
-    render(
-      <BookingCard
-        rootDataRelay={{} as never}
-        bookingDetailsRelay={{} as never}
-        organizationCustomDomain="acme"
-        connectionIds={[]}
-        canJoinBooking
-      />,
-    );
+    render(<BookingCard rootDataRelay={{} as never} bookingDetailsRelay={{} as never} organizationCustomDomain="acme" connectionIds={[]} canJoinBooking />);
 
     expect(screen.getByText('HQ Level 3')).toBeInTheDocument();
     expect(screen.getByText('Operations')).toBeInTheDocument();
@@ -172,15 +164,7 @@ describe('BookingCard', () => {
       };
     });
 
-    render(
-      <BookingCard
-        rootDataRelay={{} as never}
-        bookingDetailsRelay={{} as never}
-        organizationCustomDomain="acme"
-        connectionIds={[]}
-        canJoinBooking
-      />,
-    );
+    render(<BookingCard rootDataRelay={{} as never} bookingDetailsRelay={{} as never} organizationCustomDomain="acme" connectionIds={[]} canJoinBooking />);
 
     expect(lastMenuOptions.map((item) => item.label)).toContain('Edit this occurrence');
     expect(lastMenuOptions.map((item) => item.label)).toContain('Edit recurring booking');

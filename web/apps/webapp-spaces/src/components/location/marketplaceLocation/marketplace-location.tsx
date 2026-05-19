@@ -12,15 +12,6 @@ import {
   RoomIcon,
 } from '@/components/icons';
 import {
-  BodyIconTypography,
-  CaptionIconTypography,
-  LargeHeadingIconTypography,
-  LeadIconTypography,
-  SectionIconTypography,
-  SmallIconTypography,
-  SmallSubtitleIconTypography,
-} from '@skedular/ui';
-import {
   getMarketplaceLocationFloorPlansLink,
   getMarketplaceLocationLink,
   getMarketplaceProductBookingLink,
@@ -29,8 +20,6 @@ import {
 } from '@/components/links';
 import { MarketplaceProductCard } from '@/components/marketplaceProductCard';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
-import { formatPriceForDisplay } from '@skedular/shared';
 import type { marketplaceLocation_query$key } from '@/queries/__generated__/marketplaceLocation_query.graphql';
 import type { marketplaceLocation_refetchableFragment } from '@/queries/__generated__/marketplaceLocation_refetchableFragment.graphql';
 import '@/styles/leaflet/leaflet.css';
@@ -43,6 +32,16 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { formatPriceForDisplay, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  CaptionIconTypography,
+  LargeHeadingIconTypography,
+  LeadIconTypography,
+  SectionIconTypography,
+  SmallIconTypography,
+  SmallSubtitleIconTypography,
+} from '@skedular/ui';
 import type { LatLngTuple } from 'leaflet';
 import { usePathname, useRouter } from 'next/navigation';
 import { memo, type ReactNode, useEffect, useMemo, useState } from 'react';
@@ -352,25 +351,17 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   const locationDetails = rootData.location;
   const isFloorPlanPage = pathname.endsWith('/floorPlans');
 
-  const capacity = useMemo(() => {
-    if (!locationDetails?.extraMetadata?.peopleCapacity) {
-      return null;
-    }
-
+  const capacity = (() => {
+    if (!locationDetails?.extraMetadata?.peopleCapacity) return null;
     const { from, to } = locationDetails.extraMetadata.peopleCapacity;
-
     return from === to ? `${from} people` : `${from} - ${to} people`;
-  }, [locationDetails?.extraMetadata?.peopleCapacity]);
+  })();
 
-  const areaSize = useMemo(() => {
-    if (!locationDetails?.extraMetadata?.areaRange) {
-      return null;
-    }
-
+  const areaSize = (() => {
+    if (!locationDetails?.extraMetadata?.areaRange) return null;
     const { fromInSqm, toInSqm } = locationDetails.extraMetadata.areaRange;
-
     return fromInSqm === toInSqm ? `${fromInSqm} m2` : `${fromInSqm} - ${toInSqm} m2`;
-  }, [locationDetails?.extraMetadata?.areaRange]);
+  })();
 
   const locationExists = Boolean(locationDetails?.physicalAddress?.longitude && locationDetails?.physicalAddress?.latitude);
   const initialPosition: LatLngTuple = locationExists
@@ -524,6 +515,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
 
   useEffect(() => {
     if (!heroImages.length) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedHeroImageUrl('');
       return;
     }
@@ -539,6 +531,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     }
 
     if (!selectedFloorPlanId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedFloorPlanId(floorPlans[0].id);
       return;
     }

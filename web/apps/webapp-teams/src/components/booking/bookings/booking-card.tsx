@@ -300,7 +300,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       case MoreActionsMenuOptionType.DeleteRecurringBooking:
         handleRemoveRecurringBookingClick();
         break;
-
     }
   };
 
@@ -356,7 +355,9 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         toast.update(toastId, {
           ...successNotificationOptions,
           render: (
-            <NotificationContent content={`Booking ${bookingDetailsInfo} has been removed.${canDeleteRecurringOccurrence ? ' The rest of the recurring series will stay active.' : ''}`} />
+            <NotificationContent
+              content={`Booking ${bookingDetailsInfo} has been removed.${canDeleteRecurringOccurrence ? ' The rest of the recurring series will stay active.' : ''}`}
+            />
           ),
         });
       },

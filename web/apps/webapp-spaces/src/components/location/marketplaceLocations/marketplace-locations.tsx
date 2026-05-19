@@ -1,5 +1,3 @@
-import { GridContainer, StackColumn } from '@skedular/ui';
-import { defaultPadding } from '@skedular/ui';
 import type { marketplaceLocations_locations_query$key } from '@/queries/__generated__/marketplaceLocations_locations_query.graphql';
 import type { marketplaceLocations_locations_refetchableFragment, OrganizationTagType } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
 import type { marketplaceLocations_query$key } from '@/queries/__generated__/marketplaceLocations_query.graphql';
@@ -9,6 +7,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Pagination from '@mui/material/Pagination';
 import type { Theme } from '@mui/material/styles';
+import { defaultPadding, GridContainer, StackColumn } from '@skedular/ui';
 import type { LatLngBounds, LatLngTuple } from 'leaflet';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { IPinfoWrapper } from 'node-ipinfo';
@@ -51,6 +50,82 @@ type Props = {
 };
 
 const pageSize = 9;
+
+const MapInitBoundsTracker = ({ searchBoundaries, onBoundsChange }: { searchBoundaries: LatLngBounds | null; onBoundsChange: (bounds: LatLngBounds) => void }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    const newBounds = map.getBounds();
+    if (!searchBoundaries) {
+      onBoundsChange(map.getBounds());
+
+      return;
+    }
+
+    const oldSW = searchBoundaries.getSouthWest();
+    const oldNE = searchBoundaries.getNorthEast();
+    const newSW = newBounds.getSouthWest();
+    const newNE = newBounds.getNorthEast();
+
+    if (oldSW.lat !== newSW.lat || oldSW.lng !== newSW.lng || oldNE.lat !== newNE.lat || oldNE.lng !== newNE.lng) {
+      onBoundsChange(map.getBounds());
+
+      return;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map]);
+
+  return null;
+};
+
+const MapUpdater = ({ center, onCenterSet }: { center: LatLngTuple; onCenterSet: () => void }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    map.setView(center, map.getZoom());
+
+    onCenterSet();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [center, map]);
+
+  return null;
+};
+
+const MapCenterTracker = ({
+  searchBoundaries,
+  onBoundsChange,
+  onMapMove,
+}: {
+  searchBoundaries: LatLngBounds | null;
+  onBoundsChange: (bounds: LatLngBounds) => void;
+  onMapMove: (lat: number, lng: number, zoom: number) => void;
+}) => {
+  const map = useMapEvents({
+    moveend: () => {
+      const newBounds = map.getBounds();
+      if (!searchBoundaries) {
+        onBoundsChange(map.getBounds());
+      } else {
+        const oldSouthWest = searchBoundaries.getSouthWest();
+        const oldNorthEast = searchBoundaries.getNorthEast();
+        const newSouthWest = newBounds.getSouthWest();
+        const newNorthEast = newBounds.getNorthEast();
+
+        if (oldSouthWest.lat !== newSouthWest.lat || oldSouthWest.lng !== newSouthWest.lng || oldNorthEast.lat !== newNorthEast.lat || oldNorthEast.lng !== newNorthEast.lng) {
+          onBoundsChange(map.getBounds());
+        }
+      }
+      const center = map.getCenter();
+      onMapMove(center.lat, center.lng, map.getZoom());
+    },
+    zoomend: () => {
+      const center = map.getCenter();
+      onMapMove(center.lat, center.lng, map.getZoom());
+    },
+  });
+
+  return null;
+};
 
 const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadRequired }: Props) => {
   const rootData = useFragment(
@@ -125,12 +200,6 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
 
     return locations.find((location) => location.id === selectedLocationId) ?? null;
   }, [locations, selectedLocationId]);
-
-  useEffect(() => {
-    if (selectedLocationId && !selectedLocation) {
-      setSelectedLocationId(null);
-    }
-  }, [selectedLocationId, selectedLocation]);
 
   useEffect(() => {
     (async () => {
@@ -220,6 +289,7 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
   }, [searchBoundaries, handleRefetch]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPageIndex(0);
   }, [isMobileOrTablet, locations.length]);
 
@@ -238,45 +308,7 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
     return null;
   }
 
-  const MapInitBoundsTracker = () => {
-    const map = useMap();
-
-    useEffect(() => {
-      const newBounds = map.getBounds();
-      if (!searchBoundaries) {
-        setSearchBoundaries(map.getBounds());
-
-        return;
-      }
-
-      const oldSW = searchBoundaries.getSouthWest();
-      const oldNE = searchBoundaries.getNorthEast();
-      const newSW = newBounds.getSouthWest();
-      const newNE = newBounds.getNorthEast();
-
-      if (oldSW.lat !== newSW.lat || oldSW.lng !== newSW.lng || oldNE.lat !== newNE.lat || oldNE.lng !== newNE.lng) {
-        setSearchBoundaries(map.getBounds());
-
-        return;
-      }
-    }, [map]);
-
-    return null;
-  };
-
-  const MapUpdater = ({ center }: { center: LatLngTuple }) => {
-    const map = useMap();
-
-    useEffect(() => {
-      map.setView(center, map.getZoom());
-
-      setCenterSet(true);
-    }, [center, map]);
-
-    return null;
-  };
-
-  const updateQueryFromMap = (lat: number, lng: number, zoom: number) => {
+  const handleMapMove = (lat: number, lng: number, zoom: number) => {
     const params = new URLSearchParams(searchParams?.toString());
 
     params.set('lat', lat.toString());
@@ -290,34 +322,6 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
 
     lastQueryRef.current = newUrl;
     router.replace(newUrl, { scroll: false });
-  };
-
-  const MapCenterTracker = () => {
-    const map = useMapEvents({
-      moveend: () => {
-        const newBounds = map.getBounds();
-        if (!searchBoundaries) {
-          setSearchBoundaries(map.getBounds());
-        } else {
-          const oldSouthWest = searchBoundaries.getSouthWest();
-          const oldNorthEast = searchBoundaries.getNorthEast();
-          const newSouthWest = newBounds.getSouthWest();
-          const newNorthEast = newBounds.getNorthEast();
-
-          if (oldSouthWest.lat !== newSouthWest.lat || oldSouthWest.lng !== newSouthWest.lng || oldNorthEast.lat !== newNorthEast.lat || oldNorthEast.lng !== newNorthEast.lng) {
-            setSearchBoundaries(map.getBounds());
-          }
-        }
-        const center = map.getCenter();
-        updateQueryFromMap(center.lat, center.lng, map.getZoom());
-      },
-      zoomend: () => {
-        const center = map.getCenter();
-        updateQueryFromMap(center.lat, center.lng, map.getZoom());
-      },
-    });
-
-    return null;
   };
 
   const MapSection = (
@@ -364,9 +368,9 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
           </Popup>
         ) : null}
 
-        <MapInitBoundsTracker />
-        <MapCenterTracker />
-        {!centerSet && <MapUpdater center={initialPosition} />}
+        <MapInitBoundsTracker searchBoundaries={searchBoundaries} onBoundsChange={setSearchBoundaries} />
+        <MapCenterTracker searchBoundaries={searchBoundaries} onBoundsChange={setSearchBoundaries} onMapMove={handleMapMove} />
+        {!centerSet && <MapUpdater center={initialPosition} onCenterSet={() => setCenterSet(true)} />}
       </MapContainer>
       {isMobileOrTablet && selectedLocation && (
         <Box

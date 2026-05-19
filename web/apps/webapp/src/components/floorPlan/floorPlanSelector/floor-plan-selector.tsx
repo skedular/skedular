@@ -33,23 +33,22 @@ const FloorPlanSelector = ({ rootDataRelay, onChange }: Props) => {
   );
 
   const allItems = useMemo(() => (rootData.floorPlans?.edges ? rootData.floorPlans.edges.map(({ node }) => node) : []), [rootData.floorPlans]);
-  const [id, setId] = useState<string | null>(null);
+  const defaultId = allItems.length > 0 ? allItems[0].id : null;
+  const [userSelectedId, setUserSelectedId] = useState<string | null>(null);
+  const id = userSelectedId ?? defaultId;
 
   useEffect(() => {
-    if (allItems.length > 0) {
-      const id = allItems[0].id;
-
-      setId(id);
-      onChange(id);
+    if (defaultId !== null) {
+      onChange(defaultId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allItems]);
+  }, [defaultId]);
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {
-    const id = event.target.value as string;
+    const newId = event.target.value as string;
 
-    setId(id);
-    onChange(id);
+    setUserSelectedId(newId);
+    onChange(newId);
   };
 
   return (

@@ -1,10 +1,7 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceProductBookingDetailsLink, getMarketplaceProductLink, getSignInLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel } from '@/components/marketplaceProduct';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
-import { formatPriceForDisplay, getRelayErrorMessage, toShortDate } from '@skedular/shared';
 import type {
   BookingCategory,
   marketplaceProductBookingForm_addMarketplaceBookingMutation,
@@ -21,6 +18,8 @@ import TextField from '@mui/material/TextField';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { formatPriceForDisplay, getRelayErrorMessage, toShortDate, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useEffect, useMemo, useState } from 'react';
@@ -281,7 +280,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
     return availableResourcesCount >= requiredResourceCount;
   }, [availableResourcesCount, dateRangeValidation.valid, requiredResourceCount]);
   const availabilityMessage = useMemo(() => {
-    if (!dateRangeValidation.valid) {
+    if (!dateRangeValidation.valid || !rootData.product || !organizationCustomDomain || !selectedPricingOption) {
       return '';
     }
 
@@ -304,7 +303,17 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
     return requiredResourceCount === 1
       ? 'No matching resource is available for the selected time.'
       : `Only ${availableResourcesCount} matching resources are available, but this booking needs ${requiredResourceCount}.`;
-  }, [availabilityErrorMessage, availableResourcesCount, dateRangeValidation.valid, hasEnoughResourcesAvailable, isCheckingAvailability, requiredResourceCount]);
+  }, [
+    availabilityErrorMessage,
+    availableResourcesCount,
+    dateRangeValidation.valid,
+    hasEnoughResourcesAvailable,
+    isCheckingAvailability,
+    organizationCustomDomain,
+    requiredResourceCount,
+    rootData.product,
+    selectedPricingOption,
+  ]);
 
   const totalLabel = useMemo(() => {
     if (!selectedPricingOption || !dateRangeValidation.valid) {
@@ -338,9 +347,6 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
 
   useEffect(() => {
     if (!rootData.product || !organizationCustomDomain || !selectedPricingOption || !dateRangeValidation.valid) {
-      setAvailableResourcesCount(null);
-      setAvailabilityErrorMessage('');
-      setIsCheckingAvailability(false);
       return;
     }
 
