@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<f3103495b81d6539c0b291b0d7335aa2>>
+ * @generated SignedSource<<937edfd28d0335652e1ad13b5effaacb>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -55,7 +54,7 @@ var v0 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "newBookingDialog_customerTeams_refetchableFragment",
@@ -71,7 +70,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "newBookingDialog_customerTeams_refetchableFragment",
     "selections": [

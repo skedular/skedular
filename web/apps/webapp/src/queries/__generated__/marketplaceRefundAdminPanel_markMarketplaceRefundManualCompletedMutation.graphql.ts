@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<6eb8d8f7574e99bd8356c6a5546dc502>>
+ * @generated SignedSource<<eec9fb26d506bdb1f44dae9705a3d666>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -162,20 +161,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceRefundAdminPanel_markMarketplaceRefundManualCompletedMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceRefundAdminPanel_markMarketplaceRefundManualCompletedMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "56690947761a410ea032e84755f31c03",

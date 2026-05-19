@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<00701d536e6c84e4813a71107c0d0ed2>>
+ * @generated SignedSource<<3622e96a634d251acfdfc9231e9157dd>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -96,20 +95,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "addStripeConnectAccount_addStripeConnectAccountMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "addStripeConnectAccount_addStripeConnectAccountMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "1a75f231e8eb502f9a4a9cde56228178",

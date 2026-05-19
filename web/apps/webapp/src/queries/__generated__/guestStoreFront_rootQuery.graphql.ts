@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<b5477027f8eb4f1fed22da1c3a00f18c>>
+ * @generated SignedSource<<bc5bd35a8b896ec6a2c1908f1ee92077>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -115,9 +114,9 @@ v10 = {
   "name": "listingMetadata",
   "plural": false,
   "selections": [
-    (v7/*: any*/),
-    (v8/*: any*/),
-    (v9/*: any*/)
+    (v7/*:: as any*/),
+    (v8/*:: as any*/),
+    (v9/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -136,9 +135,9 @@ v11 = {
       "name": "about",
       "storageKey": null
     },
-    (v7/*: any*/),
-    (v8/*: any*/),
-    (v9/*: any*/)
+    (v7/*:: as any*/),
+    (v8/*:: as any*/),
+    (v9/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -165,7 +164,7 @@ v13 = {
       "name": "original",
       "plural": false,
       "selections": [
-        (v12/*: any*/),
+        (v12/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -192,7 +191,7 @@ v14 = {
   "variableName": "organizationCustomDomain"
 },
 v15 = [
-  (v14/*: any*/)
+  (v14/*:: as any*/)
 ],
 v16 = {
   "alias": null,
@@ -209,8 +208,8 @@ v17 = {
   "name": "listingMetadata",
   "plural": false,
   "selections": [
-    (v7/*: any*/),
-    (v8/*: any*/)
+    (v7/*:: as any*/),
+    (v8/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -222,11 +221,11 @@ v18 = [
     "name": "type",
     "storageKey": null
   },
-  (v6/*: any*/)
+  (v6/*:: as any*/)
 ],
 v19 = [
-  (v16/*: any*/),
-  (v6/*: any*/)
+  (v16/*:: as any*/),
+  (v6/*:: as any*/)
 ],
 v20 = {
   "alias": null,
@@ -264,8 +263,8 @@ v23 = [
     "name": "openAllDay",
     "storageKey": null
   },
-  (v21/*: any*/),
-  (v22/*: any*/)
+  (v21/*:: as any*/),
+  (v22/*:: as any*/)
 ],
 v24 = {
   "kind": "Literal",
@@ -286,17 +285,17 @@ v26 = {
   "kind": "LinkedField",
   "name": "paymentStatus",
   "plural": false,
-  "selections": (v18/*: any*/),
+  "selections": (v18/*:: as any*/),
   "storageKey": null
 };
 return {
   "fragment": {
     "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/),
-      (v3/*: any*/),
-      (v4/*: any*/)
+      (v0/*:: as any*/),
+      (v1/*:: as any*/),
+      (v2/*:: as any*/),
+      (v3/*:: as any*/),
+      (v4/*:: as any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -304,21 +303,21 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v5/*:: as any*/),
         "concreteType": "OrganizationPublicDetails",
         "kind": "LinkedField",
         "name": "organizationPublic",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
-          (v10/*: any*/),
-          (v11/*: any*/),
-          (v13/*: any*/)
+          (v6/*:: as any*/),
+          (v10/*:: as any*/),
+          (v11/*:: as any*/),
+          (v13/*:: as any*/)
         ],
         "storageKey": null
       },
       {
-        "args": (v15/*: any*/),
+        "args": (v15/*:: as any*/),
         "kind": "FragmentSpread",
         "name": "guestStoreFrontProducts_query"
       },
@@ -354,7 +353,7 @@ return {
             "name": "includeUpcomingBookings",
             "variableName": "includeUpcomingBookings"
           },
-          (v14/*: any*/)
+          (v14/*:: as any*/)
         ],
         "kind": "FragmentSpread",
         "name": "guestStoreFrontUpcomingBookingsStrip_query"
@@ -366,7 +365,7 @@ return {
             "name": "includeActiveSubscriptions",
             "variableName": "includeActiveSubscriptions"
           },
-          (v14/*: any*/)
+          (v14/*:: as any*/)
         ],
         "kind": "FragmentSpread",
         "name": "guestStoreFrontActiveSubscriptionsStrip_query"
@@ -378,27 +377,27 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v4/*: any*/),
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v3/*: any*/),
-      (v2/*: any*/)
+      (v4/*:: as any*/),
+      (v0/*:: as any*/),
+      (v1/*:: as any*/),
+      (v3/*:: as any*/),
+      (v2/*:: as any*/)
     ],
     "kind": "Operation",
     "name": "guestStoreFront_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v5/*:: as any*/),
         "concreteType": "OrganizationPublicDetails",
         "kind": "LinkedField",
         "name": "organizationPublic",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
-          (v10/*: any*/),
-          (v11/*: any*/),
-          (v13/*: any*/),
+          (v6/*:: as any*/),
+          (v10/*:: as any*/),
+          (v11/*:: as any*/),
+          (v13/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -470,7 +469,7 @@ return {
                 "name": "country",
                 "storageKey": null
               },
-              (v16/*: any*/)
+              (v16/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -524,7 +523,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v16/*: any*/),
+                  (v16/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -540,8 +539,8 @@ return {
                         "name": "index",
                         "storageKey": null
                       },
-                      (v16/*: any*/),
-                      (v17/*: any*/),
+                      (v16/*:: as any*/),
+                      (v17/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -573,7 +572,7 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v17/*: any*/),
+                  (v17/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -590,7 +589,7 @@ return {
                         "name": "original",
                         "plural": false,
                         "selections": [
-                          (v12/*: any*/)
+                          (v12/*:: as any*/)
                         ],
                         "storageKey": null
                       }
@@ -604,7 +603,7 @@ return {
                     "kind": "LinkedField",
                     "name": "currency",
                     "plural": false,
-                    "selections": (v18/*: any*/),
+                    "selections": (v18/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -614,7 +613,7 @@ return {
                     "kind": "LinkedField",
                     "name": "amenities",
                     "plural": true,
-                    "selections": (v19/*: any*/),
+                    "selections": (v19/*:: as any*/),
                     "storageKey": null
                   }
                 ],
@@ -630,7 +629,7 @@ return {
         "alias": null,
         "args": [
           {
-            "fields": (v15/*: any*/),
+            "fields": (v15/*:: as any*/),
             "kind": "ObjectValue",
             "name": "where"
           }
@@ -640,7 +639,7 @@ return {
         "name": "marketplaceLocations",
         "plural": false,
         "selections": [
-          (v20/*: any*/),
+          (v20/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -657,8 +656,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v16/*: any*/),
-                  (v6/*: any*/),
+                  (v16/*:: as any*/),
+                  (v6/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -688,7 +687,7 @@ return {
                         "name": "formattedAddress",
                         "storageKey": null
                       },
-                      (v16/*: any*/)
+                      (v16/*:: as any*/)
                     ],
                     "storageKey": null
                   },
@@ -715,7 +714,7 @@ return {
                             "kind": "LinkedField",
                             "name": "monday",
                             "plural": false,
-                            "selections": (v23/*: any*/),
+                            "selections": (v23/*:: as any*/),
                             "storageKey": null
                           },
                           {
@@ -725,7 +724,7 @@ return {
                             "kind": "LinkedField",
                             "name": "tuesday",
                             "plural": false,
-                            "selections": (v23/*: any*/),
+                            "selections": (v23/*:: as any*/),
                             "storageKey": null
                           },
                           {
@@ -735,7 +734,7 @@ return {
                             "kind": "LinkedField",
                             "name": "wednesday",
                             "plural": false,
-                            "selections": (v23/*: any*/),
+                            "selections": (v23/*:: as any*/),
                             "storageKey": null
                           },
                           {
@@ -745,7 +744,7 @@ return {
                             "kind": "LinkedField",
                             "name": "thursday",
                             "plural": false,
-                            "selections": (v23/*: any*/),
+                            "selections": (v23/*:: as any*/),
                             "storageKey": null
                           },
                           {
@@ -755,7 +754,7 @@ return {
                             "kind": "LinkedField",
                             "name": "friday",
                             "plural": false,
-                            "selections": (v23/*: any*/),
+                            "selections": (v23/*:: as any*/),
                             "storageKey": null
                           },
                           {
@@ -765,7 +764,7 @@ return {
                             "kind": "LinkedField",
                             "name": "saturday",
                             "plural": false,
-                            "selections": (v23/*: any*/),
+                            "selections": (v23/*:: as any*/),
                             "storageKey": null
                           },
                           {
@@ -775,7 +774,7 @@ return {
                             "kind": "LinkedField",
                             "name": "sunday",
                             "plural": false,
-                            "selections": (v23/*: any*/),
+                            "selections": (v23/*:: as any*/),
                             "storageKey": null
                           }
                         ],
@@ -800,7 +799,7 @@ return {
         "kind": "LinkedField",
         "name": "productPricingCadences",
         "plural": true,
-        "selections": (v18/*: any*/),
+        "selections": (v18/*:: as any*/),
         "storageKey": null
       },
       {
@@ -810,7 +809,7 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v18/*: any*/),
+        "selections": (v18/*:: as any*/),
         "storageKey": null
       },
       {
@@ -853,8 +852,8 @@ return {
                     "name": "fromLte",
                     "variableName": "bookingsSearchCriteriaTo"
                   },
-                  (v24/*: any*/),
-                  (v14/*: any*/)
+                  (v24/*:: as any*/),
+                  (v14/*:: as any*/)
                 ],
                 "kind": "ObjectValue",
                 "name": "where"
@@ -865,7 +864,7 @@ return {
             "name": "bookings",
             "plural": false,
             "selections": [
-              (v20/*: any*/),
+              (v20/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -882,9 +881,9 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v16/*: any*/),
-                      (v21/*: any*/),
-                      (v22/*: any*/),
+                      (v16/*:: as any*/),
+                      (v21/*:: as any*/),
+                      (v22/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -893,7 +892,7 @@ return {
                         "name": "involvedLocations",
                         "plural": true,
                         "selections": [
-                          (v6/*: any*/)
+                          (v6/*:: as any*/)
                         ],
                         "storageKey": null
                       },
@@ -912,7 +911,7 @@ return {
                             "kind": "LinkedField",
                             "name": "resource",
                             "plural": false,
-                            "selections": (v19/*: any*/),
+                            "selections": (v19/*:: as any*/),
                             "storageKey": null
                           }
                         ],
@@ -926,9 +925,9 @@ return {
                         "name": "marketplaceBooking",
                         "plural": false,
                         "selections": [
-                          (v25/*: any*/),
-                          (v26/*: any*/),
-                          (v16/*: any*/)
+                          (v25/*:: as any*/),
+                          (v26/*:: as any*/),
+                          (v16/*:: as any*/)
                         ],
                         "storageKey": null
                       }
@@ -968,8 +967,8 @@ return {
               },
               {
                 "fields": [
-                  (v24/*: any*/),
-                  (v14/*: any*/),
+                  (v24/*:: as any*/),
+                  (v14/*:: as any*/),
                   {
                     "kind": "Literal",
                     "name": "status",
@@ -985,7 +984,7 @@ return {
             "name": "marketplaceBookingSubscriptions",
             "plural": false,
             "selections": [
-              (v20/*: any*/),
+              (v20/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -1002,7 +1001,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v16/*: any*/),
+                      (v16/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -1039,8 +1038,8 @@ return {
                         "name": "marketplaceBooking",
                         "plural": false,
                         "selections": [
-                          (v25/*: any*/),
-                          (v26/*: any*/),
+                          (v25/*:: as any*/),
+                          (v26/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -1049,12 +1048,12 @@ return {
                             "name": "productVersion",
                             "plural": false,
                             "selections": [
-                              (v17/*: any*/),
-                              (v16/*: any*/)
+                              (v17/*:: as any*/),
+                              (v16/*:: as any*/)
                             ],
                             "storageKey": null
                           },
-                          (v16/*: any*/)
+                          (v16/*:: as any*/)
                         ],
                         "storageKey": null
                       },
@@ -1066,7 +1065,7 @@ return {
                         "name": "recurringBookings",
                         "plural": true,
                         "selections": [
-                          (v16/*: any*/),
+                          (v16/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,

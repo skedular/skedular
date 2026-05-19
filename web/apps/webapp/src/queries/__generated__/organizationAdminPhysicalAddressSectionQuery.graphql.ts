@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<b3c905a85cb52fe2877199b08da1f50c>>
+ * @generated SignedSource<<03435431c7a2417e4f979d735ef5b7b1>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -70,7 +69,7 @@ v2 = [
     "name": "organization",
     "plural": false,
     "selections": [
-      (v1/*: any*/),
+      (v1/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -86,7 +85,7 @@ v2 = [
         "name": "physicalAddress",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -194,20 +193,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminPhysicalAddressSectionQuery",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminPhysicalAddressSectionQuery",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "c78fb630105f425991810862aa923312",

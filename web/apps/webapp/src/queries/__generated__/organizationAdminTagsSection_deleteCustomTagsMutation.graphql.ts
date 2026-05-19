@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<2ac5a7b6b60b969e4f3e64d3363ad58a>>
+ * @generated SignedSource<<f44da3f4c62383399c6c97c4ceca102a>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -58,14 +57,14 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminTagsSection_deleteCustomTagsMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationTagsPayload",
         "kind": "LinkedField",
         "name": "deleteCustomTags",
@@ -79,7 +78,7 @@ return {
             "name": "organizationTags",
             "plural": true,
             "selections": [
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -92,13 +91,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminTagsSection_deleteCustomTagsMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationTagsPayload",
         "kind": "LinkedField",
         "name": "deleteCustomTags",
@@ -112,7 +111,7 @@ return {
             "name": "organizationTags",
             "plural": true,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,

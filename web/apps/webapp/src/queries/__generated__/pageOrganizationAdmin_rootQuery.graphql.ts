@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<6f0a71f9b26847fe932e3b360f8c44d1>>
+ * @generated SignedSource<<47026e5acf0a398736163275634e5846>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -57,20 +56,20 @@ v3 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "pageOrganizationAdmin_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -85,19 +84,19 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "pageOrganizationAdmin_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -112,7 +111,7 @@ return {
             "kind": "LinkedField",
             "name": "listingMetadata",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": (v3/*:: as any*/),
             "storageKey": null
           },
           {
@@ -122,7 +121,7 @@ return {
             "kind": "LinkedField",
             "name": "marketplaceListingMetadata",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": (v3/*:: as any*/),
             "storageKey": null
           }
         ],

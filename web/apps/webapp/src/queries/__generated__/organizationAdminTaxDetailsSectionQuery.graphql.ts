@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<1f833803aef227c086ad2576c55be5fb>>
+ * @generated SignedSource<<f6e0b85920a202e82ea7ce540ae85c2f>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -72,21 +71,21 @@ v5 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminTaxDetailsSectionQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
+          (v2/*:: as any*/),
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -95,8 +94,8 @@ return {
             "name": "taxDetails",
             "plural": false,
             "selections": [
-              (v4/*: any*/),
-              (v5/*: any*/)
+              (v4/*:: as any*/),
+              (v5/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -109,20 +108,20 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminTaxDetailsSectionQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
+          (v2/*:: as any*/),
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -131,9 +130,9 @@ return {
             "name": "taxDetails",
             "plural": false,
             "selections": [
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v2/*: any*/)
+              (v4/*:: as any*/),
+              (v5/*:: as any*/),
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           }

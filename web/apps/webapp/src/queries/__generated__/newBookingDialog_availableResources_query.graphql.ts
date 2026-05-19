@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<7dd2d4b976df0a066a491a718c5f45f2>>
+ * @generated SignedSource<<87bcd2429c673d43c004154c54cd9f28>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -52,8 +51,8 @@ v1 = {
   "storageKey": null
 },
 v2 = [
-  (v0/*: any*/),
-  (v1/*: any*/),
+  (v0/*:: as any*/),
+  (v1/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -134,8 +133,8 @@ return {
           "name": "resource",
           "plural": false,
           "selections": [
-            (v0/*: any*/),
-            (v1/*: any*/),
+            (v0/*:: as any*/),
+            (v1/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -143,7 +142,7 @@ return {
               "kind": "LinkedField",
               "name": "customTags",
               "plural": true,
-              "selections": (v2/*: any*/),
+              "selections": (v2/*:: as any*/),
               "storageKey": null
             },
             {
@@ -153,7 +152,7 @@ return {
               "kind": "LinkedField",
               "name": "zones",
               "plural": true,
-              "selections": (v2/*: any*/),
+              "selections": (v2/*:: as any*/),
               "storageKey": null
             }
           ],

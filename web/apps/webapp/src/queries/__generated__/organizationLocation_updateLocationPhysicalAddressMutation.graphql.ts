@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<f2d9e95dafd28208d905035b6d4a27f2>>
+ * @generated SignedSource<<98745bedb02c7fa3a2adb98e9ea6a9cf>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -122,7 +121,7 @@ v2 = [
         "name": "location",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -131,7 +130,7 @@ v2 = [
             "name": "physicalAddress",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
+              (v1/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -242,20 +241,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocation_updateLocationPhysicalAddressMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationLocation_updateLocationPhysicalAddressMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "f4e6db97d36c23f6e1f8dee13d391992",

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<bc03329b18c4c8ea9d77b7e48d70eab3>>
+ * @generated SignedSource<<768dcff388df66ab9cec90bf3c148867>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -161,7 +160,7 @@ v5 = {
       "kind": "LinkedField",
       "name": "original",
       "plural": false,
-      "selections": (v4/*: any*/),
+      "selections": (v4/*:: as any*/),
       "storageKey": null
     },
     {
@@ -171,7 +170,7 @@ v5 = {
       "kind": "LinkedField",
       "name": "thumbnail",
       "plural": false,
-      "selections": (v4/*: any*/),
+      "selections": (v4/*:: as any*/),
       "storageKey": null
     }
   ],
@@ -199,20 +198,20 @@ v8 = {
   "name": "resource",
   "plural": false,
   "selections": [
-    (v2/*: any*/)
+    (v2/*:: as any*/)
   ],
   "storageKey": null
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editFloorPlan_updateFloorPlanMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "FloorPlanPayload",
         "kind": "LinkedField",
         "name": "updateFloorPlan",
@@ -226,9 +225,9 @@ return {
             "name": "floorPlan",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v5/*: any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              (v5/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -237,9 +236,9 @@ return {
                 "name": "resourcePositions",
                 "plural": true,
                 "selections": [
-                  (v6/*: any*/),
-                  (v7/*: any*/),
-                  (v8/*: any*/)
+                  (v6/*:: as any*/),
+                  (v7/*:: as any*/),
+                  (v8/*:: as any*/)
                 ],
                 "storageKey": null
               }
@@ -255,13 +254,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editFloorPlan_updateFloorPlanMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "FloorPlanPayload",
         "kind": "LinkedField",
         "name": "updateFloorPlan",
@@ -275,9 +274,9 @@ return {
             "name": "floorPlan",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v5/*: any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              (v5/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -286,10 +285,10 @@ return {
                 "name": "resourcePositions",
                 "plural": true,
                 "selections": [
-                  (v6/*: any*/),
-                  (v7/*: any*/),
-                  (v8/*: any*/),
-                  (v2/*: any*/)
+                  (v6/*:: as any*/),
+                  (v7/*:: as any*/),
+                  (v8/*:: as any*/),
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               }

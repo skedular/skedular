@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<940e4e586bddc43f9f2f2738718cac46>>
+ * @generated SignedSource<<e0cd0eff6a3ddd4403ef0af42ebc3e25>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -121,7 +120,7 @@ v11 = {
   "name": "azureTenantOrganization",
   "plural": false,
   "selections": [
-    (v0/*: any*/)
+    (v0/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -147,21 +146,21 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/)
+          (v0/*:: as any*/),
+          (v1/*:: as any*/)
         ],
         "storageKey": null
       },
-      (v2/*: any*/),
-      (v3/*: any*/),
-      (v4/*: any*/),
-      (v5/*: any*/),
-      (v6/*: any*/),
-      (v7/*: any*/),
-      (v8/*: any*/),
-      (v9/*: any*/),
-      (v10/*: any*/),
-      (v11/*: any*/),
+      (v2/*:: as any*/),
+      (v3/*:: as any*/),
+      (v4/*:: as any*/),
+      (v5/*:: as any*/),
+      (v6/*:: as any*/),
+      (v7/*:: as any*/),
+      (v8/*:: as any*/),
+      (v9/*:: as any*/),
+      (v10/*:: as any*/),
+      (v11/*:: as any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -190,8 +189,8 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
+          (v0/*:: as any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -234,7 +233,7 @@ return {
             "name": "photoUrl",
             "storageKey": null
           },
-          (v12/*: any*/),
+          (v12/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -245,16 +244,16 @@ return {
         ],
         "storageKey": null
       },
-      (v2/*: any*/),
-      (v3/*: any*/),
-      (v4/*: any*/),
-      (v5/*: any*/),
-      (v6/*: any*/),
-      (v7/*: any*/),
-      (v8/*: any*/),
-      (v9/*: any*/),
-      (v10/*: any*/),
-      (v11/*: any*/),
+      (v2/*:: as any*/),
+      (v3/*:: as any*/),
+      (v4/*:: as any*/),
+      (v5/*:: as any*/),
+      (v6/*:: as any*/),
+      (v7/*:: as any*/),
+      (v8/*:: as any*/),
+      (v9/*:: as any*/),
+      (v10/*:: as any*/),
+      (v11/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -284,7 +283,7 @@ return {
             "name": "logoUrl",
             "storageKey": null
           },
-          (v12/*: any*/)
+          (v12/*:: as any*/)
         ],
         "storageKey": null
       },

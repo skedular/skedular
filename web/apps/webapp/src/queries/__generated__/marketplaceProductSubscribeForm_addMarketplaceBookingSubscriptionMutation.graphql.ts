@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<3eab2d0a43c14321a79a7e287d68fa3b>>
+ * @generated SignedSource<<cf420393e26d51f93437bf16aaa15392>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -164,7 +163,7 @@ v7 = {
   "kind": "LinkedField",
   "name": "status",
   "plural": false,
-  "selections": (v6/*: any*/),
+  "selections": (v6/*:: as any*/),
   "storageKey": null
 },
 v8 = {
@@ -213,7 +212,7 @@ v12 = {
   "kind": "LinkedField",
   "name": "paymentStatus",
   "plural": false,
-  "selections": (v6/*: any*/),
+  "selections": (v6/*:: as any*/),
   "storageKey": null
 },
 v13 = {
@@ -237,7 +236,7 @@ v15 = {
   "kind": "LinkedField",
   "name": "paymentMethod",
   "plural": false,
-  "selections": (v6/*: any*/),
+  "selections": (v6/*:: as any*/),
   "storageKey": null
 },
 v16 = {
@@ -248,14 +247,14 @@ v16 = {
   "name": "marketplaceBooking",
   "plural": false,
   "selections": [
-    (v2/*: any*/),
-    (v9/*: any*/),
-    (v10/*: any*/),
-    (v11/*: any*/),
-    (v12/*: any*/),
-    (v13/*: any*/),
-    (v14/*: any*/),
-    (v15/*: any*/)
+    (v2/*:: as any*/),
+    (v9/*:: as any*/),
+    (v10/*:: as any*/),
+    (v11/*:: as any*/),
+    (v12/*:: as any*/),
+    (v13/*:: as any*/),
+    (v14/*:: as any*/),
+    (v15/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -267,13 +266,13 @@ v17 = {
   "name": "marketplaceBooking",
   "plural": false,
   "selections": [
-    (v2/*: any*/),
-    (v9/*: any*/),
-    (v10/*: any*/),
-    (v11/*: any*/),
-    (v12/*: any*/),
-    (v13/*: any*/),
-    (v14/*: any*/),
+    (v2/*:: as any*/),
+    (v9/*:: as any*/),
+    (v10/*:: as any*/),
+    (v11/*:: as any*/),
+    (v12/*:: as any*/),
+    (v13/*:: as any*/),
+    (v14/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -309,7 +308,7 @@ v17 = {
       "name": "billingMode",
       "storageKey": null
     },
-    (v15/*: any*/),
+    (v15/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -322,14 +321,14 @@ v17 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "MarketplaceBookingSubscriptionPayload",
         "kind": "LinkedField",
         "name": "addMarketplaceBookingSubscription",
@@ -343,11 +342,11 @@ return {
             "name": "marketplaceBookingSubscription",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v7/*: any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              (v4/*:: as any*/),
+              (v5/*:: as any*/),
+              (v7/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -356,12 +355,12 @@ return {
                 "name": "recurringBookings",
                 "plural": true,
                 "selections": [
-                  (v8/*: any*/),
-                  (v16/*: any*/)
+                  (v8/*:: as any*/),
+                  (v16/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v17/*: any*/)
+              (v17/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -374,13 +373,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "MarketplaceBookingSubscriptionPayload",
         "kind": "LinkedField",
         "name": "addMarketplaceBookingSubscription",
@@ -394,11 +393,11 @@ return {
             "name": "marketplaceBookingSubscription",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v7/*: any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              (v4/*:: as any*/),
+              (v5/*:: as any*/),
+              (v7/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -407,13 +406,13 @@ return {
                 "name": "recurringBookings",
                 "plural": true,
                 "selections": [
-                  (v8/*: any*/),
-                  (v16/*: any*/),
-                  (v2/*: any*/)
+                  (v8/*:: as any*/),
+                  (v16/*:: as any*/),
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v17/*: any*/)
+              (v17/*:: as any*/)
             ],
             "storageKey": null
           }

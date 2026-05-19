@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<139d435a4dea38a5eb17cca5ee6acc71>>
+ * @generated SignedSource<<56fc61f33656b88c006c730be6a798fd>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -89,7 +88,7 @@ v2 = [
         "name": "organization",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -98,7 +97,7 @@ v2 = [
             "name": "ssoSettings",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
+              (v1/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -139,20 +138,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminSsoSection_removeOrganizationSsoSettingsMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminSsoSection_removeOrganizationSsoSettingsMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "6dd9b2b96ae95b474129f6c990cf680d",

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<4f3f6b77441225a2ee2d1c90065e40c1>>
+ * @generated SignedSource<<99db0e3b4c3f6568dabb705abb476e31>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -70,7 +69,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -80,7 +79,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment_graphql

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<a143633542716e8a355472f0b4cbebfa>>
+ * @generated SignedSource<<a3417b7d591d8ed94368b417c70cc258>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -76,7 +75,7 @@ return {
           "kind": "LinkedField",
           "name": "listingMetadata",
           "plural": false,
-          "selections": (v0/*: any*/),
+          "selections": (v0/*:: as any*/),
           "storageKey": null
         },
         {
@@ -86,7 +85,7 @@ return {
           "kind": "LinkedField",
           "name": "marketplaceListingMetadata",
           "plural": false,
-          "selections": (v0/*: any*/),
+          "selections": (v0/*:: as any*/),
           "storageKey": null
         }
       ],

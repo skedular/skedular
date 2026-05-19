@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<091845d97a8731944d749c39f8430823>>
+ * @generated SignedSource<<60ebd05d3e27ee958a9b5c86f86836cd>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -44,8 +43,8 @@ v2 = {
   "storageKey": null
 },
 v3 = [
-  (v1/*: any*/),
-  (v2/*: any*/)
+  (v1/*:: as any*/),
+  (v2/*:: as any*/)
 ],
 v4 = {
   "alias": null,
@@ -55,9 +54,9 @@ v4 = {
   "storageKey": null
 },
 v5 = [
-  (v1/*: any*/),
-  (v2/*: any*/),
-  (v4/*: any*/)
+  (v1/*:: as any*/),
+  (v2/*:: as any*/),
+  (v4/*:: as any*/)
 ],
 v6 = {
   "alias": null,
@@ -68,7 +67,7 @@ v6 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editMarketplaceBooking_booking_refetchableFragment",
@@ -84,7 +83,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editMarketplaceBooking_booking_refetchableFragment",
     "selections": [
@@ -102,7 +101,7 @@ return {
         "name": "booking",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -150,8 +149,8 @@ return {
             "name": "involvedCustomers",
             "plural": true,
             "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/),
+              (v1/*:: as any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -190,7 +189,7 @@ return {
             "kind": "LinkedField",
             "name": "involvedOrganizations",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v3/*:: as any*/),
             "storageKey": null
           },
           {
@@ -201,7 +200,7 @@ return {
             "name": "involvedLocations",
             "plural": true,
             "selections": [
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -212,7 +211,7 @@ return {
             "kind": "LinkedField",
             "name": "involvedTeams",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v3/*:: as any*/),
             "storageKey": null
           },
           {
@@ -231,9 +230,9 @@ return {
                 "name": "resource",
                 "plural": false,
                 "selections": [
-                  (v1/*: any*/),
-                  (v2/*: any*/),
-                  (v4/*: any*/),
+                  (v1/*:: as any*/),
+                  (v2/*:: as any*/),
+                  (v4/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -241,7 +240,7 @@ return {
                     "kind": "LinkedField",
                     "name": "customTags",
                     "plural": true,
-                    "selections": (v5/*: any*/),
+                    "selections": (v5/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -251,7 +250,7 @@ return {
                     "kind": "LinkedField",
                     "name": "zones",
                     "plural": true,
-                    "selections": (v5/*: any*/),
+                    "selections": (v5/*:: as any*/),
                     "storageKey": null
                   }
                 ],
@@ -290,12 +289,12 @@ return {
                     "name": "type",
                     "storageKey": null
                   },
-                  (v2/*: any*/)
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v6/*: any*/),
-              (v1/*: any*/)
+              (v6/*:: as any*/),
+              (v1/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -314,7 +313,7 @@ return {
                 "name": "invoiceNumber",
                 "storageKey": null
               },
-              (v6/*: any*/),
+              (v6/*:: as any*/),
               {
                 "alias": null,
                 "args": null,

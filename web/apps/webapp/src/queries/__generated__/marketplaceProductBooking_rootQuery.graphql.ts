@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<5598a75ca8938013c61b2bbc3712e4ec>>
+ * @generated SignedSource<<c777f75d2bcd28150e449508c27fe72f>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -75,18 +74,18 @@ v6 = [
     "name": "type",
     "storageKey": null
   },
-  (v5/*: any*/)
+  (v5/*:: as any*/)
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductBooking_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "ProductDetails",
         "kind": "LinkedField",
         "name": "product",
@@ -117,13 +116,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceProductBooking_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "ProductDetails",
         "kind": "LinkedField",
         "name": "product",
@@ -137,8 +136,8 @@ return {
             "name": "listingMetadata",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -193,12 +192,12 @@ return {
             "name": "amenities",
             "plural": true,
             "selections": [
-              (v4/*: any*/),
-              (v5/*: any*/)
+              (v4/*:: as any*/),
+              (v5/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v4/*: any*/),
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -213,7 +212,7 @@ return {
             "kind": "LinkedField",
             "name": "type",
             "plural": false,
-            "selections": (v6/*: any*/),
+            "selections": (v6/*:: as any*/),
             "storageKey": null
           },
           {
@@ -241,7 +240,7 @@ return {
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v6/*: any*/),
+            "selections": (v6/*:: as any*/),
             "storageKey": null
           },
           {
@@ -252,7 +251,7 @@ return {
             "name": "pricingOptions",
             "plural": true,
             "selections": [
-              (v4/*: any*/),
+              (v4/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -268,8 +267,8 @@ return {
                 "name": "listingMetadata",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
-                  (v3/*: any*/)
+                  (v2/*:: as any*/),
+                  (v3/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -382,7 +381,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -400,7 +399,7 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v6/*: any*/),
+        "selections": (v6/*:: as any*/),
         "storageKey": null
       },
       {
@@ -410,7 +409,7 @@ return {
         "kind": "LinkedField",
         "name": "paymentMethodTypes",
         "plural": true,
-        "selections": (v6/*: any*/),
+        "selections": (v6/*:: as any*/),
         "storageKey": null
       },
       {
@@ -427,7 +426,7 @@ return {
         "kind": "LinkedField",
         "name": "productPricingCadences",
         "plural": true,
-        "selections": (v6/*: any*/),
+        "selections": (v6/*:: as any*/),
         "storageKey": null
       }
     ]

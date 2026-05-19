@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<532cbc27b8f0a79da0476e7f305db2dc>>
+ * @generated SignedSource<<e8ba892bd238f8f6cfc5e3c62c8d0a2f>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -231,8 +230,8 @@ v3 = [
   }
 ],
 v4 = [
-  (v1/*: any*/),
-  (v2/*: any*/),
+  (v1/*:: as any*/),
+  (v2/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -264,8 +263,8 @@ v5 = [
         "name": "location",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
+          (v1/*:: as any*/),
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -320,7 +319,7 @@ v5 = [
                 "name": "type",
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -460,7 +459,7 @@ v5 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -470,7 +469,7 @@ v5 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -483,7 +482,7 @@ v5 = [
             "kind": "LinkedField",
             "name": "spaceTypes",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v4/*:: as any*/),
             "storageKey": null
           },
           {
@@ -493,7 +492,7 @@ v5 = [
             "kind": "LinkedField",
             "name": "amenities",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v4/*:: as any*/),
             "storageKey": null
           }
         ],
@@ -505,20 +504,20 @@ v5 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocation_updateLocationMutation",
-    "selections": (v5/*: any*/),
+    "selections": (v5/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationLocation_updateLocationMutation",
-    "selections": (v5/*: any*/)
+    "selections": (v5/*:: as any*/)
   },
   "params": {
     "cacheID": "ceee86b08804b87446188bb90912d79d",

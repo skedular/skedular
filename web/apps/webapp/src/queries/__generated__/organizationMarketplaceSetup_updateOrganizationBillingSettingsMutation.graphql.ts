@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<cb2b6a3dd27e119ef6d3da1b5fed9198>>
+ * @generated SignedSource<<c9b7b81450795de1fa4f79dcb6761699>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -129,20 +128,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "5faaa7bfd254504ce993a44719844018",

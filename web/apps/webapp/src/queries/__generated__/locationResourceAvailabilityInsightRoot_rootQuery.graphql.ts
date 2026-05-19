@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<9ee26d8e8cdcaec0b1639d5a36f3f0fe>>
+ * @generated SignedSource<<f636a7586747b310f79c7c329fd749b9>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -42,9 +41,9 @@ v2 = {
 return {
   "fragment": {
     "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
+      (v0/*:: as any*/),
+      (v1/*:: as any*/),
+      (v2/*:: as any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -62,9 +61,9 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/),
-      (v2/*: any*/)
+      (v1/*:: as any*/),
+      (v0/*:: as any*/),
+      (v2/*:: as any*/)
     ],
     "kind": "Operation",
     "name": "locationResourceAvailabilityInsightRoot_rootQuery",

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<7655d97c584130825ba7bcb650ebe227>>
+ * @generated SignedSource<<0af7fd20c915fde4d0926fa110498779>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -89,7 +88,7 @@ v2 = [
         "name": "recurringBooking",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -98,7 +97,7 @@ v2 = [
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
+              (v1/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -136,20 +135,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "pageOrganizationSubscriptionDetail_makeRecurringBookingPaymentNotRequiredMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "pageOrganizationSubscriptionDetail_makeRecurringBookingPaymentNotRequiredMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "e0fd52ef7be962d17ce79bbc26d81e5e",

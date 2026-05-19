@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<a2099c89b37b0cdc72940e400af54d90>>
+ * @generated SignedSource<<c60cfad5570b0bf72ff2d2d8c46b8cf1>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -67,7 +66,7 @@ v2 = {
   "name": "me",
   "plural": false,
   "selections": [
-    (v1/*: any*/),
+    (v1/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -76,7 +75,7 @@ v2 = {
       "name": "preferredZones",
       "plural": true,
       "selections": [
-        (v1/*: any*/)
+        (v1/*:: as any*/)
       ],
       "storageKey": null
     }
@@ -131,7 +130,7 @@ v4 = {
           "name": "node",
           "plural": false,
           "selections": [
-            (v1/*: any*/),
+            (v1/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -176,21 +175,21 @@ v4 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminZonesSectionQuery",
     "selections": [
-      (v2/*: any*/),
+      (v2/*:: as any*/),
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v3/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v4/*: any*/)
+          (v4/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -200,21 +199,21 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminZonesSectionQuery",
     "selections": [
-      (v2/*: any*/),
+      (v2/*:: as any*/),
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v3/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
-          (v1/*: any*/)
+          (v4/*:: as any*/),
+          (v1/*:: as any*/)
         ],
         "storageKey": null
       }

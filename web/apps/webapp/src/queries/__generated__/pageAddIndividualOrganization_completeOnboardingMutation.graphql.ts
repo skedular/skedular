@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<144e756a0f31a542540257a1b29f4386>>
+ * @generated SignedSource<<31869c3eb2c8220a2cf400f7a04803fe>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -91,20 +90,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "pageAddIndividualOrganization_completeOnboardingMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "pageAddIndividualOrganization_completeOnboardingMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "372348933017f5816ca7fe5717aa3a8d",

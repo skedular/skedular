@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<0255e4fe98f6924078a3f528f0291577>>
+ * @generated SignedSource<<2aa66664498a49e8c443446a2348c4b7>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -53,8 +52,8 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/)
+          (v0/*:: as any*/),
+          (v1/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -81,8 +80,8 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
+          (v0/*:: as any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -108,7 +107,7 @@ return {
         "name": "activeOrganizationTermsOfUse",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
+          (v0/*:: as any*/),
           {
             "alias": null,
             "args": null,

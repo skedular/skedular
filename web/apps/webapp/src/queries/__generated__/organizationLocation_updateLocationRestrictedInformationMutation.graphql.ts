@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<190d7720de12c3bdef7b1682570792ae>>
+ * @generated SignedSource<<35e29401c31ef22103e13c4668a537d2>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -80,7 +79,7 @@ v2 = [
         "name": "location",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -89,7 +88,7 @@ v2 = [
             "name": "restrictedInformation",
             "plural": true,
             "selections": [
-              (v1/*: any*/),
+              (v1/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -137,20 +136,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocation_updateLocationRestrictedInformationMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationLocation_updateLocationRestrictedInformationMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "f15358cc0bbd265f27d11aadfcc981e3",

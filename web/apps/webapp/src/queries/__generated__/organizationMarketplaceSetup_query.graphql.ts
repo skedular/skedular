@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<56a8d9f7043923a577659234eea61b5f>>
+ * @generated SignedSource<<51a21ffe2b76f0663990414964ec3159>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -115,8 +114,8 @@ return {
       "name": "organization",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
-        (v1/*: any*/),
+        (v0/*:: as any*/),
+        (v1/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -125,7 +124,7 @@ return {
           "name": "billingDetails",
           "plural": false,
           "selections": [
-            (v0/*: any*/),
+            (v0/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -295,7 +294,7 @@ return {
               "name": "type",
               "storageKey": null
             },
-            (v1/*: any*/)
+            (v1/*:: as any*/)
           ],
           "storageKey": null
         },
@@ -314,7 +313,7 @@ return {
           "name": "xeroConnection",
           "plural": false,
           "selections": [
-            (v0/*: any*/),
+            (v0/*:: as any*/),
             {
               "alias": null,
               "args": null,

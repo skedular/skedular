@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<c01f99c16086ec203c9ea031db56a55f>>
+ * @generated SignedSource<<313ef8b4f8960b28852be6d22fa55d87>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -266,7 +265,7 @@ v2 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v1/*: any*/),
+                "selections": (v1/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -276,7 +275,7 @@ v2 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v1/*: any*/),
+                "selections": (v1/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -291,20 +290,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "addPrivateOrganization_addOrganizationMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "addPrivateOrganization_addOrganizationMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "e52f7e8ab6157664610b8431eae8a66a",

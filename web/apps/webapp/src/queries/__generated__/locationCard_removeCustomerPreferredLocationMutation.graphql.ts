@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<69de553e44f08fd196d9371e73e1f70e>>
+ * @generated SignedSource<<8f4c3e602e1d04253a47868977802ee1>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -69,7 +68,7 @@ v2 = [
         "name": "customer",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -78,7 +77,7 @@ v2 = [
             "name": "preferredLocations",
             "plural": true,
             "selections": [
-              (v1/*: any*/)
+              (v1/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -91,20 +90,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "locationCard_removeCustomerPreferredLocationMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "locationCard_removeCustomerPreferredLocationMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "9bda2afa425b45be3bc96ff4d7ad72bb",

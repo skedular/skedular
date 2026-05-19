@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<5bda2fdb998ccedf0e817257f984d785>>
+ * @generated SignedSource<<1be7587e7c355920a208c13d918f3ef5>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -94,7 +93,7 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment",
@@ -121,13 +120,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "ConnectionOfOrganizationStripeConnectAccountEdge",
         "kind": "LinkedField",
         "name": "organizationStripeConnectAccounts",
@@ -156,7 +155,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
+                  (v2/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -284,7 +283,7 @@ return {
                         "name": "customDomain",
                         "storageKey": null
                       },
-                      (v2/*: any*/)
+                      (v2/*:: as any*/)
                     ],
                     "storageKey": null
                   },
@@ -350,7 +349,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "filters": [
           "where",
           "orderBy"

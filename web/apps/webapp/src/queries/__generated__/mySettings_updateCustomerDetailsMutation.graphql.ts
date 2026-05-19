@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<affeaffa0e54cbb0cab45ba7a9fdea2f>>
+ * @generated SignedSource<<938a90e7bb855a14ec5f24ae7b3ac434>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -136,7 +135,7 @@ v2 = [
             "name": "title",
             "storageKey": null
           },
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -180,7 +179,7 @@ v2 = [
                 "name": "type",
                 "storageKey": null
               },
-              (v1/*: any*/)
+              (v1/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -193,20 +192,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "mySettings_updateCustomerDetailsMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "mySettings_updateCustomerDetailsMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "f14feac77106870cc1cb21db26470007",

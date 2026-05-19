@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<1f59d091b0fc8f5609b6cba925cb782a>>
+ * @generated SignedSource<<7d4b58cc3811bdda16cba893df70f412>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -242,8 +241,8 @@ v4 = [
         "name": "location",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
+          (v1/*:: as any*/),
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -305,7 +304,7 @@ v4 = [
                 "name": "type",
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -324,7 +323,7 @@ v4 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -334,7 +333,7 @@ v4 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -348,8 +347,8 @@ v4 = [
             "name": "spaceTypes",
             "plural": true,
             "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/),
+              (v1/*:: as any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -369,20 +368,20 @@ v4 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "addPrivateLocation_addLocationMutation",
-    "selections": (v4/*: any*/),
+    "selections": (v4/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "addPrivateLocation_addLocationMutation",
-    "selections": (v4/*: any*/)
+    "selections": (v4/*:: as any*/)
   },
   "params": {
     "cacheID": "5d451ee0b137502f497ec49c436e0a85",

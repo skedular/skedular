@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<2438920d6729b0472c94871671454420>>
+ * @generated SignedSource<<67671362a05426c9e0bc3eed904108ef>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -134,9 +133,9 @@ v10 = [
         "name": "node",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
-          (v7/*: any*/),
-          (v8/*: any*/),
+          (v6/*:: as any*/),
+          (v7/*:: as any*/),
+          (v8/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -215,10 +214,10 @@ v13 = [
 return {
   "fragment": {
     "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/),
-      (v3/*: any*/)
+      (v0/*:: as any*/),
+      (v1/*:: as any*/),
+      (v2/*:: as any*/),
+      (v3/*:: as any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -226,13 +225,13 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v4/*: any*/),
+        "args": (v4/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v5/*: any*/)
+          (v5/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -263,24 +262,24 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v3/*: any*/),
-      (v0/*: any*/),
-      (v2/*: any*/),
-      (v1/*: any*/)
+      (v3/*:: as any*/),
+      (v0/*:: as any*/),
+      (v2/*:: as any*/),
+      (v1/*:: as any*/)
     ],
     "kind": "Operation",
     "name": "bulkAddResourcesDialog_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v4/*: any*/),
+        "args": (v4/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
-          (v6/*: any*/),
+          (v5/*:: as any*/),
+          (v6/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -289,26 +288,26 @@ return {
             "name": "resourceTypes",
             "plural": true,
             "selections": [
-              (v6/*: any*/),
-              (v7/*: any*/),
-              (v8/*: any*/)
+              (v6/*:: as any*/),
+              (v7/*:: as any*/),
+              (v8/*:: as any*/)
             ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v9/*: any*/),
+            "args": (v9/*:: as any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "customTags",
             "plural": false,
-            "selections": (v10/*: any*/),
+            "selections": (v10/*:: as any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v9/*: any*/),
-            "filters": (v11/*: any*/),
+            "args": (v9/*:: as any*/),
+            "filters": (v11/*:: as any*/),
             "handle": "connection",
             "key": "multipleChoicesCustomTags_customTags",
             "kind": "LinkedHandle",
@@ -316,18 +315,18 @@ return {
           },
           {
             "alias": null,
-            "args": (v12/*: any*/),
+            "args": (v12/*:: as any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "zones",
             "plural": false,
-            "selections": (v10/*: any*/),
+            "selections": (v10/*:: as any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v12/*: any*/),
-            "filters": (v11/*: any*/),
+            "args": (v12/*:: as any*/),
+            "filters": (v11/*:: as any*/),
             "handle": "connection",
             "key": "multipleChoicesZones_zones",
             "kind": "LinkedHandle",
@@ -335,18 +334,18 @@ return {
           },
           {
             "alias": null,
-            "args": (v13/*: any*/),
+            "args": (v13/*:: as any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "productTags",
             "plural": false,
-            "selections": (v10/*: any*/),
+            "selections": (v10/*:: as any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v13/*: any*/),
-            "filters": (v11/*: any*/),
+            "args": (v13/*:: as any*/),
+            "filters": (v11/*:: as any*/),
             "handle": "connection",
             "key": "multipleChoicesProductTags_productTags",
             "kind": "LinkedHandle",

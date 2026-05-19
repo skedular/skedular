@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<ec46c05b7e5be527e1b7761eb7dc50f2>>
+ * @generated SignedSource<<2552abe409e3aba3613ec973394b20e9>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -58,14 +57,14 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationMarketplaceSetup_deleteProductTagsMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationTagsPayload",
         "kind": "LinkedField",
         "name": "deleteProductTags",
@@ -79,7 +78,7 @@ return {
             "name": "organizationTags",
             "plural": true,
             "selections": [
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -92,13 +91,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationMarketplaceSetup_deleteProductTagsMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationTagsPayload",
         "kind": "LinkedField",
         "name": "deleteProductTags",
@@ -112,7 +111,7 @@ return {
             "name": "organizationTags",
             "plural": true,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<2d3c07eea30a468099f0bfc011805ecf>>
+ * @generated SignedSource<<72677514d1ac50d9cbbd65a09a24e576>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -69,7 +68,7 @@ v2 = [
         "name": "customer",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -78,7 +77,7 @@ v2 = [
             "name": "preferredResources",
             "plural": true,
             "selections": [
-              (v1/*: any*/)
+              (v1/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -91,20 +90,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocationManageResourcesSection_addCustomerPreferredResourceMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationLocationManageResourcesSection_addCustomerPreferredResourceMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "27687942dab066a4f95a1d3c81a5525e",

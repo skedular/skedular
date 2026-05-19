@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<d2327f5facfa89e7d139b7c4976b89c8>>
+ * @generated SignedSource<<48bbf0153c421f3a7ceffd2d41dba02b>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -90,7 +89,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -100,7 +99,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": bookings_bookings_refetchableFragment_graphql
@@ -186,7 +185,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
+                (v1/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -209,7 +208,7 @@ return {
                   "name": "involvedCustomers",
                   "plural": true,
                   "selections": [
-                    (v1/*: any*/)
+                    (v1/*:: as any*/)
                   ],
                   "storageKey": null
                 },

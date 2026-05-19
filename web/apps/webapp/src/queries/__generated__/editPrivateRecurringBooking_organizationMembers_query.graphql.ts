@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<35009f138cc5b619deda40a11a17ce32>>
+ * @generated SignedSource<<b7aa7f5f7d288984390e8958750c22c6>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -81,7 +80,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -91,7 +90,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": editPrivateRecurringBooking_organizationMembers_refetchableFragment_graphql
@@ -154,7 +153,7 @@ return {
                   "name": "node",
                   "plural": false,
                   "selections": [
-                    (v1/*: any*/),
+                    (v1/*:: as any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -163,7 +162,7 @@ return {
                       "name": "customer",
                       "plural": false,
                       "selections": [
-                        (v1/*: any*/),
+                        (v1/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,

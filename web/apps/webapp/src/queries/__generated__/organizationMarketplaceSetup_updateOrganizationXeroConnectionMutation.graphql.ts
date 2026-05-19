@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<a64bf72a7d4a34e665658a19c9135809>>
+ * @generated SignedSource<<77d47fff81fd04abca75624254221147>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -129,7 +128,7 @@ v2 = [
         "name": "organization",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -138,7 +137,7 @@ v2 = [
             "name": "xeroConnection",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
+              (v1/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -270,20 +269,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "c1fcb0a41a9ac1c0f78c767638e2010d",

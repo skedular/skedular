@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<9fedfc0600408ee9d2515be41c4193f4>>
+ * @generated SignedSource<<ee0672468effa7a026d691765db1796e>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -93,20 +92,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "5be472ced67d8cfbfbeb2c96ac61bbbf",

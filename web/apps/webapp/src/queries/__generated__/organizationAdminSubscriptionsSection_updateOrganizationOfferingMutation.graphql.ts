@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<a92ca5eea3462a45bb9cd594e1858cc4>>
+ * @generated SignedSource<<4b933974d80b6500e264e46cab0037ed>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -64,20 +63,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "568b7905a977aa5adc923e89012174cc",

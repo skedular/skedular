@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<5c0c59776a97afddf63ded8a6c853000>>
+ * @generated SignedSource<<b7eab8bd157bbe78a2f4506deee56da8>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -248,11 +247,11 @@ v5 = [
     "name": "type",
     "storageKey": null
   },
-  (v4/*: any*/)
+  (v4/*:: as any*/)
 ],
 v6 = [
-  (v1/*: any*/),
-  (v4/*: any*/),
+  (v1/*:: as any*/),
+  (v4/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -307,7 +306,7 @@ v8 = [
         "name": "product",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -323,8 +322,8 @@ v8 = [
             "name": "listingMetadata",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -342,7 +341,7 @@ v8 = [
             "kind": "LinkedField",
             "name": "type",
             "plural": false,
-            "selections": (v5/*: any*/),
+            "selections": (v5/*:: as any*/),
             "storageKey": null
           },
           {
@@ -352,7 +351,7 @@ v8 = [
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v5/*: any*/),
+            "selections": (v5/*:: as any*/),
             "storageKey": null
           },
           {
@@ -362,7 +361,7 @@ v8 = [
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v6/*: any*/),
+            "selections": (v6/*:: as any*/),
             "storageKey": null
           },
           {
@@ -372,7 +371,7 @@ v8 = [
             "kind": "LinkedField",
             "name": "amenities",
             "plural": true,
-            "selections": (v6/*: any*/),
+            "selections": (v6/*:: as any*/),
             "storageKey": null
           },
           {
@@ -390,7 +389,7 @@ v8 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v7/*: any*/),
+                "selections": (v7/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -400,7 +399,7 @@ v8 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v7/*: any*/),
+                "selections": (v7/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -429,8 +428,8 @@ v8 = [
                 "name": "listingMetadata",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
-                  (v3/*: any*/)
+                  (v2/*:: as any*/),
+                  (v3/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -555,20 +554,20 @@ v8 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editProduct_updateProductMutation",
-    "selections": (v8/*: any*/),
+    "selections": (v8/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editProduct_updateProductMutation",
-    "selections": (v8/*: any*/)
+    "selections": (v8/*:: as any*/)
   },
   "params": {
     "cacheID": "9e25ae291ba680c33eab430749d36223",

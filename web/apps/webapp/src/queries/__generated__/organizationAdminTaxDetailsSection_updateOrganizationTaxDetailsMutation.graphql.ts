@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<28517533fc24f4d47975a88ed4c7ef4d>>
+ * @generated SignedSource<<68310ff187dda89d20f9cdf1f2a331e7>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -86,14 +85,14 @@ v4 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationPayload",
         "kind": "LinkedField",
         "name": "updateOrganizationTaxDetails",
@@ -107,7 +106,7 @@ return {
             "name": "organization",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -116,8 +115,8 @@ return {
                 "name": "taxDetails",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
-                  (v4/*: any*/)
+                  (v3/*:: as any*/),
+                  (v4/*:: as any*/)
                 ],
                 "storageKey": null
               }
@@ -133,13 +132,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationPayload",
         "kind": "LinkedField",
         "name": "updateOrganizationTaxDetails",
@@ -153,7 +152,7 @@ return {
             "name": "organization",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -162,9 +161,9 @@ return {
                 "name": "taxDetails",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
-                  (v4/*: any*/),
-                  (v2/*: any*/)
+                  (v3/*:: as any*/),
+                  (v4/*:: as any*/),
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               }

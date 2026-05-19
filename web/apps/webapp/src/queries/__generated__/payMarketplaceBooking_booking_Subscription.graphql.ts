@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<17404c646644344f3e54af624d436a5d>>
+ * @generated SignedSource<<1b3d0457c95d8b6321f4747b4bf1ce94>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -126,7 +125,7 @@ v6 = {
       "name": "invoiceNumber",
       "storageKey": null
     },
-    (v3/*: any*/),
+    (v3/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -153,14 +152,14 @@ v7 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "payMarketplaceBooking_booking_Subscription",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "BookingDetails",
         "kind": "LinkedField",
         "name": "booking",
@@ -174,14 +173,14 @@ return {
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/)
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              (v4/*:: as any*/),
+              (v5/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v6/*: any*/)
+          (v6/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -191,13 +190,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "payMarketplaceBooking_booking_Subscription",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "BookingDetails",
         "kind": "LinkedField",
         "name": "booking",
@@ -211,16 +210,16 @@ return {
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v7/*: any*/)
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              (v4/*:: as any*/),
+              (v5/*:: as any*/),
+              (v7/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v6/*: any*/),
-          (v7/*: any*/)
+          (v6/*:: as any*/),
+          (v7/*:: as any*/)
         ],
         "storageKey": null
       }

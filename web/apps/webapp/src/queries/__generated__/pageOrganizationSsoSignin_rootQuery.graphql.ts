@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<76dfda2816a448e997127015158e4953>>
+ * @generated SignedSource<<dd11003ee0b93c9c33a05fa95ddf917c>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -74,22 +73,22 @@ v4 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "pageOrganizationSsoSignin_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
-          (v4/*: any*/)
+          (v2/*:: as any*/),
+          (v3/*:: as any*/),
+          (v4/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -99,21 +98,21 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "pageOrganizationSsoSignin_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
-          (v4/*: any*/),
+          (v2/*:: as any*/),
+          (v3/*:: as any*/),
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<7092c4a93590f2c9762cd5e5f9d452a8>>
+ * @generated SignedSource<<7d6a198c4413e386d2702fb48eb3388f>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -181,7 +180,7 @@ v2 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v1/*: any*/),
+                "selections": (v1/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -191,7 +190,7 @@ v2 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v1/*: any*/),
+                "selections": (v1/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -206,20 +205,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "addTeam_addTeamMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "addTeam_addTeamMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "78a95b8a1ce3c14d8f669b73d6f74c15",

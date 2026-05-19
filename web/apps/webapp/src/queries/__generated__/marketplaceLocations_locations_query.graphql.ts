@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<8992e5b8cf862f7eee9d2784c2d9b258>>
+ * @generated SignedSource<<7dd701dbed70730a843fe34e8231e82f>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -71,7 +70,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -81,7 +80,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": marketplaceLocations_locations_refetchableFragment_graphql

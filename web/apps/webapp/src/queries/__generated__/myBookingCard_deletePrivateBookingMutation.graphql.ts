@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<d2007b757835ddb57971a9ace45e220d>>
+ * @generated SignedSource<<c91f9f5c4be4426e965645fce7bbfe0b>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -58,14 +57,14 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "myBookingCard_deletePrivateBookingMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "BookingPayload",
         "kind": "LinkedField",
         "name": "deletePrivateBooking",
@@ -79,7 +78,7 @@ return {
             "name": "booking",
             "plural": false,
             "selections": [
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -92,13 +91,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "myBookingCard_deletePrivateBookingMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "BookingPayload",
         "kind": "LinkedField",
         "name": "deletePrivateBooking",
@@ -112,7 +111,7 @@ return {
             "name": "booking",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,

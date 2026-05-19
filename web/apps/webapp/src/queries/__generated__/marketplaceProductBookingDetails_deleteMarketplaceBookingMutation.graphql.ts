@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<b04f217073298febfa0b4f79d92e141f>>
+ * @generated SignedSource<<7301bff5d3a25a97e8d11f84bded4de0>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -69,7 +68,7 @@ v2 = [
         "name": "booking",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -78,7 +77,7 @@ v2 = [
             "name": "deletedByCustomer",
             "plural": false,
             "selections": [
-              (v1/*: any*/)
+              (v1/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -91,20 +90,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductBookingDetails_deleteMarketplaceBookingMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceProductBookingDetails_deleteMarketplaceBookingMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "c83d5b1197500f092effb1a2cd584b76",

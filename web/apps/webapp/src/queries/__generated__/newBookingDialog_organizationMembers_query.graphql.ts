@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<039e6726df95dffd4539e87daff9b17a>>
+ * @generated SignedSource<<ead5a5ebf609724622c17e6aefd5bb1f>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -83,7 +82,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -93,7 +92,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": newBookingDialog_organizationMembers_refetchableFragment_graphql
@@ -163,7 +162,7 @@ return {
                   "name": "node",
                   "plural": false,
                   "selections": [
-                    (v1/*: any*/),
+                    (v1/*:: as any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -172,7 +171,7 @@ return {
                       "name": "customer",
                       "plural": false,
                       "selections": [
-                        (v1/*: any*/),
+                        (v1/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,

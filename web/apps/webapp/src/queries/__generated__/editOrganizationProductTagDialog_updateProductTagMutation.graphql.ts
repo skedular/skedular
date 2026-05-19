@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<098c737b62e8e16e3494c2c608735067>>
+ * @generated SignedSource<<df281b1b16772ae7105bd9e2c7b318e7>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -113,20 +112,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editOrganizationProductTagDialog_updateProductTagMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editOrganizationProductTagDialog_updateProductTagMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "c3a98dc52f0b7db5ec155c2c3a975c15",

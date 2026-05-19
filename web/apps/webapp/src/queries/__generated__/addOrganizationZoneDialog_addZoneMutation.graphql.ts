@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<09b0f4a2a68062d0e0df1775b9c22916>>
+ * @generated SignedSource<<6f52677ff50dfc60f8e1f7cf6a344d24>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -109,20 +108,20 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "addOrganizationZoneDialog_addZoneMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationTagPayload",
         "kind": "LinkedField",
         "name": "addZone",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -132,19 +131,19 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "addOrganizationZoneDialog_addZoneMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationTagPayload",
         "kind": "LinkedField",
         "name": "addZone",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,

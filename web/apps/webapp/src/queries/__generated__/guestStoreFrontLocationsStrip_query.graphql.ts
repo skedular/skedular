@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<ca4834faf3666001fe2089c4a0f4c09c>>
+ * @generated SignedSource<<7bc46c08c4dad0fe370c4c1d52677d39>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -232,7 +231,7 @@ return {
                           "kind": "LinkedField",
                           "name": "monday",
                           "plural": false,
-                          "selections": (v0/*: any*/),
+                          "selections": (v0/*:: as any*/),
                           "storageKey": null
                         },
                         {
@@ -242,7 +241,7 @@ return {
                           "kind": "LinkedField",
                           "name": "tuesday",
                           "plural": false,
-                          "selections": (v0/*: any*/),
+                          "selections": (v0/*:: as any*/),
                           "storageKey": null
                         },
                         {
@@ -252,7 +251,7 @@ return {
                           "kind": "LinkedField",
                           "name": "wednesday",
                           "plural": false,
-                          "selections": (v0/*: any*/),
+                          "selections": (v0/*:: as any*/),
                           "storageKey": null
                         },
                         {
@@ -262,7 +261,7 @@ return {
                           "kind": "LinkedField",
                           "name": "thursday",
                           "plural": false,
-                          "selections": (v0/*: any*/),
+                          "selections": (v0/*:: as any*/),
                           "storageKey": null
                         },
                         {
@@ -272,7 +271,7 @@ return {
                           "kind": "LinkedField",
                           "name": "friday",
                           "plural": false,
-                          "selections": (v0/*: any*/),
+                          "selections": (v0/*:: as any*/),
                           "storageKey": null
                         },
                         {
@@ -282,7 +281,7 @@ return {
                           "kind": "LinkedField",
                           "name": "saturday",
                           "plural": false,
-                          "selections": (v0/*: any*/),
+                          "selections": (v0/*:: as any*/),
                           "storageKey": null
                         },
                         {
@@ -292,7 +291,7 @@ return {
                           "kind": "LinkedField",
                           "name": "sunday",
                           "plural": false,
-                          "selections": (v0/*: any*/),
+                          "selections": (v0/*:: as any*/),
                           "storageKey": null
                         }
                       ],

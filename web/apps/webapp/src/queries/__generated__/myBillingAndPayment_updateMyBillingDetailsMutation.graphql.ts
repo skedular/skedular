@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<d5f050e895a3a437ae0c3e173f0a760d>>
+ * @generated SignedSource<<68818e9b533411f3b2123294588c04da>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -128,7 +127,7 @@ v2 = [
         "name": "customer",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -137,7 +136,7 @@ v2 = [
             "name": "billingDetails",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
+              (v1/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -262,20 +261,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "myBillingAndPayment_updateMyBillingDetailsMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "myBillingAndPayment_updateMyBillingDetailsMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "ddad967c291e9ce7e463452c69f88afe",

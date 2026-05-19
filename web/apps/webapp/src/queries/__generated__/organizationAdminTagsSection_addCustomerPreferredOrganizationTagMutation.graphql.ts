@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<b6533ab8217f58c24fa0123e7a309a87>>
+ * @generated SignedSource<<80945ab4ef387ce8c81884616629fda9>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -69,7 +68,7 @@ v2 = [
         "name": "customer",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -78,7 +77,7 @@ v2 = [
             "name": "preferredCustomTags",
             "plural": true,
             "selections": [
-              (v1/*: any*/)
+              (v1/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -91,20 +90,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "04360cfabb0c92577f5e5365a8ffeba4",

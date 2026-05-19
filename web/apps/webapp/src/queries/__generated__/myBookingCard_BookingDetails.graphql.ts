@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<a21c4f4bd557b133c566d436cee1ef4d>>
+ * @generated SignedSource<<99da42b6aa62da37fc8b9c1b956d251b>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -102,9 +101,9 @@ v2 = {
   "storageKey": null
 },
 v3 = [
-  (v0/*: any*/),
-  (v1/*: any*/),
-  (v2/*: any*/)
+  (v0/*:: as any*/),
+  (v1/*:: as any*/),
+  (v2/*:: as any*/)
 ];
 return {
   "argumentDefinitions": [],
@@ -112,7 +111,7 @@ return {
   "metadata": null,
   "name": "myBookingCard_BookingDetails",
   "selections": [
-    (v0/*: any*/),
+    (v0/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -160,8 +159,8 @@ return {
       "name": "involvedCustomers",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
-        (v1/*: any*/),
+        (v0/*:: as any*/),
+        (v1/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -208,7 +207,7 @@ return {
           "name": "uniqueId",
           "storageKey": null
         },
-        (v1/*: any*/)
+        (v1/*:: as any*/)
       ],
       "storageKey": null
     },
@@ -220,8 +219,8 @@ return {
       "name": "involvedTeams",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
-        (v1/*: any*/)
+        (v0/*:: as any*/),
+        (v1/*:: as any*/)
       ],
       "storageKey": null
     },
@@ -241,9 +240,9 @@ return {
           "name": "resource",
           "plural": false,
           "selections": [
-            (v0/*: any*/),
-            (v1/*: any*/),
-            (v2/*: any*/),
+            (v0/*:: as any*/),
+            (v1/*:: as any*/),
+            (v2/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -251,7 +250,7 @@ return {
               "kind": "LinkedField",
               "name": "customTags",
               "plural": true,
-              "selections": (v3/*: any*/),
+              "selections": (v3/*:: as any*/),
               "storageKey": null
             },
             {
@@ -261,7 +260,7 @@ return {
               "kind": "LinkedField",
               "name": "zones",
               "plural": true,
-              "selections": (v3/*: any*/),
+              "selections": (v3/*:: as any*/),
               "storageKey": null
             }
           ],
@@ -300,7 +299,7 @@ return {
               "name": "type",
               "storageKey": null
             },
-            (v1/*: any*/)
+            (v1/*:: as any*/)
           ],
           "storageKey": null
         },
@@ -322,7 +321,7 @@ return {
       "name": "recurringBooking",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
+        (v0/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -345,7 +344,7 @@ return {
           "name": "frequency",
           "plural": false,
           "selections": [
-            (v1/*: any*/)
+            (v1/*:: as any*/)
           ],
           "storageKey": null
         },
@@ -357,7 +356,7 @@ return {
           "name": "marketplaceBooking",
           "plural": false,
           "selections": [
-            (v0/*: any*/)
+            (v0/*:: as any*/)
           ],
           "storageKey": null
         }

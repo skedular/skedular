@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<5c6a6e3c369d5a38908e6a5c535c086b>>
+ * @generated SignedSource<<8749257dc793e08bc858cd82e55a3265>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -55,7 +54,7 @@ v1 = [
     "name": "type",
     "storageKey": null
   },
-  (v0/*: any*/)
+  (v0/*:: as any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -76,7 +75,7 @@ return {
       "kind": "LinkedField",
       "name": "productPricingCadences",
       "plural": true,
-      "selections": (v1/*: any*/),
+      "selections": (v1/*:: as any*/),
       "storageKey": null
     },
     {
@@ -86,7 +85,7 @@ return {
       "kind": "LinkedField",
       "name": "currencies",
       "plural": true,
-      "selections": (v1/*: any*/),
+      "selections": (v1/*:: as any*/),
       "storageKey": null
     },
     {
@@ -160,7 +159,7 @@ return {
                   "name": "id",
                   "storageKey": null
                 },
-                (v0/*: any*/)
+                (v0/*:: as any*/)
               ],
               "storageKey": null
             }

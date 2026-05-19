@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<0b43c369cef717c0ab4c32295caea851>>
+ * @generated SignedSource<<3e89c24d7c55245e107e989e97a0e3b0>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -109,8 +108,8 @@ return {
       "name": "team",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
-        (v1/*: any*/),
+        (v0/*:: as any*/),
+        (v1/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -140,7 +139,7 @@ return {
               "kind": "LinkedField",
               "name": "original",
               "plural": false,
-              "selections": (v2/*: any*/),
+              "selections": (v2/*:: as any*/),
               "storageKey": null
             },
             {
@@ -150,7 +149,7 @@ return {
               "kind": "LinkedField",
               "name": "thumbnail",
               "plural": false,
-              "selections": (v2/*: any*/),
+              "selections": (v2/*:: as any*/),
               "storageKey": null
             }
           ],
@@ -164,8 +163,8 @@ return {
           "name": "primaryLocation",
           "plural": false,
           "selections": [
-            (v0/*: any*/),
-            (v1/*: any*/)
+            (v0/*:: as any*/),
+            (v1/*:: as any*/)
           ],
           "storageKey": null
         }
@@ -187,7 +186,7 @@ return {
           "name": "type",
           "storageKey": null
         },
-        (v1/*: any*/)
+        (v1/*:: as any*/)
       ],
       "storageKey": null
     },

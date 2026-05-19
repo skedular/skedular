@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<f6624c3ceb44c6953458ce833ac72167>>
+ * @generated SignedSource<<353916eb1735f1e1c5b282508a7a8ead>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -43,7 +42,7 @@ var v0 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationBookingInsight_organizationAnalytics_refetchableFragment",
@@ -59,7 +58,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationBookingInsight_organizationAnalytics_refetchableFragment",
     "selections": [

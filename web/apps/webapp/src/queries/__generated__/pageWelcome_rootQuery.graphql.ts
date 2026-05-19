@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<7f257b76afea07a863b0aefe8371bc69>>
+ * @generated SignedSource<<62348c4e187665f5fe58cfe4bea864eb>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -55,7 +54,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "pageWelcome_rootQuery",
-    "selections": (v0/*: any*/),
+    "selections": (v0/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -64,7 +63,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "pageWelcome_rootQuery",
-    "selections": (v0/*: any*/)
+    "selections": (v0/*:: as any*/)
   },
   "params": {
     "cacheID": "0b249fc91af8d6cd23bdaa7478ae5fe4",

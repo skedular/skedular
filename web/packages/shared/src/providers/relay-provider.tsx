@@ -2,8 +2,6 @@
 
 import type { PropsWithChildren } from 'react';
 import { useContext, useMemo } from 'react';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore react-relay v20 ships without bundled .d.ts
 import { RelayEnvironmentProvider } from 'react-relay';
 import { getEnvironment } from '../utils/relay-environment';
 import { InMsTeamsContext } from './in-msteams-provider';

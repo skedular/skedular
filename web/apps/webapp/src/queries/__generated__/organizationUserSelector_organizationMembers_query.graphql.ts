@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<f39f7821a0e126f9f4befe5e92cb305e>>
+ * @generated SignedSource<<1b64e46890e6f588ad54682a421fd8f5>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -126,7 +125,7 @@ return {
                   "name": "node",
                   "plural": false,
                   "selections": [
-                    (v0/*: any*/),
+                    (v0/*:: as any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -135,7 +134,7 @@ return {
                       "name": "customer",
                       "plural": false,
                       "selections": [
-                        (v0/*: any*/),
+                        (v0/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,

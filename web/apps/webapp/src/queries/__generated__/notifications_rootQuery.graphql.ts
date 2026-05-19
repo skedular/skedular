@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<2acb4a49d39c100d0bdc56264795c89a>>
+ * @generated SignedSource<<982c5e4dae2877df1b4ed3479c16fae2>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -88,7 +87,7 @@ v1 = [
     "name": "type",
     "storageKey": null
   },
-  (v0/*: any*/)
+  (v0/*:: as any*/)
 ],
 v2 = {
   "alias": null,
@@ -97,7 +96,7 @@ v2 = {
   "kind": "LinkedField",
   "name": "organizationInvitationStatuses",
   "plural": true,
-  "selections": (v1/*: any*/),
+  "selections": (v1/*:: as any*/),
   "storageKey": null
 },
 v3 = [
@@ -140,7 +139,7 @@ v6 = {
   "kind": "LinkedField",
   "name": "status",
   "plural": false,
-  "selections": (v1/*: any*/),
+  "selections": (v1/*:: as any*/),
   "storageKey": null
 },
 v7 = {
@@ -179,16 +178,16 @@ v11 = {
   "name": "createdBy",
   "plural": false,
   "selections": [
-    (v0/*: any*/),
-    (v7/*: any*/),
-    (v8/*: any*/),
-    (v9/*: any*/),
-    (v10/*: any*/)
+    (v0/*:: as any*/),
+    (v7/*:: as any*/),
+    (v8/*:: as any*/),
+    (v9/*:: as any*/),
+    (v10/*:: as any*/)
   ],
   "storageKey": null
 },
 v12 = [
-  (v0/*: any*/)
+  (v0/*:: as any*/)
 ],
 v13 = {
   "kind": "ClientExtension",
@@ -209,7 +208,7 @@ v14 = {
   "kind": "LinkedField",
   "name": "teamInvitationStatuses",
   "plural": true,
-  "selections": (v1/*: any*/),
+  "selections": (v1/*:: as any*/),
   "storageKey": null
 },
 v15 = {
@@ -219,7 +218,7 @@ v15 = {
   "kind": "LinkedField",
   "name": "status",
   "plural": false,
-  "selections": (v1/*: any*/),
+  "selections": (v1/*:: as any*/),
   "storageKey": null
 },
 v16 = {
@@ -230,18 +229,18 @@ v16 = {
   "name": "createdBy",
   "plural": false,
   "selections": [
-    (v0/*: any*/),
-    (v7/*: any*/),
-    (v8/*: any*/),
-    (v9/*: any*/),
-    (v10/*: any*/),
-    (v5/*: any*/)
+    (v0/*:: as any*/),
+    (v7/*:: as any*/),
+    (v8/*:: as any*/),
+    (v9/*:: as any*/),
+    (v10/*:: as any*/),
+    (v5/*:: as any*/)
   ],
   "storageKey": null
 },
 v17 = [
-  (v0/*: any*/),
-  (v5/*: any*/)
+  (v0/*:: as any*/),
+  (v5/*:: as any*/)
 ];
 return {
   "fragment": {
@@ -250,16 +249,16 @@ return {
     "metadata": null,
     "name": "notifications_rootQuery",
     "selections": [
-      (v2/*: any*/),
+      (v2/*:: as any*/),
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v3/*:: as any*/),
         "concreteType": "ConnectionOfOrganizationJoinInvitationEdge",
         "kind": "LinkedField",
         "name": "myInvitationsToJoinOrganizations",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -276,9 +275,9 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v5/*: any*/),
-                  (v6/*: any*/),
-                  (v11/*: any*/),
+                  (v5/*:: as any*/),
+                  (v6/*:: as any*/),
+                  (v11/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -286,7 +285,7 @@ return {
                     "kind": "LinkedField",
                     "name": "organization",
                     "plural": false,
-                    "selections": (v12/*: any*/),
+                    "selections": (v12/*:: as any*/),
                     "storageKey": null
                   }
                 ],
@@ -295,20 +294,20 @@ return {
             ],
             "storageKey": null
           },
-          (v13/*: any*/)
+          (v13/*:: as any*/)
         ],
         "storageKey": "myInvitationsToJoinOrganizations(orderBy:[{\"direction\":\"ASCENDING\",\"field\":\"CREATED_AT\"}],where:{\"status\":\"PENDING\"})"
       },
-      (v14/*: any*/),
+      (v14/*:: as any*/),
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v3/*:: as any*/),
         "concreteType": "ConnectionOfTeamJoinInvitationEdge",
         "kind": "LinkedField",
         "name": "myInvitationsToJoinTeams",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -325,9 +324,9 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v5/*: any*/),
-                  (v15/*: any*/),
-                  (v11/*: any*/),
+                  (v5/*:: as any*/),
+                  (v15/*:: as any*/),
+                  (v11/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -335,7 +334,7 @@ return {
                     "kind": "LinkedField",
                     "name": "team",
                     "plural": false,
-                    "selections": (v12/*: any*/),
+                    "selections": (v12/*:: as any*/),
                     "storageKey": null
                   }
                 ],
@@ -344,7 +343,7 @@ return {
             ],
             "storageKey": null
           },
-          (v13/*: any*/)
+          (v13/*:: as any*/)
         ],
         "storageKey": "myInvitationsToJoinTeams(orderBy:[{\"direction\":\"ASCENDING\",\"field\":\"CREATED_AT\"}],where:{\"status\":\"PENDING\"})"
       }
@@ -358,16 +357,16 @@ return {
     "kind": "Operation",
     "name": "notifications_rootQuery",
     "selections": [
-      (v2/*: any*/),
+      (v2/*:: as any*/),
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v3/*:: as any*/),
         "concreteType": "ConnectionOfOrganizationJoinInvitationEdge",
         "kind": "LinkedField",
         "name": "myInvitationsToJoinOrganizations",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -384,9 +383,9 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v5/*: any*/),
-                  (v6/*: any*/),
-                  (v16/*: any*/),
+                  (v5/*:: as any*/),
+                  (v6/*:: as any*/),
+                  (v16/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -394,7 +393,7 @@ return {
                     "kind": "LinkedField",
                     "name": "organization",
                     "plural": false,
-                    "selections": (v17/*: any*/),
+                    "selections": (v17/*:: as any*/),
                     "storageKey": null
                   }
                 ],
@@ -403,20 +402,20 @@ return {
             ],
             "storageKey": null
           },
-          (v13/*: any*/)
+          (v13/*:: as any*/)
         ],
         "storageKey": "myInvitationsToJoinOrganizations(orderBy:[{\"direction\":\"ASCENDING\",\"field\":\"CREATED_AT\"}],where:{\"status\":\"PENDING\"})"
       },
-      (v14/*: any*/),
+      (v14/*:: as any*/),
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v3/*:: as any*/),
         "concreteType": "ConnectionOfTeamJoinInvitationEdge",
         "kind": "LinkedField",
         "name": "myInvitationsToJoinTeams",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -433,9 +432,9 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v5/*: any*/),
-                  (v15/*: any*/),
-                  (v16/*: any*/),
+                  (v5/*:: as any*/),
+                  (v15/*:: as any*/),
+                  (v16/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -443,7 +442,7 @@ return {
                     "kind": "LinkedField",
                     "name": "team",
                     "plural": false,
-                    "selections": (v17/*: any*/),
+                    "selections": (v17/*:: as any*/),
                     "storageKey": null
                   }
                 ],
@@ -452,7 +451,7 @@ return {
             ],
             "storageKey": null
           },
-          (v13/*: any*/)
+          (v13/*:: as any*/)
         ],
         "storageKey": "myInvitationsToJoinTeams(orderBy:[{\"direction\":\"ASCENDING\",\"field\":\"CREATED_AT\"}],where:{\"status\":\"PENDING\"})"
       }

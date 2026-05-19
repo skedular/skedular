@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<379c75ceadfda6ec8f0cef756dd8a546>>
+ * @generated SignedSource<<5d07868a270d4074734d9b8b3cedbedb>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -192,7 +191,7 @@ v4 = [
     "name": "type",
     "storageKey": null
   },
-  (v3/*: any*/)
+  (v3/*:: as any*/)
 ],
 v5 = {
   "alias": null,
@@ -202,7 +201,7 @@ v5 = {
   "name": "marketplaceBooking",
   "plural": false,
   "selections": [
-    (v1/*: any*/),
+    (v1/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -210,7 +209,7 @@ v5 = {
       "name": "quantity",
       "storageKey": null
     },
-    (v2/*: any*/),
+    (v2/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -233,7 +232,7 @@ v5 = {
       "name": "productVersion",
       "plural": false,
       "selections": [
-        (v1/*: any*/),
+        (v1/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -348,7 +347,7 @@ v5 = {
       "kind": "LinkedField",
       "name": "paymentMethod",
       "plural": false,
-      "selections": (v4/*: any*/),
+      "selections": (v4/*:: as any*/),
       "storageKey": null
     },
     {
@@ -358,7 +357,7 @@ v5 = {
       "kind": "LinkedField",
       "name": "paymentStatus",
       "plural": false,
-      "selections": (v4/*: any*/),
+      "selections": (v4/*:: as any*/),
       "storageKey": null
     }
   ],
@@ -414,7 +413,7 @@ v11 = [
     "name": "marketplaceBookingSubscription",
     "plural": false,
     "selections": [
-      (v1/*: any*/),
+      (v1/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -443,7 +442,7 @@ v11 = [
         "name": "cancelAtPeriodEnd",
         "storageKey": null
       },
-      (v5/*: any*/),
+      (v5/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -459,7 +458,7 @@ v11 = [
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v4/*: any*/),
+            "selections": (v4/*:: as any*/),
             "storageKey": null
           },
           {
@@ -469,7 +468,7 @@ v11 = [
             "kind": "LinkedField",
             "name": "status",
             "plural": false,
-            "selections": (v4/*: any*/),
+            "selections": (v4/*:: as any*/),
             "storageKey": null
           },
           {
@@ -486,7 +485,7 @@ v11 = [
             "name": "lastProcessedAt",
             "storageKey": null
           },
-          (v6/*: any*/),
+          (v6/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -494,10 +493,10 @@ v11 = [
             "name": "refundPercentage",
             "storageKey": null
           },
-          (v7/*: any*/),
-          (v8/*: any*/),
-          (v9/*: any*/),
-          (v10/*: any*/),
+          (v7/*:: as any*/),
+          (v8/*:: as any*/),
+          (v9/*:: as any*/),
+          (v10/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -513,7 +512,7 @@ v11 = [
             "name": "events",
             "plural": true,
             "selections": [
-              (v1/*: any*/),
+              (v1/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -521,7 +520,7 @@ v11 = [
                 "kind": "LinkedField",
                 "name": "eventType",
                 "plural": false,
-                "selections": (v4/*: any*/),
+                "selections": (v4/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -531,11 +530,11 @@ v11 = [
                 "name": "occurredAt",
                 "storageKey": null
               },
-              (v6/*: any*/),
-              (v7/*: any*/),
-              (v8/*: any*/),
-              (v9/*: any*/),
-              (v10/*: any*/),
+              (v6/*:: as any*/),
+              (v7/*:: as any*/),
+              (v8/*:: as any*/),
+              (v9/*:: as any*/),
+              (v10/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -556,7 +555,7 @@ v11 = [
         "kind": "LinkedField",
         "name": "status",
         "plural": false,
-        "selections": (v4/*: any*/),
+        "selections": (v4/*:: as any*/),
         "storageKey": null
       },
       {
@@ -567,8 +566,8 @@ v11 = [
         "name": "involvedCustomers",
         "plural": true,
         "selections": [
-          (v1/*: any*/),
-          (v3/*: any*/),
+          (v1/*:: as any*/),
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -601,7 +600,7 @@ v11 = [
         "name": "recurringBookings",
         "plural": true,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -616,7 +615,7 @@ v11 = [
             "name": "endDate",
             "storageKey": null
           },
-          (v5/*: any*/)
+          (v5/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -635,7 +634,7 @@ v11 = [
             "name": "invoiceNumber",
             "storageKey": null
           },
-          (v2/*: any*/),
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -659,20 +658,20 @@ v11 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductSubscriptionDetails_subscription_Subscription",
-    "selections": (v11/*: any*/),
+    "selections": (v11/*:: as any*/),
     "type": "Subscription",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceProductSubscriptionDetails_subscription_Subscription",
-    "selections": (v11/*: any*/)
+    "selections": (v11/*:: as any*/)
   },
   "params": {
     "cacheID": "781695caa5eafa2a34a296022c0599fb",

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<adad8395defd798ceead17ce2707d465>>
+ * @generated SignedSource<<f72ca6310eab478b6571cbf749ee86ce>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -50,7 +49,7 @@ v1 = {
   "storageKey": null
 },
 v2 = [
-  (v1/*: any*/)
+  (v1/*:: as any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -84,7 +83,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -94,7 +93,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": floorPlans_bookings_refetchableFragment_graphql
@@ -161,7 +160,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
+                (v1/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -169,7 +168,7 @@ return {
                   "kind": "LinkedField",
                   "name": "involvedCustomers",
                   "plural": true,
-                  "selections": (v2/*: any*/),
+                  "selections": (v2/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -187,7 +186,7 @@ return {
                       "kind": "LinkedField",
                       "name": "resource",
                       "plural": false,
-                      "selections": (v2/*: any*/),
+                      "selections": (v2/*:: as any*/),
                       "storageKey": null
                     }
                   ],

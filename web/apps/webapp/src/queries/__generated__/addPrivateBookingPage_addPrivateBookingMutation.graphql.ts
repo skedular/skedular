@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<c91659e14b9cd8e1db2ca257715a6d99>>
+ * @generated SignedSource<<433c676a34cac6600ec33a6292dd827d>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -107,7 +106,7 @@ v3 = [
         "name": "booking",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -130,8 +129,8 @@ v3 = [
             "name": "involvedCustomers",
             "plural": true,
             "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/),
+              (v1/*:: as any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -178,7 +177,7 @@ v3 = [
                 "name": "uniqueId",
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -198,8 +197,8 @@ v3 = [
                 "name": "resource",
                 "plural": false,
                 "selections": [
-                  (v1/*: any*/),
-                  (v2/*: any*/),
+                  (v1/*:: as any*/),
+                  (v2/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -208,8 +207,8 @@ v3 = [
                     "name": "zones",
                     "plural": true,
                     "selections": [
-                      (v1/*: any*/),
-                      (v2/*: any*/)
+                      (v1/*:: as any*/),
+                      (v2/*:: as any*/)
                     ],
                     "storageKey": null
                   }
@@ -228,20 +227,20 @@ v3 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "addPrivateBookingPage_addPrivateBookingMutation",
-    "selections": (v3/*: any*/),
+    "selections": (v3/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "addPrivateBookingPage_addPrivateBookingMutation",
-    "selections": (v3/*: any*/)
+    "selections": (v3/*:: as any*/)
   },
   "params": {
     "cacheID": "b05c926bccafeb01a2d125c9e9f82bb9",

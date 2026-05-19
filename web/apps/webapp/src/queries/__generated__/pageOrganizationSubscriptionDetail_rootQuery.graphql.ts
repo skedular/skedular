@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<78d4a2528fd438c68c57e0b549c7a101>>
+ * @generated SignedSource<<7e462bb58bedd6d2e32efbf079fd9e06>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -152,7 +151,7 @@ v2 = [
     "name": "type",
     "storageKey": null
   },
-  (v1/*: any*/)
+  (v1/*:: as any*/)
 ],
 v3 = {
   "alias": null,
@@ -161,7 +160,7 @@ v3 = {
   "kind": "LinkedField",
   "name": "marketplaceBookingSubscriptionCancellationModes",
   "plural": true,
-  "selections": (v2/*: any*/),
+  "selections": (v2/*:: as any*/),
   "storageKey": null
 },
 v4 = [
@@ -287,7 +286,7 @@ v17 = {
   "name": "refund",
   "plural": false,
   "selections": [
-    (v7/*: any*/),
+    (v7/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -295,7 +294,7 @@ v17 = {
       "kind": "LinkedField",
       "name": "currency",
       "plural": false,
-      "selections": (v2/*: any*/),
+      "selections": (v2/*:: as any*/),
       "storageKey": null
     },
     {
@@ -305,7 +304,7 @@ v17 = {
       "kind": "LinkedField",
       "name": "status",
       "plural": false,
-      "selections": (v2/*: any*/),
+      "selections": (v2/*:: as any*/),
       "storageKey": null
     },
     {
@@ -322,7 +321,7 @@ v17 = {
       "name": "lastProcessedAt",
       "storageKey": null
     },
-    (v12/*: any*/),
+    (v12/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -330,10 +329,10 @@ v17 = {
       "name": "refundPercentage",
       "storageKey": null
     },
-    (v13/*: any*/),
-    (v14/*: any*/),
-    (v15/*: any*/),
-    (v16/*: any*/),
+    (v13/*:: as any*/),
+    (v14/*:: as any*/),
+    (v15/*:: as any*/),
+    (v16/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -363,7 +362,7 @@ v17 = {
       "name": "events",
       "plural": true,
       "selections": [
-        (v7/*: any*/),
+        (v7/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -371,7 +370,7 @@ v17 = {
           "kind": "LinkedField",
           "name": "eventType",
           "plural": false,
-          "selections": (v2/*: any*/),
+          "selections": (v2/*:: as any*/),
           "storageKey": null
         },
         {
@@ -381,11 +380,11 @@ v17 = {
           "name": "occurredAt",
           "storageKey": null
         },
-        (v12/*: any*/),
-        (v13/*: any*/),
-        (v14/*: any*/),
-        (v15/*: any*/),
-        (v16/*: any*/),
+        (v12/*:: as any*/),
+        (v13/*:: as any*/),
+        (v14/*:: as any*/),
+        (v15/*:: as any*/),
+        (v16/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -406,7 +405,7 @@ v18 = {
   "kind": "LinkedField",
   "name": "status",
   "plural": false,
-  "selections": (v2/*: any*/),
+  "selections": (v2/*:: as any*/),
   "storageKey": null
 },
 v19 = {
@@ -417,8 +416,8 @@ v19 = {
   "name": "involvedCustomers",
   "plural": true,
   "selections": [
-    (v7/*: any*/),
-    (v1/*: any*/),
+    (v7/*:: as any*/),
+    (v1/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -457,7 +456,7 @@ v21 = {
   "kind": "LinkedField",
   "name": "paymentStatus",
   "plural": false,
-  "selections": (v2/*: any*/),
+  "selections": (v2/*:: as any*/),
   "storageKey": null
 },
 v22 = {
@@ -467,7 +466,7 @@ v22 = {
   "kind": "LinkedField",
   "name": "paymentMethod",
   "plural": false,
-  "selections": (v2/*: any*/),
+  "selections": (v2/*:: as any*/),
   "storageKey": null
 },
 v23 = {
@@ -496,7 +495,7 @@ v24 = {
   "name": "recurringBookings",
   "plural": true,
   "selections": [
-    (v7/*: any*/),
+    (v7/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -519,8 +518,8 @@ v24 = {
       "name": "marketplaceBooking",
       "plural": false,
       "selections": [
-        (v7/*: any*/),
-        (v20/*: any*/),
+        (v7/*:: as any*/),
+        (v20/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -528,8 +527,8 @@ v24 = {
           "name": "invoiceUrl",
           "storageKey": null
         },
-        (v21/*: any*/),
-        (v22/*: any*/)
+        (v21/*:: as any*/),
+        (v22/*:: as any*/)
       ],
       "storageKey": null
     }
@@ -538,41 +537,41 @@ v24 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "pageOrganizationSubscriptionDetail_rootQuery",
     "selections": [
-      (v3/*: any*/),
+      (v3/*:: as any*/),
       {
         "alias": null,
-        "args": (v4/*: any*/),
+        "args": (v4/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v1/*: any*/)
+          (v1/*:: as any*/)
         ],
         "storageKey": null
       },
-      (v5/*: any*/),
+      (v5/*:: as any*/),
       {
         "alias": null,
-        "args": (v6/*: any*/),
+        "args": (v6/*:: as any*/),
         "concreteType": "MarketplaceBookingSubscriptionDetails",
         "kind": "LinkedField",
         "name": "marketplaceBookingSubscription",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
-          (v8/*: any*/),
-          (v9/*: any*/),
-          (v10/*: any*/),
-          (v11/*: any*/),
-          (v17/*: any*/),
-          (v18/*: any*/),
-          (v19/*: any*/),
+          (v7/*:: as any*/),
+          (v8/*:: as any*/),
+          (v9/*:: as any*/),
+          (v10/*:: as any*/),
+          (v11/*:: as any*/),
+          (v17/*:: as any*/),
+          (v18/*:: as any*/),
+          (v19/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -581,9 +580,9 @@ return {
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v20/*: any*/),
-              (v21/*: any*/),
-              (v22/*: any*/),
+              (v20/*:: as any*/),
+              (v21/*:: as any*/),
+              (v22/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -592,14 +591,14 @@ return {
                 "name": "productVersion",
                 "plural": false,
                 "selections": [
-                  (v23/*: any*/)
+                  (v23/*:: as any*/)
                 ],
                 "storageKey": null
               }
             ],
             "storageKey": null
           },
-          (v24/*: any*/)
+          (v24/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -609,41 +608,41 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "pageOrganizationSubscriptionDetail_rootQuery",
     "selections": [
-      (v3/*: any*/),
+      (v3/*:: as any*/),
       {
         "alias": null,
-        "args": (v4/*: any*/),
+        "args": (v4/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
-          (v7/*: any*/)
+          (v1/*:: as any*/),
+          (v7/*:: as any*/)
         ],
         "storageKey": null
       },
-      (v5/*: any*/),
+      (v5/*:: as any*/),
       {
         "alias": null,
-        "args": (v6/*: any*/),
+        "args": (v6/*:: as any*/),
         "concreteType": "MarketplaceBookingSubscriptionDetails",
         "kind": "LinkedField",
         "name": "marketplaceBookingSubscription",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
-          (v8/*: any*/),
-          (v9/*: any*/),
-          (v10/*: any*/),
-          (v11/*: any*/),
-          (v17/*: any*/),
-          (v18/*: any*/),
-          (v19/*: any*/),
+          (v7/*:: as any*/),
+          (v8/*:: as any*/),
+          (v9/*:: as any*/),
+          (v10/*:: as any*/),
+          (v11/*:: as any*/),
+          (v17/*:: as any*/),
+          (v18/*:: as any*/),
+          (v19/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -652,9 +651,9 @@ return {
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v20/*: any*/),
-              (v21/*: any*/),
-              (v22/*: any*/),
+              (v20/*:: as any*/),
+              (v21/*:: as any*/),
+              (v22/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -663,16 +662,16 @@ return {
                 "name": "productVersion",
                 "plural": false,
                 "selections": [
-                  (v23/*: any*/),
-                  (v7/*: any*/)
+                  (v23/*:: as any*/),
+                  (v7/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v7/*: any*/)
+              (v7/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v24/*: any*/)
+          (v24/*:: as any*/)
         ],
         "storageKey": null
       }

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<f915b5da20d75447be5fbed1d8db9714>>
+ * @generated SignedSource<<0ad59927f280d5bd20f1f6ec124c59f2>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -92,7 +91,7 @@ v2 = [
             "kind": "LinkedField",
             "name": "original",
             "plural": false,
-            "selections": (v1/*: any*/),
+            "selections": (v1/*:: as any*/),
             "storageKey": null
           },
           {
@@ -102,7 +101,7 @@ v2 = [
             "kind": "LinkedField",
             "name": "thumbnail",
             "plural": false,
-            "selections": (v1/*: any*/),
+            "selections": (v1/*:: as any*/),
             "storageKey": null
           }
         ],
@@ -114,20 +113,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "pageAuthSignInQuery",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "pageAuthSignInQuery",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "083296e5c59c10d29b435f01fabbd3a6",

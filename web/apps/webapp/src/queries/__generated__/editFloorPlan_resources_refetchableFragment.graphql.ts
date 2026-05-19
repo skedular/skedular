@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<e1223a90e11ed074e7c381efc72803cc>>
+ * @generated SignedSource<<ad8c374181c701334c96cc1faa1fb20b>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -109,13 +108,13 @@ v4 = {
   "storageKey": null
 },
 v5 = [
-  (v2/*: any*/),
-  (v3/*: any*/),
-  (v4/*: any*/)
+  (v2/*:: as any*/),
+  (v3/*:: as any*/),
+  (v4/*:: as any*/)
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editFloorPlan_resources_refetchableFragment",
@@ -142,7 +141,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editFloorPlan_resources_refetchableFragment",
     "selections": [
@@ -162,7 +161,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v1/*:: as any*/),
             "concreteType": "ConnectionOfResourceEdge",
             "kind": "LinkedField",
             "name": "resources",
@@ -184,8 +183,8 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/),
+                      (v2/*:: as any*/),
+                      (v3/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -193,7 +192,7 @@ return {
                         "name": "inactive",
                         "storageKey": null
                       },
-                      (v4/*: any*/),
+                      (v4/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -208,7 +207,7 @@ return {
                         "kind": "LinkedField",
                         "name": "customTags",
                         "plural": true,
-                        "selections": (v5/*: any*/),
+                        "selections": (v5/*:: as any*/),
                         "storageKey": null
                       },
                       {
@@ -218,7 +217,7 @@ return {
                         "kind": "LinkedField",
                         "name": "zones",
                         "plural": true,
-                        "selections": (v5/*: any*/),
+                        "selections": (v5/*:: as any*/),
                         "storageKey": null
                       },
                       {
@@ -228,7 +227,7 @@ return {
                         "kind": "LinkedField",
                         "name": "productTags",
                         "plural": true,
-                        "selections": (v5/*: any*/),
+                        "selections": (v5/*:: as any*/),
                         "storageKey": null
                       },
                       {
@@ -239,9 +238,9 @@ return {
                         "name": "resourceType",
                         "plural": false,
                         "selections": [
-                          (v2/*: any*/),
-                          (v3/*: any*/),
-                          (v4/*: any*/),
+                          (v2/*:: as any*/),
+                          (v3/*:: as any*/),
+                          (v4/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -302,7 +301,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v1/*:: as any*/),
             "filters": [
               "where",
               "orderBy"
@@ -312,7 +311,7 @@ return {
             "kind": "LinkedHandle",
             "name": "resources"
           },
-          (v2/*: any*/)
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       }

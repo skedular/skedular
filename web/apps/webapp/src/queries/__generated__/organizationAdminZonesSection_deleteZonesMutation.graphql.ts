@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<d17eaea17675673ebab244a0762ae421>>
+ * @generated SignedSource<<9ec110169da39b9423dfc1474f2a0b8f>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -58,14 +57,14 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminZonesSection_deleteZonesMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationTagsPayload",
         "kind": "LinkedField",
         "name": "deleteZones",
@@ -79,7 +78,7 @@ return {
             "name": "organizationTags",
             "plural": true,
             "selections": [
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -92,13 +91,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminZonesSection_deleteZonesMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationTagsPayload",
         "kind": "LinkedField",
         "name": "deleteZones",
@@ -112,7 +111,7 @@ return {
             "name": "organizationTags",
             "plural": true,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,

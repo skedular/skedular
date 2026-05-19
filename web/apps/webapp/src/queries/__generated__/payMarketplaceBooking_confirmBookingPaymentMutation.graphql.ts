@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<b6f6c724234a822b410aab07bdb9a1b0>>
+ * @generated SignedSource<<3b799af0439001033a5a84344b611591>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -99,14 +98,14 @@ v3 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "payMarketplaceBooking_confirmBookingPaymentMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "BookingPayload",
         "kind": "LinkedField",
         "name": "confirmBookingPayment",
@@ -120,7 +119,7 @@ return {
             "name": "booking",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -129,7 +128,7 @@ return {
                 "name": "marketplaceBooking",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/)
+                  (v3/*:: as any*/)
                 ],
                 "storageKey": null
               }
@@ -145,13 +144,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "payMarketplaceBooking_confirmBookingPaymentMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "BookingPayload",
         "kind": "LinkedField",
         "name": "confirmBookingPayment",
@@ -165,7 +164,7 @@ return {
             "name": "booking",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -174,8 +173,8 @@ return {
                 "name": "marketplaceBooking",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
-                  (v2/*: any*/)
+                  (v3/*:: as any*/),
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               }

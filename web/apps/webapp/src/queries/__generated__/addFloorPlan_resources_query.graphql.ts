@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<d03d8ef5c60b18e662410891ffcef636>>
+ * @generated SignedSource<<c5bd7f8c6817260143c29b273147dce7>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -82,9 +81,9 @@ v3 = {
   "storageKey": null
 },
 v4 = [
-  (v1/*: any*/),
-  (v2/*: any*/),
-  (v3/*: any*/)
+  (v1/*:: as any*/),
+  (v2/*:: as any*/),
+  (v3/*:: as any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -118,7 +117,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -128,7 +127,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": addFloorPlan_resources_refetchableFragment_graphql
@@ -191,8 +190,8 @@ return {
                   "name": "node",
                   "plural": false,
                   "selections": [
-                    (v1/*: any*/),
-                    (v2/*: any*/),
+                    (v1/*:: as any*/),
+                    (v2/*:: as any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -200,7 +199,7 @@ return {
                       "name": "inactive",
                       "storageKey": null
                     },
-                    (v3/*: any*/),
+                    (v3/*:: as any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -215,7 +214,7 @@ return {
                       "kind": "LinkedField",
                       "name": "customTags",
                       "plural": true,
-                      "selections": (v4/*: any*/),
+                      "selections": (v4/*:: as any*/),
                       "storageKey": null
                     },
                     {
@@ -225,7 +224,7 @@ return {
                       "kind": "LinkedField",
                       "name": "zones",
                       "plural": true,
-                      "selections": (v4/*: any*/),
+                      "selections": (v4/*:: as any*/),
                       "storageKey": null
                     },
                     {
@@ -235,7 +234,7 @@ return {
                       "kind": "LinkedField",
                       "name": "productTags",
                       "plural": true,
-                      "selections": (v4/*: any*/),
+                      "selections": (v4/*:: as any*/),
                       "storageKey": null
                     },
                     {
@@ -246,9 +245,9 @@ return {
                       "name": "resourceType",
                       "plural": false,
                       "selections": [
-                        (v1/*: any*/),
-                        (v2/*: any*/),
-                        (v3/*: any*/),
+                        (v1/*:: as any*/),
+                        (v2/*:: as any*/),
+                        (v3/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,

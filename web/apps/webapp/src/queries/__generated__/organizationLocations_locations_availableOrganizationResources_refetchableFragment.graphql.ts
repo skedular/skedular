@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<7fef28fa0bf4c95208193af19c12ff73>>
+ * @generated SignedSource<<1955eff4d98e906e25459797feba2b26>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -116,14 +115,14 @@ v4 = [
   },
   {
     "fields": [
-      (v1/*: any*/),
+      (v1/*:: as any*/),
       {
         "kind": "Variable",
         "name": "notContactedYet",
         "variableName": "locationNotContactedYet"
       },
-      (v2/*: any*/),
-      (v3/*: any*/)
+      (v2/*:: as any*/),
+      (v3/*:: as any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
@@ -161,7 +160,7 @@ v8 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocations_locations_availableOrganizationResources_refetchableFragment",
@@ -188,19 +187,19 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationLocations_locations_availableOrganizationResources_refetchableFragment",
     "selections": [
       {
         "alias": null,
-        "args": (v4/*: any*/),
+        "args": (v4/*:: as any*/),
         "concreteType": "ConnectionOfLocationEdge",
         "kind": "LinkedField",
         "name": "locations",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
+          (v5/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -217,7 +216,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/),
+                  (v6/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -226,7 +225,7 @@ return {
                     "name": "resources",
                     "plural": false,
                     "selections": [
-                      (v5/*: any*/)
+                      (v5/*:: as any*/)
                     ],
                     "storageKey": null
                   },
@@ -252,7 +251,7 @@ return {
                         "name": "latitude",
                         "storageKey": null
                       },
-                      (v6/*: any*/),
+                      (v6/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -299,7 +298,7 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v7/*: any*/),
+                  (v7/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -308,8 +307,8 @@ return {
                     "name": "zones",
                     "plural": true,
                     "selections": [
-                      (v6/*: any*/),
-                      (v7/*: any*/),
+                      (v6/*:: as any*/),
+                      (v7/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -335,7 +334,7 @@ return {
                         "kind": "LinkedField",
                         "name": "original",
                         "plural": false,
-                        "selections": (v8/*: any*/),
+                        "selections": (v8/*:: as any*/),
                         "storageKey": null
                       },
                       {
@@ -345,7 +344,7 @@ return {
                         "kind": "LinkedField",
                         "name": "thumbnail",
                         "plural": false,
-                        "selections": (v8/*: any*/),
+                        "selections": (v8/*:: as any*/),
                         "storageKey": null
                       }
                     ],
@@ -380,7 +379,7 @@ return {
                         "name": "customDomain",
                         "storageKey": null
                       },
-                      (v6/*: any*/)
+                      (v6/*:: as any*/)
                     ],
                     "storageKey": null
                   },
@@ -453,7 +452,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v4/*: any*/),
+        "args": (v4/*:: as any*/),
         "filters": [
           "where",
           "orderBy"
@@ -468,19 +467,19 @@ return {
         "args": [
           {
             "fields": [
-              (v1/*: any*/),
+              (v1/*:: as any*/),
               {
                 "kind": "Variable",
                 "name": "from",
                 "variableName": "fromTodayDate"
               },
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "kind": "Variable",
                 "name": "until",
                 "variableName": "untilTodayDate"
               },
-              (v3/*: any*/)
+              (v3/*:: as any*/)
             ],
             "kind": "ObjectValue",
             "name": "where"

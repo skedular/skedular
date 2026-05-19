@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<e04c5036ca002fce7a34cbc62f053ea2>>
+ * @generated SignedSource<<554e2f978ffb6b9b6dd2b736f8b35b0d>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -129,20 +128,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "bulkAddResourcesDialog_bulkAddResourcesMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "bulkAddResourcesDialog_bulkAddResourcesMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "f525499329dae687dbffad3a0ce42267",

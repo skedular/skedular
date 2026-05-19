@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<764258466c647b4b67f053dbd3fc1fc7>>
+ * @generated SignedSource<<ce466767d1b27394bc187b75dc5d7288>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -67,7 +66,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -77,7 +76,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": organizationMarketplaceSetup_productTags_refetchableFragment_graphql

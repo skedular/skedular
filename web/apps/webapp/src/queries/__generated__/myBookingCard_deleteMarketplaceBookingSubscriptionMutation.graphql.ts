@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<2dc361de48035fa309958544504711e9>>
+ * @generated SignedSource<<5772662a8a55f158fab6b98a252f6bb9>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -123,20 +122,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "myBookingCard_deleteMarketplaceBookingSubscriptionMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "myBookingCard_deleteMarketplaceBookingSubscriptionMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "7a7b46aaba09b89f92cb0e52c764861b",

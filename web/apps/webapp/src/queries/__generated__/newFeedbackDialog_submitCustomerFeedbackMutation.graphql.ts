@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<20f639cbe3a538b4ca7f52be162e7d07>>
+ * @generated SignedSource<<a21d817d615ead56a806d4b0c56b2588>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -65,20 +64,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "newFeedbackDialog_submitCustomerFeedbackMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "newFeedbackDialog_submitCustomerFeedbackMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "ca4c346d6838c0985a1a479ed022d377",

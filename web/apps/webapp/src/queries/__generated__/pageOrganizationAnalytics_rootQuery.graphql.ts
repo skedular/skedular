@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<508f0eb37c3086b0da21c9677402f374>>
+ * @generated SignedSource<<4ee09e9583a899aa793ddb45bec127a9>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -66,8 +65,8 @@ v4 = {
 return {
   "fragment": {
     "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/)
+      (v0/*:: as any*/),
+      (v1/*:: as any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -75,13 +74,13 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v2/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v3/*: any*/)
+          (v3/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -97,22 +96,22 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/)
+      (v1/*:: as any*/),
+      (v0/*:: as any*/)
     ],
     "kind": "Operation",
     "name": "pageOrganizationAnalytics_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v2/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
-          (v4/*: any*/)
+          (v3/*:: as any*/),
+          (v4/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -164,8 +163,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/),
-                  (v3/*: any*/)
+                  (v4/*:: as any*/),
+                  (v3/*:: as any*/)
                 ],
                 "storageKey": null
               }

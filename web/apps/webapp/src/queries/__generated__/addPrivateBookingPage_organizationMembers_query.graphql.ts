@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<34a744515a771d2f559ba883f6af644c>>
+ * @generated SignedSource<<7912b44ec43180aeb8ac6de201d81df3>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -81,7 +80,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -91,7 +90,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": addPrivateBookingPage_organizationMembers_refetchableFragment_graphql
@@ -154,7 +153,7 @@ return {
                   "name": "node",
                   "plural": false,
                   "selections": [
-                    (v1/*: any*/),
+                    (v1/*:: as any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -163,7 +162,7 @@ return {
                       "name": "customer",
                       "plural": false,
                       "selections": [
-                        (v1/*: any*/),
+                        (v1/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,

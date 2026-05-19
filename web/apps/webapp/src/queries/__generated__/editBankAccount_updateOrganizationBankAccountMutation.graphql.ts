@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<0f92345eb9907110304082ccc99ed6a1>>
+ * @generated SignedSource<<305c2e3f8471aa9c94153f59673bd554>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -134,20 +133,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editBankAccount_updateOrganizationBankAccountMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editBankAccount_updateOrganizationBankAccountMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "f74703f6d465e666fa6d673c9c3b9d92",

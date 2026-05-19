@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<44f89d2531285f476a40e7a979376275>>
+ * @generated SignedSource<<f15dba15ff0b3e2f539d754076f95958>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -43,7 +42,7 @@ var v0 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment",
@@ -59,7 +58,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment",
     "selections": [

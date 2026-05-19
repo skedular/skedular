@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<26f8883e14a3777ba42baaa15438c73e>>
+ * @generated SignedSource<<2a135aa5551c4023ad2a46fa2c18febc>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -65,7 +64,7 @@ return {
             "name": "paymentMethods",
             "plural": true,
             "selections": [
-              (v0/*: any*/),
+              (v0/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -97,7 +96,7 @@ return {
             ],
             "storageKey": null
           },
-          (v0/*: any*/)
+          (v0/*:: as any*/)
         ],
         "storageKey": null
       }

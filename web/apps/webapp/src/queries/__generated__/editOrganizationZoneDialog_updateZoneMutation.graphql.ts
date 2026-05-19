@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<8779fa40cac70c0f3ddb38b66a8a6270>>
+ * @generated SignedSource<<a6adb17dff8141aa0f2ed7ae76edbb60>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -113,20 +112,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editOrganizationZoneDialog_updateZoneMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editOrganizationZoneDialog_updateZoneMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "bc340e23c758ec6defe27201d3e646fb",

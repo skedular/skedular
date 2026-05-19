@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<0e3e350e8f441bddc22e16b1b67dc5a3>>
+ * @generated SignedSource<<44327e8c21336afbef0f89984236eb06>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -170,8 +169,8 @@ v3 = {
   "storageKey": null
 },
 v4 = [
-  (v2/*: any*/),
-  (v3/*: any*/)
+  (v2/*:: as any*/),
+  (v3/*:: as any*/)
 ],
 v5 = {
   "alias": null,
@@ -181,9 +180,9 @@ v5 = {
   "storageKey": null
 },
 v6 = [
-  (v2/*: any*/),
-  (v3/*: any*/),
-  (v5/*: any*/)
+  (v2/*:: as any*/),
+  (v3/*:: as any*/),
+  (v5/*:: as any*/)
 ],
 v7 = {
   "alias": null,
@@ -193,7 +192,7 @@ v7 = {
   "name": "booking",
   "plural": false,
   "selections": [
-    (v2/*: any*/),
+    (v2/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -230,7 +229,7 @@ v7 = {
           "name": "category",
           "storageKey": null
         },
-        (v3/*: any*/)
+        (v3/*:: as any*/)
       ],
       "storageKey": null
     },
@@ -242,8 +241,8 @@ v7 = {
       "name": "involvedCustomers",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
-        (v3/*: any*/),
+        (v2/*:: as any*/),
+        (v3/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -282,7 +281,7 @@ v7 = {
       "kind": "LinkedField",
       "name": "involvedOrganizations",
       "plural": true,
-      "selections": (v4/*: any*/),
+      "selections": (v4/*:: as any*/),
       "storageKey": null
     },
     {
@@ -300,7 +299,7 @@ v7 = {
           "name": "uniqueId",
           "storageKey": null
         },
-        (v3/*: any*/)
+        (v3/*:: as any*/)
       ],
       "storageKey": null
     },
@@ -311,7 +310,7 @@ v7 = {
       "kind": "LinkedField",
       "name": "involvedTeams",
       "plural": true,
-      "selections": (v4/*: any*/),
+      "selections": (v4/*:: as any*/),
       "storageKey": null
     },
     {
@@ -330,9 +329,9 @@ v7 = {
           "name": "resource",
           "plural": false,
           "selections": [
-            (v2/*: any*/),
-            (v3/*: any*/),
-            (v5/*: any*/),
+            (v2/*:: as any*/),
+            (v3/*:: as any*/),
+            (v5/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -340,7 +339,7 @@ v7 = {
               "kind": "LinkedField",
               "name": "customTags",
               "plural": true,
-              "selections": (v6/*: any*/),
+              "selections": (v6/*:: as any*/),
               "storageKey": null
             },
             {
@@ -350,7 +349,7 @@ v7 = {
               "kind": "LinkedField",
               "name": "zones",
               "plural": true,
-              "selections": (v6/*: any*/),
+              "selections": (v6/*:: as any*/),
               "storageKey": null
             }
           ],
@@ -364,20 +363,20 @@ v7 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "newBookingDialog_addPrivateBookingMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "BookingPayload",
         "kind": "LinkedField",
         "name": "addPrivateBooking",
         "plural": false,
         "selections": [
-          (v7/*: any*/)
+          (v7/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -387,19 +386,19 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "newBookingDialog_addPrivateBookingMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "BookingPayload",
         "kind": "LinkedField",
         "name": "addPrivateBooking",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
+          (v7/*:: as any*/),
           {
             "alias": null,
             "args": null,

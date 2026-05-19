@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<8b05709133f69c38619b91bc7ad51959>>
+ * @generated SignedSource<<06983a2d7e7d9f782a9b3a8743c6c013>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -235,7 +234,7 @@ v7 = [
         "name": "organization",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -243,7 +242,7 @@ v7 = [
             "name": "customDomain",
             "storageKey": null
           },
-          (v2/*: any*/),
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -252,9 +251,9 @@ v7 = [
             "name": "listingMetadata",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/)
+              (v3/*:: as any*/),
+              (v4/*:: as any*/),
+              (v5/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -273,9 +272,9 @@ v7 = [
             "name": "marketplaceListingMetadata",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
+              (v3/*:: as any*/),
+              (v4/*:: as any*/),
+              (v5/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -308,8 +307,8 @@ v7 = [
             "name": "industrySubCategories",
             "plural": true,
             "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/)
+              (v1/*:: as any*/),
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -349,7 +348,7 @@ v7 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v6/*: any*/),
+                "selections": (v6/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -359,7 +358,7 @@ v7 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v6/*: any*/),
+                "selections": (v6/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -380,7 +379,7 @@ v7 = [
                 "name": "type",
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -400,20 +399,20 @@ v7 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminSetupSection_updateOrganizationMutation",
-    "selections": (v7/*: any*/),
+    "selections": (v7/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminSetupSection_updateOrganizationMutation",
-    "selections": (v7/*: any*/)
+    "selections": (v7/*:: as any*/)
   },
   "params": {
     "cacheID": "05457baa29efbe18c4d963a6583451d0",

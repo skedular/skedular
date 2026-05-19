@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<6bb4cf6ba914fd16886970bc329fdc80>>
+ * @generated SignedSource<<24e135494b2d4fd9ff7fdbc45f44cccd>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -48,20 +47,20 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "pageOrganizationStripeConnectAccount_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationStripeConnectAccountDetails",
         "kind": "LinkedField",
         "name": "organizationStripeConnectAccount",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -76,19 +75,19 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "pageOrganizationStripeConnectAccount_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationStripeConnectAccountDetails",
         "kind": "LinkedField",
         "name": "organizationStripeConnectAccount",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,

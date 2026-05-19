@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<8b9603c25d287125122658f2aadd09c9>>
+ * @generated SignedSource<<56dca3e3a36f72ddf3c6022ebfd6d7d3>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -101,7 +100,7 @@ return {
       "name": "floorPlan",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
+        (v0/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -124,7 +123,7 @@ return {
               "kind": "LinkedField",
               "name": "original",
               "plural": false,
-              "selections": (v1/*: any*/),
+              "selections": (v1/*:: as any*/),
               "storageKey": null
             },
             {
@@ -134,7 +133,7 @@ return {
               "kind": "LinkedField",
               "name": "thumbnail",
               "plural": false,
-              "selections": (v1/*: any*/),
+              "selections": (v1/*:: as any*/),
               "storageKey": null
             }
           ],
@@ -170,7 +169,7 @@ return {
               "name": "resource",
               "plural": false,
               "selections": [
-                (v0/*: any*/)
+                (v0/*:: as any*/)
               ],
               "storageKey": null
             }

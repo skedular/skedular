@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<8e8ca6434d4363d8107a9c7207e98247>>
+ * @generated SignedSource<<9c2def6a74ceb19ddcd1cc6b9fed5135>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -55,7 +54,7 @@ var v0 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editMarketplaceBooking_customerTeams_refetchableFragment",
@@ -71,7 +70,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editMarketplaceBooking_customerTeams_refetchableFragment",
     "selections": [

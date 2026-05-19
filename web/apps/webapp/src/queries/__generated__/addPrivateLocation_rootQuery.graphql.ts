@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<1bb1074324a7d8835bf8c12da96100de>>
+ * @generated SignedSource<<71c0f64817e2c0842155803b15392f62>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -75,7 +74,7 @@ v5 = {
   "name": "type",
   "plural": false,
   "selections": [
-    (v4/*: any*/)
+    (v4/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -88,12 +87,12 @@ v6 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "addPrivateLocation_rootQuery",
     "selections": [
-      (v1/*: any*/),
+      (v1/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -102,19 +101,19 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v3/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v5/*: any*/)
+          (v5/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -129,11 +128,11 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "addPrivateLocation_rootQuery",
     "selections": [
-      (v1/*: any*/),
+      (v1/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -142,21 +141,21 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v6/*: any*/)
+          (v2/*:: as any*/),
+          (v6/*:: as any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v3/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
-          (v6/*: any*/)
+          (v5/*:: as any*/),
+          (v6/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -168,7 +167,7 @@ return {
         "name": "locationTypes",
         "plural": true,
         "selections": [
-          (v4/*: any*/),
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,

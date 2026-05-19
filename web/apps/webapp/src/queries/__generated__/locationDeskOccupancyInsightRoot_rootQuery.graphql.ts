@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<57a9dab03759d14bb75aba6544dc0ea5>>
+ * @generated SignedSource<<bd8a25d619acc920391a66a7fd21f2af>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -49,9 +48,9 @@ v3 = {
 return {
   "fragment": {
     "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
+      (v0/*:: as any*/),
+      (v1/*:: as any*/),
+      (v2/*:: as any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -74,9 +73,9 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/),
-      (v2/*: any*/)
+      (v1/*:: as any*/),
+      (v0/*:: as any*/),
+      (v2/*:: as any*/)
     ],
     "kind": "Operation",
     "name": "locationDeskOccupancyInsightRoot_rootQuery",
@@ -95,7 +94,7 @@ return {
         "name": "location",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -111,7 +110,7 @@ return {
             "name": "organization",
             "plural": false,
             "selections": [
-              (v3/*: any*/)
+              (v3/*:: as any*/)
             ],
             "storageKey": null
           },

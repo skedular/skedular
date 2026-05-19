@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<32ee9e82e285b8dc4f56fd2655a399c8>>
+ * @generated SignedSource<<8e8ff33f1d21297eff5b72d4956f0e03>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -89,7 +88,7 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationMarketplaceSetup_productTags_refetchableFragment",
@@ -116,7 +115,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationMarketplaceSetup_productTags_refetchableFragment",
     "selections": [
@@ -136,7 +135,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v1/*:: as any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "productTags",
@@ -165,7 +164,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
+                      (v2/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -249,7 +248,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v1/*:: as any*/),
             "filters": [
               "where",
               "orderBy"
@@ -259,7 +258,7 @@ return {
             "kind": "LinkedHandle",
             "name": "productTags"
           },
-          (v2/*: any*/)
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       }

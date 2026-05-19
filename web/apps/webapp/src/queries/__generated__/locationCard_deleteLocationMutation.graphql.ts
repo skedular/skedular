@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<141fbda1c7897d3428ecf794d795e1c3>>
+ * @generated SignedSource<<f97c873011b9bf86ef53a44060a2f755>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -58,14 +57,14 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "locationCard_deleteLocationMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "LocationPayload",
         "kind": "LinkedField",
         "name": "deleteLocation",
@@ -79,7 +78,7 @@ return {
             "name": "location",
             "plural": false,
             "selections": [
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -92,13 +91,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "locationCard_deleteLocationMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "LocationPayload",
         "kind": "LinkedField",
         "name": "deleteLocation",
@@ -112,7 +111,7 @@ return {
             "name": "location",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,

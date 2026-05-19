@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<a986d477f07d45e31c243ce257284362>>
+ * @generated SignedSource<<48b0f3d8f2c688f2600723993599b76e>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -92,14 +91,14 @@ v5 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "guestStoreFrontSelectedLocationProductsQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "LocationDetails",
         "kind": "LinkedField",
         "name": "location",
@@ -113,7 +112,7 @@ return {
             "name": "products",
             "plural": true,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -122,7 +121,7 @@ return {
                 "name": "pricingOptions",
                 "plural": true,
                 "selections": [
-                  (v3/*: any*/)
+                  (v3/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -143,13 +142,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "guestStoreFrontSelectedLocationProductsQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "LocationDetails",
         "kind": "LinkedField",
         "name": "location",
@@ -163,7 +162,7 @@ return {
             "name": "products",
             "plural": true,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -172,9 +171,9 @@ return {
                 "name": "pricingOptions",
                 "plural": true,
                 "selections": [
-                  (v3/*: any*/),
-                  (v2/*: any*/),
-                  (v4/*: any*/),
+                  (v3/*:: as any*/),
+                  (v2/*:: as any*/),
+                  (v4/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -206,7 +205,7 @@ return {
                 ],
                 "storageKey": null
               },
-              (v4/*: any*/),
+              (v4/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -251,7 +250,7 @@ return {
                     "name": "type",
                     "storageKey": null
                   },
-                  (v5/*: any*/)
+                  (v5/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -263,15 +262,15 @@ return {
                 "name": "amenities",
                 "plural": true,
                 "selections": [
-                  (v2/*: any*/),
-                  (v5/*: any*/)
+                  (v2/*:: as any*/),
+                  (v5/*:: as any*/)
                 ],
                 "storageKey": null
               }
             ],
             "storageKey": null
           },
-          (v2/*: any*/)
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       }

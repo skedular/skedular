@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<2948ccf7ce794484185dfbe59ac210fe>>
+ * @generated SignedSource<<c9672dd3f7753ec1d64c7a51f1059c4a>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -68,9 +67,9 @@ v2 = {
   "storageKey": null
 },
 v3 = [
-  (v0/*: any*/),
-  (v1/*: any*/),
-  (v2/*: any*/)
+  (v0/*:: as any*/),
+  (v1/*:: as any*/),
+  (v2/*:: as any*/)
 ];
 return {
   "argumentDefinitions": [],
@@ -78,8 +77,8 @@ return {
   "metadata": null,
   "name": "resourceCard_ResourceDetails",
   "selections": [
-    (v0/*: any*/),
-    (v1/*: any*/),
+    (v0/*:: as any*/),
+    (v1/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -87,7 +86,7 @@ return {
       "name": "inactive",
       "storageKey": null
     },
-    (v2/*: any*/),
+    (v2/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -102,7 +101,7 @@ return {
       "kind": "LinkedField",
       "name": "customTags",
       "plural": true,
-      "selections": (v3/*: any*/),
+      "selections": (v3/*:: as any*/),
       "storageKey": null
     },
     {
@@ -112,7 +111,7 @@ return {
       "kind": "LinkedField",
       "name": "zones",
       "plural": true,
-      "selections": (v3/*: any*/),
+      "selections": (v3/*:: as any*/),
       "storageKey": null
     },
     {
@@ -122,7 +121,7 @@ return {
       "kind": "LinkedField",
       "name": "productTags",
       "plural": true,
-      "selections": (v3/*: any*/),
+      "selections": (v3/*:: as any*/),
       "storageKey": null
     },
     {
@@ -133,9 +132,9 @@ return {
       "name": "resourceType",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
-        (v1/*: any*/),
-        (v2/*: any*/),
+        (v0/*:: as any*/),
+        (v1/*:: as any*/),
+        (v2/*:: as any*/),
         {
           "alias": null,
           "args": null,

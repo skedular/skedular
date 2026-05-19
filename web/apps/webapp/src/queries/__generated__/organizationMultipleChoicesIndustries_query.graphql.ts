@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<556123f047742b781352fba4158a03d7>>
+ * @generated SignedSource<<922b9513029d4bc9d4e711d7403bfa07>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -55,8 +54,8 @@ return {
       "name": "organizationIndustryMainCategoriesReferences",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
-        (v1/*: any*/),
+        (v0/*:: as any*/),
+        (v1/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -65,8 +64,8 @@ return {
           "name": "subCategories",
           "plural": true,
           "selections": [
-            (v0/*: any*/),
-            (v1/*: any*/)
+            (v0/*:: as any*/),
+            (v1/*:: as any*/)
           ],
           "storageKey": null
         }

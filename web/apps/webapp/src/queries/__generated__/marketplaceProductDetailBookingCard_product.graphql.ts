@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<d50e07a4d4e22a74c454208712b163c4>>
+ * @generated SignedSource<<943e3d71cf72df5778073d646dadef28>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -90,7 +89,7 @@ v2 = [
     "name": "type",
     "storageKey": null
   },
-  (v1/*: any*/)
+  (v1/*:: as any*/)
 ],
 v3 = {
   "alias": null,
@@ -112,7 +111,7 @@ return {
   "metadata": null,
   "name": "marketplaceProductDetailBookingCard_product",
   "selections": [
-    (v0/*: any*/),
+    (v0/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -138,7 +137,7 @@ return {
       "kind": "LinkedField",
       "name": "type",
       "plural": false,
-      "selections": (v2/*: any*/),
+      "selections": (v2/*:: as any*/),
       "storageKey": null
     },
     {
@@ -156,8 +155,8 @@ return {
           "name": "about",
           "storageKey": null
         },
-        (v3/*: any*/),
-        (v4/*: any*/),
+        (v3/*:: as any*/),
+        (v4/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -176,8 +175,8 @@ return {
       "name": "amenities",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
-        (v1/*: any*/),
+        (v0/*:: as any*/),
+        (v1/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -195,7 +194,7 @@ return {
       "kind": "LinkedField",
       "name": "currency",
       "plural": false,
-      "selections": (v2/*: any*/),
+      "selections": (v2/*:: as any*/),
       "storageKey": null
     },
     {
@@ -206,7 +205,7 @@ return {
       "name": "pricingOptions",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
+        (v0/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -222,8 +221,8 @@ return {
           "name": "listingMetadata",
           "plural": false,
           "selections": [
-            (v3/*: any*/),
-            (v4/*: any*/)
+            (v3/*:: as any*/),
+            (v4/*:: as any*/)
           ],
           "storageKey": null
         },

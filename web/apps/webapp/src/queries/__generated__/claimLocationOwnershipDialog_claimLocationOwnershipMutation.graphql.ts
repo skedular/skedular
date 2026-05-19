@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<35b513aecbcb07622c015e1b09e49881>>
+ * @generated SignedSource<<2ceea8be7fae1fdca9a51685b8ab6937>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -89,8 +88,8 @@ v3 = {
   "storageKey": null
 },
 v4 = [
-  (v2/*: any*/),
-  (v3/*: any*/),
+  (v2/*:: as any*/),
+  (v3/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -106,7 +105,7 @@ v5 = {
   "kind": "LinkedField",
   "name": "customTags",
   "plural": true,
-  "selections": (v4/*: any*/),
+  "selections": (v4/*:: as any*/),
   "storageKey": null
 },
 v6 = {
@@ -116,7 +115,7 @@ v6 = {
   "kind": "LinkedField",
   "name": "zones",
   "plural": true,
-  "selections": (v4/*: any*/),
+  "selections": (v4/*:: as any*/),
   "storageKey": null
 },
 v7 = {
@@ -167,14 +166,14 @@ v11 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "claimLocationOwnershipDialog_claimLocationOwnershipMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "LocationPayload",
         "kind": "LinkedField",
         "name": "claimLocationOwnership",
@@ -188,11 +187,11 @@ return {
             "name": "location",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v5/*: any*/),
-              (v6/*: any*/),
-              (v7/*: any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              (v5/*:: as any*/),
+              (v6/*:: as any*/),
+              (v7/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -201,12 +200,12 @@ return {
                 "name": "physicalAddress",
                 "plural": false,
                 "selections": [
-                  (v8/*: any*/)
+                  (v8/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v9/*: any*/),
-              (v10/*: any*/),
+              (v9/*:: as any*/),
+              (v10/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -215,7 +214,7 @@ return {
                 "name": "organization",
                 "plural": false,
                 "selections": [
-                  (v11/*: any*/)
+                  (v11/*:: as any*/)
                 ],
                 "storageKey": null
               }
@@ -231,13 +230,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "claimLocationOwnershipDialog_claimLocationOwnershipMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "LocationPayload",
         "kind": "LinkedField",
         "name": "claimLocationOwnership",
@@ -251,11 +250,11 @@ return {
             "name": "location",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v5/*: any*/),
-              (v6/*: any*/),
-              (v7/*: any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              (v5/*:: as any*/),
+              (v6/*:: as any*/),
+              (v7/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -264,13 +263,13 @@ return {
                 "name": "physicalAddress",
                 "plural": false,
                 "selections": [
-                  (v8/*: any*/),
-                  (v2/*: any*/)
+                  (v8/*:: as any*/),
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v9/*: any*/),
-              (v10/*: any*/),
+              (v9/*:: as any*/),
+              (v10/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -279,8 +278,8 @@ return {
                 "name": "organization",
                 "plural": false,
                 "selections": [
-                  (v11/*: any*/),
-                  (v2/*: any*/)
+                  (v11/*:: as any*/),
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               }

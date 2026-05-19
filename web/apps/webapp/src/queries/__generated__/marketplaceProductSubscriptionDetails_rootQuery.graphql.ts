@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<a9f54b34d606e679178dd25dc983feb1>>
+ * @generated SignedSource<<9d970d9346be96cb9d601ebd932cf215>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -183,7 +182,7 @@ v2 = [
     "name": "type",
     "storageKey": null
   },
-  (v1/*: any*/)
+  (v1/*:: as any*/)
 ],
 v3 = {
   "alias": null,
@@ -207,7 +206,7 @@ v5 = {
   "name": "marketplaceBooking",
   "plural": false,
   "selections": [
-    (v3/*: any*/),
+    (v3/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -215,7 +214,7 @@ v5 = {
       "name": "quantity",
       "storageKey": null
     },
-    (v4/*: any*/),
+    (v4/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -238,7 +237,7 @@ v5 = {
       "name": "productVersion",
       "plural": false,
       "selections": [
-        (v3/*: any*/),
+        (v3/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -353,7 +352,7 @@ v5 = {
       "kind": "LinkedField",
       "name": "paymentMethod",
       "plural": false,
-      "selections": (v2/*: any*/),
+      "selections": (v2/*:: as any*/),
       "storageKey": null
     },
     {
@@ -363,7 +362,7 @@ v5 = {
       "kind": "LinkedField",
       "name": "paymentStatus",
       "plural": false,
-      "selections": (v2/*: any*/),
+      "selections": (v2/*:: as any*/),
       "storageKey": null
     }
   ],
@@ -412,7 +411,7 @@ v11 = [
     "kind": "LinkedField",
     "name": "marketplaceBookingSubscriptionCancellationModes",
     "plural": true,
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "storageKey": null
   },
   {
@@ -429,7 +428,7 @@ v11 = [
     "name": "marketplaceBookingSubscription",
     "plural": false,
     "selections": [
-      (v3/*: any*/),
+      (v3/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -458,7 +457,7 @@ v11 = [
         "name": "cancelAtPeriodEnd",
         "storageKey": null
       },
-      (v5/*: any*/),
+      (v5/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -474,7 +473,7 @@ v11 = [
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v2/*: any*/),
+            "selections": (v2/*:: as any*/),
             "storageKey": null
           },
           {
@@ -484,7 +483,7 @@ v11 = [
             "kind": "LinkedField",
             "name": "status",
             "plural": false,
-            "selections": (v2/*: any*/),
+            "selections": (v2/*:: as any*/),
             "storageKey": null
           },
           {
@@ -501,7 +500,7 @@ v11 = [
             "name": "lastProcessedAt",
             "storageKey": null
           },
-          (v6/*: any*/),
+          (v6/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -509,10 +508,10 @@ v11 = [
             "name": "refundPercentage",
             "storageKey": null
           },
-          (v7/*: any*/),
-          (v8/*: any*/),
-          (v9/*: any*/),
-          (v10/*: any*/),
+          (v7/*:: as any*/),
+          (v8/*:: as any*/),
+          (v9/*:: as any*/),
+          (v10/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -528,7 +527,7 @@ v11 = [
             "name": "events",
             "plural": true,
             "selections": [
-              (v3/*: any*/),
+              (v3/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -536,7 +535,7 @@ v11 = [
                 "kind": "LinkedField",
                 "name": "eventType",
                 "plural": false,
-                "selections": (v2/*: any*/),
+                "selections": (v2/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -546,11 +545,11 @@ v11 = [
                 "name": "occurredAt",
                 "storageKey": null
               },
-              (v6/*: any*/),
-              (v7/*: any*/),
-              (v8/*: any*/),
-              (v9/*: any*/),
-              (v10/*: any*/),
+              (v6/*:: as any*/),
+              (v7/*:: as any*/),
+              (v8/*:: as any*/),
+              (v9/*:: as any*/),
+              (v10/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -571,7 +570,7 @@ v11 = [
         "kind": "LinkedField",
         "name": "status",
         "plural": false,
-        "selections": (v2/*: any*/),
+        "selections": (v2/*:: as any*/),
         "storageKey": null
       },
       {
@@ -582,8 +581,8 @@ v11 = [
         "name": "involvedCustomers",
         "plural": true,
         "selections": [
-          (v3/*: any*/),
-          (v1/*: any*/),
+          (v3/*:: as any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -616,7 +615,7 @@ v11 = [
         "name": "recurringBookings",
         "plural": true,
         "selections": [
-          (v3/*: any*/),
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -631,7 +630,7 @@ v11 = [
             "name": "endDate",
             "storageKey": null
           },
-          (v5/*: any*/)
+          (v5/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -650,7 +649,7 @@ v11 = [
             "name": "invoiceNumber",
             "storageKey": null
           },
-          (v4/*: any*/),
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -674,20 +673,20 @@ v11 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductSubscriptionDetails_rootQuery",
-    "selections": (v11/*: any*/),
+    "selections": (v11/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceProductSubscriptionDetails_rootQuery",
-    "selections": (v11/*: any*/)
+    "selections": (v11/*:: as any*/)
   },
   "params": {
     "cacheID": "e1bb635ca75dbee6362577108b092126",

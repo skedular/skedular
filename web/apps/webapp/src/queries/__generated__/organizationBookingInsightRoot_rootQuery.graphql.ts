@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<b4c000d1ce7607a7fc231cf375d40a5b>>
+ * @generated SignedSource<<b614d61f930bfb6ef6e35db07068b2fe>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -42,9 +41,9 @@ v2 = {
 return {
   "fragment": {
     "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
+      (v0/*:: as any*/),
+      (v1/*:: as any*/),
+      (v2/*:: as any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -62,9 +61,9 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/),
-      (v2/*: any*/)
+      (v1/*:: as any*/),
+      (v0/*:: as any*/),
+      (v2/*:: as any*/)
     ],
     "kind": "Operation",
     "name": "organizationBookingInsightRoot_rootQuery",

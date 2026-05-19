@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<afc2341986e1795e3c40612399ec0e3c>>
+ * @generated SignedSource<<ed82fa7f41ca8df3c98d212d4a1fbc34>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -44,7 +43,7 @@ v2 = [
     "name": "type",
     "storageKey": null
   },
-  (v1/*: any*/)
+  (v1/*:: as any*/)
 ],
 v3 = {
   "alias": null,
@@ -69,7 +68,7 @@ v5 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductBookingSignIn_rootQuery",
@@ -91,7 +90,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceProductBookingSignIn_rootQuery",
     "selections": [
@@ -102,7 +101,7 @@ return {
         "kind": "LinkedField",
         "name": "productPricingCadences",
         "plural": true,
-        "selections": (v2/*: any*/),
+        "selections": (v2/*:: as any*/),
         "storageKey": null
       },
       {
@@ -112,7 +111,7 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v2/*: any*/),
+        "selections": (v2/*:: as any*/),
         "storageKey": null
       },
       {
@@ -129,7 +128,7 @@ return {
         "name": "product",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -137,7 +136,7 @@ return {
             "kind": "LinkedField",
             "name": "type",
             "plural": false,
-            "selections": (v2/*: any*/),
+            "selections": (v2/*:: as any*/),
             "storageKey": null
           },
           {
@@ -148,8 +147,8 @@ return {
             "name": "listingMetadata",
             "plural": false,
             "selections": [
-              (v4/*: any*/),
-              (v5/*: any*/),
+              (v4/*:: as any*/),
+              (v5/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -167,7 +166,7 @@ return {
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v2/*: any*/),
+            "selections": (v2/*:: as any*/),
             "storageKey": null
           },
           {
@@ -207,8 +206,8 @@ return {
             "name": "amenities",
             "plural": true,
             "selections": [
-              (v3/*: any*/),
-              (v1/*: any*/)
+              (v3/*:: as any*/),
+              (v1/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -220,7 +219,7 @@ return {
             "name": "pricingOptions",
             "plural": true,
             "selections": [
-              (v3/*: any*/),
+              (v3/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -236,8 +235,8 @@ return {
                 "name": "listingMetadata",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/)
+                  (v4/*:: as any*/),
+                  (v5/*:: as any*/)
                 ],
                 "storageKey": null
               },

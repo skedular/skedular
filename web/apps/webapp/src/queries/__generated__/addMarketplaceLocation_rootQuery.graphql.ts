@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<f92f93978ec17e497facf19cf68080d8>>
+ * @generated SignedSource<<3241cd27b8e1cd13a23e5d7d007a5b4e>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -75,7 +74,7 @@ v5 = {
   "name": "type",
   "plural": false,
   "selections": [
-    (v4/*: any*/)
+    (v4/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -95,12 +94,12 @@ v7 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "addMarketplaceLocation_rootQuery",
     "selections": [
-      (v1/*: any*/),
+      (v1/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -109,19 +108,19 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v3/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v5/*: any*/)
+          (v5/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -141,11 +140,11 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "addMarketplaceLocation_rootQuery",
     "selections": [
-      (v1/*: any*/),
+      (v1/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -154,21 +153,21 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v6/*: any*/)
+          (v2/*:: as any*/),
+          (v6/*:: as any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v3/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
-          (v6/*: any*/),
+          (v5/*:: as any*/),
+          (v6/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -177,8 +176,8 @@ return {
             "name": "locationSpaceTypes",
             "plural": true,
             "selections": [
-              (v6/*: any*/),
-              (v7/*: any*/),
+              (v6/*:: as any*/),
+              (v7/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -200,8 +199,8 @@ return {
         "name": "locationTypes",
         "plural": true,
         "selections": [
-          (v4/*: any*/),
-          (v7/*: any*/)
+          (v4/*:: as any*/),
+          (v7/*:: as any*/)
         ],
         "storageKey": null
       }

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<479f41184327f064e2e1b74e0b112c7b>>
+ * @generated SignedSource<<74d29e9d7e297ceef2962a3e4378a296>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -53,7 +52,7 @@ v1 = [
     "name": "type",
     "storageKey": null
   },
-  (v0/*: any*/)
+  (v0/*:: as any*/)
 ],
 v2 = {
   "alias": null,
@@ -98,7 +97,7 @@ v2 = {
       "name": "title",
       "storageKey": null
     },
-    (v0/*: any*/),
+    (v0/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -141,7 +140,7 @@ v2 = {
       "kind": "LinkedField",
       "name": "personalInformationVisibility",
       "plural": false,
-      "selections": (v1/*: any*/),
+      "selections": (v1/*:: as any*/),
       "storageKey": null
     }
   ],
@@ -154,7 +153,7 @@ return {
     "metadata": null,
     "name": "mySettings_rootQuery",
     "selections": [
-      (v2/*: any*/),
+      (v2/*:: as any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -170,7 +169,7 @@ return {
     "kind": "Operation",
     "name": "mySettings_rootQuery",
     "selections": [
-      (v2/*: any*/),
+      (v2/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -178,7 +177,7 @@ return {
         "kind": "LinkedField",
         "name": "personalInformationVisibilityTypes",
         "plural": true,
-        "selections": (v1/*: any*/),
+        "selections": (v1/*:: as any*/),
         "storageKey": null
       }
     ]

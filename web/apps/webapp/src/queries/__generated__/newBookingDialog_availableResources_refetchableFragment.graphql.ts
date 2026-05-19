@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<2fccbed0dc6bb48ecd2c19bd5dfa7681>>
+ * @generated SignedSource<<893a0b5f6f23e0c108eaf214c03d1cf9>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -62,8 +61,8 @@ v2 = {
   "storageKey": null
 },
 v3 = [
-  (v1/*: any*/),
-  (v2/*: any*/),
+  (v1/*:: as any*/),
+  (v2/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -74,7 +73,7 @@ v3 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "newBookingDialog_availableResources_refetchableFragment",
@@ -90,7 +89,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "newBookingDialog_availableResources_refetchableFragment",
     "selections": [
@@ -137,8 +136,8 @@ return {
             "name": "resource",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/),
+              (v1/*:: as any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -146,7 +145,7 @@ return {
                 "kind": "LinkedField",
                 "name": "customTags",
                 "plural": true,
-                "selections": (v3/*: any*/),
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -156,7 +155,7 @@ return {
                 "kind": "LinkedField",
                 "name": "zones",
                 "plural": true,
-                "selections": (v3/*: any*/),
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               }
             ],

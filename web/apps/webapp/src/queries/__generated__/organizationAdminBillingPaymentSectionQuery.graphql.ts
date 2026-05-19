@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<7f55cc884524784c60b59f4e6c1b67f8>>
+ * @generated SignedSource<<71227995396d3ebd9bc61557d3b41110>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -79,7 +78,7 @@ v2 = [
     "name": "organization",
     "plural": false,
     "selections": [
-      (v1/*: any*/),
+      (v1/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -95,7 +94,7 @@ v2 = [
         "name": "billingDetails",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -219,7 +218,7 @@ v2 = [
         "name": "paymentMethods",
         "plural": true,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -257,20 +256,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminBillingPaymentSectionQuery",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminBillingPaymentSectionQuery",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "f2e4c2cd7651a815148d29628dc77a56",

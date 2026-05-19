@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<0f0cac2325a17135d7083ea805f0b2af>>
+ * @generated SignedSource<<e45190e28f2a03d96e9284cb95502c8e>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -75,8 +74,8 @@ return {
   "metadata": null,
   "name": "locationCard_LocationDetails",
   "selections": [
-    (v0/*: any*/),
-    (v1/*: any*/),
+    (v0/*:: as any*/),
+    (v1/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -85,8 +84,8 @@ return {
       "name": "zones",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
-        (v1/*: any*/),
+        (v0/*:: as any*/),
+        (v1/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -148,7 +147,7 @@ return {
           "kind": "LinkedField",
           "name": "original",
           "plural": false,
-          "selections": (v2/*: any*/),
+          "selections": (v2/*:: as any*/),
           "storageKey": null
         },
         {
@@ -158,7 +157,7 @@ return {
           "kind": "LinkedField",
           "name": "thumbnail",
           "plural": false,
-          "selections": (v2/*: any*/),
+          "selections": (v2/*:: as any*/),
           "storageKey": null
         }
       ],

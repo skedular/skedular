@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<e889d37d539881774f9f7cf607fc83b8>>
+ * @generated SignedSource<<412cfe6b7b6e5afa48672b8ff9fbcdb1>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -122,7 +121,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -132,7 +131,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": organizationLocations_locations_availableOrganizationResources_refetchableFragment_graphql
@@ -150,14 +149,14 @@ return {
         },
         {
           "fields": [
-            (v1/*: any*/),
+            (v1/*:: as any*/),
             {
               "kind": "Variable",
               "name": "notContactedYet",
               "variableName": "locationNotContactedYet"
             },
-            (v2/*: any*/),
-            (v3/*: any*/)
+            (v2/*:: as any*/),
+            (v3/*:: as any*/)
           ],
           "kind": "ObjectValue",
           "name": "where"
@@ -168,7 +167,7 @@ return {
       "name": "__organizationLocations_locations_connection",
       "plural": false,
       "selections": [
-        (v4/*: any*/),
+        (v4/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -200,7 +199,7 @@ return {
                   "name": "resources",
                   "plural": false,
                   "selections": [
-                    (v4/*: any*/)
+                    (v4/*:: as any*/)
                   ],
                   "storageKey": null
                 },
@@ -335,19 +334,19 @@ return {
       "args": [
         {
           "fields": [
-            (v1/*: any*/),
+            (v1/*:: as any*/),
             {
               "kind": "Variable",
               "name": "from",
               "variableName": "fromTodayDate"
             },
-            (v2/*: any*/),
+            (v2/*:: as any*/),
             {
               "kind": "Variable",
               "name": "until",
               "variableName": "untilTodayDate"
             },
-            (v3/*: any*/)
+            (v3/*:: as any*/)
           ],
           "kind": "ObjectValue",
           "name": "where"

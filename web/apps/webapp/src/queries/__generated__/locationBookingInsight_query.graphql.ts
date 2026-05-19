@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<24e49ef9c64b621e35f7d12be02fdeac>>
+ * @generated SignedSource<<077261c99f14134833b8069492dcbb9f>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -58,7 +57,7 @@ return {
       "name": "location",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
+        (v0/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -74,7 +73,7 @@ return {
           "name": "organization",
           "plural": false,
           "selections": [
-            (v0/*: any*/)
+            (v0/*:: as any*/)
           ],
           "storageKey": null
         }

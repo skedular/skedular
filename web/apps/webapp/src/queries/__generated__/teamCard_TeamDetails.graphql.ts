@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<c7169dd05e2486e8602f3e60bf5a1f13>>
+ * @generated SignedSource<<15fee8b2db0028f20b977c87a0c7b28a>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -70,8 +69,8 @@ return {
   "metadata": null,
   "name": "teamCard_TeamDetails",
   "selections": [
-    (v0/*: any*/),
-    (v1/*: any*/),
+    (v0/*:: as any*/),
+    (v1/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -137,7 +136,7 @@ return {
                       "name": "customer",
                       "plural": false,
                       "selections": [
-                        (v0/*: any*/),
+                        (v0/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -159,7 +158,7 @@ return {
                           "name": "familyName",
                           "storageKey": null
                         },
-                        (v1/*: any*/),
+                        (v1/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,

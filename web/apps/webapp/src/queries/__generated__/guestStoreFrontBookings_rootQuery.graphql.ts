@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<26938dc190b476bace3aafb8bd018580>>
+ * @generated SignedSource<<bbf888b9be54d6d806a7e4e1596315eb>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -114,7 +113,7 @@ v2 = {
   "name": "organizationPublic",
   "plural": false,
   "selections": [
-    (v1/*: any*/),
+    (v1/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -164,7 +163,7 @@ v6 = {
   "variableName": "organizationCustomDomain"
 },
 v7 = [
-  (v3/*: any*/),
+  (v3/*:: as any*/),
   {
     "kind": "Literal",
     "name": "orderBy",
@@ -177,14 +176,14 @@ v7 = [
   },
   {
     "fields": [
-      (v4/*: any*/),
+      (v4/*:: as any*/),
       {
         "kind": "Variable",
         "name": "fromGte",
         "variableName": "today"
       },
-      (v5/*: any*/),
-      (v6/*: any*/)
+      (v5/*:: as any*/),
+      (v6/*:: as any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
@@ -226,7 +225,7 @@ v12 = {
   "name": "involvedLocations",
   "plural": true,
   "selections": [
-    (v1/*: any*/)
+    (v1/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -246,8 +245,8 @@ v13 = {
       "name": "resource",
       "plural": false,
       "selections": [
-        (v9/*: any*/),
-        (v1/*: any*/)
+        (v9/*:: as any*/),
+        (v1/*:: as any*/)
       ],
       "storageKey": null
     }
@@ -276,12 +275,12 @@ v15 = {
       "name": "type",
       "storageKey": null
     },
-    (v1/*: any*/)
+    (v1/*:: as any*/)
   ],
   "storageKey": null
 },
 v16 = [
-  (v8/*: any*/),
+  (v8/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -298,11 +297,11 @@ v16 = [
         "name": "node",
         "plural": false,
         "selections": [
-          (v9/*: any*/),
-          (v10/*: any*/),
-          (v11/*: any*/),
-          (v12/*: any*/),
-          (v13/*: any*/),
+          (v9/*:: as any*/),
+          (v10/*:: as any*/),
+          (v11/*:: as any*/),
+          (v12/*:: as any*/),
+          (v13/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -311,8 +310,8 @@ v16 = [
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v14/*: any*/),
-              (v15/*: any*/)
+              (v14/*:: as any*/),
+              (v15/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -324,7 +323,7 @@ v16 = [
   }
 ],
 v17 = [
-  (v3/*: any*/),
+  (v3/*:: as any*/),
   {
     "kind": "Literal",
     "name": "orderBy",
@@ -337,21 +336,21 @@ v17 = [
   },
   {
     "fields": [
-      (v4/*: any*/),
+      (v4/*:: as any*/),
       {
         "kind": "Variable",
         "name": "fromLt",
         "variableName": "today"
       },
-      (v5/*: any*/),
-      (v6/*: any*/)
+      (v5/*:: as any*/),
+      (v6/*:: as any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
 v18 = [
-  (v8/*: any*/),
+  (v8/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -368,11 +367,11 @@ v18 = [
         "name": "node",
         "plural": false,
         "selections": [
-          (v9/*: any*/),
-          (v10/*: any*/),
-          (v11/*: any*/),
-          (v12/*: any*/),
-          (v13/*: any*/),
+          (v9/*:: as any*/),
+          (v10/*:: as any*/),
+          (v11/*:: as any*/),
+          (v12/*:: as any*/),
+          (v13/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -381,9 +380,9 @@ v18 = [
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v14/*: any*/),
-              (v15/*: any*/),
-              (v9/*: any*/)
+              (v14/*:: as any*/),
+              (v15/*:: as any*/),
+              (v9/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -396,30 +395,30 @@ v18 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "guestStoreFrontBookings_rootQuery",
     "selections": [
-      (v2/*: any*/),
+      (v2/*:: as any*/),
       {
         "alias": "upcomingBookings",
-        "args": (v7/*: any*/),
+        "args": (v7/*:: as any*/),
         "concreteType": "ConnectionOfBookingEdge",
         "kind": "LinkedField",
         "name": "bookings",
         "plural": false,
-        "selections": (v16/*: any*/),
+        "selections": (v16/*:: as any*/),
         "storageKey": null
       },
       {
         "alias": "recentBookings",
-        "args": (v17/*: any*/),
+        "args": (v17/*:: as any*/),
         "concreteType": "ConnectionOfBookingEdge",
         "kind": "LinkedField",
         "name": "bookings",
         "plural": false,
-        "selections": (v16/*: any*/),
+        "selections": (v16/*:: as any*/),
         "storageKey": null
       }
     ],
@@ -428,29 +427,29 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "guestStoreFrontBookings_rootQuery",
     "selections": [
-      (v2/*: any*/),
+      (v2/*:: as any*/),
       {
         "alias": "upcomingBookings",
-        "args": (v7/*: any*/),
+        "args": (v7/*:: as any*/),
         "concreteType": "ConnectionOfBookingEdge",
         "kind": "LinkedField",
         "name": "bookings",
         "plural": false,
-        "selections": (v18/*: any*/),
+        "selections": (v18/*:: as any*/),
         "storageKey": null
       },
       {
         "alias": "recentBookings",
-        "args": (v17/*: any*/),
+        "args": (v17/*:: as any*/),
         "concreteType": "ConnectionOfBookingEdge",
         "kind": "LinkedField",
         "name": "bookings",
         "plural": false,
-        "selections": (v18/*: any*/),
+        "selections": (v18/*:: as any*/),
         "storageKey": null
       }
     ]

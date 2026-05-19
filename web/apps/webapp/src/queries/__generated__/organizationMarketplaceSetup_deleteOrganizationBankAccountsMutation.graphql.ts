@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<b0946ddae0c4c355688988075ae9b321>>
+ * @generated SignedSource<<9c28e8b36d01da5a822278e93a5b7670>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -58,14 +57,14 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationBankAccountsPayload",
         "kind": "LinkedField",
         "name": "deleteOrganizationBankAccounts",
@@ -79,7 +78,7 @@ return {
             "name": "organizationBankAccounts",
             "plural": true,
             "selections": [
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -92,13 +91,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationBankAccountsPayload",
         "kind": "LinkedField",
         "name": "deleteOrganizationBankAccounts",
@@ -112,7 +111,7 @@ return {
             "name": "organizationBankAccounts",
             "plural": true,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<205b63818b7ddbf4164f191266335eb7>>
+ * @generated SignedSource<<469887e28bfd024f57e69c5e202b466e>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -82,20 +81,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editOrganizationProductTagDialog_rootQuery",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editOrganizationProductTagDialog_rootQuery",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "c1a1a5db6b1410216554b25add3d9387",

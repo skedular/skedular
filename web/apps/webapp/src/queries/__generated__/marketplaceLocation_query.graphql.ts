@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<0181749d507625a0bb5e1af912ca0b1b>>
+ * @generated SignedSource<<abeda815950dd97d8a67205a43eeb385>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -220,8 +219,8 @@ v1 = {
   "storageKey": null
 },
 v2 = [
-  (v0/*: any*/),
-  (v1/*: any*/)
+  (v0/*:: as any*/),
+  (v1/*:: as any*/)
 ],
 v3 = {
   "kind": "Literal",
@@ -256,7 +255,7 @@ v6 = [
     "name": "original",
     "plural": false,
     "selections": [
-      (v5/*: any*/),
+      (v5/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -276,7 +275,7 @@ v6 = [
   }
 ],
 v7 = [
-  (v4/*: any*/)
+  (v4/*:: as any*/)
 ],
 v8 = {
   "alias": null,
@@ -300,8 +299,8 @@ v10 = {
   "name": "amenities",
   "plural": true,
   "selections": [
-    (v4/*: any*/),
-    (v1/*: any*/)
+    (v4/*:: as any*/),
+    (v1/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -327,7 +326,7 @@ v12 = [
     "name": "openAllDay",
     "storageKey": null
   },
-  (v11/*: any*/),
+  (v11/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -378,7 +377,7 @@ return {
       "kind": "LinkedField",
       "name": "productPricingCadences",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": (v2/*:: as any*/),
       "storageKey": null
     },
     {
@@ -405,7 +404,7 @@ return {
     {
       "alias": null,
       "args": [
-        (v3/*: any*/),
+        (v3/*:: as any*/),
         {
           "fields": [
             {
@@ -439,8 +438,8 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v4/*: any*/),
-                (v1/*: any*/),
+                (v4/*:: as any*/),
+                (v1/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -455,7 +454,7 @@ return {
                   "kind": "LinkedField",
                   "name": "image",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v6/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -487,7 +486,7 @@ return {
                       "kind": "LinkedField",
                       "name": "resource",
                       "plural": false,
-                      "selections": (v7/*: any*/),
+                      "selections": (v7/*:: as any*/),
                       "storageKey": null
                     }
                   ],
@@ -509,7 +508,7 @@ return {
       "kind": "LinkedField",
       "name": "currencies",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": (v2/*:: as any*/),
       "storageKey": null
     },
     {
@@ -526,8 +525,8 @@ return {
       "name": "location",
       "plural": false,
       "selections": [
-        (v4/*: any*/),
-        (v1/*: any*/),
+        (v4/*:: as any*/),
+        (v1/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -561,8 +560,8 @@ return {
               "name": "about",
               "storageKey": null
             },
-            (v8/*: any*/),
-            (v9/*: any*/),
+            (v8/*:: as any*/),
+            (v9/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -580,7 +579,7 @@ return {
           "name": "timezone",
           "storageKey": null
         },
-        (v10/*: any*/),
+        (v10/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -654,7 +653,7 @@ return {
               "name": "peopleCapacity",
               "plural": false,
               "selections": [
-                (v11/*: any*/),
+                (v11/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -689,7 +688,7 @@ return {
           "kind": "LinkedField",
           "name": "featureImages",
           "plural": true,
-          "selections": (v6/*: any*/),
+          "selections": (v6/*:: as any*/),
           "storageKey": null
         },
         {
@@ -747,7 +746,7 @@ return {
                   "kind": "LinkedField",
                   "name": "monday",
                   "plural": false,
-                  "selections": (v12/*: any*/),
+                  "selections": (v12/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -757,7 +756,7 @@ return {
                   "kind": "LinkedField",
                   "name": "tuesday",
                   "plural": false,
-                  "selections": (v12/*: any*/),
+                  "selections": (v12/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -767,7 +766,7 @@ return {
                   "kind": "LinkedField",
                   "name": "wednesday",
                   "plural": false,
-                  "selections": (v12/*: any*/),
+                  "selections": (v12/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -777,7 +776,7 @@ return {
                   "kind": "LinkedField",
                   "name": "thursday",
                   "plural": false,
-                  "selections": (v12/*: any*/),
+                  "selections": (v12/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -787,7 +786,7 @@ return {
                   "kind": "LinkedField",
                   "name": "friday",
                   "plural": false,
-                  "selections": (v12/*: any*/),
+                  "selections": (v12/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -797,7 +796,7 @@ return {
                   "kind": "LinkedField",
                   "name": "saturday",
                   "plural": false,
-                  "selections": (v12/*: any*/),
+                  "selections": (v12/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -807,7 +806,7 @@ return {
                   "kind": "LinkedField",
                   "name": "sunday",
                   "plural": false,
-                  "selections": (v12/*: any*/),
+                  "selections": (v12/*:: as any*/),
                   "storageKey": null
                 }
               ],
@@ -824,7 +823,7 @@ return {
           "name": "products",
           "plural": true,
           "selections": [
-            (v4/*: any*/),
+            (v4/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -833,8 +832,8 @@ return {
               "name": "listingMetadata",
               "plural": false,
               "selections": [
-                (v8/*: any*/),
-                (v9/*: any*/)
+                (v8/*:: as any*/),
+                (v9/*:: as any*/)
               ],
               "storageKey": null
             },
@@ -845,7 +844,7 @@ return {
               "kind": "LinkedField",
               "name": "productTags",
               "plural": true,
-              "selections": (v7/*: any*/),
+              "selections": (v7/*:: as any*/),
               "storageKey": null
             },
             {
@@ -864,7 +863,7 @@ return {
                   "name": "original",
                   "plural": false,
                   "selections": [
-                    (v5/*: any*/)
+                    (v5/*:: as any*/)
                   ],
                   "storageKey": null
                 }
@@ -879,7 +878,7 @@ return {
               "name": "currency",
               "plural": false,
               "selections": [
-                (v0/*: any*/)
+                (v0/*:: as any*/)
               ],
               "storageKey": null
             },
@@ -891,7 +890,7 @@ return {
               "name": "pricingOptions",
               "plural": true,
               "selections": [
-                (v4/*: any*/),
+                (v4/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -907,7 +906,7 @@ return {
                   "name": "listingMetadata",
                   "plural": false,
                   "selections": [
-                    (v8/*: any*/)
+                    (v8/*:: as any*/)
                   ],
                   "storageKey": null
                 },
@@ -942,7 +941,7 @@ return {
               ],
               "storageKey": null
             },
-            (v10/*: any*/)
+            (v10/*:: as any*/)
           ],
           "storageKey": null
         },
@@ -954,7 +953,7 @@ return {
             {
               "alias": null,
               "args": [
-                (v3/*: any*/),
+                (v3/*:: as any*/),
                 {
                   "fields": [
                     {
@@ -988,8 +987,8 @@ return {
                       "name": "node",
                       "plural": false,
                       "selections": [
-                        (v4/*: any*/),
-                        (v1/*: any*/),
+                        (v4/*:: as any*/),
+                        (v1/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -997,7 +996,7 @@ return {
                           "name": "inactive",
                           "storageKey": null
                         },
-                        (v13/*: any*/),
+                        (v13/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -1006,9 +1005,9 @@ return {
                           "name": "productTags",
                           "plural": true,
                           "selections": [
-                            (v4/*: any*/),
-                            (v1/*: any*/),
-                            (v13/*: any*/)
+                            (v4/*:: as any*/),
+                            (v1/*:: as any*/),
+                            (v13/*:: as any*/)
                           ],
                           "storageKey": null
                         },
@@ -1020,10 +1019,10 @@ return {
                           "name": "resourceType",
                           "plural": false,
                           "selections": [
-                            (v4/*: any*/),
-                            (v1/*: any*/),
-                            (v13/*: any*/),
-                            (v0/*: any*/)
+                            (v4/*:: as any*/),
+                            (v1/*:: as any*/),
+                            (v13/*:: as any*/),
+                            (v0/*:: as any*/)
                           ],
                           "storageKey": null
                         }

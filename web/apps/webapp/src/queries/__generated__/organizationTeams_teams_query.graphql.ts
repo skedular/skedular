@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<fa07a1b0ed4a5b9045f5ff1f5843cb02>>
+ * @generated SignedSource<<56de07d107eb489a5145097ce6dbc45d>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -103,7 +102,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -113,7 +112,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": organizationTeams_teams_refetchableFragment_graphql
@@ -174,8 +173,8 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
-                (v2/*: any*/),
+                (v1/*:: as any*/),
+                (v2/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -241,7 +240,7 @@ return {
                                   "name": "customer",
                                   "plural": false,
                                   "selections": [
-                                    (v1/*: any*/),
+                                    (v1/*:: as any*/),
                                     {
                                       "alias": null,
                                       "args": null,
@@ -263,7 +262,7 @@ return {
                                       "name": "familyName",
                                       "storageKey": null
                                     },
-                                    (v2/*: any*/),
+                                    (v2/*:: as any*/),
                                     {
                                       "alias": null,
                                       "args": null,

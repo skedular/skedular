@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<7e3ca18d8679c8f9c2def4de06200de4>>
+ * @generated SignedSource<<e25a382c6b011581d42ddfbde7f7ebd3>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -62,20 +61,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "myBillingAndPayment_removeCustomerPaymentMethodMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "myBillingAndPayment_removeCustomerPaymentMethodMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "49a9ed8a40801b00dbadb3bb809d86bd",

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<42b538a6c7c7277398f632da73e43a53>>
+ * @generated SignedSource<<f51f2d21de47469bcb4a838748d2b4a8>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -266,7 +265,7 @@ v2 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v1/*: any*/),
+                "selections": (v1/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -276,7 +275,7 @@ v2 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v1/*: any*/),
+                "selections": (v1/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -291,20 +290,20 @@ v2 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "addMarketplaceOrganization_addOrganizationMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v2/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "addMarketplaceOrganization_addOrganizationMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v2/*:: as any*/)
   },
   "params": {
     "cacheID": "f51245f8073a4d381363bcbfd39ce0f4",

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<57e17a164a82496107212dea81cba6a0>>
+ * @generated SignedSource<<2dc55bf74476137d09504baf943b6c56>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -95,9 +94,9 @@ v9 = {
   "storageKey": null
 },
 v10 = [
-  (v8/*: any*/),
-  (v7/*: any*/),
-  (v9/*: any*/)
+  (v8/*:: as any*/),
+  (v7/*:: as any*/),
+  (v9/*:: as any*/)
 ],
 v11 = [
   {
@@ -145,7 +144,7 @@ v12 = [
         "kind": "LinkedField",
         "name": "monday",
         "plural": false,
-        "selections": (v11/*: any*/),
+        "selections": (v11/*:: as any*/),
         "storageKey": null
       },
       {
@@ -155,7 +154,7 @@ v12 = [
         "kind": "LinkedField",
         "name": "tuesday",
         "plural": false,
-        "selections": (v11/*: any*/),
+        "selections": (v11/*:: as any*/),
         "storageKey": null
       },
       {
@@ -165,7 +164,7 @@ v12 = [
         "kind": "LinkedField",
         "name": "wednesday",
         "plural": false,
-        "selections": (v11/*: any*/),
+        "selections": (v11/*:: as any*/),
         "storageKey": null
       },
       {
@@ -175,7 +174,7 @@ v12 = [
         "kind": "LinkedField",
         "name": "thursday",
         "plural": false,
-        "selections": (v11/*: any*/),
+        "selections": (v11/*:: as any*/),
         "storageKey": null
       },
       {
@@ -185,7 +184,7 @@ v12 = [
         "kind": "LinkedField",
         "name": "friday",
         "plural": false,
-        "selections": (v11/*: any*/),
+        "selections": (v11/*:: as any*/),
         "storageKey": null
       },
       {
@@ -195,7 +194,7 @@ v12 = [
         "kind": "LinkedField",
         "name": "saturday",
         "plural": false,
-        "selections": (v11/*: any*/),
+        "selections": (v11/*:: as any*/),
         "storageKey": null
       },
       {
@@ -205,7 +204,7 @@ v12 = [
         "kind": "LinkedField",
         "name": "sunday",
         "plural": false,
-        "selections": (v11/*: any*/),
+        "selections": (v11/*:: as any*/),
         "storageKey": null
       }
     ],
@@ -243,9 +242,9 @@ v14 = [
         "name": "node",
         "plural": false,
         "selections": [
-          (v8/*: any*/),
-          (v7/*: any*/),
-          (v9/*: any*/),
+          (v8/*:: as any*/),
+          (v7/*:: as any*/),
+          (v9/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -324,12 +323,12 @@ v17 = [
 return {
   "fragment": {
     "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/),
-      (v3/*: any*/),
-      (v4/*: any*/),
-      (v5/*: any*/)
+      (v0/*:: as any*/),
+      (v1/*:: as any*/),
+      (v2/*:: as any*/),
+      (v3/*:: as any*/),
+      (v4/*:: as any*/),
+      (v5/*:: as any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -337,13 +336,13 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v6/*: any*/),
+        "args": (v6/*:: as any*/),
         "concreteType": "ResourceDetails",
         "kind": "LinkedField",
         "name": "resource",
         "plural": false,
         "selections": [
-          (v7/*: any*/)
+          (v7/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -359,26 +358,26 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v4/*: any*/),
-      (v0/*: any*/),
-      (v5/*: any*/),
-      (v1/*: any*/),
-      (v3/*: any*/),
-      (v2/*: any*/)
+      (v4/*:: as any*/),
+      (v0/*:: as any*/),
+      (v5/*:: as any*/),
+      (v1/*:: as any*/),
+      (v3/*:: as any*/),
+      (v2/*:: as any*/)
     ],
     "kind": "Operation",
     "name": "pageOrganizationLocationResource_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v6/*: any*/),
+        "args": (v6/*:: as any*/),
         "concreteType": "ResourceDetails",
         "kind": "LinkedField",
         "name": "resource",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
-          (v8/*: any*/),
+          (v7/*:: as any*/),
+          (v8/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -393,7 +392,7 @@ return {
             "name": "requireBookingApproval",
             "storageKey": null
           },
-          (v9/*: any*/),
+          (v9/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -408,7 +407,7 @@ return {
             "kind": "LinkedField",
             "name": "customTags",
             "plural": true,
-            "selections": (v10/*: any*/),
+            "selections": (v10/*:: as any*/),
             "storageKey": null
           },
           {
@@ -418,7 +417,7 @@ return {
             "kind": "LinkedField",
             "name": "zones",
             "plural": true,
-            "selections": (v10/*: any*/),
+            "selections": (v10/*:: as any*/),
             "storageKey": null
           },
           {
@@ -428,7 +427,7 @@ return {
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v10/*: any*/),
+            "selections": (v10/*:: as any*/),
             "storageKey": null
           },
           {
@@ -438,7 +437,7 @@ return {
             "kind": "LinkedField",
             "name": "resourceType",
             "plural": false,
-            "selections": (v10/*: any*/),
+            "selections": (v10/*:: as any*/),
             "storageKey": null
           },
           {
@@ -455,7 +454,7 @@ return {
             "kind": "LinkedField",
             "name": "availableHours",
             "plural": false,
-            "selections": (v12/*: any*/),
+            "selections": (v12/*:: as any*/),
             "storageKey": null
           }
         ],
@@ -493,7 +492,7 @@ return {
             ],
             "storageKey": null
           },
-          (v8/*: any*/),
+          (v8/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -501,23 +500,23 @@ return {
             "kind": "LinkedField",
             "name": "resourceTypes",
             "plural": true,
-            "selections": (v10/*: any*/),
+            "selections": (v10/*:: as any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v13/*: any*/),
+            "args": (v13/*:: as any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "customTags",
             "plural": false,
-            "selections": (v14/*: any*/),
+            "selections": (v14/*:: as any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v13/*: any*/),
-            "filters": (v15/*: any*/),
+            "args": (v13/*:: as any*/),
+            "filters": (v15/*:: as any*/),
             "handle": "connection",
             "key": "multipleChoicesCustomTags_customTags",
             "kind": "LinkedHandle",
@@ -525,18 +524,18 @@ return {
           },
           {
             "alias": null,
-            "args": (v16/*: any*/),
+            "args": (v16/*:: as any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "zones",
             "plural": false,
-            "selections": (v14/*: any*/),
+            "selections": (v14/*:: as any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v16/*: any*/),
-            "filters": (v15/*: any*/),
+            "args": (v16/*:: as any*/),
+            "filters": (v15/*:: as any*/),
             "handle": "connection",
             "key": "multipleChoicesZones_zones",
             "kind": "LinkedHandle",
@@ -544,18 +543,18 @@ return {
           },
           {
             "alias": null,
-            "args": (v17/*: any*/),
+            "args": (v17/*:: as any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "productTags",
             "plural": false,
-            "selections": (v14/*: any*/),
+            "selections": (v14/*:: as any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v17/*: any*/),
-            "filters": (v15/*: any*/),
+            "args": (v17/*:: as any*/),
+            "filters": (v15/*:: as any*/),
             "handle": "connection",
             "key": "multipleChoicesProductTags_productTags",
             "kind": "LinkedHandle",
@@ -578,8 +577,8 @@ return {
         "name": "location",
         "plural": false,
         "selections": [
-          (v8/*: any*/),
-          (v7/*: any*/),
+          (v8/*:: as any*/),
+          (v7/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -587,7 +586,7 @@ return {
             "kind": "LinkedField",
             "name": "openingHours",
             "plural": false,
-            "selections": (v12/*: any*/),
+            "selections": (v12/*:: as any*/),
             "storageKey": null
           }
         ],

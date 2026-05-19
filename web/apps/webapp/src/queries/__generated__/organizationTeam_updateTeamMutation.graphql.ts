@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<662e0e1cd0214003f6325266cde0d1a9>>
+ * @generated SignedSource<<32bfbfc31abc58becec86bf0ad4182c8>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -156,8 +155,8 @@ v4 = [
         "name": "team",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
+          (v1/*:: as any*/),
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -187,7 +186,7 @@ v4 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -197,7 +196,7 @@ v4 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -211,8 +210,8 @@ v4 = [
             "name": "primaryLocation",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/)
+              (v1/*:: as any*/),
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -225,20 +224,20 @@ v4 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationTeam_updateTeamMutation",
-    "selections": (v4/*: any*/),
+    "selections": (v4/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationTeam_updateTeamMutation",
-    "selections": (v4/*: any*/)
+    "selections": (v4/*:: as any*/)
   },
   "params": {
     "cacheID": "e6dbdfaf5f0c85f66798cae1442ca77d",

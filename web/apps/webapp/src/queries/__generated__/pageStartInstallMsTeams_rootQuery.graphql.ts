@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<1488720c1da563a68c03ab80b956a87a>>
+ * @generated SignedSource<<4af11280759fc05abaad0b33765fa235>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -34,7 +33,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "pageStartInstallMsTeams_rootQuery",
-    "selections": (v0/*: any*/),
+    "selections": (v0/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -43,7 +42,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "pageStartInstallMsTeams_rootQuery",
-    "selections": (v0/*: any*/)
+    "selections": (v0/*:: as any*/)
   },
   "params": {
     "cacheID": "8669c15cb024cbcb7f7ab0a776b3bfab",

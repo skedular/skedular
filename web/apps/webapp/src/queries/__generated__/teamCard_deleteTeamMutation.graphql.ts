@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<9edcd006304829484afe8551736679c1>>
+ * @generated SignedSource<<b46bc716118241bd397acdb550c7b72d>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -58,14 +57,14 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "teamCard_deleteTeamMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "TeamPayload",
         "kind": "LinkedField",
         "name": "deleteTeam",
@@ -79,7 +78,7 @@ return {
             "name": "team",
             "plural": false,
             "selections": [
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -92,13 +91,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "teamCard_deleteTeamMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "TeamPayload",
         "kind": "LinkedField",
         "name": "deleteTeam",
@@ -112,7 +111,7 @@ return {
             "name": "team",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,

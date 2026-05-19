@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<6cb3a76fa75bc9b760ba4d8c61997340>>
+ * @generated SignedSource<<5e0cc6b334df078477d833dd447df4bc>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -66,20 +65,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminManageOrganizationSectionQuery",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminManageOrganizationSectionQuery",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "ce0940288f96b7b94b9bb5ce8b3e4887",

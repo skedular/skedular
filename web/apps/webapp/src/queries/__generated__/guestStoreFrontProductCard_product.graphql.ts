@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<0afd1a360083dd9a3539021ad95c4bba>>
+ * @generated SignedSource<<15406988215e320508803c8f7d011e9e>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -96,8 +95,8 @@ return {
   "metadata": null,
   "name": "guestStoreFrontProductCard_product",
   "selections": [
-    (v0/*: any*/),
-    (v1/*: any*/),
+    (v0/*:: as any*/),
+    (v1/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -142,7 +141,7 @@ return {
           "name": "type",
           "storageKey": null
         },
-        (v2/*: any*/)
+        (v2/*:: as any*/)
       ],
       "storageKey": null
     },
@@ -154,8 +153,8 @@ return {
       "name": "amenities",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
-        (v2/*: any*/)
+        (v0/*:: as any*/),
+        (v2/*:: as any*/)
       ],
       "storageKey": null
     },
@@ -167,7 +166,7 @@ return {
       "name": "pricingOptions",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
+        (v0/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -175,7 +174,7 @@ return {
           "name": "index",
           "storageKey": null
         },
-        (v1/*: any*/),
+        (v1/*:: as any*/),
         {
           "alias": null,
           "args": null,

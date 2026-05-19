@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<0cd18b1e531a23a911d0debe68f1e0fb>>
+ * @generated SignedSource<<471609b6eef5fdcda9e0840af78263b0>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -45,7 +44,7 @@ var v0 = {
   "storageKey": null
 },
 v1 = [
-  (v0/*: any*/)
+  (v0/*:: as any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -65,7 +64,7 @@ return {
       "kind": "LinkedField",
       "name": "me",
       "plural": false,
-      "selections": (v1/*: any*/),
+      "selections": (v1/*:: as any*/),
       "storageKey": null
     },
     {
@@ -139,7 +138,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v0/*: any*/),
+                (v0/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -147,7 +146,7 @@ return {
                   "kind": "LinkedField",
                   "name": "recurringBookings",
                   "plural": true,
-                  "selections": (v1/*: any*/),
+                  "selections": (v1/*:: as any*/),
                   "storageKey": null
                 }
               ],

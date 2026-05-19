@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<aefb4fa0a6d617c5d14527ba98a9b872>>
+ * @generated SignedSource<<d675b5b6a706dc81d99640a1867a9669>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -109,20 +108,20 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "newCustomTagDialog_addCustomTagMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationTagPayload",
         "kind": "LinkedField",
         "name": "addCustomTag",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -132,19 +131,19 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "newCustomTagDialog_addCustomTagMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationTagPayload",
         "kind": "LinkedField",
         "name": "addCustomTag",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,

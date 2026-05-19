@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<bcfe1faa87d63492913ac3f97a9e105f>>
+ * @generated SignedSource<<80ec539dd6f704984302c26ce53c6cc3>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -142,20 +141,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editPrivateRecurringBooking_updatePrivateRecurringBookingMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editPrivateRecurringBooking_updatePrivateRecurringBookingMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "b20346aeb98da31005c154d8410c6598",

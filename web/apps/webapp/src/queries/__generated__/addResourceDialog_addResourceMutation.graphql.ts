@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<e33ce1e675cc0beea4682f64caaedff6>>
+ * @generated SignedSource<<a1228f7787d9d0a008a7fe0b7377878f>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -139,9 +138,9 @@ v4 = {
   "storageKey": null
 },
 v5 = [
-  (v2/*: any*/),
-  (v3/*: any*/),
-  (v4/*: any*/)
+  (v2/*:: as any*/),
+  (v3/*:: as any*/),
+  (v4/*:: as any*/)
 ],
 v6 = {
   "alias": null,
@@ -151,8 +150,8 @@ v6 = {
   "name": "resource",
   "plural": false,
   "selections": [
-    (v2/*: any*/),
-    (v3/*: any*/),
+    (v2/*:: as any*/),
+    (v3/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -167,7 +166,7 @@ v6 = {
       "name": "requireBookingApproval",
       "storageKey": null
     },
-    (v4/*: any*/),
+    (v4/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -182,7 +181,7 @@ v6 = {
       "kind": "LinkedField",
       "name": "customTags",
       "plural": true,
-      "selections": (v5/*: any*/),
+      "selections": (v5/*:: as any*/),
       "storageKey": null
     },
     {
@@ -192,7 +191,7 @@ v6 = {
       "kind": "LinkedField",
       "name": "zones",
       "plural": true,
-      "selections": (v5/*: any*/),
+      "selections": (v5/*:: as any*/),
       "storageKey": null
     },
     {
@@ -202,7 +201,7 @@ v6 = {
       "kind": "LinkedField",
       "name": "productTags",
       "plural": true,
-      "selections": (v5/*: any*/),
+      "selections": (v5/*:: as any*/),
       "storageKey": null
     },
     {
@@ -212,7 +211,7 @@ v6 = {
       "kind": "LinkedField",
       "name": "resourceType",
       "plural": false,
-      "selections": (v5/*: any*/),
+      "selections": (v5/*:: as any*/),
       "storageKey": null
     }
   ],
@@ -220,20 +219,20 @@ v6 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "addResourceDialog_addResourceMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "ResourcePayload",
         "kind": "LinkedField",
         "name": "addResource",
         "plural": false,
         "selections": [
-          (v6/*: any*/)
+          (v6/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -243,19 +242,19 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "addResourceDialog_addResourceMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "ResourcePayload",
         "kind": "LinkedField",
         "name": "addResource",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
+          (v6/*:: as any*/),
           {
             "alias": null,
             "args": null,

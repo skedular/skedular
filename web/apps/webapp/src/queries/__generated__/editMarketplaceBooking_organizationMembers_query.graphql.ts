@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<0b67aa9d4121227718ab6333f6ed13df>>
+ * @generated SignedSource<<3c25c5fb7077d872393e4dd97b8c6f54>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -83,7 +82,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -93,7 +92,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": editMarketplaceBooking_organizationMembers_refetchableFragment_graphql
@@ -163,7 +162,7 @@ return {
                   "name": "node",
                   "plural": false,
                   "selections": [
-                    (v1/*: any*/),
+                    (v1/*:: as any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -172,7 +171,7 @@ return {
                       "name": "customer",
                       "plural": false,
                       "selections": [
-                        (v1/*: any*/),
+                        (v1/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,

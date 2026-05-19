@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<874b5d1387a65e8b3d011a78a3787dd4>>
+ * @generated SignedSource<<3fb46e44392c2f85fe7a75650fd457c8>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -152,8 +151,8 @@ v2 = {
   "storageKey": null
 },
 v3 = [
-  (v1/*: any*/),
-  (v2/*: any*/)
+  (v1/*:: as any*/),
+  (v2/*:: as any*/)
 ],
 v4 = {
   "alias": null,
@@ -163,9 +162,9 @@ v4 = {
   "storageKey": null
 },
 v5 = [
-  (v1/*: any*/),
-  (v2/*: any*/),
-  (v4/*: any*/)
+  (v1/*:: as any*/),
+  (v2/*:: as any*/),
+  (v4/*:: as any*/)
 ],
 v6 = [
   {
@@ -190,7 +189,7 @@ v6 = [
         "name": "booking",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -227,7 +226,7 @@ v6 = [
                 "name": "category",
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -239,8 +238,8 @@ v6 = [
             "name": "involvedCustomers",
             "plural": true,
             "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/),
+              (v1/*:: as any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -279,7 +278,7 @@ v6 = [
             "kind": "LinkedField",
             "name": "involvedOrganizations",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v3/*:: as any*/),
             "storageKey": null
           },
           {
@@ -290,7 +289,7 @@ v6 = [
             "name": "involvedLocations",
             "plural": true,
             "selections": [
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -301,7 +300,7 @@ v6 = [
             "kind": "LinkedField",
             "name": "involvedTeams",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v3/*:: as any*/),
             "storageKey": null
           },
           {
@@ -320,9 +319,9 @@ v6 = [
                 "name": "resource",
                 "plural": false,
                 "selections": [
-                  (v1/*: any*/),
-                  (v2/*: any*/),
-                  (v4/*: any*/),
+                  (v1/*:: as any*/),
+                  (v2/*:: as any*/),
+                  (v4/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -330,7 +329,7 @@ v6 = [
                     "kind": "LinkedField",
                     "name": "customTags",
                     "plural": true,
-                    "selections": (v5/*: any*/),
+                    "selections": (v5/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -340,7 +339,7 @@ v6 = [
                     "kind": "LinkedField",
                     "name": "zones",
                     "plural": true,
-                    "selections": (v5/*: any*/),
+                    "selections": (v5/*:: as any*/),
                     "storageKey": null
                   }
                 ],
@@ -358,20 +357,20 @@ v6 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editMarketplaceBooking_updateBookingMutation",
-    "selections": (v6/*: any*/),
+    "selections": (v6/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editMarketplaceBooking_updateBookingMutation",
-    "selections": (v6/*: any*/)
+    "selections": (v6/*:: as any*/)
   },
   "params": {
     "cacheID": "5c669824c7a0d28401e7dc4f1cd8eeae",

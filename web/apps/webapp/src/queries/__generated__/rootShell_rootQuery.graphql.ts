@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<bb0bcaeadf78a77d14d28b81f01368dc>>
+ * @generated SignedSource<<e6a26b7de0c8c58f7d10882ada1f9373>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -148,7 +147,7 @@ v13 = {
   "name": "azureTenantOrganization",
   "plural": false,
   "selections": [
-    (v1/*: any*/)
+    (v1/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -214,7 +213,7 @@ v20 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "rootShell_rootQuery",
@@ -227,35 +226,35 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/)
+          (v1/*:: as any*/),
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       },
-      (v3/*: any*/),
-      (v4/*: any*/),
-      (v5/*: any*/),
-      (v6/*: any*/),
-      (v7/*: any*/),
-      (v8/*: any*/),
-      (v9/*: any*/),
-      (v10/*: any*/),
-      (v11/*: any*/),
-      (v12/*: any*/),
-      (v13/*: any*/),
+      (v3/*:: as any*/),
+      (v4/*:: as any*/),
+      (v5/*:: as any*/),
+      (v6/*:: as any*/),
+      (v7/*:: as any*/),
+      (v8/*:: as any*/),
+      (v9/*:: as any*/),
+      (v10/*:: as any*/),
+      (v11/*:: as any*/),
+      (v12/*:: as any*/),
+      (v13/*:: as any*/),
       {
         "alias": null,
-        "args": (v14/*: any*/),
+        "args": (v14/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v15/*: any*/),
-          (v16/*: any*/),
-          (v17/*: any*/),
-          (v18/*: any*/),
-          (v19/*: any*/)
+          (v15/*:: as any*/),
+          (v16/*:: as any*/),
+          (v17/*:: as any*/),
+          (v18/*:: as any*/),
+          (v19/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -280,7 +279,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "rootShell_rootQuery",
     "selections": [
@@ -292,8 +291,8 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
+          (v1/*:: as any*/),
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -336,7 +335,7 @@ return {
             "name": "photoUrl",
             "storageKey": null
           },
-          (v16/*: any*/),
+          (v16/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -347,32 +346,32 @@ return {
         ],
         "storageKey": null
       },
-      (v3/*: any*/),
-      (v4/*: any*/),
-      (v5/*: any*/),
-      (v6/*: any*/),
-      (v7/*: any*/),
-      (v8/*: any*/),
-      (v9/*: any*/),
-      (v10/*: any*/),
-      (v11/*: any*/),
-      (v12/*: any*/),
-      (v13/*: any*/),
+      (v3/*:: as any*/),
+      (v4/*:: as any*/),
+      (v5/*:: as any*/),
+      (v6/*:: as any*/),
+      (v7/*:: as any*/),
+      (v8/*:: as any*/),
+      (v9/*:: as any*/),
+      (v10/*:: as any*/),
+      (v11/*:: as any*/),
+      (v12/*:: as any*/),
+      (v13/*:: as any*/),
       {
         "alias": null,
-        "args": (v14/*: any*/),
+        "args": (v14/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v15/*: any*/),
-          (v16/*: any*/),
-          (v17/*: any*/),
-          (v18/*: any*/),
-          (v19/*: any*/),
-          (v1/*: any*/),
-          (v20/*: any*/),
+          (v15/*:: as any*/),
+          (v16/*:: as any*/),
+          (v17/*:: as any*/),
+          (v18/*:: as any*/),
+          (v19/*:: as any*/),
+          (v1/*:: as any*/),
+          (v20/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -409,7 +408,7 @@ return {
                 "name": "earlyBird",
                 "storageKey": null
               },
-              (v1/*: any*/)
+              (v1/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -431,9 +430,9 @@ return {
             "name": "uniqueId",
             "storageKey": null
           },
-          (v20/*: any*/),
-          (v15/*: any*/),
-          (v16/*: any*/)
+          (v20/*:: as any*/),
+          (v15/*:: as any*/),
+          (v16/*:: as any*/)
         ],
         "storageKey": null
       },

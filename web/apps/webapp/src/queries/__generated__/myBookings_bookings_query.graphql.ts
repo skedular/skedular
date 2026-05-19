@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<a0e213fa69e39f182dd7ef27f251c165>>
+ * @generated SignedSource<<b0b0ef679034c44ce037b94f8aa15f16>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -96,9 +95,9 @@ v3 = {
   "storageKey": null
 },
 v4 = [
-  (v1/*: any*/),
-  (v2/*: any*/),
-  (v3/*: any*/)
+  (v1/*:: as any*/),
+  (v2/*:: as any*/),
+  (v3/*:: as any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -140,7 +139,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -150,7 +149,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": myBookings_bookings_refetchableFragment_graphql
@@ -231,7 +230,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
+                (v1/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -279,8 +278,8 @@ return {
                   "name": "involvedCustomers",
                   "plural": true,
                   "selections": [
-                    (v1/*: any*/),
-                    (v2/*: any*/),
+                    (v1/*:: as any*/),
+                    (v2/*:: as any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -327,7 +326,7 @@ return {
                       "name": "uniqueId",
                       "storageKey": null
                     },
-                    (v2/*: any*/)
+                    (v2/*:: as any*/)
                   ],
                   "storageKey": null
                 },
@@ -339,8 +338,8 @@ return {
                   "name": "involvedTeams",
                   "plural": true,
                   "selections": [
-                    (v1/*: any*/),
-                    (v2/*: any*/)
+                    (v1/*:: as any*/),
+                    (v2/*:: as any*/)
                   ],
                   "storageKey": null
                 },
@@ -360,9 +359,9 @@ return {
                       "name": "resource",
                       "plural": false,
                       "selections": [
-                        (v1/*: any*/),
-                        (v2/*: any*/),
-                        (v3/*: any*/),
+                        (v1/*:: as any*/),
+                        (v2/*:: as any*/),
+                        (v3/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -370,7 +369,7 @@ return {
                           "kind": "LinkedField",
                           "name": "customTags",
                           "plural": true,
-                          "selections": (v4/*: any*/),
+                          "selections": (v4/*:: as any*/),
                           "storageKey": null
                         },
                         {
@@ -380,7 +379,7 @@ return {
                           "kind": "LinkedField",
                           "name": "zones",
                           "plural": true,
-                          "selections": (v4/*: any*/),
+                          "selections": (v4/*:: as any*/),
                           "storageKey": null
                         }
                       ],

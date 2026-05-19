@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<58a69515ac567e6591f883c21dfd72f7>>
+ * @generated SignedSource<<476c4090484d7316000698813856a897>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -66,12 +65,12 @@ v1 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "unauthenticatedOrganizationStoreFrontRootShell_rootQuery",
     "selections": [
-      (v1/*: any*/),
+      (v1/*:: as any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -83,11 +82,11 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "unauthenticatedOrganizationStoreFrontRootShell_rootQuery",
     "selections": [
-      (v1/*: any*/)
+      (v1/*:: as any*/)
     ]
   },
   "params": {

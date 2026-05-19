@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<3bd5b1c0c87bd23c4097b6b29fa36e78>>
+ * @generated SignedSource<<566965d3f27ce6392dfffabbc8bb880d>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -147,7 +146,7 @@ return {
                   "name": "node",
                   "plural": false,
                   "selections": [
-                    (v0/*: any*/),
+                    (v0/*:: as any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -263,7 +262,7 @@ return {
                       "name": "recurringBookings",
                       "plural": true,
                       "selections": [
-                        (v0/*: any*/),
+                        (v0/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,

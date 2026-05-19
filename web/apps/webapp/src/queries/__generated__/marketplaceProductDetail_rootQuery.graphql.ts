@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<0d6ac94e3f350903061ffbfa88ba97ab>>
+ * @generated SignedSource<<091752197f4041dc20b21f8e05aaa5de>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -51,7 +50,7 @@ v3 = [
     "name": "type",
     "storageKey": null
   },
-  (v2/*: any*/)
+  (v2/*:: as any*/)
 ],
 v4 = {
   "alias": null,
@@ -76,18 +75,18 @@ v6 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductDetail_rootQuery",
     "selections": [
       {
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "kind": "FragmentSpread",
         "name": "marketplaceProductDetailOverview_query"
       },
       {
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "kind": "FragmentSpread",
         "name": "marketplaceProductDetailBookingCard_query"
       }
@@ -97,7 +96,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceProductDetail_rootQuery",
     "selections": [
@@ -122,7 +121,7 @@ return {
             "kind": "LinkedField",
             "name": "type",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": (v3/*:: as any*/),
             "storageKey": null
           },
           {
@@ -133,8 +132,8 @@ return {
             "name": "listingMetadata",
             "plural": false,
             "selections": [
-              (v4/*: any*/),
-              (v5/*: any*/),
+              (v4/*:: as any*/),
+              (v5/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -189,8 +188,8 @@ return {
             "name": "amenities",
             "plural": true,
             "selections": [
-              (v6/*: any*/),
-              (v2/*: any*/),
+              (v6/*:: as any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -201,7 +200,7 @@ return {
             ],
             "storageKey": null
           },
-          (v6/*: any*/),
+          (v6/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -227,7 +226,7 @@ return {
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": (v3/*:: as any*/),
             "storageKey": null
           },
           {
@@ -238,7 +237,7 @@ return {
             "name": "pricingOptions",
             "plural": true,
             "selections": [
-              (v6/*: any*/),
+              (v6/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -254,8 +253,8 @@ return {
                 "name": "listingMetadata",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/)
+                  (v4/*:: as any*/),
+                  (v5/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -360,7 +359,7 @@ return {
         "kind": "LinkedField",
         "name": "productPricingCadences",
         "plural": true,
-        "selections": (v3/*: any*/),
+        "selections": (v3/*:: as any*/),
         "storageKey": null
       },
       {
@@ -370,7 +369,7 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v3/*: any*/),
+        "selections": (v3/*:: as any*/),
         "storageKey": null
       },
       {
@@ -415,8 +414,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/),
-                  (v2/*: any*/)
+                  (v6/*:: as any*/),
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               }

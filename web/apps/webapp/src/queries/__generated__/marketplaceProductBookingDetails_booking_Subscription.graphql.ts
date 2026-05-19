@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<743ba1827e6484a663b77ee37afa358b>>
+ * @generated SignedSource<<832e030b264964f3ad823ac25a16b3ec>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -109,7 +108,7 @@ v3 = {
   "name": "deletedByCustomer",
   "plural": false,
   "selections": [
-    (v2/*: any*/)
+    (v2/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -186,7 +185,7 @@ v12 = {
   "name": "marketplaceBooking",
   "plural": false,
   "selections": [
-    (v2/*: any*/),
+    (v2/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -202,7 +201,7 @@ v12 = {
           "kind": "LinkedField",
           "name": "currency",
           "plural": false,
-          "selections": (v4/*: any*/),
+          "selections": (v4/*:: as any*/),
           "storageKey": null
         },
         {
@@ -212,7 +211,7 @@ v12 = {
           "kind": "LinkedField",
           "name": "status",
           "plural": false,
-          "selections": (v4/*: any*/),
+          "selections": (v4/*:: as any*/),
           "storageKey": null
         },
         {
@@ -229,7 +228,7 @@ v12 = {
           "name": "lastProcessedAt",
           "storageKey": null
         },
-        (v5/*: any*/),
+        (v5/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -237,10 +236,10 @@ v12 = {
           "name": "refundPercentage",
           "storageKey": null
         },
-        (v6/*: any*/),
-        (v7/*: any*/),
-        (v8/*: any*/),
-        (v9/*: any*/),
+        (v6/*:: as any*/),
+        (v7/*:: as any*/),
+        (v8/*:: as any*/),
+        (v9/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -256,7 +255,7 @@ v12 = {
           "name": "events",
           "plural": true,
           "selections": [
-            (v2/*: any*/),
+            (v2/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -264,7 +263,7 @@ v12 = {
               "kind": "LinkedField",
               "name": "eventType",
               "plural": false,
-              "selections": (v4/*: any*/),
+              "selections": (v4/*:: as any*/),
               "storageKey": null
             },
             {
@@ -274,11 +273,11 @@ v12 = {
               "name": "occurredAt",
               "storageKey": null
             },
-            (v5/*: any*/),
-            (v6/*: any*/),
-            (v7/*: any*/),
-            (v8/*: any*/),
-            (v9/*: any*/),
+            (v5/*:: as any*/),
+            (v6/*:: as any*/),
+            (v7/*:: as any*/),
+            (v8/*:: as any*/),
+            (v9/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -292,8 +291,8 @@ v12 = {
       ],
       "storageKey": null
     },
-    (v10/*: any*/),
-    (v11/*: any*/),
+    (v10/*:: as any*/),
+    (v11/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -333,7 +332,7 @@ v12 = {
       "kind": "LinkedField",
       "name": "paymentStatus",
       "plural": false,
-      "selections": (v4/*: any*/),
+      "selections": (v4/*:: as any*/),
       "storageKey": null
     }
   ],
@@ -347,8 +346,8 @@ v13 = {
   "name": "arrearsInvoices",
   "plural": true,
   "selections": [
-    (v11/*: any*/),
-    (v10/*: any*/),
+    (v11/*:: as any*/),
+    (v10/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -368,22 +367,22 @@ v13 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductBookingDetails_booking_Subscription",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "BookingDetails",
         "kind": "LinkedField",
         "name": "booking",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
-          (v12/*: any*/),
-          (v13/*: any*/)
+          (v3/*:: as any*/),
+          (v12/*:: as any*/),
+          (v13/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -393,22 +392,22 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceProductBookingDetails_booking_Subscription",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "BookingDetails",
         "kind": "LinkedField",
         "name": "booking",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
-          (v12/*: any*/),
-          (v13/*: any*/),
-          (v2/*: any*/)
+          (v3/*:: as any*/),
+          (v12/*:: as any*/),
+          (v13/*:: as any*/),
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       }

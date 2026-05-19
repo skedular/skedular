@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<68927898390e32cbb127dae23155df9d>>
+ * @generated SignedSource<<e5bd3262100cf7f12f70f1a9d06b57c5>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -58,14 +57,14 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocationManageResourcesSection_deleteResourcesMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "ResourcesPayload",
         "kind": "LinkedField",
         "name": "deleteResources",
@@ -79,7 +78,7 @@ return {
             "name": "resources",
             "plural": true,
             "selections": [
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -92,13 +91,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationLocationManageResourcesSection_deleteResourcesMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "ResourcesPayload",
         "kind": "LinkedField",
         "name": "deleteResources",
@@ -112,7 +111,7 @@ return {
             "name": "resources",
             "plural": true,
             "selections": [
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,

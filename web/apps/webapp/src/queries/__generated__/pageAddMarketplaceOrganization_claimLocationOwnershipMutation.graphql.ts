@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<f9d603bfd276b859e8dd594e21d519c9>>
+ * @generated SignedSource<<1bda65420e7650e3865d10abf690dd8b>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -65,20 +64,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "pageAddMarketplaceOrganization_claimLocationOwnershipMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "pageAddMarketplaceOrganization_claimLocationOwnershipMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "856ab27dbd8c9785c71eed4d7b9f448a",

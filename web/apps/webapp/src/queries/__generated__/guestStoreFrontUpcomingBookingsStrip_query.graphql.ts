@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<ac9db5f70fba7dba84b4988c47fee2a1>>
+ * @generated SignedSource<<d34de8cf31a2e540793514d4646b0575>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -170,7 +169,7 @@ return {
                   "name": "node",
                   "plural": false,
                   "selections": [
-                    (v0/*: any*/),
+                    (v0/*:: as any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -193,7 +192,7 @@ return {
                       "name": "involvedLocations",
                       "plural": true,
                       "selections": [
-                        (v1/*: any*/)
+                        (v1/*:: as any*/)
                       ],
                       "storageKey": null
                     },
@@ -213,8 +212,8 @@ return {
                           "name": "resource",
                           "plural": false,
                           "selections": [
-                            (v0/*: any*/),
-                            (v1/*: any*/)
+                            (v0/*:: as any*/),
+                            (v1/*:: as any*/)
                           ],
                           "storageKey": null
                         }
@@ -251,7 +250,7 @@ return {
                               "name": "type",
                               "storageKey": null
                             },
-                            (v1/*: any*/)
+                            (v1/*:: as any*/)
                           ],
                           "storageKey": null
                         }

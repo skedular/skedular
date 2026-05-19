@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<ead2c8bc03f52f7a5a3c2fc684b4b2a6>>
+ * @generated SignedSource<<3b033a8a0a4c85c86c73898a911a991c>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -167,7 +166,7 @@ v5 = {
   "name": "deletedByCustomer",
   "plural": false,
   "selections": [
-    (v2/*: any*/)
+    (v2/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -186,8 +185,8 @@ v7 = {
   "name": "involvedCustomers",
   "plural": true,
   "selections": [
-    (v2/*: any*/),
-    (v6/*: any*/),
+    (v2/*:: as any*/),
+    (v6/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -227,7 +226,7 @@ v8 = {
       "name": "uniqueId",
       "storageKey": null
     },
-    (v6/*: any*/)
+    (v6/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -247,8 +246,8 @@ v9 = {
       "name": "resource",
       "plural": false,
       "selections": [
-        (v2/*: any*/),
-        (v6/*: any*/)
+        (v2/*:: as any*/),
+        (v6/*:: as any*/)
       ],
       "storageKey": null
     }
@@ -270,7 +269,7 @@ v11 = [
     "name": "type",
     "storageKey": null
   },
-  (v6/*: any*/)
+  (v6/*:: as any*/)
 ],
 v12 = {
   "alias": null,
@@ -322,7 +321,7 @@ v17 = {
       "kind": "LinkedField",
       "name": "currency",
       "plural": false,
-      "selections": (v11/*: any*/),
+      "selections": (v11/*:: as any*/),
       "storageKey": null
     },
     {
@@ -332,7 +331,7 @@ v17 = {
       "kind": "LinkedField",
       "name": "status",
       "plural": false,
-      "selections": (v11/*: any*/),
+      "selections": (v11/*:: as any*/),
       "storageKey": null
     },
     {
@@ -349,7 +348,7 @@ v17 = {
       "name": "lastProcessedAt",
       "storageKey": null
     },
-    (v12/*: any*/),
+    (v12/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -357,10 +356,10 @@ v17 = {
       "name": "refundPercentage",
       "storageKey": null
     },
-    (v13/*: any*/),
-    (v14/*: any*/),
-    (v15/*: any*/),
-    (v16/*: any*/),
+    (v13/*:: as any*/),
+    (v14/*:: as any*/),
+    (v15/*:: as any*/),
+    (v16/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -376,7 +375,7 @@ v17 = {
       "name": "events",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
+        (v2/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -384,7 +383,7 @@ v17 = {
           "kind": "LinkedField",
           "name": "eventType",
           "plural": false,
-          "selections": (v11/*: any*/),
+          "selections": (v11/*:: as any*/),
           "storageKey": null
         },
         {
@@ -394,11 +393,11 @@ v17 = {
           "name": "occurredAt",
           "storageKey": null
         },
-        (v12/*: any*/),
-        (v13/*: any*/),
-        (v14/*: any*/),
-        (v15/*: any*/),
-        (v16/*: any*/),
+        (v12/*:: as any*/),
+        (v13/*:: as any*/),
+        (v14/*:: as any*/),
+        (v15/*:: as any*/),
+        (v16/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -447,7 +446,7 @@ v22 = {
   "kind": "LinkedField",
   "name": "type",
   "plural": false,
-  "selections": (v11/*: any*/),
+  "selections": (v11/*:: as any*/),
   "storageKey": null
 },
 v23 = {
@@ -543,7 +542,7 @@ v26 = {
   "kind": "LinkedField",
   "name": "paymentMethod",
   "plural": false,
-  "selections": (v11/*: any*/),
+  "selections": (v11/*:: as any*/),
   "storageKey": null
 },
 v27 = {
@@ -553,7 +552,7 @@ v27 = {
   "kind": "LinkedField",
   "name": "paymentStatus",
   "plural": false,
-  "selections": (v11/*: any*/),
+  "selections": (v11/*:: as any*/),
   "storageKey": null
 },
 v28 = {
@@ -564,8 +563,8 @@ v28 = {
   "name": "arrearsInvoices",
   "plural": true,
   "selections": [
-    (v19/*: any*/),
-    (v18/*: any*/),
+    (v19/*:: as any*/),
+    (v18/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -585,26 +584,26 @@ v28 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductBookingDetails_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "BookingDetails",
         "kind": "LinkedField",
         "name": "booking",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
-          (v4/*: any*/),
-          (v5/*: any*/),
-          (v7/*: any*/),
-          (v8/*: any*/),
-          (v9/*: any*/),
+          (v2/*:: as any*/),
+          (v3/*:: as any*/),
+          (v4/*:: as any*/),
+          (v5/*:: as any*/),
+          (v7/*:: as any*/),
+          (v8/*:: as any*/),
+          (v9/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -613,13 +612,13 @@ return {
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v10/*: any*/),
-              (v17/*: any*/),
-              (v18/*: any*/),
-              (v19/*: any*/),
-              (v20/*: any*/),
-              (v21/*: any*/),
+              (v2/*:: as any*/),
+              (v10/*:: as any*/),
+              (v17/*:: as any*/),
+              (v18/*:: as any*/),
+              (v19/*:: as any*/),
+              (v20/*:: as any*/),
+              (v21/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -628,19 +627,19 @@ return {
                 "name": "productVersion",
                 "plural": false,
                 "selections": [
-                  (v22/*: any*/),
-                  (v23/*: any*/),
-                  (v24/*: any*/)
+                  (v22/*:: as any*/),
+                  (v23/*:: as any*/),
+                  (v24/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v25/*: any*/),
-              (v26/*: any*/),
-              (v27/*: any*/)
+              (v25/*:: as any*/),
+              (v26/*:: as any*/),
+              (v27/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v28/*: any*/)
+          (v28/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -650,25 +649,25 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceProductBookingDetails_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "BookingDetails",
         "kind": "LinkedField",
         "name": "booking",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
-          (v4/*: any*/),
-          (v5/*: any*/),
-          (v7/*: any*/),
-          (v8/*: any*/),
-          (v9/*: any*/),
+          (v2/*:: as any*/),
+          (v3/*:: as any*/),
+          (v4/*:: as any*/),
+          (v5/*:: as any*/),
+          (v7/*:: as any*/),
+          (v8/*:: as any*/),
+          (v9/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -677,13 +676,13 @@ return {
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v10/*: any*/),
-              (v17/*: any*/),
-              (v18/*: any*/),
-              (v19/*: any*/),
-              (v20/*: any*/),
-              (v21/*: any*/),
+              (v2/*:: as any*/),
+              (v10/*:: as any*/),
+              (v17/*:: as any*/),
+              (v18/*:: as any*/),
+              (v19/*:: as any*/),
+              (v20/*:: as any*/),
+              (v21/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -692,20 +691,20 @@ return {
                 "name": "productVersion",
                 "plural": false,
                 "selections": [
-                  (v22/*: any*/),
-                  (v23/*: any*/),
-                  (v24/*: any*/),
-                  (v2/*: any*/)
+                  (v22/*:: as any*/),
+                  (v23/*:: as any*/),
+                  (v24/*:: as any*/),
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v25/*: any*/),
-              (v26/*: any*/),
-              (v27/*: any*/)
+              (v25/*:: as any*/),
+              (v26/*:: as any*/),
+              (v27/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v28/*: any*/)
+          (v28/*:: as any*/)
         ],
         "storageKey": null
       }

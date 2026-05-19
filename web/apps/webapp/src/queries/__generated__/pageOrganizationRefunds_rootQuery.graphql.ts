@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<59ffa71eb0bece22972452a431c5e715>>
+ * @generated SignedSource<<e0ba9ead8e5195b14e281914997e7a5b>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -105,7 +104,7 @@ v3 = {
 v4 = {
   "alias": null,
   "args": [
-    (v3/*: any*/)
+    (v3/*:: as any*/)
   ],
   "concreteType": "OrganizationBookingPermissions",
   "kind": "LinkedField",
@@ -130,7 +129,7 @@ v5 = [
     "name": "type",
     "storageKey": null
   },
-  (v2/*: any*/)
+  (v2/*:: as any*/)
 ],
 v6 = {
   "alias": null,
@@ -139,7 +138,7 @@ v6 = {
   "kind": "LinkedField",
   "name": "marketplaceRefundStatuses",
   "plural": true,
-  "selections": (v5/*: any*/),
+  "selections": (v5/*:: as any*/),
   "storageKey": null
 },
 v7 = {
@@ -187,7 +186,7 @@ v12 = {
 v13 = {
   "alias": null,
   "args": [
-    (v3/*: any*/),
+    (v3/*:: as any*/),
     {
       "kind": "Variable",
       "name": "statuses",
@@ -199,7 +198,7 @@ v13 = {
   "name": "marketplaceRefunds",
   "plural": true,
   "selections": [
-    (v7/*: any*/),
+    (v7/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -221,7 +220,7 @@ v13 = {
       "kind": "LinkedField",
       "name": "currency",
       "plural": false,
-      "selections": (v5/*: any*/),
+      "selections": (v5/*:: as any*/),
       "storageKey": null
     },
     {
@@ -231,7 +230,7 @@ v13 = {
       "kind": "LinkedField",
       "name": "status",
       "plural": false,
-      "selections": (v5/*: any*/),
+      "selections": (v5/*:: as any*/),
       "storageKey": null
     },
     {
@@ -248,7 +247,7 @@ v13 = {
       "name": "requestedByCustomerName",
       "storageKey": null
     },
-    (v8/*: any*/),
+    (v8/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -256,8 +255,8 @@ v13 = {
       "name": "refundPercentage",
       "storageKey": null
     },
-    (v9/*: any*/),
-    (v10/*: any*/),
+    (v9/*:: as any*/),
+    (v10/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -265,7 +264,7 @@ v13 = {
       "name": "accountingProvider",
       "storageKey": null
     },
-    (v11/*: any*/),
+    (v11/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -273,7 +272,7 @@ v13 = {
       "name": "lastProcessedAt",
       "storageKey": null
     },
-    (v12/*: any*/),
+    (v12/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -296,7 +295,7 @@ v13 = {
       "name": "events",
       "plural": true,
       "selections": [
-        (v7/*: any*/),
+        (v7/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -304,7 +303,7 @@ v13 = {
           "kind": "LinkedField",
           "name": "eventType",
           "plural": false,
-          "selections": (v5/*: any*/),
+          "selections": (v5/*:: as any*/),
           "storageKey": null
         },
         {
@@ -314,11 +313,11 @@ v13 = {
           "name": "occurredAt",
           "storageKey": null
         },
-        (v8/*: any*/),
-        (v9/*: any*/),
-        (v10/*: any*/),
-        (v12/*: any*/),
-        (v11/*: any*/),
+        (v8/*:: as any*/),
+        (v9/*:: as any*/),
+        (v10/*:: as any*/),
+        (v12/*:: as any*/),
+        (v11/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -334,52 +333,52 @@ v13 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "pageOrganizationRefunds_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       },
-      (v4/*: any*/),
-      (v6/*: any*/),
-      (v13/*: any*/)
+      (v4/*:: as any*/),
+      (v6/*:: as any*/),
+      (v13/*:: as any*/)
     ],
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "pageOrganizationRefunds_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v7/*: any*/)
+          (v2/*:: as any*/),
+          (v7/*:: as any*/)
         ],
         "storageKey": null
       },
-      (v4/*: any*/),
-      (v6/*: any*/),
-      (v13/*: any*/)
+      (v4/*:: as any*/),
+      (v6/*:: as any*/),
+      (v13/*:: as any*/)
     ]
   },
   "params": {

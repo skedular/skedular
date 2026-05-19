@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<9f031eaad1a572ecf23e64da0b4f0752>>
+ * @generated SignedSource<<32e6cfab322c6dd0746627e63191ec3d>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -68,7 +67,7 @@ return {
           "name": "id",
           "storageKey": null
         },
-        (v0/*: any*/),
+        (v0/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -139,7 +138,7 @@ return {
           "name": "type",
           "storageKey": null
         },
-        (v0/*: any*/)
+        (v0/*:: as any*/)
       ],
       "storageKey": null
     }

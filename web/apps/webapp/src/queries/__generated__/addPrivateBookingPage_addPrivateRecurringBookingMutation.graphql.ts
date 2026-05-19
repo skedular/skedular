@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<fde07783d080b950e6fe6d029de7b878>>
+ * @generated SignedSource<<0e20b0b822ef880147419f6df0011c0a>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -109,7 +108,7 @@ v3 = [
         "name": "recurringBooking",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -139,7 +138,7 @@ v3 = [
                 "name": "frequency",
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -151,8 +150,8 @@ v3 = [
             "name": "involvedCustomers",
             "plural": true,
             "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/),
+              (v1/*:: as any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -193,20 +192,20 @@ v3 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "addPrivateBookingPage_addPrivateRecurringBookingMutation",
-    "selections": (v3/*: any*/),
+    "selections": (v3/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "addPrivateBookingPage_addPrivateRecurringBookingMutation",
-    "selections": (v3/*: any*/)
+    "selections": (v3/*:: as any*/)
   },
   "params": {
     "cacheID": "78abcf983e6fc000e955b1985a0cb2fd",

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<b5f9b3960a9128cde6bdba58e56ad751>>
+ * @generated SignedSource<<3f8b3c2343d9d9d102ad8966e7f74dbb>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -92,20 +91,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "2b4d18cb14f3d4da87fb4ac19167f9fe",

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<2f4be5d721981ff5d533eb930c1892f4>>
+ * @generated SignedSource<<9ee76d1ecbb75621b6887355a8fbeb35>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -79,7 +78,7 @@ v3 = [
     "name": "type",
     "storageKey": null
   },
-  (v2/*: any*/)
+  (v2/*:: as any*/)
 ],
 v4 = [
   {
@@ -104,7 +103,7 @@ v4 = [
         "name": "members",
         "plural": true,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -113,7 +112,7 @@ v4 = [
             "name": "customer",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
+              (v1/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -121,7 +120,7 @@ v4 = [
                 "name": "email",
                 "storageKey": null
               },
-              (v2/*: any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -167,7 +166,7 @@ v4 = [
             "kind": "LinkedField",
             "name": "status",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": (v3/*:: as any*/),
             "storageKey": null
           },
           {
@@ -177,7 +176,7 @@ v4 = [
             "kind": "LinkedField",
             "name": "role",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": (v3/*:: as any*/),
             "storageKey": null
           }
         ],
@@ -189,20 +188,20 @@ v4 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationTeam_changeTeamMembersStatusMutation",
-    "selections": (v4/*: any*/),
+    "selections": (v4/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationTeam_changeTeamMembersStatusMutation",
-    "selections": (v4/*: any*/)
+    "selections": (v4/*:: as any*/)
   },
   "params": {
     "cacheID": "cd4878450456ee310197d3bdb52b3dee",

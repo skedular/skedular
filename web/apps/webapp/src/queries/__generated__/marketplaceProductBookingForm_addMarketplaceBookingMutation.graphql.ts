@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<68465f3cd8d7d7a536c1946397b433a9>>
+ * @generated SignedSource<<2a5b568ac6a405079d6338f1e2e0d8b3>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -119,7 +118,7 @@ v4 = [
         "name": "booking",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -149,7 +148,7 @@ v4 = [
                 "name": "isPaymentRequired",
                 "storageKey": null
               },
-              (v1/*: any*/),
+              (v1/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -204,8 +203,8 @@ v4 = [
                 "name": "paymentMethod",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
-                  (v3/*: any*/)
+                  (v2/*:: as any*/),
+                  (v3/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -217,8 +216,8 @@ v4 = [
                 "name": "paymentStatus",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
-                  (v2/*: any*/)
+                  (v3/*:: as any*/),
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               }
@@ -234,20 +233,20 @@ v4 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductBookingForm_addMarketplaceBookingMutation",
-    "selections": (v4/*: any*/),
+    "selections": (v4/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceProductBookingForm_addMarketplaceBookingMutation",
-    "selections": (v4/*: any*/)
+    "selections": (v4/*:: as any*/)
   },
   "params": {
     "cacheID": "faef7b90286017d48ccc900b7cc7ad08",

@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<6a8cd971670038d9171d845da1e37ea0>>
+ * @generated SignedSource<<955069563726d555d41140ce4b419d32>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -90,7 +89,7 @@ return {
       "kind": "LinkedField",
       "name": "productPricingCadences",
       "plural": true,
-      "selections": (v0/*: any*/),
+      "selections": (v0/*:: as any*/),
       "storageKey": null
     },
     {
@@ -100,7 +99,7 @@ return {
       "kind": "LinkedField",
       "name": "currencies",
       "plural": true,
-      "selections": (v0/*: any*/),
+      "selections": (v0/*:: as any*/),
       "storageKey": null
     }
   ],

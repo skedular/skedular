@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<3705a48f9136b2230ba9d74d61c272b8>>
+ * @generated SignedSource<<af123e8ac8a808ea334ce87bd1541a51>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -117,20 +116,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "notifications_rejectInvitationToJoinOrganizationMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "notifications_rejectInvitationToJoinOrganizationMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "e8353e15a0ee6623f56813dec4c134e3",

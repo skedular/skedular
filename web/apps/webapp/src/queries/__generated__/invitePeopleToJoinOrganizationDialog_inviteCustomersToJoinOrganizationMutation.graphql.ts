@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<4a5cba423125f50f47384e2c1f081d3e>>
+ * @generated SignedSource<<35d42fcaa46e248f5cf210601a37eac7>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -64,20 +63,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "849d823c6df2300ce0b93f67ff5e0462",

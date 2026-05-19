@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<72f56f738ceb13ff7f184c2444da101d>>
+ * @generated SignedSource<<d19bca914fe28dd86a0de5f06008e63f>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -80,7 +79,7 @@ return {
         "count": "count",
         "cursor": "cursor",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       }
     ],
     "refetch": {
@@ -90,7 +89,7 @@ return {
           "cursor": "cursor"
         },
         "backward": null,
-        "path": (v0/*: any*/)
+        "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
       "operation": organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment_graphql

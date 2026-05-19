@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<f30dcf50f65bead0b84f7289f4e4ef19>>
+ * @generated SignedSource<<b4e9e0cf8178561108a0f5f674f3b85c>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -64,7 +63,7 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v0/*: any*/)
+        (v0/*:: as any*/)
       ],
       "storageKey": null
     },
@@ -116,7 +115,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v0/*: any*/),
+                (v0/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,

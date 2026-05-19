@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<ef73c0cfb938d5299cc821d0becb13cc>>
+ * @generated SignedSource<<080ffbc31a8145da1f1ce58ca794517b>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -82,20 +81,20 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editOrganizationZoneDialog_rootQuery",
-    "selections": (v1/*: any*/),
+    "selections": (v1/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editOrganizationZoneDialog_rootQuery",
-    "selections": (v1/*: any*/)
+    "selections": (v1/*:: as any*/)
   },
   "params": {
     "cacheID": "35b86e0034f74662383871fc84fe754c",

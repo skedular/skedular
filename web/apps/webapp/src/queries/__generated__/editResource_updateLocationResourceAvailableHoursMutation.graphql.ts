@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<89bd7d2cc821c5c67437a78ef4314df3>>
+ * @generated SignedSource<<03faffbf0fb16d5a4097b44cb551f1cf>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -227,9 +226,9 @@ v3 = {
   "storageKey": null
 },
 v4 = [
-  (v1/*: any*/),
-  (v2/*: any*/),
-  (v3/*: any*/)
+  (v1/*:: as any*/),
+  (v2/*:: as any*/),
+  (v3/*:: as any*/)
 ],
 v5 = [
   {
@@ -284,8 +283,8 @@ v6 = [
         "name": "resource",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
+          (v1/*:: as any*/),
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -300,7 +299,7 @@ v6 = [
             "name": "requireBookingApproval",
             "storageKey": null
           },
-          (v3/*: any*/),
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -315,7 +314,7 @@ v6 = [
             "kind": "LinkedField",
             "name": "customTags",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v4/*:: as any*/),
             "storageKey": null
           },
           {
@@ -325,7 +324,7 @@ v6 = [
             "kind": "LinkedField",
             "name": "zones",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v4/*:: as any*/),
             "storageKey": null
           },
           {
@@ -335,7 +334,7 @@ v6 = [
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v4/*:: as any*/),
             "storageKey": null
           },
           {
@@ -345,7 +344,7 @@ v6 = [
             "kind": "LinkedField",
             "name": "resourceType",
             "plural": false,
-            "selections": (v4/*: any*/),
+            "selections": (v4/*:: as any*/),
             "storageKey": null
           },
           {
@@ -378,7 +377,7 @@ v6 = [
                     "kind": "LinkedField",
                     "name": "monday",
                     "plural": false,
-                    "selections": (v5/*: any*/),
+                    "selections": (v5/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -388,7 +387,7 @@ v6 = [
                     "kind": "LinkedField",
                     "name": "tuesday",
                     "plural": false,
-                    "selections": (v5/*: any*/),
+                    "selections": (v5/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -398,7 +397,7 @@ v6 = [
                     "kind": "LinkedField",
                     "name": "wednesday",
                     "plural": false,
-                    "selections": (v5/*: any*/),
+                    "selections": (v5/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -408,7 +407,7 @@ v6 = [
                     "kind": "LinkedField",
                     "name": "thursday",
                     "plural": false,
-                    "selections": (v5/*: any*/),
+                    "selections": (v5/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -418,7 +417,7 @@ v6 = [
                     "kind": "LinkedField",
                     "name": "friday",
                     "plural": false,
-                    "selections": (v5/*: any*/),
+                    "selections": (v5/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -428,7 +427,7 @@ v6 = [
                     "kind": "LinkedField",
                     "name": "saturday",
                     "plural": false,
-                    "selections": (v5/*: any*/),
+                    "selections": (v5/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -438,7 +437,7 @@ v6 = [
                     "kind": "LinkedField",
                     "name": "sunday",
                     "plural": false,
-                    "selections": (v5/*: any*/),
+                    "selections": (v5/*:: as any*/),
                     "storageKey": null
                   }
                 ],
@@ -456,20 +455,20 @@ v6 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "editResource_updateLocationResourceAvailableHoursMutation",
-    "selections": (v6/*: any*/),
+    "selections": (v6/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "editResource_updateLocationResourceAvailableHoursMutation",
-    "selections": (v6/*: any*/)
+    "selections": (v6/*:: as any*/)
   },
   "params": {
     "cacheID": "76003ad8efa893151132ae527a8dd36f",

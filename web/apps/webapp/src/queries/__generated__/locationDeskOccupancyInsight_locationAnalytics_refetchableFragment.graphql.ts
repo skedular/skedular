@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<26d8a96ce222582cf7299de015abda65>>
+ * @generated SignedSource<<d3b33256156ffbe433a59ebe6c97d832>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -43,7 +42,7 @@ var v0 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "locationDeskOccupancyInsight_locationAnalytics_refetchableFragment",
@@ -59,7 +58,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "locationDeskOccupancyInsight_locationAnalytics_refetchableFragment",
     "selections": [

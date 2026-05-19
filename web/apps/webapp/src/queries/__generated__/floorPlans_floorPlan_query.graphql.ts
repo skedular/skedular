@@ -1,7 +1,6 @@
 /**
- * @generated SignedSource<<5992de0312c30047ada2ea091a550074>>
+ * @generated SignedSource<<60f8934fbee6fe810f36acb885772063>>
  * @lightSyntaxTransform
- * @nogrep
  */
 
 /* tslint:disable */
@@ -116,8 +115,8 @@ return {
           "name": "floorPlan",
           "plural": false,
           "selections": [
-            (v0/*: any*/),
-            (v1/*: any*/),
+            (v0/*:: as any*/),
+            (v1/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -191,7 +190,7 @@ return {
                   "name": "resource",
                   "plural": false,
                   "selections": [
-                    (v0/*: any*/)
+                    (v0/*:: as any*/)
                   ],
                   "storageKey": null
                 }
@@ -263,8 +262,8 @@ return {
                       "name": "node",
                       "plural": false,
                       "selections": [
-                        (v0/*: any*/),
-                        (v1/*: any*/),
+                        (v0/*:: as any*/),
+                        (v1/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,
