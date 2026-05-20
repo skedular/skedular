@@ -35,7 +35,7 @@ import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import {
   BodyIconTypography,
   coal,
@@ -53,6 +53,7 @@ import { usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { secondDrawerCollapsedDrawerWidth, secondDrawerExpandedDrawerWidth } from './commons';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   rootDataRelay: leftSideNavigationMenuContent_query$key;

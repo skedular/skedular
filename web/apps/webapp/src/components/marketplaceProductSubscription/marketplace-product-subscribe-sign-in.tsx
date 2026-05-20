@@ -1,11 +1,11 @@
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useKnownParams } from '@skedular/shared';
 import type { marketplaceProductSubscribeSignIn_rootQuery } from '@/queries/__generated__/marketplaceProductSubscribeSignIn_rootQuery.graphql';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, useQueryLoader, usePreloadedQuery, PreloadedQuery } from 'react-relay';
 import MarketplaceProductSubscribeAuthGate from './marketplace-product-subscribe-auth-gate';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<marketplaceProductSubscribeSignIn_rootQuery, Record<string, unknown>>;

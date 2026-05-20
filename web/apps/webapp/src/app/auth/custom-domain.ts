@@ -1,5 +1,5 @@
 import type { NextRequest } from 'next/server';
-import { getOrganizationCustomDomainFromHost, normalizeHost } from '@skedular/shared/utils';
+import { getOrganizationCustomDomainFromHost, normalizeHost } from './host-utils';
 
 const firstHeaderValue = (value: string | null) => value?.split(',')[0]?.trim();
 

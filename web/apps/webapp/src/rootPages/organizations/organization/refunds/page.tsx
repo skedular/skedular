@@ -10,12 +10,12 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
-import { useKnownParams } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import useKnownParams from '@/hooks/use-known-params';
 
 const RootQuery = graphql`
   query pageOrganizationRefunds_rootQuery($organizationCustomDomain: String!, $statuses: [String!]) {

@@ -2,7 +2,6 @@ import { BodyIconTypography, StackRow } from '@skedular/ui';
 import { ArrowLeftIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useKnownParams } from '@skedular/shared';
 import type { marketplaceProductDetail_rootQuery } from '@/queries/__generated__/marketplaceProductDetail_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -13,6 +12,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import MarketplaceProductDetailBookingCard from './marketplace-product-detail-booking-card';
 import MarketplaceProductDetailOverview from './marketplace-product-detail-overview';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<marketplaceProductDetail_rootQuery, Record<string, unknown>>;

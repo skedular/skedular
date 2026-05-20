@@ -2,7 +2,6 @@ import { BodyIconTypography, StackRow } from '@skedular/ui';
 import { ArrowLeftIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useKnownParams } from '@skedular/shared';
 import type { marketplaceProductSubscribe_rootQuery } from '@/queries/__generated__/marketplaceProductSubscribe_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -13,6 +12,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import MarketplaceProductSubscribeForm from './marketplace-product-subscribe-form';
 import MarketplaceProductSubscribeHero from './marketplace-product-subscribe-hero';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<marketplaceProductSubscribe_rootQuery, Record<string, unknown>>;

@@ -9,7 +9,7 @@ import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_root
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import { InMsTeamsContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { InMsTeamsContext, useIntegratedPlatrform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, PushToRight, SmallHeadingIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { usePathname, useRouter } from 'next/navigation';
@@ -18,6 +18,7 @@ import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;

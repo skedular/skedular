@@ -14,7 +14,7 @@ import { getMarketplaceLocationLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import { getCustomerFullName, getRelayErrorMessage, isStoredFullDayRange, toStoredBookingTimeRange } from '@skedular/shared';
 import type { marketplaceProductBookingDetails_rootQuery } from '@/queries/__generated__/marketplaceProductBookingDetails_rootQuery.graphql';
 import Alert from '@mui/material/Alert';
@@ -39,6 +39,7 @@ import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingDetailsHero from './marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from './marketplace-product-booking-payment-panel';
 import MarketplaceRefundStatusCard from './marketplace-refund-status-card';
+import useKnownParams from '@/hooks/use-known-params';
 
 const RootQuery = graphql`
   query marketplaceProductBookingDetails_rootQuery($bookingId: String!) {

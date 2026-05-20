@@ -6,7 +6,6 @@ import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
 import { startOfDay, toShortDateWithAdditionalDayInfo } from '@skedular/shared';
 import type { pageOrganizationBooking_rootQuery } from '@/queries/__generated__/pageOrganizationBooking_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
@@ -18,6 +17,7 @@ import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
+import useKnownParams from '@/hooks/use-known-params';
 
 const RootQuery = graphql`
   query pageOrganizationBooking_rootQuery(

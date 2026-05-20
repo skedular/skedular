@@ -9,8 +9,8 @@ vi.mock('react-relay', () => ({
   useFragment: (...args: unknown[]) => useFragmentMock(...args),
 }));
 
-vi.mock('@skedular/shared', () => ({
-  useKnownParams: () => ({ organizationCustomDomain: 'test-org' }),
+vi.mock('@/hooks/use-known-params', () => ({
+  default: () => ({ organizationCustomDomain: 'test-org' }),
 }));
 
 vi.mock('next/link', () => ({

@@ -2,7 +2,6 @@ import { BodyIconTypography, StackRow } from '@skedular/ui';
 import { ArrowLeftIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useKnownParams } from '@skedular/shared';
 import { startOfDay, toOpeningHoursFromTime } from '@skedular/shared';
 import type { marketplaceProductBooking_rootQuery } from '@/queries/__generated__/marketplaceProductBooking_rootQuery.graphql';
 import Button from '@mui/material/Button';
@@ -16,6 +15,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import MarketplaceProductBookingForm from './marketplace-product-booking-form';
 import MarketplaceProductBookingHero from './marketplace-product-booking-hero';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<marketplaceProductBooking_rootQuery, Record<string, unknown>>;

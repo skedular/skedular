@@ -6,7 +6,7 @@ import type { pageFloorPlans_rootQuery } from '@/queries/__generated__/pageFloor
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
-import { endOfDay, startOfDay, useKnownParams } from '@skedular/shared';
+import { endOfDay, startOfDay } from '@skedular/shared';
 import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,7 @@ import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
+import useKnownParams from '@/hooks/use-known-params';
 
 const RootQuery = graphql`
   query pageFloorPlans_rootQuery(

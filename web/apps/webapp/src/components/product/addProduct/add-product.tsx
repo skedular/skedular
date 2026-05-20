@@ -4,7 +4,7 @@ import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import ProductEditorForm from '@/components/product/product-editor-form';
 import { RelayError, toRootError } from '@/components/relayError';
-import { PaletteModeContext, useKnownParams } from '@skedular/shared';
+import { PaletteModeContext } from '@skedular/shared';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import type { addProduct_addProductMutation, Currency, PaymentMethod, ProductPricingCadence, ProductType } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { array, boolean, object, string } from 'yup';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<addProduct_rootQuery, Record<string, unknown>>;

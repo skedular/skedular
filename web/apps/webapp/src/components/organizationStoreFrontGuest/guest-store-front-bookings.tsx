@@ -3,7 +3,7 @@ import { ArrowLeftIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceI
 import { getMarketplaceBookingDetailsLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import { convertCalendarDayToStartOfDay, toStoredBookingTimeRange } from '@skedular/shared';
 import type { guestStoreFrontBookings_rootQuery } from '@/queries/__generated__/guestStoreFrontBookings_rootQuery.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -21,6 +21,7 @@ import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<guestStoreFrontBookings_rootQuery, Record<string, unknown>>;

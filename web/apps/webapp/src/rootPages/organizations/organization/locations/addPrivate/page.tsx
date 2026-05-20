@@ -1,8 +1,8 @@
 import { AddPrivateLocation } from '@/components/location/addLocation';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo } from 'react';
+import useKnownParams from '@/hooks/use-known-params';
 
 const RootPage = () => {
   const searchParams = useSearchParams();

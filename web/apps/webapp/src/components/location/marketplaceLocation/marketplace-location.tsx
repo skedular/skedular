@@ -32,7 +32,7 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { formatPriceForDisplay, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { formatPriceForDisplay, useIntegratedPlatrform } from '@skedular/shared';
 import {
   BodyIconTypography,
   CaptionIconTypography,
@@ -46,6 +46,7 @@ import type { LatLngTuple } from 'leaflet';
 import { usePathname, useRouter } from 'next/navigation';
 import { memo, type ReactNode, useEffect, useMemo, useState } from 'react';
 import { graphql, useRefetchableFragment } from 'react-relay';
+import useKnownParams from '@/hooks/use-known-params';
 
 let L: typeof import('leaflet');
 let MapContainer: typeof import('react-leaflet').MapContainer;

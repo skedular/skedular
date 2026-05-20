@@ -21,7 +21,7 @@ import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/m
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import { convertCalendarDayToStartOfDay, getCustomerFullName, getRelayErrorMessage, toStoredBookingTimeRange } from '@skedular/shared';
 import type { marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { marketplaceProductSubscriptionDetails_relatedBookingsQuery } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_relatedBookingsQuery.graphql';
@@ -49,6 +49,7 @@ import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingDetailsHero from '../marketplaceProductBooking/marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from '../marketplaceProductBooking/marketplace-product-booking-payment-panel';
 import MarketplaceRefundStatusCard from '../marketplaceProductBooking/marketplace-refund-status-card';
+import useKnownParams from '@/hooks/use-known-params';
 
 type PendingCancellationConfirmation = {
   type: SupportedMarketplaceBookingSubscriptionCancellationMode;

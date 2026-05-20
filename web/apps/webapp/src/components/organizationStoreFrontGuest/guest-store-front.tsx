@@ -6,7 +6,7 @@ import type { guestStoreFrontSelectedLocationProductsQuery } from '@/queries/__g
 import Container from '@mui/material/Container';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/system/Box';
-import { convertCalendarDayToStartOfDay, endOfWeek, useKnownParams } from '@skedular/shared';
+import { convertCalendarDayToStartOfDay, endOfWeek } from '@skedular/shared';
 import { BodyIconTypography, LargeHeadingIconTypography, MediumHeadingIconTypography, SubtitleIconTypography } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import dayjs from 'dayjs';
@@ -18,6 +18,7 @@ import GuestStoreFrontFooter from './guest-store-front-footer';
 import GuestStoreFrontLocationsStrip from './guest-store-front-locations-strip';
 import GuestStoreFrontProductCard from './guest-store-front-product-card';
 import GuestStoreFrontUpcomingBookingsStrip from './guest-store-front-upcoming-bookings-strip';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<guestStoreFront_rootQuery, Record<string, unknown>>;

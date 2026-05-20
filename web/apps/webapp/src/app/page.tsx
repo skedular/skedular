@@ -1,13 +1,14 @@
 'use client';
 
 import { postSignOutReturnToKey } from '@/components/links';
-import { getProductAppDefinition, useKnownParams } from '@skedular/shared';
+import { getProductAppDefinition } from '@skedular/shared';
 import CoWorkingSubdomain from './customer-facing-subdomain/co-working-subdomain';
 import PrivateOrganizationSubdomain from './customer-facing-subdomain/private-organization-subdomain';
 import { resolveCustomerFacingEntryPoint } from './customer-facing-subdomain/customer-facing-subdomain-resolver';
 import OrganizationStoreFrontPage from '@/rootPages/marketplace/page';
 import Page from '@/rootPages/page';
 import { memo, useEffect } from 'react';
+import useKnownParams from '@/hooks/use-known-params';
 
 const appDefinition = getProductAppDefinition('webapp');
 

@@ -2,7 +2,7 @@ import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow
 import { getMarketplaceLocationLink, getMarketplaceProductBookingLink, getMarketplaceProductSubscribeLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel, MarketplaceCancellationPolicyDetails } from '@/components/marketplaceProduct';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import { formatPriceForDisplay } from '@skedular/shared';
 import type { marketplaceProductDetailBookingCard_product$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_product.graphql';
 import type { marketplaceProductDetailBookingCard_query$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_query.graphql';
@@ -17,6 +17,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import type { MarketplaceProductPricingPlan, MarketplaceProductTypeSummary } from './types';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   rootDataRelay: marketplaceProductDetailBookingCard_query$key;

@@ -1,7 +1,7 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon } from '@/components/icons';
 import { getMarketplaceBookingDetailsLink, getMarketplaceBookingsLink } from '@/components/links';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import { toStoredBookingTimeRange } from '@skedular/shared';
 import type { guestStoreFrontUpcomingBookingsStrip_query$key } from '@/queries/__generated__/guestStoreFrontUpcomingBookingsStrip_query.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   rootDataRelay: guestStoreFrontUpcomingBookingsStrip_query$key;

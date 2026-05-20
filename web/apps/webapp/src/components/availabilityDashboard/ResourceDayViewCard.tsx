@@ -3,13 +3,13 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
-import { useKnownParams } from '@skedular/shared';
 import { CaptionIconTypography, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import Link from 'next/link';
 import { memo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import AvailabilityStatusBadge from './AvailabilityStatusBadge';
 import BookingWindowList from './BookingWindowList';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   resourceDayViewRef: ResourceDayViewCard_resourceDayView$key;

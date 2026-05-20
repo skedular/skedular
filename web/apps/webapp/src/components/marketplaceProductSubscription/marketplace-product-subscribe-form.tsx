@@ -3,7 +3,7 @@ import { getMarketplaceProductLink, getMarketplaceSubscriptionDetailsLink } from
 import { CustomerTermsAndConditionsPanel } from '@/components/marketplaceProduct';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import { formatPriceForDisplay, getRelayErrorMessage, startOfDay, toShortDate } from '@skedular/shared';
 import type { marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation.graphql';
 import type { marketplaceProductSubscribeForm_query$key, PaymentMethod } from '@/queries/__generated__/marketplaceProductSubscribeForm_query.graphql';
@@ -26,6 +26,7 @@ import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 import MarketplaceProductSubscribeSummary from './marketplace-product-subscribe-summary';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   rootDataRelay: marketplaceProductSubscribeForm_query$key;

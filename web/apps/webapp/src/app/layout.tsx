@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import { headers } from 'next/headers';
 import { getProductAppDefinition } from '@skedular/shared';
-import { isOrganizationCustomDomainHost } from '@skedular/shared/utils';
+import { isOrganizationCustomDomainHost } from './auth/host-utils';
 import type { PropsWithChildren } from 'react';
 import ClientRootLayout from './client-root-layout';
 import './fonts.css';

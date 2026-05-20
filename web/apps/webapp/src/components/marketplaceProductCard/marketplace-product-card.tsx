@@ -1,7 +1,7 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceProductBookingLink, getMarketplaceProductLink, getMarketplaceProductSubscribeLink } from '@/components/links';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -10,6 +10,7 @@ import Radio from '@mui/material/Radio';
 import Box from '@mui/system/Box';
 import { useRouter } from 'next/navigation';
 import { memo, useMemo, useState } from 'react';
+import useKnownParams from '@/hooks/use-known-params';
 
 type PricingRow = {
   amountLabel: string;

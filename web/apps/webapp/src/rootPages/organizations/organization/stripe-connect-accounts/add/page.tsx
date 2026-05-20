@@ -1,8 +1,8 @@
 import { RootShell } from '@/components/rootShell';
 import { AddStripeConnectAccount } from '@/components/stripeConnectAccount/addStripeConnectAccount';
-import { useKnownParams } from '@skedular/shared';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
+import useKnownParams from '@/hooks/use-known-params';
 
 const RootPage = () => {
   const router = useRouter();

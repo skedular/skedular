@@ -1,6 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
+import { getOrganizationCustomDomainFromHost } from '../app/auth/host-utils';
 
 const getKnownParamValue = (value: string | string[] | undefined): string => {
   if (typeof value === 'string') {
@@ -28,10 +29,13 @@ const useKnownParams = () => {
     teamId,
     organizationStripeConnectAccountId,
   } = useParams();
+  const host = typeof window !== 'undefined' ? window.location.hostname : '';
+  const customDomainOrganizationName = getOrganizationCustomDomainFromHost(host);
+  const isCustomDomain = customDomainOrganizationName !== null;
 
   return {
-    isCustomDomain: false,
-    organizationCustomDomain: getKnownParamValue(organizationCustomDomain),
+    isCustomDomain,
+    organizationCustomDomain: customDomainOrganizationName ?? getKnownParamValue(organizationCustomDomain),
     locationId: getKnownParamValue(locationId),
     bookingId: getKnownParamValue(bookingId),
     subscriptionId: getKnownParamValue(subscriptionId),

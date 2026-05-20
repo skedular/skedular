@@ -6,12 +6,12 @@ import { RelayError, toRootError } from '@/components/relayError';
 import type { unauthenticatedOrganizationStoreFrontRootShell_rootQuery } from '@/queries/__generated__/unauthenticatedOrganizationStoreFrontRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useKnownParams } from '@skedular/shared';
 import type { PropsWithChildren } from 'react';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<unauthenticatedOrganizationStoreFrontRootShell_rootQuery, Record<string, unknown>>;

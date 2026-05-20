@@ -3,7 +3,6 @@ import { Loading } from '@/components/loading';
 import { OrganizationMarketplaceSetup } from '@/components/organization/organizationMarketplaceSetup';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
 import type { pageOrganizationMarketplaceSetup_rootQuery } from '@/queries/__generated__/pageOrganizationMarketplaceSetup_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -13,6 +12,7 @@ import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationMarketplaceSetup_rootQuery, Record<string, unknown>>;

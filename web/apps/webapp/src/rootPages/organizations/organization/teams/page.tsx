@@ -1,7 +1,7 @@
 import { OrganizationTeams } from '@/components/organization/organizationTeams';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
 import { memo } from 'react';
+import useKnownParams from '@/hooks/use-known-params';
 
 const RootPage = () => {
   const { organizationCustomDomain } = useKnownParams();

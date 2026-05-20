@@ -6,7 +6,7 @@ import { CalendarIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { getCustomerFullName, getRelayErrorMessage, isMidnight, keyboardSearchDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@skedular/shared';
 import type {
   BookingCategory as AddPrivateBookingCategory,
@@ -45,6 +45,7 @@ import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { array, boolean, mixed, object, string } from 'yup';
+import useKnownParams from '@/hooks/use-known-params';
 
 type CustomerDetails = {
   id: string;

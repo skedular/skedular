@@ -45,7 +45,7 @@ import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { getRelayErrorMessage, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { getRelayErrorMessage, useIntegratedPlatrform } from '@skedular/shared';
 import {
   BodyIconTypography,
   CollectionToolbar,
@@ -68,6 +68,7 @@ import { Form, FormSpy } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
+import useKnownParams from '@/hooks/use-known-params';
 
 const surfaceSx: SxProps<Theme> = {
   borderRadius: 4,

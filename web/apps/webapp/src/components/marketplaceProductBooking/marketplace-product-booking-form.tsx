@@ -18,7 +18,7 @@ import TextField from '@mui/material/TextField';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { formatPriceForDisplay, getRelayErrorMessage, toShortDate, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { formatPriceForDisplay, getRelayErrorMessage, toShortDate, useIntegratedPlatrform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -27,6 +27,7 @@ import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingSummary from './marketplace-product-booking-summary';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   onDateChange: (value: Dayjs) => void;

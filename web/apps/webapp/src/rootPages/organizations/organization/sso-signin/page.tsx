@@ -3,7 +3,7 @@ import { LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { getOrganizationBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
-import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { coal, emerald } from '@skedular/ui';
 import type { pageOrganizationSsoSignin_rootQuery } from '@/queries/__generated__/pageOrganizationSsoSignin_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -15,6 +15,7 @@ import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationSsoSignin_rootQuery, Record<string, unknown>>;

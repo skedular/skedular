@@ -2,7 +2,7 @@ import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIco
 import { PaymentStatusIcon, QuantityIcon } from '@/components/icons';
 import { getMarketplaceSubscriptionDetailsLink, getMarketplaceSubscriptionsLink } from '@/components/links';
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import type { guestStoreFrontActiveSubscriptionsStrip_query$key } from '@/queries/__generated__/guestStoreFrontActiveSubscriptionsStrip_query.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Button from '@mui/material/Button';
@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   rootDataRelay: guestStoreFrontActiveSubscriptionsStrip_query$key;

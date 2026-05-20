@@ -13,7 +13,6 @@ vi.mock('@skedular/shared', () => ({
   startOfDay: (d: Date) => d,
   toShortDateWithoutWeekDay: (d: Date) => (d ? d.toString().slice(0, 10) : '2026-01-15'),
   endOfDay: (d: Date) => d,
-  useKnownParams: () => ({ organizationCustomDomain: 'test-org' }),
 }));
 
 // Stub DayPicker to a simple date input so tests can interact with it

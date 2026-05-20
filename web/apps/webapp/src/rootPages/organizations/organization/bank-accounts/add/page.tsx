@@ -1,8 +1,8 @@
 import { AddBankAccount } from '@/components/bankAccount/addBankAccount';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
+import useKnownParams from '@/hooks/use-known-params';
 
 const RootPage = () => {
   const router = useRouter();

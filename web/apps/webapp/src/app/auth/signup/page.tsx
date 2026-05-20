@@ -4,7 +4,7 @@ import CustomOrganizationAuthPage from '@/components/auth/custom-organization-au
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import type { pageAuthSignUpQuery } from '@/queries/__generated__/pageAuthSignUpQuery.graphql';
-import { getOrganizationCustomDomainFromHost } from '@skedular/shared/utils';
+import { getOrganizationCustomDomainFromHost } from '../host-utils';
 import { useSearchParams } from 'next/navigation';
 import { memo, Suspense, useEffect, useSyncExternalStore } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';

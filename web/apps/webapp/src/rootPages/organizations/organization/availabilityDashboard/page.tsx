@@ -5,9 +5,9 @@ import type { AvailabilityFilters } from '@/components/availabilityDashboard/Ava
 import { Loading } from '@/components/loading';
 import { RootShell } from '@/components/rootShell';
 import type { pageAvailabilityDashboardQuery, ResourceAvailabilityClassification } from '@/queries/__generated__/pageAvailabilityDashboardQuery.graphql';
-import { useKnownParams } from '@skedular/shared';
 import { memo, Suspense, useCallback, useEffect, useState, useTransition } from 'react';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import useKnownParams from '@/hooks/use-known-params';
 
 // Hardcoded ordering — no sort controls in the UI.
 const HARDCODED_ORDER_BY = [{ direction: 'ASCENDING' as const, field: 'RESOURCE_NAME' as const }];

@@ -2,7 +2,7 @@ import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackCol
 import { ArrowRightIcon, CheckIcon, ClosedAllDayIcon } from '@/components/icons';
 import { getMarketplaceProductLink, getSignInLink, getSignUpLink } from '@/components/links';
 import { formatPriceForDisplay } from '@skedular/shared';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { useIntegratedPlatrform } from '@skedular/shared';
 import type { marketplaceProductSubscribeAuthGate_query$key } from '@/queries/__generated__/marketplaceProductSubscribeAuthGate_query.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -15,6 +15,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { isSubscriptionCadence } from './subscription-utils';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   bodyLabel?: string;

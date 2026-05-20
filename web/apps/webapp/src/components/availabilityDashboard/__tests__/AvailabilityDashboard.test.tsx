@@ -18,7 +18,6 @@ vi.mock('next/navigation', () => ({
 }));
 
 vi.mock('@skedular/shared', () => ({
-  useKnownParams: () => ({ organizationCustomDomain: 'test-org' }),
   startOfDay: (d: Date) => d,
   toShortDateWithoutWeekDay: (d: Date) => (d ? d.toString().slice(0, 10) : '2026-01-15'),
   endOfDay: (d: Date) => d,

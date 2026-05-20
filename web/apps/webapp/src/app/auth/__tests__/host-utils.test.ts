@@ -11,14 +11,14 @@ describe('host-utils', () => {
     expect(getOrganizationCustomDomainFromHost('skedular.app')).toBeNull();
     expect(getOrganizationCustomDomainFromHost('staging.skedular.app')).toBeNull();
     expect(getOrganizationCustomDomainFromHost('spaces.skedular.app')).toBeNull();
-    expect(getOrganizationCustomDomainFromHost('staging.teams.skedular.app')).toBeNull();
+    expect(getOrganizationCustomDomainFromHost('teamsstaging.skedular.app')).toBeNull();
   });
 
   it('reads the organization label before the product app host label', () => {
     expect(getOrganizationCustomDomainFromHost('trial.spaces.skedular.app')).toBe('trial');
     expect(getOrganizationCustomDomainFromHost('trial.teams.skedular.app')).toBe('trial');
-    expect(getOrganizationCustomDomainFromHost('trial.staging.spaces.skedular.app')).toBe('trial');
-    expect(getOrganizationCustomDomainFromHost('trial.staging.teams.skedular.app')).toBe('trial');
+    expect(getOrganizationCustomDomainFromHost('trial.spacesstaging.skedular.app')).toBe('trial');
+    expect(getOrganizationCustomDomainFromHost('trial.teamsstaging.skedular.app')).toBe('trial');
   });
 
   it('uses configured registered app hosts as the organization boundary', () => {

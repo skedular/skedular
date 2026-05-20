@@ -1,16 +1,19 @@
 import { render, screen } from '@testing-library/react';
-import { useKnownParams } from '@skedular/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import RootPage from './page';
+import useKnownParams from '@/hooks/use-known-params';
 
 vi.mock('@skedular/shared', async () => {
   const actual = await vi.importActual<typeof import('@skedular/shared')>('@skedular/shared');
 
   return {
     ...actual,
-    useKnownParams: vi.fn(() => ({ isCustomDomain: false })),
   };
 });
+
+vi.mock('@/hooks/use-known-params', () => ({
+  default: vi.fn(() => ({ isCustomDomain: false })),
+}));
 
 vi.mock('@/rootPages/page', () => ({
   default: () => <div>Public discovery root</div>,

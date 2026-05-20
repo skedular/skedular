@@ -3,12 +3,12 @@ import { MarketplaceLocation } from '@/components/location/marketplaceLocation';
 import { RelayError, toRootError } from '@/components/relayError';
 import { NoOrganizationRootShell, OrganizationStoreFrontRootShell, UnauthenticatedOrganizationStoreFrontRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
 import type { pageMarketplaceLocation_rootQuery } from '@/queries/__generated__/pageMarketplaceLocation_rootQuery.graphql';
-import { useKnownParams } from '@skedular/shared';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<pageMarketplaceLocation_rootQuery, Record<string, unknown>>;

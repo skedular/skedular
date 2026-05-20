@@ -5,9 +5,9 @@ const defaultRegisteredHosts = [
   'staging.skedular.app',
   'www.skedular.app',
   'spaces.skedular.app',
-  'staging.spaces.skedular.app',
+  'spacesstaging.skedular.app',
   'teams.skedular.app',
-  'staging.teams.skedular.app',
+  'teamsstaging.skedular.app',
 ];
 
 export const normalizeHost = (value: string | null | undefined) => (value ?? '').split(':')[0]?.replace(/\.$/, '').toLowerCase() ?? '';

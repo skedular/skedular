@@ -30,7 +30,7 @@ import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
-import { getRelayErrorMessage, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { getRelayErrorMessage, useIntegratedPlatrform } from '@skedular/shared';
 import { BodyIconTypography, DefaultDialogTitle, defaultPadding, PageHeaderPanel, StackColumn, StackRow, SubtitleIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
@@ -40,6 +40,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
+import useKnownParams from '@/hooks/use-known-params';
 
 const surfaceSx: SxProps<Theme> = {
   borderRadius: 4,

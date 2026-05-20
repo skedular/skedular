@@ -3,7 +3,6 @@ import { Loading } from '@/components/loading';
 import { OrganizationAdmin } from '@/components/organization/organizationAdmin';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
 import type { pageOrganizationAdmin_rootQuery } from '@/queries/__generated__/pageOrganizationAdmin_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -12,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationAdmin_rootQuery, Record<string, unknown>>;
