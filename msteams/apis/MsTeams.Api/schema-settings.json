@@ -2,7 +2,7 @@
   "name": "msteams-api",
   "transports": {
     "http": {
-      "url": "http://placeholder/v1/graphql",
+      "url": "http://msteams-api/v1/graphql",
       "clientName": "subgraph-msteams"
     }
   }

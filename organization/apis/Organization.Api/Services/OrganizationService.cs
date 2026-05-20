@@ -282,7 +282,7 @@ public class OrganizationService(
         string? customDomain,
         CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(id, customDomain, cancellationToken);
+        var organization = await cachedOrganizationService.GetPublicByIdOrCustomDomainAsync(id, customDomain, cancellationToken);
         if (organization is null)
         {
             return null;
@@ -290,6 +290,12 @@ public class OrganizationService(
 
         if (organization.Type.ToOrganizationType() == OrganizationType.Private)
         {
+            organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(id, customDomain, cancellationToken);
+            if (organization is null)
+            {
+                return null;
+            }
+
             return await EnrichOrganizationAsync(await cachedCustomerService.GetIdAsync(cancellationToken), organization, false, cancellationToken);
         }
 

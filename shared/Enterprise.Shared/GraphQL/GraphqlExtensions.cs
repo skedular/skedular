@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using OpenTelemetry.Trace;
 
 namespace Enterprise.Shared.GraphQL;
@@ -54,6 +55,16 @@ public static class GraphqlExtensions
                 : builder.AddInMemorySubscriptions(subscriptionOptions);
 
             configure(builder);
+
+            var warmupQueries = graphqlConfig.WarmupQueries.Count == 0 ? ["{ __typename }"] : graphqlConfig.WarmupQueries;
+
+            builder.AddWarmupTask<ConfiguredGraphqlWarmupTask>(
+                serviceProvider =>
+                    new ConfiguredGraphqlWarmupTask(
+                        schemaName,
+                        warmupQueries,
+                        serviceProvider.GetRootServiceProvider().GetRequiredService<ILogger<ConfiguredGraphqlWarmupTask>>()),
+                _ => false);
 
             if (!graphqlConfig.DisableTelemetry)
             {

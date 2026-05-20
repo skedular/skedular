@@ -11,6 +11,8 @@ public class GraphqlConfig
     public bool CollectOperationPlanTelemetry { get; set; }
     public bool AllowErrorHandlingModeOverride { get; set; }
     public TimeSpan? ExecutionTimeout { get; set; }
+    public TimeSpan? SubgraphAttemptTimeout { get; set; }
     public bool IncludeExceptionDetails { get; set; }
     public string Path { get; set; } = string.Empty;
+    public IReadOnlyList<string> WarmupQueries { get; set; } = [];
 }

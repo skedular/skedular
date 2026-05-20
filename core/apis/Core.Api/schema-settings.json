@@ -2,7 +2,7 @@
   "name": "core-api",
   "transports": {
     "http": {
-      "url": "http://placeholder/v1/graphql",
+      "url": "http://core-api/v1/graphql",
       "clientName": "subgraph-core"
     }
   }

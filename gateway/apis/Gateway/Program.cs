@@ -1,5 +1,6 @@
 using Enterprise.Shared;
 using Enterprise.Shared.Ai;
+using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.GraphQL.Configurations;
 using Enterprise.Shared.GraphQL.Handlers;
 using Gateway.Configurations;
@@ -15,11 +16,14 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>(true);
+        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
         var services = builder.Services;
         var configuration = builder.Configuration;
 
         services.AddTransient<RequestContextPropagationHandler>();
+
+        var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
+        ArgumentNullException.ThrowIfNull(graphqlConfig);
 
         var subgraphsConfigurations = configuration.GetSection(SubgraphsConfigurations.Key).Get<SubgraphsConfigurations>()
                                       ?? new SubgraphsConfigurations();
@@ -32,14 +36,19 @@ public class Program
             }
 
             var targetUrl = subgraph.Url;
-            services
+            var httpClientBuilder = services
                 .AddHttpClient(subgraph.ClientName)
-                .AddHttpMessageHandler(_ => new RewriteHostHandler(targetUrl))
-                .AddHttpMessageHandler<RequestContextPropagationHandler>();
-        }
+                .ConfigureHttpClient(httpClient => httpClient.Timeout = Timeout.InfiniteTimeSpan)
+                .AddHttpMessageHandler(_ => new RewriteHostHandler(targetUrl));
 
-        var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
-        ArgumentNullException.ThrowIfNull(graphqlConfig);
+            httpClientBuilder.AddStandardResilienceHandler(options =>
+            {
+                options.AttemptTimeout.Timeout = graphqlConfig.SubgraphAttemptTimeout ?? TimeSpan.FromSeconds(15);
+                options.TotalRequestTimeout.Timeout = graphqlConfig.ExecutionTimeout ?? TimeSpan.FromSeconds(60);
+            });
+
+            httpClientBuilder.AddHttpMessageHandler<RequestContextPropagationHandler>();
+        }
 
         // Register so UseWebApplicationDefaults/MapGraphqlEndpoints maps the Fusion gateway endpoint.
         services.AddSingleton(new GraphqlSchemaRegistration(ISchemaDefinition.DefaultName, graphqlConfig.Path));
@@ -47,6 +56,13 @@ public class Program
         _ = services
             .AddGraphQLGatewayServer(disableDefaultSecurity: true)
             .AddFileSystemConfiguration(Path.Combine(AppContext.BaseDirectory, "gateway.far"))
+            .AddWarmupTask<ConfiguredGraphqlWarmupTask>(
+                serviceProvider =>
+                    new ConfiguredGraphqlWarmupTask(
+                        ISchemaDefinition.DefaultName,
+                        graphqlConfig.WarmupQueries.Count == 0 ? ["{ __typename }"] : graphqlConfig.WarmupQueries,
+                        serviceProvider.GetRootServiceProvider().GetRequiredService<ILogger<ConfiguredGraphqlWarmupTask>>()),
+                _ => false)
             .ModifyRequestOptions(options =>
             {
                 options.IncludeExceptionDetails = graphqlConfig.IncludeExceptionDetails;

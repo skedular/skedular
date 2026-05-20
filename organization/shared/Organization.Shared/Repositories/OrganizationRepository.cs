@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Organization.Shared.Database;
 using Organization.Shared.Models;
+using IndustryMainCategory = Organization.Shared.Database.Entities.IndustryMainCategory;
 using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
 
 namespace Organization.Shared.Repositories;
@@ -16,6 +17,7 @@ namespace Organization.Shared.Repositories;
 public interface IOrganizationRepository : IRepository<Database.Entities.Organization>
 {
     Task<Database.Entities.Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
+    Task<Database.Entities.Organization?> GetPublicByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<Database.Entities.Organization>> GetByIdsOrCustomDomainsAsync(
         IReadOnlyList<string>? ids,
@@ -96,6 +98,14 @@ public static class OrganizationExtensions
                     .ThenInclude(query => query!.OrganizationStripePaymentMethod);
         }
 
+        public IIncludableQueryable<Database.Entities.Organization, IndustryMainCategory> AddPublicDependentObjects() =>
+            originalQuery
+                .AsNoTrackingWithIdentityResolution()
+                .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
+                .Include(query => query.PhysicalAddress)
+                .Include(query => query.IndustrySubCategories)
+                .ThenInclude(query => query.IndustryMainCategory);
+
         public IQueryable<Database.Entities.Organization> AddSearchCriteria(OrganizationSearchCriteria searchCriteria)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.CustomerId);
@@ -149,6 +159,30 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         {
             return await DbContext.Organization
                 .AddDependentObjects(true, false)
+                .FirstOrDefaultAsync(
+                    query => query.CustomDomain != null && query.CustomDomain == customDomain,
+                    cancellationToken);
+        }
+
+        throw new OrganizationLookupRequiresIdOrCustomDomainException();
+    }
+
+    public async Task<Database.Entities.Organization?> GetPublicByIdOrCustomDomainAsync(
+        string? id,
+        string? customDomain,
+        CancellationToken cancellationToken)
+    {
+        if (!string.IsNullOrWhiteSpace(id))
+        {
+            return await DbContext.Organization
+                .AddPublicDependentObjects()
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+        }
+
+        if (!string.IsNullOrWhiteSpace(customDomain))
+        {
+            return await DbContext.Organization
+                .AddPublicDependentObjects()
                 .FirstOrDefaultAsync(
                     query => query.CustomDomain != null && query.CustomDomain == customDomain,
                     cancellationToken);

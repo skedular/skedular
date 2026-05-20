@@ -9,6 +9,11 @@ public interface ICachedOrganizationService
 {
     ValueTask<Database.Entities.Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 
+    ValueTask<Database.Entities.Organization?> GetPublicByIdOrCustomDomainAsync(
+        string? id,
+        string? customDomain,
+        CancellationToken cancellationToken);
+
     ValueTask<IReadOnlyList<Database.Entities.Organization>> GetMyOrganizationsByCustomerIdAsync(
         string customerId,
         CancellationToken cancellationToken);
@@ -47,6 +52,42 @@ public class CachedOrganizationService(
                     CreateKeyByUniqueCustomDomain(customDomain),
                     async ct =>
                         await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(null, customDomain, ct) ??
+                        throw new OrganizationNotFound(),
+                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                    cancellationToken: cancellationToken);
+            }
+
+            throw new InvalidOperationException("Either id or customDomain must be provided.");
+        }
+        catch (OrganizationNotFound)
+        {
+            return null;
+        }
+    }
+
+    public async ValueTask<Database.Entities.Organization?> GetPublicByIdOrCustomDomainAsync(
+        string? id,
+        string? customDomain,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                return await hybridCache.GetOrCreateAsync(
+                    CreatePublicKeyById(id),
+                    async ct => await repositoryFactory.OrganizationRepository.GetPublicByIdOrCustomDomainAsync(id, null, ct) ??
+                                throw new OrganizationNotFound(),
+                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                    cancellationToken: cancellationToken);
+            }
+
+            if (!string.IsNullOrWhiteSpace(customDomain))
+            {
+                return await hybridCache.GetOrCreateAsync(
+                    CreatePublicKeyByUniqueCustomDomain(customDomain),
+                    async ct =>
+                        await repositoryFactory.OrganizationRepository.GetPublicByIdOrCustomDomainAsync(null, customDomain, ct) ??
                         throw new OrganizationNotFound(),
                     new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                     cancellationToken: cancellationToken);
@@ -114,11 +155,13 @@ public class CachedOrganizationService(
         if (!string.IsNullOrWhiteSpace(id))
         {
             await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
+            await hybridCache.RemoveAsync(CreatePublicKeyById(id), cancellationToken);
         }
 
         if (!string.IsNullOrWhiteSpace(customDomain))
         {
             await hybridCache.RemoveAsync(CreateKeyByUniqueCustomDomain(customDomain), cancellationToken);
+            await hybridCache.RemoveAsync(CreatePublicKeyByUniqueCustomDomain(customDomain), cancellationToken);
         }
     }
 
@@ -126,6 +169,12 @@ public class CachedOrganizationService(
 
     private string CreateKeyByUniqueCustomDomain(string customDomain) =>
         $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-customDomain:{customDomain}";
+
+    private string CreatePublicKeyById(string id) =>
+        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-public-id:{id}";
+
+    private string CreatePublicKeyByUniqueCustomDomain(string customDomain) =>
+        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-public-customDomain:{customDomain}";
 
     private string CreateKeyByCustomerIdOrganizations(string customerId) =>
         $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-customer-id-organizations:{customerId}";

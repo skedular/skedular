@@ -39,7 +39,7 @@
         <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.30"/>
 
         <!-- gRPC / Protobuf -->
-        <PackageReference Include="Google.Protobuf" Version="3.34.1"/>
+        <PackageReference Include="Google.Protobuf" Version="3.35.0"/>
         <PackageReference Include="Grpc.AspNetCore" Version="2.80.0"/>
         <PackageReference Include="Grpc.Net.Client" Version="2.80.0"/>
 
@@ -82,7 +82,7 @@
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.6.0"/>
 
         <!-- Microsoft Identity / Graph -->
-        <PackageReference Include="Microsoft.Graph" Version="6.0.3"/>
+        <PackageReference Include="Microsoft.Graph" Version="6.1.0"/>
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.9.0"/>
 
         <!-- OpenTelemetry -->

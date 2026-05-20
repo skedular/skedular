@@ -2,7 +2,7 @@
   "name": "location-api",
   "transports": {
     "http": {
-      "url": "http://placeholder/v1/graphql",
+      "url": "http://location-api/v1/graphql",
       "clientName": "subgraph-location"
     }
   }
