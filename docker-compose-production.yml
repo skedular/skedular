@@ -54,18 +54,6 @@ services:
     networks:
       - skedular_network
 
-  aspire-dashboard:
-    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
-    restart: unless-stopped
-    environment:
-      Dashboard__Frontend__AuthMode: "BrowserToken"
-      Dashboard__Frontend__BrowserToken: "${ASPIRE_DASHBOARD_TOKEN}"
-      Logging__LogLevel__Aspire.Dashboard.Otlp.Storage: "Error"
-    ports:
-      - "18888:18888"
-    networks:
-      - skedular_network
-
   kafka1:
     image: redpandadata/redpanda:latest
     restart: unless-stopped
@@ -198,7 +186,7 @@ services:
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -318,7 +306,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -437,7 +425,7 @@ services:
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__BookingInvoiceEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -551,7 +539,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -636,7 +624,7 @@ services:
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -756,7 +744,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -875,7 +863,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -989,7 +977,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true

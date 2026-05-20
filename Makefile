@@ -38,8 +38,8 @@ images-pull:
 .PHONY: dep-restart
 dep-restart:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down dozzle postgres18 redis redisinsight kafka1 kowl aspire-dashboard
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d dozzle postgres18 redis redisinsight kafka1 kowl aspire-dashboard
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down dozzle postgres18 redis redisinsight kafka1 kowl
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d dozzle postgres18 redis redisinsight kafka1 kowl
 
 .PHONY: services-all-restart
 services-all-restart:
