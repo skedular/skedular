@@ -6,8 +6,10 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
 using Microsoft.EntityFrameworkCore;
+using ResourceAvailabilityClassification = Booking.Shared.Models.ResourceAvailabilityClassification;
 using ResourceAvailabilityOrder = Booking.Shared.Models.ResourceAvailabilityOrder;
 using ResourceAvailabilityOrderByField = Booking.Shared.Models.ResourceAvailabilityOrderByField;
+using ResourceAvailabilityResourceRow = Booking.Shared.Models.ResourceAvailabilityResourceRow;
 
 namespace Booking.Shared.Repositories;
 
@@ -21,11 +23,14 @@ public interface IResourceRepository : IRepository<Resource>
     void RemoveRange(IEnumerable<Resource> resources);
     Task<IReadOnlyList<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<Resource>> GetForAvailabilityDayViewAsync(
+    Task<IReadOnlyList<ResourceAvailabilityResourceRow>> GetForAvailabilityDayViewAsync(
         string organizationCustomDomain,
         IReadOnlyList<string> locationIds,
         string? zoneId,
         string? resourceType,
+        IReadOnlyList<ResourceAvailabilityClassification> statuses,
+        DateTimeOffset dayStart,
+        DateTimeOffset dayEnd,
         IReadOnlyList<ResourceAvailabilityOrder> orderBy,
         CancellationToken cancellationToken);
 
@@ -119,11 +124,14 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .Include(query => query.OrganizationTags)
             .ToListAsync(cancellationToken);
 
-    public async Task<IReadOnlyList<Resource>> GetForAvailabilityDayViewAsync(
+    public async Task<IReadOnlyList<ResourceAvailabilityResourceRow>> GetForAvailabilityDayViewAsync(
         string organizationCustomDomain,
         IReadOnlyList<string> locationIds,
         string? zoneId,
         string? resourceType,
+        IReadOnlyList<ResourceAvailabilityClassification> statuses,
+        DateTimeOffset dayStart,
+        DateTimeOffset dayEnd,
         IReadOnlyList<ResourceAvailabilityOrder> orderBy,
         CancellationToken cancellationToken)
     {
@@ -131,13 +139,11 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
         // WHERE clause, so a query can never accidentally return resources from another
         // organization, even if the caller passes an empty string (which matches nothing).
         var query = DbContext.Resource
+            .AsNoTracking()
             .Where(item => !item.DeletedAt.HasValue &&
                            item.Location != null &&
                            item.Location.Organization != null &&
                            item.Location.Organization.CustomDomain == organizationCustomDomain)
-            .Include(item => item.Location)
-            .ThenInclude(item => item!.Organization)
-            .Include(item => item.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
             .AsQueryable();
 
         if (locationIds.Count > 0)
@@ -161,7 +167,41 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                     !organizationTag.DeletedAt.HasValue && organizationTag.Type == resourceType));
         }
 
-        return await ApplyOrderBy(query, orderBy).ToListAsync(cancellationToken);
+        query = ApplyAvailabilityStatusPrefilter(query, statuses, dayStart, dayEnd);
+
+        return await ApplyOrderBy(query, orderBy)
+            .Select(item => new ResourceAvailabilityResourceRow
+            {
+                Id = item.Id,
+                Name = item.Name ?? string.Empty,
+                Inactive = item.Inactive,
+                LocationId = item.Location != null ? item.Location.Id : string.Empty,
+                LocationName = item.Location != null ? item.Location.Name ?? string.Empty : string.Empty,
+                OrganizationType = item.Location != null && item.Location.Organization != null
+                    ? item.Location.Organization.Type
+                    : OrganizationTypeConstants.Private,
+                OpeningHours = item.Location != null ? item.Location.OpeningHours : null,
+                ZoneId = item.OrganizationTags
+                    .Where(organizationTag =>
+                        !organizationTag.DeletedAt.HasValue &&
+                        organizationTag.Type == OrganizationTagTypeConstants.Zone)
+                    .Select(organizationTag => organizationTag.Id)
+                    .FirstOrDefault(),
+                ZoneName = item.OrganizationTags
+                    .Where(organizationTag =>
+                        !organizationTag.DeletedAt.HasValue &&
+                        organizationTag.Type == OrganizationTagTypeConstants.Zone)
+                    .Select(organizationTag => organizationTag.Name)
+                    .FirstOrDefault(),
+                ResourceType = item.OrganizationTags
+                    .Where(organizationTag =>
+                        !organizationTag.DeletedAt.HasValue &&
+                        organizationTag.Type != null &&
+                        OrganizationTagTypeConstants.ResourceTagTypes.Contains(organizationTag.Type))
+                    .Select(organizationTag => organizationTag.Type)
+                    .FirstOrDefault() ?? string.Empty
+            })
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<Resource>> GetAvailableResourcesAsync(
@@ -240,6 +280,49 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                     .FirstOrDefault(),
             _ => throw new ArgumentOutOfRangeException(nameof(field), field, null)
         };
+
+    private static IQueryable<Resource> ApplyAvailabilityStatusPrefilter(
+        IQueryable<Resource> query,
+        IReadOnlyList<ResourceAvailabilityClassification> statuses,
+        DateTimeOffset dayStart,
+        DateTimeOffset dayEnd)
+    {
+        if (statuses.Count == 0)
+        {
+            return query;
+        }
+
+        var statusSet = statuses.ToHashSet();
+        if (statusSet.SetEquals([ResourceAvailabilityClassification.Blocked]))
+        {
+            return query.Where(item => item.Inactive);
+        }
+
+        if (!statusSet.Contains(ResourceAvailabilityClassification.Blocked))
+        {
+            query = query.Where(item => !item.Inactive);
+        }
+
+        var bookedStatuses = new[] { ResourceAvailabilityClassification.PartiallyBooked, ResourceAvailabilityClassification.FullyBooked };
+
+        if (statusSet.All(status => bookedStatuses.Contains(status)))
+        {
+            return query.Where(item => item.ResourceBookingSlots.Any(slot =>
+                slot.Start >= dayStart &&
+                slot.Start < dayEnd &&
+                slot.Bookings.Any(booking => booking.DeletedByCustomer == null)));
+        }
+
+        if (statusSet.SetEquals([ResourceAvailabilityClassification.Available]))
+        {
+            return query.Where(item => !item.ResourceBookingSlots.Any(slot =>
+                slot.Start >= dayStart &&
+                slot.Start < dayEnd &&
+                slot.Bookings.Any(booking => booking.DeletedByCustomer == null)));
+        }
+
+        return query;
+    }
 
     private async Task<IReadOnlyList<string>> GetAvailableResourceIdsAsync(
         string? organizationId,

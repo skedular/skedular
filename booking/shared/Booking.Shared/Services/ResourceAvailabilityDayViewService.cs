@@ -4,8 +4,6 @@ using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using DbResource = Booking.Shared.Database.Entities.Resource;
-using DbResourceBookingSlot = Booking.Shared.Database.Entities.ResourceBookingSlot;
 
 namespace Booking.Shared.Services;
 
@@ -74,19 +72,30 @@ public class ResourceAvailabilityDayViewService(
             filter.LocationIds,
             filter.ZoneId,
             filter.ResourceType,
+            filter.Statuses,
+            dayStart,
+            dayEnd,
             orderBy,
             cancellationToken);
 
-        // Load booking slots that overlap with the day for those resource IDs
         var resourceIds = resources.Select(r => r.Id).ToList();
-        var slots = await repositoryFactory.ResourceBookingSlotRepository.GetByResourceIdsAndDayAsync(resourceIds, dayStart, dayEnd,
-            cancellationToken);
-        var slotsByResource = slots.GroupBy(s => s.ResourceId).ToDictionary(g => g.Key, g => g.ToList());
+        var bookingWindowRows = ShouldLoadBookingWindows(filter.Statuses)
+            ? await repositoryFactory.ResourceBookingSlotRepository.GetBookingWindowsByResourceIdsAndDayAsync(resourceIds, dayStart, dayEnd,
+                cancellationToken)
+            : [];
+        var bookingWindowsByResource = bookingWindowRows
+            .GroupBy(item => item.ResourceId)
+            .ToDictionary(
+                item => item.Key,
+                item => item
+                    .Select(ToBookingWindow)
+                    .OrderBy(window => window.From)
+                    .ToList());
 
         var views = new List<ResourceDayView>(resources.Count);
         foreach (var resource in resources)
         {
-            var view = BuildDayView(resource, filter.Date, dayStart, slotsByResource, classifier);
+            var view = BuildDayView(resource, filter.Date, dayStart, bookingWindowsByResource, classifier);
 
             // LOG-002: state-transition diagnostic per resource
             logger.LogDebug(
@@ -102,10 +111,9 @@ public class ResourceAvailabilityDayViewService(
         }
 
         // Apply booking visibility filter based on org type and user roles
-        var orgType = resources.Select(r => r.Location?.Organization?.Type).FirstOrDefault(item => item is not null) ??
+        var orgType = resources.Select(r => r.OrganizationType).FirstOrDefault(item => item is not null) ??
                       OrganizationTypeConstants.Private;
         var visibleViews = visibilityFilter.Apply(views, orgType, requestingUserRoles);
-
         var subscriptionKey = subscriptionKeyService.Compute(filter);
 
         sw.Stop();
@@ -137,28 +145,14 @@ public class ResourceAvailabilityDayViewService(
     // ------------------------------------------------------------------
 
     private static ResourceDayView BuildDayView(
-        DbResource resource,
+        ResourceAvailabilityResourceRow resource,
         DateOnly date,
         DateTimeOffset dayStart,
-        Dictionary<string, List<DbResourceBookingSlot>> slotsByResource,
+        Dictionary<string, List<BookingWindow>> bookingWindowsByResource,
         IResourceAvailabilityClassifier classifier)
     {
-        var location = resource.Location;
-        var locationId = location?.Id ?? string.Empty;
-        var locationName = location?.Name ?? string.Empty;
-
-        // Zone tag (first ZONE tag found)
-        var zoneTag = resource.OrganizationTags.FirstOrDefault(t => t.Type == OrganizationTagTypeConstants.Zone);
-        var zoneId = zoneTag?.Id;
-        var zoneName = zoneTag?.Name;
-
-        // Resource type tag
-        var resourceTypeTag = resource.OrganizationTags.FirstOrDefault(t =>
-            t.Type is not null && OrganizationTagTypeConstants.ResourceTagTypes.Contains(t.Type));
-        var resourceType = resourceTypeTag?.Type ?? string.Empty;
-
         // Opening hours resolution
-        var openingHours = resource.Location?.OpeningHours;
+        var openingHours = resource.OpeningHours;
         TimeOnly? openingFrom = null;
         TimeOnly? openingUntil = null;
         var totalOpeningMinutes = 0;
@@ -190,40 +184,18 @@ public class ResourceAvailabilityDayViewService(
             }
         }
 
-        // Collect active bookings from slots
-        var activeSlots = slotsByResource.TryGetValue(resource.Id, out var resourceSlots)
-            ? resourceSlots
-            : [];
-
         var bookingWindows = new List<BookingWindow>();
         var seenBookingIds = new HashSet<string>();
-
-        foreach (var slot in activeSlots)
+        if (bookingWindowsByResource.TryGetValue(resource.Id, out var resourceBookingWindows))
         {
-            foreach (var booking in slot.Bookings)
+            foreach (var bookingWindow in resourceBookingWindows)
             {
-                if (!seenBookingIds.Add(booking.Id))
+                if (!seenBookingIds.Add(bookingWindow.BookingId))
                 {
                     continue;
                 }
 
-                var createdByCustomer = booking.CreatedByCustomer;
-                var bookedByName = createdByCustomer?.Name
-                                   ?? (createdByCustomer is not null
-                                       ? $"{createdByCustomer.GivenName} {createdByCustomer.FamilyName}".Trim()
-                                       : null);
-
-                bookingWindows.Add(new BookingWindow
-                {
-                    BookingId = booking.Id,
-                    From = booking.From,
-                    Until = booking.Until,
-                    IsRecurring = booking.RecurringBooking is not null,
-                    IsCheckedIn = false, // stub for v1
-                    BookedByName = string.IsNullOrWhiteSpace(bookedByName) ? null : bookedByName,
-                    BookedByUserId = createdByCustomer?.Id,
-                    Notes = booking.Notes
-                });
+                bookingWindows.Add(bookingWindow);
             }
         }
 
@@ -251,14 +223,14 @@ public class ResourceAvailabilityDayViewService(
         return new ResourceDayView
         {
             ResourceId = resource.Id,
-            ResourceName = resource.Name ?? string.Empty,
-            ResourceType = resourceType,
-            LocationId = locationId,
-            LocationName = locationName,
+            ResourceName = resource.Name,
+            ResourceType = resource.ResourceType,
+            LocationId = resource.LocationId,
+            LocationName = resource.LocationName,
             FloorId = null, // no FLOOR tag type in v1
             FloorName = null, // no FLOOR tag type in v1
-            ZoneId = zoneId,
-            ZoneName = zoneName,
+            ZoneId = resource.ZoneId,
+            ZoneName = resource.ZoneName,
             Date = date,
             Status = status,
             OpeningFrom = openingFrom,
@@ -327,4 +299,40 @@ public class ResourceAvailabilityDayViewService(
                 DayOfWeek.Sunday => openingHours.WeekOpeningHours.Sunday,
                 _ => throw new ArgumentOutOfRangeException(nameof(dayStart), dayStart, null)
             };
+
+    private static bool ShouldLoadBookingWindows(IReadOnlyList<ResourceAvailabilityClassification> statuses)
+    {
+        if (statuses.Count == 0)
+        {
+            return true;
+        }
+
+        var statusSet = statuses.ToHashSet();
+        if (statusSet.SetEquals([ResourceAvailabilityClassification.Available]))
+        {
+            return false;
+        }
+
+        return statusSet.Contains(ResourceAvailabilityClassification.Available) ||
+               statusSet.Contains(ResourceAvailabilityClassification.PartiallyBooked) ||
+               statusSet.Contains(ResourceAvailabilityClassification.FullyBooked);
+    }
+
+    private static BookingWindow ToBookingWindow(ResourceBookingWindowRow row)
+    {
+        var bookedByName = row.CustomerName ??
+                           $"{row.CustomerGivenName} {row.CustomerFamilyName}".Trim();
+
+        return new BookingWindow
+        {
+            BookingId = row.BookingId,
+            From = row.From,
+            Until = row.Until,
+            IsRecurring = row.IsRecurring,
+            IsCheckedIn = false,
+            BookedByName = string.IsNullOrWhiteSpace(bookedByName) ? null : bookedByName,
+            BookedByUserId = row.CustomerId,
+            Notes = row.Notes
+        };
+    }
 }

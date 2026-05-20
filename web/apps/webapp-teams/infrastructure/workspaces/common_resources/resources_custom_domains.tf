@@ -1,5 +1,5 @@
 locals {
-  custom_domains_all_environments = toset(["skedularmarketplacetrial", "assembly"])
+  custom_domains_all_environments = toset([])
   custom_domains_production_only  = toset([])
   custom_domains = (
     local.is_staging
@@ -13,14 +13,14 @@ resource "vercel_project_domain" "custom_domains" {
 
   project_id = vercel_project.default.id
   team_id    = local.team_id
-  domain     = "${each.value}.${module.shared_common.webapp_domain_name}"
+  domain     = "${each.value}.${module.shared_common.webapp_teams_domain_name}"
 }
 
 resource "cloudflare_dns_record" "custom_domains" {
   for_each = local.custom_domains
 
   zone_id = module.shared_common.cloudflare_webapp_zone_id
-  name    = "${each.value}.${module.shared_common.webapp_domain_name}"
+  name    = "${each.value}.${module.shared_common.webapp_teams_domain_name}"
   content = "cname.vercel-dns.com."
   type    = "CNAME"
   proxied = false
