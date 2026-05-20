@@ -4,6 +4,7 @@ import CustomOrganizationAuthPage from '@/components/auth/custom-organization-au
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import type { pageAuthSignInQuery } from '@/queries/__generated__/pageAuthSignInQuery.graphql';
+import { getOrganizationCustomDomainFromHost } from '@skedular/shared/utils';
 import { useSearchParams } from 'next/navigation';
 import { memo, Suspense, useEffect, useSyncExternalStore } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -53,10 +54,7 @@ const subscribeToHostname = () => () => undefined;
 const getServerCustomDomainOrganizationName = () => null;
 
 const getCustomDomainOrganizationName = () => {
-  const host = window.location.hostname;
-  const isCustomDomain = host !== '' && host !== 'localhost' && host !== '127.0.0.1' && host !== 'skedular.app' && host !== 'staging.skedular.app' && host !== 'www.skedular.app';
-
-  return isCustomDomain ? host.split('.')[0] : '';
+  return getOrganizationCustomDomainFromHost(window.location.hostname) ?? '';
 };
 
 const AuthSignInPageWithRelay = () => {

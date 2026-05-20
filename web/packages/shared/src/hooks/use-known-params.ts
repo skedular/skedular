@@ -1,6 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
+import { getOrganizationCustomDomainFromHost } from '../utils/host-utils';
 
 const getKnownParamValue = (value: string | string[] | undefined): string => {
   if (typeof value === 'string') {
@@ -29,11 +30,12 @@ const useKnownParams = () => {
     organizationStripeConnectAccountId,
   } = useParams();
   const host = typeof window !== 'undefined' ? window.location.hostname : '';
-  const isCustomDomain = host !== '' && host !== 'localhost' && host !== '127.0.0.1' && host !== 'skedular.app' && host !== 'staging.skedular.app' && host !== 'www.skedular.app';
+  const customDomainOrganizationName = getOrganizationCustomDomainFromHost(host);
+  const isCustomDomain = customDomainOrganizationName !== null;
 
   return {
     isCustomDomain,
-    organizationCustomDomain: isCustomDomain ? host.split('.')[0] : getKnownParamValue(organizationCustomDomain),
+    organizationCustomDomain: customDomainOrganizationName ?? getKnownParamValue(organizationCustomDomain),
     locationId: getKnownParamValue(locationId),
     bookingId: getKnownParamValue(bookingId),
     subscriptionId: getKnownParamValue(subscriptionId),

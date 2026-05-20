@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import { headers } from 'next/headers';
 import { getProductAppDefinition } from '@skedular/shared';
+import { isOrganizationCustomDomainHost } from '@skedular/shared/utils';
 import type { PropsWithChildren } from 'react';
 import ClientRootLayout from './client-root-layout';
 import './fonts.css';
@@ -25,13 +26,12 @@ const barlow = localFont({
   adjustFontFallback: false,
 });
 
-const knownHosts = ['skedular.app', 'staging.skedular.app', 'www.skedular.app', 'localhost', '127.0.0.1'];
 const appDefinition = getProductAppDefinition('webapp');
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
   const host = headersList.get('host') ?? '';
-  const isCustomDomain = host !== '' && !knownHosts.some((known) => host === known || host.startsWith(`${known}:`));
+  const isCustomDomain = isOrganizationCustomDomainHost(host);
 
   if (isCustomDomain) {
     // Omit title and icons entirely so the browser never flashes "Skedular"
