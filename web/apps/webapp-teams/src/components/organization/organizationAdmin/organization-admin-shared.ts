@@ -43,11 +43,6 @@ export type SsoSettingsDetails = {
   appFederationMetadataUrl: string;
 };
 
-export type TaxDetails = {
-  taxId: string;
-  taxRatePercentage: string;
-};
-
 export const splitNotificationEmails = (value: string | null | undefined) =>
   (value ?? '')
     .split(/[\n,;]/)
@@ -100,19 +95,4 @@ export const ssoSettingsSchema = object({
   entityId: string().required('Entity ID is required'),
   loginUrl: string().required('Login Url is required'),
   appFederationMetadataUrl: string().required('App Federation Metadata Url is required'),
-});
-
-export const taxDetailsSchema = object({
-  taxId: string().required('Tax ID / VAT / GST Number'),
-  taxRatePercentage: string()
-    .matches(/^\d+(\.\d{1,2})?$/, 'Tax rate must be a valid decimal number.')
-    .required('Tax rate is required.')
-    .test('is-greater-than-zero', 'Tax rate must be greater than zero.', function (value) {
-      const taxRatePercentage = Number(value);
-      if (isNaN(taxRatePercentage)) {
-        return true;
-      }
-
-      return taxRatePercentage > 0;
-    }),
 });

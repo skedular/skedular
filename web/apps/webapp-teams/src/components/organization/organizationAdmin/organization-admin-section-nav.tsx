@@ -6,7 +6,6 @@ import {
   getOrganizationAdminSetupBaseLink,
   getOrganizationAdminSsoSettingsBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
-  getOrganizationAdminTaxDetailsBaseLink,
   getOrganizationAdminZonesBaseLink,
 } from '@/components/links';
 import { useIntegratedPlatrform } from '@skedular/shared';
@@ -24,7 +23,6 @@ export type OrganizationAdminSection =
   | 'physical-address-setup'
   | 'billing-payment-setup'
   | 'sso-setup'
-  | 'tax-details-setup'
   | 'zones-setup'
   | 'tags-setup'
   | 'subscriptions'
@@ -41,7 +39,6 @@ const sectionLabels: Record<OrganizationAdminSection, string> = {
   'physical-address-setup': 'Address',
   'billing-payment-setup': 'Billing',
   'sso-setup': 'SSO',
-  'tax-details-setup': 'Tax',
   'zones-setup': 'Zones',
   'tags-setup': 'Tags',
   subscriptions: 'Subscriptions',
@@ -58,7 +55,6 @@ const OrganizationAdminSectionNav = ({ activeSection, organizationCustomDomain, 
     'physical-address-setup': getOrganizationAdminPhysicalAddressBaseLink(integratedPlatrform, organizationCustomDomain),
     'billing-payment-setup': getOrganizationAdminBillingAndPaymentBaseLink(integratedPlatrform, organizationCustomDomain),
     'sso-setup': getOrganizationAdminSsoSettingsBaseLink(integratedPlatrform, organizationCustomDomain),
-    'tax-details-setup': getOrganizationAdminTaxDetailsBaseLink(integratedPlatrform, organizationCustomDomain),
     'zones-setup': getOrganizationAdminZonesBaseLink(integratedPlatrform, organizationCustomDomain),
     'tags-setup': getOrganizationAdminCustomTagsBaseLink(integratedPlatrform, organizationCustomDomain),
     subscriptions: getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, organizationCustomDomain),

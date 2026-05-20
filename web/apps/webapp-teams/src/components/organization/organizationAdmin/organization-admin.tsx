@@ -14,7 +14,6 @@ import OrganizationAdminSetupSection from './organization-admin-setup-section';
 import OrganizationAdminSsoSection from './organization-admin-sso-section';
 import OrganizationAdminSubscriptionsSection from './organization-admin-subscriptions-section';
 import OrganizationAdminTagsSection from './organization-admin-tags-section';
-import OrganizationAdminTaxDetailsSection from './organization-admin-tax-details-section';
 import OrganizationAdminZonesSection from './organization-admin-zones-section';
 
 type Props = {
@@ -27,7 +26,6 @@ const validSections: OrganizationAdminSection[] = [
   'physical-address-setup',
   'billing-payment-setup',
   'sso-setup',
-  'tax-details-setup',
   'zones-setup',
   'tags-setup',
   'subscriptions',
@@ -110,7 +108,6 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
         {activeSection === 'physical-address-setup' && <OrganizationAdminPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'billing-payment-setup' && <OrganizationAdminBillingPaymentSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'sso-setup' && <OrganizationAdminSsoSection organizationCustomDomain={organizationCustomDomain} />}
-        {activeSection === 'tax-details-setup' && <OrganizationAdminTaxDetailsSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'zones-setup' && <OrganizationAdminZonesSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'tags-setup' && <OrganizationAdminTagsSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'subscriptions' && <OrganizationAdminSubscriptionsSection organizationCustomDomain={organizationCustomDomain} />}

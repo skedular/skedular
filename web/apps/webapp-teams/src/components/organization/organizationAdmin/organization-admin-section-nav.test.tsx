@@ -40,7 +40,6 @@ vi.mock('@/components/links', () => ({
   getOrganizationAdminPhysicalAddressBaseLink: () => '/organizations/acme/admin?section=physical-address-setup',
   getOrganizationAdminBillingAndPaymentBaseLink: () => '/organizations/acme/admin?section=billing-payment-setup',
   getOrganizationAdminSsoSettingsBaseLink: () => '/organizations/acme/admin?section=sso-setup',
-  getOrganizationAdminTaxDetailsBaseLink: () => '/organizations/acme/admin?section=tax-details-setup',
   getOrganizationAdminZonesBaseLink: () => '/organizations/acme/admin?section=zones-setup',
   getOrganizationAdminCustomTagsBaseLink: () => '/organizations/acme/admin?section=tags-setup',
   getOrganizationAdminSubscriptionsBaseLink: () => '/organizations/acme/admin?section=subscriptions',
