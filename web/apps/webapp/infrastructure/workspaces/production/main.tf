@@ -21,4 +21,5 @@ module "common_resources" {
   google_tag_manager_container_id   = "GTM-TVB7D4HJ"
   google_map_api_key                = var.google_map_api_key
   workos_api_key                    = var.workos_api_key
+  workos_client_id                  = var.workos_client_id
 }

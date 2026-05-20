@@ -72,7 +72,7 @@ jobs:
           TF_VAR_slack_client_secret: ${{ secrets.STAGING_SLACK_CLIENT_SECRET }}
           TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
           TF_VAR_google_map_api_key: ${{ secrets.STAGING_GOOGLE_MAP_API_KEY }}
-          TF_VAR_workos_api_key: ${{ secrets.STAGING_WORKOS_API_KEY }}
+          TF_VAR_workos_api_key: ${{ secrets.STAGING_WEBAPP_WORKOS_API_KEY }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           workingDirectory: ./web/apps/webapp/infrastructure/workspaces/staging
@@ -94,7 +94,7 @@ jobs:
           TF_VAR_slack_client_secret: ${{ secrets.PRODUCTION_SLACK_CLIENT_SECRET }}
           TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
           TF_VAR_google_map_api_key: ${{ secrets.PRODUCTION_GOOGLE_MAP_API_KEY }}
-          TF_VAR_workos_api_key: ${{ secrets.PRODUCTION_WORKOS_API_KEY }}
+          TF_VAR_workos_api_key: ${{ secrets.PRODUCTION_WEBAPP_WORKOS_API_KEY }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           workingDirectory: ./web/apps/webapp/infrastructure/workspaces/production
@@ -133,7 +133,7 @@ jobs:
           TF_VAR_slack_client_secret: ${{ secrets.STAGING_SLACK_CLIENT_SECRET }}
           TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
           TF_VAR_google_map_api_key: ${{ secrets.STAGING_GOOGLE_MAP_API_KEY }}
-          TF_VAR_workos_api_key: ${{ secrets.STAGING_WORKOS_API_KEY }}
+          TF_VAR_workos_api_key: ${{ secrets.STAGING_WEBAPP_WORKOS_API_KEY }}
         with:
           workingDirectory: ./web/apps/webapp/infrastructure/workspaces/staging
 
@@ -169,6 +169,6 @@ jobs:
           TF_VAR_slack_client_secret: ${{ secrets.PRODUCTION_SLACK_CLIENT_SECRET }}
           TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
           TF_VAR_google_map_api_key: ${{ secrets.PRODUCTION_GOOGLE_MAP_API_KEY }}
-          TF_VAR_workos_api_key: ${{ secrets.PRODUCTION_WORKOS_API_KEY }}
+          TF_VAR_workos_api_key: ${{ secrets.PRODUCTION_WEBAPP_WORKOS_API_KEY }}
         with:
           workingDirectory: ./web/apps/webapp/infrastructure/workspaces/production

@@ -33,4 +33,10 @@ variable "google_map_api_key" {
 variable "workos_api_key" {
   type        = string
   description = "WorkOS API Key"
+  sensitive   = true
+}
+
+variable "workos_client_id" {
+  type        = string
+  description = "WorkOS Client ID"
 }

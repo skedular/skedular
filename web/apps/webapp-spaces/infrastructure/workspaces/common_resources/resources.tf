@@ -31,7 +31,7 @@ locals {
     },
     {
       key   = "WORKOS_CLIENT_ID"
-      value = module.shared_common.workos_client_id
+      value = var.workos_client_id
     },
     {
       key   = "WORKOS_COOKIE_PASSWORD"
