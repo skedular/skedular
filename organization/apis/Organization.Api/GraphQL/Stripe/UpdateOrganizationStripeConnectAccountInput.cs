@@ -1,4 +1,5 @@
 using HotChocolate;
+using Organization.Api.Models;
 
 namespace Organization.Api.GraphQL.Stripe;
 
@@ -7,5 +8,6 @@ public class UpdateOrganizationStripeConnectAccountInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("fieldsToUpdate")] public HashSet<OrganizationStripeConnectAccountPatchField> FieldsToUpdate { get; set; } = [];
+    [GraphQLName("name")] public string? Name { get; set; }
 }

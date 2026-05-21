@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4b933974d80b6500e264e46cab0037ed>>
+ * @generated SignedSource<<a3bc2fad92bcfcf172c0b465616fe4e9>>
  * @lightSyntaxTransform
  */
 
@@ -8,9 +8,11 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationOfferingPatchField = "OFFERING_CODE" | "%future added value";
 export type UpdateOrganizationOfferingInput = {
   clientMutationId?: string | null | undefined;
-  offeringCode: string;
+  fieldsToUpdate: ReadonlyArray<OrganizationOfferingPatchField>;
+  offeringCode?: string | null | undefined;
   organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
 };

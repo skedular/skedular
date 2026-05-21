@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a6adb17dff8141aa0f2ed7ae76edbb60>>
+ * @generated SignedSource<<bee7e1028e0518501b6e0004a47543e3>>
  * @lightSyntaxTransform
  */
 
@@ -8,15 +8,17 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type UpdateZoneInput = {
+export type OrganizationTagPatchField = "COLOR" | "DESCRIPTION" | "NAME" | "%future added value";
+export type UpdateOrganizationTagInput = {
   clientMutationId?: string | null | undefined;
   color?: string | null | undefined;
   description?: string | null | undefined;
+  fieldsToUpdate: ReadonlyArray<OrganizationTagPatchField>;
   id: string;
-  name: string;
+  name?: string | null | undefined;
 };
 export type editOrganizationZoneDialog_updateZoneMutation$variables = {
-  input: UpdateZoneInput;
+  input: UpdateOrganizationTagInput;
 };
 export type editOrganizationZoneDialog_updateZoneMutation$data = {
   readonly updateZone: {
@@ -128,16 +130,16 @@ return {
     "selections": (v1/*:: as any*/)
   },
   "params": {
-    "cacheID": "bc340e23c758ec6defe27201d3e646fb",
+    "cacheID": "5bb79dbd7109410247c0775b453cee30",
     "id": null,
     "metadata": {},
     "name": "editOrganizationZoneDialog_updateZoneMutation",
     "operationKind": "mutation",
-    "text": "mutation editOrganizationZoneDialog_updateZoneMutation(\n  $input: UpdateZoneInput!\n) {\n  updateZone(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
+    "text": "mutation editOrganizationZoneDialog_updateZoneMutation(\n  $input: UpdateOrganizationTagInput!\n) {\n  updateZone(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c0e5e10234b30f8c1a33ae1ed9b061ae";
+(node as any).hash = "cd8c26374d787242b8cbfe474ebeab49";
 
 export default node;

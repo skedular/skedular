@@ -90,12 +90,13 @@ public class OrganizationCustomTagService(
     {
         var mappedOrganizationCustomTag = grpcMapper.MapTo(
             await organizationTagsServiceClient.UpdateCustomTagAsync(
-                new UpdateCustomTagInput
+                new UpdateTagInput
                 {
                     Id = organizationCustomTag.Id,
                     Name = organizationCustomTag.Name,
                     Description = organizationCustomTag.Description,
-                    Color = organizationCustomTag.Color
+                    Color = organizationCustomTag.Color,
+                    FieldsToUpdate = { TagPatchField.Name, TagPatchField.Description, TagPatchField.Color }
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));

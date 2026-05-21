@@ -9,6 +9,7 @@ namespace Organization.Shared.Repositories;
 public interface IOrganizationBillingDetailsRepository : IRepository<OrganizationBillingDetails>
 {
     Task<OrganizationBillingDetails?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<OrganizationBillingDetails?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
     OrganizationBillingDetails Add(OrganizationBillingDetails organizationBillingDetails);
     OrganizationBillingDetails Update(OrganizationBillingDetails organizationBillingDetails);
 }
@@ -18,6 +19,13 @@ public class OrganizationOrganizationBillingDetailsRepository(OrganizationDbCont
 {
     public async Task<OrganizationBillingDetails?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.OrganizationBillingDetails
+            .AsSingleQuery()
+            .Include(query => query.Organization)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<OrganizationBillingDetails?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.OrganizationBillingDetails
+            .AsNoTracking()
             .AsSingleQuery()
             .Include(query => query.Organization)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);

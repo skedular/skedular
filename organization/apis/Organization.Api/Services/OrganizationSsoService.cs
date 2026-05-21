@@ -3,11 +3,16 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Security.Sso;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Organization.Api.Mappers;
+using Organization.Api.Models;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services.Cache;
+using Polly;
 using Constants = Enterprise.Shared.Security.Sso.Models.Constants;
 using OrganizationSsoValidationResult = Organization.Shared.Configurations.OrganizationSsoValidationResult;
 
@@ -26,7 +31,9 @@ public interface IOrganizationSsoService
         string redirectUrl,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Organization> UpdateAsync(OrganizationSsoSettings ssoSettings, CancellationToken cancellationToken);
+    Task<Shared.Models.Organization> UpdatePatchAsync(
+        OrganizationSsoSettingsPatchRequest request,
+        CancellationToken cancellationToken);
 
     Task<Shared.Models.Organization> RemoveAsync(
         string? organizationId,
@@ -48,8 +55,12 @@ public class OrganizationSsoService(
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
-    IContext context) : IOrganizationSsoService
+    IContext context,
+    ICachedOrganizationService cachedOrganizationService) : IOrganizationSsoService
 {
+    private const int MaxPatchConcurrencyRetryCount = 1;
+    private const string PostgresUniqueViolationSqlState = "23505";
+
     public async Task<bool> IsSsoTokenValidAsync(
         string? organizationId,
         string? organizationCustomDomain,
@@ -113,55 +124,39 @@ public class OrganizationSsoService(
         throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
-    public async Task<Shared.Models.Organization> UpdateAsync(OrganizationSsoSettings ssoSettings, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> UpdatePatchAsync(
+        OrganizationSsoSettingsPatchRequest request,
+        CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(ssoSettings.Organization);
-
-        // Validate SSO settings first
-        var validationResult = await ValidateSsoConfigurationAsync(ssoSettings, cancellationToken);
-        if (!validationResult.IsMetadataValid || !validationResult.IsCertificateValid)
-        {
-            throw new InvalidSsoConfiguration();
-        }
+        ValidatePatchRequest(request);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                               ssoSettings.Organization.Id,
-                               ssoSettings.Organization.CustomDomain,
-                               cancellationToken) ??
-                           throw new OrganizationNotFound();
 
-        if (!await organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken))
-        {
-            throw new UnauthorizedAccessException();
-        }
+        return await Policy
+            .Handle<DbUpdateConcurrencyException>()
+            .Or<DbUpdateException>(IsUniqueViolation)
+            .WaitAndRetryAsync(
+                MaxPatchConcurrencyRetryCount,
+                _ => TimeSpan.Zero,
+                (_, _, _, _) =>
+                {
+                    repositoryFactory.DbContext.ChangeTracker.Clear();
+                })
+            .ExecuteAsync(async () =>
+            {
+                var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
+                                       request.OrganizationId,
+                                       request.OrganizationCustomDomain,
+                                       cancellationToken) ??
+                                   throw new OrganizationNotFound();
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+                if (!await organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken))
+                {
+                    throw new UnauthorizedAccessException();
+                }
 
-        if (organization.OrganizationSsoSettings is null)
-        {
-            ssoSettings.Id = randomHelper.Generate();
-            var organizationSsoSettingsEntity = graphQlMapper.MapToEntity(ssoSettings, organization);
-            organizationSsoSettingsEntity.IsActive = true;
-            repositoryFactory.OrganizationSsoSettingsRepository.Add(organizationSsoSettingsEntity);
-        }
-        else
-        {
-            ssoSettings.Id = organization.OrganizationSsoSettings.Id;
-            var organizationSsoSettingsEntity = graphQlMapper.MergeToEntity(ssoSettings, organization.OrganizationSsoSettings, organization);
-            organizationSsoSettingsEntity.IsActive = true;
-            repositoryFactory.OrganizationSsoSettingsRepository.Update(organizationSsoSettingsEntity);
-        }
-
-        var mappedOrganization = graphQlMapper.MapTo(
-            organization,
-            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
-        organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        return mappedOrganization;
+                return await UpdatePatchInternalAsync(request.SsoSettings, organization, cancellationToken);
+            });
     }
 
     public async Task<Shared.Models.Organization> RemoveAsync(
@@ -198,6 +193,7 @@ public class OrganizationSsoService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+        await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
 
         return mappedOrganization;
     }
@@ -249,6 +245,69 @@ public class OrganizationSsoService(
         }
 
         samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, ssoSettings.Organization.Id, samlResponse);
+    }
+
+    private static bool IsUniqueViolation(DbUpdateException exception) =>
+        exception.InnerException is PostgresException { SqlState: PostgresUniqueViolationSqlState };
+
+    private async Task<Shared.Models.Organization> UpdatePatchInternalAsync(
+        OrganizationSsoSettings ssoSettings,
+        Shared.Database.Entities.Organization organization,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(ssoSettings.Organization);
+
+        // Validate active SSO settings before enabling sign-in.
+        var validationResult = ssoSettings.IsActive
+            ? await ValidateSsoConfigurationAsync(ssoSettings, cancellationToken)
+            : new OrganizationSsoValidationResult { IsMetadataValid = true, IsCertificateValid = true };
+        if (!validationResult.IsMetadataValid || !validationResult.IsCertificateValid)
+        {
+            throw new InvalidSsoConfiguration();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        if (organization.OrganizationSsoSettings is null)
+        {
+            ssoSettings.Id = randomHelper.Generate();
+            var organizationSsoSettingsEntity = graphQlMapper.MapToEntity(ssoSettings, organization);
+            repositoryFactory.OrganizationSsoSettingsRepository.Add(organizationSsoSettingsEntity);
+            organization.OrganizationSsoSettings = organizationSsoSettingsEntity;
+        }
+        else
+        {
+            ssoSettings.Id = organization.OrganizationSsoSettings.Id;
+            var organizationSsoSettingsEntity = graphQlMapper.MergeToEntity(ssoSettings, organization.OrganizationSsoSettings, organization);
+            repositoryFactory.OrganizationSsoSettingsRepository.Update(organizationSsoSettingsEntity);
+        }
+
+        var mappedOrganization = graphQlMapper.MapTo(
+            organization,
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
+        organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
+
+        return mappedOrganization;
+    }
+
+    private static void ValidatePatchRequest(OrganizationSsoSettingsPatchRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(request.SsoSettings);
+
+        if (string.IsNullOrWhiteSpace(request.OrganizationId) && string.IsNullOrWhiteSpace(request.OrganizationCustomDomain))
+        {
+            throw new ArgumentException("Either organisation id or custom domain must be provided.", nameof(request));
+        }
+
+        if (!request.FieldsToUpdate.SetEquals([OrganizationSsoSettingsPatchField.SsoSettings]))
+        {
+            throw new ArgumentException("Only SSO settings can be patched by this request.", nameof(request));
+        }
     }
 
     private async Task<OrganizationSsoValidationResult> ValidateSsoConfigurationAsync(

@@ -1,21 +1,29 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { DeleteIcon } from '@/components/icons';
+import { getOrganizationAdminSetupBaseLink } from '@/components/links';
 import { ListingMetadata } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { OrganizationMultipleChoicesIndustries } from '@/components/organization';
 import { OrganizationDetails, organizationSchema, splitNotificationEmails } from '@/components/organization/organizationAdmin/organization-admin-shared';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import type { organizationAdminSetupSectionQuery } from '@/queries/__generated__/organizationAdminSetupSectionQuery.graphql';
-import type { organizationAdminSetupSection_updateOrganizationMutation } from '@/queries/__generated__/organizationAdminSetupSection_updateOrganizationMutation.graphql';
+import type {
+  OrganizationBillingCycle,
+  OrganizationPatchField,
+  organizationAdminSetupSection_updateOrganizationMutation,
+} from '@/queries/__generated__/organizationAdminSetupSection_updateOrganizationMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext } from '@skedular/shared';
-import { EditorActionBar, FormFieldLabel, FormStackColumn, HelperText, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
+import InputAdornment from '@mui/material/InputAdornment';
+import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { FormFieldLabel, FormStackColumn, HelperText, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { memo, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -29,6 +37,80 @@ type Props = {
 type InnerProps = {
   queryReference: PreloadedQuery<organizationAdminSetupSectionQuery>;
 };
+
+const inlinePatchDebounceTimeout = 1000;
+const getSavingPatchAdornment = (isSaving: boolean) =>
+  isSaving ? (
+    <InputAdornment position="end">
+      <CircularProgress aria-label="Saving" size={18} />
+    </InputAdornment>
+  ) : undefined;
+
+type OrganizationSetupPatchValues = {
+  customDomain: string | null | undefined;
+  name: string;
+  description: string;
+  title: string;
+  subTitle: string;
+  website: string | null | undefined;
+  logoUrl: string | null | undefined;
+  customerFacingTermsAndConditionsUrl: string | null | undefined;
+  industrySubCategoryIds: string[];
+  contactEmail: string | null | undefined;
+  contactPhone: string | null | undefined;
+  refundNotificationEmails: string[];
+  featureImages: {
+    original: { url: string; height: number | null | undefined; width: number | null | undefined } | null;
+    thumbnail: { url: string; height: number | null | undefined; width: number | null | undefined } | null;
+  }[];
+  billingCycle: OrganizationBillingCycle | null | undefined;
+  invoiceDueInDays: number | null | undefined;
+  marketplaceListingMetadata:
+    | {
+        about: string | null | undefined;
+        title: string | null | undefined;
+        subTitle: string | null | undefined;
+        includedFeatures: readonly string[] | null | undefined;
+      }
+    | null
+    | undefined;
+};
+
+const mapFeatureImagesToPatchInput = (featureImages: FileUploadResponse[]): OrganizationSetupPatchValues['featureImages'] =>
+  featureImages.map((image) => ({
+    original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
+    thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
+  }));
+
+const areStringListsEqual = (left: readonly string[], right: readonly string[]) => left.length === right.length && left.every((value, index) => value === right[index]);
+
+const patchValidationFields: Partial<Record<OrganizationPatchField, (keyof OrganizationDetails)[]>> = {
+  CUSTOM_DOMAIN: ['customDomain'],
+  NAME: ['name'],
+  DESCRIPTION: ['about'],
+  TITLE: ['title'],
+  SUB_TITLE: ['subTitle'],
+  WEBSITE: ['website'],
+  CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL: ['customerFacingTermsAndConditionsUrl'],
+  INDUSTRY_SUB_CATEGORIES: ['industrySubCategoryIds'],
+  CONTACT_EMAIL: ['contactEmail'],
+  CONTACT_PHONE: ['contactPhone'],
+  REFUND_NOTIFICATION_EMAILS: ['refundNotificationEmailsText'],
+};
+
+const getValidationValues = (values: OrganizationSetupPatchValues): OrganizationDetails => ({
+  customDomain: values.customDomain ?? null,
+  name: values.name,
+  about: values.description,
+  title: values.title,
+  subTitle: values.subTitle,
+  website: values.website ?? null,
+  customerFacingTermsAndConditionsUrl: values.customerFacingTermsAndConditionsUrl ?? null,
+  industrySubCategoryIds: values.industrySubCategoryIds,
+  contactEmail: values.contactEmail ?? '',
+  contactPhone: values.contactPhone ?? null,
+  refundNotificationEmailsText: values.refundNotificationEmails.join('\n'),
+});
 
 const RootQuery = graphql`
   query organizationAdminSetupSectionQuery($organizationCustomDomain: String!) {
@@ -92,8 +174,8 @@ const RootQuery = graphql`
 
 const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) => {
   const rootData = usePreloadedQuery<organizationAdminSetupSectionQuery>(RootQuery, queryReference);
-  const [commitUpdateOrganization] = useMutation<organizationAdminSetupSection_updateOrganizationMutation>(graphql`
-    mutation organizationAdminSetupSection_updateOrganizationMutation($input: UpdateOrganizationInput!) @raw_response_type {
+  const [commitUpdateOrganizationPatch] = useMutation<organizationAdminSetupSection_updateOrganizationMutation>(graphql`
+    mutation organizationAdminSetupSection_updateOrganizationMutation($input: UpdateOrganizationInput!) {
       updateOrganization(input: $input) {
         organization {
           id
@@ -143,6 +225,8 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
   `);
 
   const organization = rootData.organization;
+  const router = useRouter();
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateOrganizationDetails = makeValidate(organizationSchema);
@@ -152,29 +236,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
     maxWidth: 760,
   };
 
-  const [organizationEditableCustomDomain, setOrganizationEditableCustomDomain] = useState(organization?.customDomain);
-  const debounceSetOrganizationEditableCustomDomain = useDebounceCallback(setOrganizationEditableCustomDomain, keyboardTextFieldDebounceTimeout);
-  const [organizationName, setOrganizationName] = useState<string>(organization?.name ?? '');
-  const debounceSetOrganizationName = useDebounceCallback(setOrganizationName, keyboardTextFieldDebounceTimeout);
-  const [organizationAbout, setOrganizationAbout] = useState(organization?.listingMetadata.about ?? null);
-  const debounceSetOrganizationAbout = useDebounceCallback(setOrganizationAbout, keyboardTextFieldDebounceTimeout);
-  const [organizationTitle, setOrganizationTitle] = useState(organization?.listingMetadata.title ?? null);
-  const debounceSetOrganizationTitle = useDebounceCallback(setOrganizationTitle, keyboardTextFieldDebounceTimeout);
-  const [organizationSubTitle, setOrganizationSubTitle] = useState(organization?.listingMetadata.subTitle ?? null);
-  const debounceSetOrganizationSubTitle = useDebounceCallback(setOrganizationSubTitle, keyboardTextFieldDebounceTimeout);
-  const [organizationWebsite, setOrganizationWebsite] = useState(organization?.website);
-  const debounceSetOrganizationWebsite = useDebounceCallback(setOrganizationWebsite, keyboardTextFieldDebounceTimeout);
   const [organizationLogoUrl, setOrganizationLogoUrl] = useState<string | null>(organization?.logoUrl ?? null);
-  const [organizationCustomerFacingTermsAndConditionsUrl, setOrganizationCustomerFacingTermsAndConditionsUrl] = useState(organization?.customerFacingTermsAndConditionsUrl);
-  const debounceSetOrganizationCustomerFacingTermsAndConditionsUrl = useDebounceCallback(setOrganizationCustomerFacingTermsAndConditionsUrl, keyboardTextFieldDebounceTimeout);
-  const [organizationIndustrySubCategoryIds, setOrganizationIndustrySubCategoryIds] = useState<string[]>(organization?.industrySubCategories.map(({ id }) => id) ?? []);
-  const debounceSetOrganizationIndustrySubCategoryIds = useDebounceCallback(setOrganizationIndustrySubCategoryIds, keyboardTextFieldDebounceTimeout);
-  const [organizationContactEmail, setOrganizationContactEmail] = useState<string>(organization?.contactEmail ?? '');
-  const debounceSetOrganizationContactEmail = useDebounceCallback(setOrganizationContactEmail, keyboardTextFieldDebounceTimeout);
-  const [organizationContactPhone, setOrganizationContactPhone] = useState(organization?.contactPhone);
-  const debounceSetOrganizationContactPhone = useDebounceCallback(setOrganizationContactPhone, keyboardTextFieldDebounceTimeout);
-  const [organizationRefundNotificationEmailsText, setOrganizationRefundNotificationEmailsText] = useState<string>(organization?.refundNotificationEmails?.join('\n') ?? '');
-  const debounceSetOrganizationRefundNotificationEmailsText = useDebounceCallback(setOrganizationRefundNotificationEmailsText, keyboardTextFieldDebounceTimeout);
   const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>(
     organization
       ? organization.featureImages
@@ -187,13 +249,257 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
       : [],
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
+  const [savingPatchFields, setSavingPatchFields] = useState<ReadonlySet<OrganizationPatchField>>(() => new Set());
+  const initialPatchValues: OrganizationSetupPatchValues = {
+    customDomain: organization?.customDomain,
+    description: organization?.listingMetadata.about ?? '',
+    title: organization?.listingMetadata.title ?? '',
+    subTitle: organization?.listingMetadata.subTitle ?? '',
+    name: organization?.name ?? '',
+    website: organization?.website,
+    logoUrl: organization?.logoUrl,
+    customerFacingTermsAndConditionsUrl: organization?.customerFacingTermsAndConditionsUrl,
+    industrySubCategoryIds: organization?.industrySubCategories.map(({ id }) => id) ?? [],
+    contactEmail: organization?.contactEmail,
+    contactPhone: organization?.contactPhone,
+    refundNotificationEmails: [...(organization?.refundNotificationEmails ?? [])],
+    featureImages:
+      organization?.featureImages.map((image) => ({
+        original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
+        thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
+      })) ?? [],
+    billingCycle: organization?.billingCycle.type,
+    invoiceDueInDays: organization?.invoiceDueInDays,
+    marketplaceListingMetadata: organization?.marketplaceListingMetadata,
+  };
+  const draftPatchValues = useRef<OrganizationSetupPatchValues>(initialPatchValues);
+  const submittedPatchValues = useRef<OrganizationSetupPatchValues>(initialPatchValues);
+  const initialFormValues = useMemo(
+    () => ({
+      customDomain: organization?.customDomain,
+      name: organization?.name ?? '',
+      about: organization?.listingMetadata.about ?? null,
+      title: organization?.listingMetadata.title ?? null,
+      subTitle: organization?.listingMetadata.subTitle ?? null,
+      website: organization?.website,
+      customerFacingTermsAndConditionsUrl: organization?.customerFacingTermsAndConditionsUrl,
+      industrySubCategoryIds: organization?.industrySubCategories.map(({ id }) => id) ?? [],
+      contactEmail: organization?.contactEmail ?? '',
+      contactPhone: organization?.contactPhone,
+      refundNotificationEmailsText: organization?.refundNotificationEmails?.join('\n') ?? '',
+    }),
+    [organization],
+  );
+
+  useEffect(() => {
+    const values: OrganizationSetupPatchValues = {
+      customDomain: organization?.customDomain,
+      description: organization?.listingMetadata.about ?? '',
+      title: organization?.listingMetadata.title ?? '',
+      subTitle: organization?.listingMetadata.subTitle ?? '',
+      name: organization?.name ?? '',
+      website: organization?.website,
+      logoUrl: organization?.logoUrl,
+      customerFacingTermsAndConditionsUrl: organization?.customerFacingTermsAndConditionsUrl,
+      industrySubCategoryIds: organization?.industrySubCategories.map(({ id }) => id) ?? [],
+      contactEmail: organization?.contactEmail,
+      contactPhone: organization?.contactPhone,
+      refundNotificationEmails: [...(organization?.refundNotificationEmails ?? [])],
+      featureImages:
+        organization?.featureImages.map((image) => ({
+          original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
+          thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
+        })) ?? [],
+      billingCycle: organization?.billingCycle.type,
+      invoiceDueInDays: organization?.invoiceDueInDays,
+      marketplaceListingMetadata: organization?.marketplaceListingMetadata,
+    };
+    draftPatchValues.current = values;
+    submittedPatchValues.current = values;
+  }, [organization]);
+
+  const commitOrganizationPatch = useCallback(
+    async (fieldsToUpdate: OrganizationPatchField[], values: Partial<OrganizationSetupPatchValues>) => {
+      if (!organization || fieldsToUpdate.length === 0) {
+        return;
+      }
+
+      const nextPatchValues: OrganizationSetupPatchValues = {
+        ...submittedPatchValues.current,
+        ...values,
+        description: values.description ?? submittedPatchValues.current.description,
+        title: values.title ?? submittedPatchValues.current.title,
+        subTitle: values.subTitle ?? submittedPatchValues.current.subTitle,
+        name: values.name ?? submittedPatchValues.current.name,
+        industrySubCategoryIds: values.industrySubCategoryIds ?? submittedPatchValues.current.industrySubCategoryIds,
+        refundNotificationEmails: values.refundNotificationEmails ?? submittedPatchValues.current.refundNotificationEmails,
+        featureImages: values.featureImages ?? submittedPatchValues.current.featureImages,
+        billingCycle: values.billingCycle ?? submittedPatchValues.current.billingCycle,
+        invoiceDueInDays: values.invoiceDueInDays ?? submittedPatchValues.current.invoiceDueInDays,
+        marketplaceListingMetadata: values.marketplaceListingMetadata ?? submittedPatchValues.current.marketplaceListingMetadata,
+      };
+
+      if (fieldsToUpdate.includes('NAME') && nextPatchValues.name.trim().length < 3) {
+        return;
+      }
+
+      const validationValues = getValidationValues(nextPatchValues);
+      const validationFields = fieldsToUpdate.flatMap((field) => patchValidationFields[field] ?? []);
+      try {
+        await Promise.all(validationFields.map((field) => organizationSchema.validateAt(field, validationValues)));
+      } catch {
+        return;
+      }
+
+      const hasChanges = fieldsToUpdate.some((field) => {
+        const submittedValues = submittedPatchValues.current;
+        switch (field) {
+          case 'CUSTOM_DOMAIN':
+            return nextPatchValues.customDomain !== submittedValues.customDomain;
+          case 'NAME':
+            return nextPatchValues.name !== submittedValues.name;
+          case 'DESCRIPTION':
+            return nextPatchValues.description !== submittedValues.description;
+          case 'TITLE':
+            return nextPatchValues.title !== submittedValues.title;
+          case 'SUB_TITLE':
+            return nextPatchValues.subTitle !== submittedValues.subTitle;
+          case 'WEBSITE':
+            return nextPatchValues.website !== submittedValues.website;
+          case 'LOGO_URL':
+            return nextPatchValues.logoUrl !== submittedValues.logoUrl;
+          case 'CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL':
+            return nextPatchValues.customerFacingTermsAndConditionsUrl !== submittedValues.customerFacingTermsAndConditionsUrl;
+          case 'INDUSTRY_SUB_CATEGORIES':
+            return !areStringListsEqual(nextPatchValues.industrySubCategoryIds, submittedValues.industrySubCategoryIds);
+          case 'CONTACT_EMAIL':
+            return nextPatchValues.contactEmail !== submittedValues.contactEmail;
+          case 'CONTACT_PHONE':
+            return nextPatchValues.contactPhone !== submittedValues.contactPhone;
+          case 'REFUND_NOTIFICATION_EMAILS':
+            return !areStringListsEqual(nextPatchValues.refundNotificationEmails, submittedValues.refundNotificationEmails);
+          case 'FEATURE_IMAGES':
+            return JSON.stringify(nextPatchValues.featureImages) !== JSON.stringify(submittedValues.featureImages);
+          case 'BILLING_CYCLE':
+            return nextPatchValues.billingCycle !== submittedValues.billingCycle;
+          case 'INVOICE_DUE_IN_DAYS':
+            return nextPatchValues.invoiceDueInDays !== submittedValues.invoiceDueInDays;
+          case 'MARKETPLACE_LISTING_METADATA':
+            return JSON.stringify(nextPatchValues.marketplaceListingMetadata) !== JSON.stringify(submittedValues.marketplaceListingMetadata);
+          default:
+            return true;
+        }
+      });
+      if (!hasChanges) {
+        return;
+      }
+
+      const previousPatchValues = submittedPatchValues.current;
+      submittedPatchValues.current = nextPatchValues;
+      setSavingPatchFields((prev) => new Set([...prev, ...fieldsToUpdate]));
+
+      const clearSavingPatchFields = () => {
+        setSavingPatchFields((prev) => {
+          const next = new Set(prev);
+          fieldsToUpdate.forEach((field) => next.delete(field));
+          return next;
+        });
+      };
+
+      const selectedIndustrySubCategories = rootData.organizationIndustryMainCategoriesReferences
+        .flatMap((mainCategory) => mainCategory.subCategories)
+        .filter(({ id }) => nextPatchValues.industrySubCategoryIds.includes(id))
+        .map(({ id, name }) => ({ id, name }));
+
+      commitUpdateOrganizationPatch({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
+            id: organization.id,
+            fieldsToUpdate,
+            ...(fieldsToUpdate.includes('CUSTOM_DOMAIN') ? { customDomain: nextPatchValues.customDomain } : {}),
+            ...(fieldsToUpdate.includes('NAME') ? { name: nextPatchValues.name } : {}),
+            ...(fieldsToUpdate.includes('DESCRIPTION') ? { description: nextPatchValues.description } : {}),
+            ...(fieldsToUpdate.includes('TITLE') ? { title: nextPatchValues.title } : {}),
+            ...(fieldsToUpdate.includes('SUB_TITLE') ? { subTitle: nextPatchValues.subTitle } : {}),
+            ...(fieldsToUpdate.includes('WEBSITE') ? { website: nextPatchValues.website } : {}),
+            ...(fieldsToUpdate.includes('LOGO_URL') ? { logoUrl: nextPatchValues.logoUrl } : {}),
+            ...(fieldsToUpdate.includes('CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL')
+              ? { customerFacingTermsAndConditionsUrl: nextPatchValues.customerFacingTermsAndConditionsUrl }
+              : {}),
+            ...(fieldsToUpdate.includes('INDUSTRY_SUB_CATEGORIES') ? { industrySubCategoryIds: nextPatchValues.industrySubCategoryIds } : {}),
+            ...(fieldsToUpdate.includes('CONTACT_EMAIL') ? { contactEmail: nextPatchValues.contactEmail } : {}),
+            ...(fieldsToUpdate.includes('CONTACT_PHONE') ? { contactPhone: nextPatchValues.contactPhone } : {}),
+            ...(fieldsToUpdate.includes('REFUND_NOTIFICATION_EMAILS') ? { refundNotificationEmails: nextPatchValues.refundNotificationEmails } : {}),
+            ...(fieldsToUpdate.includes('FEATURE_IMAGES') ? { featureImages: nextPatchValues.featureImages } : {}),
+            ...(fieldsToUpdate.includes('BILLING_CYCLE') ? { billingCycle: nextPatchValues.billingCycle } : {}),
+            ...(fieldsToUpdate.includes('INVOICE_DUE_IN_DAYS') ? { invoiceDueInDays: nextPatchValues.invoiceDueInDays } : {}),
+            ...(fieldsToUpdate.includes('MARKETPLACE_LISTING_METADATA') ? { marketplaceListingMetadata: nextPatchValues.marketplaceListingMetadata } : {}),
+          },
+        },
+        onCompleted: (response, errors) => {
+          clearSavingPatchFields();
+
+          if (errors && errors.length > 0) {
+            submittedPatchValues.current = previousPatchValues;
+            themedToast(<NotificationContent content={`We couldn't update organisation '${organization.name}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+            return;
+          }
+
+          const updatedCustomDomain = response.updateOrganization.organization.customDomain;
+          if (fieldsToUpdate.includes('CUSTOM_DOMAIN') && updatedCustomDomain && updatedCustomDomain !== organization.customDomain) {
+            router.replace(getOrganizationAdminSetupBaseLink(integratedPlatrform, updatedCustomDomain));
+          }
+        },
+        onError: (error) => {
+          clearSavingPatchFields();
+          submittedPatchValues.current = previousPatchValues;
+          themedToast(<NotificationContent content={`We couldn't update organisation '${organization.name}'. ${error.message}`} />, errorNotificationOptions);
+        },
+        optimisticResponse: {
+          updateOrganization: {
+            organization: {
+              id: organization.id,
+              customDomain: nextPatchValues.customDomain,
+              name: nextPatchValues.name,
+              listingMetadata: {
+                about: nextPatchValues.description,
+                title: nextPatchValues.title,
+                subTitle: nextPatchValues.subTitle,
+              },
+              logoUrl: nextPatchValues.logoUrl,
+              marketplaceListingMetadata: nextPatchValues.marketplaceListingMetadata,
+              website: nextPatchValues.website,
+              customerFacingTermsAndConditionsUrl: nextPatchValues.customerFacingTermsAndConditionsUrl,
+              industrySubCategories: selectedIndustrySubCategories,
+              contactEmail: nextPatchValues.contactEmail,
+              contactPhone: nextPatchValues.contactPhone,
+              refundNotificationEmails: nextPatchValues.refundNotificationEmails,
+              featureImages: nextPatchValues.featureImages,
+              billingCycle: {
+                ...organization.billingCycle,
+                type: nextPatchValues.billingCycle ?? organization.billingCycle.type,
+              },
+              invoiceDueInDays: nextPatchValues.invoiceDueInDays ?? organization.invoiceDueInDays,
+            },
+          },
+        },
+      });
+    },
+    [commitUpdateOrganizationPatch, integratedPlatrform, organization, rootData.organizationIndustryMainCategoriesReferences, router, themedToast],
+  );
+  const debouncedCommitOrganizationPatch = useDebounceCallback(commitOrganizationPatch, inlinePatchDebounceTimeout);
 
   if (!organization) {
     return null;
   }
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
-    setFeatureImages((prev) => [response, ...prev]);
+    setFeatureImages((prev) => {
+      const next = [response, ...prev];
+      commitOrganizationPatch(['FEATURE_IMAGES'], { featureImages: mapFeatureImagesToPatchInput(next) });
+      return next;
+    });
     setPrimaryFeatureImage((prevPrimary) => prevPrimary ?? response);
   };
 
@@ -205,145 +511,99 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
         setPrimaryFeatureImage(next[0] ?? null);
       }
 
+      commitOrganizationPatch(['FEATURE_IMAGES'], { featureImages: mapFeatureImagesToPatchInput(next) });
       return next;
     });
   };
 
   const handleSetPrimaryFeatureImage = (image: FileUploadResponse) => {
     setPrimaryFeatureImage(image);
-    setFeatureImages((prev) => [image, ...prev.filter((item) => item.original?.url !== image.original?.url)]);
+    setFeatureImages((prev) => {
+      const next = [image, ...prev.filter((item) => item.original?.url !== image.original?.url)];
+      commitOrganizationPatch(['FEATURE_IMAGES'], { featureImages: mapFeatureImagesToPatchInput(next) });
+      return next;
+    });
   };
 
   const handleLogoUploadCompleted = (response: FileUploadResponse) => {
-    setOrganizationLogoUrl(response.original?.url ?? response.thumbnail?.url ?? null);
+    const nextLogoUrl = response.original?.url ?? response.thumbnail?.url ?? null;
+    setOrganizationLogoUrl(nextLogoUrl);
+    commitOrganizationPatch(['LOGO_URL'], { logoUrl: nextLogoUrl });
   };
 
-  const handleOrganizationDetailUpdateClick = ({
-    customDomain,
-    name,
-    about,
-    title,
-    subTitle,
-    website,
-    customerFacingTermsAndConditionsUrl,
-    industrySubCategoryIds,
-    contactEmail,
-    contactPhone,
-    refundNotificationEmailsText,
-  }: OrganizationDetails) => {
-    const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
-    const refundNotificationEmails = splitNotificationEmails(refundNotificationEmailsText);
-    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}'...`} />, infoNotificationOptions);
-    const finalFeatureImages = featureImages.map((image) => ({
-      original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
-      thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
-    }));
-
-    commitUpdateOrganization({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: organization.id,
-          customDomain,
-          name,
-          listingMetadata: {
-            about: about ?? '',
-            title: title ?? '',
-            subTitle: subTitle ?? '',
-          },
-          marketplaceListingMetadata: organization.marketplaceListingMetadata,
-          website,
-          logoUrl: organizationLogoUrl,
-          customerFacingTermsAndConditionsUrl,
-          industrySubCategoryIds: selectedIndustrySubCategoryIds,
-          contactEmail,
-          contactPhone,
-          refundNotificationEmails,
-          featureImages: finalFeatureImages,
-          billingCycle: organization.billingCycle.type,
-          invoiceDueInDays: organization.invoiceDueInDays,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update organization '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`The details for organization '${name}' have been updated.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update organization '${organization.name}'. ${error.message}`} />,
-        });
-      },
-      optimisticResponse: {
-        updateOrganization: {
-          organization: {
-            id: organization.id,
-            customDomain: organization.customDomain,
-            name,
-            listingMetadata: {
-              about: about ?? '',
-              title: title ?? '',
-              subTitle: subTitle ?? '',
-            },
-            marketplaceListingMetadata: organization.marketplaceListingMetadata,
-            website,
-            logoUrl: organizationLogoUrl,
-            customerFacingTermsAndConditionsUrl,
-            industrySubCategories: rootData.organizationIndustryMainCategoriesReferences
-              .flatMap((mainCategory) => mainCategory.subCategories)
-              .filter(({ id }) => selectedIndustrySubCategoryIds.includes(id))
-              .map(({ id, name }) => ({ id, name })),
-            contactEmail,
-            contactPhone,
-            refundNotificationEmails,
-            featureImages: finalFeatureImages,
-            billingCycle: organization.billingCycle,
-            invoiceDueInDays: organization.invoiceDueInDays,
-          },
-        },
-      },
-    });
+  const handleRemoveLogo = () => {
+    setOrganizationLogoUrl(null);
+    commitOrganizationPatch(['LOGO_URL'], { logoUrl: null });
   };
 
   return (
     <Form
-      onSubmit={handleOrganizationDetailUpdateClick}
-      initialValues={{
-        customDomain: organizationEditableCustomDomain,
-        name: organizationName,
-        about: organizationAbout,
-        title: organizationTitle,
-        subTitle: organizationSubTitle,
-        website: organizationWebsite,
-        customerFacingTermsAndConditionsUrl: organizationCustomerFacingTermsAndConditionsUrl,
-        industrySubCategoryIds: organizationIndustrySubCategoryIds,
-        contactEmail: organizationContactEmail,
-        contactPhone: organizationContactPhone,
-        refundNotificationEmailsText: organizationRefundNotificationEmailsText,
-      }}
+      onSubmit={() => undefined}
+      initialValues={initialFormValues}
+      keepDirtyOnReinitialize
       validate={validateOrganizationDetails}
       render={({ handleSubmit, values }) => {
         const formValues = values!;
 
-        debounceSetOrganizationEditableCustomDomain(formValues.customDomain);
-        debounceSetOrganizationName(formValues.name);
-        debounceSetOrganizationWebsite(formValues.website);
-        debounceSetOrganizationCustomerFacingTermsAndConditionsUrl(formValues.customerFacingTermsAndConditionsUrl);
-        debounceSetOrganizationIndustrySubCategoryIds(formValues.industrySubCategoryIds);
-        debounceSetOrganizationContactEmail(formValues.contactEmail);
-        debounceSetOrganizationContactPhone(formValues.contactPhone);
-        debounceSetOrganizationRefundNotificationEmailsText(formValues.refundNotificationEmailsText ?? '');
+        const nextName = formValues.name ?? '';
+        const nextAbout = formValues.about ?? '';
+        const nextCustomDomain = formValues.customDomain;
+        const nextTitle = formValues.title ?? '';
+        const nextSubTitle = formValues.subTitle ?? '';
+        const nextWebsite = formValues.website;
+        const nextCustomerFacingTermsAndConditionsUrl = formValues.customerFacingTermsAndConditionsUrl;
+        const nextIndustrySubCategoryIds = formValues.industrySubCategoryIds ?? [];
+        const nextContactEmail = formValues.contactEmail ?? null;
+        const nextContactPhone = formValues.contactPhone;
+        const nextRefundNotificationEmailsText = formValues.refundNotificationEmailsText ?? '';
+        const nextRefundNotificationEmails = splitNotificationEmails(nextRefundNotificationEmailsText);
+
+        if (draftPatchValues.current.customDomain !== nextCustomDomain) {
+          draftPatchValues.current = { ...draftPatchValues.current, customDomain: nextCustomDomain };
+          debouncedCommitOrganizationPatch(['CUSTOM_DOMAIN'], { customDomain: nextCustomDomain });
+        }
+        if (draftPatchValues.current.name !== nextName) {
+          draftPatchValues.current = { ...draftPatchValues.current, name: nextName };
+          debouncedCommitOrganizationPatch(['NAME'], { name: nextName });
+        }
+        if (draftPatchValues.current.description !== nextAbout) {
+          draftPatchValues.current = { ...draftPatchValues.current, description: nextAbout };
+          debouncedCommitOrganizationPatch(['DESCRIPTION'], { description: nextAbout });
+        }
+        if (draftPatchValues.current.title !== nextTitle) {
+          draftPatchValues.current = { ...draftPatchValues.current, title: nextTitle };
+          debouncedCommitOrganizationPatch(['TITLE'], { title: nextTitle });
+        }
+        if (draftPatchValues.current.subTitle !== nextSubTitle) {
+          draftPatchValues.current = { ...draftPatchValues.current, subTitle: nextSubTitle };
+          debouncedCommitOrganizationPatch(['SUB_TITLE'], { subTitle: nextSubTitle });
+        }
+        if (draftPatchValues.current.website !== nextWebsite) {
+          draftPatchValues.current = { ...draftPatchValues.current, website: nextWebsite };
+          debouncedCommitOrganizationPatch(['WEBSITE'], { website: nextWebsite });
+        }
+        if (draftPatchValues.current.customerFacingTermsAndConditionsUrl !== nextCustomerFacingTermsAndConditionsUrl) {
+          draftPatchValues.current = { ...draftPatchValues.current, customerFacingTermsAndConditionsUrl: nextCustomerFacingTermsAndConditionsUrl };
+          debouncedCommitOrganizationPatch(['CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL'], {
+            customerFacingTermsAndConditionsUrl: nextCustomerFacingTermsAndConditionsUrl,
+          });
+        }
+        if (!areStringListsEqual(draftPatchValues.current.industrySubCategoryIds, nextIndustrySubCategoryIds)) {
+          draftPatchValues.current = { ...draftPatchValues.current, industrySubCategoryIds: nextIndustrySubCategoryIds };
+          debouncedCommitOrganizationPatch(['INDUSTRY_SUB_CATEGORIES'], { industrySubCategoryIds: nextIndustrySubCategoryIds });
+        }
+        if (draftPatchValues.current.contactEmail !== nextContactEmail) {
+          draftPatchValues.current = { ...draftPatchValues.current, contactEmail: nextContactEmail };
+          debouncedCommitOrganizationPatch(['CONTACT_EMAIL'], { contactEmail: nextContactEmail });
+        }
+        if (draftPatchValues.current.contactPhone !== nextContactPhone) {
+          draftPatchValues.current = { ...draftPatchValues.current, contactPhone: nextContactPhone };
+          debouncedCommitOrganizationPatch(['CONTACT_PHONE'], { contactPhone: nextContactPhone });
+        }
+        if (!areStringListsEqual(draftPatchValues.current.refundNotificationEmails, nextRefundNotificationEmails)) {
+          draftPatchValues.current = { ...draftPatchValues.current, refundNotificationEmails: nextRefundNotificationEmails };
+          debouncedCommitOrganizationPatch(['REFUND_NOTIFICATION_EMAILS'], { refundNotificationEmails: nextRefundNotificationEmails });
+        }
 
         return (
           <FormStackColumn onSubmit={handleSubmit}>
@@ -376,7 +636,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                         <StackRow>
                           <ImageFileUploaderWithCropper helperText="Upload a square logo or icon for organization branding." onUploadCompleted={handleLogoUploadCompleted} />
                           {organizationLogoUrl ? (
-                            <Button variant="outlined" size="small" onClick={() => setOrganizationLogoUrl(null)} sx={{ textTransform: 'none' }}>
+                            <Button variant="outlined" size="small" onClick={handleRemoveLogo} sx={{ textTransform: 'none' }}>
                               Remove logo
                             </Button>
                           ) : null}
@@ -430,7 +690,12 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredOrganizationDetailsFields.name} />
+                      <TextField
+                        name="name"
+                        required={requiredOrganizationDetailsFields.name}
+                        slotProps={{ input: { endAdornment: getSavingPatchAdornment(savingPatchFields.has('NAME')) } }}
+                        onBlur={() => commitOrganizationPatch(['NAME'], { name: draftPatchValues.current.name })}
+                      />
                     </FormFieldLabel>
 
                     {rootData.me?.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
@@ -442,10 +707,11 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                     <ListingMetadata
                       fields={['about', 'title', 'subTitle']}
                       requiredFields={requiredOrganizationDetailsFields}
-                      onChange={({ about, title, subTitle }) => {
-                        debounceSetOrganizationAbout(about);
-                        debounceSetOrganizationTitle(title);
-                        debounceSetOrganizationSubTitle(subTitle);
+                      textFieldProps={{
+                        about: { name: 'about', slotProps: { input: { endAdornment: getSavingPatchAdornment(savingPatchFields.has('DESCRIPTION')) } } },
+                      }}
+                      onFieldBlur={{
+                        about: () => commitOrganizationPatch(['DESCRIPTION'], { description: draftPatchValues.current.description }),
                       }}
                     />
 
@@ -487,8 +753,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                         <HelperText text="Optional. One email per line, or separate multiple emails with commas. These addresses receive internal refund status updates." />
                       </StackColumn>
                     </FormFieldLabel>
-
-                    <EditorActionBar primaryAction="Update" />
                   </StackColumn>
                 </SettingsSectionCard>
               </StackColumn>

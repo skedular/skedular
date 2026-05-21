@@ -3,6 +3,7 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Organization.Api.Mappers;
+using Organization.Api.Models;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
@@ -21,6 +22,7 @@ public interface IOrganizationOfferingService
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
+    Task UpdateOfferingPatchAsync(OrganizationOfferingPatchRequest request, CancellationToken cancellationToken);
     Task CancelOfferingAsync(string? organizationId, string? organizationUniqueAlphanumericName, CancellationToken cancellationToken);
     Task RegenerateAllOfferingsAsync(CancellationToken cancellationToken);
     Task RerunAllOfferingsWorkflowsAsync(CancellationToken cancellationToken);
@@ -143,6 +145,18 @@ public class OrganizationOfferingService(
         await transaction.CommitAsync(cancellationToken);
     }
 
+    public async Task UpdateOfferingPatchAsync(OrganizationOfferingPatchRequest request, CancellationToken cancellationToken)
+    {
+        ValidatePatchRequest(request);
+
+        await UpdateOfferingAsync(
+            request.OrganizationId,
+            request.OrganizationCustomDomain,
+            request.OfferingCode!.Value,
+            false,
+            cancellationToken);
+    }
+
     public async Task CancelOfferingAsync(string? organizationId, string? organizationUniqueAlphanumericName, CancellationToken cancellationToken) =>
         await UpdateOfferingAsync(organizationId, organizationUniqueAlphanumericName, OfferingCode.FreeTierV1, false, cancellationToken);
 
@@ -187,5 +201,26 @@ public class OrganizationOfferingService(
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    private static void ValidatePatchRequest(OrganizationOfferingPatchRequest request)
+    {
+        if (request.FieldsToUpdate.Count == 0)
+        {
+            throw new ArgumentException("Choose at least one organisation offering field to update.", nameof(request));
+        }
+
+        foreach (var field in request.FieldsToUpdate)
+        {
+            if (!Enum.IsDefined(field))
+            {
+                throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation offering patch field is not supported.");
+            }
+        }
+
+        if (!request.FieldsToUpdate.Contains(OrganizationOfferingPatchField.OfferingCode) || request.OfferingCode is null)
+        {
+            throw new ArgumentException("Organisation offering code is required.", nameof(request));
+        }
     }
 }

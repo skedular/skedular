@@ -176,17 +176,24 @@ message AddBillingDetailsInput {
   int32  invoiceDueInDays = 13;
 }
 
+enum BillingDetailsPatchField {
+  BillingDetailsPatchField_CompanyName    = 0;
+  BillingDetailsPatchField_Email          = 1;
+  BillingDetailsPatchField_BillingAddress = 2;
+}
+
 message UpdateBillingDetailsInput {
-  string id               = 1;
-  string companyName      = 2;
-  string email            = 3;
-  string addressLine1     = 4;
-  string addressLine2     = 5;
-  string suburb           = 6;
-  string city             = 7;
-  string province         = 8;
-  string zipcode          = 9;
-  string country          = 10;
-  string countryCode      = 11;
-  int32  invoiceDueInDays = 12;
+  string                            organizationId           = 1;
+  string                            organizationCustomDomain = 2;
+  repeated BillingDetailsPatchField fieldsToUpdate           = 3;
+  string                            companyName              = 4;
+  string                            email                    = 5;
+  string                            addressLine1             = 6;
+  string                            addressLine2             = 7;
+  string                            suburb                   = 8;
+  string                            city                     = 9;
+  string                            province                 = 10;
+  string                            zipcode                  = 11;
+  string                            country                  = 12;
+  string                            countryCode              = 13;
 }

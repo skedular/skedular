@@ -18,7 +18,6 @@ using Organization.Api.GraphQL.Xero;
 using Organization.Shared.Models;
 using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.Tag.AddCustomTagInput;
-using AddOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.AddOrganizationBillingDetailsInput;
 using AddProductTagInput = Organization.Api.GraphQL.Tag.AddProductTagInput;
 using AzureTenant = Organization.Shared.Models.AzureTenant;
 using AzureTenantMember = Organization.Shared.Models.AzureTenantMember;
@@ -36,11 +35,12 @@ using OrganizationMemberAttendancePercentage = Organization.Shared.Models.Organi
 using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
 using Tag = Organization.Shared.Models.Tag;
 using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
-using UpdateCustomTagInput = Organization.Api.GraphQL.Tag.UpdateCustomTagInput;
 using OrganizationBankAccount = Organization.Shared.Database.Entities.OrganizationBankAccount;
+using OrganizationBankAccountPatchRequest = Organization.Api.Models.OrganizationBankAccountPatchRequest;
 using OrganizationBillingDetails = Organization.Shared.Database.Entities.OrganizationBillingDetails;
 using OrganizationDetails = Organization.Api.GraphQL.Organization.OrganizationDetails;
 using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
+using OrganizationStripeConnectAccountPatchRequest = Organization.Api.Models.OrganizationStripeConnectAccountPatchRequest;
 using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
 using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.OrganizationStripeConnectAccount;
 using OrganizationStripeConnectAccountAuthorization = Organization.Shared.Models.OrganizationStripeConnectAccountAuthorization;
@@ -49,7 +49,11 @@ using OrganizationStripePaymentMethod = Organization.Shared.Models.OrganizationS
 using OrganizationXeroConnection = Organization.Shared.Models.OrganizationXeroConnection;
 using UpdateOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.UpdateOrganizationBillingDetailsInput;
 using OrganizationPhysicalAddress = Organization.Shared.Database.Entities.OrganizationPhysicalAddress;
-using UpdateProductTagInput = Organization.Api.GraphQL.Tag.UpdateProductTagInput;
+using OrganizationPatchRequest = Organization.Api.Models.OrganizationPatchRequest;
+using OrganizationBillingDetailsPatchRequest = Organization.Api.Models.OrganizationBillingDetailsPatchRequest;
+using OrganizationSsoSettingsPatchRequest = Organization.Api.Models.OrganizationSsoSettingsPatchRequest;
+using OrganizationTaxDetailsPatchRequest = Organization.Api.Models.OrganizationTaxDetailsPatchRequest;
+using OrganizationXeroConnectionPatchRequest = Organization.Api.Models.OrganizationXeroConnectionPatchRequest;
 
 
 namespace Organization.Api.Mappers;
@@ -86,7 +90,7 @@ public interface IGraphQlMapper
         IEnumerable<OrganizationDailyBookingsTotal> organizationDailyBookingsTotals);
 
     Shared.Models.Organization MapTo(AddOrganizationInput src);
-    Shared.Models.Organization MapTo(UpdateOrganizationInput src);
+    OrganizationPatchRequest MapTo(UpdateOrganizationInput src);
 
     Shared.Database.Entities.OrganizationMember MapToEntity(
         OrganizationMember src,
@@ -111,13 +115,11 @@ public interface IGraphQlMapper
     Shared.Database.Entities.Tag MergeTo(Tag src, Shared.Database.Entities.Tag dest, Shared.Database.Entities.Organization organization);
     IEnumerable<Edge<Tag>> MapTo(IEnumerable<Edge<Shared.Database.Entities.Tag>> src, Shared.Models.Organization organization);
     Tag MapTo(AddCustomTagInput src);
-    Tag MapTo(UpdateCustomTagInput src);
     Tag MapTo(AddZoneInput src);
-    Tag MapTo(UpdateZoneInput src);
     OrganizationTagDetails? MapTo(Tag? src);
     OrganizationTagEdge MapTo(Edge<Tag> src);
     IEnumerable<string> MapTo(Offering offering);
-    OrganizationSsoSettings MapTo(UpdateOrganizationSsoSettingsInput src);
+    OrganizationSsoSettingsPatchRequest MapTo(UpdateOrganizationSsoSettingsInput src);
     Shared.Database.Entities.OrganizationSsoSettings MapToEntity(OrganizationSsoSettings src, Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.OrganizationSsoSettings MergeToEntity(
@@ -126,7 +128,6 @@ public interface IGraphQlMapper
         Shared.Database.Entities.Organization organization);
 
     Tag MapTo(AddProductTagInput src);
-    Tag MapTo(UpdateProductTagInput src);
     OrganizationBillingDetails MapTo(Shared.Models.OrganizationBillingDetails src, Shared.Database.Entities.Organization organization);
 
     OrganizationBillingDetails MergeToEntity(
@@ -135,14 +136,14 @@ public interface IGraphQlMapper
         Shared.Database.Entities.Organization organization);
 
     CustomerCreateOptions MapToStripeCustomerCreateOption(Shared.Database.Entities.Organization src);
-    Shared.Models.OrganizationBillingDetails MapTo(AddOrganizationBillingDetailsInput src);
-    Shared.Models.OrganizationBillingDetails MapTo(UpdateOrganizationBillingDetailsInput src);
+    OrganizationBillingDetailsPatchRequest MapTo(UpdateOrganizationBillingDetailsInput src);
     Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src);
     AccountCreateOptions MapToStripeAccountRequest(Shared.Database.Entities.Organization src);
     OrganizationStripeConnectAccount MapTo(Account src, string id, string name, bool isDefault, Shared.Database.Entities.Organization organization);
     Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
     OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src);
     OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src);
+    OrganizationStripeConnectAccountPatchRequest MapTo(UpdateOrganizationStripeConnectAccountInput src);
     OrganizationBankAccount MapTo(Shared.Models.OrganizationBankAccount src, Shared.Database.Entities.Organization organization);
 
     OrganizationBankAccount MergeTo(
@@ -152,10 +153,10 @@ public interface IGraphQlMapper
 
     Shared.Models.OrganizationBankAccount MapTo(OrganizationBankAccount src);
     Shared.Models.OrganizationBankAccount MapTo(AddOrganizationBankAccountInput src);
-    Shared.Models.OrganizationBankAccount MapTo(UpdateOrganizationBankAccountInput src);
+    OrganizationBankAccountPatchRequest MapTo(UpdateOrganizationBankAccountInput src);
     OrganizationBankAccountDetails? MapTo(Shared.Models.OrganizationBankAccount? src);
     OrganizationBankAccountEdge MapTo(Edge<Shared.Models.OrganizationBankAccount> src);
-    OrganizationTaxDetails MapTo(UpdateOrganizationTaxDetailsInput src);
+    OrganizationTaxDetailsPatchRequest MapTo(UpdateOrganizationTaxDetailsInput src);
     Shared.Database.Entities.OrganizationTaxDetails MapToEntity(OrganizationTaxDetails src, Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.OrganizationTaxDetails MergeToEntity(
@@ -163,16 +164,7 @@ public interface IGraphQlMapper
         Shared.Database.Entities.OrganizationTaxDetails dest,
         Shared.Database.Entities.Organization organization);
 
-    OrganizationXeroConnection MapTo(UpdateOrganizationXeroConnectionInput src);
-
-    Shared.Database.Entities.OrganizationXeroConnection MapToEntity(
-        OrganizationXeroConnection src,
-        Shared.Database.Entities.Organization organization);
-
-    Shared.Database.Entities.OrganizationXeroConnection MergeToEntity(
-        OrganizationXeroConnection src,
-        Shared.Database.Entities.OrganizationXeroConnection dest,
-        Shared.Database.Entities.Organization organization);
+    OrganizationXeroConnectionPatchRequest MapTo(UpdateOrganizationXeroConnectionInput src);
 
     OrganizationXeroConnectionDetails? MapTo(OrganizationXeroConnection? src);
     OrganizationPhysicalAddress MapTo(Shared.Models.OrganizationPhysicalAddress src, Shared.Database.Entities.Organization organization);
@@ -182,8 +174,6 @@ public interface IGraphQlMapper
         OrganizationPhysicalAddress dest,
         Shared.Database.Entities.Organization organization);
 
-    Shared.Models.OrganizationPhysicalAddress MapTo(AddOrganizationPhysicalAddressInput src);
-    Shared.Models.OrganizationPhysicalAddress MapTo(UpdateOrganizationPhysicalAddressInput src);
     IEnumerable<InviteCustomerToJoinOrganizationDetails> MapTo(IEnumerable<JoinInvitation> src);
     InviteCustomerToJoinOrganizationDetails MapTo(JoinInvitation src);
     Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src);
@@ -521,25 +511,27 @@ public class GraphQlMapper : IGraphQlMapper
             TermsOfUse = new Shared.Models.TermsOfUse { Id = src.TermsOfUseId }
         };
 
-    public Shared.Models.Organization MapTo(UpdateOrganizationInput src) =>
-        new()
-        {
-            Id = src.Id.ToSafeString(),
-            CustomDomain = src.CustomDomain.ToSafeString(),
-            Name = src.Name,
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
-            MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
-            Website = src.Website,
-            LogoUrl = src.LogoUrl,
-            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
-            BillingCycle = src.BillingCycle,
-            InvoiceDueInDays = src.InvoiceDueInDays,
-            ContactEmail = src.ContactEmail,
-            ContactPhone = src.ContactPhone,
-            RefundNotificationEmails = src.RefundNotificationEmails.ToSafeCollection(),
-            FeatureImages = src.FeatureImages.ToSafeCollection(),
-            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
-        };
+    public OrganizationPatchRequest MapTo(UpdateOrganizationInput src) =>
+        new(
+            src.Id.ToSafeString(),
+            src.CustomDomain.ToSafeString(),
+            src.FieldsToUpdate.ToHashSet(),
+            src.Name,
+            src.Description,
+            src.Title,
+            src.SubTitle,
+            src.Website,
+            src.LogoUrl,
+            src.CustomerFacingTermsAndConditionsUrl,
+            src.BillingCycle,
+            src.InvoiceDueInDays,
+            src.ContactEmail,
+            src.ContactPhone,
+            src.RefundNotificationEmails.ToSafeCollection(),
+            src.IndustrySubCategoryIds.ToSafeCollection(),
+            src.FeatureImages.ToSafeCollection(),
+            src.MarketplaceListingMetadata,
+            MapTo(src.PhysicalAddress));
 
     public Shared.Database.Entities.OrganizationMember MapToEntity(
         OrganizationMember src,
@@ -618,16 +610,6 @@ public class GraphQlMapper : IGraphQlMapper
             Color = src.Color
         };
 
-    public Tag MapTo(UpdateCustomTagInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            Description = src.Description,
-            Type = OrganizationTagType.Custom,
-            Color = src.Color
-        };
-
     public Tag MapTo(AddZoneInput src) =>
         new()
         {
@@ -638,16 +620,6 @@ public class GraphQlMapper : IGraphQlMapper
             {
                 Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
             },
-            Type = OrganizationTagType.Zone,
-            Color = src.Color
-        };
-
-    public Tag MapTo(UpdateZoneInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            Description = src.Description,
             Type = OrganizationTagType.Zone,
             Color = src.Color
         };
@@ -668,18 +640,26 @@ public class GraphQlMapper : IGraphQlMapper
 
     public IEnumerable<string> MapTo(Offering offering) => offering.FeatureSets.Select(MapTo);
 
-    public OrganizationSsoSettings MapTo(UpdateOrganizationSsoSettingsInput src) =>
-        new()
+    public OrganizationSsoSettingsPatchRequest MapTo(UpdateOrganizationSsoSettingsInput src)
+    {
+        var organization = new Shared.Models.Organization
         {
-            IsActive = src.IsActive,
-            EntityId = src.EntityId,
-            LoginUrl = src.LoginUrl,
-            AppFederationMetadataUrl = src.AppFederationMetadataUrl,
-            Organization = new Shared.Models.Organization
-            {
-                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
-            }
+            Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
         };
+
+        return new OrganizationSsoSettingsPatchRequest(
+            src.OrganizationId,
+            src.OrganizationCustomDomain,
+            src.FieldsToUpdate.ToHashSet(),
+            new OrganizationSsoSettings
+            {
+                IsActive = src.IsActive,
+                EntityId = src.EntityId,
+                LoginUrl = src.LoginUrl,
+                AppFederationMetadataUrl = src.AppFederationMetadataUrl,
+                Organization = organization
+            });
+    }
 
     public Shared.Database.Entities.OrganizationSsoSettings MapToEntity(
         OrganizationSsoSettings src,
@@ -710,16 +690,6 @@ public class GraphQlMapper : IGraphQlMapper
             {
                 Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
             },
-            Type = OrganizationTagType.Product,
-            Color = src.Color
-        };
-
-    public Tag MapTo(UpdateProductTagInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            Description = src.Description,
             Type = OrganizationTagType.Product,
             Color = src.Color
         };
@@ -761,51 +731,27 @@ public class GraphQlMapper : IGraphQlMapper
             Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
         };
 
-    public Shared.Models.OrganizationBillingDetails MapTo(AddOrganizationBillingDetailsInput src) =>
-        new()
-        {
-            Id = src.Id.ToSafeString(),
-            CompanyName = src.CompanyName,
-            Email = src.Email,
-            OsmType = src.OsmType,
-            OsmId = src.OsmId,
-            PlaceId = src.PlaceId,
-            Coordinates = src.Longitude is null || src.Latitude is null ? null : new Point(new Coordinate(src.Longitude.Value, src.Latitude.Value)),
-            FormattedAddress = src.FormattedAddress,
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country,
-            CountryCode = src.CountryCode,
-            Organization = new Shared.Models.Organization
-            {
-                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
-            }
-        };
-
-    public Shared.Models.OrganizationBillingDetails MapTo(UpdateOrganizationBillingDetailsInput src) =>
-        new()
-        {
-            Id = src.Id,
-            CompanyName = src.CompanyName,
-            Email = src.Email,
-            OsmType = src.OsmType,
-            OsmId = src.OsmId,
-            PlaceId = src.PlaceId,
-            Coordinates = src.Longitude is null || src.Latitude is null ? null : new Point(new Coordinate(src.Longitude.Value, src.Latitude.Value)),
-            FormattedAddress = src.FormattedAddress,
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country,
-            CountryCode = src.CountryCode
-        };
+    public OrganizationBillingDetailsPatchRequest MapTo(UpdateOrganizationBillingDetailsInput src) =>
+        new(
+            src.OrganizationId,
+            src.OrganizationCustomDomain,
+            src.FieldsToUpdate,
+            src.CompanyName,
+            src.Email,
+            src.OsmType,
+            src.OsmId,
+            src.PlaceId,
+            src.Longitude,
+            src.Latitude,
+            src.FormattedAddress,
+            src.AddressLine1,
+            src.AddressLine2,
+            src.Suburb,
+            src.City,
+            src.Province,
+            src.Zipcode,
+            src.Country,
+            src.CountryCode);
 
     public Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src) =>
         src is null
@@ -952,6 +898,9 @@ public class GraphQlMapper : IGraphQlMapper
 
     public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);
 
+    public OrganizationStripeConnectAccountPatchRequest MapTo(UpdateOrganizationStripeConnectAccountInput src) =>
+        new(src.Id, src.FieldsToUpdate, src.Name);
+
     public OrganizationBankAccount MapTo(Shared.Models.OrganizationBankAccount src, Shared.Database.Entities.Organization organization) =>
         MergeTo(src, new OrganizationBankAccount(), organization);
 
@@ -1002,16 +951,8 @@ public class GraphQlMapper : IGraphQlMapper
             }
         };
 
-    public Shared.Models.OrganizationBankAccount MapTo(UpdateOrganizationBankAccountInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            BankName = src.BankName,
-            AccountHolderName = src.AccountHolderName,
-            AccountNumber = src.AccountNumber,
-            Country = src.Country
-        };
+    public OrganizationBankAccountPatchRequest MapTo(UpdateOrganizationBankAccountInput src) =>
+        new(src.Id, src.FieldsToUpdate, src.Name, src.BankName, src.AccountHolderName, src.AccountNumber, src.Country);
 
     public OrganizationBankAccountDetails? MapTo(Shared.Models.OrganizationBankAccount? src) =>
         src is null
@@ -1030,16 +971,13 @@ public class GraphQlMapper : IGraphQlMapper
 
     public OrganizationBankAccountEdge MapTo(Edge<Shared.Models.OrganizationBankAccount> src) => new(MapTo(src.Node)!, src.Cursor);
 
-    public OrganizationTaxDetails MapTo(UpdateOrganizationTaxDetailsInput src) =>
-        new()
-        {
-            TaxId = src.TaxId,
-            TaxRatePercentage = src.TaxRatePercentage,
-            Organization = new Shared.Models.Organization
-            {
-                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
-            }
-        };
+    public OrganizationTaxDetailsPatchRequest MapTo(UpdateOrganizationTaxDetailsInput src) =>
+        new(
+            src.OrganizationId.ToSafeString(),
+            src.OrganizationCustomDomain.ToSafeString(),
+            src.FieldsToUpdate.ToHashSet(),
+            src.TaxId,
+            src.TaxRatePercentage);
 
     public Shared.Database.Entities.OrganizationTaxDetails MapToEntity(
         OrganizationTaxDetails src,
@@ -1058,65 +996,24 @@ public class GraphQlMapper : IGraphQlMapper
         return dest;
     }
 
-    public OrganizationXeroConnection MapTo(UpdateOrganizationXeroConnectionInput src) =>
-        new()
-        {
-            TenantId = src.TenantId,
-            TenantName = src.TenantName,
-            BillingMode = src.BillingMode,
-            Scopes = src.Scopes,
-            IsActive = src.IsActive,
-            SendInvoicesViaXero = src.SendInvoicesViaXero,
-            AutoReconcilePayments = src.AutoReconcilePayments,
-            DefaultSalesAccountCode = src.DefaultSalesAccountCode,
-            DefaultReceivablesAccountCode = src.DefaultReceivablesAccountCode,
-            DefaultTrackingCategory1 = src.DefaultTrackingCategory1,
-            DefaultTrackingCategory2 = src.DefaultTrackingCategory2,
-            DefaultBrandingThemeId = src.DefaultBrandingThemeId,
-            DefaultReferencePrefix = src.DefaultReferencePrefix,
-            Organization = new Shared.Models.Organization
-            {
-                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
-            }
-        };
-
-    public Shared.Database.Entities.OrganizationXeroConnection MapToEntity(
-        OrganizationXeroConnection src,
-        Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new Shared.Database.Entities.OrganizationXeroConnection(), organization);
-
-    public Shared.Database.Entities.OrganizationXeroConnection MergeToEntity(
-        OrganizationXeroConnection src,
-        Shared.Database.Entities.OrganizationXeroConnection dest,
-        Shared.Database.Entities.Organization organization)
-    {
-        dest.Id = src.Id;
-        dest.TenantId = src.TenantId;
-        dest.TenantName = src.TenantName;
-        dest.BillingMode = src.BillingMode.ToOrganizationXeroBillingMode();
-        dest.Scopes = src.Scopes;
-        dest.IsActive = src.IsActive;
-        dest.SendInvoicesViaXero = src.SendInvoicesViaXero;
-        dest.AutoReconcilePayments = src.AutoReconcilePayments;
-        dest.DefaultSalesAccountCode = src.DefaultSalesAccountCode;
-        dest.DefaultReceivablesAccountCode = src.DefaultReceivablesAccountCode;
-        dest.DefaultTrackingCategory1 = src.DefaultTrackingCategory1;
-        dest.DefaultTrackingCategory2 = src.DefaultTrackingCategory2;
-        dest.DefaultBrandingThemeId = src.DefaultBrandingThemeId;
-        dest.DefaultReferencePrefix = src.DefaultReferencePrefix;
-        if (src.AccessTokenExpiresAt is not null)
-        {
-            dest.AccessTokenExpiresAt = src.AccessTokenExpiresAt;
-        }
-
-        if (src.RefreshTokenExpiresAt is not null)
-        {
-            dest.RefreshTokenExpiresAt = src.RefreshTokenExpiresAt;
-        }
-
-        dest.Organization = organization;
-        return dest;
-    }
+    public OrganizationXeroConnectionPatchRequest MapTo(UpdateOrganizationXeroConnectionInput src) =>
+        new(
+            src.OrganizationId.ToSafeString(),
+            src.OrganizationCustomDomain.ToSafeString(),
+            src.FieldsToUpdate,
+            src.TenantId,
+            src.TenantName,
+            src.BillingMode,
+            src.Scopes,
+            src.IsActive,
+            src.SendInvoicesViaXero,
+            src.AutoReconcilePayments,
+            src.DefaultSalesAccountCode,
+            src.DefaultReceivablesAccountCode,
+            src.DefaultTrackingCategory1,
+            src.DefaultTrackingCategory2,
+            src.DefaultBrandingThemeId,
+            src.DefaultReferencePrefix);
 
     public OrganizationXeroConnectionDetails? MapTo(OrganizationXeroConnection? src) =>
         src is null
@@ -1171,48 +1068,6 @@ public class GraphQlMapper : IGraphQlMapper
         return dest;
     }
 
-    public Shared.Models.OrganizationPhysicalAddress MapTo(AddOrganizationPhysicalAddressInput src) =>
-        new()
-        {
-            Id = src.Id.ToSafeString(),
-            OsmType = src.OsmType,
-            OsmId = src.OsmId,
-            PlaceId = src.PlaceId,
-            Coordinates = src.Longitude is null || src.Latitude is null ? null : new Point(new Coordinate(src.Longitude.Value, src.Latitude.Value)),
-            FormattedAddress = src.FormattedAddress,
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country,
-            CountryCode = src.CountryCode,
-            Organization = new Shared.Models.Organization
-            {
-                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
-            }
-        };
-
-    public Shared.Models.OrganizationPhysicalAddress MapTo(UpdateOrganizationPhysicalAddressInput src) =>
-        new()
-        {
-            Id = src.Id,
-            OsmType = src.OsmType,
-            OsmId = src.OsmId,
-            PlaceId = src.PlaceId,
-            Coordinates = src.Longitude is null || src.Latitude is null ? null : new Point(new Coordinate(src.Longitude.Value, src.Latitude.Value)),
-            FormattedAddress = src.FormattedAddress,
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country,
-            CountryCode = src.CountryCode
-        };
-
     public IEnumerable<InviteCustomerToJoinOrganizationDetails> MapTo(IEnumerable<JoinInvitation> src) =>
         src.Select(MapTo);
 
@@ -1251,6 +1106,27 @@ public class GraphQlMapper : IGraphQlMapper
         dest.CapabilitiesTransfers = src.Capabilities.Transfers.ToSafeString();
         return dest;
     }
+
+    private static Shared.Models.OrganizationPhysicalAddress? MapTo(OrganizationPhysicalAddressPatchInput? src) =>
+        src is null
+            ? null
+            : new Shared.Models.OrganizationPhysicalAddress
+            {
+                OsmType = src.OsmType,
+                OsmId = src.OsmId,
+                PlaceId = src.PlaceId,
+                Coordinates =
+                    src.Longitude is null || src.Latitude is null ? null : new Point(new Coordinate(src.Longitude.Value, src.Latitude.Value)),
+                FormattedAddress = src.FormattedAddress,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country,
+                CountryCode = src.CountryCode
+            };
 
     private IEnumerable<OrganizationMember> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationMember> src,

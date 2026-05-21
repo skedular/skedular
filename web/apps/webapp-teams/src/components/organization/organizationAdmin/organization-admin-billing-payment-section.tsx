@@ -5,17 +5,16 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { BillingDetails, billingSchema } from '@/components/organization/organizationAdmin/organization-admin-shared';
 import type { organizationAdminBillingPaymentSectionQuery } from '@/queries/__generated__/organizationAdminBillingPaymentSectionQuery.graphql';
-import type { organizationAdminBillingPaymentSection_addOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdminBillingPaymentSection_addOrganizationBillingDetailsMutation.graphql';
 import type { organizationAdminBillingPaymentSection_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdminBillingPaymentSection_removeOrganizationPaymentMethodMutation.graphql';
 import type { organizationAdminBillingPaymentSection_updateOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdminBillingPaymentSection_updateOrganizationBillingDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext } from '@skedular/shared';
-import { BodyIconTypography, CreditCard, EditorActionBar, FormFieldLabel, FormStackColumn, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import { BodyIconTypography, CreditCard, FormFieldLabel, FormStackColumn, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -31,6 +30,19 @@ type InnerProps = {
   onRefetchRequired: () => void;
   queryReference: PreloadedQuery<organizationAdminBillingPaymentSectionQuery>;
 };
+
+type BillingDetailsPatchField = 'COMPANY_NAME' | 'EMAIL' | 'BILLING_ADDRESS';
+
+const inlinePatchDebounceTimeout = 1000;
+
+const areBillingAddressValuesEqual = (left: BillingDetails, right: BillingDetails) =>
+  left.addressLine1 === right.addressLine1 &&
+  left.addressLine2 === right.addressLine2 &&
+  left.suburb === right.suburb &&
+  left.city === right.city &&
+  left.province === right.province &&
+  left.zipcode === right.zipcode &&
+  left.countryCode === right.countryCode;
 
 const RootQuery = graphql`
   query organizationAdminBillingPaymentSectionQuery($organizationCustomDomain: String!) {
@@ -69,35 +81,7 @@ const RootQuery = graphql`
 
 const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomain, onRefetchRequired, queryReference }: InnerProps) => {
   const rootData = usePreloadedQuery<organizationAdminBillingPaymentSectionQuery>(RootQuery, queryReference);
-  const [commitAddOrganizationBillingDetails] = useMutation<organizationAdminBillingPaymentSection_addOrganizationBillingDetailsMutation>(graphql`
-    mutation organizationAdminBillingPaymentSection_addOrganizationBillingDetailsMutation($input: AddOrganizationBillingDetailsInput!) @raw_response_type {
-      addOrganizationBillingDetails(input: $input) {
-        organization {
-          id
-          billingDetails {
-            id
-            companyName
-            email
-            osmType
-            osmId
-            placeId
-            longitude
-            latitude
-            formattedAddress
-            addressLine1
-            addressLine2
-            suburb
-            city
-            province
-            zipcode
-            country
-            countryCode
-          }
-        }
-      }
-    }
-  `);
-  const [commitUpdateOrganizationBillingDetails] = useMutation<organizationAdminBillingPaymentSection_updateOrganizationBillingDetailsMutation>(graphql`
+  const [commitUpdateOrganizationBillingDetailsPatch] = useMutation<organizationAdminBillingPaymentSection_updateOrganizationBillingDetailsMutation>(graphql`
     mutation organizationAdminBillingPaymentSection_updateOrganizationBillingDetailsMutation($input: UpdateOrganizationBillingDetailsInput!) @raw_response_type {
       updateOrganizationBillingDetails(input: $input) {
         organization {
@@ -143,38 +127,29 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
     maxWidth: 760,
   };
 
-  const [billingCompanyName, setBillingCompanyName] = useState(organization?.billingDetails?.companyName);
-  const debounceSetBillingCompanyName = useDebounceCallback(setBillingCompanyName, keyboardTextFieldDebounceTimeout);
-  const [billingEmail, setBillingEmail] = useState<string>(organization?.billingDetails?.email ?? '');
-  const debounceSetBillingEmail = useDebounceCallback(setBillingEmail, keyboardTextFieldDebounceTimeout);
   const [billingOsmType, setBillingOsmType] = useState(organization?.billingDetails?.osmType);
   const [billingOsmId, setBillingOsmId] = useState(organization?.billingDetails?.osmId);
   const [billingPlaceId, setBillingPlaceId] = useState(organization?.billingDetails?.placeId);
   const [billingLongitude, setBillingLongitude] = useState(organization?.billingDetails?.longitude);
   const [billingLatitude, setBillingLatitude] = useState(organization?.billingDetails?.latitude);
   const [billingFormattedAddress, setBillingFormattedAddress] = useState(organization?.billingDetails?.formattedAddress);
-  const [billingAddressLine1, setBillingAddressLine1] = useState<string>(organization?.billingDetails?.addressLine1 ?? '');
-  const debounceSetBillingAddressLine1 = useDebounceCallback(setBillingAddressLine1, keyboardTextFieldDebounceTimeout);
-  const [billingAddressLine2, setBillingAddressLine2] = useState(organization?.billingDetails?.addressLine2);
-  const debounceSetBillingAddressLine2 = useDebounceCallback(setBillingAddressLine2, keyboardTextFieldDebounceTimeout);
-  const [billingSuburb, setBillingSuburb] = useState(organization?.billingDetails?.suburb);
-  const debounceSetBillingSuburb = useDebounceCallback(setBillingSuburb, keyboardTextFieldDebounceTimeout);
-  const [billingCity, setBillingCity] = useState(organization?.billingDetails?.city);
-  const debounceSetBillingCity = useDebounceCallback(setBillingCity, keyboardTextFieldDebounceTimeout);
-  const [billingProvince, setBillingProvince] = useState(organization?.billingDetails?.province);
-  const debounceSetBillingProvince = useDebounceCallback(setBillingProvince, keyboardTextFieldDebounceTimeout);
-  const [billingZipcode, setBillingZipcode] = useState<string>(organization?.billingDetails?.zipcode ?? '');
-  const debounceSetBillingZipcode = useDebounceCallback(setBillingZipcode, keyboardTextFieldDebounceTimeout);
   const [billingCountry, setBillingCountry] = useState<string>(organization?.billingDetails?.country ?? '');
-  const [billingCountryCode, setBillingCountryCode] = useState<string>(organization?.billingDetails?.countryCode ?? '');
-  const debounceSetBillingCountryCode = useDebounceCallback(setBillingCountryCode, keyboardTextFieldDebounceTimeout);
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
-
-  if (!organization) {
-    return null;
-  }
-
-  const paymentMethodExist = organization.paymentMethods.length > 0;
+  const initialBillingValues = useMemo<BillingDetails>(
+    () => ({
+      companyName: organization?.billingDetails?.companyName ?? null,
+      email: organization?.billingDetails?.email ?? '',
+      addressLine1: organization?.billingDetails?.addressLine1 ?? '',
+      addressLine2: organization?.billingDetails?.addressLine2 ?? null,
+      suburb: organization?.billingDetails?.suburb ?? null,
+      city: organization?.billingDetails?.city ?? null,
+      province: organization?.billingDetails?.province ?? null,
+      zipcode: organization?.billingDetails?.zipcode ?? '',
+      countryCode: organization?.billingDetails?.countryCode ?? '',
+    }),
+    [organization],
+  );
+  const draftBillingValues = useRef(initialBillingValues);
 
   const handleBillingAddressSelect = (address: Address) => {
     setBillingOsmType(address.osmType);
@@ -183,33 +158,32 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
     setBillingLongitude(address.longitude);
     setBillingLatitude(address.latitude);
     setBillingFormattedAddress(address.formattedAddress);
-    setBillingAddressLine1(address.addressLine1 ?? '');
-    setBillingAddressLine2(address.addressLine2 ?? '');
-    setBillingSuburb(address.suburb ?? '');
-    setBillingCity(address.city ?? '');
-    setBillingProvince(address.province ?? '');
-    setBillingZipcode(address.zipcode ?? '');
     setBillingCountry(address.country ?? '');
-    setBillingCountryCode(address.countryCode ?? '');
   };
 
-  const handleBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: BillingDetails) => {
-    const countryData = getCountryData(countryCode as TCountryCode);
-    let country = billingCountry;
-    if (countryData) {
-      country = countryData.name;
-    }
+  const commitBillingDetailsPatch = useCallback(
+    (fieldsToUpdate: BillingDetailsPatchField[], { companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: BillingDetails) => {
+      if (
+        !organization ||
+        fieldsToUpdate.length === 0 ||
+        !billingSchema.isValidSync({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, countryCode })
+      ) {
+        return;
+      }
 
-    const billingDetails = organization.billingDetails;
+      const countryData = getCountryData(countryCode as TCountryCode);
+      let country = billingCountry;
+      if (countryData) {
+        country = countryData.name;
+      }
 
-    if (billingDetails) {
-      const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing...`} />, infoNotificationOptions);
-
-      commitUpdateOrganizationBillingDetails({
+      const billingDetailsId = organization.billingDetails?.id ?? uuid();
+      commitUpdateOrganizationBillingDetailsPatch({
         variables: {
           input: {
             clientMutationId: uuid(),
-            id: billingDetails.id,
+            organizationCustomDomain,
+            fieldsToUpdate,
             companyName,
             email,
             osmType: billingOsmType,
@@ -230,31 +204,21 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't update billing for organization '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
-            });
-
-            return;
+            themedToast(
+              <NotificationContent content={`We couldn't update billing for organization '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
+              errorNotificationOptions,
+            );
           }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`Billing for organization '${organization.name}' has been updated.`} />,
-          });
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update billing for organization '${organization.name}'. ${error.message}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't update billing for organization '${organization.name}'. ${error.message}`} />, errorNotificationOptions);
         },
         optimisticResponse: {
           updateOrganizationBillingDetails: {
             organization: {
               id: organization.id,
               billingDetails: {
-                id: billingDetails.id,
+                id: billingDetailsId,
                 companyName,
                 email,
                 osmType: billingOsmType,
@@ -276,86 +240,28 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
           },
         },
       });
+    },
+    [
+      billingCountry,
+      billingFormattedAddress,
+      billingLatitude,
+      billingLongitude,
+      billingOsmId,
+      billingOsmType,
+      billingPlaceId,
+      commitUpdateOrganizationBillingDetailsPatch,
+      organization,
+      organizationCustomDomain,
+      themedToast,
+    ],
+  );
+  const debouncedCommitBillingDetailsPatch = useDebounceCallback(commitBillingDetailsPatch, inlinePatchDebounceTimeout);
 
-      return;
-    }
+  if (!organization) {
+    return null;
+  }
 
-    const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding billing for organization '${organization.name}'...`} />, infoNotificationOptions);
-
-    commitAddOrganizationBillingDetails({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          organizationCustomDomain,
-          id,
-          companyName,
-          email,
-          osmType: billingOsmType,
-          osmId: billingOsmId,
-          placeId: billingPlaceId,
-          longitude: billingLongitude,
-          latitude: billingLatitude,
-          formattedAddress: billingFormattedAddress,
-          addressLine1,
-          addressLine2,
-          suburb,
-          city,
-          province,
-          zipcode,
-          country,
-          countryCode,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't add billing for organization '${organization.name}'. ${getRelayErrorMessage(errors)}`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Billing for organization '${organization.name}' has been added.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't add billing for organization '${organization.name}'. ${error.message}`} />,
-        });
-      },
-      optimisticResponse: {
-        addOrganizationBillingDetails: {
-          organization: {
-            id: organization.id,
-            billingDetails: {
-              id,
-              companyName,
-              email,
-              osmType: billingOsmType,
-              osmId: billingOsmId,
-              placeId: billingPlaceId,
-              longitude: billingLongitude,
-              latitude: billingLatitude,
-              formattedAddress: billingFormattedAddress,
-              addressLine1,
-              addressLine2,
-              suburb,
-              city,
-              province,
-              zipcode,
-              country,
-              countryCode,
-            },
-          },
-        },
-      },
-    });
-  };
+  const paymentMethodExist = organization.paymentMethods.length > 0;
 
   const handleAddPaymentMethodClicked = () => {
     setIsAddPaymentMethodDialogOpen(true);
@@ -403,32 +309,26 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
 
   return (
     <>
-      <Form
-        onSubmit={handleBillingDetailUpdateClick}
-        initialValues={{
-          companyName: billingCompanyName,
-          email: billingEmail,
-          addressLine1: billingAddressLine1,
-          addressLine2: billingAddressLine2,
-          suburb: billingSuburb,
-          city: billingCity,
-          province: billingProvince,
-          zipcode: billingZipcode,
-          countryCode: billingCountryCode,
-        }}
+      <Form<BillingDetails>
+        onSubmit={() => undefined}
+        initialValues={initialBillingValues}
         validate={validateOrganizationBilling}
         render={({ handleSubmit, values, form }) => {
-          const formValues = values!;
-
-          debounceSetBillingCompanyName(formValues.companyName);
-          debounceSetBillingEmail(formValues.email);
-          debounceSetBillingAddressLine1(formValues.addressLine1);
-          debounceSetBillingAddressLine2(formValues.addressLine2);
-          debounceSetBillingSuburb(formValues.suburb);
-          debounceSetBillingCity(formValues.city);
-          debounceSetBillingProvince(formValues.province);
-          debounceSetBillingZipcode(formValues.zipcode);
-          debounceSetBillingCountryCode(formValues.countryCode);
+          const formValues = values as BillingDetails;
+          const changedFields: BillingDetailsPatchField[] = [];
+          if (draftBillingValues.current.companyName !== formValues.companyName) {
+            changedFields.push('COMPANY_NAME');
+          }
+          if (draftBillingValues.current.email !== formValues.email) {
+            changedFields.push('EMAIL');
+          }
+          if (!areBillingAddressValuesEqual(draftBillingValues.current, formValues)) {
+            changedFields.push('BILLING_ADDRESS');
+          }
+          if (changedFields.length > 0) {
+            draftBillingValues.current = formValues;
+            debouncedCommitBillingDetailsPatch(changedFields, formValues);
+          }
 
           return (
             <FormStackColumn onSubmit={handleSubmit}>
@@ -472,8 +372,6 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
                           });
                         }}
                       />
-
-                      <EditorActionBar primaryAction="Update" />
                     </StackColumn>
                   </SettingsSectionCard>
 

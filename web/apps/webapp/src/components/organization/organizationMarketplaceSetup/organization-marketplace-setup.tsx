@@ -19,7 +19,7 @@ import { Search } from '@/components/search';
 import { ExistingStripeConnectAccountButton, NewStripeConnectAccountButton } from '@/components/stripeConnectAccount/addStripeConnectAccount';
 import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
+import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteProductTagsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductTagsMutation.graphql';
@@ -35,10 +35,12 @@ import type { organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMu
 import type { organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation.graphql';
 import type {
   OrganizationBillingCycle,
+  OrganizationPatchField,
   organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation,
 } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation.graphql';
 import type { organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation.graphql';
 import type {
+  OrganizationXeroConnectionPatchField,
   organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation,
   OrganizationXeroBillingMode,
 } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation.graphql';
@@ -46,12 +48,12 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import { EditorActionBar, PageHeaderPanel } from '@skedular/ui';
+import { PageHeaderPanel } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -67,6 +69,8 @@ type Props = {
   onReloadRequired: () => void;
   organizationCustomDomain: string;
 };
+
+const inlinePatchDebounceTimeout = 1000;
 
 type OrganizationMarketplaceListingMetadataDetails = {
   title: string | null;
@@ -398,9 +402,9 @@ const OrganizationMarketplaceSetup = ({
     }
   `);
 
-  const [commitUpdateOrganizationMarketplaceListingMetadata] = useMutation<organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation>(graphql`
-    mutation organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation($input: UpdateOrganizationMarketplaceListingMetadataInput!) @raw_response_type {
-      updateOrganizationMarketplaceListingMetadata(input: $input) {
+  const [commitUpdateOrganizationPatchMarketplaceListingMetadata] = useMutation<organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation>(graphql`
+    mutation organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation($input: UpdateOrganizationInput!) @raw_response_type {
+      updateOrganization(input: $input) {
         organization {
           id
           marketplaceListingMetadata {
@@ -414,9 +418,9 @@ const OrganizationMarketplaceSetup = ({
     }
   `);
 
-  const [commitUpdateOrganizationBillingSettings] = useMutation<organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation>(graphql`
-    mutation organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation($input: UpdateOrganizationBillingSettingsInput!) @raw_response_type {
-      updateOrganizationBillingSettings(input: $input) {
+  const [commitUpdateOrganizationPatchBillingSettings] = useMutation<organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation>(graphql`
+    mutation organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation($input: UpdateOrganizationInput!) @raw_response_type {
+      updateOrganization(input: $input) {
         organization {
           id
           billingCycle {
@@ -429,7 +433,7 @@ const OrganizationMarketplaceSetup = ({
     }
   `);
 
-  const [commitUpdateOrganizationXeroConnection] = useMutation<organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation>(graphql`
+  const [commitUpdateOrganizationXeroConnectionPatch] = useMutation<organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation>(graphql`
     mutation organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation($input: UpdateOrganizationXeroConnectionInput!) @raw_response_type {
       updateOrganizationXeroConnection(input: $input) {
         organization {
@@ -489,25 +493,60 @@ const OrganizationMarketplaceSetup = ({
   const validateOrganizationMarketplaceListingMetadataDetails = makeValidate(organizationMarketplaceListingMetadataSchema);
   const requiredOrganizationMarketplaceListingMetadataDetailsFields = makeRequired(organizationMarketplaceListingMetadataSchema);
 
-  const [organizationTitle, setOrganizationTitle] = useState(rootData.organization?.marketplaceListingMetadata.title ?? null);
-  const debounceSetOrganizationTitle = useDebounceCallback(setOrganizationTitle, keyboardTextFieldDebounceTimeout);
-  const [organizationSubTitle, setOrganizationSubTitle] = useState(rootData.organization?.marketplaceListingMetadata.subTitle ?? null);
-  const debounceSetOrganizationSubTitle = useDebounceCallback(setOrganizationSubTitle, keyboardTextFieldDebounceTimeout);
-
   const validateOrganizationBillingSettingsDetails = makeValidate(organizationBillingSettingsSchema);
   const requiredOrganizationBillingSettingsDetailsFields = makeRequired(organizationBillingSettingsSchema);
 
-  const [organizationBillingCycle, setOrganizationBillingCycle] = useState(rootData.organization?.billingCycle.type ?? '');
-  const debounceSetOrganizationBillingCycle = useDebounceCallback(setOrganizationBillingCycle, keyboardTextFieldDebounceTimeout);
-  const [organizationInvoiceDueInDays, setOrganizationInvoiceDueInDays] = useState<number>(rootData.organization?.invoiceDueInDays ?? 7);
-  const debounceSetOrganizationInvoiceDueInDays = useDebounceCallback(setOrganizationInvoiceDueInDays, keyboardTextFieldDebounceTimeout);
   const organization = rootData.organization as
     | (NonNullable<typeof rootData.organization> & {
         xeroConnection?: OrganizationXeroConnectionDetails | null;
       })
     | null
     | undefined;
+  const draftOrganizationBillingSettings = useRef<OrganizationBillingSettingsDetails>({
+    billingCycle: organization?.billingCycle.type ?? '',
+    invoiceDueInDays: organization?.invoiceDueInDays ?? 7,
+  });
+  useEffect(() => {
+    draftOrganizationBillingSettings.current = {
+      billingCycle: organization?.billingCycle.type ?? '',
+      invoiceDueInDays: organization?.invoiceDueInDays ?? 7,
+    };
+  }, [organization?.billingCycle.type, organization?.invoiceDueInDays]);
   const existingXeroConnection = organization?.xeroConnection;
+  const draftOrganizationXeroConnection = useRef<OrganizationXeroConnectionDetails>({
+    tenantId: existingXeroConnection?.tenantId ?? '',
+    tenantName: existingXeroConnection?.tenantName ?? '',
+    billingMode: existingXeroConnection?.billingMode ?? 'DISABLED',
+    isActive: existingXeroConnection?.isActive ?? false,
+    defaultSalesAccountCode: existingXeroConnection?.defaultSalesAccountCode ?? '',
+    defaultTrackingCategory1: existingXeroConnection?.defaultTrackingCategory1 ?? '',
+    defaultTrackingCategory2: existingXeroConnection?.defaultTrackingCategory2 ?? '',
+    defaultBrandingThemeId: existingXeroConnection?.defaultBrandingThemeId ?? '',
+    defaultReferencePrefix: existingXeroConnection?.defaultReferencePrefix ?? '',
+  });
+  useEffect(() => {
+    draftOrganizationXeroConnection.current = {
+      tenantId: existingXeroConnection?.tenantId ?? '',
+      tenantName: existingXeroConnection?.tenantName ?? '',
+      billingMode: existingXeroConnection?.billingMode ?? 'DISABLED',
+      isActive: existingXeroConnection?.isActive ?? false,
+      defaultSalesAccountCode: existingXeroConnection?.defaultSalesAccountCode ?? '',
+      defaultTrackingCategory1: existingXeroConnection?.defaultTrackingCategory1 ?? '',
+      defaultTrackingCategory2: existingXeroConnection?.defaultTrackingCategory2 ?? '',
+      defaultBrandingThemeId: existingXeroConnection?.defaultBrandingThemeId ?? '',
+      defaultReferencePrefix: existingXeroConnection?.defaultReferencePrefix ?? '',
+    };
+  }, [
+    existingXeroConnection?.billingMode,
+    existingXeroConnection?.defaultBrandingThemeId,
+    existingXeroConnection?.defaultReferencePrefix,
+    existingXeroConnection?.defaultSalesAccountCode,
+    existingXeroConnection?.defaultTrackingCategory1,
+    existingXeroConnection?.defaultTrackingCategory2,
+    existingXeroConnection?.isActive,
+    existingXeroConnection?.tenantId,
+    existingXeroConnection?.tenantName,
+  ]);
   const xeroTenantOptions = useMemo<XeroTenantOption[]>(() => {
     const rawValue = searchParams.get('xeroTenantOptions');
     if (!rawValue) {
@@ -943,32 +982,67 @@ const OrganizationMarketplaceSetup = ({
     handleRefetchOrganizationBankAccounts(str);
   };
 
-  const handleUpdateOrganizationXeroConnectionClick = (values: OrganizationXeroConnectionDetails) => {
+  const commitOrganizationXeroConnectionPatch = (values: OrganizationXeroConnectionDetails) => {
     if (!organization) {
+      return;
+    }
+
+    const fieldsToUpdate: OrganizationXeroConnectionPatchField[] = [];
+    const tenantId = values.tenantId ?? existingXeroConnection?.tenantId ?? xeroSuggestedTenantId ?? '';
+    const tenantName = values.tenantName ?? existingXeroConnection?.tenantName ?? xeroSuggestedTenantName;
+    const billingMode = values.billingMode ?? 'DISABLED';
+    const defaultSalesAccountCode = values.defaultSalesAccountCode ?? null;
+    const defaultTrackingCategory1 = values.defaultTrackingCategory1 ?? null;
+    const defaultTrackingCategory2 = values.defaultTrackingCategory2 ?? null;
+    const defaultBrandingThemeId = values.defaultBrandingThemeId ?? null;
+    const defaultReferencePrefix = values.defaultReferencePrefix ?? null;
+
+    if (tenantId !== (existingXeroConnection?.tenantId ?? '')) {
+      fieldsToUpdate.push('TENANT_ID');
+    }
+    if (tenantName !== (existingXeroConnection?.tenantName ?? '')) {
+      fieldsToUpdate.push('TENANT_NAME');
+    }
+    if (billingMode !== (existingXeroConnection?.billingMode ?? 'DISABLED')) {
+      fieldsToUpdate.push('BILLING_MODE');
+    }
+    if (defaultSalesAccountCode !== (existingXeroConnection?.defaultSalesAccountCode ?? null)) {
+      fieldsToUpdate.push('DEFAULT_SALES_ACCOUNT_CODE');
+    }
+    if (defaultTrackingCategory1 !== (existingXeroConnection?.defaultTrackingCategory1 ?? null)) {
+      fieldsToUpdate.push('DEFAULT_TRACKING_CATEGORY1');
+    }
+    if (defaultTrackingCategory2 !== (existingXeroConnection?.defaultTrackingCategory2 ?? null)) {
+      fieldsToUpdate.push('DEFAULT_TRACKING_CATEGORY2');
+    }
+    if (defaultBrandingThemeId !== (existingXeroConnection?.defaultBrandingThemeId ?? null)) {
+      fieldsToUpdate.push('DEFAULT_BRANDING_THEME_ID');
+    }
+    if (defaultReferencePrefix !== (existingXeroConnection?.defaultReferencePrefix ?? null)) {
+      fieldsToUpdate.push('DEFAULT_REFERENCE_PREFIX');
+    }
+    if (fieldsToUpdate.length === 0) {
+      clearTransientXeroQueryParams();
       return;
     }
 
     const toastId = themedToast(<NotificationContent content={`Updating Xero settings for ${organization.name}...`} />, infoNotificationOptions);
 
-    commitUpdateOrganizationXeroConnection({
+    commitUpdateOrganizationXeroConnectionPatch({
       variables: {
         input: {
           clientMutationId: uuid(),
           organizationId: organization.id,
           organizationCustomDomain,
-          tenantId: organization.xeroConnection?.tenantId ?? '',
-          tenantName: organization.xeroConnection?.tenantName ?? '',
-          billingMode: values.billingMode ?? 'DISABLED',
-          scopes: organization.xeroConnection?.scopes ?? '',
-          isActive: existingXeroConnection?.isActive ?? false,
-          sendInvoicesViaXero: true,
-          autoReconcilePayments: true,
-          defaultSalesAccountCode: values.defaultSalesAccountCode ?? null,
-          defaultReceivablesAccountCode: organization.xeroConnection?.defaultReceivablesAccountCode ?? null,
-          defaultTrackingCategory1: values.defaultTrackingCategory1 ?? null,
-          defaultTrackingCategory2: values.defaultTrackingCategory2 ?? null,
-          defaultBrandingThemeId: values.defaultBrandingThemeId ?? null,
-          defaultReferencePrefix: values.defaultReferencePrefix ?? null,
+          fieldsToUpdate,
+          tenantId,
+          tenantName,
+          billingMode,
+          defaultSalesAccountCode,
+          defaultTrackingCategory1,
+          defaultTrackingCategory2,
+          defaultBrandingThemeId,
+          defaultReferencePrefix,
         },
       },
       onCompleted: (_, errors) => {
@@ -996,6 +1070,7 @@ const OrganizationMarketplaceSetup = ({
       },
     });
   };
+  const debounceUpdateOrganizationXeroConnection = useDebounceCallback(commitOrganizationXeroConnectionPatch, inlinePatchDebounceTimeout);
 
   const handleDisconnectOrganizationXeroConnectionClick = () => {
     if (!organization) {
@@ -1229,118 +1304,143 @@ const OrganizationMarketplaceSetup = ({
     [organizationBankAccounts],
   );
 
-  const handleOrganizationMarketplaceListingMetadataDetailUpdateClick = ({ title, subTitle }: OrganizationMarketplaceListingMetadataDetails) => {
-    const organization = rootData.organization;
-    if (!organization) {
-      return;
-    }
+  const commitOrganizationMarketplaceListingMetadataPatch = useCallback(
+    ({ title, subTitle }: OrganizationMarketplaceListingMetadataDetails) => {
+      if (!organization || (organization.marketplaceListingMetadata.title === title && organization.marketplaceListingMetadata.subTitle === subTitle)) {
+        return;
+      }
 
-    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' marketplace listing...`} />, infoNotificationOptions);
+      const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' marketplace listing...`} />, infoNotificationOptions);
 
-    commitUpdateOrganizationMarketplaceListingMetadata({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: organization.id,
-          marketplaceListingMetadata: {
-            about: '',
-            title: title ?? '',
-            subTitle: subTitle ?? '',
-            includedFeatures: [],
-          },
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' marketplace listing. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${organization?.name} marketplace listing updated.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update organization '${organization?.name}' marketplace listing. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        updateOrganizationMarketplaceListingMetadata: {
-          organization: {
+      commitUpdateOrganizationPatchMarketplaceListingMetadata({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
             id: organization.id,
+            fieldsToUpdate: ['MARKETPLACE_LISTING_METADATA'],
             marketplaceListingMetadata: {
-              about: '',
+              about: organization.marketplaceListingMetadata.about ?? '',
               title: title ?? '',
               subTitle: subTitle ?? '',
-              includedFeatures: [],
+              includedFeatures: organization.marketplaceListingMetadata.includedFeatures ?? [],
             },
           },
         },
-      },
-    });
-  };
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to update organization '${organization?.name}' marketplace listing. Error: ${getRelayErrorMessage(errors)}.`} />,
+            });
 
-  const handleOrganizationBillingSettingsUpdateClick = ({ billingCycle, invoiceDueInDays }: OrganizationBillingSettingsDetails) => {
-    const organization = rootData.organization;
-    if (!organization) {
-      return;
-    }
+            return;
+          }
 
-    const normalizedInvoiceDueInDays = Number(invoiceDueInDays);
-
-    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing settings...`} />, infoNotificationOptions);
-
-    commitUpdateOrganizationBillingSettings({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: organization.id,
-          billingCycle: billingCycle as OrganizationBillingCycle,
-          invoiceDueInDays: normalizedInvoiceDueInDays,
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Organization ${organization?.name} marketplace listing updated.`} />,
+          });
         },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
+        onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing settings. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' marketplace listing. Error: ${error.message}.`} />,
           });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${organization?.name} billing settings updated.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing settings. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        updateOrganizationBillingSettings: {
-          organization: {
-            id: organization.id,
-            billingCycle: {
-              type: billingCycle as OrganizationBillingCycle,
-              name: '',
+        },
+        optimisticResponse: {
+          updateOrganization: {
+            organization: {
+              id: organization.id,
+              marketplaceListingMetadata: {
+                about: organization.marketplaceListingMetadata.about ?? '',
+                title: title ?? '',
+                subTitle: subTitle ?? '',
+                includedFeatures: organization.marketplaceListingMetadata.includedFeatures ?? [],
+              },
             },
-            invoiceDueInDays: normalizedInvoiceDueInDays,
           },
         },
-      },
-    });
-  };
+      });
+    },
+    [commitUpdateOrganizationPatchMarketplaceListingMetadata, organization, themedToast],
+  );
+  const debounceUpdateOrganizationMarketplaceListingMetadata = useDebounceCallback(commitOrganizationMarketplaceListingMetadataPatch, inlinePatchDebounceTimeout);
+
+  const commitOrganizationBillingSettingsPatch = useCallback(
+    async ({ billingCycle, invoiceDueInDays }: OrganizationBillingSettingsDetails) => {
+      if (!organization) {
+        return;
+      }
+
+      const normalizedBillingCycle = billingCycle as OrganizationBillingCycle;
+      const normalizedInvoiceDueInDays = Number(invoiceDueInDays);
+      try {
+        await organizationBillingSettingsSchema.validate({ billingCycle: normalizedBillingCycle, invoiceDueInDays: normalizedInvoiceDueInDays });
+      } catch {
+        return;
+      }
+
+      const fieldsToUpdate: OrganizationPatchField[] = [];
+      if (normalizedBillingCycle !== organization.billingCycle.type) {
+        fieldsToUpdate.push('BILLING_CYCLE');
+      }
+      if (normalizedInvoiceDueInDays !== organization.invoiceDueInDays) {
+        fieldsToUpdate.push('INVOICE_DUE_IN_DAYS');
+      }
+      if (fieldsToUpdate.length === 0) {
+        return;
+      }
+
+      const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing settings...`} />, infoNotificationOptions);
+
+      commitUpdateOrganizationPatchBillingSettings({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
+            id: organization.id,
+            fieldsToUpdate,
+            ...(fieldsToUpdate.includes('BILLING_CYCLE') ? { billingCycle: normalizedBillingCycle } : {}),
+            ...(fieldsToUpdate.includes('INVOICE_DUE_IN_DAYS') ? { invoiceDueInDays: normalizedInvoiceDueInDays } : {}),
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing settings. Error: ${getRelayErrorMessage(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Organization ${organization?.name} billing settings updated.`} />,
+          });
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing settings. Error: ${error.message}.`} />,
+          });
+        },
+        optimisticResponse: {
+          updateOrganization: {
+            organization: {
+              id: organization.id,
+              billingCycle: {
+                ...organization.billingCycle,
+                type: normalizedBillingCycle,
+              },
+              invoiceDueInDays: normalizedInvoiceDueInDays,
+            },
+          },
+        },
+      });
+    },
+    [commitUpdateOrganizationPatchBillingSettings, organization, themedToast],
+  );
+  const debounceUpdateOrganizationBillingSettings = useDebounceCallback(commitOrganizationBillingSettingsPatch, inlinePatchDebounceTimeout);
 
   const xeroBillingModeLabel = xeroBillingModeLabels[existingXeroConnection?.billingMode ?? 'DISABLED'] ?? existingXeroConnection?.billingMode ?? 'Disabled';
   const xeroSummaryTenantName = existingXeroConnection?.isActive ? existingXeroConnection.tenantName : '';
@@ -1365,17 +1465,26 @@ const OrganizationMarketplaceSetup = ({
       case 'billing-cycle':
         return (
           <Form
-            onSubmit={handleOrganizationBillingSettingsUpdateClick}
+            onSubmit={() => undefined}
             initialValues={{
-              billingCycle: organizationBillingCycle,
-              invoiceDueInDays: organizationInvoiceDueInDays,
+              billingCycle: organization?.billingCycle.type ?? '',
+              invoiceDueInDays: organization?.invoiceDueInDays ?? 7,
             }}
             validate={validateOrganizationBillingSettingsDetails}
             render={({ handleSubmit, values }) => {
-              debounceSetOrganizationBillingCycle(values!.billingCycle);
               const nextInvoiceDueInDays = typeof values?.invoiceDueInDays === 'number' ? values.invoiceDueInDays : Number(values?.invoiceDueInDays ?? NaN);
-              if (!Number.isNaN(nextInvoiceDueInDays)) {
-                debounceSetOrganizationInvoiceDueInDays(nextInvoiceDueInDays);
+              if (values?.billingCycle && !Number.isNaN(nextInvoiceDueInDays)) {
+                const nextBillingSettings = {
+                  billingCycle: values.billingCycle,
+                  invoiceDueInDays: nextInvoiceDueInDays,
+                };
+                if (
+                  nextBillingSettings.billingCycle !== draftOrganizationBillingSettings.current.billingCycle ||
+                  nextBillingSettings.invoiceDueInDays !== draftOrganizationBillingSettings.current.invoiceDueInDays
+                ) {
+                  draftOrganizationBillingSettings.current = nextBillingSettings;
+                  debounceUpdateOrganizationBillingSettings(nextBillingSettings);
+                }
               }
 
               return (
@@ -1392,7 +1501,7 @@ const OrganizationMarketplaceSetup = ({
                     </FormFieldLabel>
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
                     <FormFieldLabel label="Invoice Due Days">
                       <TextField
                         name="invoiceDueInDays"
@@ -1401,10 +1510,6 @@ const OrganizationMarketplaceSetup = ({
                         helperText="How many days customers have to pay marketplace invoices by default."
                       />
                     </FormFieldLabel>
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
-                    <EditorActionBar primaryAction="Update" />
                   </StackColumn>
                 </FormStackColumn>
               );
@@ -1415,8 +1520,9 @@ const OrganizationMarketplaceSetup = ({
         return (
           <Form
             key={`xero-form-${existingXeroConnection?.id ?? 'new'}-${xeroSuggestedTenantId}-${xeroSuggestedTenantName}`}
-            onSubmit={handleUpdateOrganizationXeroConnectionClick}
+            onSubmit={() => undefined}
             initialValues={{
+              tenantId: existingXeroConnection?.tenantId ?? xeroSuggestedTenantId,
               tenantName: existingXeroConnection?.tenantName ?? xeroSuggestedTenantName,
               billingMode: existingXeroConnection?.billingMode ?? 'DISABLED',
               scopes: existingXeroConnection?.scopes ?? '',
@@ -1430,6 +1536,31 @@ const OrganizationMarketplaceSetup = ({
             render={({ handleSubmit, values }) => {
               const selectedXeroBillingMode = values?.billingMode ?? existingXeroConnection?.billingMode ?? 'DISABLED';
               const selectedXeroBillingModeGuidance = xeroBillingModeGuidance[selectedXeroBillingMode] ?? xeroBillingModeGuidance.DISABLED;
+              const nextXeroConnection = {
+                tenantId: values?.tenantId ?? existingXeroConnection?.tenantId ?? xeroSuggestedTenantId ?? '',
+                tenantName: values?.tenantName ?? existingXeroConnection?.tenantName ?? xeroSuggestedTenantName,
+                billingMode: selectedXeroBillingMode,
+                isActive: existingXeroConnection?.isActive ?? false,
+                defaultSalesAccountCode: values?.defaultSalesAccountCode ?? '',
+                defaultTrackingCategory1: values?.defaultTrackingCategory1 ?? '',
+                defaultTrackingCategory2: values?.defaultTrackingCategory2 ?? '',
+                defaultBrandingThemeId: values?.defaultBrandingThemeId ?? '',
+                defaultReferencePrefix: values?.defaultReferencePrefix ?? '',
+              };
+
+              if (
+                nextXeroConnection.tenantId !== draftOrganizationXeroConnection.current.tenantId ||
+                nextXeroConnection.tenantName !== draftOrganizationXeroConnection.current.tenantName ||
+                nextXeroConnection.billingMode !== draftOrganizationXeroConnection.current.billingMode ||
+                nextXeroConnection.defaultSalesAccountCode !== draftOrganizationXeroConnection.current.defaultSalesAccountCode ||
+                nextXeroConnection.defaultTrackingCategory1 !== draftOrganizationXeroConnection.current.defaultTrackingCategory1 ||
+                nextXeroConnection.defaultTrackingCategory2 !== draftOrganizationXeroConnection.current.defaultTrackingCategory2 ||
+                nextXeroConnection.defaultBrandingThemeId !== draftOrganizationXeroConnection.current.defaultBrandingThemeId ||
+                nextXeroConnection.defaultReferencePrefix !== draftOrganizationXeroConnection.current.defaultReferencePrefix
+              ) {
+                draftOrganizationXeroConnection.current = nextXeroConnection;
+                debounceUpdateOrganizationXeroConnection(nextXeroConnection);
+              }
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -1448,10 +1579,7 @@ const OrganizationMarketplaceSetup = ({
                           <SmallIconTypography label="Not connected. Connect Xero first, then fine-tune how Skedular exports and reconciles invoices." />
                         )}
                         <SmallIconTypography
-                          label={
-                            xeroMessage ??
-                            'If your Xero login can access multiple tenants, connect Xero to load the available tenants, then choose one and save it here to finish setup.'
-                          }
+                          label={xeroMessage ?? 'If your Xero login can access multiple tenants, connect Xero to load the available tenants, then choose one to finish setup.'}
                         />
                       </Grid>
 
@@ -1472,7 +1600,7 @@ const OrganizationMarketplaceSetup = ({
                   {xeroTenantOptions.length > 0 && !isTenantLocked && (
                     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                       <SectionIconTypography label="Available Xero Tenants" />
-                      <BodyIconTypography label="Choose the tenant returned by Xero and save it into this setup to finish attaching the organization." />
+                      <BodyIconTypography label="Choose the tenant returned by Xero to finish attaching the organization." />
                       <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
                         {xeroTenantOptions.map((tenantOption) => (
                           <Button
@@ -1489,7 +1617,7 @@ const OrganizationMarketplaceSetup = ({
                     </StackColumn>
                   )}
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, ...formColumnSx }}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding, ...formColumnSx }}>
                     <FormFieldLabel label="Billing Mode">
                       <SingleChoiceOrganizationXeroBillingMode rootDataRelay={rootData} name="billingMode" required />
                     </FormFieldLabel>
@@ -1518,7 +1646,7 @@ const OrganizationMarketplaceSetup = ({
                     </FormFieldLabel>
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, ...formColumnSx }}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding, ...formColumnSx }}>
                     <StackRow sx={{ alignItems: 'center', gap: 2 }}>
                       <BodyIconTypography label={existingXeroConnection?.isActive ? 'Connection active' : 'Connection inactive'} />
                       <BodyIconTypography startElement={<BillingIcon />} label={existingXeroConnection?.hasAccessToken ? 'Access token present' : 'No access token stored yet'} />
@@ -1528,10 +1656,6 @@ const OrganizationMarketplaceSetup = ({
                     {existingXeroConnection?.lastSuccessfulSyncAt && (
                       <SmallIconTypography label={`Last successful sync: ${new Date(existingXeroConnection.lastSuccessfulSyncAt).toLocaleString()}`} />
                     )}
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding, ...formColumnSx }}>
-                    <EditorActionBar primaryAction="Update" />
                   </StackColumn>
                 </FormStackColumn>
               );
@@ -1681,10 +1805,10 @@ const OrganizationMarketplaceSetup = ({
       default:
         return (
           <Form
-            onSubmit={handleOrganizationMarketplaceListingMetadataDetailUpdateClick}
+            onSubmit={() => undefined}
             initialValues={{
-              title: organizationTitle,
-              subTitle: organizationSubTitle,
+              title: organization?.marketplaceListingMetadata.title ?? null,
+              subTitle: organization?.marketplaceListingMetadata.subTitle ?? null,
             }}
             validate={validateOrganizationMarketplaceListingMetadataDetails}
             render={({ handleSubmit }) => {
@@ -1696,19 +1820,14 @@ const OrganizationMarketplaceSetup = ({
                     <Divider />
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
                     <ListingMetadata
                       fields={['title', 'subTitle']}
                       onChange={({ subTitle, title }) => {
-                        debounceSetOrganizationTitle(title);
-                        debounceSetOrganizationSubTitle(subTitle);
+                        debounceUpdateOrganizationMarketplaceListingMetadata({ title, subTitle });
                       }}
                       requiredFields={requiredOrganizationMarketplaceListingMetadataDetailsFields}
                     />
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
-                    <EditorActionBar primaryAction="Update" />
                   </StackColumn>
                 </FormStackColumn>
               );

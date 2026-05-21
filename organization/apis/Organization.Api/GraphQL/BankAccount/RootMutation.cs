@@ -30,7 +30,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         {
             ClientMutationId = input.ClientMutationId,
             OrganizationBankAccount =
-                graphQlMapper.MapTo(await organizationBankAccountService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
+                graphQlMapper.MapTo(await organizationBankAccountService.UpdatePatchAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]

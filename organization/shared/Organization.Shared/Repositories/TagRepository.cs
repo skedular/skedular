@@ -13,6 +13,7 @@ namespace Organization.Shared.Repositories;
 public interface ITagRepository : IRepository<Tag>
 {
     Task<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<Tag?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<Tag>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
 
     Task<bool> ExistsActiveWithNameAsync(
@@ -79,6 +80,12 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
 
     public async Task<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Tag.AddDependentObjects().FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<Tag?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.Tag
+            .AsNoTracking()
+            .AddDependentObjects()
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<IReadOnlyList<Tag>> GetByIdsAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Tag.Where(query => ids.Contains(query.Id)).AddDependentObjects().ToListAsync(cancellationToken);

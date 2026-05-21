@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<00080fdf6a6ab709b0b919fca730c135>>
+ * @generated SignedSource<<dbda3df00ec87156813ffec5beba745b>>
  * @lightSyntaxTransform
  */
 
@@ -8,10 +8,12 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationSsoSettingsPatchField = "SSO_SETTINGS" | "%future added value";
 export type UpdateOrganizationSsoSettingsInput = {
   appFederationMetadataUrl: string;
   clientMutationId?: string | null | undefined;
   entityId: string;
+  fieldsToUpdate: ReadonlyArray<OrganizationSsoSettingsPatchField>;
   isActive: boolean;
   loginUrl: string;
   organizationCustomDomain?: string | null | undefined;

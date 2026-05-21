@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ee0672468effa7a026d691765db1796e>>
+ * @generated SignedSource<<8ee3ce617028c5902953711866ddb972>>
  * @lightSyntaxTransform
  */
 
@@ -8,10 +8,12 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationStripeConnectAccountPatchField = "NAME" | "%future added value";
 export type UpdateOrganizationStripeConnectAccountInput = {
   clientMutationId?: string | null | undefined;
+  fieldsToUpdate: ReadonlyArray<OrganizationStripeConnectAccountPatchField>;
   id: string;
-  name: string;
+  name?: string | null | undefined;
 };
 export type editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation$variables = {
   input: UpdateOrganizationStripeConnectAccountInput;

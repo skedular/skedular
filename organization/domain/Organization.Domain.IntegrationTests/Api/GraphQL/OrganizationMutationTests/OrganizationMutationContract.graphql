@@ -1,0 +1,54 @@
+query OrganizationMutationContract {
+    __schema {
+        mutationType {
+            fields {
+                name
+            }
+        }
+    }
+    updateOrganizationInput: __type(name: "UpdateOrganizationInput") {
+        inputFields {
+            name
+        }
+    }
+    updateOrganizationBillingDetailsInput: __type(name: "UpdateOrganizationBillingDetailsInput") {
+        inputFields {
+            name
+        }
+    }
+    updateOrganizationTaxDetailsInput: __type(name: "UpdateOrganizationTaxDetailsInput") {
+        inputFields {
+            name
+        }
+    }
+    updateOrganizationTagInput: __type(name: "UpdateOrganizationTagInput") {
+        inputFields {
+            name
+        }
+    }
+    updateOrganizationOfferingInput: __type(name: "UpdateOrganizationOfferingInput") {
+        inputFields {
+            name
+        }
+    }
+    updateOrganizationBankAccountInput: __type(name: "UpdateOrganizationBankAccountInput") {
+        inputFields {
+            name
+        }
+    }
+    updateOrganizationStripeConnectAccountInput: __type(name: "UpdateOrganizationStripeConnectAccountInput") {
+        inputFields {
+            name
+        }
+    }
+    updateOrganizationXeroConnectionInput: __type(name: "UpdateOrganizationXeroConnectionInput") {
+        inputFields {
+            name
+        }
+    }
+    updateOrganizationSsoSettingsInput: __type(name: "UpdateOrganizationSsoSettingsInput") {
+        inputFields {
+            name
+        }
+    }
+}

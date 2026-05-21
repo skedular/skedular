@@ -14,6 +14,7 @@ public static class Extensions
         public IServiceCollection AddMappers() =>
             services
                 .AddSingleton<IGraphQlMapper, GraphQlMapper>()
+                .AddSingleton<IOrganizationPatchMapper, OrganizationPatchMapper>()
                 .AddSingleton<IGrpcMapper, GrpcMapper>();
 
         public IServiceCollection AddServices() =>
@@ -40,7 +41,6 @@ public static class Extensions
                 .AddScoped<IOrganizationBankAccountService, OrganizationBankAccountService>()
                 .AddScoped<IOrganizationTaxDetailsService, OrganizationTaxDetailsService>()
                 .AddScoped<IOrganizationXeroConnectionService, OrganizationXeroConnectionService>()
-                .AddScoped<IOrganizationPhysicalAddressService, OrganizationPhysicalAddressService>()
                 .AddScoped<IOrganizationOwnershipService, OrganizationOwnershipService>();
 
         public IServiceCollection AddJobs() =>

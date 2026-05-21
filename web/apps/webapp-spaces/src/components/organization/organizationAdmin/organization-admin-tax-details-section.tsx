@@ -3,16 +3,15 @@ import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { TaxDetails, taxDetailsSchema } from '@/components/organization/organizationAdmin/organization-admin-shared';
 import { PaletteModeContext } from '@skedular/shared';
-import { keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationAdminTaxDetailsSectionQuery } from '@/queries/__generated__/organizationAdminTaxDetailsSectionQuery.graphql';
 import type { organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation } from '@/queries/__generated__/organizationAdminTaxDetailsSection_removeOrganizationTaxDetailsMutation.graphql';
 import type { organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation } from '@/queries/__generated__/organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Switch from '@mui/material/Switch';
-import { EditorActionBar, SettingsSectionCard } from '@skedular/ui';
+import { SettingsSectionCard } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -27,6 +26,10 @@ type InnerProps = {
   organizationCustomDomain: string;
   queryReference: PreloadedQuery<organizationAdminTaxDetailsSectionQuery>;
 };
+
+type TaxDetailsPatchField = 'TAX_ID' | 'TAX_RATE_PERCENTAGE';
+
+const inlinePatchDebounceTimeout = 1000;
 
 const RootQuery = graphql`
   query organizationAdminTaxDetailsSectionQuery($organizationCustomDomain: String!) {
@@ -43,7 +46,7 @@ const RootQuery = graphql`
 
 const OrganizationAdminTaxDetailsSectionContent = ({ organizationCustomDomain, queryReference }: InnerProps) => {
   const rootData = usePreloadedQuery<organizationAdminTaxDetailsSectionQuery>(RootQuery, queryReference);
-  const [commitUpdateOrganizationTaxDetails] = useMutation<organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation>(graphql`
+  const [commitUpdateOrganizationTaxDetailsPatch] = useMutation<organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation>(graphql`
     mutation organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation($input: UpdateOrganizationTaxDetailsInput!) @raw_response_type {
       updateOrganizationTaxDetails(input: $input) {
         organization {
@@ -81,67 +84,69 @@ const OrganizationAdminTaxDetailsSectionContent = ({ organizationCustomDomain, q
   };
 
   const [taxDetailsEnabled, setTaxDetailsEnabled] = useState(!!organization?.taxDetails);
-  const [taxDetailsTaxId, setTaxDetailsTaxId] = useState<string>(organization?.taxDetails?.taxId ?? '');
-  const debounceSetTaxDetailsTaxId = useDebounceCallback(setTaxDetailsTaxId, keyboardTextFieldDebounceTimeout);
-  const [taxDetailsTaxRatePercentage, setTaxDetailsTaxRatePercentage] = useState<string>(organization?.taxDetails?.taxRatePercentage ?? '');
-  const debounceSetTaxDetailsTaxRatePercentage = useDebounceCallback(setTaxDetailsTaxRatePercentage, keyboardTextFieldDebounceTimeout);
+  const initialTaxDetailsValues = useMemo<TaxDetails>(
+    () => ({
+      taxId: organization?.taxDetails?.taxId ?? '',
+      taxRatePercentage: organization?.taxDetails?.taxRatePercentage ?? '',
+    }),
+    [organization],
+  );
+  const draftTaxDetailsValues = useRef(initialTaxDetailsValues);
+
+  const commitTaxDetailsPatch = useCallback(
+    (fieldsToUpdate: TaxDetailsPatchField[], { taxId, taxRatePercentage }: TaxDetails) => {
+      if (!organization || fieldsToUpdate.length === 0 || !taxDetailsSchema.isValidSync({ taxId, taxRatePercentage })) {
+        return;
+      }
+
+      commitUpdateOrganizationTaxDetailsPatch({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
+            organizationCustomDomain,
+            fieldsToUpdate,
+            taxId,
+            taxRatePercentage: parseFloat(taxRatePercentage),
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            themedToast(
+              <NotificationContent content={`Failed to update organization '${organization.name}' tax details. Error: ${getRelayErrorMessage(errors)}.`} />,
+              errorNotificationOptions,
+            );
+          }
+        },
+        onError: (error) => {
+          themedToast(<NotificationContent content={`Failed to update organization '${organization.name}' tax details. Error: ${error.message}.`} />, errorNotificationOptions);
+        },
+        optimisticResponse: {
+          updateOrganizationTaxDetails: {
+            organization: {
+              id: organization.id,
+              taxDetails: {
+                id: '',
+                taxId,
+                taxRatePercentage,
+              },
+            },
+          },
+        },
+      });
+    },
+    [commitUpdateOrganizationTaxDetailsPatch, organization, organizationCustomDomain, themedToast],
+  );
+  const debouncedCommitTaxDetailsPatch = useDebounceCallback(commitTaxDetailsPatch, inlinePatchDebounceTimeout);
 
   if (!organization) {
     return null;
   }
 
-  const handleEnableOrganizationTaxDetailsClick = ({ taxId, taxRatePercentage }: TaxDetails) => {
-    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' tax details...`} />, infoNotificationOptions);
-
-    commitUpdateOrganizationTaxDetails({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          organizationCustomDomain,
-          taxId,
-          taxRatePercentage: parseFloat(taxRatePercentage),
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization.name}' tax details. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${organization.name} tax details details updated.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update organization '${organization.name}' tax details. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        updateOrganizationTaxDetails: {
-          organization: {
-            id: organization.id,
-            taxDetails: {
-              id: '',
-              taxId,
-              taxRatePercentage,
-            },
-          },
-        },
-      },
-    });
-  };
-
   const handleEnableTaxDetailsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTaxDetailsEnabled(event.target.checked);
 
     if (event.target.checked) {
+      commitTaxDetailsPatch(['TAX_ID', 'TAX_RATE_PERCENTAGE'], draftTaxDetailsValues.current);
       return;
     }
 
@@ -188,17 +193,22 @@ const OrganizationAdminTaxDetailsSectionContent = ({ organizationCustomDomain, q
 
   return (
     <Form
-      onSubmit={handleEnableOrganizationTaxDetailsClick}
-      initialValues={{
-        taxId: taxDetailsTaxId,
-        taxRatePercentage: taxDetailsTaxRatePercentage,
-      }}
+      onSubmit={() => undefined}
+      initialValues={initialTaxDetailsValues}
       validate={validateTaxDetails}
       render={({ handleSubmit, values }) => {
-        const formValues = values!;
-
-        debounceSetTaxDetailsTaxId(formValues.taxId);
-        debounceSetTaxDetailsTaxRatePercentage(formValues.taxRatePercentage);
+        const formValues = values as TaxDetails;
+        const changedFields: TaxDetailsPatchField[] = [];
+        if (draftTaxDetailsValues.current.taxId !== formValues.taxId) {
+          changedFields.push('TAX_ID');
+        }
+        if (draftTaxDetailsValues.current.taxRatePercentage !== formValues.taxRatePercentage) {
+          changedFields.push('TAX_RATE_PERCENTAGE');
+        }
+        if (taxDetailsEnabled && changedFields.length > 0) {
+          draftTaxDetailsValues.current = formValues;
+          debouncedCommitTaxDetailsPatch(changedFields, formValues);
+        }
 
         return (
           <FormStackColumn onSubmit={handleSubmit}>
@@ -220,8 +230,6 @@ const OrganizationAdminTaxDetailsSectionContent = ({ organizationCustomDomain, q
                       </FormFieldLabel>
                     </>
                   )}
-
-                  {taxDetailsEnabled ? <EditorActionBar primaryAction="Update" /> : null}
                 </StackColumn>
               </SettingsSectionCard>
             </Box>

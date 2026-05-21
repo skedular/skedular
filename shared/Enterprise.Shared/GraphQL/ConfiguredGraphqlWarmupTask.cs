@@ -20,7 +20,7 @@ public class ConfiguredGraphqlWarmupTask(string schemaName, IReadOnlyList<string
             {
                 throw;
             }
-            catch (Exception ex)
+            catch (GraphQLException ex)
             {
                 logger.LogWarning(ex, "GraphQL warmup query failed for schema {SchemaName}. Query: {WarmupQuery}", schemaName, warmupQuery);
             }

@@ -1,4 +1,5 @@
 using HotChocolate;
+using Organization.Api.Models;
 
 namespace Organization.Api.GraphQL.Offering;
 
@@ -11,5 +12,6 @@ public class UpdateOrganizationOfferingInput
     [GraphQLName("organizationCustomDomain")]
     public string? OrganizationCustomDomain { get; set; }
 
-    [GraphQLName("offeringCode")] public string OfferingCode { get; set; } = string.Empty;
+    [GraphQLName("fieldsToUpdate")] public HashSet<OrganizationOfferingPatchField> FieldsToUpdate { get; set; } = [];
+    [GraphQLName("offeringCode")] public string? OfferingCode { get; set; }
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<71008946b8e19aed52f630404bdafea4>>
+ * @generated SignedSource<<498381e65b909cd5a323930756253326>>
  * @lightSyntaxTransform
  */
 
@@ -8,11 +8,38 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type UpdateOrganizationMarketplaceListingMetadataInput = {
+export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%future added value";
+export type OrganizationPatchField = "BILLING_CYCLE" | "CONTACT_EMAIL" | "CONTACT_PHONE" | "CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL" | "CUSTOM_DOMAIN" | "DESCRIPTION" | "FEATURE_IMAGES" | "INDUSTRY_SUB_CATEGORIES" | "INVOICE_DUE_IN_DAYS" | "LOGO_URL" | "MARKETPLACE_LISTING_METADATA" | "NAME" | "PHYSICAL_ADDRESS" | "REFUND_NOTIFICATION_EMAILS" | "SUB_TITLE" | "TITLE" | "WEBSITE" | "%future added value";
+export type UpdateOrganizationInput = {
+  billingCycle?: OrganizationBillingCycle | null | undefined;
   clientMutationId?: string | null | undefined;
+  contactEmail?: string | null | undefined;
+  contactPhone?: string | null | undefined;
   customDomain?: string | null | undefined;
+  customerFacingTermsAndConditionsUrl?: string | null | undefined;
+  description?: string | null | undefined;
+  featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
+  fieldsToUpdate: ReadonlyArray<OrganizationPatchField>;
   id?: string | null | undefined;
-  marketplaceListingMetadata: ListingMetadataInput;
+  industrySubCategoryIds?: ReadonlyArray<string> | null | undefined;
+  invoiceDueInDays?: number | null | undefined;
+  logoUrl?: string | null | undefined;
+  marketplaceListingMetadata?: ListingMetadataInput | null | undefined;
+  name?: string | null | undefined;
+  physicalAddress?: OrganizationPhysicalAddressPatchInput | null | undefined;
+  refundNotificationEmails?: ReadonlyArray<string> | null | undefined;
+  subTitle?: string | null | undefined;
+  title?: string | null | undefined;
+  website?: string | null | undefined;
+};
+export type CdnImageFileInput = {
+  original?: CdnFileInput | null | undefined;
+  thumbnail?: CdnFileInput | null | undefined;
+};
+export type CdnFileInput = {
+  height?: number | null | undefined;
+  url: string;
+  width?: number | null | undefined;
 };
 export type ListingMetadataInput = {
   about?: string | null | undefined;
@@ -20,11 +47,27 @@ export type ListingMetadataInput = {
   subTitle?: string | null | undefined;
   title?: string | null | undefined;
 };
+export type OrganizationPhysicalAddressPatchInput = {
+  addressLine1: string;
+  addressLine2?: string | null | undefined;
+  city?: string | null | undefined;
+  country: string;
+  countryCode?: string | null | undefined;
+  formattedAddress?: string | null | undefined;
+  latitude?: number | null | undefined;
+  longitude?: number | null | undefined;
+  osmId?: string | null | undefined;
+  osmType?: string | null | undefined;
+  placeId?: string | null | undefined;
+  province?: string | null | undefined;
+  suburb?: string | null | undefined;
+  zipcode: string;
+};
 export type organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation$variables = {
-  input: UpdateOrganizationMarketplaceListingMetadataInput;
+  input: UpdateOrganizationInput;
 };
 export type organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation$data = {
-  readonly updateOrganizationMarketplaceListingMetadata: {
+  readonly updateOrganization: {
     readonly organization: {
       readonly id: string;
       readonly marketplaceListingMetadata: {
@@ -37,7 +80,7 @@ export type organizationMarketplaceSetup_updateOrganizationMarketplaceListingMet
   };
 };
 export type organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation$rawResponse = {
-  readonly updateOrganizationMarketplaceListingMetadata: {
+  readonly updateOrganization: {
     readonly organization: {
       readonly id: string;
       readonly marketplaceListingMetadata: {
@@ -75,7 +118,7 @@ v1 = [
     ],
     "concreteType": "OrganizationPayload",
     "kind": "LinkedField",
-    "name": "updateOrganizationMarketplaceListingMetadata",
+    "name": "updateOrganization",
     "plural": false,
     "selections": [
       {
@@ -157,16 +200,16 @@ return {
     "selections": (v1/*:: as any*/)
   },
   "params": {
-    "cacheID": "a2ba8103113d0fb574a08b594ee1baf2",
+    "cacheID": "99fec9bc82349b686f70691ada660907",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation(\n  $input: UpdateOrganizationMarketplaceListingMetadataInput!\n) {\n  updateOrganizationMarketplaceListingMetadata(input: $input) {\n    organization {\n      id\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e9ec1b1f93b8fdd9fc1baffb50794b34";
+(node as any).hash = "399d99ab88dcbf61453dd5a034d292dc";
 
 export default node;

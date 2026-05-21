@@ -2,6 +2,8 @@ using Api.Shared.Services;
 using Enterprise.Shared.Random;
 using Organization.Api.Mappers;
 using Organization.Shared.Database.Entities;
+using Organization.Shared.Mappers;
+using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Stripe;
 using Customer = Stripe.Customer;
@@ -16,7 +18,9 @@ public interface IStripeCustomerService
 public class StripeCustomerService(
     IRepositoryFactory repositoryFactory,
     IGraphQlMapper graphQlMapper,
+    IEntityMapper entityMapper,
     IRandomHelper randomHelper,
+    IOrganizationOutboxPublisher organizationOutboxPublisher,
     ICreatable<Customer, CustomerCreateOptions> customerCreateService) : IStripeCustomerService
 {
     public async Task<OrganizationStripeCustomer> AddAsync(string organizationId, CancellationToken cancellationToken)
@@ -39,6 +43,7 @@ public class StripeCustomerService(
         {
             Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id, Organization = organization
         });
+        organizationOutboxPublisher.PublishOrganizations([entityMapper.MapTo(organization)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 

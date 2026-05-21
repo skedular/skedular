@@ -62,6 +62,38 @@ It also references the external systems that the organization domain coordinates
 - `DailyBookingCountRecording` / `DailyMemberCountRecording`
     - Persisted analytics snapshots produced by `GenerateOrganizationDailyAnalytics`.
 
+## Organization Field-Masked Updates
+
+Organisation update contracts keep their normal `Update*` names. Their current organisation-domain implementation uses
+field-masked patch semantics instead of full-object replacement: GraphQL setup editing calls `updateOrganization`, and
+the specialised organisation GraphQL update mutations follow the same pattern for billing details, tax details, bank
+accounts, offering selection, tags, Stripe Connect account metadata, Xero connection settings, and SSO settings.
+
+Patch requests carry an explicit `fieldsToUpdate` enum list. The enum is the update mask: only fields named in that
+list may change, and every omitted organisation value is preserved. This is required because nullable GraphQL input
+values cannot distinguish "caller did not send this field" from "caller intentionally cleared this field".
+
+The patch mapper owns applying selected setup fields to the organisation entity so the behaviour is reusable outside the
+GraphQL resolver. It supports the editable setup fields previously sent by the GraphQL setup update path, including
+name, description, title, subtitle, custom domain, public URLs, billing cycle, invoice due days, contact details, refund
+notification recipients, industry subcategories, feature images, and marketplace listing metadata.
+
+Successful field-masked update mutations return the existing payload shapes with the latest saved details. The setup UI
+uses that payload to let Relay update other displayed fields without a success toast. While an inline text save is in
+flight, the field shows an inline saving indicator; failures are surfaced through the existing toast path.
+
+Concurrency remains owned by the entity layer. If persistence reports a concurrency conflict, the API reloads the latest
+organisation and retries the same selected patch fields against that latest entity. The API does not expose an
+`expectedVersion` argument.
+
+Organisation gRPC billing details, tag, custom tag, product tag, and zone update RPCs use the same field-mask model.
+Their RPCs keep their normal `Update*` names, but their inputs carry `fieldsToUpdate` and patch field enums so callers
+cannot accidentally replace omitted values.
+
+Organisation SSO settings use `updateOrganizationSsoSettings` with `fieldsToUpdate: [SSO_SETTINGS]` and still return
+`OrganizationPayload`. SSO is patched as one aggregate field because entity id, login URL, federation metadata URL, and
+active state are validated together against metadata and certificate checks.
+
 ## System Context
 
 ```mermaid

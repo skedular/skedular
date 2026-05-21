@@ -1,6 +1,5 @@
 using HotChocolate;
-
-// ReSharper disable ClassNeverInstantiated.Global
+using Organization.Api.Models;
 
 namespace Organization.Api.GraphQL.TaxDetails;
 
@@ -13,6 +12,8 @@ public class UpdateOrganizationTaxDetailsInput
     [GraphQLName("organizationCustomDomain")]
     public string? OrganizationCustomDomain { get; set; }
 
-    [GraphQLName("taxId")] public string TaxId { get; set; } = string.Empty;
-    [GraphQLName("taxRatePercentage")] public decimal TaxRatePercentage { get; set; }
+    [GraphQLName("fieldsToUpdate")] public IEnumerable<OrganizationTaxDetailsPatchField> FieldsToUpdate { get; set; } = [];
+
+    [GraphQLName("taxId")] public string? TaxId { get; set; }
+    [GraphQLName("taxRatePercentage")] public decimal? TaxRatePercentage { get; set; }
 }

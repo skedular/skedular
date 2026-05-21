@@ -3,6 +3,8 @@ using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Database;
 using Organization.Shared.Activities;
 using Organization.Shared.Database.Entities;
+using Organization.Shared.Mappers;
+using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
@@ -54,6 +56,8 @@ public class XeroIntegrationsShould
         [Frozen] IOrganizationRepository organizationRepository,
         [Frozen] IOrganizationXeroConnectionRepository organizationXeroConnectionRepository,
         [Frozen] IUnitOfWork unitOfWork,
+        [Frozen] IEntityMapper entityMapper,
+        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
         [Frozen] TimeProvider timeProvider,
         [Frozen] ICachedOrganizationService cachedOrganizationService,
         XeroIntegrations sut)
@@ -70,12 +74,14 @@ public class XeroIntegrationsShould
             IsActive = true
         };
         var organization = new Database.Entities.Organization { Id = "org-1", Name = "Org 1", OrganizationXeroConnection = connection };
+        var mappedOrganization = new Models.Organization { Id = organization.Id, Name = organization.Name };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationXeroConnectionRepository).Returns(organizationXeroConnectionRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, environment.CancellationTokenSource.Token))
             .Returns(organization);
+        A.CallTo(() => entityMapper.MapTo(organization)).Returns(mappedOrganization);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
 
         var result = await environment.RunAsync(() =>
@@ -85,6 +91,10 @@ public class XeroIntegrationsShould
         connection.IsActive.ShouldBeFalse();
         connection.LastError.ShouldBe("Xero refresh token expired. Reconnect required.");
         A.CallTo(() => organizationXeroConnectionRepository.Update(connection)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => organizationOutboxPublisher.PublishOrganizations(
+                A<IEnumerable<Models.Organization>>.That.Matches(items => items.SequenceEqual(new[] { mappedOrganization })),
+                unitOfWork))
+            .MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
         A.CallTo(() => cachedOrganizationService.RemoveByIdOrCustomDomainAsync("org-1", null, environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
@@ -97,6 +107,8 @@ public class XeroIntegrationsShould
         [Frozen] IOrganizationRepository organizationRepository,
         [Frozen] IOrganizationXeroConnectionRepository organizationXeroConnectionRepository,
         [Frozen] IUnitOfWork unitOfWork,
+        [Frozen] IEntityMapper entityMapper,
+        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
         [Frozen] IXeroTokenRefreshService xeroTokenRefreshService,
         [Frozen] TimeProvider timeProvider,
         [Frozen] ICachedOrganizationService cachedOrganizationService,
@@ -116,6 +128,7 @@ public class XeroIntegrationsShould
             LastError = "old-error"
         };
         var organization = new Database.Entities.Organization { Id = "org-1", Name = "Org 1", OrganizationXeroConnection = connection };
+        var mappedOrganization = new Models.Organization { Id = organization.Id, Name = organization.Name };
         var refreshResult = new XeroTokenRefreshResult(
             true,
             false,
@@ -130,6 +143,7 @@ public class XeroIntegrationsShould
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, environment.CancellationTokenSource.Token))
             .Returns(organization);
+        A.CallTo(() => entityMapper.MapTo(organization)).Returns(mappedOrganization);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => xeroTokenRefreshService.RefreshAsync(connection, environment.CancellationTokenSource.Token)).Returns(refreshResult);
         A.CallTo(() => xeroTokenRefreshService.GetNextMaintenanceAt(nextRefreshAt)).Returns(nextMaintenanceAt);
@@ -145,6 +159,10 @@ public class XeroIntegrationsShould
         connection.LastSuccessfulSyncAt.ShouldBe(now);
         connection.LastError.ShouldBeNull();
         A.CallTo(() => organizationXeroConnectionRepository.Update(connection)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => organizationOutboxPublisher.PublishOrganizations(
+                A<IEnumerable<Models.Organization>>.That.Matches(items => items.SequenceEqual(new[] { mappedOrganization })),
+                unitOfWork))
+            .MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
         A.CallTo(() => cachedOrganizationService.RemoveByIdOrCustomDomainAsync("org-1", null, environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();

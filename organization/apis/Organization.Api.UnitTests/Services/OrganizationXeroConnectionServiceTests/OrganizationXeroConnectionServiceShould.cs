@@ -8,6 +8,7 @@ using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
+using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
@@ -31,6 +32,7 @@ public class OrganizationXeroConnectionServiceShould
         ICachedOrganizationService cachedOrganizationService,
         ITemporalOutboxService temporalOutboxService,
         IGraphQlMapper graphQlMapper,
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
         IDbTransactionBuilder transactionBuilder,
         IRandomHelper randomHelper,
         TimeProvider timeProvider,
@@ -67,6 +69,7 @@ public class OrganizationXeroConnectionServiceShould
             cachedOrganizationService,
             temporalOutboxService,
             graphQlMapper,
+            organizationOutboxPublisher,
             transactionBuilder,
             randomHelper,
             timeProvider);

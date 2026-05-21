@@ -1,0 +1,21 @@
+mutation UpdateOrganization(
+    $id: String!
+    $fieldsToUpdate: [OrganizationPatchField!]!
+    $name: String
+    $description: String
+) {
+    updateOrganization(
+        input: {
+            id: $id
+            fieldsToUpdate: $fieldsToUpdate
+            name: $name
+            description: $description
+        }
+    ) {
+        organization {
+            id
+            name
+            website
+        }
+    }
+}

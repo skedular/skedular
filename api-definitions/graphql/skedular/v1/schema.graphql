@@ -636,21 +636,9 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
-  addOrganizationBillingDetails(
-    input: AddOrganizationBillingDetailsInput! @fusion__inputField(schema: ORGANIZATION_API)
-  ): OrganizationPayload!
-    @cost(weight: "10")
-    @fusion__cost(schema: ORGANIZATION_API, weight: "10")
-    @fusion__field(schema: ORGANIZATION_API)
   addOrganizationPaymentMethodIntent(
     input: AddOrganizationPaymentMethodIntentInput! @fusion__inputField(schema: ORGANIZATION_API)
   ): AddOrganizationPaymentMethodIntentPayload!
-    @cost(weight: "10")
-    @fusion__cost(schema: ORGANIZATION_API, weight: "10")
-    @fusion__field(schema: ORGANIZATION_API)
-  addOrganizationPhysicalAddress(
-    input: AddOrganizationPhysicalAddressInput! @fusion__inputField(schema: ORGANIZATION_API)
-  ): OrganizationPayload!
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
@@ -1141,7 +1129,7 @@ type Mutation
     @fusion__cost(schema: CUSTOMER_API, weight: "10")
     @fusion__field(schema: CUSTOMER_API)
   updateCustomTag(
-    input: UpdateCustomTagInput! @fusion__inputField(schema: ORGANIZATION_API)
+    input: UpdateOrganizationTagInput! @fusion__inputField(schema: ORGANIZATION_API)
   ): OrganizationTagPayload!
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
@@ -1218,27 +1206,9 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
-  updateOrganizationBillingSettings(
-    input: UpdateOrganizationBillingSettingsInput! @fusion__inputField(schema: ORGANIZATION_API)
-  ): OrganizationPayload!
-    @cost(weight: "10")
-    @fusion__cost(schema: ORGANIZATION_API, weight: "10")
-    @fusion__field(schema: ORGANIZATION_API)
-  updateOrganizationMarketplaceListingMetadata(
-    input: UpdateOrganizationMarketplaceListingMetadataInput! @fusion__inputField(schema: ORGANIZATION_API)
-  ): OrganizationPayload!
-    @cost(weight: "10")
-    @fusion__cost(schema: ORGANIZATION_API, weight: "10")
-    @fusion__field(schema: ORGANIZATION_API)
   updateOrganizationOffering(
     input: UpdateOrganizationOfferingInput! @fusion__inputField(schema: ORGANIZATION_API)
   ): UpdateOrganizationOfferingPayload!
-    @cost(weight: "10")
-    @fusion__cost(schema: ORGANIZATION_API, weight: "10")
-    @fusion__field(schema: ORGANIZATION_API)
-  updateOrganizationPhysicalAddress(
-    input: UpdateOrganizationPhysicalAddressInput! @fusion__inputField(schema: ORGANIZATION_API)
-  ): OrganizationPayload!
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
@@ -1285,7 +1255,7 @@ type Mutation
     @fusion__cost(schema: MARKETPLACE_API, weight: "10")
     @fusion__field(schema: MARKETPLACE_API)
   updateProductTag(
-    input: UpdateProductTagInput! @fusion__inputField(schema: ORGANIZATION_API)
+    input: UpdateOrganizationTagInput! @fusion__inputField(schema: ORGANIZATION_API)
   ): OrganizationTagPayload!
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
@@ -1319,7 +1289,7 @@ type Mutation
     @fusion__cost(schema: TEAM_API, weight: "10")
     @fusion__field(schema: TEAM_API)
   updateZone(
-    input: UpdateZoneInput! @fusion__inputField(schema: ORGANIZATION_API)
+    input: UpdateOrganizationTagInput! @fusion__inputField(schema: ORGANIZATION_API)
   ): OrganizationTagPayload!
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
@@ -3587,29 +3557,6 @@ input AddOrganizationBankAccountInput @fusion__type(schema: ORGANIZATION_API) {
   organizationId: String @fusion__inputField(schema: ORGANIZATION_API)
 }
 
-input AddOrganizationBillingDetailsInput @fusion__type(schema: ORGANIZATION_API) {
-  addressLine1: String! @fusion__inputField(schema: ORGANIZATION_API)
-  addressLine2: String @fusion__inputField(schema: ORGANIZATION_API)
-  city: String @fusion__inputField(schema: ORGANIZATION_API)
-  clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  companyName: String @fusion__inputField(schema: ORGANIZATION_API)
-  country: String! @fusion__inputField(schema: ORGANIZATION_API)
-  countryCode: String @fusion__inputField(schema: ORGANIZATION_API)
-  email: String! @fusion__inputField(schema: ORGANIZATION_API)
-  formattedAddress: String @fusion__inputField(schema: ORGANIZATION_API)
-  id: String @fusion__inputField(schema: ORGANIZATION_API)
-  latitude: Float @fusion__inputField(schema: ORGANIZATION_API)
-  longitude: Float @fusion__inputField(schema: ORGANIZATION_API)
-  organizationCustomDomain: String @fusion__inputField(schema: ORGANIZATION_API)
-  organizationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  osmId: String @fusion__inputField(schema: ORGANIZATION_API)
-  osmType: String @fusion__inputField(schema: ORGANIZATION_API)
-  placeId: String @fusion__inputField(schema: ORGANIZATION_API)
-  province: String @fusion__inputField(schema: ORGANIZATION_API)
-  suburb: String @fusion__inputField(schema: ORGANIZATION_API)
-  zipcode: String! @fusion__inputField(schema: ORGANIZATION_API)
-}
-
 input AddOrganizationInput @fusion__type(schema: ORGANIZATION_API) {
   agreedToTermsOfUse: Boolean! @fusion__inputField(schema: ORGANIZATION_API)
   billingCycle: OrganizationBillingCycle! @fusion__inputField(schema: ORGANIZATION_API)
@@ -3637,28 +3584,6 @@ input AddOrganizationPaymentMethodIntentInput
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
   organizationCustomDomain: String @fusion__inputField(schema: ORGANIZATION_API)
   organizationId: String @fusion__inputField(schema: ORGANIZATION_API)
-}
-
-input AddOrganizationPhysicalAddressInput
-  @fusion__type(schema: ORGANIZATION_API) {
-  addressLine1: String! @fusion__inputField(schema: ORGANIZATION_API)
-  addressLine2: String @fusion__inputField(schema: ORGANIZATION_API)
-  city: String @fusion__inputField(schema: ORGANIZATION_API)
-  clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  country: String! @fusion__inputField(schema: ORGANIZATION_API)
-  countryCode: String @fusion__inputField(schema: ORGANIZATION_API)
-  formattedAddress: String @fusion__inputField(schema: ORGANIZATION_API)
-  id: String @fusion__inputField(schema: ORGANIZATION_API)
-  latitude: Float @fusion__inputField(schema: ORGANIZATION_API)
-  longitude: Float @fusion__inputField(schema: ORGANIZATION_API)
-  organizationCustomDomain: String @fusion__inputField(schema: ORGANIZATION_API)
-  organizationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  osmId: String @fusion__inputField(schema: ORGANIZATION_API)
-  osmType: String @fusion__inputField(schema: ORGANIZATION_API)
-  placeId: String @fusion__inputField(schema: ORGANIZATION_API)
-  province: String @fusion__inputField(schema: ORGANIZATION_API)
-  suburb: String @fusion__inputField(schema: ORGANIZATION_API)
-  zipcode: String! @fusion__inputField(schema: ORGANIZATION_API)
 }
 
 input AddOrganizationStripeConnectAccountInput
@@ -4336,6 +4261,24 @@ input OrganizationOrderInput @fusion__type(schema: ORGANIZATION_API) {
   field: OrganizationOrderField! @fusion__inputField(schema: ORGANIZATION_API)
 }
 
+input OrganizationPhysicalAddressPatchInput
+  @fusion__type(schema: ORGANIZATION_API) {
+  addressLine1: String! @fusion__inputField(schema: ORGANIZATION_API)
+  addressLine2: String @fusion__inputField(schema: ORGANIZATION_API)
+  city: String @fusion__inputField(schema: ORGANIZATION_API)
+  country: String! @fusion__inputField(schema: ORGANIZATION_API)
+  countryCode: String @fusion__inputField(schema: ORGANIZATION_API)
+  formattedAddress: String @fusion__inputField(schema: ORGANIZATION_API)
+  latitude: Float @fusion__inputField(schema: ORGANIZATION_API)
+  longitude: Float @fusion__inputField(schema: ORGANIZATION_API)
+  osmId: String @fusion__inputField(schema: ORGANIZATION_API)
+  osmType: String @fusion__inputField(schema: ORGANIZATION_API)
+  placeId: String @fusion__inputField(schema: ORGANIZATION_API)
+  province: String @fusion__inputField(schema: ORGANIZATION_API)
+  suburb: String @fusion__inputField(schema: ORGANIZATION_API)
+  zipcode: String! @fusion__inputField(schema: ORGANIZATION_API)
+}
+
 input OrganizationStripeConnectAccountOrderInput
   @fusion__type(schema: ORGANIZATION_API) {
   direction: OrderDirection! @fusion__inputField(schema: ORGANIZATION_API)
@@ -4641,14 +4584,6 @@ input UpdateCustomerDetailsInput @fusion__type(schema: CUSTOMER_API) {
   title: String @fusion__inputField(schema: CUSTOMER_API)
 }
 
-input UpdateCustomTagInput @fusion__type(schema: ORGANIZATION_API) {
-  clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  color: String @fusion__inputField(schema: ORGANIZATION_API)
-  description: String @fusion__inputField(schema: ORGANIZATION_API)
-  id: String! @fusion__inputField(schema: ORGANIZATION_API)
-  name: String! @fusion__inputField(schema: ORGANIZATION_API)
-}
-
 input UpdateFloorPlanInput @fusion__type(schema: LOCATION_API) {
   clientMutationId: String @fusion__inputField(schema: LOCATION_API)
   id: String! @fusion__inputField(schema: LOCATION_API)
@@ -4759,105 +4694,76 @@ input UpdateMyCustomerDetailsInput @fusion__type(schema: CUSTOMER_API) {
 }
 
 input UpdateOrganizationBankAccountInput @fusion__type(schema: ORGANIZATION_API) {
-  accountHolderName: String! @fusion__inputField(schema: ORGANIZATION_API)
-  accountNumber: String! @fusion__inputField(schema: ORGANIZATION_API)
-  bankName: String! @fusion__inputField(schema: ORGANIZATION_API)
+  accountHolderName: String @fusion__inputField(schema: ORGANIZATION_API)
+  accountNumber: String @fusion__inputField(schema: ORGANIZATION_API)
+  bankName: String @fusion__inputField(schema: ORGANIZATION_API)
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  country: String! @fusion__inputField(schema: ORGANIZATION_API)
-  countryCode: String @fusion__inputField(schema: ORGANIZATION_API)
+  country: String @fusion__inputField(schema: ORGANIZATION_API)
+  fieldsToUpdate: [OrganizationBankAccountPatchField!]! @fusion__inputField(schema: ORGANIZATION_API)
   id: String! @fusion__inputField(schema: ORGANIZATION_API)
-  name: String! @fusion__inputField(schema: ORGANIZATION_API)
+  name: String @fusion__inputField(schema: ORGANIZATION_API)
 }
 
 input UpdateOrganizationBillingDetailsInput
   @fusion__type(schema: ORGANIZATION_API) {
-  addressLine1: String! @fusion__inputField(schema: ORGANIZATION_API)
+  addressLine1: String @fusion__inputField(schema: ORGANIZATION_API)
   addressLine2: String @fusion__inputField(schema: ORGANIZATION_API)
   city: String @fusion__inputField(schema: ORGANIZATION_API)
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
   companyName: String @fusion__inputField(schema: ORGANIZATION_API)
-  country: String! @fusion__inputField(schema: ORGANIZATION_API)
+  country: String @fusion__inputField(schema: ORGANIZATION_API)
   countryCode: String @fusion__inputField(schema: ORGANIZATION_API)
-  email: String! @fusion__inputField(schema: ORGANIZATION_API)
+  email: String @fusion__inputField(schema: ORGANIZATION_API)
+  fieldsToUpdate: [OrganizationBillingDetailsPatchField!]! @fusion__inputField(schema: ORGANIZATION_API)
   formattedAddress: String @fusion__inputField(schema: ORGANIZATION_API)
-  id: String! @fusion__inputField(schema: ORGANIZATION_API)
   latitude: Float @fusion__inputField(schema: ORGANIZATION_API)
   longitude: Float @fusion__inputField(schema: ORGANIZATION_API)
+  organizationCustomDomain: String @fusion__inputField(schema: ORGANIZATION_API)
+  organizationId: String @fusion__inputField(schema: ORGANIZATION_API)
   osmId: String @fusion__inputField(schema: ORGANIZATION_API)
   osmType: String @fusion__inputField(schema: ORGANIZATION_API)
   placeId: String @fusion__inputField(schema: ORGANIZATION_API)
   province: String @fusion__inputField(schema: ORGANIZATION_API)
   suburb: String @fusion__inputField(schema: ORGANIZATION_API)
-  zipcode: String! @fusion__inputField(schema: ORGANIZATION_API)
-}
-
-input UpdateOrganizationBillingSettingsInput
-  @fusion__type(schema: ORGANIZATION_API) {
-  billingCycle: OrganizationBillingCycle! @fusion__inputField(schema: ORGANIZATION_API)
-  clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  customDomain: String @fusion__inputField(schema: ORGANIZATION_API)
-  id: String @fusion__inputField(schema: ORGANIZATION_API)
-  invoiceDueInDays: Int! @fusion__inputField(schema: ORGANIZATION_API)
+  zipcode: String @fusion__inputField(schema: ORGANIZATION_API)
 }
 
 input UpdateOrganizationInput @fusion__type(schema: ORGANIZATION_API) {
-  billingCycle: OrganizationBillingCycle! @fusion__inputField(schema: ORGANIZATION_API)
+  billingCycle: OrganizationBillingCycle @fusion__inputField(schema: ORGANIZATION_API)
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
   contactEmail: String @fusion__inputField(schema: ORGANIZATION_API)
   contactPhone: String @fusion__inputField(schema: ORGANIZATION_API)
   customDomain: String @fusion__inputField(schema: ORGANIZATION_API)
   customerFacingTermsAndConditionsUrl: String @fusion__inputField(schema: ORGANIZATION_API)
+  description: String @fusion__inputField(schema: ORGANIZATION_API)
   featureImages: [CdnImageFileInput!] @fusion__inputField(schema: ORGANIZATION_API)
+  fieldsToUpdate: [OrganizationPatchField!]! @fusion__inputField(schema: ORGANIZATION_API)
   id: String @fusion__inputField(schema: ORGANIZATION_API)
-  industrySubCategoryIds: [String!]! @fusion__inputField(schema: ORGANIZATION_API)
-  invoiceDueInDays: Int! @fusion__inputField(schema: ORGANIZATION_API)
-  listingMetadata: ListingMetadataInput @fusion__inputField(schema: ORGANIZATION_API)
+  industrySubCategoryIds: [String!] @fusion__inputField(schema: ORGANIZATION_API)
+  invoiceDueInDays: Int @fusion__inputField(schema: ORGANIZATION_API)
   logoUrl: String @fusion__inputField(schema: ORGANIZATION_API)
   marketplaceListingMetadata: ListingMetadataInput @fusion__inputField(schema: ORGANIZATION_API)
-  name: String! @fusion__inputField(schema: ORGANIZATION_API)
-  refundNotificationEmails: [String!]! @fusion__inputField(schema: ORGANIZATION_API)
+  name: String @fusion__inputField(schema: ORGANIZATION_API)
+  physicalAddress: OrganizationPhysicalAddressPatchInput @fusion__inputField(schema: ORGANIZATION_API)
+  refundNotificationEmails: [String!] @fusion__inputField(schema: ORGANIZATION_API)
+  subTitle: String @fusion__inputField(schema: ORGANIZATION_API)
+  title: String @fusion__inputField(schema: ORGANIZATION_API)
   website: String @fusion__inputField(schema: ORGANIZATION_API)
-}
-
-input UpdateOrganizationMarketplaceListingMetadataInput
-  @fusion__type(schema: ORGANIZATION_API) {
-  clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  customDomain: String @fusion__inputField(schema: ORGANIZATION_API)
-  id: String @fusion__inputField(schema: ORGANIZATION_API)
-  marketplaceListingMetadata: ListingMetadataInput! @fusion__inputField(schema: ORGANIZATION_API)
 }
 
 input UpdateOrganizationOfferingInput @fusion__type(schema: ORGANIZATION_API) {
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  offeringCode: String! @fusion__inputField(schema: ORGANIZATION_API)
+  fieldsToUpdate: [OrganizationOfferingPatchField!]! @fusion__inputField(schema: ORGANIZATION_API)
+  offeringCode: String @fusion__inputField(schema: ORGANIZATION_API)
   organizationCustomDomain: String @fusion__inputField(schema: ORGANIZATION_API)
   organizationId: String @fusion__inputField(schema: ORGANIZATION_API)
-}
-
-input UpdateOrganizationPhysicalAddressInput
-  @fusion__type(schema: ORGANIZATION_API) {
-  addressLine1: String! @fusion__inputField(schema: ORGANIZATION_API)
-  addressLine2: String @fusion__inputField(schema: ORGANIZATION_API)
-  city: String @fusion__inputField(schema: ORGANIZATION_API)
-  clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  country: String! @fusion__inputField(schema: ORGANIZATION_API)
-  countryCode: String @fusion__inputField(schema: ORGANIZATION_API)
-  formattedAddress: String @fusion__inputField(schema: ORGANIZATION_API)
-  id: String! @fusion__inputField(schema: ORGANIZATION_API)
-  latitude: Float @fusion__inputField(schema: ORGANIZATION_API)
-  longitude: Float @fusion__inputField(schema: ORGANIZATION_API)
-  osmId: String @fusion__inputField(schema: ORGANIZATION_API)
-  osmType: String @fusion__inputField(schema: ORGANIZATION_API)
-  placeId: String @fusion__inputField(schema: ORGANIZATION_API)
-  province: String @fusion__inputField(schema: ORGANIZATION_API)
-  suburb: String @fusion__inputField(schema: ORGANIZATION_API)
-  zipcode: String! @fusion__inputField(schema: ORGANIZATION_API)
 }
 
 input UpdateOrganizationSsoSettingsInput @fusion__type(schema: ORGANIZATION_API) {
   appFederationMetadataUrl: String! @fusion__inputField(schema: ORGANIZATION_API)
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
   entityId: String! @fusion__inputField(schema: ORGANIZATION_API)
+  fieldsToUpdate: [OrganizationSsoSettingsPatchField!]! @fusion__inputField(schema: ORGANIZATION_API)
   isActive: Boolean! @fusion__inputField(schema: ORGANIZATION_API)
   loginUrl: String! @fusion__inputField(schema: ORGANIZATION_API)
   organizationCustomDomain: String @fusion__inputField(schema: ORGANIZATION_API)
@@ -4867,22 +4773,33 @@ input UpdateOrganizationSsoSettingsInput @fusion__type(schema: ORGANIZATION_API)
 input UpdateOrganizationStripeConnectAccountInput
   @fusion__type(schema: ORGANIZATION_API) {
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
+  fieldsToUpdate: [OrganizationStripeConnectAccountPatchField!]! @fusion__inputField(schema: ORGANIZATION_API)
   id: String! @fusion__inputField(schema: ORGANIZATION_API)
-  name: String! @fusion__inputField(schema: ORGANIZATION_API)
+  name: String @fusion__inputField(schema: ORGANIZATION_API)
+}
+
+input UpdateOrganizationTagInput @fusion__type(schema: ORGANIZATION_API) {
+  clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
+  color: String @fusion__inputField(schema: ORGANIZATION_API)
+  description: String @fusion__inputField(schema: ORGANIZATION_API)
+  fieldsToUpdate: [OrganizationTagPatchField!]! @fusion__inputField(schema: ORGANIZATION_API)
+  id: String! @fusion__inputField(schema: ORGANIZATION_API)
+  name: String @fusion__inputField(schema: ORGANIZATION_API)
 }
 
 input UpdateOrganizationTaxDetailsInput @fusion__type(schema: ORGANIZATION_API) {
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
+  fieldsToUpdate: [OrganizationTaxDetailsPatchField!]! @fusion__inputField(schema: ORGANIZATION_API)
   organizationCustomDomain: String @fusion__inputField(schema: ORGANIZATION_API)
   organizationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  taxId: String! @fusion__inputField(schema: ORGANIZATION_API)
-  taxRatePercentage: Decimal! @fusion__inputField(schema: ORGANIZATION_API)
+  taxId: String @fusion__inputField(schema: ORGANIZATION_API)
+  taxRatePercentage: Decimal @fusion__inputField(schema: ORGANIZATION_API)
 }
 
 input UpdateOrganizationXeroConnectionInput
   @fusion__type(schema: ORGANIZATION_API) {
-  autoReconcilePayments: Boolean! @fusion__inputField(schema: ORGANIZATION_API)
-  billingMode: OrganizationXeroBillingMode! @fusion__inputField(schema: ORGANIZATION_API)
+  autoReconcilePayments: Boolean @fusion__inputField(schema: ORGANIZATION_API)
+  billingMode: OrganizationXeroBillingMode @fusion__inputField(schema: ORGANIZATION_API)
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
   defaultBrandingThemeId: String @fusion__inputField(schema: ORGANIZATION_API)
   defaultReceivablesAccountCode: String @fusion__inputField(schema: ORGANIZATION_API)
@@ -4890,13 +4807,14 @@ input UpdateOrganizationXeroConnectionInput
   defaultSalesAccountCode: String @fusion__inputField(schema: ORGANIZATION_API)
   defaultTrackingCategory1: String @fusion__inputField(schema: ORGANIZATION_API)
   defaultTrackingCategory2: String @fusion__inputField(schema: ORGANIZATION_API)
-  isActive: Boolean! @fusion__inputField(schema: ORGANIZATION_API)
+  fieldsToUpdate: [OrganizationXeroConnectionPatchField!]! @fusion__inputField(schema: ORGANIZATION_API)
+  isActive: Boolean @fusion__inputField(schema: ORGANIZATION_API)
   organizationCustomDomain: String @fusion__inputField(schema: ORGANIZATION_API)
   organizationId: String @fusion__inputField(schema: ORGANIZATION_API)
   scopes: String @fusion__inputField(schema: ORGANIZATION_API)
-  sendInvoicesViaXero: Boolean! @fusion__inputField(schema: ORGANIZATION_API)
-  tenantId: String! @fusion__inputField(schema: ORGANIZATION_API)
-  tenantName: String! @fusion__inputField(schema: ORGANIZATION_API)
+  sendInvoicesViaXero: Boolean @fusion__inputField(schema: ORGANIZATION_API)
+  tenantId: String @fusion__inputField(schema: ORGANIZATION_API)
+  tenantName: String @fusion__inputField(schema: ORGANIZATION_API)
 }
 
 input UpdatePrivateBookingInput @fusion__type(schema: BOOKING_API) {
@@ -4945,14 +4863,6 @@ input UpdateProductInput @fusion__type(schema: MARKETPLACE_API) {
   pricingOptions: [ProductPricingInput!]! @fusion__inputField(schema: MARKETPLACE_API)
   tagIds: [String!]! @fusion__inputField(schema: MARKETPLACE_API)
   type: ProductType! @fusion__inputField(schema: MARKETPLACE_API)
-}
-
-input UpdateProductTagInput @fusion__type(schema: ORGANIZATION_API) {
-  clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  color: String @fusion__inputField(schema: ORGANIZATION_API)
-  description: String @fusion__inputField(schema: ORGANIZATION_API)
-  id: String! @fusion__inputField(schema: ORGANIZATION_API)
-  name: String! @fusion__inputField(schema: ORGANIZATION_API)
 }
 
 input UpdateResourceInput @fusion__type(schema: LOCATION_API) {
@@ -5004,14 +4914,6 @@ input UpdateTeamMembersInput @fusion__type(schema: TEAM_API) {
   customerIds: [String!]! @fusion__inputField(schema: TEAM_API)
   id: String! @fusion__inputField(schema: TEAM_API)
   organizationMemberIds: [String!]! @fusion__inputField(schema: TEAM_API)
-}
-
-input UpdateZoneInput @fusion__type(schema: ORGANIZATION_API) {
-  clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
-  color: String @fusion__inputField(schema: ORGANIZATION_API)
-  description: String @fusion__inputField(schema: ORGANIZATION_API)
-  id: String! @fusion__inputField(schema: ORGANIZATION_API)
-  name: String! @fusion__inputField(schema: ORGANIZATION_API)
 }
 
 input WeekOpeningHoursInput @fusion__type(schema: LOCATION_API) {
@@ -5237,10 +5139,25 @@ enum OrganizationBankAccountOrderField @fusion__type(schema: ORGANIZATION_API) {
   NAME @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
+enum OrganizationBankAccountPatchField @fusion__type(schema: ORGANIZATION_API) {
+  NAME @fusion__enumValue(schema: ORGANIZATION_API)
+  BANK_NAME @fusion__enumValue(schema: ORGANIZATION_API)
+  ACCOUNT_HOLDER_NAME @fusion__enumValue(schema: ORGANIZATION_API)
+  ACCOUNT_NUMBER @fusion__enumValue(schema: ORGANIZATION_API)
+  COUNTRY @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
 enum OrganizationBillingCycle @fusion__type(schema: ORGANIZATION_API) {
   WEEKLY @fusion__enumValue(schema: ORGANIZATION_API)
   FORTNIGHTLY @fusion__enumValue(schema: ORGANIZATION_API)
   MONTHLY @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
+enum OrganizationBillingDetailsPatchField
+  @fusion__type(schema: ORGANIZATION_API) {
+  COMPANY_NAME @fusion__enumValue(schema: ORGANIZATION_API)
+  EMAIL @fusion__enumValue(schema: ORGANIZATION_API)
+  BILLING_ADDRESS @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum OrganizationMemberOrderField @fusion__type(schema: ORGANIZATION_API) {
@@ -5264,11 +5181,45 @@ enum OrganizationMemberStatus @fusion__type(schema: ORGANIZATION_API) {
   INACTIVE @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
+enum OrganizationOfferingPatchField @fusion__type(schema: ORGANIZATION_API) {
+  OFFERING_CODE @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
 enum OrganizationOrderField @fusion__type(schema: ORGANIZATION_API) {
   NAME @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
+enum OrganizationPatchField @fusion__type(schema: ORGANIZATION_API) {
+  NAME @fusion__enumValue(schema: ORGANIZATION_API)
+  DESCRIPTION @fusion__enumValue(schema: ORGANIZATION_API)
+  TITLE @fusion__enumValue(schema: ORGANIZATION_API)
+  SUB_TITLE @fusion__enumValue(schema: ORGANIZATION_API)
+  CUSTOM_DOMAIN @fusion__enumValue(schema: ORGANIZATION_API)
+  WEBSITE @fusion__enumValue(schema: ORGANIZATION_API)
+  LOGO_URL @fusion__enumValue(schema: ORGANIZATION_API)
+  CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  BILLING_CYCLE @fusion__enumValue(schema: ORGANIZATION_API)
+  INVOICE_DUE_IN_DAYS @fusion__enumValue(schema: ORGANIZATION_API)
+  CONTACT_EMAIL @fusion__enumValue(schema: ORGANIZATION_API)
+  CONTACT_PHONE @fusion__enumValue(schema: ORGANIZATION_API)
+  REFUND_NOTIFICATION_EMAILS @fusion__enumValue(schema: ORGANIZATION_API)
+  INDUSTRY_SUB_CATEGORIES @fusion__enumValue(schema: ORGANIZATION_API)
+  FEATURE_IMAGES @fusion__enumValue(schema: ORGANIZATION_API)
+  MARKETPLACE_LISTING_METADATA @fusion__enumValue(schema: ORGANIZATION_API)
+  PHYSICAL_ADDRESS @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
+enum OrganizationSsoSettingsPatchField @fusion__type(schema: ORGANIZATION_API) {
+  SSO_SETTINGS @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
 enum OrganizationStripeConnectAccountOrderField
+  @fusion__type(schema: ORGANIZATION_API) {
+  NAME @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
+enum OrganizationStripeConnectAccountPatchField
   @fusion__type(schema: ORGANIZATION_API) {
   NAME @fusion__enumValue(schema: ORGANIZATION_API)
 }
@@ -5277,6 +5228,12 @@ enum OrganizationTagOrderField @fusion__type(schema: ORGANIZATION_API) {
   NAME @fusion__enumValue(schema: ORGANIZATION_API)
   DESCRIPTION @fusion__enumValue(schema: ORGANIZATION_API)
   TYPE @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
+enum OrganizationTagPatchField @fusion__type(schema: ORGANIZATION_API) {
+  NAME @fusion__enumValue(schema: ORGANIZATION_API)
+  DESCRIPTION @fusion__enumValue(schema: ORGANIZATION_API)
+  COLOR @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum OrganizationTagType
@@ -6301,6 +6258,11 @@ enum OrganizationTagType
     @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
+enum OrganizationTaxDetailsPatchField @fusion__type(schema: ORGANIZATION_API) {
+  TAX_ID @fusion__enumValue(schema: ORGANIZATION_API)
+  TAX_RATE_PERCENTAGE @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
 enum OrganizationType @fusion__type(schema: ORGANIZATION_API) {
   PRIVATE @fusion__enumValue(schema: ORGANIZATION_API)
   MARKETPLACE @fusion__enumValue(schema: ORGANIZATION_API)
@@ -6311,6 +6273,23 @@ enum OrganizationXeroBillingMode @fusion__type(schema: ORGANIZATION_API) {
   DISABLED @fusion__enumValue(schema: ORGANIZATION_API)
   ENABLED @fusion__enumValue(schema: ORGANIZATION_API)
   REPEATING_INVOICES @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
+enum OrganizationXeroConnectionPatchField
+  @fusion__type(schema: ORGANIZATION_API) {
+  TENANT_ID @fusion__enumValue(schema: ORGANIZATION_API)
+  TENANT_NAME @fusion__enumValue(schema: ORGANIZATION_API)
+  BILLING_MODE @fusion__enumValue(schema: ORGANIZATION_API)
+  SCOPES @fusion__enumValue(schema: ORGANIZATION_API)
+  IS_ACTIVE @fusion__enumValue(schema: ORGANIZATION_API)
+  SEND_INVOICES_VIA_XERO @fusion__enumValue(schema: ORGANIZATION_API)
+  AUTO_RECONCILE_PAYMENTS @fusion__enumValue(schema: ORGANIZATION_API)
+  DEFAULT_SALES_ACCOUNT_CODE @fusion__enumValue(schema: ORGANIZATION_API)
+  DEFAULT_RECEIVABLES_ACCOUNT_CODE @fusion__enumValue(schema: ORGANIZATION_API)
+  DEFAULT_TRACKING_CATEGORY1 @fusion__enumValue(schema: ORGANIZATION_API)
+  DEFAULT_TRACKING_CATEGORY2 @fusion__enumValue(schema: ORGANIZATION_API)
+  DEFAULT_BRANDING_THEME_ID @fusion__enumValue(schema: ORGANIZATION_API)
+  DEFAULT_REFERENCE_PREFIX @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum PaymentMethod

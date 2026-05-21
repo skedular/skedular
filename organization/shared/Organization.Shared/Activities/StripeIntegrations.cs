@@ -3,6 +3,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Random;
 using Flurl;
 using Organization.Shared.Mappers;
+using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Stripe;
 using Temporalio.Activities;
@@ -15,6 +16,7 @@ public class StripeIntegrations(
     ApplicationConfiguration applicationConfiguration,
     IRepositoryFactory repositoryFactory,
     IEntityMapper entityMapper,
+    IOrganizationOutboxPublisher organizationOutboxPublisher,
     IRandomHelper randomHelper,
     IRetrievable<SetupIntent, SetupIntentGetOptions> setupIntentRetrievableService,
     IRetrievable<PaymentMethod, PaymentMethodGetOptions> paymentMethodRetrievableService)
@@ -48,6 +50,7 @@ public class StripeIntegrations(
             var organizationStripePaymentMethod = entityMapper.MapTo(paymentMethod, args.SetupIntentId, organization);
             organizationStripePaymentMethod.Id = randomHelper.Generate();
             repositoryFactory.OrganizationStripePaymentMethodRepository.Add(organizationStripePaymentMethod);
+            organizationOutboxPublisher.PublishOrganizations([entityMapper.MapTo(organization)], repositoryFactory.UnitOfWork);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
         else

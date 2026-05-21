@@ -6,7 +6,9 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
+using Microsoft.EntityFrameworkCore;
 using Organization.Api.Mappers;
+using Organization.Api.Models;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
@@ -14,6 +16,7 @@ using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
 using Organization.Shared.Workflows;
+using Polly;
 using Constants = Enterprise.Shared.Constants;
 using Customer = Organization.Shared.Models.Customer;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
@@ -29,7 +32,7 @@ public interface IOrganizationService
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Organization> UpdateAsync(Shared.Models.Organization organization, CancellationToken cancellationToken);
+    Task<OrganizationPatchResult> UpdatePatchAsync(OrganizationPatchRequest request, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> DeleteAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 
     Task<Shared.Models.Organization?> GetByIdOrCustomDomainAsync(
@@ -48,19 +51,6 @@ public interface IOrganizationService
         OrganizationSearchCriteria searchCriteria,
         IEnumerable<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken);
-
-    Task<Shared.Models.Organization> UpdateMarketplaceListingMetadataAsync(
-        string? organizationId,
-        string? organizationCustomDomain,
-        ListingMetadata marketplaceListingMetadata,
-        CancellationToken cancellationToken);
-
-    Task<Shared.Models.Organization> UpdateOrganizationBillingSettingsAsync(
-        string? organizationId,
-        string? organizationCustomDomain,
-        OrganizationBillingCycle billingCycle,
-        int invoiceDueInDays,
-        CancellationToken cancellationToken);
 }
 
 public class OrganizationService(
@@ -74,11 +64,15 @@ public class OrganizationService(
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
     IGraphQlMapper graphQlMapper,
+    IOrganizationPatchMapper organizationPatchMapper,
     TimeProvider timeProvider,
     IContext context,
     ICachedOrganizationService cachedOrganizationService,
-    IOrganizationDefaultValuesProvider organizationDefaultValuesProvider) : IOrganizationService
+    IOrganizationDefaultValuesProvider organizationDefaultValuesProvider,
+    ILogger<OrganizationService> logger) : IOrganizationService
 {
+    private const int MaxPatchConcurrencyRetryCount = 1;
+
     public async Task<Shared.Models.Organization> AddAsync(
         Shared.Models.Organization organization,
         string? offeringCode,
@@ -206,16 +200,88 @@ public class OrganizationService(
         return organization;
     }
 
-    public async Task<Shared.Models.Organization> UpdateAsync(Shared.Models.Organization organization, CancellationToken cancellationToken)
+    public async Task<OrganizationPatchResult> UpdatePatchAsync(OrganizationPatchRequest request, CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                                       organization.Id,
-                                       organization.CustomDomain,
-                                       cancellationToken) ??
-                                   throw new OrganizationNotFound();
+        try
+        {
+            organizationPatchMapper.Validate(request);
+        }
+        catch (ArgumentOutOfRangeException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Organization patch update rejected because field selection is not supported. OrganizationId: {OrganizationId}, OrganizationCustomDomain: {OrganizationCustomDomain}, FieldsToUpdate: {FieldsToUpdate}",
+                request.Id,
+                request.CustomDomain,
+                string.Join(",", request.FieldsToUpdate));
+            throw;
+        }
+        catch (ArgumentException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Organization patch update rejected because validation failed. OrganizationId: {OrganizationId}, OrganizationCustomDomain: {OrganizationCustomDomain}, FieldsToUpdate: {FieldsToUpdate}",
+                request.Id,
+                request.CustomDomain,
+                string.Join(",", request.FieldsToUpdate));
+            throw;
+        }
 
-        return await UpdateInternalAsync(organization, existingOrganization, customer, cancellationToken);
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        logger.LogInformation(
+            "Organization patch update started. OrganizationId: {OrganizationId}, OrganizationCustomDomain: {OrganizationCustomDomain}, CustomerId: {CustomerId}, FieldsToUpdate: {FieldsToUpdate}",
+            request.Id,
+            request.CustomDomain,
+            customer.Id,
+            string.Join(",", request.FieldsToUpdate));
+
+        try
+        {
+            return await Policy
+                .Handle<DbUpdateConcurrencyException>()
+                .WaitAndRetryAsync(
+                    MaxPatchConcurrencyRetryCount,
+                    _ => TimeSpan.Zero,
+                    (exception, _, retryAttempt, _) =>
+                    {
+                        logger.LogWarning(
+                            exception,
+                            "Organization patch update hit a concurrency conflict and will retry against the latest organization. CustomerId: {CustomerId}, RetryAttempt: {RetryAttempt}",
+                            customer.Id,
+                            retryAttempt);
+                        repositoryFactory.DbContext.ChangeTracker.Clear();
+                    })
+                .ExecuteAsync(async () =>
+                {
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
+                                                   request.Id,
+                                                   request.CustomDomain,
+                                                   cancellationToken) ??
+                                               throw new OrganizationNotFound();
+
+                    if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
+                    {
+                        logger.LogWarning(
+                            "Organization patch update rejected because customer is not authorized. OrganizationId: {OrganizationId}, CustomerId: {CustomerId}",
+                            existingOrganization.Id,
+                            customer.Id);
+                        throw new UnauthorizedAccessException();
+                    }
+
+                    return await UpdatePatchInternalAsync(request, existingOrganization, customer.Id, cancellationToken);
+                });
+        }
+        catch (Exception exception) when (exception is not UnauthorizedAccessException)
+        {
+            logger.LogError(
+                exception,
+                "Organization patch update failed during persistence. OrganizationId: {OrganizationId}, OrganizationCustomDomain: {OrganizationCustomDomain}, CustomerId: {CustomerId}, FieldsToUpdate: {FieldsToUpdate}",
+                request.Id,
+                request.CustomDomain,
+                customer.Id,
+                string.Join(",", request.FieldsToUpdate));
+            throw;
+        }
     }
 
     public async Task<Shared.Models.Organization> DeleteAsync(string? id, string? customDomain, CancellationToken cancellationToken)
@@ -374,90 +440,6 @@ public class OrganizationService(
         return (paginatedInfo, mappedOrganizations, totalCount);
     }
 
-    public async Task<Shared.Models.Organization> UpdateMarketplaceListingMetadataAsync(
-        string? organizationId,
-        string? organizationCustomDomain,
-        ListingMetadata marketplaceListingMetadata,
-        CancellationToken cancellationToken)
-    {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                                       organizationId,
-                                       organizationCustomDomain,
-                                       cancellationToken) ??
-                                   throw new OrganizationNotFound();
-
-        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
-        {
-            throw new UnauthorizedAccessException();
-        }
-
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
-        existingOrganization.MarketplaceListingMetadata = marketplaceListingMetadata;
-
-        var organization = graphQlMapper.MapTo(
-            repositoryFactory.OrganizationRepository.Update(existingOrganization),
-            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
-
-        organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
-        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
-            existingOrganization.OrganizationMembers.Select(item => item.CustomerId).ToList(),
-            cancellationToken);
-
-        return organization;
-    }
-
-    public async Task<Shared.Models.Organization> UpdateOrganizationBillingSettingsAsync(
-        string? organizationId,
-        string? organizationCustomDomain,
-        OrganizationBillingCycle billingCycle,
-        int invoiceDueInDays,
-        CancellationToken cancellationToken)
-    {
-        if (invoiceDueInDays is < 1 or > 999)
-        {
-            throw new InvoiceDueInDaysMustBeBetween1And999();
-        }
-
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                                       organizationId,
-                                       organizationCustomDomain,
-                                       cancellationToken) ??
-                                   throw new OrganizationNotFound();
-
-        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
-        {
-            throw new UnauthorizedAccessException();
-        }
-
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
-        existingOrganization.BillingCycle = billingCycle.ToOrganizationBillingCycle();
-        existingOrganization.InvoiceDueInDays = invoiceDueInDays;
-
-        repositoryFactory.OrganizationRepository.Update(existingOrganization);
-
-        var organization = graphQlMapper.MapTo(
-            existingOrganization,
-            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
-
-        organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
-
-        return organization;
-    }
-
     private async Task<Shared.Models.Organization> UpdateInternalAsync(
         Shared.Models.Organization organization,
         Shared.Database.Entities.Organization existingOrganization,
@@ -510,6 +492,82 @@ public class OrganizationService(
         }
 
         return organization;
+    }
+
+    private async Task<OrganizationPatchResult> UpdatePatchInternalAsync(
+        OrganizationPatchRequest request,
+        Shared.Database.Entities.Organization existingOrganization,
+        string customerId,
+        CancellationToken cancellationToken)
+    {
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+        var previousCustomDomain = existingOrganization.CustomDomain;
+
+        var industrySubCategories = request.FieldsToUpdate.Contains(OrganizationPatchField.IndustrySubCategories)
+            ? await repositoryFactory.IndustrySubCategoryRepository.GetActiveByIdsWithMainCategoryAsync(request.IndustrySubCategoryIds,
+                cancellationToken)
+            : [];
+        var physicalAddressCreated = AddPhysicalAddressPatchIfNeeded(request, existingOrganization);
+        var patchChanged = organizationPatchMapper.ApplyTo(request, existingOrganization, industrySubCategories);
+        var changed = physicalAddressCreated || patchChanged;
+        var organization = graphQlMapper.MapTo(
+            existingOrganization,
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
+
+        if (!changed)
+        {
+            logger.LogInformation(
+                "Organization patch update completed with no changes. OrganizationId: {OrganizationId}, CustomerId: {CustomerId}, FieldsToUpdate: {FieldsToUpdate}",
+                existingOrganization.Id,
+                customerId,
+                string.Join(",", request.FieldsToUpdate));
+            return new OrganizationPatchResult(organization);
+        }
+
+        organization = graphQlMapper.MapTo(
+            repositoryFactory.OrganizationRepository.Update(existingOrganization),
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
+
+        organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, previousCustomDomain, cancellationToken);
+        await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
+        var memberCustomerIds = existingOrganization.OrganizationMembers.Select(item => item.CustomerId).ToList();
+        if (memberCustomerIds.Count == 0)
+        {
+            memberCustomerIds.Add(customerId);
+        }
+
+        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(memberCustomerIds, cancellationToken);
+
+        logger.LogInformation(
+            "Organization patch update completed with applied changes. OrganizationId: {OrganizationId}, CustomerId: {CustomerId}, FieldsToUpdate: {FieldsToUpdate}",
+            organization.Id,
+            customerId,
+            string.Join(",", request.FieldsToUpdate));
+
+        return new OrganizationPatchResult(organization);
+    }
+
+    private bool AddPhysicalAddressPatchIfNeeded(
+        OrganizationPatchRequest request,
+        Shared.Database.Entities.Organization existingOrganization)
+    {
+        if (!request.FieldsToUpdate.Contains(OrganizationPatchField.PhysicalAddress) ||
+            request.PhysicalAddress is null ||
+            existingOrganization.PhysicalAddress is not null)
+        {
+            return false;
+        }
+
+        request.PhysicalAddress.Id = randomHelper.Generate();
+        var physicalAddress = graphQlMapper.MapTo(request.PhysicalAddress, existingOrganization);
+        repositoryFactory.OrganizationPhysicalAddressRepository.Add(physicalAddress);
+        existingOrganization.PhysicalAddress = physicalAddress;
+        return true;
     }
 
     private async Task<Shared.Models.Organization> EnrichOrganizationAsync(

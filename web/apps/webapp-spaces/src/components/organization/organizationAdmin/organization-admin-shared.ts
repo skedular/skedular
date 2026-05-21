@@ -10,7 +10,7 @@ export type OrganizationDetails = {
   website: string | null;
   customerFacingTermsAndConditionsUrl: string | null;
   industrySubCategoryIds: string[];
-  contactEmail: string;
+  contactEmail: string | null;
   contactPhone: string | null;
   refundNotificationEmailsText: string | null;
 };
@@ -63,7 +63,7 @@ export const organizationSchema = object({
   industrySubCategoryIds: array().nullable(),
   contactEmail: string()
     .email(({ value }) => `${value} is not a valid email`)
-    .required('Contact email is required'),
+    .nullable(),
   contactPhone: string().nullable(),
   refundNotificationEmailsText: string()
     .nullable()

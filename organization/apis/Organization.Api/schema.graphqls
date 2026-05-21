@@ -112,8 +112,6 @@ type Mutation {
   setOrganizationBankAccountAsDefault(
     input: SetOrganizationBankAccountAsDefaultInput!
   ): OrganizationBankAccountPayload! @cost(weight: "10")
-  addOrganizationBillingDetails(input: AddOrganizationBillingDetailsInput!): OrganizationPayload!
-    @cost(weight: "10")
   updateOrganizationBillingDetails(
     input: UpdateOrganizationBillingDetailsInput!
   ): OrganizationPayload! @cost(weight: "10")
@@ -148,22 +146,11 @@ type Mutation {
     @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload!
     @cost(weight: "10")
-  updateOrganizationMarketplaceListingMetadata(
-    input: UpdateOrganizationMarketplaceListingMetadataInput!
-  ): OrganizationPayload! @cost(weight: "10")
-  updateOrganizationBillingSettings(
-    input: UpdateOrganizationBillingSettingsInput!
-  ): OrganizationPayload! @cost(weight: "10")
   addOrganizationPaymentMethodIntent(
     input: AddOrganizationPaymentMethodIntentInput!
   ): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload!
     @cost(weight: "10")
-  addOrganizationPhysicalAddress(input: AddOrganizationPhysicalAddressInput!): OrganizationPayload!
-    @cost(weight: "10")
-  updateOrganizationPhysicalAddress(
-    input: UpdateOrganizationPhysicalAddressInput!
-  ): OrganizationPayload! @cost(weight: "10")
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload!
     @cost(weight: "10")
   removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationPayload!
@@ -185,14 +172,14 @@ type Mutation {
   ): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload!
     @cost(weight: "10")
-  updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload!
+  updateCustomTag(input: UpdateOrganizationTagInput!): OrganizationTagPayload!
     @cost(weight: "10")
   deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload!
     @cost(weight: "10")
   deleteCustomTags(input: DeleteCustomTagsInput!): OrganizationTagsPayload!
     @cost(weight: "10")
   addZone(input: AddZoneInput!): OrganizationTagPayload! @cost(weight: "10")
-  updateZone(input: UpdateZoneInput!): OrganizationTagPayload!
+  updateZone(input: UpdateOrganizationTagInput!): OrganizationTagPayload!
     @cost(weight: "10")
   deleteZone(input: DeleteZoneInput!): OrganizationTagPayload!
     @cost(weight: "10")
@@ -200,7 +187,7 @@ type Mutation {
     @cost(weight: "10")
   addProductTag(input: AddProductTagInput!): OrganizationTagPayload!
     @cost(weight: "10")
-  updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload!
+  updateProductTag(input: UpdateOrganizationTagInput!): OrganizationTagPayload!
     @cost(weight: "10")
   deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload!
     @cost(weight: "10")
@@ -796,29 +783,6 @@ input AddOrganizationBankAccountInput {
   countryCode: String
 }
 
-input AddOrganizationBillingDetailsInput {
-  clientMutationId: String
-  id: String
-  organizationId: String
-  organizationCustomDomain: String
-  companyName: String
-  email: String!
-  osmType: String
-  osmId: String
-  placeId: String
-  longitude: Float
-  latitude: Float
-  formattedAddress: String
-  addressLine1: String!
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String!
-  country: String!
-  countryCode: String
-}
-
 input AddOrganizationInput {
   clientMutationId: String
   id: String
@@ -845,27 +809,6 @@ input AddOrganizationPaymentMethodIntentInput {
   clientMutationId: String
   organizationId: String
   organizationCustomDomain: String
-}
-
-input AddOrganizationPhysicalAddressInput {
-  clientMutationId: String
-  id: String
-  organizationId: String
-  organizationCustomDomain: String
-  osmType: String
-  osmId: String
-  placeId: String
-  longitude: Float
-  latitude: Float
-  formattedAddress: String
-  addressLine1: String!
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String!
-  country: String!
-  countryCode: String
 }
 
 input AddOrganizationStripeConnectAccountInput {
@@ -1053,6 +996,23 @@ input OrganizationOrderInput {
   field: OrganizationOrderField!
 }
 
+input OrganizationPhysicalAddressPatchInput {
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
+}
+
 input OrganizationStripeConnectAccountOrderInput {
   direction: OrderDirection!
   field: OrganizationStripeConnectAccountOrderField!
@@ -1115,110 +1075,76 @@ input SetOrganizationStripeConnectAccountAsDefaultInput {
   id: String!
 }
 
-input UpdateCustomTagInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  description: String
-  color: String
-}
-
 input UpdateOrganizationBankAccountInput {
   clientMutationId: String
   id: String!
-  name: String!
-  bankName: String!
-  accountHolderName: String!
-  accountNumber: String!
-  country: String!
-  countryCode: String
+  fieldsToUpdate: [OrganizationBankAccountPatchField!]!
+  name: String
+  bankName: String
+  accountHolderName: String
+  accountNumber: String
+  country: String
 }
 
 input UpdateOrganizationBillingDetailsInput {
   clientMutationId: String
-  id: String!
+  organizationId: String
+  organizationCustomDomain: String
+  fieldsToUpdate: [OrganizationBillingDetailsPatchField!]!
   companyName: String
-  email: String!
+  email: String
   osmType: String
   osmId: String
   placeId: String
   longitude: Float
   latitude: Float
   formattedAddress: String
-  addressLine1: String!
+  addressLine1: String
   addressLine2: String
   suburb: String
   city: String
   province: String
-  zipcode: String!
-  country: String!
+  zipcode: String
+  country: String
   countryCode: String
-}
-
-input UpdateOrganizationBillingSettingsInput {
-  clientMutationId: String
-  id: String
-  customDomain: String
-  billingCycle: OrganizationBillingCycle!
-  invoiceDueInDays: Int!
 }
 
 input UpdateOrganizationInput {
   clientMutationId: String
   id: String
   customDomain: String
-  name: String!
+  fieldsToUpdate: [OrganizationPatchField!]!
+  name: String
+  description: String
+  title: String
+  subTitle: String
   website: String
   logoUrl: String
   customerFacingTermsAndConditionsUrl: String
-  billingCycle: OrganizationBillingCycle!
-  invoiceDueInDays: Int!
+  billingCycle: OrganizationBillingCycle
+  invoiceDueInDays: Int
   contactEmail: String
   contactPhone: String
-  refundNotificationEmails: [String!]!
-  industrySubCategoryIds: [String!]!
+  refundNotificationEmails: [String!]
+  industrySubCategoryIds: [String!]
   featureImages: [CdnImageFileInput!]
-  listingMetadata: ListingMetadataInput
   marketplaceListingMetadata: ListingMetadataInput
-}
-
-input UpdateOrganizationMarketplaceListingMetadataInput {
-  clientMutationId: String
-  id: String
-  customDomain: String
-  marketplaceListingMetadata: ListingMetadataInput!
+  physicalAddress: OrganizationPhysicalAddressPatchInput
 }
 
 input UpdateOrganizationOfferingInput {
   clientMutationId: String
   organizationId: String
   organizationCustomDomain: String
-  offeringCode: String!
-}
-
-input UpdateOrganizationPhysicalAddressInput {
-  clientMutationId: String
-  id: String!
-  osmType: String
-  osmId: String
-  placeId: String
-  longitude: Float
-  latitude: Float
-  formattedAddress: String
-  addressLine1: String!
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String!
-  country: String!
-  countryCode: String
+  fieldsToUpdate: [OrganizationOfferingPatchField!]!
+  offeringCode: String
 }
 
 input UpdateOrganizationSsoSettingsInput {
   clientMutationId: String
   organizationId: String
   organizationCustomDomain: String
+  fieldsToUpdate: [OrganizationSsoSettingsPatchField!]!
   entityId: String!
   loginUrl: String!
   appFederationMetadataUrl: String!
@@ -1228,50 +1154,46 @@ input UpdateOrganizationSsoSettingsInput {
 input UpdateOrganizationStripeConnectAccountInput {
   clientMutationId: String
   id: String!
-  name: String!
+  fieldsToUpdate: [OrganizationStripeConnectAccountPatchField!]!
+  name: String
+}
+
+input UpdateOrganizationTagInput {
+  clientMutationId: String
+  id: String!
+  fieldsToUpdate: [OrganizationTagPatchField!]!
+  name: String
+  description: String
+  color: String
 }
 
 input UpdateOrganizationTaxDetailsInput {
   clientMutationId: String
   organizationId: String
   organizationCustomDomain: String
-  taxId: String!
-  taxRatePercentage: Decimal!
+  fieldsToUpdate: [OrganizationTaxDetailsPatchField!]!
+  taxId: String
+  taxRatePercentage: Decimal
 }
 
 input UpdateOrganizationXeroConnectionInput {
   clientMutationId: String
   organizationId: String
   organizationCustomDomain: String
-  tenantId: String!
-  tenantName: String!
-  billingMode: OrganizationXeroBillingMode!
+  fieldsToUpdate: [OrganizationXeroConnectionPatchField!]!
+  tenantId: String
+  tenantName: String
+  billingMode: OrganizationXeroBillingMode
   scopes: String
-  isActive: Boolean!
-  sendInvoicesViaXero: Boolean!
-  autoReconcilePayments: Boolean!
+  isActive: Boolean
+  sendInvoicesViaXero: Boolean
+  autoReconcilePayments: Boolean
   defaultSalesAccountCode: String
   defaultReceivablesAccountCode: String
   defaultTrackingCategory1: String
   defaultTrackingCategory2: String
   defaultBrandingThemeId: String
   defaultReferencePrefix: String
-}
-
-input UpdateProductTagInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  description: String
-  color: String
-}
-
-input UpdateZoneInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  description: String
-  color: String
 }
 
 input ZoneOrganizationTagWhereInput {
@@ -1300,10 +1222,24 @@ enum OrganizationBankAccountOrderField {
   NAME
 }
 
+enum OrganizationBankAccountPatchField {
+  NAME
+  BANK_NAME
+  ACCOUNT_HOLDER_NAME
+  ACCOUNT_NUMBER
+  COUNTRY
+}
+
 enum OrganizationBillingCycle {
   WEEKLY
   FORTNIGHTLY
   MONTHLY
+}
+
+enum OrganizationBillingDetailsPatchField {
+  COMPANY_NAME
+  EMAIL
+  BILLING_ADDRESS
 }
 
 enum OrganizationMemberOrderField {
@@ -1327,11 +1263,43 @@ enum OrganizationMemberStatus {
   INACTIVE
 }
 
+enum OrganizationOfferingPatchField {
+  OFFERING_CODE
+}
+
 enum OrganizationOrderField {
   NAME
 }
 
+enum OrganizationPatchField {
+  NAME
+  DESCRIPTION
+  TITLE
+  SUB_TITLE
+  CUSTOM_DOMAIN
+  WEBSITE
+  LOGO_URL
+  CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL
+  BILLING_CYCLE
+  INVOICE_DUE_IN_DAYS
+  CONTACT_EMAIL
+  CONTACT_PHONE
+  REFUND_NOTIFICATION_EMAILS
+  INDUSTRY_SUB_CATEGORIES
+  FEATURE_IMAGES
+  MARKETPLACE_LISTING_METADATA
+  PHYSICAL_ADDRESS
+}
+
+enum OrganizationSsoSettingsPatchField {
+  SSO_SETTINGS
+}
+
 enum OrganizationStripeConnectAccountOrderField {
+  NAME
+}
+
+enum OrganizationStripeConnectAccountPatchField {
   NAME
 }
 
@@ -1339,6 +1307,12 @@ enum OrganizationTagOrderField {
   NAME
   DESCRIPTION
   TYPE
+}
+
+enum OrganizationTagPatchField {
+  NAME
+  DESCRIPTION
+  COLOR
 }
 
 enum OrganizationTagType {
@@ -1513,6 +1487,11 @@ enum OrganizationTagType {
   AMENITY_SAFETY_COMPLIANCE_KIT
 }
 
+enum OrganizationTaxDetailsPatchField {
+  TAX_ID
+  TAX_RATE_PERCENTAGE
+}
+
 enum OrganizationType {
   PRIVATE
   MARKETPLACE
@@ -1523,6 +1502,22 @@ enum OrganizationXeroBillingMode {
   DISABLED
   ENABLED
   REPEATING_INVOICES
+}
+
+enum OrganizationXeroConnectionPatchField {
+  TENANT_ID
+  TENANT_NAME
+  BILLING_MODE
+  SCOPES
+  IS_ACTIVE
+  SEND_INVOICES_VIA_XERO
+  AUTO_RECONCILE_PAYMENTS
+  DEFAULT_SALES_ACCOUNT_CODE
+  DEFAULT_RECEIVABLES_ACCOUNT_CODE
+  DEFAULT_TRACKING_CATEGORY1
+  DEFAULT_TRACKING_CATEGORY2
+  DEFAULT_BRANDING_THEME_ID
+  DEFAULT_REFERENCE_PREFIX
 }
 
 enum ScalarSerializationType {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0ce4f9ba4a47e3f44f4e352634eef576>>
+ * @generated SignedSource<<b8bdb5a170bb6b2891f2f1f31094d440>>
  * @lightSyntaxTransform
  */
 
@@ -8,15 +8,17 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type UpdateCustomTagInput = {
+export type OrganizationTagPatchField = "COLOR" | "DESCRIPTION" | "NAME" | "%future added value";
+export type UpdateOrganizationTagInput = {
   clientMutationId?: string | null | undefined;
   color?: string | null | undefined;
   description?: string | null | undefined;
+  fieldsToUpdate: ReadonlyArray<OrganizationTagPatchField>;
   id: string;
-  name: string;
+  name?: string | null | undefined;
 };
 export type editOrganizationCustomTagDialog_updateCustomTagMutation$variables = {
-  input: UpdateCustomTagInput;
+  input: UpdateOrganizationTagInput;
 };
 export type editOrganizationCustomTagDialog_updateCustomTagMutation$data = {
   readonly updateCustomTag: {
@@ -128,16 +130,16 @@ return {
     "selections": (v1/*:: as any*/)
   },
   "params": {
-    "cacheID": "293f0e61e898e1f6950f770e35661c3e",
+    "cacheID": "78e50e1afebd5bedd17c3999aeb25361",
     "id": null,
     "metadata": {},
     "name": "editOrganizationCustomTagDialog_updateCustomTagMutation",
     "operationKind": "mutation",
-    "text": "mutation editOrganizationCustomTagDialog_updateCustomTagMutation(\n  $input: UpdateCustomTagInput!\n) {\n  updateCustomTag(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
+    "text": "mutation editOrganizationCustomTagDialog_updateCustomTagMutation(\n  $input: UpdateOrganizationTagInput!\n) {\n  updateCustomTag(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "02436d107bbbc57b385773bb56fde98a";
+(node as any).hash = "dfbb38fb7ce21164a14146b9e8bfe689";
 
 export default node;

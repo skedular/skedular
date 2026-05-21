@@ -9,6 +9,7 @@ using Flurl;
 using HotChocolate.Types.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using Organization.Api.Mappers;
+using Organization.Api.Models;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
@@ -32,7 +33,10 @@ public interface IOrganizationStripeConnectAccountService
         string redirectUrl,
         CancellationToken cancellationToken);
 
-    Task<OrganizationStripeConnectAccount> UpdateAsync(string id, string nickname, CancellationToken cancellationToken);
+    Task<OrganizationStripeConnectAccount> UpdatePatchAsync(
+        OrganizationStripeConnectAccountPatchRequest request,
+        CancellationToken cancellationToken);
+
     Task<OrganizationStripeConnectAccount> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<OrganizationStripeConnectAccount>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount> GetByIdAsync(string id, CancellationToken cancellationToken);
@@ -146,16 +150,17 @@ public class OrganizationStripeConnectAccountService(
         return mappedAccount;
     }
 
-    public async Task<OrganizationStripeConnectAccount> UpdateAsync(string id, string nickname, CancellationToken cancellationToken)
+    public async Task<OrganizationStripeConnectAccount> UpdatePatchAsync(
+        OrganizationStripeConnectAccountPatchRequest request,
+        CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
-        ArgumentException.ThrowIfNullOrWhiteSpace(nickname);
+        ValidatePatchRequest(request);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken) ??
+        var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(request.Id, cancellationToken) ??
                       throw new OrganizationStripeConnectAccountNotFound();
 
-        return await UpdateInternalAsync(nickname, account, customer, cancellationToken);
+        return await UpdateInternalAsync(request.Name!, account, customer, cancellationToken);
     }
 
     public async Task<OrganizationStripeConnectAccount> DeleteAsync(string id, CancellationToken cancellationToken)
@@ -457,6 +462,33 @@ public class OrganizationStripeConnectAccountService(
         await transaction.CommitAsync(cancellationToken);
 
         return mappedAccount;
+    }
+
+    private static void ValidatePatchRequest(OrganizationStripeConnectAccountPatchRequest request)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Id);
+
+        if (request.FieldsToUpdate.Count == 0)
+        {
+            throw new ArgumentException("Choose at least one organisation Stripe Connect account field to update.", nameof(request));
+        }
+
+        foreach (var field in request.FieldsToUpdate)
+        {
+            if (!Enum.IsDefined(field))
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(request),
+                    field,
+                    "This organisation Stripe Connect account patch field is not supported.");
+            }
+        }
+
+        if (!request.FieldsToUpdate.SetEquals([OrganizationStripeConnectAccountPatchField.Name]) ||
+            string.IsNullOrWhiteSpace(request.Name))
+        {
+            throw new ArgumentException("Organisation Stripe Connect account name is required.", nameof(request));
+        }
     }
 
     private async Task<Shared.Database.Entities.OrganizationStripeConnectAccount> ReSyncOnboardingCompletedStateAsync(

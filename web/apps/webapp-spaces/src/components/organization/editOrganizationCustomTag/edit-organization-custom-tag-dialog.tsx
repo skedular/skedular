@@ -43,6 +43,8 @@ type CustomTagDetails = {
   description: string | null | undefined;
 };
 
+type TagPatchField = 'NAME' | 'DESCRIPTION' | 'COLOR';
+
 const customTagSchema = object({
   name: string().required('Tag name is required'),
   description: string().nullable(),
@@ -51,8 +53,8 @@ const customTagSchema = object({
 const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const rootData = usePreloadedQuery<editOrganizationCustomTagDialog_rootQuery>(RootQuery, queryReference);
 
-  const [commitUpdateCustomTag] = useMutation<editOrganizationCustomTagDialog_updateCustomTagMutation>(graphql`
-    mutation editOrganizationCustomTagDialog_updateCustomTagMutation($input: UpdateCustomTagInput!) @raw_response_type {
+  const [commitUpdateCustomTagPatch] = useMutation<editOrganizationCustomTagDialog_updateCustomTagMutation>(graphql`
+    mutation editOrganizationCustomTagDialog_updateCustomTagMutation($input: UpdateOrganizationTagInput!) @raw_response_type {
       updateCustomTag(input: $input) {
         organizationTag {
           id
@@ -80,13 +82,28 @@ const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialog
     }
 
     const oldName = rootData.customTag.name;
+    const fieldsToUpdate: TagPatchField[] = [];
+    if (rootData.customTag.name !== name) {
+      fieldsToUpdate.push('NAME');
+    }
+    if (rootData.customTag.description !== description) {
+      fieldsToUpdate.push('DESCRIPTION');
+    }
+    if (rootData.customTag.color !== selectedColor) {
+      fieldsToUpdate.push('COLOR');
+    }
+    if (fieldsToUpdate.length === 0) {
+      onAddClicked();
+      return;
+    }
     const toastId = themedToast(<NotificationContent content={`Updating tag '${oldName}'...`} />, infoNotificationOptions);
 
-    commitUpdateCustomTag({
+    commitUpdateCustomTagPatch({
       variables: {
         input: {
           clientMutationId: uuid(),
           id: customTagId,
+          fieldsToUpdate,
           name,
           description,
           color: selectedColor,

@@ -1,8 +1,12 @@
 using Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Organization.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1;
+using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Grpc.Skedular.Organization.Core.V1;
+using Api.Shared.Grpc.Skedular.Organization.Tags.V1;
+using Api.Shared.Grpc.Skedular.Organization.Zones.V1;
 using Api.Shared.Services;
+using Api.Shared.Services.Configurations.Grpc;
 using Aspire.Hosting.Testing;
 using Enterprise.Shared;
 using Enterprise.Shared.Accounting;
@@ -51,13 +55,19 @@ public class Startup
         ArgumentNullException.ThrowIfNull(organizationApiClient.BaseAddress);
 
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
+        var organizationConfiguration = configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
+        ArgumentNullException.ThrowIfNull(organizationConfiguration);
         var organizationApiGrpcChannel = GrpcChannelFactory.Create(organizationApiGrpcEndpoint);
 
         services.TryAddSingleton(TimeProvider.System);
         services
+            .AddSingleton(organizationConfiguration)
             .AddKeyedSingleton("organization-api-grpc-channel", organizationApiGrpcChannel)
             .AddTestingSharedIntegrationTests()
-            .AddSingleton(_ => new OrganizationService.OrganizationServiceClient(organizationApiGrpcChannel));
+            .AddSingleton(_ => new OrganizationService.OrganizationServiceClient(organizationApiGrpcChannel))
+            .AddSingleton(_ => new OrganizationBillingService.OrganizationBillingServiceClient(organizationApiGrpcChannel))
+            .AddSingleton(_ => new OrganizationTagsService.OrganizationTagsServiceClient(organizationApiGrpcChannel))
+            .AddSingleton(_ => new OrganizationZonesService.OrganizationZonesServiceClient(organizationApiGrpcChannel));
 
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 
@@ -80,8 +90,14 @@ public class Startup
             .AddSingleton<IOrganizationGraphqlClient>(_ => new OrganizationGraphqlClient(organizationApiClient))
             .AddSingleton<IOrganizationWorkaroundClient>(_ => new OrganizationWorkaroundClient(organizationApiClient));
 
+        services.AddTransient<TestBearerTokenHandler>();
+
         services
             .AddSkedularGraphQLV1()
-            .ConfigureHttpClient(httpClient => httpClient.BaseAddress = organizationApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
+            .ConfigureHttpClient(
+                httpClient => httpClient.BaseAddress = organizationApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri(),
+                builder => builder.AddHttpMessageHandler<TestBearerTokenHandler>());
+
+        OrganizationIntegrationTestServices.Provider = services.BuildServiceProvider();
     }
 }

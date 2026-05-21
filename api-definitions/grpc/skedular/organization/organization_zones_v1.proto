@@ -73,11 +73,18 @@ message AddZoneInput {
   string color          = 5;
 }
 
+enum ZonePatchField {
+  ZonePatchField_Name        = 0;
+  ZonePatchField_Description = 1;
+  ZonePatchField_Color       = 2;
+}
+
 message UpdateZoneInput {
-  string id          = 1;
-  string name        = 2;
-  string description = 3;
-  string color       = 4;
+  string                  id             = 1;
+  repeated ZonePatchField fieldsToUpdate = 2;
+  string                  name           = 3;
+  string                  description    = 4;
+  string                  color          = 5;
 }
 
 message RemoveZoneInput {

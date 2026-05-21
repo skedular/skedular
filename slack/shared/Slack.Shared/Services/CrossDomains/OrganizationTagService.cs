@@ -83,7 +83,11 @@ public class OrganizationTagService(
             await organizationTagsServiceClient.UpdateTagAsync(
                 new UpdateTagInput
                 {
-                    Id = organizationTag.Id, Name = organizationTag.Name, Description = organizationTag.Description, Color = organizationTag.Color
+                    Id = organizationTag.Id,
+                    Name = organizationTag.Name,
+                    Description = organizationTag.Description,
+                    Color = organizationTag.Color,
+                    FieldsToUpdate = { TagPatchField.Name, TagPatchField.Description, TagPatchField.Color }
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));

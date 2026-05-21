@@ -24,7 +24,7 @@ public class OrganizationSsoSettingsRepository(OrganizationDbContext dbContext, 
     {
         var now = TimeProvider.GetUtcNow();
         organizationSsoSettings.CreatedAt = now;
-        DbContext.OrganizationSsoSettings.Update(organizationSsoSettings);
+        DbContext.OrganizationSsoSettings.Add(organizationSsoSettings);
     }
 
     public void Update(OrganizationSsoSettings organizationSsoSettings)

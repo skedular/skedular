@@ -1,7 +1,9 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
 using Organization.Api.Mappers;
+using Organization.Api.Models;
 using Organization.Api.Services;
 
 namespace Organization.Api.GraphQL.Tag;
@@ -22,13 +24,16 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
 
     [UseResolverScope]
     public async Task<OrganizationTagPayload> UpdateCustomTagAsync(
-        UpdateCustomTagInput input,
+        UpdateOrganizationTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationTag = graphQlMapper.MapTo(await tagService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
+            OrganizationTag = graphQlMapper.MapTo(await tagService.UpdatePatchAsync(
+                new OrganizationTagPatchRequest(input.Id, OrganizationTagType.Custom, input.FieldsToUpdate, input.Name, input.Description,
+                    input.Color),
+                cancellationToken))!
         };
 
     [UseResolverScope]
@@ -68,13 +73,15 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
 
     [UseResolverScope]
     public async Task<OrganizationTagPayload> UpdateZoneAsync(
-        UpdateZoneInput input,
+        UpdateOrganizationTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationTag = graphQlMapper.MapTo(await tagService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
+            OrganizationTag = graphQlMapper.MapTo(await tagService.UpdatePatchAsync(
+                new OrganizationTagPatchRequest(input.Id, OrganizationTagType.Zone, input.FieldsToUpdate, input.Name, input.Description, input.Color),
+                cancellationToken))!
         };
 
     [UseResolverScope]
@@ -114,13 +121,16 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
 
     [UseResolverScope]
     public async Task<OrganizationTagPayload> UpdateProductTagAsync(
-        UpdateProductTagInput input,
+        UpdateOrganizationTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationTag = graphQlMapper.MapTo(await tagService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
+            OrganizationTag = graphQlMapper.MapTo(await tagService.UpdatePatchAsync(
+                new OrganizationTagPatchRequest(input.Id, OrganizationTagType.Product, input.FieldsToUpdate, input.Name, input.Description,
+                    input.Color),
+                cancellationToken))!
         };
 
     [UseResolverScope]

@@ -1,6 +1,6 @@
 import { FormFieldLabel } from '@skedular/ui';
 import { TextField } from 'mui-rff';
-import { useMemo, type ReactNode } from 'react';
+import { useMemo, type ComponentProps, type ReactNode } from 'react';
 import { FormSpy } from 'react-final-form';
 import { object, string } from 'yup';
 
@@ -55,10 +55,12 @@ type Props = {
   labels?: Partial<Record<ListingMetadataFieldName, string>>;
   namePrefix?: string;
   onChange?: (value: ListingMetadataValue) => void;
+  onFieldBlur?: Partial<Record<ListingMetadataFieldName, () => void>>;
   requiredFields?: Partial<Record<ListingMetadataFieldName, boolean>>;
+  textFieldProps?: Partial<Record<ListingMetadataFieldName, ComponentProps<typeof TextField>>>;
 };
 
-const ListingMetadata = ({ fields = listingMetadataFieldNames, helperTexts, labels, namePrefix, onChange, requiredFields }: Props) => {
+const ListingMetadata = ({ fields = listingMetadataFieldNames, helperTexts, labels, namePrefix, onChange, onFieldBlur, requiredFields, textFieldProps }: Props) => {
   const visibleFields = useMemo(() => new Set(fields), [fields]);
   const resolvedLabels = { ...listingMetadataFieldLabels, ...labels };
 
@@ -82,19 +84,41 @@ const ListingMetadata = ({ fields = listingMetadataFieldNames, helperTexts, labe
 
       {visibleFields.has('about') ? (
         <FormFieldLabel label={resolvedLabels.about} required={requiredFields?.about}>
-          <TextField name={getListingMetadataFieldName('about', namePrefix)} required={requiredFields?.about} multiline rows={3} helperText={helperTexts?.about} />
+          <TextField
+            name={getListingMetadataFieldName('about', namePrefix)}
+            required={requiredFields?.about}
+            multiline
+            rows={3}
+            helperText={helperTexts?.about}
+            onBlur={onFieldBlur?.about}
+            {...textFieldProps?.about}
+          />
         </FormFieldLabel>
       ) : null}
 
       {visibleFields.has('title') ? (
         <FormFieldLabel label={resolvedLabels.title} required={requiredFields?.title}>
-          <TextField name={getListingMetadataFieldName('title', namePrefix)} required={requiredFields?.title} multiline rows={3} helperText={helperTexts?.title} />
+          <TextField
+            name={getListingMetadataFieldName('title', namePrefix)}
+            required={requiredFields?.title}
+            multiline
+            rows={3}
+            helperText={helperTexts?.title}
+            onBlur={onFieldBlur?.title}
+          />
         </FormFieldLabel>
       ) : null}
 
       {visibleFields.has('subTitle') ? (
         <FormFieldLabel label={resolvedLabels.subTitle} required={requiredFields?.subTitle}>
-          <TextField name={getListingMetadataFieldName('subTitle', namePrefix)} required={requiredFields?.subTitle} multiline rows={3} helperText={helperTexts?.subTitle} />
+          <TextField
+            name={getListingMetadataFieldName('subTitle', namePrefix)}
+            required={requiredFields?.subTitle}
+            multiline
+            rows={3}
+            helperText={helperTexts?.subTitle}
+            onBlur={onFieldBlur?.subTitle}
+          />
         </FormFieldLabel>
       ) : null}
 
@@ -106,6 +130,7 @@ const ListingMetadata = ({ fields = listingMetadataFieldNames, helperTexts, labe
             multiline
             rows={3}
             helperText={helperTexts?.includedFeatures}
+            onBlur={onFieldBlur?.includedFeatures}
           />
         </FormFieldLabel>
       ) : null}

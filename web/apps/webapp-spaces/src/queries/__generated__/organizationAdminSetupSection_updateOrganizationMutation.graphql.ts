@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<06983a2d7e7d9f782a9b3a8743c6c013>>
+ * @generated SignedSource<<07392eaad1c7ba56f133320d8cb66e6c>>
  * @lightSyntaxTransform
  */
 
@@ -9,22 +9,27 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%future added value";
+export type OrganizationPatchField = "BILLING_CYCLE" | "CONTACT_EMAIL" | "CONTACT_PHONE" | "CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL" | "CUSTOM_DOMAIN" | "DESCRIPTION" | "FEATURE_IMAGES" | "INDUSTRY_SUB_CATEGORIES" | "INVOICE_DUE_IN_DAYS" | "LOGO_URL" | "MARKETPLACE_LISTING_METADATA" | "NAME" | "PHYSICAL_ADDRESS" | "REFUND_NOTIFICATION_EMAILS" | "SUB_TITLE" | "TITLE" | "WEBSITE" | "%future added value";
 export type UpdateOrganizationInput = {
-  billingCycle: OrganizationBillingCycle;
+  billingCycle?: OrganizationBillingCycle | null | undefined;
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;
   customDomain?: string | null | undefined;
   customerFacingTermsAndConditionsUrl?: string | null | undefined;
+  description?: string | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
+  fieldsToUpdate: ReadonlyArray<OrganizationPatchField>;
   id?: string | null | undefined;
-  industrySubCategoryIds: ReadonlyArray<string>;
-  invoiceDueInDays: number;
-  listingMetadata?: ListingMetadataInput | null | undefined;
+  industrySubCategoryIds?: ReadonlyArray<string> | null | undefined;
+  invoiceDueInDays?: number | null | undefined;
   logoUrl?: string | null | undefined;
   marketplaceListingMetadata?: ListingMetadataInput | null | undefined;
-  name: string;
-  refundNotificationEmails: ReadonlyArray<string>;
+  name?: string | null | undefined;
+  physicalAddress?: OrganizationPhysicalAddressPatchInput | null | undefined;
+  refundNotificationEmails?: ReadonlyArray<string> | null | undefined;
+  subTitle?: string | null | undefined;
+  title?: string | null | undefined;
   website?: string | null | undefined;
 };
 export type CdnImageFileInput = {
@@ -41,6 +46,22 @@ export type ListingMetadataInput = {
   includedFeatures?: ReadonlyArray<string> | null | undefined;
   subTitle?: string | null | undefined;
   title?: string | null | undefined;
+};
+export type OrganizationPhysicalAddressPatchInput = {
+  addressLine1: string;
+  addressLine2?: string | null | undefined;
+  city?: string | null | undefined;
+  country: string;
+  countryCode?: string | null | undefined;
+  formattedAddress?: string | null | undefined;
+  latitude?: number | null | undefined;
+  longitude?: number | null | undefined;
+  osmId?: string | null | undefined;
+  osmType?: string | null | undefined;
+  placeId?: string | null | undefined;
+  province?: string | null | undefined;
+  suburb?: string | null | undefined;
+  zipcode: string;
 };
 export type organizationAdminSetupSection_updateOrganizationMutation$variables = {
   input: UpdateOrganizationInput;
@@ -92,55 +113,7 @@ export type organizationAdminSetupSection_updateOrganizationMutation$data = {
     };
   };
 };
-export type organizationAdminSetupSection_updateOrganizationMutation$rawResponse = {
-  readonly updateOrganization: {
-    readonly organization: {
-      readonly billingCycle: {
-        readonly name: string;
-        readonly type: OrganizationBillingCycle;
-      };
-      readonly contactEmail: string | null | undefined;
-      readonly contactPhone: string | null | undefined;
-      readonly customDomain: string | null | undefined;
-      readonly customerFacingTermsAndConditionsUrl: string | null | undefined;
-      readonly featureImages: ReadonlyArray<{
-        readonly original: {
-          readonly height: number | null | undefined;
-          readonly url: string;
-          readonly width: number | null | undefined;
-        } | null | undefined;
-        readonly thumbnail: {
-          readonly height: number | null | undefined;
-          readonly url: string;
-          readonly width: number | null | undefined;
-        } | null | undefined;
-      }>;
-      readonly id: string;
-      readonly industrySubCategories: ReadonlyArray<{
-        readonly id: string;
-        readonly name: string;
-      }>;
-      readonly invoiceDueInDays: number;
-      readonly listingMetadata: {
-        readonly about: string | null | undefined;
-        readonly subTitle: string | null | undefined;
-        readonly title: string | null | undefined;
-      };
-      readonly logoUrl: string | null | undefined;
-      readonly marketplaceListingMetadata: {
-        readonly about: string | null | undefined;
-        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
-        readonly subTitle: string | null | undefined;
-        readonly title: string | null | undefined;
-      };
-      readonly name: string;
-      readonly refundNotificationEmails: ReadonlyArray<string>;
-      readonly website: string | null | undefined;
-    };
-  };
-};
 export type organizationAdminSetupSection_updateOrganizationMutation = {
-  rawResponse: organizationAdminSetupSection_updateOrganizationMutation$rawResponse;
   response: organizationAdminSetupSection_updateOrganizationMutation$data;
   variables: organizationAdminSetupSection_updateOrganizationMutation$variables;
 };
@@ -425,6 +398,6 @@ return {
 };
 })();
 
-(node as any).hash = "788ab11eaf4769c152e070bf95b0606c";
+(node as any).hash = "8956f93381325e646f2e4032c2e49438";
 
 export default node;

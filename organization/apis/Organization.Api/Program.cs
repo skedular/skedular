@@ -2,14 +2,17 @@ using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Cache;
+using Enterprise.Shared.Context;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Payment;
 using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Sso;
+using Enterprise.Shared.Security.Token;
 using Enterprise.Shared.Temporal;
 using Organization.Api.Grpc;
+using Organization.Api.Services;
 using Organization.Shared;
 using Organization.Shared.Database;
 
@@ -50,6 +53,12 @@ public class Program
             .AddStripe(configuration)
             .AddTemporalClient(configuration, "temporal")
             .AddGrpc();
+
+        if (DomainAppHostEnvironmentVariables.IsFakeDependenciesEnabled())
+        {
+            services.AddSingleton<IEnumerable<ITokenService>>(sp =>
+                [new FakeTokenService(sp.GetRequiredService<IContext>())]);
+        }
 
         var app = builder
             .Build()

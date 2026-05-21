@@ -36,7 +36,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         {
             ClientMutationId = input.ClientMutationId,
             OrganizationStripeConnectAccount =
-                graphQlMapper.MapTo(await organizationStripeConnectAccountService.UpdateAsync(input.Id, input.Name, cancellationToken))!
+                graphQlMapper.MapTo(await organizationStripeConnectAccountService.UpdatePatchAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]

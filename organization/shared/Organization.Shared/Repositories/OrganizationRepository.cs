@@ -17,6 +17,7 @@ namespace Organization.Shared.Repositories;
 public interface IOrganizationRepository : IRepository<Database.Entities.Organization>
 {
     Task<Database.Entities.Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
+    Task<Database.Entities.Organization?> GetByIdOrCustomDomainUntrackedAsync(string? id, string? customDomain, CancellationToken cancellationToken);
     Task<Database.Entities.Organization?> GetPublicByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<Database.Entities.Organization>> GetByIdsOrCustomDomainsAsync(
@@ -159,6 +160,30 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         {
             return await DbContext.Organization
                 .AddDependentObjects(true, false)
+                .FirstOrDefaultAsync(
+                    query => query.CustomDomain != null && query.CustomDomain == customDomain,
+                    cancellationToken);
+        }
+
+        throw new OrganizationLookupRequiresIdOrCustomDomainException();
+    }
+
+    public async Task<Database.Entities.Organization?> GetByIdOrCustomDomainUntrackedAsync(
+        string? id,
+        string? customDomain,
+        CancellationToken cancellationToken)
+    {
+        if (!string.IsNullOrWhiteSpace(id))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects(false, false)
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+        }
+
+        if (!string.IsNullOrWhiteSpace(customDomain))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects(false, false)
                 .FirstOrDefaultAsync(
                     query => query.CustomDomain != null && query.CustomDomain == customDomain,
                     cancellationToken);

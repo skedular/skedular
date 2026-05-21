@@ -12,8 +12,10 @@ using Enterprise.Shared.Random;
 using Flurl;
 using Microsoft.AspNetCore.Mvc;
 using Organization.Api.Mappers;
+using Organization.Api.Models;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
+using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
@@ -35,7 +37,7 @@ public interface IOrganizationXeroConnectionService
         DateTimeOffset refreshTokenExpiresAt,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Organization> UpdateAsync(OrganizationXeroConnection xeroConnection, CancellationToken cancellationToken);
+    Task<Shared.Models.Organization> UpdatePatchAsync(OrganizationXeroConnectionPatchRequest request, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> RemoveAsync(string? organizationId, string? organizationCustomDomain, CancellationToken cancellationToken);
 }
 
@@ -52,6 +54,7 @@ public class OrganizationXeroConnectionService(
     ICachedOrganizationService cachedOrganizationService,
     ITemporalOutboxService temporalOutboxService,
     IGraphQlMapper graphQlMapper,
+    IOrganizationOutboxPublisher organizationOutboxPublisher,
     IDbTransactionBuilder transactionBuilder,
     IRandomHelper randomHelper,
     TimeProvider timeProvider) : IOrganizationXeroConnectionService
@@ -156,6 +159,7 @@ public class OrganizationXeroConnectionService(
                     organization.Id,
                     xeroTokenRefreshService.GetNextMaintenanceAt(organization.OrganizationXeroConnection.RefreshTokenExpiresAt!.Value)),
                 repositoryFactory.UnitOfWork);
+            PublishOrganization(organization);
 
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
@@ -180,6 +184,7 @@ public class OrganizationXeroConnectionService(
                 organization.Id,
                 xeroTokenRefreshService.GetNextMaintenanceAt(organization.OrganizationXeroConnection.RefreshTokenExpiresAt!.Value)),
             repositoryFactory.UnitOfWork);
+        PublishOrganization(organization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -224,6 +229,7 @@ public class OrganizationXeroConnectionService(
                 organization.Id,
                 xeroTokenRefreshService.GetNextMaintenanceAt(refreshTokenExpiresAt)),
             repositoryFactory.UnitOfWork);
+        PublishOrganization(organization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -256,16 +262,16 @@ public class OrganizationXeroConnectionService(
         };
     }
 
-    public async Task<Shared.Models.Organization> UpdateAsync(OrganizationXeroConnection xeroConnection, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> UpdatePatchAsync(
+        OrganizationXeroConnectionPatchRequest request,
+        CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(xeroConnection.Organization);
-
-        ValidateBillingMode(xeroConnection.BillingMode);
+        ValidatePatchRequest(request);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                               xeroConnection.Organization.Id,
-                               xeroConnection.Organization.CustomDomain,
+                               request.OrganizationId,
+                               request.OrganizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken))
@@ -275,59 +281,49 @@ public class OrganizationXeroConnectionService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        if (organization.OrganizationXeroConnection is null)
+        var xeroConnection = organization.OrganizationXeroConnection;
+        var created = xeroConnection is null;
+        if (xeroConnection is null)
         {
-            xeroConnection.Id = randomHelper.Generate();
-            organization.OrganizationXeroConnection =
-                repositoryFactory.OrganizationXeroConnectionRepository.Add(graphQlMapper.MapToEntity(xeroConnection, organization));
-        }
-        else
-        {
-            if (!string.IsNullOrWhiteSpace(organization.OrganizationXeroConnection.RefreshTokenEncrypted) &&
-                !string.IsNullOrWhiteSpace(organization.OrganizationXeroConnection.TenantId) &&
-                !string.Equals(organization.OrganizationXeroConnection.TenantId, xeroConnection.TenantId,
-                    StringComparison.InvariantCultureIgnoreCase))
+            xeroConnection = new Shared.Database.Entities.OrganizationXeroConnection
             {
-                throw new XeroTenantReconnectRequiredException();
-            }
-
-            xeroConnection.Id = organization.OrganizationXeroConnection.Id;
-            organization.OrganizationXeroConnection = repositoryFactory.OrganizationXeroConnectionRepository.Update(
-                graphQlMapper.MergeToEntity(xeroConnection, organization.OrganizationXeroConnection, organization));
+                Id = randomHelper.Generate(),
+                Organization = organization,
+                BillingMode = XeroBillingModeConstants.Disabled,
+                SendInvoicesViaXero = true,
+                AutoReconcilePayments = true
+            };
         }
 
-        if (organization.OrganizationXeroConnection is not null &&
-            organization.OrganizationXeroConnection.IsActive &&
-            string.IsNullOrWhiteSpace(organization.OrganizationXeroConnection.RefreshTokenEncrypted))
+        if (!ApplyPatch(request, xeroConnection))
         {
-            throw new XeroActivationRequiresConnectionException();
+            return graphQlMapper.MapTo(
+                organization,
+                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
         }
 
-        if (organization.OrganizationXeroConnection is not null &&
-            organization.OrganizationXeroConnection.IsActive &&
-            string.IsNullOrWhiteSpace(organization.OrganizationXeroConnection.TenantId))
+        ValidateConnectionState(xeroConnection);
+        if (!string.IsNullOrWhiteSpace(xeroConnection.TenantId) &&
+            !string.IsNullOrWhiteSpace(xeroConnection.RefreshTokenEncrypted))
         {
-            throw new XeroActivationRequiresTenantSelectionException();
+            await ValidateTenantSelectionAsync(xeroConnection, xeroConnection.TenantId, cancellationToken);
         }
 
-        if (organization.OrganizationXeroConnection is not null &&
-            !string.IsNullOrWhiteSpace(organization.OrganizationXeroConnection.TenantId) &&
-            !string.IsNullOrWhiteSpace(organization.OrganizationXeroConnection.RefreshTokenEncrypted))
-        {
-            await ValidateTenantSelectionAsync(organization.OrganizationXeroConnection, organization.OrganizationXeroConnection.TenantId,
-                cancellationToken);
-        }
+        organization.OrganizationXeroConnection = created
+            ? repositoryFactory.OrganizationXeroConnectionRepository.Add(xeroConnection)
+            : repositoryFactory.OrganizationXeroConnectionRepository.Update(xeroConnection);
 
-        if (organization.OrganizationXeroConnection is not null &&
-            !string.IsNullOrWhiteSpace(organization.OrganizationXeroConnection.RefreshTokenEncrypted) &&
-            organization.OrganizationXeroConnection.RefreshTokenExpiresAt is not null)
+        if (!string.IsNullOrWhiteSpace(xeroConnection.RefreshTokenEncrypted) &&
+            xeroConnection.RefreshTokenExpiresAt is not null)
         {
             temporalOutboxService.StartWorkflowMaintainOrganizationXeroConnection(
                 new MaintainOrganizationXeroConnectionInput(
                     organization.Id,
-                    xeroTokenRefreshService.GetNextMaintenanceAt(organization.OrganizationXeroConnection.RefreshTokenExpiresAt.Value)),
+                    xeroTokenRefreshService.GetNextMaintenanceAt(xeroConnection.RefreshTokenExpiresAt.Value)),
                 repositoryFactory.UnitOfWork);
         }
+
+        PublishOrganization(organization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -365,6 +361,7 @@ public class OrganizationXeroConnectionService(
 
         _ = repositoryFactory.OrganizationXeroConnectionRepository.Remove(organization.OrganizationXeroConnection);
         organization.OrganizationXeroConnection = null;
+        PublishOrganization(organization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -381,6 +378,137 @@ public class OrganizationXeroConnectionService(
         {
             throw new UnsupportedXeroBillingModeException(billingMode.ToString());
         }
+    }
+
+    private void PublishOrganization(Shared.Database.Entities.Organization organization) =>
+        organizationOutboxPublisher.PublishOrganizations(
+            [graphQlMapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+            repositoryFactory.UnitOfWork);
+
+    private static void ValidatePatchRequest(OrganizationXeroConnectionPatchRequest request)
+    {
+        if (request.FieldsToUpdate.Count == 0)
+        {
+            throw new ArgumentException("Choose at least one organisation Xero connection field to update.", nameof(request));
+        }
+
+        foreach (var field in request.FieldsToUpdate)
+        {
+            if (!Enum.IsDefined(field))
+            {
+                throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation Xero connection patch field is not supported.");
+            }
+
+            if (field == OrganizationXeroConnectionPatchField.BillingMode)
+            {
+                if (request.BillingMode is null)
+                {
+                    throw new ArgumentException("Organisation Xero billing mode is required.", nameof(request));
+                }
+
+                ValidateBillingMode(request.BillingMode.Value);
+            }
+
+            if (field is OrganizationXeroConnectionPatchField.IsActive or
+                    OrganizationXeroConnectionPatchField.SendInvoicesViaXero or
+                    OrganizationXeroConnectionPatchField.AutoReconcilePayments &&
+                GetBooleanValue(request, field) is null)
+            {
+                throw new ArgumentException("Selected organisation Xero connection patch fields are required.", nameof(request));
+            }
+        }
+    }
+
+    private static bool ApplyPatch(
+        OrganizationXeroConnectionPatchRequest request,
+        Shared.Database.Entities.OrganizationXeroConnection xeroConnection)
+    {
+        var changed = false;
+        foreach (var field in request.FieldsToUpdate)
+        {
+            if (field == OrganizationXeroConnectionPatchField.TenantId &&
+                !string.IsNullOrWhiteSpace(xeroConnection.RefreshTokenEncrypted) &&
+                !string.IsNullOrWhiteSpace(xeroConnection.TenantId) &&
+                !string.Equals(xeroConnection.TenantId, request.TenantId, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new XeroTenantReconnectRequiredException();
+            }
+
+            changed = field switch
+            {
+                OrganizationXeroConnectionPatchField.TenantId => ApplyValue(request.TenantId ?? string.Empty, xeroConnection.TenantId,
+                    value => xeroConnection.TenantId = value) || changed,
+                OrganizationXeroConnectionPatchField.TenantName => ApplyValue(request.TenantName ?? string.Empty, xeroConnection.TenantName,
+                    value => xeroConnection.TenantName = value) || changed,
+                OrganizationXeroConnectionPatchField.BillingMode =>
+                    ApplyValue(request.BillingMode!.Value.ToOrganizationXeroBillingMode(), xeroConnection.BillingMode,
+                        value => xeroConnection.BillingMode = value) || changed,
+                OrganizationXeroConnectionPatchField.Scopes => ApplyValue(request.Scopes, xeroConnection.Scopes,
+                    value => xeroConnection.Scopes = value) || changed,
+                OrganizationXeroConnectionPatchField.IsActive => ApplyValue(request.IsActive!.Value, xeroConnection.IsActive,
+                    value => xeroConnection.IsActive = value) || changed,
+                OrganizationXeroConnectionPatchField.SendInvoicesViaXero =>
+                    ApplyValue(request.SendInvoicesViaXero!.Value, xeroConnection.SendInvoicesViaXero,
+                        value => xeroConnection.SendInvoicesViaXero = value) || changed,
+                OrganizationXeroConnectionPatchField.AutoReconcilePayments =>
+                    ApplyValue(request.AutoReconcilePayments!.Value, xeroConnection.AutoReconcilePayments,
+                        value => xeroConnection.AutoReconcilePayments = value) || changed,
+                OrganizationXeroConnectionPatchField.DefaultSalesAccountCode =>
+                    ApplyValue(request.DefaultSalesAccountCode, xeroConnection.DefaultSalesAccountCode,
+                        value => xeroConnection.DefaultSalesAccountCode = value) || changed,
+                OrganizationXeroConnectionPatchField.DefaultReceivablesAccountCode =>
+                    ApplyValue(request.DefaultReceivablesAccountCode, xeroConnection.DefaultReceivablesAccountCode,
+                        value => xeroConnection.DefaultReceivablesAccountCode = value) || changed,
+                OrganizationXeroConnectionPatchField.DefaultTrackingCategory1 =>
+                    ApplyValue(request.DefaultTrackingCategory1, xeroConnection.DefaultTrackingCategory1,
+                        value => xeroConnection.DefaultTrackingCategory1 = value) || changed,
+                OrganizationXeroConnectionPatchField.DefaultTrackingCategory2 =>
+                    ApplyValue(request.DefaultTrackingCategory2, xeroConnection.DefaultTrackingCategory2,
+                        value => xeroConnection.DefaultTrackingCategory2 = value) || changed,
+                OrganizationXeroConnectionPatchField.DefaultBrandingThemeId =>
+                    ApplyValue(request.DefaultBrandingThemeId, xeroConnection.DefaultBrandingThemeId,
+                        value => xeroConnection.DefaultBrandingThemeId = value) || changed,
+                OrganizationXeroConnectionPatchField.DefaultReferencePrefix =>
+                    ApplyValue(request.DefaultReferencePrefix, xeroConnection.DefaultReferencePrefix,
+                        value => xeroConnection.DefaultReferencePrefix = value) || changed,
+                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation Xero connection patch field is not supported.")
+            };
+        }
+
+        return changed;
+    }
+
+    private static void ValidateConnectionState(Shared.Database.Entities.OrganizationXeroConnection xeroConnection)
+    {
+        if (xeroConnection.IsActive && string.IsNullOrWhiteSpace(xeroConnection.RefreshTokenEncrypted))
+        {
+            throw new XeroActivationRequiresConnectionException();
+        }
+
+        if (xeroConnection.IsActive && string.IsNullOrWhiteSpace(xeroConnection.TenantId))
+        {
+            throw new XeroActivationRequiresTenantSelectionException();
+        }
+    }
+
+    private static bool? GetBooleanValue(OrganizationXeroConnectionPatchRequest request, OrganizationXeroConnectionPatchField field) =>
+        field switch
+        {
+            OrganizationXeroConnectionPatchField.IsActive => request.IsActive,
+            OrganizationXeroConnectionPatchField.SendInvoicesViaXero => request.SendInvoicesViaXero,
+            OrganizationXeroConnectionPatchField.AutoReconcilePayments => request.AutoReconcilePayments,
+            _ => null
+        };
+
+    private static bool ApplyValue<T>(T value, T currentValue, Action<T> apply)
+    {
+        if (EqualityComparer<T>.Default.Equals(value, currentValue))
+        {
+            return false;
+        }
+
+        apply(value);
+        return true;
     }
 
     private Uri BuildMarketplaceSetupUri(string organizationCustomDomain, IReadOnlyList<XeroTenantOption>? tenantOptions = null,

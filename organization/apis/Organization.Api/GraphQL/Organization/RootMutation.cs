@@ -23,12 +23,11 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     public async Task<OrganizationPayload> UpdateOrganizationAsync(
         UpdateOrganizationInput input,
         [Service] IOrganizationService organizationService,
-        CancellationToken cancellationToken) =>
-        new()
-        {
-            ClientMutationId = input.ClientMutationId,
-            Organization = graphQlMapper.MapTo(await organizationService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
-        };
+        CancellationToken cancellationToken)
+    {
+        var result = await organizationService.UpdatePatchAsync(graphQlMapper.MapTo(input), cancellationToken);
+        return new OrganizationPayload { ClientMutationId = input.ClientMutationId, Organization = graphQlMapper.MapTo(result.Organization)! };
+    }
 
     [UseResolverScope]
     public async Task<OrganizationPayload> DeleteOrganizationAsync(
@@ -39,38 +38,5 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         {
             ClientMutationId = input.ClientMutationId,
             Organization = graphQlMapper.MapTo(await organizationService.DeleteAsync(input.Id, input.CustomDomain, cancellationToken))!
-        };
-
-    [UseResolverScope]
-    public async Task<OrganizationPayload> UpdateOrganizationMarketplaceListingMetadataAsync(
-        UpdateOrganizationMarketplaceListingMetadataInput input,
-        [Service] IOrganizationService organizationService,
-        CancellationToken cancellationToken) =>
-        new()
-        {
-            ClientMutationId = input.ClientMutationId,
-            Organization = graphQlMapper.MapTo(
-                await organizationService.UpdateMarketplaceListingMetadataAsync(
-                    input.Id,
-                    input.CustomDomain,
-                    input.MarketplaceListingMetadata,
-                    cancellationToken))!
-        };
-
-    [UseResolverScope]
-    public async Task<OrganizationPayload> UpdateOrganizationBillingSettingsAsync(
-        UpdateOrganizationBillingSettingsInput input,
-        [Service] IOrganizationService organizationService,
-        CancellationToken cancellationToken) =>
-        new()
-        {
-            ClientMutationId = input.ClientMutationId,
-            Organization = graphQlMapper.MapTo(
-                await organizationService.UpdateOrganizationBillingSettingsAsync(
-                    input.Id,
-                    input.CustomDomain,
-                    input.BillingCycle,
-                    input.InvoiceDueInDays,
-                    cancellationToken))!
         };
 }

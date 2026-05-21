@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<305c2e3f8471aa9c94153f59673bd554>>
+ * @generated SignedSource<<3d48363f9936ef2026bcdf930a6b6780>>
  * @lightSyntaxTransform
  */
 
@@ -8,15 +8,16 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationBankAccountPatchField = "ACCOUNT_HOLDER_NAME" | "ACCOUNT_NUMBER" | "BANK_NAME" | "COUNTRY" | "NAME" | "%future added value";
 export type UpdateOrganizationBankAccountInput = {
-  accountHolderName: string;
-  accountNumber: string;
-  bankName: string;
+  accountHolderName?: string | null | undefined;
+  accountNumber?: string | null | undefined;
+  bankName?: string | null | undefined;
   clientMutationId?: string | null | undefined;
-  country: string;
-  countryCode?: string | null | undefined;
+  country?: string | null | undefined;
+  fieldsToUpdate: ReadonlyArray<OrganizationBankAccountPatchField>;
   id: string;
-  name: string;
+  name?: string | null | undefined;
 };
 export type editBankAccount_updateOrganizationBankAccountMutation$variables = {
   input: UpdateOrganizationBankAccountInput;

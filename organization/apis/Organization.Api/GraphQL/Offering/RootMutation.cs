@@ -1,6 +1,7 @@
 using Api.Shared.Services.Offering;
 using HotChocolate;
 using HotChocolate.Types;
+using Organization.Api.Models;
 using Organization.Api.Services;
 
 namespace Organization.Api.GraphQL.Offering;
@@ -14,11 +15,12 @@ public class RootMutation
         [Service] IOrganizationOfferingService organizationOfferingService,
         CancellationToken cancellationToken)
     {
-        await organizationOfferingService.UpdateOfferingAsync(
-            input.OrganizationId,
-            input.OrganizationCustomDomain,
-            input.OfferingCode.ToOfferingCode(),
-            false,
+        await organizationOfferingService.UpdateOfferingPatchAsync(
+            new OrganizationOfferingPatchRequest(
+                input.OrganizationId,
+                input.OrganizationCustomDomain,
+                input.FieldsToUpdate,
+                string.IsNullOrWhiteSpace(input.OfferingCode) ? null : input.OfferingCode.ToOfferingCode()),
             cancellationToken);
         return new UpdateOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
     }

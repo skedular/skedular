@@ -171,7 +171,7 @@ public class OrganizationBillingGrpcService(
     public override async Task<BillingDetails> UpdateBillingDetails(UpdateBillingDetailsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
-        var organization = await organizationBillingService.UpdateAsync(grpcMapper.MapTo(request), context.CancellationToken);
+        var organization = await organizationBillingService.UpdatePatchAsync(grpcMapper.MapTo(request), context.CancellationToken);
 
         return grpcMapper.MapToGrpcResponse(organization.BillingDetails);
     }

@@ -43,6 +43,8 @@ type ProductTagDetails = {
   description: string | null | undefined;
 };
 
+type TagPatchField = 'NAME' | 'DESCRIPTION' | 'COLOR';
+
 const productTagSchema = object({
   name: string().required('Tag name is required'),
   description: string().nullable(),
@@ -51,8 +53,8 @@ const productTagSchema = object({
 const EditOrganizationProductTagDialog = ({ queryReference, productTagId, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const rootData = usePreloadedQuery<editOrganizationProductTagDialog_rootQuery>(RootQuery, queryReference);
 
-  const [commitUpdateProductTag] = useMutation<editOrganizationProductTagDialog_updateProductTagMutation>(graphql`
-    mutation editOrganizationProductTagDialog_updateProductTagMutation($input: UpdateProductTagInput!) @raw_response_type {
+  const [commitUpdateProductTagPatch] = useMutation<editOrganizationProductTagDialog_updateProductTagMutation>(graphql`
+    mutation editOrganizationProductTagDialog_updateProductTagMutation($input: UpdateOrganizationTagInput!) @raw_response_type {
       updateProductTag(input: $input) {
         organizationTag {
           id
@@ -80,13 +82,28 @@ const EditOrganizationProductTagDialog = ({ queryReference, productTagId, isDial
     }
 
     const oldName = rootData.productTag.name;
+    const fieldsToUpdate: TagPatchField[] = [];
+    if (rootData.productTag.name !== name) {
+      fieldsToUpdate.push('NAME');
+    }
+    if (rootData.productTag.description !== description) {
+      fieldsToUpdate.push('DESCRIPTION');
+    }
+    if (rootData.productTag.color !== selectedColor) {
+      fieldsToUpdate.push('COLOR');
+    }
+    if (fieldsToUpdate.length === 0) {
+      onAddClicked();
+      return;
+    }
     const toastId = themedToast(<NotificationContent content={`Updating product tag '${oldName}'...`} />, infoNotificationOptions);
 
-    commitUpdateProductTag({
+    commitUpdateProductTagPatch({
       variables: {
         input: {
           clientMutationId: uuid(),
           id: productTagId,
+          fieldsToUpdate,
           name,
           description,
           color: selectedColor,

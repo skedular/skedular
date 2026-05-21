@@ -5,6 +5,7 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
 using Organization.Api.Mappers;
+using Organization.Api.Models;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
@@ -17,7 +18,7 @@ public interface ITagService
 {
     Task<Tag> GetByIdAsync(string tagId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Tag> AddAsync(Tag tag, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
-    Task<Tag> UpdateAsync(Tag tag, CancellationToken cancellationToken);
+    Task<Tag> UpdatePatchAsync(OrganizationTagPatchRequest request, CancellationToken cancellationToken);
     Task<Tag> DeleteAsync(string tagId, CancellationToken cancellationToken);
     Task<IReadOnlyList<Tag>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
 
@@ -137,14 +138,55 @@ public class TagService(
         return tag;
     }
 
-    public async Task<Tag> UpdateAsync(Tag tag, CancellationToken cancellationToken)
+    public async Task<Tag> UpdatePatchAsync(OrganizationTagPatchRequest request, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(tag.Id);
+        ValidatePatchRequest(request);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingTag = await repositoryFactory.TagRepository.GetByIdAsync(tag.Id, cancellationToken) ?? throw new OrganizationTagNotFound();
+        var existingTag = await repositoryFactory.TagRepository.GetByIdAsync(request.Id, cancellationToken) ?? throw new OrganizationTagNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
+                                       existingTag.Organization.Id,
+                                       null,
+                                       cancellationToken) ??
+                                   throw new OrganizationNotFound();
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
+        {
+            throw new UnauthorizedAccessException();
+        }
 
-        return await UpdateInternalAsync(tag, existingTag, customer, cancellationToken);
+        var existingType = existingTag.Type.ToOrganizationTagType();
+        if (existingType != request.Type)
+        {
+            throw new OrganizationTagNotFound();
+        }
+
+        if (request.FieldsToUpdate.Contains(OrganizationTagPatchField.Name) && existingTag.Name != request.Name)
+        {
+            await ValidateNameAsync(request.Id, request.Type, request.Name!, existingOrganization.Id, cancellationToken);
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        if (!ApplyPatch(request, existingTag))
+        {
+            return graphQlMapper.MapTo(existingTag);
+        }
+
+        var tag = graphQlMapper.MapTo(repositoryFactory.TagRepository.Update(existingTag));
+
+        organizationOutboxPublisher.PublishOrganizations(
+        [
+            graphQlMapper.MapTo(
+                existingOrganization,
+                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))
+        ], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        await cachedTagService.UpdateByIdAsync(tag.Id, cancellationToken);
+
+        return tag;
     }
 
     public async Task<Tag> DeleteAsync(string tagId, CancellationToken cancellationToken)
@@ -282,26 +324,7 @@ public class TagService(
             throw new UnauthorizedAccessException();
         }
 
-        var tagId = tag.Id;
-        var tagName = tag.Name;
-        var tagType = tag.Type.ToOrganizationTagType();
-        var organizationId = existingTag.Organization.Id;
-        var matchingTagFound = await repositoryFactory.TagRepository
-            .ExistsActiveWithNameAsync(organizationId, tagType, tagName, tagId, cancellationToken);
-        if (matchingTagFound)
-        {
-            if (tag.Type == OrganizationTagType.Custom)
-            {
-                throw new CustomTagWithSameNameExist();
-            }
-
-            if (tag.Type == OrganizationTagType.Zone)
-            {
-                throw new ZoneWithSameNameExist();
-            }
-
-            throw new OrganizationTagWithSameNameExist();
-        }
+        await ValidateNameAsync(tag.Id, tag.Type, tag.Name, existingTag.Organization.Id, cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -320,5 +343,84 @@ public class TagService(
         await cachedTagService.UpdateByIdAsync(tag.Id, cancellationToken);
 
         return tag;
+    }
+
+    private async Task ValidateNameAsync(
+        string tagId,
+        OrganizationTagType tagType,
+        string tagName,
+        string organizationId,
+        CancellationToken cancellationToken)
+    {
+        var matchingTagFound = await repositoryFactory.TagRepository
+            .ExistsActiveWithNameAsync(organizationId, tagType.ToOrganizationTagType(), tagName, tagId, cancellationToken);
+        if (!matchingTagFound)
+        {
+            return;
+        }
+
+        if (tagType == OrganizationTagType.Custom)
+        {
+            throw new CustomTagWithSameNameExist();
+        }
+
+        if (tagType == OrganizationTagType.Zone)
+        {
+            throw new ZoneWithSameNameExist();
+        }
+
+        throw new OrganizationTagWithSameNameExist();
+    }
+
+    private static void ValidatePatchRequest(OrganizationTagPatchRequest request)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Id);
+
+        if (request.FieldsToUpdate.Count == 0)
+        {
+            throw new ArgumentException("Choose at least one organisation tag field to update.", nameof(request));
+        }
+
+        foreach (var field in request.FieldsToUpdate)
+        {
+            if (!Enum.IsDefined(field))
+            {
+                throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation tag patch field is not supported.");
+            }
+        }
+
+        if (request.FieldsToUpdate.Contains(OrganizationTagPatchField.Name) && string.IsNullOrWhiteSpace(request.Name))
+        {
+            throw new ArgumentException("Organisation tag name is required.", nameof(request));
+        }
+    }
+
+    private static bool ApplyPatch(OrganizationTagPatchRequest request, Shared.Database.Entities.Tag tag)
+    {
+        var changed = false;
+        foreach (var field in request.FieldsToUpdate)
+        {
+            changed = field switch
+            {
+                OrganizationTagPatchField.Name => ApplyValue(request.Name!, tag.Name, value => tag.Name = value) || changed,
+                OrganizationTagPatchField.Description => ApplyValue(request.Description, tag.Description, value => tag.Description = value) ||
+                                                         changed,
+                OrganizationTagPatchField.Color => ApplyValue(request.Color, tag.Color, value => tag.Color = value) || changed,
+                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation tag patch field is not supported.")
+            };
+        }
+
+        return changed;
+    }
+
+    private static bool ApplyValue<T>(T value, T currentValue, Action<T> apply)
+    {
+        if (EqualityComparer<T>.Default.Equals(value, currentValue))
+        {
+            return false;
+        }
+
+        apply(value);
+        return true;
     }
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<df281b1b16772ae7105bd9e2c7b318e7>>
+ * @generated SignedSource<<c2475a59e970fb48a38007a30fd74796>>
  * @lightSyntaxTransform
  */
 
@@ -8,15 +8,17 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type UpdateProductTagInput = {
+export type OrganizationTagPatchField = "COLOR" | "DESCRIPTION" | "NAME" | "%future added value";
+export type UpdateOrganizationTagInput = {
   clientMutationId?: string | null | undefined;
   color?: string | null | undefined;
   description?: string | null | undefined;
+  fieldsToUpdate: ReadonlyArray<OrganizationTagPatchField>;
   id: string;
-  name: string;
+  name?: string | null | undefined;
 };
 export type editOrganizationProductTagDialog_updateProductTagMutation$variables = {
-  input: UpdateProductTagInput;
+  input: UpdateOrganizationTagInput;
 };
 export type editOrganizationProductTagDialog_updateProductTagMutation$data = {
   readonly updateProductTag: {
@@ -128,16 +130,16 @@ return {
     "selections": (v1/*:: as any*/)
   },
   "params": {
-    "cacheID": "c3a98dc52f0b7db5ec155c2c3a975c15",
+    "cacheID": "4d22a25f3435b0e0153b57a58b44bb7e",
     "id": null,
     "metadata": {},
     "name": "editOrganizationProductTagDialog_updateProductTagMutation",
     "operationKind": "mutation",
-    "text": "mutation editOrganizationProductTagDialog_updateProductTagMutation(\n  $input: UpdateProductTagInput!\n) {\n  updateProductTag(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
+    "text": "mutation editOrganizationProductTagDialog_updateProductTagMutation(\n  $input: UpdateOrganizationTagInput!\n) {\n  updateProductTag(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3f1a52b4ff4c8e8d6978c29608b31bf6";
+(node as any).hash = "94cedd6632e8db3edfbeb75aa9c0057e";
 
 export default node;

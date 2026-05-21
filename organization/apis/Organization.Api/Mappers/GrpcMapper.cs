@@ -7,6 +7,7 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
+using Organization.Api.Models;
 using Organization.Shared.Models;
 using AddZoneInput = Api.Shared.Grpc.Skedular.Organization.Zones.V1.AddZoneInput;
 using BankAccount = Api.Shared.Grpc.Skedular.Organization.Billing.V1.BankAccount;
@@ -19,7 +20,6 @@ using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using OrganizationMember = Organization.Shared.Models.OrganizationMember;
 using OrganizationMemberStatus = Api.Shared.Services.Models.OrganizationMemberStatus;
 using Tag = Organization.Shared.Models.Tag;
-using UpdateZoneInput = Api.Shared.Grpc.Skedular.Organization.Zones.V1.UpdateZoneInput;
 using Member = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMember;
 using Offering = Api.Shared.Grpc.Skedular.Organization.Core.V1.Offering;
 using OrganizationBillingCycle = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationBillingCycle;
@@ -45,22 +45,20 @@ public interface IGrpcMapper
     CustomTag MapToGrpcResponseCustomTag(Tag src);
     CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src);
     Tag MapTo(AddCustomTagInput src);
-    Tag MapTo(UpdateCustomTagInput src);
+    OrganizationTagPatchRequest MapTo(UpdateTagInput src, OrganizationTagType type);
     Zone MapToGrpcResponseZone(Tag src);
     ZoneEdge MapToGrpcResponseZone(Edge<Tag> src);
     Tag MapTo(AddZoneInput src);
-    Tag MapTo(UpdateZoneInput src);
+    OrganizationTagPatchRequest MapTo(UpdateZoneInput src);
     ProductTag MapToGrpcResponseProductTag(Tag src);
     ProductTagEdge MapToGrpcResponseProductTag(Edge<Tag> src);
     Tag MapTo(AddProductTagInput src);
-    Tag MapTo(UpdateProductTagInput src);
     BillingDetails MapToGrpcResponse(OrganizationBillingDetails? src);
     StripeConnectAccountEdge MapToGrpcResponse(Edge<OrganizationStripeConnectAccount> src);
     BankAccountEdge MapToGrpcResponse(Edge<OrganizationBankAccount> src);
     Tag MapTo(AddTagInput src);
-    Tag MapTo(UpdateTagInput src);
     OrganizationBillingDetails MapTo(AddBillingDetailsInput src);
-    OrganizationBillingDetails MapTo(UpdateBillingDetailsInput src);
+    OrganizationBillingDetailsPatchRequest MapTo(UpdateBillingDetailsInput src);
 }
 
 public class GrpcMapper : IGrpcMapper
@@ -224,15 +222,8 @@ public class GrpcMapper : IGrpcMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public Tag MapTo(UpdateCustomTagInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Description = src.Description.ToSafeString(),
-            Type = OrganizationTagType.Custom,
-            Color = src.Color
-        };
+    public OrganizationTagPatchRequest MapTo(UpdateTagInput src, OrganizationTagType type) =>
+        new(src.Id, type, src.FieldsToUpdate.Select(MapTo).ToHashSet(), src.Name, src.Description, src.Color);
 
     public Zone MapToGrpcResponseZone(Tag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
@@ -250,8 +241,8 @@ public class GrpcMapper : IGrpcMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public Tag MapTo(UpdateZoneInput src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Type = OrganizationTagType.Zone };
+    public OrganizationTagPatchRequest MapTo(UpdateZoneInput src) =>
+        new(src.Id, OrganizationTagType.Zone, src.FieldsToUpdate.Select(MapTo).ToHashSet(), src.Name, src.Description, src.Color);
 
     public ProductTag MapToGrpcResponseProductTag(Tag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
@@ -269,16 +260,6 @@ public class GrpcMapper : IGrpcMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public Tag MapTo(UpdateProductTagInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Description = src.Description.ToSafeString(),
-            Type = OrganizationTagType.Product,
-            Color = src.Color
-        };
-
     public BillingDetails MapToGrpcResponse(OrganizationBillingDetails? src) =>
         src is null
             ? new BillingDetails { Id = string.Empty }
@@ -290,11 +271,11 @@ public class GrpcMapper : IGrpcMapper
                 AddressLine1 = src.AddressLine1,
                 AddressLine2 = src.AddressLine2.ToSafeString(),
                 Suburb = src.Suburb.ToSafeString(),
-                City = src.City,
+                City = src.City.ToSafeString(),
                 Province = src.Province.ToSafeString(),
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode,
+                CountryCode = src.CountryCode.ToSafeString(),
                 FormattedAddress = src.ToFormattedAddress(),
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),
@@ -319,16 +300,6 @@ public class GrpcMapper : IGrpcMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public Tag MapTo(UpdateTagInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Description = src.Description.ToSafeString(),
-            Type = src.Type.ToOrganizationTagType(),
-            Color = src.Color
-        };
-
     public OrganizationBillingDetails MapTo(AddBillingDetailsInput src) =>
         new()
         {
@@ -346,20 +317,53 @@ public class GrpcMapper : IGrpcMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public OrganizationBillingDetails MapTo(UpdateBillingDetailsInput src) =>
-        new()
+    public OrganizationBillingDetailsPatchRequest MapTo(UpdateBillingDetailsInput src) =>
+        new(
+            src.OrganizationId,
+            src.OrganizationCustomDomain,
+            src.FieldsToUpdate.Select(MapTo).ToHashSet(),
+            src.CompanyName,
+            src.Email,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            src.AddressLine1,
+            src.AddressLine2,
+            src.Suburb,
+            src.City,
+            src.Province,
+            src.Zipcode,
+            src.Country,
+            src.CountryCode);
+
+    private static OrganizationTagPatchField MapTo(TagPatchField src) =>
+        src switch
         {
-            Id = src.Id.ToSafeString(),
-            CompanyName = src.CompanyName,
-            Email = src.Email,
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country,
-            CountryCode = src.CountryCode
+            TagPatchField.Name => OrganizationTagPatchField.Name,
+            TagPatchField.Description => OrganizationTagPatchField.Description,
+            TagPatchField.Color => OrganizationTagPatchField.Color,
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src, "This organisation tag gRPC patch field is not supported.")
+        };
+
+    private static OrganizationTagPatchField MapTo(ZonePatchField src) =>
+        src switch
+        {
+            ZonePatchField.Name => OrganizationTagPatchField.Name,
+            ZonePatchField.Description => OrganizationTagPatchField.Description,
+            ZonePatchField.Color => OrganizationTagPatchField.Color,
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src, "This organisation zone gRPC patch field is not supported.")
+        };
+
+    private static OrganizationBillingDetailsPatchField MapTo(BillingDetailsPatchField src) =>
+        src switch
+        {
+            BillingDetailsPatchField.CompanyName => OrganizationBillingDetailsPatchField.CompanyName,
+            BillingDetailsPatchField.Email => OrganizationBillingDetailsPatchField.Email,
+            BillingDetailsPatchField.BillingAddress => OrganizationBillingDetailsPatchField.BillingAddress,
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src, "This organisation billing details gRPC patch field is not supported.")
         };
 
     private static IEnumerable<global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>

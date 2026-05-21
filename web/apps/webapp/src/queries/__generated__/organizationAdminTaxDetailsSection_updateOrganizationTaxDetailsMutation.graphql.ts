@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<68310ff187dda89d20f9cdf1f2a331e7>>
+ * @generated SignedSource<<6cda2dbb95e2aba73684feffc4a74943>>
  * @lightSyntaxTransform
  */
 
@@ -8,12 +8,14 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationTaxDetailsPatchField = "TAX_ID" | "TAX_RATE_PERCENTAGE" | "%future added value";
 export type UpdateOrganizationTaxDetailsInput = {
   clientMutationId?: string | null | undefined;
+  fieldsToUpdate: ReadonlyArray<OrganizationTaxDetailsPatchField>;
   organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
-  taxId: string;
-  taxRatePercentage: any;
+  taxId?: string | null | undefined;
+  taxRatePercentage?: any | null | undefined;
 };
 export type organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation$variables = {
   input: UpdateOrganizationTaxDetailsInput;

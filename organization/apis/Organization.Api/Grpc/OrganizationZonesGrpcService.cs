@@ -84,7 +84,7 @@ public class OrganizationZonesGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return grpcMapper.MapToGrpcResponseZone(await tagService.UpdateAsync(grpcMapper.MapTo(request), context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseZone(await tagService.UpdatePatchAsync(grpcMapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<Zone> RemoveZone(RemoveZoneInput request, ServerCallContext context)

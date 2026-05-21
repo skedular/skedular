@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<77d47fff81fd04abca75624254221147>>
+ * @generated SignedSource<<da9102f3d193ba0a1c8548366a844853>>
  * @lightSyntaxTransform
  */
 
@@ -9,9 +9,10 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type OrganizationXeroBillingMode = "DISABLED" | "ENABLED" | "REPEATING_INVOICES" | "%future added value";
+export type OrganizationXeroConnectionPatchField = "AUTO_RECONCILE_PAYMENTS" | "BILLING_MODE" | "DEFAULT_BRANDING_THEME_ID" | "DEFAULT_RECEIVABLES_ACCOUNT_CODE" | "DEFAULT_REFERENCE_PREFIX" | "DEFAULT_SALES_ACCOUNT_CODE" | "DEFAULT_TRACKING_CATEGORY1" | "DEFAULT_TRACKING_CATEGORY2" | "IS_ACTIVE" | "SCOPES" | "SEND_INVOICES_VIA_XERO" | "TENANT_ID" | "TENANT_NAME" | "%future added value";
 export type UpdateOrganizationXeroConnectionInput = {
-  autoReconcilePayments: boolean;
-  billingMode: OrganizationXeroBillingMode;
+  autoReconcilePayments?: boolean | null | undefined;
+  billingMode?: OrganizationXeroBillingMode | null | undefined;
   clientMutationId?: string | null | undefined;
   defaultBrandingThemeId?: string | null | undefined;
   defaultReceivablesAccountCode?: string | null | undefined;
@@ -19,13 +20,14 @@ export type UpdateOrganizationXeroConnectionInput = {
   defaultSalesAccountCode?: string | null | undefined;
   defaultTrackingCategory1?: string | null | undefined;
   defaultTrackingCategory2?: string | null | undefined;
-  isActive: boolean;
+  fieldsToUpdate: ReadonlyArray<OrganizationXeroConnectionPatchField>;
+  isActive?: boolean | null | undefined;
   organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
   scopes?: string | null | undefined;
-  sendInvoicesViaXero: boolean;
-  tenantId: string;
-  tenantName: string;
+  sendInvoicesViaXero?: boolean | null | undefined;
+  tenantId?: string | null | undefined;
+  tenantName?: string | null | undefined;
 };
 export type organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation$variables = {
   input: UpdateOrganizationXeroConnectionInput;

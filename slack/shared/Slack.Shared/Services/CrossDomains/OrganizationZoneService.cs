@@ -80,7 +80,8 @@ public class OrganizationZoneService(
                     Id = organizationZone.Id,
                     Name = organizationZone.Name,
                     Description = organizationZone.Description,
-                    Color = organizationZone.Color
+                    Color = organizationZone.Color,
+                    FieldsToUpdate = { ZonePatchField.Name, ZonePatchField.Description, ZonePatchField.Color }
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));

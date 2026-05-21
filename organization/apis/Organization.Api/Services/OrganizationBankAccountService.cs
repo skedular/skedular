@@ -4,8 +4,10 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
 using Organization.Api.Mappers;
+using Organization.Api.Models;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
+using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services.Cache;
 
@@ -14,7 +16,7 @@ namespace Organization.Api.Services;
 public interface IOrganizationBankAccountService
 {
     Task<OrganizationBankAccount> AddAsync(OrganizationBankAccount organizationBankAccount, CancellationToken cancellationToken);
-    Task<OrganizationBankAccount> UpdateAsync(OrganizationBankAccount organizationBankAccount, CancellationToken cancellationToken);
+    Task<OrganizationBankAccount> UpdatePatchAsync(OrganizationBankAccountPatchRequest request, CancellationToken cancellationToken);
     Task<OrganizationBankAccount> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<OrganizationBankAccount>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<OrganizationBankAccount> SetAsDefaultAsync(string id, CancellationToken cancellationToken);
@@ -35,7 +37,9 @@ public class OrganizationBankAccountService(
     ICustomerService customerService,
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    IGraphQlMapper graphQlMapper) : IOrganizationBankAccountService
+    IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+    IGraphQlMapper graphQlMapper,
+    IOrganizationOutboxPublisher organizationOutboxPublisher) : IOrganizationBankAccountService
 {
     public async Task<OrganizationBankAccount> AddAsync(OrganizationBankAccount organizationBankAccount, CancellationToken cancellationToken)
     {
@@ -72,22 +76,45 @@ public class OrganizationBankAccountService(
         var mappedResource =
             graphQlMapper.MapTo(
                 repositoryFactory.OrganizationBankAccountRepository.Add(graphQlMapper.MapTo(organizationBankAccount, existingOrganization)));
+        PublishOrganization(existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return mappedResource;
     }
 
-    public async Task<OrganizationBankAccount> UpdateAsync(OrganizationBankAccount organizationBankAccount, CancellationToken cancellationToken)
+    public async Task<OrganizationBankAccount> UpdatePatchAsync(OrganizationBankAccountPatchRequest request, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationBankAccount.Id);
+        ValidatePatchRequest(request);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingOrganizationBankAccount =
-            await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(organizationBankAccount.Id, cancellationToken) ??
+            await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(request.Id, cancellationToken) ??
             throw new OrganizationBankAccountNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
+                                       existingOrganizationBankAccount.Organization.Id,
+                                       existingOrganizationBankAccount.Organization.CustomDomain,
+                                       cancellationToken) ??
+                                   throw new OrganizationNotFound();
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
+        {
+            throw new UnauthorizedAccessException();
+        }
 
-        return await UpdateInternalAsync(organizationBankAccount, existingOrganizationBankAccount, customer, cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        if (!ApplyPatch(request, existingOrganizationBankAccount))
+        {
+            return graphQlMapper.MapTo(existingOrganizationBankAccount);
+        }
+
+        var organizationBankAccount =
+            graphQlMapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Update(existingOrganizationBankAccount));
+        PublishOrganization(existingOrganization);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        return organizationBankAccount;
     }
 
     public async Task<OrganizationBankAccount> DeleteAsync(string id, CancellationToken cancellationToken)
@@ -110,6 +137,7 @@ public class OrganizationBankAccountService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var deletedResource = graphQlMapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Remove(existingOrganizationBankAccount));
+        PublishOrganization(existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -144,6 +172,7 @@ public class OrganizationBankAccountService(
         repositoryFactory.OrganizationBankAccountRepository.RemoveRange(resources);
 
         var deletedOrganizationBankAccounts = resources.Select(graphQlMapper.MapTo).ToList();
+        PublishOrganizations(existingOrganizations);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -179,6 +208,7 @@ public class OrganizationBankAccountService(
         existingOrganizationBankAccount.IsDefault = true;
         var organizationBankAccount =
             graphQlMapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Update(existingOrganizationBankAccount));
+        PublishOrganization(existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -260,9 +290,90 @@ public class OrganizationBankAccountService(
         existingOrganizationBankAccount = graphQlMapper.MergeTo(organizationBankAccount, existingOrganizationBankAccount, existingOrganization);
 
         organizationBankAccount = graphQlMapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Update(existingOrganizationBankAccount));
+        PublishOrganization(existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return organizationBankAccount;
+    }
+
+    private void PublishOrganization(Shared.Database.Entities.Organization organization) =>
+        organizationOutboxPublisher.PublishOrganizations(
+            [graphQlMapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+            repositoryFactory.UnitOfWork);
+
+    private void PublishOrganizations(IEnumerable<Shared.Database.Entities.Organization> organizations) =>
+        organizationOutboxPublisher.PublishOrganizations(
+            organizations.Select(organization =>
+                graphQlMapper.MapTo(organization,
+                    organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))).ToList(),
+            repositoryFactory.UnitOfWork);
+
+    private static void ValidatePatchRequest(OrganizationBankAccountPatchRequest request)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Id);
+
+        if (request.FieldsToUpdate.Count == 0)
+        {
+            throw new ArgumentException("Choose at least one organisation bank account field to update.", nameof(request));
+        }
+
+        foreach (var field in request.FieldsToUpdate)
+        {
+            if (!Enum.IsDefined(field))
+            {
+                throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation bank account patch field is not supported.");
+            }
+
+            var value = field switch
+            {
+                OrganizationBankAccountPatchField.Name => request.Name,
+                OrganizationBankAccountPatchField.BankName => request.BankName,
+                OrganizationBankAccountPatchField.AccountHolderName => request.AccountHolderName,
+                OrganizationBankAccountPatchField.AccountNumber => request.AccountNumber,
+                OrganizationBankAccountPatchField.Country => request.Country,
+                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation bank account patch field is not supported.")
+            };
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException("Selected organisation bank account patch fields are required.", nameof(request));
+            }
+        }
+    }
+
+    private static bool ApplyPatch(
+        OrganizationBankAccountPatchRequest request,
+        Shared.Database.Entities.OrganizationBankAccount bankAccount)
+    {
+        var changed = false;
+        foreach (var field in request.FieldsToUpdate)
+        {
+            changed = field switch
+            {
+                OrganizationBankAccountPatchField.Name => ApplyValue(request.Name!, bankAccount.Name, value => bankAccount.Name = value) || changed,
+                OrganizationBankAccountPatchField.BankName => ApplyValue(request.BankName!, bankAccount.BankName,
+                    value => bankAccount.BankName = value) || changed,
+                OrganizationBankAccountPatchField.AccountHolderName => ApplyValue(request.AccountHolderName!, bankAccount.AccountHolderName,
+                    value => bankAccount.AccountHolderName = value) || changed,
+                OrganizationBankAccountPatchField.AccountNumber => ApplyValue(request.AccountNumber!, bankAccount.AccountNumber,
+                    value => bankAccount.AccountNumber = value) || changed,
+                OrganizationBankAccountPatchField.Country =>
+                    ApplyValue(request.Country!, bankAccount.Country, value => bankAccount.Country = value) || changed,
+                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation bank account patch field is not supported.")
+            };
+        }
+
+        return changed;
+    }
+
+    private static bool ApplyValue(string value, string currentValue, Action<string> apply)
+    {
+        if (value == currentValue)
+        {
+            return false;
+        }
+
+        apply(value);
+        return true;
     }
 }

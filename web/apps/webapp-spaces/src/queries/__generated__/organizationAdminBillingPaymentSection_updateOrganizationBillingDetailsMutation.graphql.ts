@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b28fab182816a08e6021031bb5d1147d>>
+ * @generated SignedSource<<883648de7dda99deb974a813653d9c6d>>
  * @lightSyntaxTransform
  */
 
@@ -8,25 +8,28 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationBillingDetailsPatchField = "BILLING_ADDRESS" | "COMPANY_NAME" | "EMAIL" | "%future added value";
 export type UpdateOrganizationBillingDetailsInput = {
-  addressLine1: string;
+  addressLine1?: string | null | undefined;
   addressLine2?: string | null | undefined;
   city?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   companyName?: string | null | undefined;
-  country: string;
+  country?: string | null | undefined;
   countryCode?: string | null | undefined;
-  email: string;
+  email?: string | null | undefined;
+  fieldsToUpdate: ReadonlyArray<OrganizationBillingDetailsPatchField>;
   formattedAddress?: string | null | undefined;
-  id: string;
   latitude?: number | null | undefined;
   longitude?: number | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
+  organizationId?: string | null | undefined;
   osmId?: string | null | undefined;
   osmType?: string | null | undefined;
   placeId?: string | null | undefined;
   province?: string | null | undefined;
   suburb?: string | null | undefined;
-  zipcode: string;
+  zipcode?: string | null | undefined;
 };
 export type organizationAdminBillingPaymentSection_updateOrganizationBillingDetailsMutation$variables = {
   input: UpdateOrganizationBillingDetailsInput;

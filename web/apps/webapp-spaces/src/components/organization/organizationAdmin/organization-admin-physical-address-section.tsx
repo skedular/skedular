@@ -1,19 +1,17 @@
 import { Address, PhysicalAddress } from '@/components/address';
 import { FormStackColumn, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { physicalAddressSchema, PhysicalAddressDetails } from '@/components/organization/organizationAdmin/organization-admin-shared';
-import { keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationAdminPhysicalAddressSectionQuery } from '@/queries/__generated__/organizationAdminPhysicalAddressSectionQuery.graphql';
-import type { organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation } from '@/queries/__generated__/organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation.graphql';
-import type { organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation } from '@/queries/__generated__/organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation.graphql';
+import type { organizationAdminPhysicalAddressSection_updateOrganizationMutation } from '@/queries/__generated__/organizationAdminPhysicalAddressSection_updateOrganizationMutation.graphql';
 import Box from '@mui/material/Box';
-import { EditorActionBar, SettingsSectionCard } from '@skedular/ui';
+import { SettingsSectionCard } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate } from 'mui-rff';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -29,6 +27,17 @@ type InnerProps = {
   organizationCustomDomain: string;
   queryReference: PreloadedQuery<organizationAdminPhysicalAddressSectionQuery>;
 };
+
+const inlinePatchDebounceTimeout = 1000;
+
+const arePhysicalAddressValuesEqual = (left: PhysicalAddressDetails, right: PhysicalAddressDetails) =>
+  left.addressLine1 === right.addressLine1 &&
+  left.addressLine2 === right.addressLine2 &&
+  left.suburb === right.suburb &&
+  left.city === right.city &&
+  left.province === right.province &&
+  left.zipcode === right.zipcode &&
+  left.countryCode === right.countryCode;
 
 const RootQuery = graphql`
   query organizationAdminPhysicalAddressSectionQuery($organizationCustomDomain: String!) {
@@ -58,35 +67,9 @@ const RootQuery = graphql`
 
 const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDomain, queryReference }: InnerProps) => {
   const rootData = usePreloadedQuery<organizationAdminPhysicalAddressSectionQuery>(RootQuery, queryReference);
-  const [commitAddOrganizationPhysicalAddress] = useMutation<organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation>(graphql`
-    mutation organizationAdminPhysicalAddressSection_addOrganizationPhysicalAddressMutation($input: AddOrganizationPhysicalAddressInput!) @raw_response_type {
-      addOrganizationPhysicalAddress(input: $input) {
-        organization {
-          id
-          physicalAddress {
-            id
-            osmType
-            osmId
-            placeId
-            longitude
-            latitude
-            formattedAddress
-            addressLine1
-            addressLine2
-            suburb
-            city
-            province
-            zipcode
-            country
-            countryCode
-          }
-        }
-      }
-    }
-  `);
-  const [commitUpdateOrganizationPhysicalAddress] = useMutation<organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation>(graphql`
-    mutation organizationAdminPhysicalAddressSection_updateOrganizationPhysicalAddressMutation($input: UpdateOrganizationPhysicalAddressInput!) @raw_response_type {
-      updateOrganizationPhysicalAddress(input: $input) {
+  const [commitUpdateOrganizationPatch] = useMutation<organizationAdminPhysicalAddressSection_updateOrganizationMutation>(graphql`
+    mutation organizationAdminPhysicalAddressSection_updateOrganizationMutation($input: UpdateOrganizationInput!) @raw_response_type {
+      updateOrganization(input: $input) {
         organization {
           id
           physicalAddress {
@@ -127,25 +110,20 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
   const [physicalAddressLongitude, setPhysicalAddressLongitude] = useState(organization?.physicalAddress?.longitude);
   const [physicalAddressLatitude, setPhysicalAddressLatitude] = useState(organization?.physicalAddress?.latitude);
   const [physicalAddressFormattedAddress, setPhysicalAddressFormattedAddress] = useState(organization?.physicalAddress?.formattedAddress);
-  const [physicalAddressAddressLine1, setPhysicalAddressAddressLine1] = useState<string>(organization?.physicalAddress?.addressLine1 ?? '');
-  const debounceSetPhysicalAddressAddressLine1 = useDebounceCallback(setPhysicalAddressAddressLine1, keyboardTextFieldDebounceTimeout);
-  const [physicalAddressAddressLine2, setPhysicalAddressAddressLine2] = useState(organization?.physicalAddress?.addressLine2);
-  const debounceSetPhysicalAddressAddressLine2 = useDebounceCallback(setPhysicalAddressAddressLine2, keyboardTextFieldDebounceTimeout);
-  const [physicalAddressSuburb, setPhysicalAddressSuburb] = useState(organization?.physicalAddress?.suburb);
-  const debounceSetPhysicalAddressSuburb = useDebounceCallback(setPhysicalAddressSuburb, keyboardTextFieldDebounceTimeout);
-  const [physicalAddressCity, setPhysicalAddressCity] = useState(organization?.physicalAddress?.city);
-  const debounceSetPhysicalAddressCity = useDebounceCallback(setPhysicalAddressCity, keyboardTextFieldDebounceTimeout);
-  const [physicalAddressProvince, setPhysicalAddressProvince] = useState(organization?.physicalAddress?.province);
-  const debounceSetPhysicalAddressProvince = useDebounceCallback(setPhysicalAddressProvince, keyboardTextFieldDebounceTimeout);
-  const [physicalAddressZipcode, setPhysicalAddressZipcode] = useState<string>(organization?.physicalAddress?.zipcode ?? '');
-  const debounceSetPhysicalAddressZipcode = useDebounceCallback(setPhysicalAddressZipcode, keyboardTextFieldDebounceTimeout);
   const [physicalAddressCountry, setPhysicalAddressCountry] = useState<string>(organization?.physicalAddress?.country ?? '');
-  const [physicalAddressCountryCode, setPhysicalAddressCountryCode] = useState<string>(organization?.physicalAddress?.countryCode ?? '');
-  const debounceSetPhysicalAddressCountryCode = useDebounceCallback(setPhysicalAddressCountryCode, keyboardTextFieldDebounceTimeout);
-
-  if (!organization) {
-    return null;
-  }
+  const initialPhysicalAddressValues = useMemo<PhysicalAddressDetails>(
+    () => ({
+      addressLine1: organization?.physicalAddress?.addressLine1 ?? '',
+      addressLine2: organization?.physicalAddress?.addressLine2 ?? null,
+      suburb: organization?.physicalAddress?.suburb ?? null,
+      city: organization?.physicalAddress?.city ?? null,
+      province: organization?.physicalAddress?.province ?? null,
+      zipcode: organization?.physicalAddress?.zipcode ?? '',
+      countryCode: organization?.physicalAddress?.countryCode ?? '',
+    }),
+    [organization],
+  );
+  const draftPhysicalAddressValues = useRef(initialPhysicalAddressValues);
 
   const handlePhysicalAddressSelect = (address: Address) => {
     setPhysicalAddressOsmType(address.osmType);
@@ -154,76 +132,63 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
     setPhysicalAddressLongitude(address.longitude);
     setPhysicalAddressLatitude(address.latitude);
     setPhysicalAddressFormattedAddress(address.formattedAddress);
-    setPhysicalAddressAddressLine1(address.addressLine1 ?? '');
-    setPhysicalAddressAddressLine2(address.addressLine2 ?? '');
-    setPhysicalAddressSuburb(address.suburb ?? '');
-    setPhysicalAddressCity(address.city ?? '');
-    setPhysicalAddressProvince(address.province ?? '');
-    setPhysicalAddressZipcode(address.zipcode ?? '');
     setPhysicalAddressCountry(address.country ?? '');
-    setPhysicalAddressCountryCode(address.countryCode ?? '');
   };
 
-  const handlePhysicalAddressUpdateClick = ({ addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: PhysicalAddressDetails) => {
-    const countryData = getCountryData(countryCode as TCountryCode);
-    let country = physicalAddressCountry;
-    if (countryData) {
-      country = countryData.name;
-    }
+  const commitPhysicalAddressPatch = useCallback(
+    ({ addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: PhysicalAddressDetails) => {
+      if (!organization || !physicalAddressSchema.isValidSync({ addressLine1, addressLine2, suburb, city, province, zipcode, countryCode })) {
+        return;
+      }
 
-    const physicalAddress = organization.physicalAddress;
+      const countryData = getCountryData(countryCode as TCountryCode);
+      let country = physicalAddressCountry;
+      if (countryData) {
+        country = countryData.name;
+      }
 
-    if (physicalAddress) {
-      const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' physical address...`} />, infoNotificationOptions);
-
-      commitUpdateOrganizationPhysicalAddress({
+      const physicalAddressId = organization.physicalAddress?.id ?? uuid();
+      commitUpdateOrganizationPatch({
         variables: {
           input: {
             clientMutationId: uuid(),
-            id: physicalAddress.id,
-            osmType: physicalAddressOsmType,
-            osmId: physicalAddressOsmId,
-            placeId: physicalAddressPlaceId,
-            longitude: physicalAddressLongitude,
-            latitude: physicalAddressLatitude,
-            formattedAddress: physicalAddressFormattedAddress,
-            addressLine1,
-            addressLine2,
-            suburb,
-            city,
-            province,
-            zipcode,
-            country,
-            countryCode,
+            customDomain: organizationCustomDomain,
+            fieldsToUpdate: ['PHYSICAL_ADDRESS'],
+            physicalAddress: {
+              osmType: physicalAddressOsmType,
+              osmId: physicalAddressOsmId,
+              placeId: physicalAddressPlaceId,
+              longitude: physicalAddressLongitude,
+              latitude: physicalAddressLatitude,
+              formattedAddress: physicalAddressFormattedAddress,
+              addressLine1,
+              addressLine2,
+              suburb,
+              city,
+              province,
+              zipcode,
+              country,
+              countryCode,
+            },
           },
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to update organization '${organization.name}' physical address. Error: ${getRelayErrorMessage(errors)}.`} />,
-            });
-
-            return;
+            themedToast(
+              <NotificationContent content={`Failed to save organization '${organization.name}' physical address. Error: ${getRelayErrorMessage(errors)}.`} />,
+              errorNotificationOptions,
+            );
           }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`Organization '${organization.name}' physical address updated.`} />,
-          });
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization.name}' physical address. Error: ${error.message}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to save organization '${organization.name}' physical address. Error: ${error.message}.`} />, errorNotificationOptions);
         },
         optimisticResponse: {
-          updateOrganizationPhysicalAddress: {
+          updateOrganization: {
             organization: {
               id: organization.id,
               physicalAddress: {
-                id: physicalAddress.id,
+                id: physicalAddressId,
                 osmType: physicalAddressOsmType,
                 osmId: physicalAddressOsmId,
                 placeId: physicalAddressPlaceId,
@@ -243,106 +208,39 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
           },
         },
       });
+    },
+    [
+      commitUpdateOrganizationPatch,
+      organization,
+      organizationCustomDomain,
+      physicalAddressCountry,
+      physicalAddressFormattedAddress,
+      physicalAddressLatitude,
+      physicalAddressLongitude,
+      physicalAddressOsmId,
+      physicalAddressOsmType,
+      physicalAddressPlaceId,
+      themedToast,
+    ],
+  );
+  const debouncedCommitPhysicalAddressPatch = useDebounceCallback(commitPhysicalAddressPatch, inlinePatchDebounceTimeout);
 
-      return;
-    }
-
-    const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding organization '${organization.name}' physical address...`} />, infoNotificationOptions);
-
-    commitAddOrganizationPhysicalAddress({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          organizationCustomDomain,
-          id,
-          osmType: physicalAddressOsmType,
-          osmId: physicalAddressOsmId,
-          placeId: physicalAddressPlaceId,
-          longitude: physicalAddressLongitude,
-          latitude: physicalAddressLatitude,
-          formattedAddress: physicalAddressFormattedAddress,
-          addressLine1,
-          addressLine2,
-          suburb,
-          city,
-          province,
-          zipcode,
-          country,
-          countryCode,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add organization '${organization.name}' physical address. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Organization '${organization.name}' physical address added.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add organization '${organization.name}' physical address. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        addOrganizationPhysicalAddress: {
-          organization: {
-            id: organization.id,
-            physicalAddress: {
-              id,
-              osmType: physicalAddressOsmType,
-              osmId: physicalAddressOsmId,
-              placeId: physicalAddressPlaceId,
-              longitude: physicalAddressLongitude,
-              latitude: physicalAddressLatitude,
-              formattedAddress: physicalAddressFormattedAddress,
-              addressLine1,
-              addressLine2,
-              suburb,
-              city,
-              province,
-              zipcode,
-              country,
-              countryCode,
-            },
-          },
-        },
-      },
-    });
-  };
+  if (!organization) {
+    return null;
+  }
 
   return (
-    <Form
-      onSubmit={handlePhysicalAddressUpdateClick}
-      initialValues={{
-        addressLine1: physicalAddressAddressLine1,
-        addressLine2: physicalAddressAddressLine2,
-        suburb: physicalAddressSuburb,
-        city: physicalAddressCity,
-        province: physicalAddressProvince,
-        zipcode: physicalAddressZipcode,
-        countryCode: physicalAddressCountryCode,
-      }}
+    <Form<PhysicalAddressDetails>
+      onSubmit={() => undefined}
+      initialValues={initialPhysicalAddressValues}
       validate={validatePhysicalAddress}
       render={({ handleSubmit, values, form }) => {
-        const formValues = values!;
+        const formValues = values as PhysicalAddressDetails;
 
-        debounceSetPhysicalAddressAddressLine1(formValues.addressLine1);
-        debounceSetPhysicalAddressAddressLine2(formValues.addressLine2);
-        debounceSetPhysicalAddressSuburb(formValues.suburb);
-        debounceSetPhysicalAddressCity(formValues.city);
-        debounceSetPhysicalAddressProvince(formValues.province);
-        debounceSetPhysicalAddressZipcode(formValues.zipcode);
-        debounceSetPhysicalAddressCountryCode(formValues.countryCode);
+        if (!arePhysicalAddressValuesEqual(draftPhysicalAddressValues.current, formValues)) {
+          draftPhysicalAddressValues.current = formValues;
+          debouncedCommitPhysicalAddressPatch(formValues);
+        }
 
         return (
           <FormStackColumn onSubmit={handleSubmit}>
@@ -377,7 +275,6 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
                       });
                     }}
                   />
-                  <EditorActionBar primaryAction="Update" />
                 </StackColumn>
               </SettingsSectionCard>
             </Box>

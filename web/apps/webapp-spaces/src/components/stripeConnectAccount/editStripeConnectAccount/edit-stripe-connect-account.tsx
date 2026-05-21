@@ -1,7 +1,6 @@
 import {
   BodyIconTypography,
   CaptionIconTypography,
-  EditorActionBar,
   FormFieldLabel,
   FormStackColumn,
   LeadIconTypography,
@@ -10,25 +9,24 @@ import {
   StackColumn,
   StackRow,
 } from '@skedular/ui';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { CompleteOnboardStripeConnectAccountButton } from '@/components/stripeConnectAccount';
 import { PaletteModeContext } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding, PageHeaderPanel } from '@skedular/ui';
+import { defaultPadding, PageHeaderPanel } from '@skedular/ui';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { editStripeConnectAccount_query$key } from '@/queries/__generated__/editStripeConnectAccount_query.graphql';
 import type { editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation } from '@/queries/__generated__/editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation.graphql';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { useRouter } from 'next/navigation';
-import { memo, useContext, useState } from 'react';
+import { memo, useCallback, useContext, useRef } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
@@ -40,6 +38,8 @@ type Props = {
 type StripeConnectAccountDetails = {
   name: string;
 };
+
+const inlinePatchDebounceTimeout = 1000;
 
 const stripeConnectAccountSchema = object({
   name: string().min(3, 'Stripe Connect account nickname must be at least three characters long.').required('Stripe Connect account nickname is required'),
@@ -82,7 +82,7 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
-  const [commitUpdateOrganizationStripeConnectAccount] = useMutation<editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation>(graphql`
+  const [commitUpdateOrganizationStripeConnectAccountPatch] = useMutation<editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation>(graphql`
     mutation editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation($input: UpdateOrganizationStripeConnectAccountInput!) @raw_response_type {
       updateOrganizationStripeConnectAccount(input: $input) {
         organizationStripeConnectAccount {
@@ -93,68 +93,57 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
     }
   `);
 
-  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateStripeConnectAccountDetails = makeValidate(stripeConnectAccountSchema);
   const requiredFields = makeRequired(stripeConnectAccountSchema);
-  const [name, setName] = useState(rootData.organizationStripeConnectAccount?.name);
+  const account = rootData.organizationStripeConnectAccount;
+  const initialStripeConnectAccountValues = {
+    name: account?.name ?? '',
+  };
+  const draftStripeConnectAccountValues = useRef(initialStripeConnectAccountValues);
 
-  const handleStripeConnectAccountDetailUpdateClick = ({ name }: StripeConnectAccountDetails) => {
-    const account = rootData.organizationStripeConnectAccount;
-    if (!account) {
-      return;
-    }
+  const commitStripeConnectAccountPatch = useCallback(
+    ({ name }: StripeConnectAccountDetails) => {
+      const account = rootData.organizationStripeConnectAccount;
+      if (!account || !stripeConnectAccountSchema.isValidSync({ name })) {
+        return;
+      }
 
-    const toastId = themedToast(<NotificationContent content={`Updating Stripe Connect account '${account.name}'...`} />, infoNotificationOptions);
-
-    commitUpdateOrganizationStripeConnectAccount({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: account.id,
-          name,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update Stripe Connect account '${account.name}'. Error: ${getRelayErrorMessage(errors)}`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Stripe Connect account ${name} updated.`} />,
-        });
-
-        router.back();
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update Stripe Connect account '${account.name}'. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        updateOrganizationStripeConnectAccount: {
-          organizationStripeConnectAccount: {
+      commitUpdateOrganizationStripeConnectAccountPatch({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
             id: account.id,
+            fieldsToUpdate: ['NAME'],
             name,
           },
         },
-      },
-    });
-  };
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            themedToast(
+              <NotificationContent content={`Failed to update Stripe Connect account '${account.name}'. Error: ${getRelayErrorMessage(errors)}`} />,
+              errorNotificationOptions,
+            );
+          }
+        },
+        onError: (error) => {
+          themedToast(<NotificationContent content={`Failed to update Stripe Connect account '${account.name}'. Error: ${error.message}.`} />, errorNotificationOptions);
+        },
+        optimisticResponse: {
+          updateOrganizationStripeConnectAccount: {
+            organizationStripeConnectAccount: {
+              id: account.id,
+              name,
+            },
+          },
+        },
+      });
+    },
+    [commitUpdateOrganizationStripeConnectAccountPatch, rootData.organizationStripeConnectAccount, themedToast],
+  );
+  const debouncedCommitStripeConnectAccountPatch = useDebounceCallback(commitStripeConnectAccountPatch, inlinePatchDebounceTimeout);
 
-  const handleCloseClick = () => {
-    router.back();
-  };
-
-  const account = rootData.organizationStripeConnectAccount;
   if (!account) {
     return null;
   }
@@ -189,13 +178,15 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
           }}
         >
           <Form
-            onSubmit={handleStripeConnectAccountDetailUpdateClick}
-            initialValues={{
-              name,
-            }}
+            onSubmit={() => undefined}
+            initialValues={initialStripeConnectAccountValues}
             validate={validateStripeConnectAccountDetails}
             render={({ handleSubmit, values }) => {
-              setName(values!.name);
+              const formValues = values as StripeConnectAccountDetails;
+              if (draftStripeConnectAccountValues.current.name !== formValues.name) {
+                draftStripeConnectAccountValues.current = formValues;
+                debouncedCommitStripeConnectAccountPatch(formValues);
+              }
 
               return (
                 <FormStackColumn onSubmit={handleSubmit} sx={{ p: defaultPadding, ...formColumnSx }}>
@@ -248,19 +239,6 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
                       <DetailRow label="Authorised" value={account.isAuthorized ? 'Yes' : 'No'} />
                     </StackColumn>
                   </StackColumn>
-
-                  <EditorActionBar
-                    primaryAction={
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    }
-                    secondaryActions={
-                      <Button variant="text" onClick={handleCloseClick} sx={{ textTransform: 'none' }}>
-                        Cancel
-                      </Button>
-                    }
-                  />
                 </FormStackColumn>
               );
             }}

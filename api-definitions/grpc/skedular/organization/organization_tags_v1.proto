@@ -20,13 +20,13 @@ service OrganizationTagsService {
   rpc GetPaginatedCustomTags (GetPaginatedCustomTagsInput) returns (CustomTagConnection);
   rpc GetCustomTag (GetCustomTagInput) returns (CustomTag);
   rpc AddCustomTag (AddCustomTagInput) returns (CustomTag);
-  rpc UpdateCustomTag (UpdateCustomTagInput) returns (CustomTag);
+  rpc UpdateCustomTag (UpdateTagInput) returns (CustomTag);
   rpc RemoveCustomTag (RemoveCustomTagInput) returns (CustomTag);
 
   rpc GetPaginatedProductTags (GetPaginatedProductTagsInput) returns (ProductTagConnection);
   rpc GetProductTag (GetProductTagInput) returns (ProductTag);
   rpc AddProductTag (AddProductTagInput) returns (ProductTag);
-  rpc UpdateProductTag (UpdateProductTagInput) returns (ProductTag);
+  rpc UpdateProductTag (UpdateTagInput) returns (ProductTag);
   rpc RemoveProductTag (RemoveProductTagInput) returns (ProductTag);
 }
 
@@ -96,12 +96,19 @@ message AddTagInput {
   string type           = 6;
 }
 
+enum TagPatchField {
+  TagPatchField_Name        = 0;
+  TagPatchField_Description = 1;
+  TagPatchField_Color       = 2;
+}
+
 message UpdateTagInput {
-  string id          = 1;
-  string name        = 2;
-  string description = 3;
-  string color       = 4;
-  string type        = 6;
+  string                 id             = 1;
+  repeated TagPatchField fieldsToUpdate = 2;
+  string                 name           = 3;
+  string                 description    = 4;
+  string                 color          = 5;
+  string                 type           = 6;
 }
 
 message RemoveTagInput {
@@ -163,13 +170,6 @@ message AddCustomTagInput {
   string color          = 5;
 }
 
-message UpdateCustomTagInput {
-  string id          = 1;
-  string name        = 2;
-  string description = 3;
-  string color       = 4;
-}
-
 message RemoveCustomTagInput {
   string id = 1;
 }
@@ -227,13 +227,6 @@ message AddProductTagInput {
   string name           = 3;
   string description    = 4;
   string color          = 5;
-}
-
-message UpdateProductTagInput {
-  string id          = 1;
-  string name        = 2;
-  string description = 3;
-  string color       = 4;
 }
 
 message RemoveProductTagInput {

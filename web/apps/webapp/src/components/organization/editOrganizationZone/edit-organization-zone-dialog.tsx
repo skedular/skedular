@@ -43,6 +43,8 @@ type ZoneDetails = {
   description: string | null | undefined;
 };
 
+type TagPatchField = 'NAME' | 'DESCRIPTION' | 'COLOR';
+
 const zoneSchema = object({
   name: string().required('Zone name is required'),
   description: string().nullable(),
@@ -51,8 +53,8 @@ const zoneSchema = object({
 const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const rootData = usePreloadedQuery<editOrganizationZoneDialog_rootQuery>(RootQuery, queryReference);
 
-  const [commitUpdateZone] = useMutation<editOrganizationZoneDialog_updateZoneMutation>(graphql`
-    mutation editOrganizationZoneDialog_updateZoneMutation($input: UpdateZoneInput!) @raw_response_type {
+  const [commitUpdateZonePatch] = useMutation<editOrganizationZoneDialog_updateZoneMutation>(graphql`
+    mutation editOrganizationZoneDialog_updateZoneMutation($input: UpdateOrganizationTagInput!) @raw_response_type {
       updateZone(input: $input) {
         organizationTag {
           id
@@ -80,13 +82,28 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
     }
 
     const oldName = rootData.zone.name;
+    const fieldsToUpdate: TagPatchField[] = [];
+    if (rootData.zone.name !== name) {
+      fieldsToUpdate.push('NAME');
+    }
+    if (rootData.zone.description !== description) {
+      fieldsToUpdate.push('DESCRIPTION');
+    }
+    if (rootData.zone.color !== selectedColor) {
+      fieldsToUpdate.push('COLOR');
+    }
+    if (fieldsToUpdate.length === 0) {
+      onAddClicked();
+      return;
+    }
     const toastId = themedToast(<NotificationContent content={`Updating zone '${oldName}'...`} />, infoNotificationOptions);
 
-    commitUpdateZone({
+    commitUpdateZonePatch({
       variables: {
         input: {
           clientMutationId: uuid(),
           id: zoneId,
+          fieldsToUpdate,
           name,
           description,
           color: selectedColor,

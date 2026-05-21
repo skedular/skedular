@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using HotChocolate;
+using Organization.Api.Models;
 
 namespace Organization.Api.GraphQL.Xero;
 
@@ -12,13 +13,14 @@ public class UpdateOrganizationXeroConnectionInput
     [GraphQLName("organizationCustomDomain")]
     public string? OrganizationCustomDomain { get; set; }
 
-    [GraphQLName("tenantId")] public string TenantId { get; set; } = string.Empty;
-    [GraphQLName("tenantName")] public string TenantName { get; set; } = string.Empty;
-    [GraphQLName("billingMode")] public OrganizationXeroBillingMode BillingMode { get; set; }
+    [GraphQLName("fieldsToUpdate")] public HashSet<OrganizationXeroConnectionPatchField> FieldsToUpdate { get; set; } = [];
+    [GraphQLName("tenantId")] public string? TenantId { get; set; }
+    [GraphQLName("tenantName")] public string? TenantName { get; set; }
+    [GraphQLName("billingMode")] public OrganizationXeroBillingMode? BillingMode { get; set; }
     [GraphQLName("scopes")] public string? Scopes { get; set; }
-    [GraphQLName("isActive")] public bool IsActive { get; set; }
-    [GraphQLName("sendInvoicesViaXero")] public bool SendInvoicesViaXero { get; set; } = true;
-    [GraphQLName("autoReconcilePayments")] public bool AutoReconcilePayments { get; set; } = true;
+    [GraphQLName("isActive")] public bool? IsActive { get; set; }
+    [GraphQLName("sendInvoicesViaXero")] public bool? SendInvoicesViaXero { get; set; }
+    [GraphQLName("autoReconcilePayments")] public bool? AutoReconcilePayments { get; set; }
 
     [GraphQLName("defaultSalesAccountCode")]
     public string? DefaultSalesAccountCode { get; set; }

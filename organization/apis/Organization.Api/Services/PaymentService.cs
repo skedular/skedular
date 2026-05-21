@@ -4,6 +4,8 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
+using Organization.Shared.Mappers;
+using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Workflows;
@@ -32,6 +34,8 @@ public class PaymentService(
     IRetrievable<PaymentMethod, PaymentMethodGetOptions> paymentMethodRetrievableService,
     PaymentMethodService paymentMethodService,
     IStripeCustomerService stripeCustomerService,
+    IEntityMapper entityMapper,
+    IOrganizationOutboxPublisher organizationOutboxPublisher,
     TimeProvider timeProvider,
     IRandomHelper randomHelper,
     ITemporalOutboxService temporalOutboxService,
@@ -104,7 +108,9 @@ public class PaymentService(
             {
                 if (organizationOffering.Code.IsFreeOffering())
                 {
+                    PublishOrganization(organization);
                     await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+                    await transaction.CommitAsync(cancellationToken);
 
                     return;
                 }
@@ -158,6 +164,8 @@ public class PaymentService(
             }
         }
 
+        PublishOrganization(organization);
+
         var paymentMethod =
             await paymentMethodRetrievableService.GetAsync(organizationStripePaymentMethod.PaymentMethodId, cancellationToken: cancellationToken);
         if (paymentMethod is not null)
@@ -172,4 +180,7 @@ public class PaymentService(
         _ = await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
+
+    private void PublishOrganization(Shared.Database.Entities.Organization organization) =>
+        organizationOutboxPublisher.PublishOrganizations([entityMapper.MapTo(organization)], repositoryFactory.UnitOfWork);
 }

@@ -17,7 +17,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = graphQlMapper.MapTo(await organizationSsoService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
+            Organization = graphQlMapper.MapTo(await organizationSsoService.UpdatePatchAsync(graphQlMapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]

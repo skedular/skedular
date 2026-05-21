@@ -90,7 +90,7 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
       }
     }
   `);
-  const [commitUpdateOrganizationOffering] = useMutation<organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation>(graphql`
+  const [commitUpdateOrganizationOfferingPatch] = useMutation<organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation>(graphql`
     mutation organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation($input: UpdateOrganizationOfferingInput!) {
       updateOrganizationOffering(input: $input) {
         clientMutationId
@@ -202,11 +202,12 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
     const name = organization.name;
     const toastId = themedToast(<NotificationContent content={`Updating the active plan for organization '${name}'...`} />, infoNotificationOptions);
 
-    commitUpdateOrganizationOffering({
+    commitUpdateOrganizationOfferingPatch({
       variables: {
         input: {
           clientMutationId: uuid(),
           organizationCustomDomain,
+          fieldsToUpdate: ['OFFERING_CODE'],
           offeringCode: code,
         },
       },

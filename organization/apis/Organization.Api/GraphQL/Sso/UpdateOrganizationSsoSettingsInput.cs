@@ -1,4 +1,5 @@
 using HotChocolate;
+using Organization.Api.Models;
 
 // ReSharper disable ClassNeverInstantiated.Global
 
@@ -12,6 +13,8 @@ public class UpdateOrganizationSsoSettingsInput
 
     [GraphQLName("organizationCustomDomain")]
     public string? OrganizationCustomDomain { get; set; }
+
+    [GraphQLName("fieldsToUpdate")] public IEnumerable<OrganizationSsoSettingsPatchField> FieldsToUpdate { get; set; } = [];
 
     [GraphQLName("entityId")] public string EntityId { get; set; } = string.Empty;
     [GraphQLName("loginUrl")] public string LoginUrl { get; set; } = string.Empty;

@@ -1,21 +1,21 @@
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, GridContainer, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, GridContainer, SectionIconTypography, StackColumn } from '@skedular/ui';
 import { SingleChoiceCountry } from '@/components/forms';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { PaletteModeContext } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
+import { defaultPadding } from '@skedular/ui';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { editBankAccount_query$key } from '@/queries/__generated__/editBankAccount_query.graphql';
 import type { editBankAccount_updateOrganizationBankAccountMutation } from '@/queries/__generated__/editBankAccount_updateOrganizationBankAccountMutation.graphql';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter } from 'next/navigation';
-import { memo, useContext, useState } from 'react';
+import { memo, useCallback, useContext, useRef } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
@@ -31,6 +31,10 @@ type BankAccountDetails = {
   accountNumber: string;
   country: string;
 };
+
+type BankAccountPatchField = 'NAME' | 'BANK_NAME' | 'ACCOUNT_HOLDER_NAME' | 'ACCOUNT_NUMBER' | 'COUNTRY';
+
+const inlinePatchDebounceTimeout = 1000;
 
 const bankAccountSchema = object({
   name: string().min(3, 'Name must be at least three characters long.').required('Name is required'),
@@ -57,7 +61,7 @@ const EditBankAccount = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
-  const [commitUpdateOrganizationBankAccount] = useMutation<editBankAccount_updateOrganizationBankAccountMutation>(graphql`
+  const [commitUpdateOrganizationBankAccountPatch] = useMutation<editBankAccount_updateOrganizationBankAccountMutation>(graphql`
     mutation editBankAccount_updateOrganizationBankAccountMutation($input: UpdateOrganizationBankAccountInput!) @raw_response_type {
       updateOrganizationBankAccount(input: $input) {
         organizationBankAccount {
@@ -77,59 +81,29 @@ const EditBankAccount = ({ rootDataRelay }: Props) => {
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateBankAccountDetails = makeValidate(bankAccountSchema);
   const requiredFields = makeRequired(bankAccountSchema);
-  const [name, setName] = useState(rootData.organizationBankAccount?.name);
-  const [bankName, setBankName] = useState(rootData.organizationBankAccount?.bankName);
-  const [accountHolderName, setAccountHolderName] = useState(rootData.organizationBankAccount?.accountHolderName);
-  const [accountNumber, setAccountNumber] = useState(rootData.organizationBankAccount?.accountNumber);
-  const [country, setCountry] = useState(rootData.organizationBankAccount?.country);
+  const account = rootData.organizationBankAccount;
+  const initialBankAccountValues = {
+    name: account?.name ?? '',
+    bankName: account?.bankName ?? '',
+    accountHolderName: account?.accountHolderName ?? '',
+    accountNumber: account?.accountNumber ?? '',
+    country: account?.country ?? '',
+  };
+  const draftBankAccountValues = useRef(initialBankAccountValues);
 
-  const handleBankAccountDetailUpdateClick = ({ name, bankName, accountHolderName, accountNumber, country }: BankAccountDetails) => {
-    const account = rootData.organizationBankAccount;
-    if (!account) {
-      return;
-    }
+  const commitBankAccountPatch = useCallback(
+    (fieldsToUpdate: BankAccountPatchField[], { name, bankName, accountHolderName, accountNumber, country }: BankAccountDetails) => {
+      const account = rootData.organizationBankAccount;
+      if (!account || fieldsToUpdate.length === 0 || !bankAccountSchema.isValidSync({ name, bankName, accountHolderName, accountNumber, country })) {
+        return;
+      }
 
-    const toastId = themedToast(<NotificationContent content={`Updating Bank account '${account.name}'...`} />, infoNotificationOptions);
-
-    commitUpdateOrganizationBankAccount({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: account.id,
-          name,
-          bankName,
-          accountHolderName,
-          accountNumber,
-          country,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update Bank account '${account.name}'. Error: ${getRelayErrorMessage(errors)}`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Bank account ${name} updated.`} />,
-        });
-
-        router.back();
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update Bank account '${account.name}'. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        updateOrganizationBankAccount: {
-          organizationBankAccount: {
+      commitUpdateOrganizationBankAccountPatch({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
             id: account.id,
+            fieldsToUpdate,
             name,
             bankName,
             accountHolderName,
@@ -137,15 +111,36 @@ const EditBankAccount = ({ rootDataRelay }: Props) => {
             country,
           },
         },
-      },
-    });
-  };
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            themedToast(<NotificationContent content={`Failed to update bank account '${account.name}'. Error: ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+          }
+        },
+        onError: (error) => {
+          themedToast(<NotificationContent content={`Failed to update bank account '${account.name}'. Error: ${error.message}.`} />, errorNotificationOptions);
+        },
+        optimisticResponse: {
+          updateOrganizationBankAccount: {
+            organizationBankAccount: {
+              id: account.id,
+              name,
+              bankName,
+              accountHolderName,
+              accountNumber,
+              country,
+            },
+          },
+        },
+      });
+    },
+    [commitUpdateOrganizationBankAccountPatch, rootData.organizationBankAccount, themedToast],
+  );
+  const debouncedCommitBankAccountPatch = useDebounceCallback(commitBankAccountPatch, inlinePatchDebounceTimeout);
 
   const handleCloseClick = () => {
     router.back();
   };
 
-  const account = rootData.organizationBankAccount;
   if (!account) {
     return null;
   }
@@ -155,25 +150,35 @@ const EditBankAccount = ({ rootDataRelay }: Props) => {
       <Box sx={{ flexGrow: 1 }}>
         <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Bank Account">
           <Form
-            onSubmit={handleBankAccountDetailUpdateClick}
-            initialValues={{
-              name,
-              bankName,
-              accountHolderName,
-              accountNumber,
-              country,
-            }}
+            onSubmit={() => undefined}
+            initialValues={initialBankAccountValues}
             validate={validateBankAccountDetails}
             render={({ handleSubmit, values }) => {
-              setName(values!.name);
-              setBankName(values!.bankName);
-              setAccountHolderName(values!.accountHolderName);
-              setAccountNumber(values!.accountNumber);
-              setCountry(values!.country);
+              const formValues = values as BankAccountDetails;
+              const changedFields: BankAccountPatchField[] = [];
+              if (draftBankAccountValues.current.name !== formValues.name) {
+                changedFields.push('NAME');
+              }
+              if (draftBankAccountValues.current.bankName !== formValues.bankName) {
+                changedFields.push('BANK_NAME');
+              }
+              if (draftBankAccountValues.current.accountHolderName !== formValues.accountHolderName) {
+                changedFields.push('ACCOUNT_HOLDER_NAME');
+              }
+              if (draftBankAccountValues.current.accountNumber !== formValues.accountNumber) {
+                changedFields.push('ACCOUNT_NUMBER');
+              }
+              if (draftBankAccountValues.current.country !== formValues.country) {
+                changedFields.push('COUNTRY');
+              }
+              if (changedFields.length > 0) {
+                draftBankAccountValues.current = formValues;
+                debouncedCommitBankAccountPatch(changedFields, formValues);
+              }
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
                     <GridContainer sx={{ justifyContent: 'space-between' }}>
                       <Grid>
                         <SectionIconTypography label="Bank Account Setup" />
@@ -183,7 +188,7 @@ const EditBankAccount = ({ rootDataRelay }: Props) => {
                     <Divider />
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
                     <FormFieldLabel label="Name">
                       <TextField name="name" required={requiredFields.name} />
                     </FormFieldLabel>
@@ -203,14 +208,6 @@ const EditBankAccount = ({ rootDataRelay }: Props) => {
                     <FormFieldLabel label="Country">
                       <SingleChoiceCountry name="country" required={requiredFields.country} />
                     </FormFieldLabel>
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
                   </StackColumn>
                 </FormStackColumn>
               );
