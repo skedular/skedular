@@ -1,0 +1,26 @@
+query LocationMutationContract {
+    updateLocationInput: __type(name: "UpdateLocationInput") {
+        inputFields { name }
+    }
+    updateLocationOpeningHoursInput: __type(name: "UpdateLocationOpeningHoursInput") {
+        inputFields { name }
+    }
+    updateLocationPhysicalAddressInput: __type(name: "UpdateLocationPhysicalAddressInput") {
+        inputFields { name }
+    }
+    updateLocationRestrictedInformationInput: __type(name: "UpdateLocationRestrictedInformationInput") {
+        inputFields { name }
+    }
+    updateFloorPlanInput: __type(name: "UpdateFloorPlanInput") {
+        inputFields { name }
+    }
+    updateResourcePositionsInput: __type(name: "UpdateResourcePositionsInput") {
+        inputFields { name }
+    }
+    updateResourceInput: __type(name: "UpdateResourceInput") {
+        inputFields { name }
+    }
+    updateLocationResourceAvailableHoursInput: __type(name: "UpdateLocationResourceAvailableHoursInput") {
+        inputFields { name }
+    }
+}

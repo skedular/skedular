@@ -1,4 +1,5 @@
 using HotChocolate;
+using Location.Api.Models;
 using Location.Shared.Models;
 
 namespace Location.Api.GraphQL.Location;
@@ -8,6 +9,7 @@ public class UpdateLocationRestrictedInformationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("fieldsToUpdate")] public HashSet<LocationRestrictedInformationPatchField> FieldsToUpdate { get; set; } = [];
     [GraphQLName("title")] public string Title { get; set; } = string.Empty;
     [GraphQLName("category")] public LocationRestrictedInformationCategory Category { get; set; }
     [GraphQLName("content")] public string Content { get; set; } = string.Empty;

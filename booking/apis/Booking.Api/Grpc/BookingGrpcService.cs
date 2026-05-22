@@ -2,6 +2,7 @@ using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
+using Booking.Api.Models;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
@@ -14,6 +15,7 @@ using BookingOrderField = Booking.Shared.Models.BookingOrderField;
 using BookingService = Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingService;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
 using OrganizationPermissions = Api.Shared.Grpc.Skedular.Booking.Core.V1.OrganizationPermissions;
+using PrivateBookingPatchField = Api.Shared.Grpc.Skedular.Booking.Core.V1.PrivateBookingPatchField;
 using TeamPermissions = Api.Shared.Grpc.Skedular.Booking.Core.V1.TeamPermissions;
 using Version = Api.Shared.Grpc.Skedular.Booking.Core.V1.Version;
 
@@ -217,7 +219,25 @@ public class BookingGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        return grpcMapper.MapToGrpcResponse(await privateBookingService.UpdateAsync(grpcMapper.MapTo(request), context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(
+            await privateBookingService.UpdateAsync(
+                new PrivateBookingPatchRequest(
+                    grpcMapper.MapTo(request),
+                    request.FieldsToUpdate.Select(field => field switch
+                    {
+                        PrivateBookingPatchField.Participants =>
+                            Models.PrivateBookingPatchField.Participants,
+                        PrivateBookingPatchField.Schedule =>
+                            Models.PrivateBookingPatchField.Schedule,
+                        PrivateBookingPatchField.Notes =>
+                            Models.PrivateBookingPatchField.Notes,
+                        PrivateBookingPatchField.Category =>
+                            Models.PrivateBookingPatchField.Category,
+                        PrivateBookingPatchField.Resources =>
+                            Models.PrivateBookingPatchField.Resources,
+                        _ => throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null)
+                    }).ToHashSet()),
+                context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking> DeletePrivate(

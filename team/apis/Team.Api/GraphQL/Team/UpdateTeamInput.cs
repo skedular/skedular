@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using HotChocolate;
+using Team.Api.Models;
 
 namespace Team.Api.GraphQL.Team;
 
@@ -8,6 +9,7 @@ public class UpdateTeamInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("fieldsToUpdate")] public HashSet<TeamPatchField> FieldsToUpdate { get; set; } = [];
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }

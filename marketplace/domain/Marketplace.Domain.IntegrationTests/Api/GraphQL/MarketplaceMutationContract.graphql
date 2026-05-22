@@ -1,0 +1,5 @@
+query MarketplaceMutationContract {
+    updateProductInput: __type(name: "UpdateProductInput") {
+        inputFields { name }
+    }
+}

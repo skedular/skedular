@@ -1,0 +1,26 @@
+mutation UpdateLocationPatchSave(
+    $id: String!
+    $fieldsToUpdate: [LocationPatchField!]!
+    $name: String!
+    $timezone: String
+) {
+    updateLocation(
+        input: {
+            id: $id
+            fieldsToUpdate: $fieldsToUpdate
+            name: $name
+            timezone: $timezone
+            type: PRIVATE
+            tagIds: []
+        }
+    ) {
+        location {
+            id
+            name
+            timezone
+            listingMetadata {
+                title
+            }
+        }
+    }
+}

@@ -1,12 +1,9 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceBookingCategory } from '@/components/booking';
-import { BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
 import { CalendarIcon } from '@/components/icons';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext } from '@skedular/shared';
-import { getCustomerFullName, getRelayErrorMessage, isMidnight, keyboardSearchDebounceTimeout, toOpeningHoursFromTime, toShortDate } from '@skedular/shared';
 import type { editPrivateRecurringBooking_availableResources_query$key } from '@/queries/__generated__/editPrivateRecurringBooking_availableResources_query.graphql';
 import type { editPrivateRecurringBooking_availableResources_refetchableFragment } from '@/queries/__generated__/editPrivateRecurringBooking_availableResources_refetchableFragment.graphql';
 import type { editPrivateRecurringBooking_customerTeams_query$key } from '@/queries/__generated__/editPrivateRecurringBooking_customerTeams_query.graphql';
@@ -18,6 +15,7 @@ import type {
   BookingFrequency,
   DayOfWeek,
   editPrivateRecurringBooking_updatePrivateRecurringBookingMutation,
+  PrivateRecurringBookingPatchField,
   RecurringBookingEndType,
   BookingCategory as UpdatePrivateRecurringBookingCategory,
 } from '@/queries/__generated__/editPrivateRecurringBooking_updatePrivateRecurringBookingMutation.graphql';
@@ -31,11 +29,24 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
-import { EditorActionBar, PageHeaderPanel, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
+import { getCustomerFullName, getRelayErrorMessage, isMidnight, keyboardSearchDebounceTimeout, PaletteModeContext, toOpeningHoursFromTime, toShortDate } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  EditorActionBar,
+  ErrorTypography,
+  FormFieldLabel,
+  FormStackColumn,
+  PageHeaderPanel,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  StickyReviewRail,
+} from '@skedular/ui';
 import dayjs, { Dayjs } from 'dayjs';
 import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches } from 'mui-rff';
 import { useRouter } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form, FormSpy } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -121,6 +132,34 @@ const bookingSchema = object({
 });
 
 const toAllDayBoolean = (value: unknown): boolean => value === true || value === 'allDay' || (Array.isArray(value) && value.includes('allDay'));
+const bookingAutosaveDebounceTimeout = 1000;
+
+type RecurrenceState = {
+  frequency: RecurrenceFrequency;
+  interval: number;
+  weekDays: RecurrenceDayOfWeek[];
+  endType: RecurrenceEndType;
+  endDate: Dayjs;
+  occurrenceCount: number;
+};
+
+const getChangedRecurringBookingFields = (
+  left: BookingDetails | null,
+  right: BookingDetails,
+  leftTimeRange: DateRange<Dayjs>,
+  rightTimeRange: DateRange<Dayjs>,
+  leftRecurrence: RecurrenceState,
+  rightRecurrence: RecurrenceState,
+): PrivateRecurringBookingPatchField[] => {
+  if (!left) return [];
+  const changed: PrivateRecurringBookingPatchField[] = [];
+  if (left.member !== right.member || left.team !== right.team) changed.push('PARTICIPANTS');
+  if (JSON.stringify(left.resources) !== JSON.stringify(right.resources)) changed.push('REQUESTED_RESOURCES');
+  if (left.date !== right.date || left.allDay !== right.allDay || JSON.stringify(leftTimeRange) !== JSON.stringify(rightTimeRange)) changed.push('SCHEDULE');
+  if (JSON.stringify(leftRecurrence) !== JSON.stringify(rightRecurrence)) changed.push('RECURRENCE');
+  if (left.category !== right.category) changed.push('CATEGORY');
+  return changed;
+};
 
 const recurrenceFrequencyOptions: { value: RecurrenceFrequency; label: string }[] = [
   { value: 'DAILY', label: 'Daily' },
@@ -179,7 +218,7 @@ const getDateRange = (allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil
   };
 };
 
-const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootDataTeamsRelay, rootDataAvailableResourcesRelay, onReloadRequired }: Props) => {
+const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootDataTeamsRelay, rootDataAvailableResourcesRelay }: Props) => {
   const rootData = useFragment<editPrivateRecurringBooking_query$key>(
     graphql`
       fragment editPrivateRecurringBooking_query on Query {
@@ -431,6 +470,32 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
     const [timeFrom, timeUntil] = timeRange;
     return getDateRange(allDay, from, { timeFrom, timeUntil });
   }, [allDay, from, timeRange]);
+  const initialBookingValues = useMemo<BookingDetails | null>(
+    () =>
+      recurringBooking
+        ? {
+            member: customerId ?? '',
+            date: from,
+            allDay,
+            team: recurringBooking.involvedTeams[0]?.id,
+            location: locationId,
+            resources: resourceIds,
+            category,
+          }
+        : null,
+    [allDay, category, customerId, from, locationId, recurringBooking, resourceIds],
+  );
+  const previousBookingValues = useRef<BookingDetails | null>(initialBookingValues);
+  const previousBookingTimeRange = useRef<DateRange<Dayjs>>(timeRange);
+  const previousRecurrenceState = useRef<RecurrenceState>({
+    frequency: recurrenceFrequency,
+    interval: recurrenceInterval,
+    weekDays: recurrenceWeekDays,
+    endType: recurrenceEndType,
+    endDate: recurrenceEndDate,
+    occurrenceCount: recurrenceOccurrenceCount,
+  });
+  const debouncedBookingDetailUpdate = useDebounceCallback((save: () => void) => save(), bookingAutosaveDebounceTimeout);
 
   const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
@@ -492,7 +557,10 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
     router.back();
   };
 
-  const handleSubmit = ({ date, allDay: allDayValue, member, team, resources: selectedResourceIds, category: categoryValue }: BookingDetails) => {
+  const handleSubmit = (
+    fieldsToUpdate: PrivateRecurringBookingPatchField[],
+    { date, allDay: allDayValue, member, team, resources: selectedResourceIds, category: categoryValue }: BookingDetails,
+  ) => {
     const [timeFrom, timeUntil] = timeRange;
     const computedDateRange = getDateRange(toAllDayBoolean(allDayValue), date, { timeFrom, timeUntil });
 
@@ -512,13 +580,12 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
 
     setRecurrenceError('');
 
-    const toastId = themedToast(<NotificationContent content={`Updating recurring booking starting ${toShortDate(computedDateRange.from)}...`} />, infoNotificationOptions);
-
     commitUpdatePrivateRecurringBooking({
       variables: {
         input: {
           clientMutationId: uuid(),
           id: recurringBooking.id,
+          fieldsToUpdate,
           category: categoryValue as UpdatePrivateRecurringBookingCategory,
           customerIds: [member],
           organizationIds: booking.involvedOrganizations.map(({ id }) => id),
@@ -538,28 +605,14 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
           skippedDates: recurringBooking.skippedDates,
         },
       },
-      onCompleted: (response, errors) => {
+      onCompleted: (_, errors) => {
         if (errors?.length) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update this recurring booking. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't update this recurring booking. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           return;
         }
-
-        const updatedRecurringBooking = response.updatePrivateRecurringBooking.recurringBooking;
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Recurring booking updated from ${toShortDate(updatedRecurringBooking.startDate)}.`} />,
-        });
-        onReloadRequired?.();
-        goBack();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update this recurring booking. ${getRelayErrorMessage(error)}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't update this recurring booking. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
       },
     });
   };
@@ -578,292 +631,309 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
           />
 
           <Form
-            onSubmit={handleSubmit}
-            initialValues={{
-              member: customerId,
-              date: from,
-              allDay,
-              team: recurringBooking.involvedTeams[0]?.id,
-              location: locationId,
-              resources: resourceIds,
-              category,
-            }}
+            onSubmit={() => undefined}
+            initialValues={initialBookingValues}
             validate={validate}
-            render={({ handleSubmit: handleFormSubmit }) => (
-              <FormStackColumn onSubmit={handleFormSubmit}>
-                <FormSpy
-                  subscription={{ values: true }}
-                  onChange={({ values: currentValues }) => {
-                    if (!currentValues) return;
-                    if (currentValues.date !== from) setFrom(currentValues.date);
-                    const normalizedAllDay = toAllDayBoolean(currentValues.allDay);
-                    if (normalizedAllDay !== allDay) setAllDay(normalizedAllDay);
-                    if (JSON.stringify(currentValues.resources) !== JSON.stringify(resourceIds)) setResourceIds(currentValues.resources);
-                    if (currentValues.category !== category) setCategory(currentValues.category);
-                  }}
-                />
+            render={({ handleSubmit: handleFormSubmit, values }) => {
+              const bookingValues = values as BookingDetails;
+              const currentRecurrenceState: RecurrenceState = {
+                frequency: recurrenceFrequency,
+                interval: recurrenceInterval,
+                weekDays: recurrenceWeekDays,
+                endType: recurrenceEndType,
+                endDate: recurrenceEndDate,
+                occurrenceCount: recurrenceOccurrenceCount,
+              };
+              const changedFields = getChangedRecurringBookingFields(
+                previousBookingValues.current,
+                bookingValues,
+                previousBookingTimeRange.current,
+                timeRange,
+                previousRecurrenceState.current,
+                currentRecurrenceState,
+              );
+              if (changedFields.length > 0) {
+                previousBookingValues.current = bookingValues;
+                previousBookingTimeRange.current = timeRange;
+                previousRecurrenceState.current = currentRecurrenceState;
+                debouncedBookingDetailUpdate(() => handleSubmit(changedFields, bookingValues));
+              }
 
-                <SettingsSectionCard title="Booking basics" description="Choose who this recurring booking is for and what kind of work it represents.">
-                  <StackColumn spacing={2}>
-                    <FormFieldLabel label="User">
-                      <Autocomplete
-                        name="member"
-                        multiple={false}
-                        required={requiredFields.member}
-                        options={customers}
-                        getOptionValue={(option) => (option as OrganizationMemberDetails).customer.id}
-                        getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
-                        renderOption={(props, option) => {
-                          const castedOption = (option as OrganizationMemberDetails).customer;
+              return (
+                <FormStackColumn onSubmit={handleFormSubmit}>
+                  <FormSpy
+                    subscription={{ values: true }}
+                    onChange={({ values: currentValues }) => {
+                      if (!currentValues) return;
+                      if (currentValues.date !== from) setFrom(currentValues.date);
+                      const normalizedAllDay = toAllDayBoolean(currentValues.allDay);
+                      if (normalizedAllDay !== allDay) setAllDay(normalizedAllDay);
+                      if (JSON.stringify(currentValues.resources) !== JSON.stringify(resourceIds)) setResourceIds(currentValues.resources);
+                      if (currentValues.category !== category) setCategory(currentValues.category);
+                    }}
+                  />
 
-                          return (
-                            <li {...props} key={castedOption.id}>
-                              <BodyIconTypography
-                                label={getCustomerFullName(castedOption)}
-                                startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
-                              />
-                            </li>
-                          );
-                        }}
-                        filterOptions={(options, params) => {
-                          if (params.inputValue !== peopleNameSearchText) {
-                            debounceSearchTextChange(params.inputValue);
-                          }
+                  <SettingsSectionCard title="Booking basics" description="Choose who this recurring booking is for and what kind of work it represents.">
+                    <StackColumn spacing={2}>
+                      <FormFieldLabel label="User">
+                        <Autocomplete
+                          name="member"
+                          multiple={false}
+                          required={requiredFields.member}
+                          options={customers}
+                          getOptionValue={(option) => (option as OrganizationMemberDetails).customer.id}
+                          getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
+                          renderOption={(props, option) => {
+                            const castedOption = (option as OrganizationMemberDetails).customer;
 
-                          return options;
-                        }}
-                        selectOnFocus
-                        clearOnBlur
-                        handleHomeEndKeys
-                        onChange={(_, option) => {
-                          const nextCustomerId = (option as OrganizationMemberDetails | null)?.customer.id;
-                          setCustomerId(nextCustomerId);
-                          handleRefetchTeams(nextCustomerId);
-                        }}
-                      />
-                    </FormFieldLabel>
+                            return (
+                              <li {...props} key={castedOption.id}>
+                                <BodyIconTypography
+                                  label={getCustomerFullName(castedOption)}
+                                  startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
+                                />
+                              </li>
+                            );
+                          }}
+                          filterOptions={(options, params) => {
+                            if (params.inputValue !== peopleNameSearchText) {
+                              debounceSearchTextChange(params.inputValue);
+                            }
 
-                    <FormFieldLabel label="Category">
-                      <SingleChoiceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
-                    </FormFieldLabel>
-                  </StackColumn>
-                </SettingsSectionCard>
+                            return options;
+                          }}
+                          selectOnFocus
+                          clearOnBlur
+                          handleHomeEndKeys
+                          onChange={(_, option) => {
+                            const nextCustomerId = (option as OrganizationMemberDetails | null)?.customer.id;
+                            setCustomerId(nextCustomerId);
+                            handleRefetchTeams(nextCustomerId);
+                          }}
+                        />
+                      </FormFieldLabel>
 
-                <SettingsSectionCard title="Recurring schedule" description="Change the recurring rule for future bookings in this series.">
-                  <StackColumn spacing={2}>
-                    <FormFieldLabel label="Date and time">
-                      <StackColumn spacing={1.5}>
-                        <StackRow sx={{ gap: 1.5, alignItems: 'center', flexWrap: 'wrap' }}>
+                      <FormFieldLabel label="Category">
+                        <SingleChoiceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
+                      </FormFieldLabel>
+                    </StackColumn>
+                  </SettingsSectionCard>
+
+                  <SettingsSectionCard title="Recurring schedule" description="Change the recurring rule for future bookings in this series.">
+                    <StackColumn spacing={2}>
+                      <FormFieldLabel label="Date and time">
+                        <StackColumn spacing={1.5}>
+                          <StackRow sx={{ gap: 1.5, alignItems: 'center', flexWrap: 'wrap' }}>
+                            <Box sx={{ width: 'fit-content' }}>
+                              <DatePicker name="date" required={requiredFields.date} />
+                            </Box>
+                            <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
+                          </StackRow>
                           <Box sx={{ width: 'fit-content' }}>
-                            <DatePicker name="date" required={requiredFields.date} />
+                            <TimeRangePicker minutesStep={rootData.bookingSlotSizeInMinutes} disabled={allDay} value={timeRange} onChange={setTimeRange} />
                           </Box>
-                          <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
-                        </StackRow>
-                        <Box sx={{ width: 'fit-content' }}>
-                          <TimeRangePicker minutesStep={rootData.bookingSlotSizeInMinutes} disabled={allDay} value={timeRange} onChange={setTimeRange} />
-                        </Box>
-                      </StackColumn>
-                    </FormFieldLabel>
+                        </StackColumn>
+                      </FormFieldLabel>
 
-                    <ErrorTypography errorMessage={dateRange.errorMessage} />
+                      <ErrorTypography errorMessage={dateRange.errorMessage} />
 
-                    <Divider />
+                      <Divider />
 
-                    <FormFieldLabel label="Frequency">
-                      <ToggleButtonGroup
-                        size="small"
-                        exclusive
-                        value={recurrenceFrequency}
-                        onChange={(_, value: RecurrenceFrequency | null) => {
-                          if (value) {
-                            setRecurrenceFrequency(value);
-                          }
-                        }}
-                      >
-                        {recurrenceFrequencyOptions.map((option) => (
-                          <ToggleButton key={option.value} value={option.value}>
-                            {option.label}
-                          </ToggleButton>
-                        ))}
-                      </ToggleButtonGroup>
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Repeat every">
-                      <TextField
-                        type="number"
-                        value={recurrenceInterval}
-                        onChange={(event) => setRecurrenceInterval(Math.max(1, Number(event.target.value) || 1))}
-                        helperText={recurrenceFrequency === 'DAILY' ? 'Every N days' : recurrenceFrequency === 'WEEKLY' ? 'Every N weeks' : 'Every N months'}
-                      />
-                    </FormFieldLabel>
-
-                    {recurrenceFrequency === 'WEEKLY' ? (
-                      <FormFieldLabel label="Days">
+                      <FormFieldLabel label="Frequency">
                         <ToggleButtonGroup
                           size="small"
-                          value={recurrenceWeekDays}
-                          onChange={(_, value: RecurrenceDayOfWeek[]) => setRecurrenceWeekDays(value.length > 0 ? value : [toRecurringDayOfWeek(from)])}
+                          exclusive
+                          value={recurrenceFrequency}
+                          onChange={(_, value: RecurrenceFrequency | null) => {
+                            if (value) {
+                              setRecurrenceFrequency(value);
+                            }
+                          }}
                         >
-                          {dayOfWeekOptions.map((option) => (
+                          {recurrenceFrequencyOptions.map((option) => (
                             <ToggleButton key={option.value} value={option.value}>
                               {option.label}
                             </ToggleButton>
                           ))}
                         </ToggleButtonGroup>
                       </FormFieldLabel>
-                    ) : null}
 
-                    <FormFieldLabel label="Series ends">
-                      <ToggleButtonGroup
-                        size="small"
-                        exclusive
-                        value={recurrenceEndType}
-                        onChange={(_, value: RecurrenceEndType | null) => {
-                          if (value) {
-                            setRecurrenceEndType(value);
-                          }
-                        }}
-                      >
-                        {recurrenceEndTypeOptions.map((option) => (
-                          <ToggleButton key={option.value} value={option.value}>
-                            {option.label}
-                          </ToggleButton>
-                        ))}
-                      </ToggleButtonGroup>
-                    </FormFieldLabel>
-
-                    {recurrenceEndType === 'UNTIL_DATE' ? (
-                      <FormFieldLabel label="End date">
-                        <TextField
-                          type="date"
-                          value={recurrenceEndDate.format('YYYY-MM-DD')}
-                          onChange={(event) => {
-                            const value = dayjs(event.target.value);
-                            if (value.isValid()) {
-                              setRecurrenceEndDate(value);
-                            }
-                          }}
-                        />
-                      </FormFieldLabel>
-                    ) : null}
-
-                    {recurrenceEndType === 'AFTER_OCCURRENCES' ? (
-                      <FormFieldLabel label="Occurrences">
+                      <FormFieldLabel label="Repeat every">
                         <TextField
                           type="number"
-                          value={recurrenceOccurrenceCount}
-                          onChange={(event) => setRecurrenceOccurrenceCount(Math.max(1, Number(event.target.value) || 1))}
+                          value={recurrenceInterval}
+                          onChange={(event) => setRecurrenceInterval(Math.max(1, Number(event.target.value) || 1))}
+                          helperText={recurrenceFrequency === 'DAILY' ? 'Every N days' : recurrenceFrequency === 'WEEKLY' ? 'Every N weeks' : 'Every N months'}
                         />
                       </FormFieldLabel>
-                    ) : null}
 
-                    <ErrorTypography errorMessage={recurrenceError} />
-                  </StackColumn>
-                </SettingsSectionCard>
+                      {recurrenceFrequency === 'WEEKLY' ? (
+                        <FormFieldLabel label="Days">
+                          <ToggleButtonGroup
+                            size="small"
+                            value={recurrenceWeekDays}
+                            onChange={(_, value: RecurrenceDayOfWeek[]) => setRecurrenceWeekDays(value.length > 0 ? value : [toRecurringDayOfWeek(from)])}
+                          >
+                            {dayOfWeekOptions.map((option) => (
+                              <ToggleButton key={option.value} value={option.value}>
+                                {option.label}
+                              </ToggleButton>
+                            ))}
+                          </ToggleButtonGroup>
+                        </FormFieldLabel>
+                      ) : null}
 
-                <SettingsSectionCard title="Assignments" description="Pick the team, location, and requested resources for future bookings in this series.">
-                  <StackColumn spacing={2}>
-                    <FormFieldLabel label="Team">
-                      <Autocomplete
-                        name="team"
-                        multiple={false}
-                        required={requiredFields.team}
-                        options={teams}
-                        getOptionValue={(option) => (option as TeamDetails).id}
-                        getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
-                        renderOption={(props, option) => {
-                          const castedOption = option as TeamDetails;
-                          return (
-                            <li {...props} key={castedOption.id}>
-                              <BodyIconTypography label={castedOption.name} />
-                            </li>
-                          );
-                        }}
-                        filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
-                        selectOnFocus
-                        clearOnBlur
-                        handleHomeEndKeys
-                      />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Series ends">
+                        <ToggleButtonGroup
+                          size="small"
+                          exclusive
+                          value={recurrenceEndType}
+                          onChange={(_, value: RecurrenceEndType | null) => {
+                            if (value) {
+                              setRecurrenceEndType(value);
+                            }
+                          }}
+                        >
+                          {recurrenceEndTypeOptions.map((option) => (
+                            <ToggleButton key={option.value} value={option.value}>
+                              {option.label}
+                            </ToggleButton>
+                          ))}
+                        </ToggleButtonGroup>
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Location">
-                      <Autocomplete
-                        name="location"
-                        multiple={false}
-                        required={requiredFields.location}
-                        options={locations}
-                        getOptionValue={(option) => (option as LocationDetails).id}
-                        getOptionLabel={(option: string | LocationDetails) => (option as LocationDetails).name}
-                        renderOption={(props, option) => {
-                          const castedOption = option as LocationDetails;
-                          return (
-                            <li {...props} key={castedOption.id}>
-                              <BodyIconTypography label={castedOption.name} />
-                            </li>
-                          );
-                        }}
-                        filterOptions={(options, params) => filterLocation(options as LocationDetails[], params)}
-                        selectOnFocus
-                        clearOnBlur
-                        handleHomeEndKeys
-                        onChange={(_, option) => setLocationId((option as LocationDetails | null)?.id)}
-                      />
-                    </FormFieldLabel>
+                      {recurrenceEndType === 'UNTIL_DATE' ? (
+                        <FormFieldLabel label="End date">
+                          <TextField
+                            type="date"
+                            value={recurrenceEndDate.format('YYYY-MM-DD')}
+                            onChange={(event) => {
+                              const value = dayjs(event.target.value);
+                              if (value.isValid()) {
+                                setRecurrenceEndDate(value);
+                              }
+                            }}
+                          />
+                        </FormFieldLabel>
+                      ) : null}
 
-                    <FormFieldLabel label="Resources">
-                      {resources.length > 0 ? (
+                      {recurrenceEndType === 'AFTER_OCCURRENCES' ? (
+                        <FormFieldLabel label="Occurrences">
+                          <TextField
+                            type="number"
+                            value={recurrenceOccurrenceCount}
+                            onChange={(event) => setRecurrenceOccurrenceCount(Math.max(1, Number(event.target.value) || 1))}
+                          />
+                        </FormFieldLabel>
+                      ) : null}
+
+                      <ErrorTypography errorMessage={recurrenceError} />
+                    </StackColumn>
+                  </SettingsSectionCard>
+
+                  <SettingsSectionCard title="Assignments" description="Pick the team, location, and requested resources for future bookings in this series.">
+                    <StackColumn spacing={2}>
+                      <FormFieldLabel label="Team">
                         <Autocomplete
-                          name="resources"
-                          multiple={true}
-                          required={requiredFields.resources}
-                          options={resources}
-                          getOptionValue={(option) => (option as ResourceDetails).id}
-                          getOptionLabel={(option: string | ResourceDetails) => (option as ResourceDetails).name}
+                          name="team"
+                          multiple={false}
+                          required={requiredFields.team}
+                          options={teams}
+                          getOptionValue={(option) => (option as TeamDetails).id}
+                          getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
                           renderOption={(props, option) => {
-                            const castedOption = option as ResourceDetails;
-
+                            const castedOption = option as TeamDetails;
                             return (
                               <li {...props} key={castedOption.id}>
-                                <StackRow sx={{ alignItems: 'center' }}>
-                                  <BodyIconTypography label={castedOption.name} />
-                                  <CustomTags customTags={castedOption.customTags} hideNAText />
-                                  <Zones zones={castedOption.zones} hideIcon hideNAText />
-                                </StackRow>
+                                <BodyIconTypography label={castedOption.name} />
                               </li>
                             );
                           }}
-                          filterOptions={(options, params) => filterResource(options as ResourceDetails[], params)}
+                          filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
                           selectOnFocus
                           clearOnBlur
                           handleHomeEndKeys
                         />
-                      ) : (
-                        <BodyIconTypography
-                          label={
-                            !locationId
-                              ? 'Pick a location to load available resources.'
-                              : !allDay && (!timeRange[0] || !timeRange[1])
-                                ? 'Pick a start and end time to load available resources.'
-                                : !dateRange.valid
-                                  ? 'Fix the selected time to load availability.'
-                                  : 'No resources are available for this slot.'
-                          }
-                        />
-                      )}
-                    </FormFieldLabel>
-                  </StackColumn>
-                </SettingsSectionCard>
+                      </FormFieldLabel>
 
-                <EditorActionBar
-                  secondaryActions={
-                    <Button type="button" variant="text" onClick={goBack} sx={{ textTransform: 'none' }}>
-                      Cancel
-                    </Button>
-                  }
-                  primaryAction="Update recurring booking"
-                />
-              </FormStackColumn>
-            )}
+                      <FormFieldLabel label="Location">
+                        <Autocomplete
+                          name="location"
+                          multiple={false}
+                          required={requiredFields.location}
+                          options={locations}
+                          getOptionValue={(option) => (option as LocationDetails).id}
+                          getOptionLabel={(option: string | LocationDetails) => (option as LocationDetails).name}
+                          renderOption={(props, option) => {
+                            const castedOption = option as LocationDetails;
+                            return (
+                              <li {...props} key={castedOption.id}>
+                                <BodyIconTypography label={castedOption.name} />
+                              </li>
+                            );
+                          }}
+                          filterOptions={(options, params) => filterLocation(options as LocationDetails[], params)}
+                          selectOnFocus
+                          clearOnBlur
+                          handleHomeEndKeys
+                          onChange={(_, option) => setLocationId((option as LocationDetails | null)?.id)}
+                        />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Resources">
+                        {resources.length > 0 ? (
+                          <Autocomplete
+                            name="resources"
+                            multiple={true}
+                            required={requiredFields.resources}
+                            options={resources}
+                            getOptionValue={(option) => (option as ResourceDetails).id}
+                            getOptionLabel={(option: string | ResourceDetails) => (option as ResourceDetails).name}
+                            renderOption={(props, option) => {
+                              const castedOption = option as ResourceDetails;
+
+                              return (
+                                <li {...props} key={castedOption.id}>
+                                  <StackRow sx={{ alignItems: 'center' }}>
+                                    <BodyIconTypography label={castedOption.name} />
+                                    <CustomTags customTags={castedOption.customTags} hideNAText />
+                                    <Zones zones={castedOption.zones} hideIcon hideNAText />
+                                  </StackRow>
+                                </li>
+                              );
+                            }}
+                            filterOptions={(options, params) => filterResource(options as ResourceDetails[], params)}
+                            selectOnFocus
+                            clearOnBlur
+                            handleHomeEndKeys
+                          />
+                        ) : (
+                          <BodyIconTypography
+                            label={
+                              !locationId
+                                ? 'Pick a location to load available resources.'
+                                : !allDay && (!timeRange[0] || !timeRange[1])
+                                  ? 'Pick a start and end time to load available resources.'
+                                  : !dateRange.valid
+                                    ? 'Fix the selected time to load availability.'
+                                    : 'No resources are available for this slot.'
+                            }
+                          />
+                        )}
+                      </FormFieldLabel>
+                    </StackColumn>
+                  </SettingsSectionCard>
+
+                  <EditorActionBar
+                    secondaryActions={
+                      <Button type="button" variant="text" onClick={goBack} sx={{ textTransform: 'none' }}>
+                        Cancel
+                      </Button>
+                    }
+                  />
+                </FormStackColumn>
+              );
+            }}
           />
         </StackColumn>
 

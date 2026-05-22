@@ -17,6 +17,15 @@ minimumReleaseAgeExclude:
   - '@vitest/spy@4.1.7'
   - '@vitest/utils@4.1.7'
   - vitest@4.1.7
+  - '@mui/x-charts@9.3.0'
+  - '@mui/x-data-grid-premium@9.3.0'
+  - '@mui/x-data-grid-pro@9.3.0'
+  - '@mui/x-data-grid@9.3.0'
+  - '@mui/x-date-pickers-pro@9.3.0'
+  - '@mui/x-date-pickers@9.3.0'
+  - '@mui/x-internal-gestures@9.3.0'
+  - '@mui/x-tree-view-pro@9.3.0'
+  - '@mui/x-virtualizer@9.0.0-alpha.7'
 overrides:
   '@types/node': 25.9.0
 patchedDependencies:

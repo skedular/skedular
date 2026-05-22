@@ -1,4 +1,5 @@
 using Booking.Api.Mappers;
+using Booking.Api.Models;
 using Booking.Api.Services;
 using HotChocolate;
 using HotChocolate.Types;
@@ -24,7 +25,9 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         [Service] IPrivateBookingService privateBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await privateBookingService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken);
+        var booking = await privateBookingService.UpdateAsync(
+            new PrivateBookingPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
+            cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
     }
 
@@ -54,7 +57,9 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         [Service] IMarketplaceBookingService marketplaceBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await marketplaceBookingService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken);
+        var booking = await marketplaceBookingService.UpdateAsync(
+            new MarketplaceBookingPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
+            cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
     }
 

@@ -1,4 +1,5 @@
 using Api.Shared.Services.Models;
+using Booking.Api.Models;
 using Booking.Shared.Models;
 using HotChocolate;
 
@@ -9,6 +10,7 @@ public class UpdatePrivateRecurringBookingInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("fieldsToUpdate")] public HashSet<PrivateRecurringBookingPatchField> FieldsToUpdate { get; set; } = [];
     [GraphQLName("customerIds")] public IEnumerable<string> CustomerIds { get; set; } = [];
     [GraphQLName("organizationIds")] public IEnumerable<string>? OrganizationIds { get; set; }
 

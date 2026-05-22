@@ -67,7 +67,7 @@ public class DatabaseTestContext(DbContextOptions options) : DbContext(options),
     }
 }
 
-public sealed class PostgresTestDbContext(
+public class PostgresTestDbContext(
     DbContextOptions<PostgresTestDbContext> options,
     CustomDbContextOptions<PostgresTestDbContext> customDbContextOptions)
     : DbContextBase<PostgresTestDbContext>(options, customDbContextOptions)
@@ -86,7 +86,7 @@ public sealed class PostgresTestDbContext(
     }
 }
 
-public sealed class SqlServerTestDbContext(
+public class SqlServerTestDbContext(
     DbContextOptions<SqlServerTestDbContext> options,
     CustomDbContextOptions<SqlServerTestDbContext> customDbContextOptions)
     : Enterprise.Shared.Database.SqlServer.DbContextBase<SqlServerTestDbContext>(options, customDbContextOptions)
@@ -105,12 +105,12 @@ public sealed class SqlServerTestDbContext(
     }
 }
 
-public sealed class PostgresTestRepositoryFactory : RepositoryFactoryBase<PostgresTestDbContext>
+public class PostgresTestRepositoryFactory : RepositoryFactoryBase<PostgresTestDbContext>
 {
     public void SetDbContext(PostgresTestDbContext? dbContext) => _dbContext = dbContext;
 }
 
-public sealed class SqlServerTestRepositoryFactory : RepositoryFactoryBase<SqlServerTestDbContext>
+public class SqlServerTestRepositoryFactory : RepositoryFactoryBase<SqlServerTestDbContext>
 {
     public void SetDbContext(SqlServerTestDbContext? dbContext) => _dbContext = dbContext;
 }

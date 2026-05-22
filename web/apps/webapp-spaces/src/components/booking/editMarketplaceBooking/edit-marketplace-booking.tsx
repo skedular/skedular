@@ -1,20 +1,7 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceMarketplaceBookingCategory } from '@/components/booking';
 import InvoiceDownloadLinks from '@/components/booking/invoice-download-links';
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
-import {
-  getCustomerFullName,
-  getOpeningHoursFromDateTime,
-  getRelayErrorMessage,
-  isMidnight,
-  keyboardSearchDebounceTimeout,
-  toOpeningHoursFromTime,
-  toShortDate,
-  toShortTime,
-} from '@skedular/shared';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import type { editMarketplaceBooking_booking_query$key } from '@/queries/__generated__/editMarketplaceBooking_booking_query.graphql';
 import type { editMarketplaceBooking_booking_refetchableFragment } from '@/queries/__generated__/editMarketplaceBooking_booking_refetchableFragment.graphql';
 import type { editMarketplaceBooking_customerTeams_query$key } from '@/queries/__generated__/editMarketplaceBooking_customerTeams_query.graphql';
@@ -22,16 +9,41 @@ import type { editMarketplaceBooking_customerTeams_refetchableFragment } from '@
 import type { editMarketplaceBooking_organizationMembers_query$key } from '@/queries/__generated__/editMarketplaceBooking_organizationMembers_query.graphql';
 import type { editMarketplaceBooking_organizationMembers_refetchableFragment } from '@/queries/__generated__/editMarketplaceBooking_organizationMembers_refetchableFragment.graphql';
 import type { editMarketplaceBooking_query$key } from '@/queries/__generated__/editMarketplaceBooking_query.graphql';
-import type { BookingCategory, editMarketplaceBooking_updateBookingMutation } from '@/queries/__generated__/editMarketplaceBooking_updateBookingMutation.graphql';
+import type {
+  BookingCategory,
+  editMarketplaceBooking_updateBookingMutation,
+  MarketplaceBookingPatchField,
+} from '@/queries/__generated__/editMarketplaceBooking_updateBookingMutation.graphql';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
+import {
+  getCustomerFullName,
+  getOpeningHoursFromDateTime,
+  getRelayErrorMessage,
+  isMidnight,
+  keyboardSearchDebounceTimeout,
+  PaletteModeContext,
+  toOpeningHoursFromTime,
+  toShortDate,
+  toShortTime,
+} from '@skedular/shared';
+import {
+  AppBarWithStackColumn,
+  BodyIconTypography,
+  defaultPadding,
+  FormFieldLabel,
+  FormStackColumn,
+  SectionIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import { Autocomplete, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -79,6 +91,16 @@ const bookingSchema = object({
   team: string().notRequired(),
   category: string().required('Category is required'),
 });
+const bookingAutosaveDebounceTimeout = 1000;
+
+const getChangedMarketplaceBookingFields = (left: BookingDetails | null, right: BookingDetails): MarketplaceBookingPatchField[] => {
+  if (!left) return [];
+  const changed: MarketplaceBookingPatchField[] = [];
+  if (left.member !== right.member || left.team !== right.team) changed.push('PARTICIPANTS');
+  if (left.notes !== right.notes) changed.push('NOTES');
+  if (left.category !== right.category) changed.push('CATEGORY');
+  return changed;
+};
 
 const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay }: Props) => {
   const rootData = useFragment<editMarketplaceBooking_query$key>(
@@ -289,6 +311,19 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
     [rootDataOrganizationMembers.organization?.members],
   );
   const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
+  const initialBookingValues = useMemo<BookingDetails | null>(
+    () =>
+      rootDataBooking.booking
+        ? {
+            member: customerId ?? '',
+            notes: rootDataBooking.booking.notes,
+            team: teamId,
+            category: rootDataBooking.booking.category.category,
+          }
+        : null,
+    [customerId, rootDataBooking.booking, teamId],
+  );
+  const previousBookingValues = useRef<BookingDetails | null>(initialBookingValues);
 
   const handleRefetchOrganizationMembers = useCallback(
     (peopleNameSearchText: string) => {
@@ -335,28 +370,24 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
     router.back();
   };
 
-  const handleBookingDetailUpdateClick = ({ member: memberId, notes, team: teamId, category }: BookingDetails) => {
+  const handleBookingDetailUpdateClick = (fieldsToUpdate: MarketplaceBookingPatchField[], { member: memberId, notes, team: teamId, category }: BookingDetails) => {
     const booking = rootDataBooking.booking;
-    if (!booking) {
+    if (
+      !booking ||
+      !bookingSchema.isValidSync({ member: memberId, notes, team: teamId, category }) ||
+      (booking.marketplaceBooking?.paymentStatus.type !== 'NO_PAYMENT_REQUIRED' && booking.marketplaceBooking?.paymentStatus.type !== 'CONFIRMED')
+    ) {
       return;
     }
 
     const shortDateTimeFormatFrom = toShortDate(booking.from);
-
-    let bookingDetailsInfo = `for ${getCustomerFullName(booking.involvedCustomers[0])}`;
-    if (booking.involvedLocations.length > 0) {
-      bookingDetailsInfo += ` at the "${booking.involvedLocations[0]!.name}"`;
-    }
-
-    bookingDetailsInfo += ` on ${shortDateTimeFormatFrom}`;
-
-    const toastId = themedToast(<NotificationContent content={`Updating booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
     commitUpdateMarketplaceBooking({
       variables: {
         input: {
           clientMutationId: uuid(),
           id: booking.id,
+          fieldsToUpdate,
           notes,
           category: category as BookingCategory,
           customerIds: [memberId],
@@ -366,26 +397,13 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} updated.`} />,
-        });
-
-        router.back();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         updateMarketplaceBooking: {
@@ -417,6 +435,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
       },
     });
   };
+  const debouncedBookingDetailUpdate = useDebounceCallback(handleBookingDetailUpdateClick, bookingAutosaveDebounceTimeout);
 
   const handleMemberChange = (option: OrganizationMemberDetails | null) => {
     if (!rootDataBooking.booking) {
@@ -455,118 +474,112 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
       <Box sx={{ flexGrow: 1 }}>
         <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Booking Information">
           <Form
-            onSubmit={handleBookingDetailUpdateClick}
-            initialValues={{
-              member: customerId,
-              notes: booking.notes,
-              team: teamId,
-              category: booking.category.category,
-            }}
+            onSubmit={() => undefined}
+            initialValues={initialBookingValues}
             validate={validate}
-            render={({ handleSubmit }) => (
-              <FormStackColumn onSubmit={handleSubmit}>
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <SectionIconTypography label="Edit Booking" />
-                  <BodyIconTypography label="Edit your booking details" />
-                  <Divider />
-                </StackColumn>
+            render={({ handleSubmit, values }) => {
+              const bookingValues = values as BookingDetails;
+              const changedFields = getChangedMarketplaceBookingFields(previousBookingValues.current, bookingValues);
+              if (changedFields.length > 0) {
+                previousBookingValues.current = bookingValues;
+                debouncedBookingDetailUpdate(changedFields, bookingValues);
+              }
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Payment Status" stackLabelOnTop>
-                    <SmallIconTypography label={booking.marketplaceBooking?.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Date/Time" stackLabelOnTop>
-                    <StackRow>
-                      <BodyIconTypography label={`${toShortDate(booking.from)}, `} />
-                      {allDay && <BodyIconTypography label="All day" />}
-                      {!allDay && <BodyIconTypography label={`${toShortTime(timeRange[0])} - ${toShortTime(timeRange[1])}`} />}
-                    </StackRow>
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Invoice" stackLabelOnTop>
-                    <InvoiceDownloadLinks invoices={booking.arrearsInvoices ?? []} legacyInvoiceUrl={booking.marketplaceBooking?.invoiceUrl ?? null} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="User">
-                    <Autocomplete
-                      name="member"
-                      multiple={false}
-                      required={requiredFields.member}
-                      options={customers}
-                      getOptionValue={(option) => (option as OrganizationMemberDetails).customer.id}
-                      getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
-                      renderOption={(props, option) => {
-                        const castedOption = (option as OrganizationMemberDetails).customer;
-
-                        return (
-                          <li {...props} key={castedOption.id}>
-                            <BodyIconTypography
-                              label={getCustomerFullName(castedOption)}
-                              startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
-                            />
-                          </li>
-                        );
-                      }}
-                      filterOptions={(options, params) => {
-                        if (params.inputValue !== peopleNameSearchText) {
-                          debounceSearchTextChange(params.inputValue);
-                        }
-
-                        return options;
-                      }}
-                      selectOnFocus
-                      clearOnBlur
-                      handleHomeEndKeys
-                      onChange={(_, option) => handleMemberChange(option as OrganizationMemberDetails)}
-                    />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Notes">
-                    <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Category">
-                    <SingleChoiceMarketplaceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Team">
-                    <Autocomplete
-                      name="team"
-                      multiple={false}
-                      required={requiredFields.team}
-                      options={teams}
-                      getOptionValue={(option) => (option as TeamDetails).id}
-                      getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
-                      renderOption={(props, option) => {
-                        const castedOption = option as TeamDetails;
-
-                        return (
-                          <li {...props} key={castedOption.id}>
-                            <BodyIconTypography label={castedOption.name} />
-                          </li>
-                        );
-                      }}
-                      filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
-                      selectOnFocus
-                      clearOnBlur
-                      handleHomeEndKeys
-                      onChange={(_, option) => handleTeamChange(option as TeamDetails)}
-                    />
-                  </FormFieldLabel>
-                </StackColumn>
-
-                {(booking.marketplaceBooking?.paymentStatus.type === 'NO_PAYMENT_REQUIRED' || booking.marketplaceBooking?.paymentStatus.type === 'CONFIRMED') && (
+              return (
+                <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
+                    <SectionIconTypography label="Edit Booking" />
+                    <BodyIconTypography label="Edit your booking details" />
+                    <Divider />
                   </StackColumn>
-                )}
-              </FormStackColumn>
-            )}
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Payment Status" stackLabelOnTop>
+                      <SmallIconTypography label={booking.marketplaceBooking?.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Date/Time" stackLabelOnTop>
+                      <StackRow>
+                        <BodyIconTypography label={`${toShortDate(booking.from)}, `} />
+                        {allDay && <BodyIconTypography label="All day" />}
+                        {!allDay && <BodyIconTypography label={`${toShortTime(timeRange[0])} - ${toShortTime(timeRange[1])}`} />}
+                      </StackRow>
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Invoice" stackLabelOnTop>
+                      <InvoiceDownloadLinks invoices={booking.arrearsInvoices ?? []} legacyInvoiceUrl={booking.marketplaceBooking?.invoiceUrl ?? null} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="User">
+                      <Autocomplete
+                        name="member"
+                        multiple={false}
+                        required={requiredFields.member}
+                        options={customers}
+                        getOptionValue={(option) => (option as OrganizationMemberDetails).customer.id}
+                        getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
+                        renderOption={(props, option) => {
+                          const castedOption = (option as OrganizationMemberDetails).customer;
+
+                          return (
+                            <li {...props} key={castedOption.id}>
+                              <BodyIconTypography
+                                label={getCustomerFullName(castedOption)}
+                                startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
+                              />
+                            </li>
+                          );
+                        }}
+                        filterOptions={(options, params) => {
+                          if (params.inputValue !== peopleNameSearchText) {
+                            debounceSearchTextChange(params.inputValue);
+                          }
+
+                          return options;
+                        }}
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                        onChange={(_, option) => handleMemberChange(option as OrganizationMemberDetails)}
+                      />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Notes">
+                      <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Category">
+                      <SingleChoiceMarketplaceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Team">
+                      <Autocomplete
+                        name="team"
+                        multiple={false}
+                        required={requiredFields.team}
+                        options={teams}
+                        getOptionValue={(option) => (option as TeamDetails).id}
+                        getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
+                        renderOption={(props, option) => {
+                          const castedOption = option as TeamDetails;
+
+                          return (
+                            <li {...props} key={castedOption.id}>
+                              <BodyIconTypography label={castedOption.name} />
+                            </li>
+                          );
+                        }}
+                        filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                        onChange={(_, option) => handleTeamChange(option as TeamDetails)}
+                      />
+                    </FormFieldLabel>
+                  </StackColumn>
+                </FormStackColumn>
+              );
+            }}
           />
         </AppBarWithStackColumn>
       </Box>

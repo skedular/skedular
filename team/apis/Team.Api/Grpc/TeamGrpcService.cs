@@ -7,12 +7,14 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Version;
 using Grpc.Core;
 using Team.Api.Mappers;
+using Team.Api.Models;
 using Team.Api.Services;
 using Team.Api.Services.Authorization;
 using Team.Shared.Models;
 using OrderDirection = Api.Shared.Grpc.Skedular.Team.Core.V1.OrderDirection;
 using Permissions = Api.Shared.Grpc.Skedular.Team.Core.V1.Permissions;
 using TeamOrderField = Api.Shared.Grpc.Skedular.Team.Core.V1.TeamOrderField;
+using TeamPatchField = Api.Shared.Grpc.Skedular.Team.Core.V1.TeamPatchField;
 using TeamService = Api.Shared.Grpc.Skedular.Team.Core.V1.TeamService;
 using Version = Api.Shared.Grpc.Skedular.Team.Core.V1.Version;
 
@@ -138,7 +140,22 @@ public class TeamGrpcService(
 
         ArgumentException.ThrowIfNullOrEmpty(request.OrganizationId);
 
-        var updated = await teamService.UpdateAsync(grpcMapper.MapTo(request), true, context.CancellationToken);
+        var requestedTeam = grpcMapper.MapTo(request);
+        var fields = request.FieldsToUpdate.ToHashSet();
+        var patchFields = new HashSet<TeamAndMembersPatchField>();
+        if (fields.Any(field => field != TeamPatchField.Members))
+        {
+            patchFields.Add(TeamAndMembersPatchField.Team);
+        }
+
+        if (fields.Contains(TeamPatchField.Members))
+        {
+            patchFields.Add(TeamAndMembersPatchField.Members);
+        }
+
+        var updated = await teamService.UpdateAsync(
+            new TeamAndMembersPatchRequest(requestedTeam, patchFields),
+            context.CancellationToken);
         logger.LogInformation("gRPC Update modified team {TeamId}", updated.Id);
 
         return grpcMapper.MapToGrpcResponse(updated);

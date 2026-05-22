@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<32bfbfc31abc58becec86bf0ad4182c8>>
+ * @generated SignedSource<<633a6dfcef21cac47056b4f8737b6e4a>>
  * @lightSyntaxTransform
  */
 
@@ -8,10 +8,12 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type TeamPatchField = "ABOUT" | "FEATURE_IMAGES" | "NAME" | "PRIMARY_LOCATION" | "TIMEZONE" | "%future added value";
 export type UpdateTeamInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
+  fieldsToUpdate: ReadonlyArray<TeamPatchField>;
   id: string;
   name: string;
   primaryLocationId?: string | null | undefined;

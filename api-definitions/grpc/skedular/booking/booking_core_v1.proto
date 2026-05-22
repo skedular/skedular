@@ -231,6 +231,15 @@ message UpdatePrivateInput {
   repeated string           organizationIds = 7;
   repeated string           teamIds         = 8;
   repeated string           resourceIds     = 9;
+  repeated PrivateBookingPatchField fieldsToUpdate = 10;
+}
+
+enum PrivateBookingPatchField {
+  PrivateBookingPatchField_Participants = 0;
+  PrivateBookingPatchField_Schedule     = 1;
+  PrivateBookingPatchField_Notes        = 2;
+  PrivateBookingPatchField_Category     = 3;
+  PrivateBookingPatchField_Resources    = 4;
 }
 
 message DeletePrivateInput {

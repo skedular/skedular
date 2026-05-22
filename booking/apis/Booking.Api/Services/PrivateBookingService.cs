@@ -1,5 +1,7 @@
 using Api.Shared.Services;
+using Booking.Api.Models;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Random;
@@ -10,7 +12,7 @@ namespace Booking.Api.Services;
 public interface IPrivateBookingService
 {
     Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
-    Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
+    Task<Shared.Models.Booking> UpdateAsync(PrivateBookingPatchRequest request, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -20,7 +22,9 @@ public class PrivateBookingService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
     IContext context,
-    Shared.Services.IPrivateBookingService sharedPrivateBookingService) : IPrivateBookingService
+    Shared.Services.IPrivateBookingService sharedPrivateBookingService,
+    IEntityMapper entityMapper,
+    ILogger<PrivateBookingService> logger) : IPrivateBookingService
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
@@ -71,18 +75,48 @@ public class PrivateBookingService(
         return await sharedPrivateBookingService.AddAsync(booking, customer, organizations, teams, null, cancellationToken);
     }
 
-    public async Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Booking> UpdateAsync(PrivateBookingPatchRequest request, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Booking.Id);
 
-        var verifiableToken = context.GetVerifiableToken();
-        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Private booking patch autosave started. BookingId: {BookingId}, EditUnits: {EditUnits}",
+            request.Booking.Id,
+            editUnits);
 
-        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
-                       throw new CustomerNotFound();
-        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken) ?? throw new BookingNotFound();
+        try
+        {
+            var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(request.Booking.Id, cancellationToken) ??
+                                  throw new BookingNotFound();
+            var booking = entityMapper.MapTo(existingBooking);
+            Apply(request, booking);
 
-        return await UpdateInternalAsync(booking, existingBooking, customer, cancellationToken);
+            var updatedBooking = await UpdateAsync(booking, cancellationToken);
+            logger.LogInformation(
+                "Private booking patch autosave completed. BookingId: {BookingId}, EditUnits: {EditUnits}",
+                updatedBooking.Id,
+                editUnits);
+            return updatedBooking;
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Private booking patch autosave rejected by authorization. BookingId: {BookingId}, EditUnits: {EditUnits}",
+                request.Booking.Id,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Private booking patch autosave failed. BookingId: {BookingId}, EditUnits: {EditUnits}",
+                request.Booking.Id,
+                editUnits);
+            throw;
+        }
     }
 
     public async Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken)
@@ -130,6 +164,20 @@ public class PrivateBookingService(
         return await sharedPrivateBookingService.DeleteAsync(existingBooking, customer, true, cancellationToken);
     }
 
+    private async Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
+
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
+                       throw new CustomerNotFound();
+        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken) ?? throw new BookingNotFound();
+
+        return await UpdateInternalAsync(booking, existingBooking, customer, cancellationToken);
+    }
+
     private async Task<Shared.Models.Booking> UpdateInternalAsync(
         Shared.Models.Booking booking,
         Shared.Database.Entities.Booking existingBooking,
@@ -174,5 +222,36 @@ public class PrivateBookingService(
             null,
             false,
             cancellationToken);
+    }
+
+    private static void Apply(PrivateBookingPatchRequest request, Shared.Models.Booking booking)
+    {
+        foreach (var field in request.FieldsToUpdate)
+        {
+            switch (field)
+            {
+                case PrivateBookingPatchField.Participants:
+                    booking.InvolvedCustomers = request.Booking.InvolvedCustomers;
+                    booking.InvolvedOrganizations = request.Booking.InvolvedOrganizations;
+                    booking.InvolvedTeams = request.Booking.InvolvedTeams;
+                    break;
+                case PrivateBookingPatchField.Schedule:
+                    booking.From = request.Booking.From;
+                    booking.Until = request.Booking.Until;
+                    booking.Schedules = request.Booking.Schedules;
+                    break;
+                case PrivateBookingPatchField.Notes:
+                    booking.Notes = request.Booking.Notes;
+                    break;
+                case PrivateBookingPatchField.Category:
+                    booking.Category = request.Booking.Category;
+                    break;
+                case PrivateBookingPatchField.Resources:
+                    booking.Resources = request.Booking.Resources;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
+using Location.Api.Models;
 using Location.Api.Services.Authorization;
 using Location.Shared.Mappers;
 using Location.Shared.Models;
@@ -17,7 +18,7 @@ public interface IFloorPlanService
 {
     Task<FloorPlan?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<FloorPlan> AddAsync(FloorPlan floorPlan, bool updateResourcePositions, CancellationToken cancellationToken);
-    Task<FloorPlan> UpdateAsync(FloorPlan floorPlan, bool updateResourcePositions, CancellationToken cancellationToken);
+    Task<FloorPlan> UpdateAsync(FloorPlanPatchRequest request, CancellationToken cancellationToken);
     Task<FloorPlan> DeleteAsync(string id, CancellationToken cancellationToken);
 
     Task<FloorPlan> UpdateResourcePositionsAsync(
@@ -25,7 +26,9 @@ public interface IFloorPlanService
         IReadOnlyList<ResourcePosition> resourcePositions,
         CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int )> GetPaginatedFloorPlansAsync(
+    Task<FloorPlan> UpdateResourcePositionsAsync(ResourcePositionsPatchRequest request, CancellationToken cancellationToken);
+
+    Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int)> GetPaginatedFloorPlansAsync(
         PaginationInputParam paginationInputParam,
         FloorPlanSearchCriteria searchCriteria,
         IEnumerable<FloorPlanOrder> orderByFields,
@@ -39,7 +42,8 @@ public class FloorPlanService(
     ICachedCustomerService cachedCustomerService,
     IRandomHelper randomHelper,
     IEntityMapper entityMapper,
-    ICachedLocationService cachedLocationService) : IFloorPlanService
+    ICachedLocationService cachedLocationService,
+    ILogger<FloorPlanService> logger) : IFloorPlanService
 {
     public async Task<FloorPlan?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
@@ -139,23 +143,74 @@ public class FloorPlanService(
         return floorPlan;
     }
 
-    public async Task<FloorPlan> UpdateAsync(FloorPlan floorPlan, bool updateResourcePositions, CancellationToken cancellationToken)
+    public async Task<FloorPlan> UpdateAsync(FloorPlanPatchRequest request, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(floorPlan.Id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.FloorPlan.Id);
 
-        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
-        var existingFloorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlan.Id, cancellationToken) ??
-                                throw new FloorPlanNotFound();
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Floor plan patch autosave started. FloorPlanId: {FloorPlanId}, EditUnits: {EditUnits}",
+            request.FloorPlan.Id,
+            editUnits);
 
-        var existingLocation =
-            await repositoryFactory.LocationRepository.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
-
-        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customerId, cancellationToken))
+        try
         {
-            throw new UnauthorizedAccessException();
-        }
+            var floorPlan = await GetByIdAsync(request.FloorPlan.Id, cancellationToken) ?? throw new FloorPlanNotFound();
+            foreach (var field in request.FieldsToUpdate)
+            {
+                switch (field)
+                {
+                    case FloorPlanPatchField.Name:
+                        floorPlan.Name = request.FloorPlan.Name;
+                        break;
+                    case FloorPlanPatchField.Image:
+                        floorPlan.Image = request.FloorPlan.Image;
+                        break;
+                    case FloorPlanPatchField.ResourcePositions:
+                        floorPlan.ResourcePositions = request.FloorPlan.ResourcePositions;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+                }
+            }
 
-        return await UpdateInternalAsync(floorPlan, updateResourcePositions, existingFloorPlan, existingLocation, cancellationToken);
+            if (request.FieldsToUpdate.Count == 0)
+            {
+                logger.LogInformation(
+                    "Floor plan patch autosave completed with no changes. FloorPlanId: {FloorPlanId}, EditUnits: {EditUnits}",
+                    floorPlan.Id,
+                    editUnits);
+                return floorPlan;
+            }
+
+            var updatedFloorPlan = await UpdateAsync(
+                floorPlan,
+                request.FieldsToUpdate.Contains(FloorPlanPatchField.ResourcePositions),
+                cancellationToken);
+            logger.LogInformation(
+                "Floor plan patch autosave completed. FloorPlanId: {FloorPlanId}, EditUnits: {EditUnits}",
+                updatedFloorPlan.Id,
+                editUnits);
+            return updatedFloorPlan;
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Floor plan patch autosave rejected by authorization. FloorPlanId: {FloorPlanId}, EditUnits: {EditUnits}",
+                request.FloorPlan.Id,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Floor plan patch autosave failed. FloorPlanId: {FloorPlanId}, EditUnits: {EditUnits}",
+                request.FloorPlan.Id,
+                editUnits);
+            throw;
+        }
     }
 
     public async Task<FloorPlan> DeleteAsync(string id, CancellationToken cancellationToken)
@@ -260,6 +315,53 @@ public class FloorPlanService(
         return entityMapper.MapTo(existingFloorPlan);
     }
 
+    public async Task<FloorPlan> UpdateResourcePositionsAsync(ResourcePositionsPatchRequest request, CancellationToken cancellationToken)
+    {
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Floor plan resource positions patch autosave started. FloorPlanId: {FloorPlanId}, EditUnits: {EditUnits}",
+            request.FloorPlanId,
+            editUnits);
+
+        try
+        {
+            if (!request.FieldsToUpdate.Contains(ResourcePositionsPatchField.ResourcePositions))
+            {
+                var unchangedFloorPlan = await GetByIdAsync(request.FloorPlanId, cancellationToken) ?? throw new FloorPlanNotFound();
+                logger.LogInformation(
+                    "Floor plan resource positions patch autosave completed with no changes. FloorPlanId: {FloorPlanId}, EditUnits: {EditUnits}",
+                    unchangedFloorPlan.Id,
+                    editUnits);
+                return unchangedFloorPlan;
+            }
+
+            var updatedFloorPlan = await UpdateResourcePositionsAsync(request.FloorPlanId, request.ResourcePositions, cancellationToken);
+            logger.LogInformation(
+                "Floor plan resource positions patch autosave completed. FloorPlanId: {FloorPlanId}, EditUnits: {EditUnits}",
+                updatedFloorPlan.Id,
+                editUnits);
+            return updatedFloorPlan;
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Floor plan resource positions patch autosave rejected by authorization. FloorPlanId: {FloorPlanId}, EditUnits: {EditUnits}",
+                request.FloorPlanId,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Floor plan resource positions patch autosave failed. FloorPlanId: {FloorPlanId}, EditUnits: {EditUnits}",
+                request.FloorPlanId,
+                editUnits);
+            throw;
+        }
+    }
+
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int)> GetPaginatedFloorPlansAsync(
         PaginationInputParam paginationInputParam,
         FloorPlanSearchCriteria searchCriteria,
@@ -286,6 +388,25 @@ public class FloorPlanService(
             cancellationToken);
 
         return (paginatedInfo, edges.Select(item => new Edge<FloorPlan>(entityMapper.MapTo(item.Node), item.Cursor)).ToList(), totalCount);
+    }
+
+    private async Task<FloorPlan> UpdateAsync(FloorPlan floorPlan, bool updateResourcePositions, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(floorPlan.Id);
+
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var existingFloorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlan.Id, cancellationToken) ??
+                                throw new FloorPlanNotFound();
+
+        var existingLocation =
+            await repositoryFactory.LocationRepository.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
+
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customerId, cancellationToken))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        return await UpdateInternalAsync(floorPlan, updateResourcePositions, existingFloorPlan, existingLocation, cancellationToken);
     }
 
     private async Task<FloorPlan> UpdateInternalAsync(

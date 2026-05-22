@@ -1,6 +1,7 @@
 using HotChocolate;
 using HotChocolate.Types;
 using Location.Api.Mappers;
+using Location.Api.Models;
 using Location.Api.Services;
 
 namespace Location.Api.GraphQL.Location;
@@ -27,7 +28,11 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Location = graphQlMapper.MapTo(await locationService.UpdateAsync(graphQlMapper.MapTo(input), false, cancellationToken))!
+            Location = graphQlMapper.MapTo(
+                await locationService.UpdateAsync(
+                    new LocationPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
+                    false,
+                    cancellationToken))!
         };
 
     [UseResolverScope]
@@ -50,7 +55,9 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         {
             ClientMutationId = input.ClientMutationId,
             Location = graphQlMapper.MapTo(
-                await locationOpeningHoursService.UpdateOpeningHoursAsync(input.Id, graphQlMapper.MapTo(input.WeekOpeningHours)!, cancellationToken))!
+                await locationOpeningHoursService.UpdateOpeningHoursAsync(
+                    new LocationOpeningHoursPatchRequest(input.Id, graphQlMapper.MapTo(input.WeekOpeningHours)!, input.FieldsToUpdate),
+                    cancellationToken))!
         };
 
     [UseResolverScope]
@@ -72,7 +79,10 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Location = graphQlMapper.MapTo(await locationRestrictedInformationService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
+            Location = graphQlMapper.MapTo(
+                await locationRestrictedInformationService.UpdateAsync(
+                    new LocationRestrictedInformationPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
+                    cancellationToken))!
         };
 
     [UseResolverScope]

@@ -2,6 +2,7 @@
 using HotChocolate.Types;
 using Location.Api.GraphQL.Location;
 using Location.Api.Mappers;
+using Location.Api.Models;
 using Location.Api.Services;
 
 namespace Location.Api.GraphQL.PhysicalAddress;
@@ -28,6 +29,9 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Location = graphQlMapper.MapTo(await organizationPhysicalAddressService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))!
+            Location = graphQlMapper.MapTo(
+                await organizationPhysicalAddressService.UpdateAsync(
+                    new LocationPhysicalAddressPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
+                    cancellationToken))!
         };
 }

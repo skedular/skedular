@@ -4,6 +4,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
+using Location.Api.Models;
 using Location.Api.Services.Authorization;
 using Location.Shared.Mappers;
 using Location.Shared.Models;
@@ -18,7 +19,7 @@ namespace Location.Api.Services;
 public interface IResourceService
 {
     Task<Resource> AddAsync(Resource resource, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
-    Task<Resource> UpdateAsync(Resource resource, CancellationToken cancellationToken);
+    Task<Resource> UpdateAsync(ResourcePatchRequest request, CancellationToken cancellationToken);
     Task<Resource> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<Resource>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<IReadOnlyList<Resource>> ActivateAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
@@ -43,7 +44,8 @@ public class ResourceService(
     ILocationOutboxPublisher locationOutboxPublisher,
     ICachedResourceService cachedResourceService,
     ICachedLocationService cachedLocationService,
-    ITemporalOutboxService temporalOutboxService) : IResourceService
+    ITemporalOutboxService temporalOutboxService,
+    ILogger<ResourceService> logger) : IResourceService
 {
     public async Task<Resource> AddAsync(Resource resource, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
@@ -136,20 +138,48 @@ public class ResourceService(
         return mappedResource;
     }
 
-    public async Task<Resource> UpdateAsync(Resource resource, CancellationToken cancellationToken)
+    public async Task<Resource> UpdateAsync(ResourcePatchRequest request, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(resource.Id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Resource.Id);
 
-        foreach (var tag in resource.Tags)
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Resource patch autosave started. ResourceId: {ResourceId}, EditUnits: {EditUnits}",
+            request.Resource.Id,
+            editUnits);
+
+        try
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(tag.Id);
+            var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(request.Resource.Id, cancellationToken) ??
+                                   throw new ResourceNotFound();
+            var resource = entityMapper.MapTo(existingResource);
+            Apply(request, resource);
+
+            var updatedResource = await UpdateAsync(resource, cancellationToken);
+            logger.LogInformation(
+                "Resource patch autosave completed. ResourceId: {ResourceId}, EditUnits: {EditUnits}",
+                updatedResource.Id,
+                editUnits);
+            return updatedResource;
         }
-
-        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
-        var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, cancellationToken) ??
-                               throw new ResourceNotFound();
-
-        return await UpdateInternalAsync(resource, existingResource, customerId, cancellationToken);
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Resource patch autosave rejected by authorization. ResourceId: {ResourceId}, EditUnits: {EditUnits}",
+                request.Resource.Id,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Resource patch autosave failed. ResourceId: {ResourceId}, EditUnits: {EditUnits}",
+                request.Resource.Id,
+                editUnits);
+            throw;
+        }
     }
 
     public async Task<Resource> DeleteAsync(string id, CancellationToken cancellationToken)
@@ -417,6 +447,22 @@ public class ResourceService(
         return (paginatedInfo, entityMapper.MapTo(edges, entityMapper.MapTo(existingLocation)).ToList(), totalCount);
     }
 
+    private async Task<Resource> UpdateAsync(Resource resource, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(resource.Id);
+
+        foreach (var tag in resource.Tags)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(tag.Id);
+        }
+
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, cancellationToken) ??
+                               throw new ResourceNotFound();
+
+        return await UpdateInternalAsync(resource, existingResource, customerId, cancellationToken);
+    }
+
     private async Task<Resource> UpdateInternalAsync(
         Resource resource,
         Shared.Database.Entities.Resource existingResource,
@@ -493,5 +539,36 @@ public class ResourceService(
         await cachedResourceService.UpdateByIdAsync(resource.Id, cancellationToken);
 
         return resource;
+    }
+
+    private static void Apply(ResourcePatchRequest request, Resource resource)
+    {
+        foreach (var field in request.FieldsToUpdate)
+        {
+            switch (field)
+            {
+                case ResourcePatchField.Name:
+                    resource.Name = request.Resource.Name;
+                    break;
+                case ResourcePatchField.Inactive:
+                    resource.Inactive = request.Resource.Inactive;
+                    break;
+                case ResourcePatchField.RequireBookingApproval:
+                    resource.RequireBookingApproval = request.Resource.RequireBookingApproval;
+                    break;
+                case ResourcePatchField.Color:
+                    resource.Color = request.Resource.Color;
+                    break;
+                case ResourcePatchField.Capacity:
+                    resource.Capacity = request.Resource.Capacity;
+                    break;
+                case ResourcePatchField.Tags:
+                case ResourcePatchField.ResourceType:
+                    resource.Tags = request.Resource.Tags;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+            }
+        }
     }
 }

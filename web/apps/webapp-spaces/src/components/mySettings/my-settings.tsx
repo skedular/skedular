@@ -1,20 +1,21 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
 import type { mySettings_rootQuery } from '@/queries/__generated__/mySettings_rootQuery.graphql';
-import type { mySettings_updateCustomerDetailsMutation, PersonalInformationVisibility } from '@/queries/__generated__/mySettings_updateCustomerDetailsMutation.graphql';
+import type {
+  CustomerDetailsPatchField,
+  mySettings_updateCustomerDetailsMutation,
+  PersonalInformationVisibility,
+} from '@/queries/__generated__/mySettings_updateCustomerDetailsMutation.graphql';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
 import {
   CaptionIconTypography,
-  defaultButtonStyle,
   defaultPadding,
-  EditorActionBar,
   FormFieldLabel,
   FormStackColumn,
   LeadIconTypography,
@@ -24,11 +25,12 @@ import {
   StackRow,
 } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
@@ -89,6 +91,23 @@ const formColumnSx = {
   maxWidth: 760,
 };
 
+const inlinePatchDebounceTimeout = 1000;
+
+const profilePatchFields: Record<keyof ProfileDetailsDetails, CustomerDetailsPatchField> = {
+  designation: 'DESIGNATION',
+  title: 'TITLE',
+  name: 'NAME',
+  givenName: 'GIVEN_NAME',
+  middleName: 'MIDDLE_NAME',
+  familyName: 'FAMILY_NAME',
+  timezone: 'TIMEZONE',
+  phoneNumber: 'PHONE_NUMBER',
+  personalInformationVisibility: 'PERSONAL_INFORMATION_VISIBILITY',
+};
+
+const getChangedProfileFields = (left: ProfileDetailsDetails, right: ProfileDetailsDetails) =>
+  (Object.keys(profilePatchFields) as (keyof ProfileDetailsDetails)[]).filter((field) => left[field] !== right[field]).map((field) => profilePatchFields[field]);
+
 const MySettings = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<mySettings_rootQuery>(RootQuery, queryReference);
 
@@ -119,79 +138,77 @@ const MySettings = ({ queryReference }: Props) => {
   const validateProfileDetails = makeValidate(profileDetailsSchema);
   const requiredProfileDetailsFields = makeRequired(profileDetailsSchema);
 
-  const handleProfileDetailUpdateClick = ({
-    timezone,
-    designation,
-    title,
-    name,
-    givenName,
-    middleName,
-    familyName,
-    phoneNumber,
-    personalInformationVisibility,
-  }: ProfileDetailsDetails) => {
-    const toastId = themedToast(<NotificationContent content={`Updating user profile details'...`} />, infoNotificationOptions);
+  const me = rootData.me;
+  const initialProfileValues = useMemo<ProfileDetailsDetails>(
+    () => ({
+      timezone: me.timezone ?? '',
+      designation: me.designation ?? null,
+      title: me.title ?? null,
+      name: me.name ?? null,
+      givenName: me.givenName ?? null,
+      middleName: me.middleName ?? null,
+      familyName: me.familyName ?? null,
+      phoneNumber: me.phoneNumber ?? null,
+      personalInformationVisibility: me.personalInformationVisibility.type,
+    }),
+    [me],
+  );
+  const draftProfileValues = useRef(initialProfileValues);
+  const submittedProfileValues = useRef(initialProfileValues);
 
-    commitUpdateCustomerDetails({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: rootData.me.id,
-          timezone,
-          designation,
-          title,
-          name,
-          givenName,
-          middleName,
-          familyName,
-          phoneNumber,
-          personalInformationVisibility: personalInformationVisibility as PersonalInformationVisibility,
+  const commitProfilePatch = useCallback(
+    (fieldsToUpdate: CustomerDetailsPatchField[], values: ProfileDetailsDetails) => {
+      if (fieldsToUpdate.length === 0 || !profileDetailsSchema.isValidSync(values)) {
+        return;
+      }
+
+      const previousValues = submittedProfileValues.current;
+      if (getChangedProfileFields(previousValues, values).length === 0) {
+        return;
+      }
+
+      submittedProfileValues.current = values;
+
+      commitUpdateCustomerDetails({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
+            id: me.id,
+            fieldsToUpdate,
+            ...values,
+            personalInformationVisibility: values.personalInformationVisibility as PersonalInformationVisibility,
+          },
         },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update your profile details. ${getRelayErrorMessage(errors)}`} />,
-          });
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            submittedProfileValues.current = previousValues;
+            themedToast(<NotificationContent content={`We couldn't update your profile details. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+            return;
+          }
 
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Your profile details have been updated.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update your profile details. ${error.message}`} />,
-        });
-      },
-      optimisticResponse: {
-        updateCustomerDetails: {
-          customer: {
-            id: rootData.me.id,
-            timezone,
-            designation,
-            title,
-            name,
-            givenName,
-            middleName,
-            familyName,
-            phoneNumber,
-            personalInformationVisibility: {
-              type: personalInformationVisibility as PersonalInformationVisibility,
-              name: '',
+          themedToast(<NotificationContent content="Profile details saved." />, successNotificationOptions);
+        },
+        onError: (error) => {
+          submittedProfileValues.current = previousValues;
+          themedToast(<NotificationContent content={`We couldn't update your profile details. ${error.message}`} />, errorNotificationOptions);
+        },
+        optimisticResponse: {
+          updateCustomerDetails: {
+            customer: {
+              id: me.id,
+              ...values,
+              personalInformationVisibility: {
+                type: values.personalInformationVisibility as PersonalInformationVisibility,
+                name: '',
+              },
             },
           },
         },
-      },
-    });
-  };
-
-  const me = rootData.me;
+      });
+    },
+    [commitUpdateCustomerDetails, me.id, themedToast],
+  );
+  const debouncedCommitProfilePatch = useDebounceCallback(commitProfilePatch, inlinePatchDebounceTimeout);
 
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pt: { xs: 1, sm: 1, md: 2 }, pb: defaultPadding }}>
@@ -225,79 +242,70 @@ const MySettings = ({ queryReference }: Props) => {
           }}
         >
           <Form
-            onSubmit={handleProfileDetailUpdateClick}
-            initialValues={{
-              timezone: me.timezone ?? '',
-              designation: me.designation,
-              title: me.title,
-              name: me.name,
-              givenName: me.givenName,
-              middleName: me.middleName,
-              familyName: me.familyName,
-              phoneNumber: me.phoneNumber,
-              personalInformationVisibility: me.personalInformationVisibility.type,
-            }}
+            onSubmit={() => undefined}
+            initialValues={initialProfileValues}
             validate={validateProfileDetails}
-            render={({ handleSubmit }) => (
-              <FormStackColumn onSubmit={handleSubmit} sx={{ p: defaultPadding, ...formColumnSx }}>
-                <StackColumn spacing={2}>
-                  <StackColumn spacing={0.5}>
-                    <LeadIconTypography label="Profile" />
-                    <SmallIconTypography label="Edit the details shown across your account and organizations." />
+            render={({ handleSubmit, values }) => {
+              const formValues = values as ProfileDetailsDetails;
+              const changedFields = getChangedProfileFields(draftProfileValues.current, formValues);
+              if (changedFields.length > 0) {
+                draftProfileValues.current = formValues;
+                debouncedCommitProfilePatch(changedFields, formValues);
+              }
+
+              return (
+                <FormStackColumn onSubmit={handleSubmit} sx={{ p: defaultPadding, ...formColumnSx }}>
+                  <StackColumn spacing={2}>
+                    <StackColumn spacing={0.5}>
+                      <LeadIconTypography label="Profile" />
+                      <SmallIconTypography label="Edit the details shown across your account and organizations." />
+                    </StackColumn>
+
+                    <Divider />
+
+                    <FormFieldLabel label="Designation">
+                      <TextField name="designation" required={requiredProfileDetailsFields.designation} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Title">
+                      <TextField name="title" required={requiredProfileDetailsFields.title} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Name">
+                      <TextField name="name" required={requiredProfileDetailsFields.name} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Given Name">
+                      <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Middle Name">
+                      <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Family Name">
+                      <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Timezone">
+                      <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Phone Number">
+                      <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Personal Information Visibility" required={requiredProfileDetailsFields.personalInformationVisibility}>
+                      <SingleChoiceUserPersonalInformationVisibility
+                        rootDataRelay={rootData}
+                        name="personalInformationVisibility"
+                        required={requiredProfileDetailsFields.personalInformationVisibility}
+                      />
+                    </FormFieldLabel>
                   </StackColumn>
-
-                  <Divider />
-
-                  <FormFieldLabel label="Designation">
-                    <TextField name="designation" required={requiredProfileDetailsFields.designation} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Title">
-                    <TextField name="title" required={requiredProfileDetailsFields.title} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredProfileDetailsFields.name} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Given Name">
-                    <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Middle Name">
-                    <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Family Name">
-                    <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Timezone">
-                    <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Phone Number">
-                    <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Personal Information Visibility" required={requiredProfileDetailsFields.personalInformationVisibility}>
-                    <SingleChoiceUserPersonalInformationVisibility
-                      rootDataRelay={rootData}
-                      name="personalInformationVisibility"
-                      required={requiredProfileDetailsFields.personalInformationVisibility}
-                    />
-                  </FormFieldLabel>
-                </StackColumn>
-
-                <EditorActionBar
-                  primaryAction={
-                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                      Update
-                    </Button>
-                  }
-                />
-              </FormStackColumn>
-            )}
+                </FormStackColumn>
+              );
+            }}
           />
         </Box>
       </StackColumn>

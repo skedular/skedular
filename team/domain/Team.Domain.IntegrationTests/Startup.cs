@@ -3,6 +3,7 @@ using Api.Shared.Clients.OpenApi.Skedular.Team.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Team.Workaround.V1;
 using Api.Shared.Grpc.Skedular.Team.Core.V1;
 using Api.Shared.Services;
+using Api.Shared.Services.Configurations.Grpc;
 using Aspire.Hosting.Testing;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
@@ -58,6 +59,9 @@ public class Startup
             .AddTestingSharedIntegrationTests()
             .AddSingleton(_ => new TeamService.TeamServiceClient(teamApiGrpcChannel));
 
+        var teamConfiguration = configuration.GetSection(TeamConfiguration.Key).Get<TeamConfiguration>() ?? new TeamConfiguration { ApiKey = "XXX" };
+        services.AddSingleton(teamConfiguration);
+
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 
         services
@@ -78,8 +82,12 @@ public class Startup
             .AddSingleton<ITeamGraphqlClient>(_ => new TeamGraphqlClient(teamApiClient))
             .AddSingleton<ITeamWorkaroundClient>(_ => new TeamWorkaroundClient(teamApiClient));
 
+        services.AddTransient<TestBearerTokenHandler>();
+
         services
             .AddSkedularGraphQLV1()
-            .ConfigureHttpClient(httpClient => httpClient.BaseAddress = teamApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
+            .ConfigureHttpClient(
+                httpClient => httpClient.BaseAddress = teamApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri(),
+                builder => builder.AddHttpMessageHandler<TestBearerTokenHandler>());
     }
 }

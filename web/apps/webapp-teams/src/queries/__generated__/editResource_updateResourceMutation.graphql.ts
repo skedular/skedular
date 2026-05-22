@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dab82394cc92af25d5ea3aa80b1d09d5>>
+ * @generated SignedSource<<c97b62933b077ab7814052bddfd14367>>
  * @lightSyntaxTransform
  */
 
@@ -8,11 +8,13 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type ResourcePatchField = "CAPACITY" | "COLOR" | "INACTIVE" | "NAME" | "REQUIRE_BOOKING_APPROVAL" | "RESOURCE_TYPE" | "TAGS" | "%future added value";
 export type UpdateResourceInput = {
   capacity: number;
   clientMutationId?: string | null | undefined;
   color?: string | null | undefined;
   customTagIds: ReadonlyArray<string>;
+  fieldsToUpdate: ReadonlyArray<ResourcePatchField>;
   id: string;
   inactive: boolean;
   name: string;

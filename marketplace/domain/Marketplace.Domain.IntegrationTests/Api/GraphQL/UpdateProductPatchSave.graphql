@@ -1,0 +1,28 @@
+mutation UpdateProductPatchSave(
+    $id: String!
+    $fieldsToUpdate: [ProductPatchField!]!
+    $listingMetadata: ListingMetadataInput
+) {
+    updateProduct(
+        input: {
+            id: $id
+            fieldsToUpdate: $fieldsToUpdate
+            type: RESOURCE
+            currency: NZD
+            tagIds: []
+            pricingOptions: []
+            listingMetadata: $listingMetadata
+        }
+    ) {
+        product {
+            id
+            currency {
+                type
+            }
+            listingMetadata {
+                title
+                subTitle
+            }
+        }
+    }
+}

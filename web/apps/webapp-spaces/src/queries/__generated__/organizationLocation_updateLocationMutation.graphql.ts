@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e8ba892bd238f8f6cfc5e3c62c8d0a2f>>
+ * @generated SignedSource<<dcb567fd97c44af6687a3fc011c3ad80>>
  * @lightSyntaxTransform
  */
 
@@ -8,11 +8,13 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type LocationPatchField = "EXTRA_METADATA" | "FEATURE_IMAGES" | "LISTING_METADATA" | "NAME" | "ORGANIZATION" | "PHYSICAL_ADDRESS" | "TAGS" | "TIMEZONE" | "TYPE" | "UNIQUE_CLAIM_CODE" | "%future added value";
 export type LocationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type UpdateLocationInput = {
   clientMutationId?: string | null | undefined;
   extraMetadata?: LocationExtraMetadataInput | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
+  fieldsToUpdate: ReadonlyArray<LocationPatchField>;
   id: string;
   listingMetadata?: ListingMetadataInput | null | undefined;
   name: string;

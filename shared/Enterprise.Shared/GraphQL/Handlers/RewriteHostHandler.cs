@@ -1,6 +1,6 @@
 namespace Enterprise.Shared.GraphQL.Handlers;
 
-public sealed class RewriteHostHandler(Uri target) : DelegatingHandler
+public class RewriteHostHandler(Uri target) : DelegatingHandler
 {
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {

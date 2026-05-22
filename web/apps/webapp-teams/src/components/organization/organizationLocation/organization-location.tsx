@@ -1,6 +1,5 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { Address, PhysicalAddress } from '@/components/address';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, LeadIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
 import { getOrganizationLocationsBaseLink } from '@/components/links';
@@ -14,9 +13,6 @@ import OrganizationLocationManageResourcesSection from '@/components/organizatio
 import OrganizationLocationSectionNav, { OrganizationLocationSection } from '@/components/organization/organizationLocation/organization-location-section-nav';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, stringCollectionToString, stringToMultiLines } from '@skedular/shared';
 import type { organizationLocation_addLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_addLocationPhysicalAddressMutation.graphql';
 import type {
   LocationRestrictedInformationCategory,
@@ -25,20 +21,37 @@ import type {
 import type { organizationLocation_deleteLocationMutation } from '@/queries/__generated__/organizationLocation_deleteLocationMutation.graphql';
 import type { organizationLocation_deleteLocationRestrictedInformationMutation } from '@/queries/__generated__/organizationLocation_deleteLocationRestrictedInformationMutation.graphql';
 import type { organizationLocation_query$key } from '@/queries/__generated__/organizationLocation_query.graphql';
-import type { LocationType, organizationLocation_updateLocationMutation } from '@/queries/__generated__/organizationLocation_updateLocationMutation.graphql';
+import type { LocationPatchField, LocationType, organizationLocation_updateLocationMutation } from '@/queries/__generated__/organizationLocation_updateLocationMutation.graphql';
 import type { organizationLocation_updateLocationOpeningHoursMutation } from '@/queries/__generated__/organizationLocation_updateLocationOpeningHoursMutation.graphql';
 import type { organizationLocation_updateLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_updateLocationPhysicalAddressMutation.graphql';
-import type { organizationLocation_updateLocationRestrictedInformationMutation } from '@/queries/__generated__/organizationLocation_updateLocationRestrictedInformationMutation.graphql';
+import type {
+  LocationRestrictedInformationPatchField,
+  organizationLocation_updateLocationRestrictedInformationMutation,
+} from '@/queries/__generated__/organizationLocation_updateLocationRestrictedInformationMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import { EditorActionBar, PageHeaderPanel, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext, stringCollectionToString, stringToMultiLines, useIntegratedPlatrform } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  defaultButtonStyle,
+  defaultPadding,
+  EditorActionBar,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  PageHeaderPanel,
+  SettingsSectionCard,
+  StackColumn,
+  StackRow,
+  StickyReviewRail,
+} from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, Suspense, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, Suspense, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -150,6 +163,50 @@ const getActiveSection = (value: string | null): OrganizationLocationSection => 
 
   return 'setup';
 };
+const locationAutosaveDebounceTimeout = 1000;
+
+type LocationFormField = keyof LocationDetails;
+const locationFieldGroups: ReadonlyArray<[LocationPatchField, ReadonlyArray<LocationFormField>]> = [
+  ['NAME', ['name']],
+  ['LISTING_METADATA', ['title', 'subTitle', 'includedFeatures']],
+  ['TIMEZONE', ['timezone']],
+  ['TYPE', ['type']],
+  [
+    'EXTRA_METADATA',
+    [
+      'contactPeople',
+      'contactEmails',
+      'contactPhones',
+      'areaRangeFromInSqm',
+      'areaRangeToInSqm',
+      'peopleCapacityFrom',
+      'peopleCapacityTo',
+      'website',
+      'relatedImageLinks',
+      'relatedVideoLinks',
+      'otherLinks',
+    ],
+  ],
+  ['TAGS', ['spaceTypeIds', 'amenityIds']],
+];
+
+const getChangedLocationFields = (left: LocationDetails | null, right: LocationDetails): LocationPatchField[] => {
+  if (!left) return [];
+  return locationFieldGroups.filter(([, formFields]) => formFields.some((field) => JSON.stringify(left[field]) !== JSON.stringify(right[field]))).map(([patchField]) => patchField);
+};
+
+const restrictedInformationPatchFields: Record<keyof RestrictedInformationDetails, LocationRestrictedInformationPatchField> = {
+  title: 'TITLE',
+  category: 'CATEGORY',
+  content: 'CONTENT',
+  active: 'ACTIVE',
+  sortOrder: 'SORT_ORDER',
+};
+
+const getChangedRestrictedInformationFields = (left: RestrictedInformationDetails, right: RestrictedInformationDetails): LocationRestrictedInformationPatchField[] =>
+  (Object.keys(restrictedInformationPatchFields) as (keyof RestrictedInformationDetails)[])
+    .filter((field) => JSON.stringify(left[field]) !== JSON.stringify(right[field]))
+    .map((field) => restrictedInformationPatchFields[field]);
 
 const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCustomDomain, locationId }: Props) => {
   const rootData = useFragment<organizationLocation_query$key>(
@@ -635,6 +692,13 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   const [physicalAddressCountry, setPhysicalAddressCountry] = useState<string>(rootData.location?.physicalAddress?.country ?? '');
   const [physicalAddressCountryCode, setPhysicalAddressCountryCode] = useState<string>(rootData.location?.physicalAddress?.countryCode ?? '');
   const debounceSetPhysicalAddressCountryCode = useDebounceCallback(setPhysicalAddressCountryCode, keyboardTextFieldDebounceTimeout);
+  const previousLocationValues = useRef<LocationDetails | null>(null);
+  const previousLocationFeatureImages = useRef<FileUploadResponse[] | null>(null);
+  const submittedPhysicalAddressKey = useRef<string | null>(null);
+  const previousRestrictedInformationValues = useRef<Record<string, RestrictedInformationDetails>>({});
+  const debouncedLocationDetailsUpdate = useDebounceCallback((save: () => void) => save(), locationAutosaveDebounceTimeout);
+  const debouncedPhysicalAddressUpdate = useDebounceCallback((save: () => void) => save(), locationAutosaveDebounceTimeout);
+  const debouncedRestrictedInformationUpdate = useDebounceCallback((save: () => void) => save(), locationAutosaveDebounceTimeout);
 
   useEffect(() => {
     const updateStickyTop = () => {
@@ -680,28 +744,30 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     setFeatureImages((current) => [image, ...current.filter((item) => item.original?.url !== image.original?.url)]);
   };
 
-  const handleLocationDetailUpdateClick = ({
-    name,
-    title,
-    subTitle,
-    includedFeatures,
-    timezone,
-    type,
-    contactPeople,
-    contactEmails,
-    contactPhones,
-    areaRangeFromInSqm,
-    areaRangeToInSqm,
-    peopleCapacityFrom,
-    peopleCapacityTo,
-    website,
-    relatedImageLinks,
-    relatedVideoLinks,
-    otherLinks,
-    spaceTypeIds: nextSpaceTypeIds,
-    amenityIds: nextAmenityIds,
-  }: LocationDetails) => {
-    const toastId = themedToast(<NotificationContent content={`Updating location '${location.name}'...`} />, infoNotificationOptions);
+  function handleLocationDetailUpdateClick(
+    fieldsToUpdate: LocationPatchField[],
+    {
+      name,
+      title,
+      subTitle,
+      includedFeatures,
+      timezone,
+      type,
+      contactPeople,
+      contactEmails,
+      contactPhones,
+      areaRangeFromInSqm,
+      areaRangeToInSqm,
+      peopleCapacityFrom,
+      peopleCapacityTo,
+      website,
+      relatedImageLinks,
+      relatedVideoLinks,
+      otherLinks,
+      spaceTypeIds: nextSpaceTypeIds,
+      amenityIds: nextAmenityIds,
+    }: LocationDetails,
+  ) {
     const finalFeatureImages = featureImages.map((image) => ({
       original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
       thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
@@ -712,6 +778,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         input: {
           clientMutationId: uuid(),
           id: location.id,
+          fieldsToUpdate,
           name,
           listingMetadata: {
             about: '',
@@ -743,23 +810,12 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update location '${location.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to update location '${location.name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location ${name} details updated.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update location '${location.name}'. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to update location '${location.name}'. Error: ${error.message}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         updateLocation: {
@@ -799,7 +855,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         },
       },
     });
-  };
+  }
 
   const handlePhysicalAddressSelect = (address: Address) => {
     setPhysicalAddressOsmType(address.osmType);
@@ -818,7 +874,11 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     setPhysicalAddressCountryCode(address.countryCode ?? '');
   };
 
-  const handlePhysicalAddressUpdateClick = ({ addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: PhysicalAddressDetails) => {
+  function handlePhysicalAddressUpdateClick({ addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: PhysicalAddressDetails) {
+    if (!physicalAddressSchema.isValidSync({ addressLine1, addressLine2, suburb, city, province, zipcode, countryCode })) {
+      return;
+    }
+
     const countryData = getCountryData(countryCode as TCountryCode);
     let country = physicalAddressCountry;
     if (countryData) {
@@ -833,6 +893,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
           input: {
             clientMutationId: uuid(),
             id: physicalAddress.id,
+            fieldsToUpdate: ['ADDRESS'],
             osmType: physicalAddressOsmType,
             osmId: physicalAddressOsmId,
             placeId: physicalAddressPlaceId,
@@ -966,7 +1027,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         },
       },
     });
-  };
+  }
 
   const handleLocationOpeningHoursUpdateClick = (weekOpeningHours: WeekOpeningHoursDetails) => {
     const toastId = themedToast(<NotificationContent content={`Updating location '${location.name}' opening hours...`} />, infoNotificationOptions);
@@ -975,6 +1036,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         input: {
           clientMutationId: uuid(),
           id: location.id,
+          fieldsToUpdate: ['WEEK_OPENING_HOURS'],
           weekOpeningHours,
         },
       },
@@ -1049,13 +1111,22 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     });
   };
 
-  const handleUpdateRestrictedInformationClick = (id: string, { title, category, content, active, sortOrder }: RestrictedInformationDetails) => {
+  function handleUpdateRestrictedInformationClick(
+    id: string,
+    fieldsToUpdate: LocationRestrictedInformationPatchField[],
+    { title, category, content, active, sortOrder }: RestrictedInformationDetails,
+  ) {
+    if (!restrictedInformationSchema.isValidSync({ title, category, content, active, sortOrder })) {
+      return;
+    }
+
     const toastId = themedToast(<NotificationContent content="Updating restricted information..." />, infoNotificationOptions);
     commitUpdateLocationRestrictedInformation({
       variables: {
         input: {
           clientMutationId: uuid(),
           id,
+          fieldsToUpdate,
           title,
           category,
           content,
@@ -1085,7 +1156,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         });
       },
     });
-  };
+  }
 
   const handleDeleteRestrictedInformationClick = (item: RestrictedInformationItem) => {
     const toastId = themedToast(<NotificationContent content={`Removing '${item.title}'...`} />, infoNotificationOptions);
@@ -1178,7 +1249,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
 
   const renderSetupSection = () => (
     <Form
-      onSubmit={handleLocationDetailUpdateClick}
+      onSubmit={() => undefined}
       initialValues={{
         name: locationName,
         title: locationTitle,
@@ -1221,6 +1292,19 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         debounceSetLocationTitle(values!.title);
         debounceSetLocationSubTitle(values!.subTitle);
         debounceSetLocationIncludedFeatures(values!.includedFeatures);
+        const locationValues = values as LocationDetails;
+        const changedFormFields = getChangedLocationFields(previousLocationValues.current, locationValues);
+        const extraFields: LocationPatchField[] =
+          previousLocationFeatureImages.current !== null && featureImages !== previousLocationFeatureImages.current ? ['FEATURE_IMAGES'] : [];
+        const fieldsToUpdate: LocationPatchField[] = [...changedFormFields, ...extraFields];
+        if (previousLocationValues.current === null) {
+          previousLocationValues.current = locationValues;
+          previousLocationFeatureImages.current = featureImages;
+        } else if (fieldsToUpdate.length > 0) {
+          previousLocationValues.current = locationValues;
+          previousLocationFeatureImages.current = featureImages;
+          debouncedLocationDetailsUpdate(() => handleLocationDetailUpdateClick(fieldsToUpdate, locationValues));
+        }
 
         return (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: { xs: 2, xl: 2 }, pb: defaultPadding }}>
@@ -1339,14 +1423,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
                     </FormFieldLabel>
                   </StackColumn>
                 </SettingsSectionCard>
-
-                <EditorActionBar
-                  primaryAction={
-                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                      Update
-                    </Button>
-                  }
-                />
               </StackColumn>
             </FormStackColumn>
 
@@ -1358,8 +1434,8 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   );
 
   const renderPhysicalAddressSection = () => (
-    <Form
-      onSubmit={handlePhysicalAddressUpdateClick}
+    <Form<PhysicalAddressDetails>
+      onSubmit={() => undefined}
       initialValues={{
         addressLine1: physicalAddressAddressLine1,
         addressLine2: physicalAddressAddressLine2,
@@ -1378,6 +1454,22 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         debounceSetPhysicalAddressProvince(values!.province);
         debounceSetPhysicalAddressZipcode(values!.zipcode);
         debounceSetPhysicalAddressCountryCode(values!.countryCode);
+        const physicalAddressValues = values as PhysicalAddressDetails;
+        const nextPhysicalAddressKey = JSON.stringify({
+          values: physicalAddressValues,
+          osmType: physicalAddressOsmType,
+          osmId: physicalAddressOsmId,
+          placeId: physicalAddressPlaceId,
+          longitude: physicalAddressLongitude,
+          latitude: physicalAddressLatitude,
+          formattedAddress: physicalAddressFormattedAddress,
+        });
+        if (submittedPhysicalAddressKey.current === null) {
+          submittedPhysicalAddressKey.current = nextPhysicalAddressKey;
+        } else if (nextPhysicalAddressKey !== submittedPhysicalAddressKey.current) {
+          submittedPhysicalAddressKey.current = nextPhysicalAddressKey;
+          debouncedPhysicalAddressUpdate(() => handlePhysicalAddressUpdateClick(physicalAddressValues));
+        }
 
         return (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: { xs: 2, xl: 2 }, pb: defaultPadding }}>
@@ -1411,13 +1503,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
                         form.change('countryCode', address.countryCode ?? '');
                       });
                     }}
-                  />
-                  <EditorActionBar
-                    primaryAction={
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    }
                   />
                 </StackColumn>
               </SettingsSectionCard>
@@ -1478,7 +1563,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
               restrictedInformation.map((item) => (
                 <Form
                   key={item.id}
-                  onSubmit={(values) => handleUpdateRestrictedInformationClick(item.id, values as RestrictedInformationDetails)}
+                  onSubmit={() => undefined}
                   initialValues={{
                     title: item.title,
                     category: item.category,
@@ -1487,23 +1572,34 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
                     sortOrder: item.sortOrder,
                   }}
                   validate={validateRestrictedInformation}
-                  render={({ handleSubmit }) => (
-                    <FormStackColumn onSubmit={handleSubmit}>
-                      <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 2 }}>
-                        <StackColumn>
-                          {renderRestrictedInformationFields()}
-                          <StackRow sx={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-                            <Button color="error" variant="outlined" onClick={() => handleDeleteRestrictedInformationClick(item)} sx={defaultButtonStyle}>
-                              Remove
-                            </Button>
-                            <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                              Update
-                            </Button>
-                          </StackRow>
-                        </StackColumn>
-                      </Box>
-                    </FormStackColumn>
-                  )}
+                  render={({ handleSubmit, values }) => {
+                    const restrictedInformationValues = values as RestrictedInformationDetails;
+                    const previousValues = previousRestrictedInformationValues.current[item.id];
+                    if (!previousValues) {
+                      previousRestrictedInformationValues.current[item.id] = restrictedInformationValues;
+                    } else {
+                      const changedFields = getChangedRestrictedInformationFields(previousValues, restrictedInformationValues);
+                      if (changedFields.length > 0) {
+                        previousRestrictedInformationValues.current[item.id] = restrictedInformationValues;
+                        debouncedRestrictedInformationUpdate(() => handleUpdateRestrictedInformationClick(item.id, changedFields, restrictedInformationValues));
+                      }
+                    }
+
+                    return (
+                      <FormStackColumn onSubmit={handleSubmit}>
+                        <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 2 }}>
+                          <StackColumn>
+                            {renderRestrictedInformationFields()}
+                            <StackRow sx={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                              <Button color="error" variant="outlined" onClick={() => handleDeleteRestrictedInformationClick(item)} sx={defaultButtonStyle}>
+                                Remove
+                              </Button>
+                            </StackRow>
+                          </StackColumn>
+                        </Box>
+                      </FormStackColumn>
+                    );
+                  }}
                 />
               ))
             )}

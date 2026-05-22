@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5b17dbbe28465a8d629aa62874c939bf>>
+ * @generated SignedSource<<2b2cce43ed4577118c5eb2f9f8b54e78>>
  * @lightSyntaxTransform
  */
 
@@ -9,10 +9,12 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
+export type PrivateBookingPatchField = "CATEGORY" | "NOTES" | "PARTICIPANTS" | "RESOURCES" | "SCHEDULE" | "%future added value";
 export type UpdatePrivateBookingInput = {
   category?: BookingCategory | null | undefined;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
+  fieldsToUpdate: ReadonlyArray<PrivateBookingPatchField>;
   from: any;
   id: string;
   notes?: string | null | undefined;

@@ -4,7 +4,7 @@ using OpenTelemetry;
 
 namespace Enterprise.Shared.Telemetry;
 
-public sealed class OutboxTraceFilteringProcessor(BaseProcessor<Activity> innerProcessor) : BaseProcessor<Activity>
+public class OutboxTraceFilteringProcessor(BaseProcessor<Activity> innerProcessor) : BaseProcessor<Activity>
 {
     public override void OnStart(Activity data) => innerProcessor.OnStart(data);
 

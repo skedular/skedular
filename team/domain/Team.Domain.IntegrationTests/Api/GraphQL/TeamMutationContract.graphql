@@ -1,0 +1,11 @@
+query TeamMutationContract {
+    updateTeamInput: __type(name: "UpdateTeamInput") {
+        inputFields { name }
+    }
+    updateTeamAndTeamMembersInput: __type(name: "UpdateTeamAndTeamMembersInput") {
+        inputFields { name }
+    }
+    updateTeamMembersInput: __type(name: "UpdateTeamMembersInput") {
+        inputFields { name }
+    }
+}

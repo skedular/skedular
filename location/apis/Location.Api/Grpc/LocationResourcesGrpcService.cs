@@ -5,6 +5,7 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Pagination;
 using Grpc.Core;
 using Location.Api.Mappers;
+using Location.Api.Models;
 using Location.Api.Services;
 using Location.Shared.Models;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
@@ -12,6 +13,7 @@ using PageInfo = Api.Shared.Grpc.Skedular.Location.Core.V1.PageInfo;
 using Resource = Api.Shared.Grpc.Skedular.Location.Core.V1.Resource;
 using ResourceOrderField = Api.Shared.Grpc.Skedular.Location.Resources.V1.ResourceOrderField;
 using LocationResourcesService = Api.Shared.Grpc.Skedular.Location.Resources.V1.LocationResourcesService;
+using ResourcePatchField = Api.Shared.Grpc.Skedular.Location.Resources.V1.ResourcePatchField;
 
 namespace Location.Api.Grpc;
 
@@ -84,7 +86,27 @@ public class LocationResourcesGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
-        return grpcMapper.MapToGrpcResponse(await resourceService.UpdateAsync(grpcMapper.MapTo(request), context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(
+            await resourceService.UpdateAsync(
+                new ResourcePatchRequest(
+                    grpcMapper.MapTo(request),
+                    request.FieldsToUpdate.Select(field => field switch
+                    {
+                        ResourcePatchField.Name =>
+                            Models.ResourcePatchField.Name,
+                        ResourcePatchField.Inactive =>
+                            Models.ResourcePatchField.Inactive,
+                        ResourcePatchField.RequireBookingApproval =>
+                            Models.ResourcePatchField.RequireBookingApproval,
+                        ResourcePatchField.Tags =>
+                            Models.ResourcePatchField.Tags,
+                        ResourcePatchField.Color =>
+                            Models.ResourcePatchField.Color,
+                        ResourcePatchField.Capacity =>
+                            Models.ResourcePatchField.Capacity,
+                        _ => throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null)
+                    }).ToHashSet()),
+                context.CancellationToken));
     }
 
     public override async Task<Resource> RemoveResource(RemoveResourceInput request, ServerCallContext context)

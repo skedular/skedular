@@ -7,10 +7,12 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Version;
 using Grpc.Core;
 using Location.Api.Mappers;
+using Location.Api.Models;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
 using Location.Shared.Models;
 using LocationOrderField = Location.Shared.Models.LocationOrderField;
+using LocationPatchField = Location.Api.Models.LocationPatchField;
 using LocationService = Api.Shared.Grpc.Skedular.Location.Core.V1.LocationService;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
 using PageInfo = Api.Shared.Grpc.Skedular.Location.Core.V1.PageInfo;
@@ -54,7 +56,11 @@ public class LocationGrpcService(
 
         ArgumentException.ThrowIfNullOrWhiteSpace(request.OrganizationId);
 
-        return grpcMapper.MapToGrpcResponse(await locationService.UpdateAsync(grpcMapper.MapTo(request), true, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(
+            await locationService.UpdateAsync(
+                new LocationPatchRequest(grpcMapper.MapTo(request), MapToPatchFields(request.FieldsToUpdate)),
+                true,
+                context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Location.Core.V1.Location> Get(GetInput request, ServerCallContext context)
@@ -219,7 +225,11 @@ public class LocationGrpcService(
 
         ArgumentException.ThrowIfNullOrWhiteSpace(request.OrganizationId);
 
-        return grpcMapper.MapToGrpcResponse(await locationService.UpdateAsync(grpcMapper.MapTo(request), false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(
+            await locationService.UpdateAsync(
+                new LocationPatchRequest(grpcMapper.MapTo(request), MapToPatchFields(request.FieldsToUpdate)),
+                false,
+                context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Location.Core.V1.Location> Remove(RemoveInput request, ServerCallContext context)
@@ -228,4 +238,27 @@ public class LocationGrpcService(
 
         return grpcMapper.MapToGrpcResponse(await locationService.DeleteAsync(request.Id, context.CancellationToken));
     }
+
+    private static HashSet<LocationPatchField> MapToPatchFields(
+        IEnumerable<global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField> fields) =>
+        fields.Select(field => field switch
+        {
+            global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.Name => LocationPatchField.Name,
+            global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.ListingMetadata =>
+                LocationPatchField.ListingMetadata,
+            global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.Organization =>
+                LocationPatchField.Organization,
+            global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.Timezone => LocationPatchField.Timezone,
+            global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.Tags => LocationPatchField.Tags,
+            global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.FeatureImages =>
+                LocationPatchField.FeatureImages,
+            global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.Type => LocationPatchField.Type,
+            global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.ExtraMetadata =>
+                LocationPatchField.ExtraMetadata,
+            global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.PhysicalAddress =>
+                LocationPatchField.PhysicalAddress,
+            global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.UniqueClaimCode =>
+                LocationPatchField.UniqueClaimCode,
+            _ => throw new ArgumentOutOfRangeException(nameof(fields), field, null)
+        }).ToHashSet();
 }

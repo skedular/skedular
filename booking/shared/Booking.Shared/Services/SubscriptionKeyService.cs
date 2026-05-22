@@ -47,7 +47,7 @@ public interface ISubscriptionKeyService
 }
 
 /// <inheritdoc cref="ISubscriptionKeyService" />
-public sealed class SubscriptionKeyService : ISubscriptionKeyService
+public class SubscriptionKeyService : ISubscriptionKeyService
 {
     /// <inheritdoc />
     public string Compute(ResourceAvailabilityDayFilter filter)

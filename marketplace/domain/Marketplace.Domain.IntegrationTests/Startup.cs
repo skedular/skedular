@@ -78,8 +78,12 @@ public class Startup
             .AddSingleton<IMarketplaceGraphqlClient>(_ => new MarketplaceGraphqlClient(marketplaceApiClient))
             .AddSingleton<IMarketplaceWorkaroundClient>(_ => new MarketplaceWorkaroundClient(marketplaceApiClient));
 
+        services.AddTransient<TestBearerTokenHandler>();
+
         services
             .AddSkedularGraphQLV1()
-            .ConfigureHttpClient(httpClient => httpClient.BaseAddress = marketplaceApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
+            .ConfigureHttpClient(
+                httpClient => httpClient.BaseAddress = marketplaceApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri(),
+                builder => builder.AddHttpMessageHandler<TestBearerTokenHandler>());
     }
 }

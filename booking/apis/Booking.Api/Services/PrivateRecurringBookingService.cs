@@ -1,5 +1,7 @@
 using Api.Shared.Services;
+using Booking.Api.Models;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Context;
@@ -11,7 +13,7 @@ namespace Booking.Api.Services;
 public interface IPrivateRecurringBookingService
 {
     Task<RecurringBooking> AddAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken);
-    Task<RecurringBooking> UpdateAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken);
+    Task<RecurringBooking> UpdateAsync(PrivateRecurringBookingPatchRequest request, CancellationToken cancellationToken);
     Task<RecurringBooking> DeleteAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -21,7 +23,9 @@ public class PrivateRecurringBookingService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
     IContext context,
-    Shared.Services.IPrivateRecurringBookingService sharedPrivateRecurringBookingService) : IPrivateRecurringBookingService
+    Shared.Services.IPrivateRecurringBookingService sharedPrivateRecurringBookingService,
+    IEntityMapper entityMapper,
+    ILogger<PrivateRecurringBookingService> logger) : IPrivateRecurringBookingService
 {
     public async Task<RecurringBooking> AddAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken)
     {
@@ -72,19 +76,49 @@ public class PrivateRecurringBookingService(
         return await sharedPrivateRecurringBookingService.AddAsync(recurringBooking, customer, organizations, teams, cancellationToken);
     }
 
-    public async Task<RecurringBooking> UpdateAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken)
+    public async Task<RecurringBooking> UpdateAsync(PrivateRecurringBookingPatchRequest request, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(recurringBooking.Id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.RecurringBooking.Id);
 
-        var verifiableToken = context.GetVerifiableToken();
-        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Private recurring booking patch autosave started. RecurringBookingId: {RecurringBookingId}, EditUnits: {EditUnits}",
+            request.RecurringBooking.Id,
+            editUnits);
 
-        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
-                       throw new CustomerNotFound();
-        var existingRecurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(recurringBooking.Id, cancellationToken) ??
-                                       throw new RecurringBookingNotFound();
+        try
+        {
+            var existingRecurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(
+                request.RecurringBooking.Id,
+                cancellationToken) ?? throw new RecurringBookingNotFound();
+            var recurringBooking = entityMapper.MapTo(existingRecurringBooking);
+            Apply(request, recurringBooking);
 
-        return await UpdateInternalAsync(recurringBooking, existingRecurringBooking, customer, cancellationToken);
+            var updatedBooking = await UpdateAsync(recurringBooking, cancellationToken);
+            logger.LogInformation(
+                "Private recurring booking patch autosave completed. RecurringBookingId: {RecurringBookingId}, EditUnits: {EditUnits}",
+                updatedBooking.Id,
+                editUnits);
+            return updatedBooking;
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Private recurring booking patch autosave rejected by authorization. RecurringBookingId: {RecurringBookingId}, EditUnits: {EditUnits}",
+                request.RecurringBooking.Id,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Private recurring booking patch autosave failed. RecurringBookingId: {RecurringBookingId}, EditUnits: {EditUnits}",
+                request.RecurringBooking.Id,
+                editUnits);
+            throw;
+        }
     }
 
     public async Task<RecurringBooking> DeleteAsync(string id, CancellationToken cancellationToken)
@@ -133,6 +167,21 @@ public class PrivateRecurringBookingService(
         return await sharedPrivateRecurringBookingService.DeleteAsync(existingRecurringBooking, customer, cancellationToken);
     }
 
+    private async Task<RecurringBooking> UpdateAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(recurringBooking.Id);
+
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
+                       throw new CustomerNotFound();
+        var existingRecurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(recurringBooking.Id, cancellationToken) ??
+                                       throw new RecurringBookingNotFound();
+
+        return await UpdateInternalAsync(recurringBooking, existingRecurringBooking, customer, cancellationToken);
+    }
+
     private async Task<RecurringBooking> UpdateInternalAsync(
         RecurringBooking recurringBooking,
         Shared.Database.Entities.RecurringBooking existingRecurringBooking,
@@ -166,5 +215,46 @@ public class PrivateRecurringBookingService(
             organizations,
             teams,
             cancellationToken);
+    }
+
+    private static void Apply(PrivateRecurringBookingPatchRequest request, RecurringBooking recurringBooking)
+    {
+        foreach (var field in request.FieldsToUpdate)
+        {
+            switch (field)
+            {
+                case PrivateRecurringBookingPatchField.Participants:
+                    recurringBooking.InvolvedCustomers = request.RecurringBooking.InvolvedCustomers;
+                    recurringBooking.InvolvedOrganizations = request.RecurringBooking.InvolvedOrganizations;
+                    recurringBooking.InvolvedTeams = request.RecurringBooking.InvolvedTeams;
+                    break;
+                case PrivateRecurringBookingPatchField.RequestedResources:
+                    recurringBooking.RequestedResources = request.RecurringBooking.RequestedResources;
+                    break;
+                case PrivateRecurringBookingPatchField.Schedule:
+                    recurringBooking.From = request.RecurringBooking.From;
+                    recurringBooking.Until = request.RecurringBooking.Until;
+                    break;
+                case PrivateRecurringBookingPatchField.Recurrence:
+                    recurringBooking.Frequency = request.RecurringBooking.Frequency;
+                    recurringBooking.Interval = request.RecurringBooking.Interval;
+                    recurringBooking.ByMonthDay = request.RecurringBooking.ByMonthDay;
+                    recurringBooking.BySetPosition = request.RecurringBooking.BySetPosition;
+                    recurringBooking.ByWeekDays = request.RecurringBooking.ByWeekDays;
+                    recurringBooking.EndType = request.RecurringBooking.EndType;
+                    recurringBooking.StartDate = request.RecurringBooking.StartDate;
+                    recurringBooking.EndDate = request.RecurringBooking.EndDate;
+                    recurringBooking.OccurrenceCount = request.RecurringBooking.OccurrenceCount;
+                    break;
+                case PrivateRecurringBookingPatchField.SkippedDates:
+                    recurringBooking.SkippedDates = request.RecurringBooking.SkippedDates;
+                    break;
+                case PrivateRecurringBookingPatchField.Category:
+                    recurringBooking.Category = request.RecurringBooking.Category;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+            }
+        }
     }
 }

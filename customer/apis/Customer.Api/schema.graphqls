@@ -311,6 +311,7 @@ input SubmitCustomerFeedbackInput {
 input UpdateCustomerDetailsInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [CustomerDetailsPatchField!]!
   timezone: String
   designation: String
   title: String
@@ -325,6 +326,7 @@ input UpdateCustomerDetailsInput {
 input UpdateMyBillingDetailsInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [CustomerBillingDetailsPatchField!]!
   companyName: String
   email: String!
   osmType: String
@@ -345,6 +347,7 @@ input UpdateMyBillingDetailsInput {
 
 input UpdateMyCustomerDetailsInput {
   clientMutationId: String
+  fieldsToUpdate: [CustomerDetailsPatchField!]!
   timezone: String
   designation: String
   title: String
@@ -354,6 +357,24 @@ input UpdateMyCustomerDetailsInput {
   familyName: String
   phoneNumber: String
   personalInformationVisibility: PersonalInformationVisibility!
+}
+
+enum CustomerBillingDetailsPatchField {
+  COMPANY_NAME
+  EMAIL
+  BILLING_ADDRESS
+}
+
+enum CustomerDetailsPatchField {
+  TIMEZONE
+  DESIGNATION
+  TITLE
+  NAME
+  GIVEN_NAME
+  MIDDLE_NAME
+  FAMILY_NAME
+  PHONE_NUMBER
+  PERSONAL_INFORMATION_VISIBILITY
 }
 
 enum CustomerOrderField {

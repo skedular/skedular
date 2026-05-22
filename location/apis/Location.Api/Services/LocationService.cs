@@ -6,6 +6,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
+using Location.Api.Models;
 using Location.Api.Services.Authorization;
 using Location.Shared.Mappers;
 using Location.Shared.Models;
@@ -23,7 +24,7 @@ namespace Location.Api.Services;
 public interface ILocationService
 {
     Task<Shared.Models.Location> AddAsync(Shared.Models.Location location, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
-    Task<Shared.Models.Location> UpdateAsync(Shared.Models.Location location, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
+    Task<Shared.Models.Location> UpdateAsync(LocationPatchRequest request, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Shared.Models.Location> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Location?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
 
@@ -53,7 +54,8 @@ public class LocationService(
     TimeProvider timeProvider,
     IContext context,
     ICachedLocationService cachedLocationService,
-    ILocationBookingAccessService locationBookingAccessService) : ILocationService
+    ILocationBookingAccessService locationBookingAccessService,
+    ILogger<LocationService> logger) : ILocationService
 {
     public async Task<Shared.Models.Location> AddAsync(
         Shared.Models.Location location,
@@ -182,30 +184,50 @@ public class LocationService(
     }
 
     public async Task<Shared.Models.Location> UpdateAsync(
-        Shared.Models.Location location,
+        LocationPatchRequest request,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(location.Id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Location.Id);
 
-        var customer = await cachedCustomerService.GetNullableAsync(cancellationToken);
-        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken) ??
-                               throw new LocationNotFound();
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Location patch autosave started. LocationId: {LocationId}, EditUnits: {EditUnits}",
+            request.Location.Id,
+            editUnits);
 
-        if (!ignoreAuthorizationCheck)
+        try
         {
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
+            var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(request.Location.Id, cancellationToken) ??
+                                   throw new LocationNotFound();
+            var location = entityMapper.MapTo(existingLocation);
+            Apply(request, location);
 
-            if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
-            {
-                throw new NoMoreInteractionAllowed();
-            }
+            var updatedLocation = await UpdateAsync(location, ignoreAuthorizationCheck, cancellationToken);
+            logger.LogInformation(
+                "Location patch autosave completed. LocationId: {LocationId}, EditUnits: {EditUnits}",
+                updatedLocation.Id,
+                editUnits);
+            return updatedLocation;
         }
-
-        return await UpdateInternalAsync(location, existingLocation, customer, cancellationToken);
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Location patch autosave rejected by authorization. LocationId: {LocationId}, EditUnits: {EditUnits}",
+                request.Location.Id,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Location patch autosave failed. LocationId: {LocationId}, EditUnits: {EditUnits}",
+                request.Location.Id,
+                editUnits);
+            throw;
+        }
     }
 
     public async Task<Shared.Models.Location> DeleteAsync(string id, CancellationToken cancellationToken)
@@ -327,6 +349,33 @@ public class LocationService(
         return locations.Select(entityMapper.MapTo).ToList();
     }
 
+    private async Task<Shared.Models.Location> UpdateAsync(
+        Shared.Models.Location location,
+        bool ignoreAuthorizationCheck,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(location.Id);
+
+        var customer = await cachedCustomerService.GetNullableAsync(cancellationToken);
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken) ??
+                               throw new LocationNotFound();
+
+        if (!ignoreAuthorizationCheck)
+        {
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
+
+            if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+            {
+                throw new NoMoreInteractionAllowed();
+            }
+        }
+
+        return await UpdateInternalAsync(location, existingLocation, customer, cancellationToken);
+    }
+
     private async Task<Shared.Models.Location> UpdateInternalAsync(
         Shared.Models.Location location,
         Shared.Database.Entities.Location existingLocation,
@@ -410,6 +459,48 @@ public class LocationService(
         await cachedLocationService.UpdateByIdAsync(location.Id, cancellationToken);
 
         return location;
+    }
+
+    private static void Apply(LocationPatchRequest request, Shared.Models.Location location)
+    {
+        foreach (var field in request.FieldsToUpdate)
+        {
+            switch (field)
+            {
+                case LocationPatchField.Name:
+                    location.Name = request.Location.Name;
+                    break;
+                case LocationPatchField.Timezone:
+                    location.Timezone = request.Location.Timezone;
+                    break;
+                case LocationPatchField.Type:
+                    location.Type = request.Location.Type;
+                    break;
+                case LocationPatchField.Organization:
+                    location.Organization = request.Location.Organization;
+                    break;
+                case LocationPatchField.Tags:
+                    location.OrganizationTags = request.Location.OrganizationTags;
+                    break;
+                case LocationPatchField.FeatureImages:
+                    location.FeatureImages = request.Location.FeatureImages;
+                    break;
+                case LocationPatchField.ExtraMetadata:
+                    location.ExtraMetadata = request.Location.ExtraMetadata;
+                    break;
+                case LocationPatchField.ListingMetadata:
+                    location.ListingMetadata = request.Location.ListingMetadata;
+                    break;
+                case LocationPatchField.PhysicalAddress:
+                    location.PhysicalAddress = request.Location.PhysicalAddress;
+                    break;
+                case LocationPatchField.UniqueClaimCode:
+                    location.UniqueClaimCode = request.Location.UniqueClaimCode;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+            }
+        }
     }
 
     private async Task<Shared.Models.Location> EnrichLocationAsync(

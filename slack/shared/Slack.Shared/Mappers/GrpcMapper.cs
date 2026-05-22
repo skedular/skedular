@@ -62,8 +62,12 @@ public class GrpcMapper : IGrpcMapper
     public Admin_AddIdentityInput MapToAddIdentityInput(WorkspaceMember src, string customerId) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
 
-    public Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+    public Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId)
+    {
+        var input = new Admin_UpdateIdentityInput { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+        input.FieldsToUpdate.AddRange([IdentityPatchField.Email, IdentityPatchField.EmailVerified]);
+        return input;
+    }
 
     public Admin_AddInput MapTo(WorkspaceMember src, string customerId, string defaultOrganizationId, IReadOnlyList<string> preferredLocationIds)
     {

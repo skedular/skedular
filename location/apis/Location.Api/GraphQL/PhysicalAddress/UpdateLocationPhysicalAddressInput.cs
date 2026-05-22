@@ -1,4 +1,5 @@
 using HotChocolate;
+using Location.Api.Models;
 
 namespace Location.Api.GraphQL.PhysicalAddress;
 
@@ -7,6 +8,7 @@ public class UpdateLocationPhysicalAddressInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("fieldsToUpdate")] public HashSet<LocationPhysicalAddressPatchField> FieldsToUpdate { get; set; } = [];
     [GraphQLName("osmType")] public string? OsmType { get; set; }
     [GraphQLName("osmId")] public string? OsmId { get; set; }
     [GraphQLName("placeId")] public string? PlaceId { get; set; }

@@ -27,7 +27,7 @@ public interface IResourceAvailabilityClassifier
 }
 
 /// <inheritdoc cref="IResourceAvailabilityClassifier" />
-public sealed class ResourceAvailabilityClassifier : IResourceAvailabilityClassifier
+public class ResourceAvailabilityClassifier : IResourceAvailabilityClassifier
 {
     /// <inheritdoc />
     public ResourceAvailabilityClassification Classify(

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3fb46e44392c2f85fe7a75650fd457c8>>
+ * @generated SignedSource<<41254864831a7758fb80a17d00b13f37>>
  * @lightSyntaxTransform
  */
 
@@ -9,10 +9,12 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
+export type MarketplaceBookingPatchField = "CATEGORY" | "NOTES" | "PARTICIPANTS" | "%future added value";
 export type UpdateMarketplaceBookingInput = {
   category?: BookingCategory | null | undefined;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
+  fieldsToUpdate: ReadonlyArray<MarketplaceBookingPatchField>;
   id: string;
   notes?: string | null | undefined;
   organizationCustomDomains?: ReadonlyArray<string> | null | undefined;

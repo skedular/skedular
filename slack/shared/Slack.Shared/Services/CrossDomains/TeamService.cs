@@ -228,6 +228,16 @@ public class TeamService(
                 }
             }
         }));
+        updateInput.FieldsToUpdate.AddRange(
+        [
+            TeamPatchField.Name,
+            TeamPatchField.About,
+            TeamPatchField.Organization,
+            TeamPatchField.Timezone,
+            TeamPatchField.Members,
+            TeamPatchField.PrimaryLocation,
+            TeamPatchField.FeatureImages
+        ]);
 
         var mappedTeam = grpcMapper.MapTo(
             await teamServiceClient.UpdateAsync(

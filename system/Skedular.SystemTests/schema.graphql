@@ -4574,6 +4574,7 @@ input UpdateCustomerDetailsInput @fusion__type(schema: CUSTOMER_API) {
   clientMutationId: String @fusion__inputField(schema: CUSTOMER_API)
   designation: String @fusion__inputField(schema: CUSTOMER_API)
   familyName: String @fusion__inputField(schema: CUSTOMER_API)
+  fieldsToUpdate: [CustomerDetailsPatchField!]! @fusion__inputField(schema: CUSTOMER_API)
   givenName: String @fusion__inputField(schema: CUSTOMER_API)
   id: String! @fusion__inputField(schema: CUSTOMER_API)
   middleName: String @fusion__inputField(schema: CUSTOMER_API)
@@ -4586,6 +4587,7 @@ input UpdateCustomerDetailsInput @fusion__type(schema: CUSTOMER_API) {
 
 input UpdateFloorPlanInput @fusion__type(schema: LOCATION_API) {
   clientMutationId: String @fusion__inputField(schema: LOCATION_API)
+  fieldsToUpdate: [FloorPlanPatchField!]! @fusion__inputField(schema: LOCATION_API)
   id: String! @fusion__inputField(schema: LOCATION_API)
   image: CdnImageFileInput! @fusion__inputField(schema: LOCATION_API)
   name: String! @fusion__inputField(schema: LOCATION_API)
@@ -4596,6 +4598,7 @@ input UpdateLocationInput @fusion__type(schema: LOCATION_API) {
   clientMutationId: String @fusion__inputField(schema: LOCATION_API)
   extraMetadata: LocationExtraMetadataInput @fusion__inputField(schema: LOCATION_API)
   featureImages: [CdnImageFileInput!] @fusion__inputField(schema: LOCATION_API)
+  fieldsToUpdate: [LocationPatchField!]! @fusion__inputField(schema: LOCATION_API)
   id: String! @fusion__inputField(schema: LOCATION_API)
   listingMetadata: ListingMetadataInput @fusion__inputField(schema: LOCATION_API)
   name: String! @fusion__inputField(schema: LOCATION_API)
@@ -4606,6 +4609,7 @@ input UpdateLocationInput @fusion__type(schema: LOCATION_API) {
 
 input UpdateLocationOpeningHoursInput @fusion__type(schema: LOCATION_API) {
   clientMutationId: String @fusion__inputField(schema: LOCATION_API)
+  fieldsToUpdate: [LocationOpeningHoursPatchField!]! @fusion__inputField(schema: LOCATION_API)
   id: String! @fusion__inputField(schema: LOCATION_API)
   weekOpeningHours: WeekOpeningHoursInput! @fusion__inputField(schema: LOCATION_API)
 }
@@ -4617,6 +4621,7 @@ input UpdateLocationPhysicalAddressInput @fusion__type(schema: LOCATION_API) {
   clientMutationId: String @fusion__inputField(schema: LOCATION_API)
   country: String! @fusion__inputField(schema: LOCATION_API)
   countryCode: String @fusion__inputField(schema: LOCATION_API)
+  fieldsToUpdate: [LocationPhysicalAddressPatchField!]! @fusion__inputField(schema: LOCATION_API)
   formattedAddress: String @fusion__inputField(schema: LOCATION_API)
   id: String! @fusion__inputField(schema: LOCATION_API)
   latitude: Float @fusion__inputField(schema: LOCATION_API)
@@ -4633,6 +4638,7 @@ input UpdateLocationResourceAvailableHoursInput
   @fusion__type(schema: LOCATION_API) {
   availableHours: WeekOpeningHoursInput @fusion__inputField(schema: LOCATION_API)
   clientMutationId: String @fusion__inputField(schema: LOCATION_API)
+  fieldsToUpdate: [LocationResourceAvailableHoursPatchField!]! @fusion__inputField(schema: LOCATION_API)
   id: String! @fusion__inputField(schema: LOCATION_API)
   overrideAvailableHours: Boolean! @fusion__inputField(schema: LOCATION_API)
 }
@@ -4643,6 +4649,7 @@ input UpdateLocationRestrictedInformationInput
   category: LocationRestrictedInformationCategory! @fusion__inputField(schema: LOCATION_API)
   clientMutationId: String @fusion__inputField(schema: LOCATION_API)
   content: String! @fusion__inputField(schema: LOCATION_API)
+  fieldsToUpdate: [LocationRestrictedInformationPatchField!]! @fusion__inputField(schema: LOCATION_API)
   id: String! @fusion__inputField(schema: LOCATION_API)
   sortOrder: Int! @fusion__inputField(schema: LOCATION_API)
   title: String! @fusion__inputField(schema: LOCATION_API)
@@ -4652,6 +4659,7 @@ input UpdateMarketplaceBookingInput @fusion__type(schema: BOOKING_API) {
   category: BookingCategory @fusion__inputField(schema: BOOKING_API)
   clientMutationId: String @fusion__inputField(schema: BOOKING_API)
   customerIds: [String!]! @fusion__inputField(schema: BOOKING_API)
+  fieldsToUpdate: [MarketplaceBookingPatchField!]! @fusion__inputField(schema: BOOKING_API)
   id: String! @fusion__inputField(schema: BOOKING_API)
   notes: String @fusion__inputField(schema: BOOKING_API)
   organizationCustomDomains: [String!] @fusion__inputField(schema: BOOKING_API)
@@ -4668,6 +4676,7 @@ input UpdateMyBillingDetailsInput @fusion__type(schema: CUSTOMER_API) {
   country: String! @fusion__inputField(schema: CUSTOMER_API)
   countryCode: String @fusion__inputField(schema: CUSTOMER_API)
   email: String! @fusion__inputField(schema: CUSTOMER_API)
+  fieldsToUpdate: [CustomerBillingDetailsPatchField!]! @fusion__inputField(schema: CUSTOMER_API)
   formattedAddress: String @fusion__inputField(schema: CUSTOMER_API)
   id: String! @fusion__inputField(schema: CUSTOMER_API)
   latitude: Float @fusion__inputField(schema: CUSTOMER_API)
@@ -4684,6 +4693,7 @@ input UpdateMyCustomerDetailsInput @fusion__type(schema: CUSTOMER_API) {
   clientMutationId: String @fusion__inputField(schema: CUSTOMER_API)
   designation: String @fusion__inputField(schema: CUSTOMER_API)
   familyName: String @fusion__inputField(schema: CUSTOMER_API)
+  fieldsToUpdate: [CustomerDetailsPatchField!]! @fusion__inputField(schema: CUSTOMER_API)
   givenName: String @fusion__inputField(schema: CUSTOMER_API)
   middleName: String @fusion__inputField(schema: CUSTOMER_API)
   name: String @fusion__inputField(schema: CUSTOMER_API)
@@ -4821,6 +4831,7 @@ input UpdatePrivateBookingInput @fusion__type(schema: BOOKING_API) {
   category: BookingCategory @fusion__inputField(schema: BOOKING_API)
   clientMutationId: String @fusion__inputField(schema: BOOKING_API)
   customerIds: [String!]! @fusion__inputField(schema: BOOKING_API)
+  fieldsToUpdate: [PrivateBookingPatchField!]! @fusion__inputField(schema: BOOKING_API)
   from: DateTime! @fusion__inputField(schema: BOOKING_API)
   id: String! @fusion__inputField(schema: BOOKING_API)
   notes: String @fusion__inputField(schema: BOOKING_API)
@@ -4840,6 +4851,7 @@ input UpdatePrivateRecurringBookingInput @fusion__type(schema: BOOKING_API) {
   customerIds: [String!]! @fusion__inputField(schema: BOOKING_API)
   endDate: DateTime @fusion__inputField(schema: BOOKING_API)
   endType: RecurringBookingEndType! @fusion__inputField(schema: BOOKING_API)
+  fieldsToUpdate: [PrivateRecurringBookingPatchField!]! @fusion__inputField(schema: BOOKING_API)
   frequency: BookingFrequency! @fusion__inputField(schema: BOOKING_API)
   from: DateTime! @fusion__inputField(schema: BOOKING_API)
   id: String! @fusion__inputField(schema: BOOKING_API)
@@ -4858,6 +4870,7 @@ input UpdateProductInput @fusion__type(schema: MARKETPLACE_API) {
   clientMutationId: String @fusion__inputField(schema: MARKETPLACE_API)
   currency: Currency! @fusion__inputField(schema: MARKETPLACE_API)
   featureImages: [CdnImageFileInput!] @fusion__inputField(schema: MARKETPLACE_API)
+  fieldsToUpdate: [ProductPatchField!]! @fusion__inputField(schema: MARKETPLACE_API)
   id: String! @fusion__inputField(schema: MARKETPLACE_API)
   listingMetadata: ListingMetadataInput @fusion__inputField(schema: MARKETPLACE_API)
   pricingOptions: [ProductPricingInput!]! @fusion__inputField(schema: MARKETPLACE_API)
@@ -4870,6 +4883,7 @@ input UpdateResourceInput @fusion__type(schema: LOCATION_API) {
   clientMutationId: String @fusion__inputField(schema: LOCATION_API)
   color: String @fusion__inputField(schema: LOCATION_API)
   customTagIds: [String!]! @fusion__inputField(schema: LOCATION_API)
+  fieldsToUpdate: [ResourcePatchField!]! @fusion__inputField(schema: LOCATION_API)
   id: String! @fusion__inputField(schema: LOCATION_API)
   inactive: Boolean! @fusion__inputField(schema: LOCATION_API)
   name: String! @fusion__inputField(schema: LOCATION_API)
@@ -4881,6 +4895,7 @@ input UpdateResourceInput @fusion__type(schema: LOCATION_API) {
 
 input UpdateResourcePositionsInput @fusion__type(schema: LOCATION_API) {
   clientMutationId: String @fusion__inputField(schema: LOCATION_API)
+  fieldsToUpdate: [ResourcePositionsPatchField!]! @fusion__inputField(schema: LOCATION_API)
   floorPlanId: String! @fusion__inputField(schema: LOCATION_API)
   resourcePositions: [ResourcePositionInput!]! @fusion__inputField(schema: LOCATION_API)
 }
@@ -4890,6 +4905,7 @@ input UpdateTeamAndTeamMembersInput @fusion__type(schema: TEAM_API) {
   clientMutationId: String @fusion__inputField(schema: TEAM_API)
   customerIds: [String!]! @fusion__inputField(schema: TEAM_API)
   featureImages: [CdnImageFileInput!] @fusion__inputField(schema: TEAM_API)
+  fieldsToUpdate: [TeamAndMembersPatchField!]! @fusion__inputField(schema: TEAM_API)
   id: String! @fusion__inputField(schema: TEAM_API)
   name: String! @fusion__inputField(schema: TEAM_API)
   organizationCustomDomain: String @fusion__inputField(schema: TEAM_API)
@@ -4903,6 +4919,7 @@ input UpdateTeamInput @fusion__type(schema: TEAM_API) {
   about: String @fusion__inputField(schema: TEAM_API)
   clientMutationId: String @fusion__inputField(schema: TEAM_API)
   featureImages: [CdnImageFileInput!] @fusion__inputField(schema: TEAM_API)
+  fieldsToUpdate: [TeamPatchField!]! @fusion__inputField(schema: TEAM_API)
   id: String! @fusion__inputField(schema: TEAM_API)
   name: String! @fusion__inputField(schema: TEAM_API)
   primaryLocationId: String @fusion__inputField(schema: TEAM_API)
@@ -4912,6 +4929,7 @@ input UpdateTeamInput @fusion__type(schema: TEAM_API) {
 input UpdateTeamMembersInput @fusion__type(schema: TEAM_API) {
   clientMutationId: String @fusion__inputField(schema: TEAM_API)
   customerIds: [String!]! @fusion__inputField(schema: TEAM_API)
+  fieldsToUpdate: [TeamMembersPatchField!]! @fusion__inputField(schema: TEAM_API)
   id: String! @fusion__inputField(schema: TEAM_API)
   organizationMemberIds: [String!]! @fusion__inputField(schema: TEAM_API)
 }
@@ -4973,6 +4991,24 @@ enum Currency
     @fusion__enumValue(schema: MARKETPLACE_API)
 }
 
+enum CustomerBillingDetailsPatchField @fusion__type(schema: CUSTOMER_API) {
+  COMPANY_NAME @fusion__enumValue(schema: CUSTOMER_API)
+  EMAIL @fusion__enumValue(schema: CUSTOMER_API)
+  BILLING_ADDRESS @fusion__enumValue(schema: CUSTOMER_API)
+}
+
+enum CustomerDetailsPatchField @fusion__type(schema: CUSTOMER_API) {
+  TIMEZONE @fusion__enumValue(schema: CUSTOMER_API)
+  DESIGNATION @fusion__enumValue(schema: CUSTOMER_API)
+  TITLE @fusion__enumValue(schema: CUSTOMER_API)
+  NAME @fusion__enumValue(schema: CUSTOMER_API)
+  GIVEN_NAME @fusion__enumValue(schema: CUSTOMER_API)
+  MIDDLE_NAME @fusion__enumValue(schema: CUSTOMER_API)
+  FAMILY_NAME @fusion__enumValue(schema: CUSTOMER_API)
+  PHONE_NUMBER @fusion__enumValue(schema: CUSTOMER_API)
+  PERSONAL_INFORMATION_VISIBILITY @fusion__enumValue(schema: CUSTOMER_API)
+}
+
 enum CustomerOrderField @fusion__type(schema: CUSTOMER_API) {
   DESIGNATION @fusion__enumValue(schema: CUSTOMER_API)
   TITLE @fusion__enumValue(schema: CUSTOMER_API)
@@ -5008,6 +5044,12 @@ enum FeedbackChannelType @fusion__type(schema: CUSTOMER_API) {
 
 enum FloorPlanOrderField @fusion__type(schema: LOCATION_API) {
   NAME @fusion__enumValue(schema: LOCATION_API)
+}
+
+enum FloorPlanPatchField @fusion__type(schema: LOCATION_API) {
+  NAME @fusion__enumValue(schema: LOCATION_API)
+  IMAGE @fusion__enumValue(schema: LOCATION_API)
+  RESOURCE_POSITIONS @fusion__enumValue(schema: LOCATION_API)
 }
 
 "The fusion__Schema enum is a generated type used within an execution schema document to refer to a source schema in a type-safe manner."
@@ -5054,10 +5096,36 @@ enum JoinTeamInvitationOrderField @fusion__type(schema: TEAM_API) {
   STATUS @fusion__enumValue(schema: TEAM_API)
 }
 
+enum LocationOpeningHoursPatchField @fusion__type(schema: LOCATION_API) {
+  WEEK_OPENING_HOURS @fusion__enumValue(schema: LOCATION_API)
+}
+
 enum LocationOrderField @fusion__type(schema: LOCATION_API) {
   NAME @fusion__enumValue(schema: LOCATION_API)
   TIMEZONE @fusion__enumValue(schema: LOCATION_API)
   TYPE @fusion__enumValue(schema: LOCATION_API)
+}
+
+enum LocationPatchField @fusion__type(schema: LOCATION_API) {
+  NAME @fusion__enumValue(schema: LOCATION_API)
+  TIMEZONE @fusion__enumValue(schema: LOCATION_API)
+  TYPE @fusion__enumValue(schema: LOCATION_API)
+  ORGANIZATION @fusion__enumValue(schema: LOCATION_API)
+  TAGS @fusion__enumValue(schema: LOCATION_API)
+  FEATURE_IMAGES @fusion__enumValue(schema: LOCATION_API)
+  EXTRA_METADATA @fusion__enumValue(schema: LOCATION_API)
+  LISTING_METADATA @fusion__enumValue(schema: LOCATION_API)
+  PHYSICAL_ADDRESS @fusion__enumValue(schema: LOCATION_API)
+  UNIQUE_CLAIM_CODE @fusion__enumValue(schema: LOCATION_API)
+}
+
+enum LocationPhysicalAddressPatchField @fusion__type(schema: LOCATION_API) {
+  ADDRESS @fusion__enumValue(schema: LOCATION_API)
+}
+
+enum LocationResourceAvailableHoursPatchField
+  @fusion__type(schema: LOCATION_API) {
+  AVAILABLE_HOURS @fusion__enumValue(schema: LOCATION_API)
 }
 
 enum LocationRestrictedInformationCategory @fusion__type(schema: LOCATION_API) {
@@ -5086,9 +5154,23 @@ enum LocationRestrictedInformationCategory @fusion__type(schema: LOCATION_API) {
   HOUSE_RULES @fusion__enumValue(schema: LOCATION_API)
 }
 
+enum LocationRestrictedInformationPatchField @fusion__type(schema: LOCATION_API) {
+  TITLE @fusion__enumValue(schema: LOCATION_API)
+  CATEGORY @fusion__enumValue(schema: LOCATION_API)
+  CONTENT @fusion__enumValue(schema: LOCATION_API)
+  ACTIVE @fusion__enumValue(schema: LOCATION_API)
+  SORT_ORDER @fusion__enumValue(schema: LOCATION_API)
+}
+
 enum LocationType @fusion__type(schema: LOCATION_API) {
   PRIVATE @fusion__enumValue(schema: LOCATION_API)
   MARKETPLACE @fusion__enumValue(schema: LOCATION_API)
+}
+
+enum MarketplaceBookingPatchField @fusion__type(schema: BOOKING_API) {
+  PARTICIPANTS @fusion__enumValue(schema: BOOKING_API)
+  NOTES @fusion__enumValue(schema: BOOKING_API)
+  CATEGORY @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum MarketplaceBookingSubscriptionCancellationMode
@@ -6318,8 +6400,34 @@ enum PersonalInformationVisibility @fusion__type(schema: CUSTOMER_API) {
   REDACTED @fusion__enumValue(schema: CUSTOMER_API)
 }
 
+enum PrivateBookingPatchField @fusion__type(schema: BOOKING_API) {
+  PARTICIPANTS @fusion__enumValue(schema: BOOKING_API)
+  SCHEDULE @fusion__enumValue(schema: BOOKING_API)
+  NOTES @fusion__enumValue(schema: BOOKING_API)
+  CATEGORY @fusion__enumValue(schema: BOOKING_API)
+  RESOURCES @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum PrivateRecurringBookingPatchField @fusion__type(schema: BOOKING_API) {
+  PARTICIPANTS @fusion__enumValue(schema: BOOKING_API)
+  REQUESTED_RESOURCES @fusion__enumValue(schema: BOOKING_API)
+  SCHEDULE @fusion__enumValue(schema: BOOKING_API)
+  RECURRENCE @fusion__enumValue(schema: BOOKING_API)
+  SKIPPED_DATES @fusion__enumValue(schema: BOOKING_API)
+  CATEGORY @fusion__enumValue(schema: BOOKING_API)
+}
+
 enum ProductOrderField @fusion__type(schema: MARKETPLACE_API) {
   NAME @fusion__enumValue(schema: MARKETPLACE_API)
+}
+
+enum ProductPatchField @fusion__type(schema: MARKETPLACE_API) {
+  TYPE @fusion__enumValue(schema: MARKETPLACE_API)
+  CURRENCY @fusion__enumValue(schema: MARKETPLACE_API)
+  TAGS @fusion__enumValue(schema: MARKETPLACE_API)
+  FEATURE_IMAGES @fusion__enumValue(schema: MARKETPLACE_API)
+  PRICING_OPTIONS @fusion__enumValue(schema: MARKETPLACE_API)
+  LISTING_METADATA @fusion__enumValue(schema: MARKETPLACE_API)
 }
 
 enum ProductPricingBillingMode
@@ -6447,6 +6555,20 @@ enum ResourceOrderField @fusion__type(schema: LOCATION_API) {
   NAME @fusion__enumValue(schema: LOCATION_API)
 }
 
+enum ResourcePatchField @fusion__type(schema: LOCATION_API) {
+  NAME @fusion__enumValue(schema: LOCATION_API)
+  INACTIVE @fusion__enumValue(schema: LOCATION_API)
+  REQUIRE_BOOKING_APPROVAL @fusion__enumValue(schema: LOCATION_API)
+  COLOR @fusion__enumValue(schema: LOCATION_API)
+  CAPACITY @fusion__enumValue(schema: LOCATION_API)
+  TAGS @fusion__enumValue(schema: LOCATION_API)
+  RESOURCE_TYPE @fusion__enumValue(schema: LOCATION_API)
+}
+
+enum ResourcePositionsPatchField @fusion__type(schema: LOCATION_API) {
+  RESOURCE_POSITIONS @fusion__enumValue(schema: LOCATION_API)
+}
+
 enum ScalarSerializationType
   @fusion__type(schema: BOOKING_API)
   @fusion__type(schema: CUSTOMER_API)
@@ -6491,6 +6613,11 @@ enum ScalarSerializationType
     @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
+enum TeamAndMembersPatchField @fusion__type(schema: TEAM_API) {
+  TEAM @fusion__enumValue(schema: TEAM_API)
+  MEMBERS @fusion__enumValue(schema: TEAM_API)
+}
+
 enum TeamMemberOrderField @fusion__type(schema: TEAM_API) {
   ROLE @fusion__enumValue(schema: TEAM_API)
   STATUS @fusion__enumValue(schema: TEAM_API)
@@ -6506,6 +6633,10 @@ enum TeamMemberRole @fusion__type(schema: TEAM_API) {
   MEMBER @fusion__enumValue(schema: TEAM_API)
 }
 
+enum TeamMembersPatchField @fusion__type(schema: TEAM_API) {
+  MEMBERS @fusion__enumValue(schema: TEAM_API)
+}
+
 enum TeamMemberStatus @fusion__type(schema: TEAM_API) {
   ACTIVE @fusion__enumValue(schema: TEAM_API)
   INACTIVE @fusion__enumValue(schema: TEAM_API)
@@ -6514,6 +6645,14 @@ enum TeamMemberStatus @fusion__type(schema: TEAM_API) {
 enum TeamOrderField @fusion__type(schema: TEAM_API) {
   NAME @fusion__enumValue(schema: TEAM_API)
   ABOUT @fusion__enumValue(schema: TEAM_API)
+}
+
+enum TeamPatchField @fusion__type(schema: TEAM_API) {
+  NAME @fusion__enumValue(schema: TEAM_API)
+  ABOUT @fusion__enumValue(schema: TEAM_API)
+  PRIMARY_LOCATION @fusion__enumValue(schema: TEAM_API)
+  TIMEZONE @fusion__enumValue(schema: TEAM_API)
+  FEATURE_IMAGES @fusion__enumValue(schema: TEAM_API)
 }
 
 "The `DateTime` scalar type represents a date and time with time zone offset information."

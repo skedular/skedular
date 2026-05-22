@@ -1,0 +1,30 @@
+mutation UpdatePrivateBookingPatchSave(
+    $id: String!
+    $fieldsToUpdate: [PrivateBookingPatchField!]!
+    $customerIds: [String!]!
+    $from: DateTime!
+    $until: DateTime!
+    $notes: String
+) {
+    updatePrivateBooking(
+        input: {
+            id: $id
+            fieldsToUpdate: $fieldsToUpdate
+            customerIds: $customerIds
+            from: $from
+            until: $until
+            notes: $notes
+            category: ANNUAL_LEAVE
+        }
+    ) {
+        booking {
+            id
+            from
+            until
+            notes
+            category {
+                category
+            }
+        }
+    }
+}

@@ -16,9 +16,7 @@ import type {
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
 import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { FormFieldLabel, FormStackColumn, HelperText, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -39,13 +37,6 @@ type InnerProps = {
 };
 
 const inlinePatchDebounceTimeout = 1000;
-const getSavingPatchAdornment = (isSaving: boolean) =>
-  isSaving ? (
-    <InputAdornment position="end">
-      <CircularProgress aria-label="Saving" size={18} />
-    </InputAdornment>
-  ) : undefined;
-
 type OrganizationSetupPatchValues = {
   customDomain: string | null | undefined;
   name: string;
@@ -249,7 +240,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
       : [],
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
-  const [savingPatchFields, setSavingPatchFields] = useState<ReadonlySet<OrganizationPatchField>>(() => new Set());
   const initialPatchValues: OrganizationSetupPatchValues = {
     customDomain: organization?.customDomain,
     description: organization?.listingMetadata.about ?? '',
@@ -396,15 +386,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
 
       const previousPatchValues = submittedPatchValues.current;
       submittedPatchValues.current = nextPatchValues;
-      setSavingPatchFields((prev) => new Set([...prev, ...fieldsToUpdate]));
-
-      const clearSavingPatchFields = () => {
-        setSavingPatchFields((prev) => {
-          const next = new Set(prev);
-          fieldsToUpdate.forEach((field) => next.delete(field));
-          return next;
-        });
-      };
 
       const selectedIndustrySubCategories = rootData.organizationIndustryMainCategoriesReferences
         .flatMap((mainCategory) => mainCategory.subCategories)
@@ -438,8 +419,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
           },
         },
         onCompleted: (response, errors) => {
-          clearSavingPatchFields();
-
           if (errors && errors.length > 0) {
             submittedPatchValues.current = previousPatchValues;
             themedToast(<NotificationContent content={`We couldn't update organisation '${organization.name}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
@@ -452,7 +431,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
           }
         },
         onError: (error) => {
-          clearSavingPatchFields();
           submittedPatchValues.current = previousPatchValues;
           themedToast(<NotificationContent content={`We couldn't update organisation '${organization.name}'. ${error.message}`} />, errorNotificationOptions);
         },
@@ -693,7 +671,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                       <TextField
                         name="name"
                         required={requiredOrganizationDetailsFields.name}
-                        slotProps={{ input: { endAdornment: getSavingPatchAdornment(savingPatchFields.has('NAME')) } }}
                         onBlur={() => commitOrganizationPatch(['NAME'], { name: draftPatchValues.current.name })}
                       />
                     </FormFieldLabel>
@@ -708,7 +685,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                       fields={['about', 'title', 'subTitle']}
                       requiredFields={requiredOrganizationDetailsFields}
                       textFieldProps={{
-                        about: { name: 'about', slotProps: { input: { endAdornment: getSavingPatchAdornment(savingPatchFields.has('DESCRIPTION')) } } },
+                        about: { name: 'about' },
                       }}
                       onFieldBlur={{
                         about: () => commitOrganizationPatch(['DESCRIPTION'], { description: draftPatchValues.current.description }),

@@ -13,7 +13,7 @@ public interface IXeroSdkClientFactory
     IdentityApi CreateIdentityApi();
 }
 
-public sealed class XeroSdkClientFactory(XeroConfiguration xeroConfiguration, ILogger<XeroSdkClientFactory> logger) : IXeroSdkClientFactory
+public class XeroSdkClientFactory(XeroConfiguration xeroConfiguration, ILogger<XeroSdkClientFactory> logger) : IXeroSdkClientFactory
 {
     public XeroClient CreateClient(Uri? callbackUri = null)
     {

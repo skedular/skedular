@@ -1,27 +1,39 @@
 import { Address, PhysicalAddress } from '@/components/address';
-import { CreditCard, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon, NewIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { PaletteModeContext } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding, EditorActionBar, PageHeaderPanel } from '@skedular/ui';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import type { myBillingAndPayment_addMyBillingDetailsMutation } from '@/queries/__generated__/myBillingAndPayment_addMyBillingDetailsMutation.graphql';
 import type { myBillingAndPayment_customerPaymentMethodsDetails_query$key } from '@/queries/__generated__/myBillingAndPayment_customerPaymentMethodsDetails_query.graphql';
 import type { myBillingAndPayment_customerPaymentMethodsDetails_refetchableFragment } from '@/queries/__generated__/myBillingAndPayment_customerPaymentMethodsDetails_refetchableFragment.graphql';
 import type { myBillingAndPayment_removeCustomerPaymentMethodMutation } from '@/queries/__generated__/myBillingAndPayment_removeCustomerPaymentMethodMutation.graphql';
 import type { myBillingAndPayment_rootQuery } from '@/queries/__generated__/myBillingAndPayment_rootQuery.graphql';
-import type { myBillingAndPayment_updateMyBillingDetailsMutation } from '@/queries/__generated__/myBillingAndPayment_updateMyBillingDetailsMutation.graphql';
+import type {
+  CustomerBillingDetailsPatchField,
+  myBillingAndPayment_updateMyBillingDetailsMutation,
+} from '@/queries/__generated__/myBillingAndPayment_updateMyBillingDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import {
+  CreditCard,
+  defaultButtonStyle,
+  defaultPadding,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  PageHeaderPanel,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useSearchParams } from 'next/navigation';
-import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
@@ -104,6 +116,31 @@ const getActiveSection = (value: string | null): MyBillingAndPaymentSection => {
 const formColumnSx = {
   width: '100%',
   maxWidth: 760,
+};
+
+const inlinePatchDebounceTimeout = 1000;
+
+const areBillingAddressValuesEqual = (left: CustomerBillingDetails, right: CustomerBillingDetails) =>
+  left.addressLine1 === right.addressLine1 &&
+  left.addressLine2 === right.addressLine2 &&
+  left.suburb === right.suburb &&
+  left.city === right.city &&
+  left.province === right.province &&
+  left.zipcode === right.zipcode &&
+  left.countryCode === right.countryCode;
+
+const getChangedBillingFields = (left: CustomerBillingDetails, right: CustomerBillingDetails) => {
+  const fields: CustomerBillingDetailsPatchField[] = [];
+  if (left.companyName !== right.companyName) {
+    fields.push('COMPANY_NAME');
+  }
+  if (left.email !== right.email) {
+    fields.push('EMAIL');
+  }
+  if (!areBillingAddressValuesEqual(left, right)) {
+    fields.push('BILLING_ADDRESS');
+  }
+  return fields;
 };
 
 const MyBillingAndPayment = ({ queryReference }: Props) => {
@@ -201,31 +238,29 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
   const [stickyTop, setStickyTop] = useState(0);
   const validateCustomerBilling = makeValidate(customerBillingSchema);
   const requiredCustomerBillingFields = makeRequired(customerBillingSchema);
-  const [billingCompanyName, setBillingCompanyName] = useState(rootData.me.billingDetails?.companyName);
-  const debounceSetBillingCompanyName = useDebounceCallback(setBillingCompanyName, keyboardTextFieldDebounceTimeout);
-  const [billingEmail, setBillingEmail] = useState<string>(rootData.me.billingDetails?.email ?? '');
-  const debounceSetBillingEmail = useDebounceCallback(setBillingEmail, keyboardTextFieldDebounceTimeout);
   const [billingOsmType, setBillingOsmType] = useState(rootData.me.billingDetails?.osmType);
   const [billingOsmId, setBillingOsmId] = useState(rootData.me.billingDetails?.osmId);
   const [billingPlaceId, setBillingPlaceId] = useState(rootData.me.billingDetails?.placeId);
   const [billingLongitude, setBillingLongitude] = useState(rootData.me.billingDetails?.longitude);
   const [billingLatitude, setBillingLatitude] = useState(rootData.me.billingDetails?.latitude);
   const [billingFormattedAddress, setBillingFormattedAddress] = useState(rootData.me.billingDetails?.formattedAddress);
-  const [billingAddressLine1, setBillingAddressLine1] = useState<string>(rootData.me.billingDetails?.addressLine1 ?? '');
-  const debounceSetBillingAddressLine1 = useDebounceCallback(setBillingAddressLine1, keyboardTextFieldDebounceTimeout);
-  const [billingAddressLine2, setBillingAddressLine2] = useState(rootData.me.billingDetails?.addressLine2);
-  const debounceSetBillingAddressLine2 = useDebounceCallback(setBillingAddressLine2, keyboardTextFieldDebounceTimeout);
-  const [billingSuburb, setBillingSuburb] = useState(rootData.me.billingDetails?.suburb);
-  const debounceSetBillingSuburb = useDebounceCallback(setBillingSuburb, keyboardTextFieldDebounceTimeout);
-  const [billingCity, setBillingCity] = useState(rootData.me.billingDetails?.city);
-  const debounceSetBillingCity = useDebounceCallback(setBillingCity, keyboardTextFieldDebounceTimeout);
-  const [billingProvince, setBillingProvince] = useState(rootData.me.billingDetails?.province);
-  const debounceSetBillingProvince = useDebounceCallback(setBillingProvince, keyboardTextFieldDebounceTimeout);
-  const [billingZipcode, setBillingZipcode] = useState<string>(rootData.me.billingDetails?.zipcode ?? '');
-  const debounceSetBillingZipcode = useDebounceCallback(setBillingZipcode, keyboardTextFieldDebounceTimeout);
   const [billingCountry, setBillingCountry] = useState<string>(rootData.me.billingDetails?.country ?? '');
-  const [billingCountryCode, setBillingCountryCode] = useState<string>(rootData.me.billingDetails?.countryCode ?? '');
-  const debounceSetBillingCountryCode = useDebounceCallback(setBillingCountryCode, keyboardTextFieldDebounceTimeout);
+  const initialBillingValues = useMemo<CustomerBillingDetails>(
+    () => ({
+      companyName: rootData.me.billingDetails?.companyName ?? null,
+      email: rootData.me.billingDetails?.email ?? '',
+      addressLine1: rootData.me.billingDetails?.addressLine1 ?? '',
+      addressLine2: rootData.me.billingDetails?.addressLine2 ?? null,
+      suburb: rootData.me.billingDetails?.suburb ?? null,
+      city: rootData.me.billingDetails?.city ?? null,
+      province: rootData.me.billingDetails?.province ?? null,
+      zipcode: rootData.me.billingDetails?.zipcode ?? '',
+      countryCode: rootData.me.billingDetails?.countryCode ?? '',
+    }),
+    [rootData.me.billingDetails],
+  );
+  const draftBillingValues = useRef(initialBillingValues);
+  const submittedBillingValues = useRef(initialBillingValues);
 
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
 
@@ -260,175 +295,180 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
     setBillingLongitude(address.longitude);
     setBillingLatitude(address.latitude);
     setBillingFormattedAddress(address.formattedAddress);
-    setBillingAddressLine1(address.addressLine1 ?? '');
-    setBillingAddressLine2(address.addressLine2 ?? '');
-    setBillingSuburb(address.suburb ?? '');
-    setBillingCity(address.city ?? '');
-    setBillingProvince(address.province ?? '');
-    setBillingZipcode(address.zipcode ?? '');
     setBillingCountry(address.country ?? '');
-    setBillingCountryCode(address.countryCode ?? '');
   };
 
-  const handleMyBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: CustomerBillingDetails) => {
-    const countryData = getCountryData(countryCode as TCountryCode);
-    let country = billingCountry;
-    if (countryData) {
-      country = countryData.name;
-    }
+  const commitBillingDetailsPatch = useCallback(
+    (fieldsToUpdate: CustomerBillingDetailsPatchField[], values: CustomerBillingDetails) => {
+      if (fieldsToUpdate.length === 0 || !customerBillingSchema.isValidSync(values)) {
+        return;
+      }
 
-    const billingDetails = rootData.me.billingDetails;
-    if (billingDetails) {
-      const toastId = themedToast(<NotificationContent content={`Updating billing...`} />, infoNotificationOptions);
+      const { companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, countryCode } = values;
+      const countryData = getCountryData(countryCode as TCountryCode);
+      let country = billingCountry;
+      if (countryData) {
+        country = countryData.name;
+      }
 
-      commitUpdateMyBillingDetails({
-        variables: {
-          input: {
-            clientMutationId: uuid(),
-            id: billingDetails.id,
-            companyName,
-            email,
-            osmType: billingOsmType,
-            osmId: billingOsmId,
-            placeId: billingPlaceId,
-            longitude: billingLongitude,
-            latitude: billingLatitude,
-            formattedAddress: billingFormattedAddress,
-            addressLine1,
-            addressLine2,
-            suburb,
-            city,
-            province,
-            zipcode,
-            country,
-            countryCode,
+      const billingDetails = rootData.me.billingDetails;
+      if (billingDetails) {
+        const previousValues = submittedBillingValues.current;
+        if (getChangedBillingFields(previousValues, values).length === 0) {
+          return;
+        }
+        submittedBillingValues.current = values;
+
+        commitUpdateMyBillingDetails({
+          variables: {
+            input: {
+              clientMutationId: uuid(),
+              id: billingDetails.id,
+              fieldsToUpdate,
+              companyName,
+              email,
+              osmType: billingOsmType,
+              osmId: billingOsmId,
+              placeId: billingPlaceId,
+              longitude: billingLongitude,
+              latitude: billingLatitude,
+              formattedAddress: billingFormattedAddress,
+              addressLine1,
+              addressLine2,
+              suburb,
+              city,
+              province,
+              zipcode,
+              country,
+              countryCode,
+            },
           },
-        },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to update billing. Error: ${getRelayErrorMessage(errors)}.`} />,
-            });
+          onCompleted: (_, errors) => {
+            if (errors && errors.length > 0) {
+              submittedBillingValues.current = previousValues;
+              themedToast(<NotificationContent content={`Failed to update billing. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
+              return;
+            }
 
-            return;
-          }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`Billing updated.`} />,
-          });
-        },
-        onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update billing. Error: ${error.message}.`} />,
-          });
-        },
-        optimisticResponse: {
-          updateMyBillingDetails: {
-            customer: {
-              id: rootData.me.id,
-              billingDetails: {
-                id: billingDetails.id,
-                companyName,
-                email,
-                osmType: billingOsmType,
-                osmId: billingOsmId,
-                placeId: billingPlaceId,
-                longitude: billingLongitude,
-                latitude: billingLatitude,
-                formattedAddress: billingFormattedAddress,
-                addressLine1,
-                addressLine2,
-                suburb,
-                city,
-                province,
-                zipcode,
-                country,
-                countryCode,
+            themedToast(<NotificationContent content="Billing details saved." />, successNotificationOptions);
+          },
+          onError: (error) => {
+            submittedBillingValues.current = previousValues;
+            themedToast(<NotificationContent content={`Failed to update billing. Error: ${error.message}.`} />, errorNotificationOptions);
+          },
+          optimisticResponse: {
+            updateMyBillingDetails: {
+              customer: {
+                id: rootData.me.id,
+                billingDetails: {
+                  id: billingDetails.id,
+                  companyName,
+                  email,
+                  osmType: billingOsmType,
+                  osmId: billingOsmId,
+                  placeId: billingPlaceId,
+                  longitude: billingLongitude,
+                  latitude: billingLatitude,
+                  formattedAddress: billingFormattedAddress,
+                  addressLine1,
+                  addressLine2,
+                  suburb,
+                  city,
+                  province,
+                  zipcode,
+                  country,
+                  countryCode,
+                },
               },
             },
           },
-        },
-      });
-    } else {
-      const id = uuid();
-      const toastId = themedToast(<NotificationContent content={`Adding billing...`} />, infoNotificationOptions);
+        });
+      } else {
+        const id = uuid();
+        submittedBillingValues.current = values;
 
-      commitAddMyBillingDetails({
-        variables: {
-          input: {
-            clientMutationId: uuid(),
-            id,
-            companyName,
-            email,
-            osmType: billingOsmType,
-            osmId: billingOsmId,
-            placeId: billingPlaceId,
-            longitude: billingLongitude,
-            latitude: billingLatitude,
-            formattedAddress: billingFormattedAddress,
-            addressLine1,
-            addressLine2,
-            suburb,
-            city,
-            province,
-            zipcode,
-            country,
-            countryCode,
+        commitAddMyBillingDetails({
+          variables: {
+            input: {
+              clientMutationId: uuid(),
+              id,
+              companyName,
+              email,
+              osmType: billingOsmType,
+              osmId: billingOsmId,
+              placeId: billingPlaceId,
+              longitude: billingLongitude,
+              latitude: billingLatitude,
+              formattedAddress: billingFormattedAddress,
+              addressLine1,
+              addressLine2,
+              suburb,
+              city,
+              province,
+              zipcode,
+              country,
+              countryCode,
+            },
           },
-        },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to add billing. Error: ${getRelayErrorMessage(errors)}.`} />,
-            });
+          onCompleted: (_, errors) => {
+            if (errors && errors.length > 0) {
+              submittedBillingValues.current = initialBillingValues;
+              themedToast(<NotificationContent content={`Failed to add billing. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
+              return;
+            }
 
-            return;
-          }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`Billing added.`} />,
-          });
-        },
-        onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update add. Error: ${error.message}.`} />,
-          });
-        },
-        optimisticResponse: {
-          addMyBillingDetails: {
-            customer: {
-              id: rootData.me.id,
-              billingDetails: {
-                id,
-                companyName,
-                email,
-                osmType: billingOsmType,
-                osmId: billingOsmId,
-                placeId: billingPlaceId,
-                longitude: billingLongitude,
-                latitude: billingLatitude,
-                formattedAddress: billingFormattedAddress,
-                addressLine1,
-                addressLine2,
-                suburb,
-                city,
-                province,
-                zipcode,
-                country,
-                countryCode,
+            themedToast(<NotificationContent content="Billing details saved." />, successNotificationOptions);
+          },
+          onError: (error) => {
+            submittedBillingValues.current = initialBillingValues;
+            themedToast(<NotificationContent content={`Failed to update add. Error: ${error.message}.`} />, errorNotificationOptions);
+          },
+          optimisticResponse: {
+            addMyBillingDetails: {
+              customer: {
+                id: rootData.me.id,
+                billingDetails: {
+                  id,
+                  companyName,
+                  email,
+                  osmType: billingOsmType,
+                  osmId: billingOsmId,
+                  placeId: billingPlaceId,
+                  longitude: billingLongitude,
+                  latitude: billingLatitude,
+                  formattedAddress: billingFormattedAddress,
+                  addressLine1,
+                  addressLine2,
+                  suburb,
+                  city,
+                  province,
+                  zipcode,
+                  country,
+                  countryCode,
+                },
               },
             },
           },
-        },
-      });
-    }
-  };
+        });
+      }
+    },
+    [
+      billingCountry,
+      billingFormattedAddress,
+      billingLatitude,
+      billingLongitude,
+      billingOsmId,
+      billingOsmType,
+      billingPlaceId,
+      commitAddMyBillingDetails,
+      commitUpdateMyBillingDetails,
+      initialBillingValues,
+      rootData.me.billingDetails,
+      rootData.me.id,
+      themedToast,
+    ],
+  );
+  const debouncedCommitBillingDetailsPatch = useDebounceCallback(commitBillingDetailsPatch, inlinePatchDebounceTimeout);
 
   const handleAddPaymentMethodClicked = () => {
     setIsAddPaymentMethodDialogOpen(true);
@@ -519,30 +559,17 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
 
   const renderBillingDetailsSection = () => (
     <Box sx={{ p: defaultPadding }}>
-      <Form
-        onSubmit={handleMyBillingDetailUpdateClick}
-        initialValues={{
-          companyName: billingCompanyName,
-          email: billingEmail,
-          addressLine1: billingAddressLine1,
-          addressLine2: billingAddressLine2,
-          suburb: billingSuburb,
-          city: billingCity,
-          province: billingProvince,
-          zipcode: billingZipcode,
-          countryCode: billingCountryCode,
-        }}
+      <Form<CustomerBillingDetails>
+        onSubmit={() => undefined}
+        initialValues={initialBillingValues}
         validate={validateCustomerBilling}
         render={({ handleSubmit, values, form }) => {
-          debounceSetBillingCompanyName(values!.companyName);
-          debounceSetBillingEmail(values!.email);
-          debounceSetBillingAddressLine1(values!.addressLine1);
-          debounceSetBillingAddressLine2(values!.addressLine2);
-          debounceSetBillingSuburb(values!.suburb);
-          debounceSetBillingCity(values!.city);
-          debounceSetBillingProvince(values!.province);
-          debounceSetBillingZipcode(values!.zipcode);
-          debounceSetBillingCountryCode(values!.countryCode);
+          const formValues = values as CustomerBillingDetails;
+          const changedFields = getChangedBillingFields(draftBillingValues.current, formValues);
+          if (changedFields.length > 0) {
+            draftBillingValues.current = formValues;
+            debouncedCommitBillingDetailsPatch(changedFields, formValues);
+          }
 
           return (
             <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
@@ -591,14 +618,6 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
                   }}
                 />
               </StackColumn>
-
-              <EditorActionBar
-                primaryAction={
-                  <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                    Update
-                  </Button>
-                }
-              />
             </FormStackColumn>
           );
         }}

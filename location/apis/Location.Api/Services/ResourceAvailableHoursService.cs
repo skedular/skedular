@@ -1,6 +1,7 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
+using Location.Api.Models;
 using Location.Api.Services.Authorization;
 using Location.Shared.Mappers;
 using Location.Shared.Models;
@@ -17,6 +18,8 @@ public interface IResourceAvailableHoursService
         bool overrideAvailableHours,
         WeekOpeningHours? availableHours,
         CancellationToken cancellationToken);
+
+    Task<Resource> UpdateAvailableHoursAsync(ResourceAvailableHoursPatchRequest request, CancellationToken cancellationToken);
 }
 
 public class ResourceAvailableHoursService(
@@ -26,7 +29,8 @@ public class ResourceAvailableHoursService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ILocationOutboxPublisher locationOutboxPublisher,
-    IEntityMapper entityMapper) : IResourceAvailableHoursService
+    IEntityMapper entityMapper,
+    ILogger<ResourceAvailableHoursService> logger) : IResourceAvailableHoursService
 {
     public async Task<Resource> UpdateAvailableHoursAsync(
         string id,
@@ -77,5 +81,65 @@ public class ResourceAvailableHoursService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return resource;
+    }
+
+    public async Task<Resource> UpdateAvailableHoursAsync(ResourceAvailableHoursPatchRequest request, CancellationToken cancellationToken)
+    {
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Resource available hours patch autosave started. ResourceId: {ResourceId}, EditUnits: {EditUnits}",
+            request.Id,
+            editUnits);
+
+        try
+        {
+            if (request.FieldsToUpdate.Contains(LocationResourceAvailableHoursPatchField.AvailableHours))
+            {
+                var updatedResource =
+                    await UpdateAvailableHoursAsync(request.Id, request.OverrideAvailableHours, request.AvailableHours, cancellationToken);
+                logger.LogInformation(
+                    "Resource available hours patch autosave completed. ResourceId: {ResourceId}, EditUnits: {EditUnits}",
+                    updatedResource.Id,
+                    editUnits);
+                return updatedResource;
+            }
+
+            ArgumentException.ThrowIfNullOrWhiteSpace(request.Id);
+
+            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+            var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(request.Id, cancellationToken) ??
+                                   throw new ResourceNotFound();
+            var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(existingResource.Location.Id, cancellationToken) ??
+                                   throw new LocationNotFound();
+            if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customerId, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            var unchangedResource = entityMapper.MapTo(existingResource);
+            logger.LogInformation(
+                "Resource available hours patch autosave completed with no changes. ResourceId: {ResourceId}, EditUnits: {EditUnits}",
+                unchangedResource.Id,
+                editUnits);
+            return unchangedResource;
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Resource available hours patch autosave rejected by authorization. ResourceId: {ResourceId}, EditUnits: {EditUnits}",
+                request.Id,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Resource available hours patch autosave failed. ResourceId: {ResourceId}, EditUnits: {EditUnits}",
+                request.Id,
+                editUnits);
+            throw;
+        }
     }
 }

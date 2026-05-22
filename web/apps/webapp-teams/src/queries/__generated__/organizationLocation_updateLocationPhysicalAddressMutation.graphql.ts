@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<98745bedb02c7fa3a2adb98e9ea6a9cf>>
+ * @generated SignedSource<<fba6cc24a04cf40b4ded9608483f6e03>>
  * @lightSyntaxTransform
  */
 
@@ -8,6 +8,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type LocationPhysicalAddressPatchField = "ADDRESS" | "%future added value";
 export type UpdateLocationPhysicalAddressInput = {
   addressLine1: string;
   addressLine2?: string | null | undefined;
@@ -15,6 +16,7 @@ export type UpdateLocationPhysicalAddressInput = {
   clientMutationId?: string | null | undefined;
   country: string;
   countryCode?: string | null | undefined;
+  fieldsToUpdate: ReadonlyArray<LocationPhysicalAddressPatchField>;
   formattedAddress?: string | null | undefined;
   id: string;
   latitude?: number | null | undefined;

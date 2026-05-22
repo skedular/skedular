@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4ca80cb5be7ff94446d86dfea7474a95>>
+ * @generated SignedSource<<5b92d631598723acd77c8951a1c372a6>>
  * @lightSyntaxTransform
  */
 
@@ -8,8 +8,10 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type LocationOpeningHoursPatchField = "WEEK_OPENING_HOURS" | "%future added value";
 export type UpdateLocationOpeningHoursInput = {
   clientMutationId?: string | null | undefined;
+  fieldsToUpdate: ReadonlyArray<LocationOpeningHoursPatchField>;
   id: string;
   weekOpeningHours: WeekOpeningHoursInput;
 };

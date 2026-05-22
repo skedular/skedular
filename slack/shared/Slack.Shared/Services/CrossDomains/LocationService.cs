@@ -165,6 +165,14 @@ public class LocationService(
                         LocationType.Private => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private,
                         LocationType.Marketplace => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace,
                         _ => throw new ArgumentOutOfRangeException()
+                    },
+                    FieldsToUpdate =
+                    {
+                        LocationPatchField.Name,
+                        LocationPatchField.ListingMetadata,
+                        LocationPatchField.Organization,
+                        LocationPatchField.Timezone,
+                        LocationPatchField.Type
                     }
                 },
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),

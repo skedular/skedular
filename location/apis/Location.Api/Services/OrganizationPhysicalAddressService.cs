@@ -1,6 +1,7 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
+using Location.Api.Models;
 using Location.Api.Services.Authorization;
 using Location.Shared.Mappers;
 using Location.Shared.Models;
@@ -13,7 +14,7 @@ namespace Location.Api.Services;
 public interface ILocationPhysicalAddressService
 {
     Task<Shared.Models.Location> AddAsync(LocationPhysicalAddress locationPhysicalAddress, CancellationToken cancellationToken);
-    Task<Shared.Models.Location> UpdateAsync(LocationPhysicalAddress locationPhysicalAddress, CancellationToken cancellationToken);
+    Task<Shared.Models.Location> UpdateAsync(LocationPhysicalAddressPatchRequest request, CancellationToken cancellationToken);
 }
 
 public class LocationPhysicalAddressService(
@@ -24,7 +25,8 @@ public class LocationPhysicalAddressService(
     IRandomHelper randomHelper,
     IEntityMapper entityMapper,
     ILocationOutboxPublisher locationOutboxPublisher,
-    ICachedLocationService cachedLocationService) : ILocationPhysicalAddressService
+    ICachedLocationService cachedLocationService,
+    ILogger<LocationPhysicalAddressService> logger) : ILocationPhysicalAddressService
 {
     public async Task<Shared.Models.Location> AddAsync(LocationPhysicalAddress locationPhysicalAddress, CancellationToken cancellationToken)
     {
@@ -82,7 +84,70 @@ public class LocationPhysicalAddressService(
         return mappedLocation;
     }
 
-    public async Task<Shared.Models.Location> UpdateAsync(LocationPhysicalAddress locationPhysicalAddress, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Location> UpdateAsync(LocationPhysicalAddressPatchRequest request, CancellationToken cancellationToken)
+    {
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Location physical address patch autosave started. PhysicalAddressId: {PhysicalAddressId}, EditUnits: {EditUnits}",
+            request.PhysicalAddress.Id,
+            editUnits);
+
+        try
+        {
+            if (request.FieldsToUpdate.Contains(LocationPhysicalAddressPatchField.Address))
+            {
+                var updatedLocation = await UpdateAsync(request.PhysicalAddress, cancellationToken);
+                logger.LogInformation(
+                    "Location physical address patch autosave completed. LocationId: {LocationId}, PhysicalAddressId: {PhysicalAddressId}, EditUnits: {EditUnits}",
+                    updatedLocation.Id,
+                    request.PhysicalAddress.Id,
+                    editUnits);
+                return updatedLocation;
+            }
+
+            ArgumentNullException.ThrowIfNull(request.PhysicalAddress.Id);
+
+            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+            var existingLocationPhysicalAddress = await repositoryFactory.LocationPhysicalAddressRepository.GetByIdAsync(
+                request.PhysicalAddress.Id,
+                cancellationToken) ?? throw new LocationPhysicalAddressNotFound();
+            var existingLocation =
+                await repositoryFactory.LocationRepository.GetByIdAsync(existingLocationPhysicalAddress.Location.Id, cancellationToken) ??
+                throw new LocationNotFound();
+            if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customerId, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            var unchangedLocation = entityMapper.MapTo(existingLocation);
+            logger.LogInformation(
+                "Location physical address patch autosave completed with no changes. LocationId: {LocationId}, PhysicalAddressId: {PhysicalAddressId}, EditUnits: {EditUnits}",
+                unchangedLocation.Id,
+                request.PhysicalAddress.Id,
+                editUnits);
+            return unchangedLocation;
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Location physical address patch autosave rejected by authorization. PhysicalAddressId: {PhysicalAddressId}, EditUnits: {EditUnits}",
+                request.PhysicalAddress.Id,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Location physical address patch autosave failed. PhysicalAddressId: {PhysicalAddressId}, EditUnits: {EditUnits}",
+                request.PhysicalAddress.Id,
+                editUnits);
+            throw;
+        }
+    }
+
+    private async Task<Shared.Models.Location> UpdateAsync(LocationPhysicalAddress locationPhysicalAddress, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(locationPhysicalAddress.Id);
 

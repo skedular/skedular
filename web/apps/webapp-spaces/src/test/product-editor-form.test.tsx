@@ -156,7 +156,7 @@ describe('ProductEditorForm', () => {
     expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument();
   });
 
-  it('uses review and update as the final edit-product step and only shows submit there', async () => {
+  it('keeps edit-product review without a redundant update action', async () => {
     const user = userEvent.setup();
 
     render(<ProductEditorForm {...baseProps} mode="edit" />);
@@ -168,7 +168,7 @@ describe('ProductEditorForm', () => {
 
     expect(screen.getAllByText('Review & Update')).not.toHaveLength(0);
     expect(screen.getByText('Check the high-level shape before updating the product. This is the compact product story your team needs to understand.')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Update' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Update' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument();
   });
 });

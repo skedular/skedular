@@ -2,6 +2,7 @@ using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
 using Location.Api.Mappers;
+using Location.Api.Models;
 using Location.Api.Services;
 
 namespace Location.Api.GraphQL.Resource;
@@ -28,7 +29,10 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Resource = graphQlMapper.MapTo(await resourceService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken))
+            Resource = graphQlMapper.MapTo(
+                await resourceService.UpdateAsync(
+                    new ResourcePatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
+                    cancellationToken))
         };
 
     [UseResolverScope]
@@ -82,9 +86,11 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             ClientMutationId = input.ClientMutationId,
             Resource = graphQlMapper.MapTo(
                 await resourceAvailableHoursService.UpdateAvailableHoursAsync(
-                    input.Id,
-                    input.OverrideAvailableHours,
-                    graphQlMapper.MapTo(input.AvailableHours),
+                    new ResourceAvailableHoursPatchRequest(
+                        input.Id,
+                        input.OverrideAvailableHours,
+                        graphQlMapper.MapTo(input.AvailableHours),
+                        input.FieldsToUpdate),
                     cancellationToken))
         };
 

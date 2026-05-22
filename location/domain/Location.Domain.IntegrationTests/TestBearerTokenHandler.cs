@@ -9,7 +9,7 @@ namespace Location.Domain.IntegrationTests;
 ///     flows correctly through async continuations and is isolated per
 ///     logical execution context.
 /// </summary>
-public sealed class TestBearerTokenHandler : DelegatingHandler
+public class TestBearerTokenHandler : DelegatingHandler
 {
     private static readonly AsyncLocal<string?> CurrentToken = new();
 

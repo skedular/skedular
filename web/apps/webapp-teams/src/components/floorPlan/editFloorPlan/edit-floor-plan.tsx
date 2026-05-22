@@ -1,17 +1,12 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeskIcon, OtherResourceIcon, ParkingIcon, RoomIcon } from '@/components/icons';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { ImageFileUploader } from '@/libs/image-file-uploader';
-import { PaletteModeContext } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { editFloorPlan_query$key } from '@/queries/__generated__/editFloorPlan_query.graphql';
 import type { editFloorPlan_resources_query$key } from '@/queries/__generated__/editFloorPlan_resources_query.graphql';
 import type { editFloorPlan_resources_refetchableFragment } from '@/queries/__generated__/editFloorPlan_resources_refetchableFragment.graphql';
-import type { editFloorPlan_updateFloorPlanMutation } from '@/queries/__generated__/editFloorPlan_updateFloorPlanMutation.graphql';
+import type { editFloorPlan_updateFloorPlanMutation, FloorPlanPatchField } from '@/queries/__generated__/editFloorPlan_updateFloorPlanMutation.graphql';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
@@ -19,12 +14,15 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import { AppBarWithStackColumn, BodyIconTypography, defaultPadding, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter } from 'next/navigation';
-import { memo, useContext, useMemo, useState } from 'react';
+import { memo, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
@@ -41,6 +39,7 @@ type FloorPlanDetails = {
 const floorPlanSchema = object({
   name: string().min(3, 'Floor plan name must be at least three characters long.').required('Floor plan name is required'),
 });
+const floorPlanAutosaveDebounceTimeout = 1000;
 
 const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
   const rootData = useFragment<editFloorPlan_query$key>(
@@ -186,14 +185,15 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
   );
   const [draggingResourceId, setDraggingResourceId] = useState<string | null>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const previousFloorPlanName = useRef<string | null | undefined>(null);
+  const previousFloorPlanImage = useRef<FileUploadResponse | null>(image);
+  const previousFloorPlanResourcePositions = useRef<Map<string, { x: number; y: number }>>(resourcePositions);
 
-  const handleFloorPlanDetailUpdateClick = ({ name }: FloorPlanDetails) => {
+  const handleFloorPlanDetailUpdateClick = (fieldsToUpdate: FloorPlanPatchField[], { name }: FloorPlanDetails) => {
     const floorPlan = rootData.floorPlan;
-    if (!floorPlan) {
+    if (!floorPlan || !floorPlanSchema.isValidSync({ name })) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content={`Updating floor plan '${floorPlan.name}'...`} />, infoNotificationOptions);
 
     if (
       !image ||
@@ -205,10 +205,7 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
       !image.thumbnail.height ||
       !image.thumbnail.width
     ) {
-      toast.update(toastId, {
-        ...errorNotificationOptions,
-        render: <NotificationContent content={`Floor plan image is required.`} />,
-      });
+      themedToast(<NotificationContent content={`Floor plan image is required.`} />, errorNotificationOptions);
 
       return;
     }
@@ -222,6 +219,7 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
         input: {
           clientMutationId: uuid(),
           id: floorPlan.id,
+          fieldsToUpdate,
           name,
           image: finalImage,
           resourcePositions: [...resourcePositions.entries()].map(([resourceId, { x, y }]) => ({
@@ -233,26 +231,13 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update floor plan '${floorPlan.name}'. Error: ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to update floor plan '${floorPlan.name}'. Error: ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Floor plan ${name} updated.`} />,
-        });
-
-        router.back();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update floor plan '${floorPlan.name}'. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to update floor plan '${floorPlan.name}'. Error: ${error.message}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         updateFloorPlan: {
@@ -271,6 +256,28 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
       },
     });
   };
+  const debouncedFloorPlanDetailUpdate = useDebounceCallback(handleFloorPlanDetailUpdateClick, floorPlanAutosaveDebounceTimeout);
+
+  useEffect(() => {
+    if (previousFloorPlanName.current === null) {
+      previousFloorPlanName.current = name;
+      return;
+    }
+
+    if (!name) return;
+
+    const changedFields: FloorPlanPatchField[] = [];
+    if (previousFloorPlanName.current !== name) changedFields.push('NAME');
+    if (JSON.stringify(previousFloorPlanImage.current) !== JSON.stringify(image)) changedFields.push('IMAGE');
+    if (JSON.stringify([...previousFloorPlanResourcePositions.current.entries()]) !== JSON.stringify([...resourcePositions.entries()])) changedFields.push('RESOURCE_POSITIONS');
+
+    if (changedFields.length > 0) {
+      previousFloorPlanName.current = name;
+      previousFloorPlanImage.current = image;
+      previousFloorPlanResourcePositions.current = resourcePositions;
+      debouncedFloorPlanDetailUpdate(changedFields, { name });
+    }
+  }, [debouncedFloorPlanDetailUpdate, image, name, resourcePositions]);
 
   const handleCloseClick = () => {
     router.back();
@@ -324,7 +331,7 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
       <Box sx={{ flexGrow: 1 }}>
         <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Floor Plan">
           <Form
-            onSubmit={handleFloorPlanDetailUpdateClick}
+            onSubmit={() => undefined}
             initialValues={{
               name,
             }}
@@ -442,14 +449,6 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
                         </StackColumn>
                       </StackRow>
                     </FormFieldLabel>
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
                   </StackColumn>
                 </FormStackColumn>
               );

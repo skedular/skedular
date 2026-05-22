@@ -1,0 +1,24 @@
+mutation UpdateTeamPatchSave(
+    $id: String!
+    $fieldsToUpdate: [TeamPatchField!]!
+    $name: String!
+    $about: String
+    $timezone: String
+) {
+    updateTeam(
+        input: {
+            id: $id
+            fieldsToUpdate: $fieldsToUpdate
+            name: $name
+            about: $about
+            timezone: $timezone
+        }
+    ) {
+        team {
+            id
+            name
+            about
+            timezone
+        }
+    }
+}

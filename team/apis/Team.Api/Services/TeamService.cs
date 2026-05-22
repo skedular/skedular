@@ -3,6 +3,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
+using Team.Api.Models;
 using Team.Api.Services.Authorization;
 using Team.Shared.Mappers;
 using Team.Shared.Models;
@@ -17,7 +18,8 @@ namespace Team.Api.Services;
 public interface ITeamService
 {
     Task<Shared.Models.Team> AddAsync(Shared.Models.Team team, CancellationToken cancellationToken);
-    Task<Shared.Models.Team> UpdateAsync(Shared.Models.Team team, bool updateTeamMembers, CancellationToken cancellationToken);
+    Task<Shared.Models.Team> UpdateAsync(TeamPatchRequest request, CancellationToken cancellationToken);
+    Task<Shared.Models.Team> UpdateAsync(TeamAndMembersPatchRequest request, CancellationToken cancellationToken);
     Task<Shared.Models.Team> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Team?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
 
@@ -151,56 +153,82 @@ public class TeamService(
         return team;
     }
 
-    public async Task<Shared.Models.Team> UpdateAsync(Shared.Models.Team team, bool updateTeamMembers, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Team> UpdateAsync(TeamPatchRequest request, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(team.Id);
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Team patch autosave started. TeamId: {TeamId}, EditUnits: {EditUnits}",
+            request.Team.Id,
+            editUnits);
 
-        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
-        logger.LogInformation("Team update requested for team {TeamId} by customer {CustomerId}", team.Id, customerId);
-        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken) ?? throw new TeamNotFound();
-        Location? primaryLocation = null;
-
-        if (team.PrimaryLocation is not null)
+        try
         {
-            primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(team.PrimaryLocation.Id, cancellationToken) ??
-                              throw new LocationNotFound();
-
-            if (!string.IsNullOrWhiteSpace(existingTeam.Organization.Id))
-            {
-                if (primaryLocation.Organization.Id != existingTeam.Organization.Id)
-                {
-                    throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
-                }
-            }
-            else if (!string.IsNullOrWhiteSpace(existingTeam.Organization.CustomDomain))
-            {
-                if (primaryLocation.Organization.CustomDomain != existingTeam.Organization.CustomDomain)
-                {
-                    throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException("Either organizationId or organizationCustomDomain must be provided.");
-            }
+            var updatedTeam = await UpdatePatchAsync(request.Team, request.FieldsToUpdate, false, cancellationToken);
+            logger.LogInformation(
+                "Team patch autosave completed. TeamId: {TeamId}, EditUnits: {EditUnits}",
+                updatedTeam.Id,
+                editUnits);
+            return updatedTeam;
         }
-
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                               existingTeam.Organization.Id,
-                               existingTeam.Organization.CustomDomain,
-                               false,
-                               cancellationToken) ??
-                           throw new OrganizationNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customerId, cancellationToken))
+        catch (UnauthorizedAccessException exception)
         {
-            throw new NoMoreInteractionAllowed();
+            logger.LogWarning(
+                exception,
+                "Team patch autosave rejected by authorization. TeamId: {TeamId}, EditUnits: {EditUnits}",
+                request.Team.Id,
+                editUnits);
+            throw;
         }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Team patch autosave failed. TeamId: {TeamId}, EditUnits: {EditUnits}",
+                request.Team.Id,
+                editUnits);
+            throw;
+        }
+    }
 
-        var updatedTeam =
-            await UpdateInternalAsync(team, existingTeam, customerId, organization, primaryLocation, updateTeamMembers, cancellationToken);
-        logger.LogInformation("Team update completed for team {TeamId}", updatedTeam.Id);
+    public async Task<Shared.Models.Team> UpdateAsync(TeamAndMembersPatchRequest request, CancellationToken cancellationToken)
+    {
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Team and members patch autosave started. TeamId: {TeamId}, EditUnits: {EditUnits}",
+            request.Team.Id,
+            editUnits);
 
-        return updatedTeam;
+        try
+        {
+            var updatedTeam = await UpdatePatchAsync(
+                request.Team,
+                request.FieldsToUpdate,
+                request.FieldsToUpdate.Contains(TeamAndMembersPatchField.Members),
+                cancellationToken);
+            logger.LogInformation(
+                "Team and members patch autosave completed. TeamId: {TeamId}, EditUnits: {EditUnits}",
+                updatedTeam.Id,
+                editUnits);
+            return updatedTeam;
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Team and members patch autosave rejected by authorization. TeamId: {TeamId}, EditUnits: {EditUnits}",
+                request.Team.Id,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Team and members patch autosave failed. TeamId: {TeamId}, EditUnits: {EditUnits}",
+                request.Team.Id,
+                editUnits);
+            throw;
+        }
     }
 
     public async Task<Shared.Models.Team> DeleteAsync(string id, CancellationToken cancellationToken)
@@ -355,6 +383,58 @@ public class TeamService(
         return teams.Select(entityMapper.MapTo).ToList();
     }
 
+    private async Task<Shared.Models.Team> UpdateAsync(Shared.Models.Team team, bool updateTeamMembers, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(team.Id);
+
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        logger.LogInformation("Team update requested for team {TeamId} by customer {CustomerId}", team.Id, customerId);
+        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken) ?? throw new TeamNotFound();
+        Location? primaryLocation = null;
+
+        if (team.PrimaryLocation is not null)
+        {
+            primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(team.PrimaryLocation.Id, cancellationToken) ??
+                              throw new LocationNotFound();
+
+            if (!string.IsNullOrWhiteSpace(existingTeam.Organization.Id))
+            {
+                if (primaryLocation.Organization.Id != existingTeam.Organization.Id)
+                {
+                    throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(existingTeam.Organization.CustomDomain))
+            {
+                if (primaryLocation.Organization.CustomDomain != existingTeam.Organization.CustomDomain)
+                {
+                    throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Either organizationId or organizationCustomDomain must be provided.");
+            }
+        }
+
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
+                               existingTeam.Organization.Id,
+                               existingTeam.Organization.CustomDomain,
+                               false,
+                               cancellationToken) ??
+                           throw new OrganizationNotFound();
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customerId, cancellationToken))
+        {
+            throw new NoMoreInteractionAllowed();
+        }
+
+        var updatedTeam =
+            await UpdateInternalAsync(team, existingTeam, customerId, organization, primaryLocation, updateTeamMembers, cancellationToken);
+        logger.LogInformation("Team update completed for team {TeamId}", updatedTeam.Id);
+
+        return updatedTeam;
+    }
+
     private async Task<Shared.Models.Team> UpdateInternalAsync(
         Shared.Models.Team team,
         Shared.Database.Entities.Team existingTeam,
@@ -406,6 +486,64 @@ public class TeamService(
         await cachedTeamService.UpdateByIdAsync(team.Id, cancellationToken);
 
         return team;
+    }
+
+    private async Task<Shared.Models.Team> UpdatePatchAsync(
+        Shared.Models.Team requestedTeam,
+        IReadOnlySet<TeamPatchField> fieldsToUpdate,
+        bool updateTeamMembers,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(requestedTeam.Id);
+
+        var current = await repositoryFactory.TeamRepository.GetByIdAsync(requestedTeam.Id, cancellationToken) ?? throw new TeamNotFound();
+        var patchedTeam = entityMapper.MapTo(current);
+        Apply(requestedTeam, fieldsToUpdate, patchedTeam);
+        if (updateTeamMembers)
+        {
+            patchedTeam.TeamMembers = requestedTeam.TeamMembers;
+        }
+
+        return await UpdateAsync(patchedTeam, updateTeamMembers, cancellationToken);
+    }
+
+    private Task<Shared.Models.Team> UpdatePatchAsync(
+        Shared.Models.Team requestedTeam,
+        IReadOnlySet<TeamAndMembersPatchField> fieldsToUpdate,
+        bool updateTeamMembers,
+        CancellationToken cancellationToken)
+    {
+        var teamFields = fieldsToUpdate.Contains(TeamAndMembersPatchField.Team)
+            ? Enum.GetValues<TeamPatchField>().ToHashSet()
+            : [];
+        return UpdatePatchAsync(requestedTeam, teamFields, updateTeamMembers, cancellationToken);
+    }
+
+    private static void Apply(Shared.Models.Team requestedTeam, IReadOnlySet<TeamPatchField> fieldsToUpdate, Shared.Models.Team patchedTeam)
+    {
+        foreach (var field in fieldsToUpdate)
+        {
+            switch (field)
+            {
+                case TeamPatchField.Name:
+                    patchedTeam.Name = requestedTeam.Name;
+                    break;
+                case TeamPatchField.About:
+                    patchedTeam.About = requestedTeam.About;
+                    break;
+                case TeamPatchField.PrimaryLocation:
+                    patchedTeam.PrimaryLocation = requestedTeam.PrimaryLocation;
+                    break;
+                case TeamPatchField.Timezone:
+                    patchedTeam.Timezone = requestedTeam.Timezone;
+                    break;
+                case TeamPatchField.FeatureImages:
+                    patchedTeam.FeatureImages = requestedTeam.FeatureImages;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(fieldsToUpdate), field, null);
+            }
+        }
     }
 
     private async Task<Shared.Models.Team> EnrichTeamAsync(

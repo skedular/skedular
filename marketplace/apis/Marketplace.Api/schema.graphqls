@@ -278,6 +278,7 @@ input ProductWhereInput {
 input UpdateProductInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [ProductPatchField!]!
   type: ProductType!
   currency: Currency!
   tagIds: [String!]!
@@ -475,6 +476,15 @@ enum PaymentMethod {
 
 enum ProductOrderField {
   NAME
+}
+
+enum ProductPatchField {
+  TYPE
+  CURRENCY
+  TAGS
+  FEATURE_IMAGES
+  PRICING_OPTIONS
+  LISTING_METADATA
 }
 
 enum ProductPricingBillingMode {

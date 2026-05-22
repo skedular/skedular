@@ -5,7 +5,7 @@ namespace Enterprise.Shared.Telemetry;
 /// <summary>
 ///     The standard propagator for our purposes.
 /// </summary>
-public sealed class StandardTextMapPropagator() : CompositeTextMapPropagator(s_propagators)
+public class StandardTextMapPropagator() : CompositeTextMapPropagator(s_propagators)
 {
     private static readonly TextMapPropagator[] s_propagators = [new TraceContextPropagator(), new BaggagePropagator()];
 

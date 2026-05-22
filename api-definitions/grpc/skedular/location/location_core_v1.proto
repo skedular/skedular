@@ -97,6 +97,7 @@ message Admin_UpdateInput {
   ExtraMetadata         ExtraMetadata   = 9;
   PhysicalAddress       physicalAddress = 10;
   string                uniqueClaimCode = 11;
+  repeated LocationPatchField fieldsToUpdate = 12;
 }
 
 message LocationConnection {
@@ -217,6 +218,20 @@ message UpdateInput {
   ExtraMetadata         ExtraMetadata   = 9;
   PhysicalAddress       physicalAddress = 10;
   string                uniqueClaimCode = 11;
+  repeated LocationPatchField fieldsToUpdate = 12;
+}
+
+enum LocationPatchField {
+  LocationPatchField_Name            = 0;
+  LocationPatchField_ListingMetadata = 1;
+  LocationPatchField_Organization    = 2;
+  LocationPatchField_Timezone        = 3;
+  LocationPatchField_Tags            = 4;
+  LocationPatchField_FeatureImages   = 5;
+  LocationPatchField_Type            = 6;
+  LocationPatchField_ExtraMetadata   = 7;
+  LocationPatchField_PhysicalAddress = 8;
+  LocationPatchField_UniqueClaimCode = 9;
 }
 
 message RemoveInput {

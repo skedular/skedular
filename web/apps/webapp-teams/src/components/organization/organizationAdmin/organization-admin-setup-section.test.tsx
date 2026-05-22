@@ -345,7 +345,7 @@ describe('OrganizationAdminSetupSection', () => {
     });
   });
 
-  it('shows inline saving feedback without a success toast while the name patch is in flight', async () => {
+  it('saves silently without any toast while the name patch is in flight', async () => {
     render(<OrganizationAdminSetupSection organizationCustomDomain="acme" />);
 
     fireEvent.change(screen.getByRole('textbox', { name: 'Name' }), { target: { value: 'Acme Labs' } });
@@ -353,14 +353,12 @@ describe('OrganizationAdminSetupSection', () => {
       vi.advanceTimersByTime(1000);
     });
 
-    expect(screen.getByLabelText('Saving')).toBeInTheDocument();
     expect(toast).not.toHaveBeenCalled();
 
     await act(async () => {
       patchUpdateCommit.mock.calls[0][0].onCompleted({ updateOrganization: { organization } }, undefined);
     });
 
-    expect(screen.queryByLabelText('Saving')).not.toBeInTheDocument();
     expect(toast).not.toHaveBeenCalled();
   });
 

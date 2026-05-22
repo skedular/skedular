@@ -351,6 +351,7 @@ input TeamWhereInput {
 input UpdateTeamAndTeamMembersInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [TeamAndMembersPatchField!]!
   name: String!
   about: String
   organizationId: String
@@ -365,6 +366,7 @@ input UpdateTeamAndTeamMembersInput {
 input UpdateTeamInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [TeamPatchField!]!
   name: String!
   about: String
   primaryLocationId: String
@@ -375,6 +377,7 @@ input UpdateTeamInput {
 input UpdateTeamMembersInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [TeamMembersPatchField!]!
   customerIds: [String!]!
   organizationMemberIds: [String!]!
 }
@@ -397,6 +400,11 @@ enum OrderDirection {
   DESCENDING
 }
 
+enum TeamAndMembersPatchField {
+  TEAM
+  MEMBERS
+}
+
 enum TeamMemberOrderField {
   ROLE
   STATUS
@@ -412,6 +420,10 @@ enum TeamMemberRole {
   MEMBER
 }
 
+enum TeamMembersPatchField {
+  MEMBERS
+}
+
 enum TeamMemberStatus {
   ACTIVE
   INACTIVE
@@ -420,6 +432,14 @@ enum TeamMemberStatus {
 enum TeamOrderField {
   NAME
   ABOUT
+}
+
+enum TeamPatchField {
+  NAME
+  ABOUT
+  PRIMARY_LOCATION
+  TIMEZONE
+  FEATURE_IMAGES
 }
 
 scalar FieldSelectionSet

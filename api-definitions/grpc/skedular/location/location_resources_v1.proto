@@ -78,6 +78,16 @@ message UpdateResourceInput {
   repeated string tagIds                 = 5;
   string          color                  = 6;
   int32           capacity               = 7;
+  repeated ResourcePatchField fieldsToUpdate = 8;
+}
+
+enum ResourcePatchField {
+  ResourcePatchField_Name                   = 0;
+  ResourcePatchField_Inactive               = 1;
+  ResourcePatchField_RequireBookingApproval = 2;
+  ResourcePatchField_Tags                   = 3;
+  ResourcePatchField_Color                  = 4;
+  ResourcePatchField_Capacity               = 5;
 }
 
 message RemoveResourceInput {

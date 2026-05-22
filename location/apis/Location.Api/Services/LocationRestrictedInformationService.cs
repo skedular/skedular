@@ -2,6 +2,7 @@ using Api.Shared.Services;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
+using Location.Api.Models;
 using Location.Api.Services.Authorization;
 using Location.Shared.Mappers;
 using Location.Shared.Models;
@@ -15,7 +16,7 @@ public interface ILocationRestrictedInformationService
 {
     Task<IReadOnlyList<LocationRestrictedInformation>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
     Task<Shared.Models.Location> AddAsync(LocationRestrictedInformation restrictedInformation, CancellationToken cancellationToken);
-    Task<Shared.Models.Location> UpdateAsync(LocationRestrictedInformation restrictedInformation, CancellationToken cancellationToken);
+    Task<Shared.Models.Location> UpdateAsync(LocationRestrictedInformationPatchRequest request, CancellationToken cancellationToken);
     Task<Shared.Models.Location> DeleteAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -28,7 +29,8 @@ public class LocationRestrictedInformationService(
     ILocationOutboxPublisher locationOutboxPublisher,
     IEntityMapper entityMapper,
     ICachedLocationService cachedLocationService,
-    IContext context) : ILocationRestrictedInformationService
+    IContext context,
+    ILogger<LocationRestrictedInformationService> logger) : ILocationRestrictedInformationService
 {
     public async Task<IReadOnlyList<LocationRestrictedInformation>> GetByLocationIdAsync(
         string locationId,
@@ -80,35 +82,97 @@ public class LocationRestrictedInformationService(
     }
 
     public async Task<Shared.Models.Location> UpdateAsync(
-        LocationRestrictedInformation restrictedInformation,
+        LocationRestrictedInformationPatchRequest request,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(restrictedInformation.Id);
-        ArgumentException.ThrowIfNullOrWhiteSpace(restrictedInformation.Title);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.RestrictedInformation.Id);
 
-        var existing = await repositoryFactory.LocationRestrictedInformationRepository.GetByIdAsync(
-                           restrictedInformation.Id,
-                           cancellationToken) ??
-                       throw new LocationRestrictedInformationNotFound();
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Location restricted information patch autosave started. RestrictedInformationId: {RestrictedInformationId}, EditUnits: {EditUnits}",
+            request.RestrictedInformation.Id,
+            editUnits);
 
-        await EnsureCurrentCustomerCanModifyAsync(existing.Location.OrganizationId, cancellationToken);
+        try
+        {
+            var existing = await repositoryFactory.LocationRestrictedInformationRepository.GetByIdAsync(
+                               request.RestrictedInformation.Id,
+                               cancellationToken) ??
+                           throw new LocationRestrictedInformationNotFound();
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+            await EnsureCurrentCustomerCanModifyAsync(existing.Location.OrganizationId, cancellationToken);
 
-        existing.Title = restrictedInformation.Title;
-        existing.Category = restrictedInformation.Category.ToLocationRestrictedInformationCategory();
-        existing.Content = restrictedInformation.Content;
-        existing.Active = restrictedInformation.Active;
-        existing.SortOrder = restrictedInformation.SortOrder;
+            if (request.FieldsToUpdate.Count == 0)
+            {
+                var location = await repositoryFactory.LocationRepository.GetByIdAsync(existing.Location.Id, cancellationToken) ??
+                               throw new LocationNotFound();
+                var unchangedLocation = entityMapper.MapTo(location);
+                logger.LogInformation(
+                    "Location restricted information patch autosave completed with no changes. LocationId: {LocationId}, RestrictedInformationId: {RestrictedInformationId}, EditUnits: {EditUnits}",
+                    unchangedLocation.Id,
+                    request.RestrictedInformation.Id,
+                    editUnits);
+                return unchangedLocation;
+            }
 
-        repositoryFactory.LocationRestrictedInformationRepository.Update(existing);
+            await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var mappedLocation = await PublishLocationChangedAsync(existing.Location.Id, cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
+            foreach (var field in request.FieldsToUpdate)
+            {
+                switch (field)
+                {
+                    case LocationRestrictedInformationPatchField.Title:
+                        ArgumentException.ThrowIfNullOrWhiteSpace(request.RestrictedInformation.Title);
+                        existing.Title = request.RestrictedInformation.Title;
+                        break;
+                    case LocationRestrictedInformationPatchField.Category:
+                        existing.Category = request.RestrictedInformation.Category.ToLocationRestrictedInformationCategory();
+                        break;
+                    case LocationRestrictedInformationPatchField.Content:
+                        existing.Content = request.RestrictedInformation.Content;
+                        break;
+                    case LocationRestrictedInformationPatchField.Active:
+                        existing.Active = request.RestrictedInformation.Active;
+                        break;
+                    case LocationRestrictedInformationPatchField.SortOrder:
+                        existing.SortOrder = request.RestrictedInformation.SortOrder;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+                }
+            }
 
-        await cachedLocationService.UpdateByIdAsync(existing.Location.Id, cancellationToken);
+            repositoryFactory.LocationRestrictedInformationRepository.Update(existing);
 
-        return mappedLocation;
+            var mappedLocation = await PublishLocationChangedAsync(existing.Location.Id, cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+            await cachedLocationService.UpdateByIdAsync(existing.Location.Id, cancellationToken);
+
+            logger.LogInformation(
+                "Location restricted information patch autosave completed. LocationId: {LocationId}, RestrictedInformationId: {RestrictedInformationId}, EditUnits: {EditUnits}",
+                mappedLocation.Id,
+                request.RestrictedInformation.Id,
+                editUnits);
+            return mappedLocation;
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Location restricted information patch autosave rejected by authorization. RestrictedInformationId: {RestrictedInformationId}, EditUnits: {EditUnits}",
+                request.RestrictedInformation.Id,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Location restricted information patch autosave failed. RestrictedInformationId: {RestrictedInformationId}, EditUnits: {EditUnits}",
+                request.RestrictedInformation.Id,
+                editUnits);
+            throw;
+        }
     }
 
     public async Task<Shared.Models.Location> DeleteAsync(string id, CancellationToken cancellationToken)

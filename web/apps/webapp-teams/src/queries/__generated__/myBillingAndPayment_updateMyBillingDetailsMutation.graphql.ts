@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<68818e9b533411f3b2123294588c04da>>
+ * @generated SignedSource<<03121998c5636e592ec76803a52bef36>>
  * @lightSyntaxTransform
  */
 
@@ -8,6 +8,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type CustomerBillingDetailsPatchField = "BILLING_ADDRESS" | "COMPANY_NAME" | "EMAIL" | "%future added value";
 export type UpdateMyBillingDetailsInput = {
   addressLine1: string;
   addressLine2?: string | null | undefined;
@@ -17,6 +18,7 @@ export type UpdateMyBillingDetailsInput = {
   country: string;
   countryCode?: string | null | undefined;
   email: string;
+  fieldsToUpdate: ReadonlyArray<CustomerBillingDetailsPatchField>;
   formattedAddress?: string | null | undefined;
   id: string;
   latitude?: number | null | undefined;

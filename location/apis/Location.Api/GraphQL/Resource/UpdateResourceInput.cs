@@ -1,4 +1,5 @@
 using HotChocolate;
+using Location.Api.Models;
 
 namespace Location.Api.GraphQL.Resource;
 
@@ -7,6 +8,7 @@ public class UpdateResourceInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("fieldsToUpdate")] public HashSet<ResourcePatchField> FieldsToUpdate { get; set; } = [];
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("inactive")] public bool Inactive { get; set; }
 

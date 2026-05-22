@@ -4,11 +4,10 @@ using Api.Shared.Grpc.Skedular.Organization.Zones.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Grpc;
-using Organization.Shared.Database.Entities;
-using Organization.Shared.Models;
 using Organization.Shared.Repositories;
 using GrpcOrganizationConfiguration = Api.Shared.Services.Configurations.Grpc.OrganizationConfiguration;
 using BillingDetailsEntity = Organization.Shared.Database.Entities.OrganizationBillingDetails;
+using Constants = Api.Shared.Services.Constants;
 using IdentityEntity = Organization.Shared.Database.Entities.Identity;
 using OrganizationMemberEntity = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOfferingEntity = Organization.Shared.Database.Entities.OrganizationOffering;
@@ -64,9 +63,7 @@ public class UpdatePatchShould
         var result = await organizationBillingServiceClient.UpdateBillingDetailsAsync(
             new UpdateBillingDetailsInput
             {
-                OrganizationId = organization.Id,
-                CompanyName = newCompanyName,
-                FieldsToUpdate = { BillingDetailsPatchField.CompanyName }
+                OrganizationId = organization.Id, CompanyName = newCompanyName, FieldsToUpdate = { BillingDetailsPatchField.CompanyName }
             },
             organizationConfiguration.ApiKey.CreateMetadata(identityId),
             cancellationToken: cancellationToken);
@@ -101,7 +98,7 @@ public class UpdatePatchShould
         TimeProvider timeProvider,
         CancellationToken cancellationToken)
     {
-        var storedColor = color[..Math.Min(color.Length, global::Api.Shared.Services.Constants.MaxColorValueLength)];
+        var storedColor = color[..Math.Min(color.Length, Constants.MaxColorValueLength)];
         var tag = await SeedOwnedTagAsync(
             repositoryFactory,
             organizationId,
@@ -118,12 +115,7 @@ public class UpdatePatchShould
             cancellationToken);
 
         var result = await organizationTagsServiceClient.UpdateTagAsync(
-            new UpdateTagInput
-            {
-                Id = tag.Id,
-                Name = newName,
-                FieldsToUpdate = { TagPatchField.Name }
-            },
+            new UpdateTagInput { Id = tag.Id, Name = newName, FieldsToUpdate = { TagPatchField.Name } },
             organizationConfiguration.ApiKey.CreateMetadata(identityId),
             cancellationToken: cancellationToken);
 
@@ -155,7 +147,7 @@ public class UpdatePatchShould
         TimeProvider timeProvider,
         CancellationToken cancellationToken)
     {
-        var storedColor = color[..Math.Min(color.Length, global::Api.Shared.Services.Constants.MaxColorValueLength)];
+        var storedColor = color[..Math.Min(color.Length, Constants.MaxColorValueLength)];
         var zone = await SeedOwnedTagAsync(
             repositoryFactory,
             organizationId,
@@ -172,12 +164,7 @@ public class UpdatePatchShould
             cancellationToken);
 
         var result = await organizationZonesServiceClient.UpdateZoneAsync(
-            new UpdateZoneInput
-            {
-                Id = zone.Id,
-                Description = newDescription,
-                FieldsToUpdate = { ZonePatchField.Description }
-            },
+            new UpdateZoneInput { Id = zone.Id, Description = newDescription, FieldsToUpdate = { ZonePatchField.Description } },
             organizationConfiguration.ApiKey.CreateMetadata(identityId),
             cancellationToken: cancellationToken);
 

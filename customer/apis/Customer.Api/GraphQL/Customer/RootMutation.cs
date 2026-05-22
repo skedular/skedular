@@ -1,4 +1,5 @@
 using Customer.Api.Mappers;
+using Customer.Api.Models;
 using Customer.Api.Services;
 using HotChocolate;
 using HotChocolate.Types;
@@ -14,17 +15,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         [Service] ICustomerDetailsService customerDetailsService,
         CancellationToken cancellationToken)
     {
-        var customer = await customerDetailsService.UpdateMyCustomerDetailsAsync(
-            input.Timezone,
-            input.Designation,
-            input.Title,
-            input.Name,
-            input.GivenName,
-            input.MiddleName,
-            input.FamilyName,
-            input.PhoneNumber,
-            input.PersonalInformationVisibility,
-            cancellationToken);
+        var customer = await customerDetailsService.UpdateMyCustomerDetailsAsync(ToPatchRequest(input), cancellationToken);
         return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
     }
 
@@ -34,8 +25,14 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         [Service] ICustomerDetailsService customerDetailsService,
         CancellationToken cancellationToken)
     {
-        var customer = await customerDetailsService.UpdateCustomerDetailsAsync(
-            input.Id,
+        var customer = await customerDetailsService.UpdateCustomerDetailsAsync(input.Id, ToPatchRequest(input), cancellationToken);
+
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+    }
+
+    private static CustomerDetailsPatchRequest ToPatchRequest(UpdateMyCustomerDetailsInput input) =>
+        new(
+            input.FieldsToUpdate,
             input.Timezone,
             input.Designation,
             input.Title,
@@ -44,9 +41,18 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             input.MiddleName,
             input.FamilyName,
             input.PhoneNumber,
-            input.PersonalInformationVisibility,
-            cancellationToken);
+            input.PersonalInformationVisibility);
 
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
-    }
+    private static CustomerDetailsPatchRequest ToPatchRequest(UpdateCustomerDetailsInput input) =>
+        new(
+            input.FieldsToUpdate,
+            input.Timezone,
+            input.Designation,
+            input.Title,
+            input.Name,
+            input.GivenName,
+            input.MiddleName,
+            input.FamilyName,
+            input.PhoneNumber,
+            input.PersonalInformationVisibility);
 }

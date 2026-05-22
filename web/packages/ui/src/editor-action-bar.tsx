@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import { StackRow } from './index';
 
 type Props = {
-  primaryAction: ReactNode;
+  primaryAction?: ReactNode;
   secondaryActions?: ReactNode;
 };
 

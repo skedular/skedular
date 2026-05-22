@@ -2,6 +2,7 @@ using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
 using Marketplace.Api.Mappers;
+using Marketplace.Api.Models;
 using Marketplace.Api.Services;
 
 namespace Marketplace.Api.GraphQL.Product;
@@ -34,7 +35,10 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Product = graphQlMapper.MapTo(await productService.UpdateAsync(input.Id, graphQlMapper.MapTo(input), cancellationToken))!
+            Product = graphQlMapper.MapTo(
+                await productService.UpdateAsync(
+                    new ProductPatchRequest(input.Id, input.FieldsToUpdate, graphQlMapper.MapTo(input)),
+                    cancellationToken))!
         };
 
     [UseResolverScope]

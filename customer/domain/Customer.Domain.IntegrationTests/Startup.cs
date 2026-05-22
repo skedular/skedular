@@ -2,8 +2,10 @@ using Api.Shared.Clients.OpenApi.Skedular.Customer.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Workaround.V1;
+using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
 using Api.Shared.Grpc.Skedular.Customer.Core.V1;
 using Api.Shared.Services;
+using Api.Shared.Services.Configurations.Grpc;
 using Aspire.Hosting.Testing;
 using Customer.Shared;
 using Customer.Shared.Database;
@@ -56,7 +58,12 @@ public class Startup
         services
             .AddKeyedSingleton("customer-api-grpc-channel", customerApiGrpcChannel)
             .AddTestingSharedIntegrationTests()
-            .AddSingleton(_ => new CustomerService.CustomerServiceClient(customerApiGrpcChannel));
+            .AddSingleton(_ => new CustomerService.CustomerServiceClient(customerApiGrpcChannel))
+            .AddSingleton(_ => new CustomerAdminService.CustomerAdminServiceClient(customerApiGrpcChannel));
+
+        var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>() ??
+                                    new CustomerConfiguration { ApiKey = "XXX" };
+        services.AddSingleton(customerConfiguration);
 
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 
@@ -79,8 +86,12 @@ public class Startup
             .AddSingleton<ICustomerStripeClient>(_ => new CustomerStripeClient(customerApiClient))
             .AddSingleton<ICustomerWorkaroundClient>(_ => new CustomerWorkaroundClient(customerApiClient));
 
+        services.AddTransient<TestBearerTokenHandler>();
+
         services
             .AddSkedularGraphQLV1()
-            .ConfigureHttpClient(httpClient => httpClient.BaseAddress = customerApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
+            .ConfigureHttpClient(
+                httpClient => httpClient.BaseAddress = customerApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri(),
+                builder => builder.AddHttpMessageHandler<TestBearerTokenHandler>());
     }
 }

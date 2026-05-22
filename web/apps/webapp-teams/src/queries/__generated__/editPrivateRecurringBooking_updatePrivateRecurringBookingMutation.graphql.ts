@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<80ec539dd6f704984302c26ce53c6cc3>>
+ * @generated SignedSource<<5fce99c9d58d5ca2e5657a5d9a30fe2f>>
  * @lightSyntaxTransform
  */
 
@@ -11,6 +11,7 @@ import { ConcreteRequest } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type BookingFrequency = "DAILY" | "MONTHLY" | "WEEKLY" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
+export type PrivateRecurringBookingPatchField = "CATEGORY" | "PARTICIPANTS" | "RECURRENCE" | "REQUESTED_RESOURCES" | "SCHEDULE" | "SKIPPED_DATES" | "%future added value";
 export type RecurringBookingEndType = "AFTER_OCCURRENCES" | "NEVER" | "UNTIL_DATE" | "%future added value";
 export type UpdatePrivateRecurringBookingInput = {
   byMonthDay?: number | null | undefined;
@@ -21,6 +22,7 @@ export type UpdatePrivateRecurringBookingInput = {
   customerIds: ReadonlyArray<string>;
   endDate?: any | null | undefined;
   endType: RecurringBookingEndType;
+  fieldsToUpdate: ReadonlyArray<PrivateRecurringBookingPatchField>;
   frequency: BookingFrequency;
   from: any;
   id: string;

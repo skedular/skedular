@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using HotChocolate;
+using Location.Api.Models;
 using Location.Shared.Models;
 
 namespace Location.Api.GraphQL.Location;
@@ -9,6 +10,7 @@ public class UpdateLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("fieldsToUpdate")] public HashSet<LocationPatchField> FieldsToUpdate { get; set; } = [];
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("type")] public LocationType Type { get; set; }

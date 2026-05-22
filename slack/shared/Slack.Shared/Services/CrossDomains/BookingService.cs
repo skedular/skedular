@@ -217,6 +217,14 @@ public class BookingService(
         updateInput.OrganizationIds.AddRange(booking.InvolvedOrganizations.Select(item => item.Id));
         updateInput.TeamIds.AddRange(booking.InvolvedTeams.Select(item => item.Id));
         updateInput.ResourceIds.AddRange(booking.Resources.Select(item => item.Id));
+        updateInput.FieldsToUpdate.AddRange(
+        [
+            PrivateBookingPatchField.Participants,
+            PrivateBookingPatchField.Schedule,
+            PrivateBookingPatchField.Notes,
+            PrivateBookingPatchField.Category,
+            PrivateBookingPatchField.Resources
+        ]);
 
         var mappedBooking = grpcMapper.MapTo(
             await bookingServiceClient.UpdatePrivateAsync(

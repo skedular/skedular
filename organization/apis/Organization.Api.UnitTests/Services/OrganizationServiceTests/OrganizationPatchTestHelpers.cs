@@ -1,6 +1,5 @@
 using Api.Shared.Services.Models;
 using Organization.Api.Models;
-using Organization.Shared.Database.Entities;
 using Organization.Shared.Models;
 using OrganizationEntity = Organization.Shared.Database.Entities.Organization;
 
@@ -26,5 +25,5 @@ internal static class OrganizationPatchTestHelpers
             name,
             null);
 
-    public static Organization.Shared.Models.Customer CreateCustomer(string id) => new() { Id = id };
+    public static Customer CreateCustomer(string id) => new() { Id = id };
 }

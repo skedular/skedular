@@ -1,21 +1,20 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { listingMetadataSchemaShape } from '@/components/listingMetadata';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import ProductEditorForm from '@/components/product/product-editor-form';
-import { PaletteModeContext } from '@skedular/shared';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import type { editProduct_query$key } from '@/queries/__generated__/editProduct_query.graphql';
 import type {
   Currency,
   editProduct_updateProductMutation,
   PaymentMethod,
+  ProductPatchField,
   ProductPricingCadence,
   ProductType,
 } from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
 import Box from '@mui/material/Box';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext } from '@skedular/shared';
 import { makeRequired, makeValidate } from 'mui-rff';
-import { useRouter } from 'next/navigation';
-import { memo, useContext, useState } from 'react';
+import { memo, useContext, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -62,6 +61,32 @@ type PricingOptionForm = {
 type CancellationRefundRuleForm = {
   minutesBefore: string;
   refundPercentage: string;
+};
+const productAutosaveDebounceTimeout = 1000;
+
+const productFieldGroups: ReadonlyArray<[ProductPatchField, ReadonlyArray<keyof ProductDetails>]> = [
+  ['LISTING_METADATA', ['title', 'subTitle', 'includedFeatures']],
+  ['TYPE', ['type']],
+  ['CURRENCY', ['currency']],
+  ['TAGS', ['productTagIds', 'amenityIds']],
+  ['PRICING_OPTIONS', ['pricingOptions']],
+];
+
+const getChangedProductFields = (
+  left: ProductDetails | null,
+  right: ProductDetails,
+  leftFeatureImages: FileUploadResponse[],
+  rightFeatureImages: FileUploadResponse[],
+): ProductPatchField[] => {
+  if (!left) return [];
+  const changed: ProductPatchField[] = [];
+  for (const [patchField, formFields] of productFieldGroups) {
+    if (formFields.some((f) => JSON.stringify(left[f]) !== JSON.stringify(right[f]))) {
+      changed.push(patchField);
+    }
+  }
+  if (JSON.stringify(leftFeatureImages) !== JSON.stringify(rightFeatureImages)) changed.push('FEATURE_IMAGES');
+  return changed;
 };
 
 const cancellationRefundRuleSchema = object({
@@ -486,11 +511,11 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
     }
   `);
 
-  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const validateProductDetails = makeValidate(productSchema(rootData.bookingSlotSizeInMinutes));
-  const requiredFields = makeRequired(productSchema(rootData.bookingSlotSizeInMinutes));
+  const productDetailsSchema = productSchema(rootData.bookingSlotSizeInMinutes);
+  const validateProductDetails = makeValidate(productDetailsSchema);
+  const requiredFields = makeRequired(productDetailsSchema);
 
   const [title, setTitle] = useState<string | null>(rootData.product?.listingMetadata.title ?? null);
   const debounceSetTitle = useDebounceCallback(setTitle, keyboardTextFieldDebounceTimeout);
@@ -532,15 +557,69 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       : [],
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
+  const initialProductValues = useMemo<ProductDetails | null>(
+    () =>
+      rootData.product
+        ? {
+            title,
+            subTitle,
+            includedFeatures,
+            type,
+            currency,
+            productTagIds,
+            amenityIds,
+            pricingOptions:
+              rootData.product.pricingOptions.length > 0
+                ? rootData.product.pricingOptions.map((pricingOption) => ({
+                    id: uuid(),
+                    title: pricingOption.listingMetadata.title ?? null,
+                    subTitle: pricingOption.listingMetadata.subTitle ?? null,
+                    cadence: pricingOption.purchaseCadence,
+                    price: pricingOption.price.toString(),
+                    supportsSubscriptionAutoRenewal: pricingOption.supportsSubscriptionAutoRenewal,
+                    numberOfResourcesToBook: pricingOption.numberOfResourcesToBook.toString(),
+                    minDurationMinutes: pricingOption.minDurationMinutes ? pricingOption.minDurationMinutes.toString() : '',
+                    maxDurationMinutes: pricingOption.maxDurationMinutes ? pricingOption.maxDurationMinutes.toString() : '',
+                    cancellationPolicyType: pricingOption.cancellationPolicyType,
+                    cancellationRefundRules: normalizeCancellationRefundRules(pricingOption.cancellationPolicyType, pricingOption.cancellationRefundRules).map((item) => ({
+                      minutesBefore: item.minutesBefore.toString(),
+                      refundPercentage: item.refundPercentage.toString(),
+                    })),
+                    isTaxInclusive: pricingOption.isTaxInclusive,
+                    maxAllowedResourcesLockTimePaidViaCard: pricingOption.maxAllowedResourcesLockTimePaidViaCard.toString(),
+                    maxAllowedResourcesLockTimePaidViaBankTransfer: (pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
+                    billingMode: (pricingOption as unknown as { billingMode?: string }).billingMode ?? 'NOT_SET',
+                    acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((item) => item),
+                  }))
+                : [createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer)],
+          }
+        : null,
+    [
+      amenityIds,
+      currency,
+      includedFeatures,
+      productTagIds,
+      rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer,
+      rootData.defaultMaxAllowedResourcesLockTimePaidViaCard,
+      rootData.product,
+      subTitle,
+      title,
+      type,
+    ],
+  );
+  const previousProductValues = useRef<ProductDetails | null>(initialProductValues);
+  const previousFeatureImages = useRef<FileUploadResponse[]>(featureImages);
 
-  const handleProductDetailUpdateClick = ({ title, subTitle, includedFeatures, type, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
+  const handleProductDetailUpdateClick = (
+    fieldsToUpdate: ProductPatchField[],
+    { title, subTitle, includedFeatures, type, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails,
+  ) => {
     const product = rootData.product;
-    if (!product) {
+    if (!product || !productDetailsSchema.isValidSync({ title, subTitle, includedFeatures, type, currency, productTagIds, amenityIds, pricingOptions })) {
       return;
     }
 
     const productTitle = product.listingMetadata.title || 'product';
-    const toastId = themedToast(<NotificationContent content={`Updating ${productTitle}...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
       original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
       thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
@@ -556,6 +635,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         input: {
           clientMutationId: uuid(),
           id: product.id,
+          fieldsToUpdate,
           listingMetadata: {
             about: '',
             title: title ?? '',
@@ -600,26 +680,13 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       } as never,
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update ${productTitle}. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't update ${productTitle}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`${productTitle} has been updated.`} />,
-        });
-
-        router.back();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update ${productTitle}. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't update ${productTitle}. ${error.message}`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         updateProduct: {
@@ -673,6 +740,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       } as never,
     });
   };
+  const debouncedProductDetailUpdate = useDebounceCallback(handleProductDetailUpdateClick, productAutosaveDebounceTimeout);
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
     setFeatureImages((prev) => [response, ...prev]);
@@ -704,40 +772,8 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
         <Form
-          onSubmit={handleProductDetailUpdateClick}
-          initialValues={{
-            title,
-            subTitle,
-            includedFeatures,
-            type,
-            currency,
-            productTagIds,
-            amenityIds,
-            pricingOptions:
-              rootData.product.pricingOptions.length > 0
-                ? rootData.product.pricingOptions.map((pricingOption) => ({
-                    id: uuid(),
-                    title: pricingOption.listingMetadata.title ?? null,
-                    subTitle: pricingOption.listingMetadata.subTitle ?? null,
-                    cadence: pricingOption.purchaseCadence,
-                    price: pricingOption.price.toString(),
-                    supportsSubscriptionAutoRenewal: pricingOption.supportsSubscriptionAutoRenewal,
-                    numberOfResourcesToBook: pricingOption.numberOfResourcesToBook.toString(),
-                    minDurationMinutes: pricingOption.minDurationMinutes ? pricingOption.minDurationMinutes.toString() : '',
-                    maxDurationMinutes: pricingOption.maxDurationMinutes ? pricingOption.maxDurationMinutes.toString() : '',
-                    cancellationPolicyType: pricingOption.cancellationPolicyType,
-                    cancellationRefundRules: normalizeCancellationRefundRules(pricingOption.cancellationPolicyType, pricingOption.cancellationRefundRules).map((item) => ({
-                      minutesBefore: item.minutesBefore.toString(),
-                      refundPercentage: item.refundPercentage.toString(),
-                    })),
-                    isTaxInclusive: pricingOption.isTaxInclusive,
-                    maxAllowedResourcesLockTimePaidViaCard: pricingOption.maxAllowedResourcesLockTimePaidViaCard.toString(),
-                    maxAllowedResourcesLockTimePaidViaBankTransfer: (pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
-                    billingMode: (pricingOption as unknown as { billingMode?: string }).billingMode ?? 'NOT_SET',
-                    acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((item) => item),
-                  }))
-                : [createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer)],
-          }}
+          onSubmit={() => undefined}
+          initialValues={initialProductValues}
           validate={validateProductDetails}
           render={({ handleSubmit, values, form, errors }) => {
             debounceSetTitle(values!.title);
@@ -747,6 +783,13 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             debounceSetCurrency(values!.currency);
             debounceSetProductTagIds(values!.productTagIds);
             debounceSetAmenityIds(values!.amenityIds);
+            const productValues = values as ProductDetails;
+            const changedFields = getChangedProductFields(previousProductValues.current, productValues, previousFeatureImages.current, featureImages);
+            if (changedFields.length > 0) {
+              previousProductValues.current = productValues;
+              previousFeatureImages.current = featureImages;
+              debouncedProductDetailUpdate(changedFields, productValues);
+            }
 
             return (
               <ProductEditorForm

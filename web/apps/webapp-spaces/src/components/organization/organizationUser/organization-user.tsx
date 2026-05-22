@@ -7,7 +7,11 @@ import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user
 import type { organizationUser_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUser_changeOrganizationUsersStatusMutation.graphql';
 import type { organizationUser_query$key } from '@/queries/__generated__/organizationUser_query.graphql';
 import type { organizationUser_removeOrganizationUsersMutation } from '@/queries/__generated__/organizationUser_removeOrganizationUsersMutation.graphql';
-import type { organizationUser_updateCustomerDetailsMutation, PersonalInformationVisibility } from '@/queries/__generated__/organizationUser_updateCustomerDetailsMutation.graphql';
+import type {
+  CustomerDetailsPatchField,
+  organizationUser_updateCustomerDetailsMutation,
+  PersonalInformationVisibility,
+} from '@/queries/__generated__/organizationUser_updateCustomerDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -27,10 +31,11 @@ import {
 } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 import OrganizationUserSectionNav, { OrganizationUserSection } from './organization-user-section-nav';
@@ -81,6 +86,23 @@ const formColumnSx = {
   width: '100%',
   maxWidth: 760,
 };
+
+const inlinePatchDebounceTimeout = 1000;
+
+const profilePatchFields: Record<keyof ProfileDetailsDetails, CustomerDetailsPatchField> = {
+  designation: 'DESIGNATION',
+  title: 'TITLE',
+  name: 'NAME',
+  givenName: 'GIVEN_NAME',
+  middleName: 'MIDDLE_NAME',
+  familyName: 'FAMILY_NAME',
+  timezone: 'TIMEZONE',
+  phoneNumber: 'PHONE_NUMBER',
+  personalInformationVisibility: 'PERSONAL_INFORMATION_VISIBILITY',
+};
+
+const getChangedProfileFields = (left: ProfileDetailsDetails, right: ProfileDetailsDetails) =>
+  (Object.keys(profilePatchFields) as (keyof ProfileDetailsDetails)[]).filter((field) => left[field] !== right[field]).map((field) => profilePatchFields[field]);
 
 const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId }: Props) => {
   const rootData = useFragment<organizationUser_query$key>(
@@ -263,81 +285,74 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
     };
   }, []);
 
-  const handleProfileDetailUpdateClick = ({
-    timezone,
-    designation,
-    title,
-    name,
-    givenName,
-    middleName,
-    familyName,
-    phoneNumber,
-    personalInformationVisibility,
-  }: ProfileDetailsDetails) => {
-    if (!rootData.customer) {
-      return;
-    }
+  const initialProfileValues = useMemo<ProfileDetailsDetails | null>(
+    () =>
+      rootData.customer
+        ? {
+            timezone: rootData.customer.timezone ?? '',
+            designation: rootData.customer.designation ?? null,
+            title: rootData.customer.title ?? null,
+            name: rootData.customer.name ?? null,
+            givenName: rootData.customer.givenName ?? null,
+            middleName: rootData.customer.middleName ?? null,
+            familyName: rootData.customer.familyName ?? null,
+            phoneNumber: rootData.customer.phoneNumber ?? null,
+            personalInformationVisibility: rootData.customer.personalInformationVisibility.type,
+          }
+        : null,
+    [rootData.customer],
+  );
+  const draftProfileValues = useRef(initialProfileValues);
+  const submittedProfileValues = useRef(initialProfileValues);
+  const commitProfilePatch = useCallback(
+    (fieldsToUpdate: CustomerDetailsPatchField[], values: ProfileDetailsDetails) => {
+      if (!rootData.customer || rootData.customer.id !== rootData.me?.id || fieldsToUpdate.length === 0 || !profileDetailsSchema.isValidSync(values)) {
+        return;
+      }
 
-    const toastId = themedToast(<NotificationContent content="Updating user profile details..." />, infoNotificationOptions);
+      const previousValues = submittedProfileValues.current;
+      if (!previousValues || getChangedProfileFields(previousValues, values).length === 0) {
+        return;
+      }
+      submittedProfileValues.current = values;
 
-    commitUpdateCustomerDetails({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: customerId,
-          timezone,
-          designation,
-          title,
-          name,
-          givenName,
-          middleName,
-          familyName,
-          phoneNumber,
-          personalInformationVisibility: personalInformationVisibility as PersonalInformationVisibility,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update this user's profile details. ${getRelayErrorMessage(errors)}`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content="This user's profile details have been updated." />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update this user's profile details. ${error.message}`} />,
-        });
-      },
-      optimisticResponse: {
-        updateCustomerDetails: {
-          customer: {
+      commitUpdateCustomerDetails({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
             id: customerId,
-            timezone,
-            designation,
-            title,
-            name,
-            givenName,
-            middleName,
-            familyName,
-            phoneNumber,
-            personalInformationVisibility: {
-              type: personalInformationVisibility as PersonalInformationVisibility,
-              name: '',
+            fieldsToUpdate,
+            ...values,
+            personalInformationVisibility: values.personalInformationVisibility as PersonalInformationVisibility,
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            submittedProfileValues.current = previousValues;
+            themedToast(<NotificationContent content={`We couldn't update this user's profile details. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+          }
+        },
+        onError: (error) => {
+          submittedProfileValues.current = previousValues;
+          themedToast(<NotificationContent content={`We couldn't update this user's profile details. ${error.message}`} />, errorNotificationOptions);
+        },
+        optimisticResponse: {
+          updateCustomerDetails: {
+            customer: {
+              id: customerId,
+              ...values,
+              personalInformationVisibility: {
+                type: values.personalInformationVisibility as PersonalInformationVisibility,
+                name: '',
+              },
             },
           },
         },
-      },
-    });
-  };
+      });
+    },
+    [commitUpdateCustomerDetails, customerId, rootData.customer, rootData.me?.id, themedToast],
+  );
+  const debouncedCommitProfilePatch = useDebounceCallback(commitProfilePatch, inlinePatchDebounceTimeout);
 
   const handleDeactivateUserClick = () => {
     if (!member) {
@@ -468,89 +483,78 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
   const renderProfileSection = () => (
     <Box sx={{ p: defaultPadding }}>
       <Form
-        onSubmit={handleProfileDetailUpdateClick}
-        initialValues={{
-          timezone: customer.timezone ?? '',
-          designation: customer.designation,
-          title: customer.title,
-          name: customer.name,
-          givenName: customer.givenName,
-          middleName: customer.middleName,
-          familyName: customer.familyName,
-          phoneNumber: customer.phoneNumber,
-          personalInformationVisibility: customer.personalInformationVisibility.type,
-        }}
+        onSubmit={() => undefined}
+        initialValues={initialProfileValues}
         validate={validateProfileDetails}
-        render={({ handleSubmit }) => (
-          <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
-            <StackColumn spacing={2}>
-              <StackColumn spacing={0.5}>
-                <LeadIconTypography label="Profile" />
-                <SmallIconTypography label="Manage the identity, contact details, and visibility settings for this user." />
+        render={({ handleSubmit, values }) => {
+          const formValues = values as ProfileDetailsDetails;
+          const changedFields = draftProfileValues.current ? getChangedProfileFields(draftProfileValues.current, formValues) : [];
+          if (isItMe && changedFields.length > 0) {
+            draftProfileValues.current = formValues;
+            debouncedCommitProfilePatch(changedFields, formValues);
+          }
+
+          return (
+            <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+              <StackColumn spacing={2}>
+                <StackColumn spacing={0.5}>
+                  <LeadIconTypography label="Profile" />
+                  <SmallIconTypography label="Manage the identity, contact details, and visibility settings for this user." />
+                </StackColumn>
+
+                <Divider />
+
+                <FormFieldLabel label="Designation">
+                  {isItMe && <TextField name="designation" required={requiredProfileDetailsFields.designation} />}
+                  {!isItMe && <SmallIconTypography label={customer.designation} />}
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Title">
+                  {isItMe && <TextField name="title" required={requiredProfileDetailsFields.title} />}
+                  {!isItMe && <SmallIconTypography label={customer.title} />}
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Name">
+                  {isItMe && <TextField name="name" required={requiredProfileDetailsFields.name} />}
+                  {!isItMe && <SmallIconTypography label={customer.name} />}
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Given Name">
+                  {isItMe && <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />}
+                  {!isItMe && <SmallIconTypography label={customer.givenName} />}
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Middle Name">
+                  {isItMe && <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />}
+                  {!isItMe && <SmallIconTypography label={customer.middleName} />}
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Family Name">
+                  {isItMe && <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />}
+                  {!isItMe && <SmallIconTypography label={customer.familyName} />}
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Timezone">
+                  {isItMe && <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />}
+                  {!isItMe && <SmallIconTypography label={customer.timezone} />}
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Phone Number">
+                  {isItMe && <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />}
+                  {!isItMe && <SmallIconTypography label={customer.phoneNumber} />}
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Personal Information Visibility" required={requiredProfileDetailsFields.personalInformationVisibility}>
+                  <SingleChoiceUserPersonalInformationVisibility
+                    rootDataRelay={rootData}
+                    name="personalInformationVisibility"
+                    required={requiredProfileDetailsFields.personalInformationVisibility}
+                  />
+                </FormFieldLabel>
               </StackColumn>
-
-              <Divider />
-
-              <FormFieldLabel label="Designation">
-                {isItMe && <TextField name="designation" required={requiredProfileDetailsFields.designation} />}
-                {!isItMe && <SmallIconTypography label={customer.designation} />}
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Title">
-                {isItMe && <TextField name="title" required={requiredProfileDetailsFields.title} />}
-                {!isItMe && <SmallIconTypography label={customer.title} />}
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Name">
-                {isItMe && <TextField name="name" required={requiredProfileDetailsFields.name} />}
-                {!isItMe && <SmallIconTypography label={customer.name} />}
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Given Name">
-                {isItMe && <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />}
-                {!isItMe && <SmallIconTypography label={customer.givenName} />}
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Middle Name">
-                {isItMe && <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />}
-                {!isItMe && <SmallIconTypography label={customer.middleName} />}
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Family Name">
-                {isItMe && <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />}
-                {!isItMe && <SmallIconTypography label={customer.familyName} />}
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Timezone">
-                {isItMe && <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />}
-                {!isItMe && <SmallIconTypography label={customer.timezone} />}
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Phone Number">
-                {isItMe && <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />}
-                {!isItMe && <SmallIconTypography label={customer.phoneNumber} />}
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Personal Information Visibility" required={requiredProfileDetailsFields.personalInformationVisibility}>
-                <SingleChoiceUserPersonalInformationVisibility
-                  rootDataRelay={rootData}
-                  name="personalInformationVisibility"
-                  required={requiredProfileDetailsFields.personalInformationVisibility}
-                />
-              </FormFieldLabel>
-            </StackColumn>
-
-            {isItMe && (
-              <EditorActionBar
-                primaryAction={
-                  <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                    Update
-                  </Button>
-                }
-              />
-            )}
-          </FormStackColumn>
-        )}
+            </FormStackColumn>
+          );
+        }}
       />
     </Box>
   );

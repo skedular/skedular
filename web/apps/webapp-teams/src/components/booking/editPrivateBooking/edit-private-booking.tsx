@@ -1,20 +1,8 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceBookingCategory } from '@/components/booking';
-import { BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, StackColumn, StackRow } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext } from '@skedular/shared';
-import { defaultPadding } from '@skedular/ui';
-import {
-  getCustomerFullName,
-  getOpeningHoursFromDateTime,
-  getRelayErrorMessage,
-  isMidnight,
-  keyboardSearchDebounceTimeout,
-  toOpeningHoursFromTime,
-  toShortDate,
-} from '@skedular/shared';
 import type { editPrivateBooking_availableResources_query$key } from '@/queries/__generated__/editPrivateBooking_availableResources_query.graphql';
 import type { editPrivateBooking_availableResources_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_availableResources_refetchableFragment.graphql';
 import type { editPrivateBooking_customerTeams_query$key } from '@/queries/__generated__/editPrivateBooking_customerTeams_query.graphql';
@@ -22,16 +10,29 @@ import type { editPrivateBooking_customerTeams_refetchableFragment } from '@/que
 import type { editPrivateBooking_organizationMembers_query$key } from '@/queries/__generated__/editPrivateBooking_organizationMembers_query.graphql';
 import type { editPrivateBooking_organizationMembers_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_organizationMembers_refetchableFragment.graphql';
 import type { editPrivateBooking_query$key } from '@/queries/__generated__/editPrivateBooking_query.graphql';
-import type { BookingCategory, editPrivateBooking_updatePrivateBookingMutation } from '@/queries/__generated__/editPrivateBooking_updatePrivateBookingMutation.graphql';
+import type {
+  BookingCategory,
+  editPrivateBooking_updatePrivateBookingMutation,
+  PrivateBookingPatchField,
+} from '@/queries/__generated__/editPrivateBooking_updatePrivateBookingMutation.graphql';
 import Box from '@mui/material/Box';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
-import { EditorActionBar, PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
+import {
+  getCustomerFullName,
+  getOpeningHoursFromDateTime,
+  getRelayErrorMessage,
+  isMidnight,
+  keyboardSearchDebounceTimeout,
+  PaletteModeContext,
+  toOpeningHoursFromTime,
+  toShortDate,
+} from '@skedular/shared';
+import { BodyIconTypography, defaultPadding, ErrorTypography, FormFieldLabel, FormStackColumn, PageHeaderPanel, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
 import dayjs, { Dayjs } from 'dayjs';
 import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
-import { useRouter } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form, FormSpy } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -124,6 +125,32 @@ const bookingSchema = object({
 });
 
 const toAllDayBoolean = (value: unknown): boolean => value === true || value === 'allDay' || (Array.isArray(value) && value.includes('allDay'));
+const bookingAutosaveDebounceTimeout = 1000;
+
+type PrivateBookingFormField = keyof Pick<BookingDetails, 'member' | 'team' | 'date' | 'allDay' | 'notes' | 'category' | 'resources'>;
+const privateBookingFieldGroups: ReadonlyArray<[PrivateBookingPatchField, ReadonlyArray<PrivateBookingFormField>]> = [
+  ['PARTICIPANTS', ['member', 'team']],
+  ['SCHEDULE', ['date', 'allDay']],
+  ['NOTES', ['notes']],
+  ['CATEGORY', ['category']],
+  ['RESOURCES', ['resources']],
+];
+
+const getChangedPrivateBookingFields = (
+  left: BookingDetails | null,
+  right: BookingDetails,
+  leftTimeRange: DateRange<Dayjs>,
+  rightTimeRange: DateRange<Dayjs>,
+): PrivateBookingPatchField[] => {
+  if (!left) return [];
+  const changed = privateBookingFieldGroups
+    .filter(([, formFields]) => formFields.some((field) => JSON.stringify(left[field]) !== JSON.stringify(right[field])))
+    .map(([patchField]) => patchField);
+  if (!changed.includes('SCHEDULE') && JSON.stringify(leftTimeRange) !== JSON.stringify(rightTimeRange)) {
+    changed.push('SCHEDULE');
+  }
+  return changed;
+};
 
 const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay, rootDataAvailableResourcesRelay }: Props) => {
   const rootData = useFragment<editPrivateBooking_query$key>(
@@ -326,7 +353,6 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
     }
   `);
 
-  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const booking = rootData.booking;
@@ -485,6 +511,24 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
 
     return availableResources;
   }, [rootDataAvailableResources.availableResources, timeRangeValid, from, booking]);
+  const initialBookingValues = useMemo<BookingDetails | null>(
+    () =>
+      booking
+        ? {
+            member: customerId ?? '',
+            date: from,
+            allDay,
+            notes: booking.notes,
+            team: teamId,
+            location: locationId,
+            resources: booking.bookingResources ? booking.bookingResources.map(({ resource }) => resource.id) : [],
+            category: booking.category.category,
+          }
+        : null,
+    [allDay, booking, customerId, from, locationId, teamId],
+  );
+  const previousBookingValues = useRef<BookingDetails | null>(initialBookingValues);
+  const previousBookingTimeRange = useRef<DateRange<Dayjs>>(timeRange);
 
   useEffect(() => {
     if (!rootData.booking?.involvedCustomers || rootData.booking?.involvedCustomers.length === 0) {
@@ -502,8 +546,11 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
     handleRefetchAvailableResources(dateRangeValidation, locationId);
   }, [dateRangeValidation, handleRefetchAvailableResources, locationId]);
 
-  const handleBookingDetailUpdateClick = ({ date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, category }: BookingDetails) => {
-    if (!booking) {
+  const handleBookingDetailUpdateClick = (
+    fieldsToUpdate: PrivateBookingPatchField[],
+    { date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, category }: BookingDetails,
+  ) => {
+    if (!booking || !bookingSchema.isValidSync({ date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, category })) {
       return;
     }
 
@@ -518,20 +565,12 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
     const until = dateRange.until.toISOString();
     const shortDateTimeFormatFrom = toShortDate(start);
 
-    let bookingDetailsInfo = `for ${getCustomerFullName(booking.involvedCustomers[0])}`;
-    if (booking.involvedLocations.length > 0) {
-      bookingDetailsInfo += ` at the "${booking.involvedLocations[0]!.name}"`;
-    }
-
-    bookingDetailsInfo += ` on ${toShortDate(dateRange.from)}`;
-
-    const toastId = themedToast(<NotificationContent content={`Updating booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
-
     commitUpdatePrivateBooking({
       variables: {
         input: {
           clientMutationId: uuid(),
           id: booking.id,
+          fieldsToUpdate,
           from,
           until,
           notes,
@@ -544,26 +583,13 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} updated.`} />,
-        });
-
-        router.back();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         updatePrivateBooking: {
@@ -596,6 +622,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
       },
     });
   };
+  const debouncedBookingDetailUpdate = useDebounceCallback(handleBookingDetailUpdateClick, bookingAutosaveDebounceTimeout);
 
   const handleMemberChange = (option: OrganizationMemberDetails | null) => {
     if (!rootData.booking) {
@@ -653,195 +680,192 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
         <PageHeaderPanel eyebrow="Private Booking" title={pageTitle} description="Update the date, time, member, location, and resources for this booking." />
 
         <Form
-          onSubmit={handleBookingDetailUpdateClick}
-          initialValues={{
-            member: customerId,
-            date: from,
-            allDay,
-            notes: booking.notes,
-            team: teamId,
-            location: locationId,
-            resources: booking.bookingResources ? booking.bookingResources.map(({ resource }) => resource.id) : [],
-            category: booking.category.category,
-          }}
+          onSubmit={() => undefined}
+          initialValues={initialBookingValues}
           validate={validate}
-          render={({ handleSubmit }) => (
-            <FormStackColumn onSubmit={handleSubmit}>
-              <FormSpy
-                subscription={{ values: true }}
-                onChange={({ values }) => {
-                  const normalizedAllDay = toAllDayBoolean(values?.allDay);
+          render={({ handleSubmit, values }) => {
+            const bookingValues = values as BookingDetails;
+            const changedFields = getChangedPrivateBookingFields(previousBookingValues.current, bookingValues, previousBookingTimeRange.current, timeRange);
+            if (changedFields.length > 0) {
+              previousBookingValues.current = bookingValues;
+              previousBookingTimeRange.current = timeRange;
+              debouncedBookingDetailUpdate(changedFields, bookingValues);
+            }
 
-                  if (normalizedAllDay !== allDay) {
-                    setAllDay(normalizedAllDay);
-                  }
-                }}
-              />
-              <StackColumn spacing={3}>
-                <SettingsSectionCard title="Booking Details" description="Edit the member, date, time, category, team, location and resources for this booking.">
-                  <StackColumn>
-                    <FormFieldLabel label="User">
-                      <Autocomplete
-                        name="member"
-                        multiple={false}
-                        required={requiredFields.member}
-                        options={customers}
-                        getOptionValue={(option) => (option as OrganizationMemberDetails).customer.id}
-                        getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
-                        renderOption={(props, option) => {
-                          const castedOption = (option as OrganizationMemberDetails).customer;
+            return (
+              <FormStackColumn onSubmit={handleSubmit}>
+                <FormSpy
+                  subscription={{ values: true }}
+                  onChange={({ values }) => {
+                    const normalizedAllDay = toAllDayBoolean(values?.allDay);
 
-                          return (
-                            <li {...props} key={castedOption.id}>
-                              <BodyIconTypography
-                                label={getCustomerFullName(castedOption)}
-                                startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
-                              />
-                            </li>
-                          );
-                        }}
-                        filterOptions={(options, params) => {
-                          if (params.inputValue !== peopleNameSearchText) {
-                            debounceSearchTextChange(params.inputValue);
-                          }
-
-                          return options;
-                        }}
-                        selectOnFocus
-                        clearOnBlur
-                        handleHomeEndKeys
-                        onChange={(_, option) => handleMemberChange(option as OrganizationMemberDetails)}
-                      />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Date/Time">
-                      <StackColumn>
-                        <StackRow>
-                          <Box sx={{ width: 'fit-content' }}>
-                            <DatePicker
-                              name="date"
-                              required={requiredFields.date}
-                              fieldProps={{
-                                onChange: (value: unknown) => {
-                                  if (value && dayjs.isDayjs(value)) {
-                                    setFrom(value);
-                                  }
-                                },
-                              }}
-                            />
-                          </Box>
-                          <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
-                        </StackRow>
-
-                        <Box sx={{ width: 'fit-content' }}>
-                          <TimeRangePicker minutesStep={rootData.bookingSlotSizeInMinutes} disabled={allDay} value={timeRange} onChange={setTimeRange} />
-                        </Box>
-                      </StackColumn>
-                    </FormFieldLabel>
-
-                    <FormFieldLabel>
-                      <ErrorTypography errorMessage={dateTimeErrorMessage} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Notes">
-                      <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Category">
-                      <SingleChoiceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Team">
-                      <Autocomplete
-                        name="team"
-                        multiple={false}
-                        required={requiredFields.team}
-                        options={teams}
-                        getOptionValue={(option) => (option as TeamDetails).id}
-                        getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
-                        renderOption={(props, option) => {
-                          const castedOption = option as TeamDetails;
-
-                          return (
-                            <li {...props} key={castedOption.id}>
-                              <BodyIconTypography label={castedOption.name} />
-                            </li>
-                          );
-                        }}
-                        filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
-                        selectOnFocus
-                        clearOnBlur
-                        handleHomeEndKeys
-                        onChange={(_, option) => handleTeamChange(option as TeamDetails)}
-                      />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Location">
-                      <Autocomplete
-                        name="location"
-                        multiple={false}
-                        required={requiredFields.location}
-                        options={locations}
-                        getOptionValue={(option) => (option as LocationDetails).id}
-                        getOptionLabel={(option: string | LocationDetails) => (option as LocationDetails).name}
-                        renderOption={(props, option) => {
-                          const castedOption = option as LocationDetails;
-
-                          return (
-                            <li {...props} key={castedOption.id}>
-                              <BodyIconTypography label={castedOption.name} />
-                            </li>
-                          );
-                        }}
-                        filterOptions={(options, params) => filterLocation(options as LocationDetails[], params)}
-                        selectOnFocus
-                        clearOnBlur
-                        handleHomeEndKeys
-                        onChange={(_, option) => handleLocationChange(option as LocationDetails)}
-                      />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Resources">
-                      {resources.length > 0 && (
+                    if (normalizedAllDay !== allDay) {
+                      setAllDay(normalizedAllDay);
+                    }
+                  }}
+                />
+                <StackColumn spacing={3}>
+                  <SettingsSectionCard title="Booking Details" description="Edit the member, date, time, category, team, location and resources for this booking.">
+                    <StackColumn>
+                      <FormFieldLabel label="User">
                         <Autocomplete
-                          name="resources"
-                          multiple={true}
-                          required={requiredFields.resources}
-                          options={resources}
-                          getOptionValue={(option) => (option as ResourceDetails).id}
-                          getOptionLabel={(option: string | ResourceDetails) => (option as ResourceDetails).name}
+                          name="member"
+                          multiple={false}
+                          required={requiredFields.member}
+                          options={customers}
+                          getOptionValue={(option) => (option as OrganizationMemberDetails).customer.id}
+                          getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
                           renderOption={(props, option) => {
-                            const castedOption = option as ResourceDetails;
+                            const castedOption = (option as OrganizationMemberDetails).customer;
 
                             return (
                               <li {...props} key={castedOption.id}>
-                                <StackRow sx={{ alignItems: 'center' }}>
-                                  <BodyIconTypography label={castedOption.name} />
-                                  <CustomTags customTags={castedOption.customTags} hideNAText />
-                                  <Zones zones={castedOption.zones} hideIcon hideNAText />
-                                </StackRow>
+                                <BodyIconTypography
+                                  label={getCustomerFullName(castedOption)}
+                                  startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
+                                />
                               </li>
                             );
                           }}
-                          filterOptions={(options, params) => filterResource(options as ResourceDetails[], params)}
+                          filterOptions={(options, params) => {
+                            if (params.inputValue !== peopleNameSearchText) {
+                              debounceSearchTextChange(params.inputValue);
+                            }
+
+                            return options;
+                          }}
                           selectOnFocus
                           clearOnBlur
                           handleHomeEndKeys
+                          onChange={(_, option) => handleMemberChange(option as OrganizationMemberDetails)}
                         />
-                      )}
+                      </FormFieldLabel>
 
-                      {resources.length === 0 && !locationId && <BodyIconTypography label="There are currently no available resources." />}
-                      {resources.length === 0 && locationId && <BodyIconTypography label="There are currently no available resources in the chosen location." />}
-                    </FormFieldLabel>
-                  </StackColumn>
-                </SettingsSectionCard>
+                      <FormFieldLabel label="Date/Time">
+                        <StackColumn>
+                          <StackRow>
+                            <Box sx={{ width: 'fit-content' }}>
+                              <DatePicker
+                                name="date"
+                                required={requiredFields.date}
+                                fieldProps={{
+                                  onChange: (value: unknown) => {
+                                    if (value && dayjs.isDayjs(value)) {
+                                      setFrom(value);
+                                    }
+                                  },
+                                }}
+                              />
+                            </Box>
+                            <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
+                          </StackRow>
 
-                <Box sx={{ px: defaultPadding, pb: defaultPadding }}>
-                  <EditorActionBar primaryAction="Update Booking" />
-                </Box>
-              </StackColumn>
-            </FormStackColumn>
-          )}
+                          <Box sx={{ width: 'fit-content' }}>
+                            <TimeRangePicker minutesStep={rootData.bookingSlotSizeInMinutes} disabled={allDay} value={timeRange} onChange={setTimeRange} />
+                          </Box>
+                        </StackColumn>
+                      </FormFieldLabel>
+
+                      <FormFieldLabel>
+                        <ErrorTypography errorMessage={dateTimeErrorMessage} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Notes">
+                        <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Category">
+                        <SingleChoiceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Team">
+                        <Autocomplete
+                          name="team"
+                          multiple={false}
+                          required={requiredFields.team}
+                          options={teams}
+                          getOptionValue={(option) => (option as TeamDetails).id}
+                          getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
+                          renderOption={(props, option) => {
+                            const castedOption = option as TeamDetails;
+
+                            return (
+                              <li {...props} key={castedOption.id}>
+                                <BodyIconTypography label={castedOption.name} />
+                              </li>
+                            );
+                          }}
+                          filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
+                          selectOnFocus
+                          clearOnBlur
+                          handleHomeEndKeys
+                          onChange={(_, option) => handleTeamChange(option as TeamDetails)}
+                        />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Location">
+                        <Autocomplete
+                          name="location"
+                          multiple={false}
+                          required={requiredFields.location}
+                          options={locations}
+                          getOptionValue={(option) => (option as LocationDetails).id}
+                          getOptionLabel={(option: string | LocationDetails) => (option as LocationDetails).name}
+                          renderOption={(props, option) => {
+                            const castedOption = option as LocationDetails;
+
+                            return (
+                              <li {...props} key={castedOption.id}>
+                                <BodyIconTypography label={castedOption.name} />
+                              </li>
+                            );
+                          }}
+                          filterOptions={(options, params) => filterLocation(options as LocationDetails[], params)}
+                          selectOnFocus
+                          clearOnBlur
+                          handleHomeEndKeys
+                          onChange={(_, option) => handleLocationChange(option as LocationDetails)}
+                        />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Resources">
+                        {resources.length > 0 && (
+                          <Autocomplete
+                            name="resources"
+                            multiple={true}
+                            required={requiredFields.resources}
+                            options={resources}
+                            getOptionValue={(option) => (option as ResourceDetails).id}
+                            getOptionLabel={(option: string | ResourceDetails) => (option as ResourceDetails).name}
+                            renderOption={(props, option) => {
+                              const castedOption = option as ResourceDetails;
+
+                              return (
+                                <li {...props} key={castedOption.id}>
+                                  <StackRow sx={{ alignItems: 'center' }}>
+                                    <BodyIconTypography label={castedOption.name} />
+                                    <CustomTags customTags={castedOption.customTags} hideNAText />
+                                    <Zones zones={castedOption.zones} hideIcon hideNAText />
+                                  </StackRow>
+                                </li>
+                              );
+                            }}
+                            filterOptions={(options, params) => filterResource(options as ResourceDetails[], params)}
+                            selectOnFocus
+                            clearOnBlur
+                            handleHomeEndKeys
+                          />
+                        )}
+
+                        {resources.length === 0 && !locationId && <BodyIconTypography label="There are currently no available resources." />}
+                        {resources.length === 0 && locationId && <BodyIconTypography label="There are currently no available resources in the chosen location." />}
+                      </FormFieldLabel>
+                    </StackColumn>
+                  </SettingsSectionCard>
+                </StackColumn>
+              </FormStackColumn>
+            );
+          }}
         />
       </StackColumn>
     </Box>

@@ -1,3 +1,4 @@
+using Customer.Api.Models;
 using HotChocolate;
 
 namespace Customer.Api.GraphQL.Billing;
@@ -7,6 +8,7 @@ public class UpdateMyBillingDetailsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("fieldsToUpdate")] public HashSet<CustomerBillingDetailsPatchField> FieldsToUpdate { get; set; } = [];
     [GraphQLName("companyName")] public string? CompanyName { get; set; }
     [GraphQLName("email")] public string Email { get; set; } = string.Empty;
     [GraphQLName("osmType")] public string? OsmType { get; set; }

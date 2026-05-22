@@ -1,14 +1,14 @@
 import { ClosedOpenAllDayCustomToggle } from '@/components/closedOpenAllDayCustomToggle';
 import { ErrorTypography, FormFieldLabel, StackColumn, StackRow } from '@skedular/ui';
-import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
+import { defaultPadding } from '@skedular/ui';
 import { getOpeningHoursFromDateTime, toOpeningHoursFromTime } from '@skedular/shared';
 import type { weekOpeningHours_query$key } from '@/queries/__generated__/weekOpeningHours_query.graphql';
-import Button from '@mui/material/Button';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import { Dayjs } from 'dayjs';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
+import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = {
   rootDataRelay: weekOpeningHours_query$key;
@@ -41,6 +41,7 @@ export type OpeningHoursDetailsInternal<T = Date | Dayjs> = {
 };
 
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const;
+const openingHoursAutosaveDebounceTimeout = 1000;
 
 const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetailUpdateClick }: Props) => {
   const rootData = useFragment<weekOpeningHours_query$key>(
@@ -91,16 +92,30 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
     setHours((prev) => ({ ...prev, [day]: value }));
   };
 
-  const handleUpdateClick = useCallback(() => {
+  const nextWeekOpeningHours = useMemo(() => {
     const allValid = weekdays.every((day) => validations[day].result);
     if (!allValid) {
+      return null;
+    }
+
+    return Object.fromEntries(weekdays.map((day) => [day, getValue(states[day], hours[day][0], hours[day][1])])) as WeekOpeningHoursDetails;
+  }, [validations, states, hours]);
+  const submittedWeekOpeningHoursKey = useRef(JSON.stringify(defaultValue));
+  const debouncedUpdateWeekOpeningHours = useDebounceCallback(onWeekOpeningHoursDetailUpdateClick, openingHoursAutosaveDebounceTimeout);
+
+  useEffect(() => {
+    if (!nextWeekOpeningHours) {
       return;
     }
 
-    const result: WeekOpeningHoursDetails = Object.fromEntries(weekdays.map((day) => [day, getValue(states[day], hours[day][0], hours[day][1])])) as WeekOpeningHoursDetails;
+    const nextKey = JSON.stringify(nextWeekOpeningHours);
+    if (nextKey === submittedWeekOpeningHoursKey.current) {
+      return;
+    }
 
-    onWeekOpeningHoursDetailUpdateClick(result);
-  }, [validations, states, hours, onWeekOpeningHoursDetailUpdateClick]);
+    submittedWeekOpeningHoursKey.current = nextKey;
+    debouncedUpdateWeekOpeningHours(nextWeekOpeningHours);
+  }, [debouncedUpdateWeekOpeningHours, nextWeekOpeningHours]);
 
   return (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
@@ -117,12 +132,6 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
           </FormFieldLabel>
         </div>
       ))}
-
-      <StackRow>
-        <Button variant="contained" sx={defaultButtonStyle} onClick={handleUpdateClick}>
-          Update
-        </Button>
-      </StackRow>
     </StackColumn>
   );
 };

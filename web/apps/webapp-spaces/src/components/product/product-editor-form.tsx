@@ -626,7 +626,7 @@ const ProductEditorForm = ({
               {activeStep === 'offers' ? renderOffers() : null}
               {activeStep === 'review' ? renderReview() : null}
 
-              {activeStep === 'review' ? (
+              {mode === 'add' && activeStep === 'review' ? (
                 <StackColumn>
                   <StackRow sx={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}>
                     <Button variant="contained" type="submit" sx={defaultButtonStyle}>

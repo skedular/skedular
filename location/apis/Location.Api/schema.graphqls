@@ -702,6 +702,7 @@ input ToggleContactedViaWhatsappInput {
 input UpdateFloorPlanInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [FloorPlanPatchField!]!
   name: String!
   image: CdnImageFileInput!
   resourcePositions: [ResourcePositionInput!]
@@ -710,6 +711,7 @@ input UpdateFloorPlanInput {
 input UpdateLocationInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [LocationPatchField!]!
   name: String!
   timezone: String
   type: LocationType!
@@ -722,12 +724,14 @@ input UpdateLocationInput {
 input UpdateLocationOpeningHoursInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [LocationOpeningHoursPatchField!]!
   weekOpeningHours: WeekOpeningHoursInput!
 }
 
 input UpdateLocationPhysicalAddressInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [LocationPhysicalAddressPatchField!]!
   osmType: String
   osmId: String
   placeId: String
@@ -747,6 +751,7 @@ input UpdateLocationPhysicalAddressInput {
 input UpdateLocationResourceAvailableHoursInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [LocationResourceAvailableHoursPatchField!]!
   overrideAvailableHours: Boolean!
   availableHours: WeekOpeningHoursInput
 }
@@ -754,6 +759,7 @@ input UpdateLocationResourceAvailableHoursInput {
 input UpdateLocationRestrictedInformationInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [LocationRestrictedInformationPatchField!]!
   title: String!
   category: LocationRestrictedInformationCategory!
   content: String!
@@ -764,6 +770,7 @@ input UpdateLocationRestrictedInformationInput {
 input UpdateResourceInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [ResourcePatchField!]!
   name: String!
   inactive: Boolean!
   requireBookingApproval: Boolean!
@@ -778,6 +785,7 @@ input UpdateResourceInput {
 input UpdateResourcePositionsInput {
   clientMutationId: String
   floorPlanId: String!
+  fieldsToUpdate: [ResourcePositionsPatchField!]!
   resourcePositions: [ResourcePositionInput!]!
 }
 
@@ -795,10 +803,41 @@ enum FloorPlanOrderField {
   NAME
 }
 
+enum FloorPlanPatchField {
+  NAME
+  IMAGE
+  RESOURCE_POSITIONS
+}
+
+enum LocationOpeningHoursPatchField {
+  WEEK_OPENING_HOURS
+}
+
 enum LocationOrderField {
   NAME
   TIMEZONE
   TYPE
+}
+
+enum LocationPatchField {
+  NAME
+  TIMEZONE
+  TYPE
+  ORGANIZATION
+  TAGS
+  FEATURE_IMAGES
+  EXTRA_METADATA
+  LISTING_METADATA
+  PHYSICAL_ADDRESS
+  UNIQUE_CLAIM_CODE
+}
+
+enum LocationPhysicalAddressPatchField {
+  ADDRESS
+}
+
+enum LocationResourceAvailableHoursPatchField {
+  AVAILABLE_HOURS
 }
 
 enum LocationRestrictedInformationCategory {
@@ -825,6 +864,14 @@ enum LocationRestrictedInformationCategory {
   PETS
   SMOKING
   HOUSE_RULES
+}
+
+enum LocationRestrictedInformationPatchField {
+  TITLE
+  CATEGORY
+  CONTENT
+  ACTIVE
+  SORT_ORDER
 }
 
 enum LocationType {
@@ -1011,6 +1058,20 @@ enum OrganizationTagType {
 
 enum ResourceOrderField {
   NAME
+}
+
+enum ResourcePatchField {
+  NAME
+  INACTIVE
+  REQUIRE_BOOKING_APPROVAL
+  COLOR
+  CAPACITY
+  TAGS
+  RESOURCE_TYPE
+}
+
+enum ResourcePositionsPatchField {
+  RESOURCE_POSITIONS
 }
 
 enum ScalarSerializationType {

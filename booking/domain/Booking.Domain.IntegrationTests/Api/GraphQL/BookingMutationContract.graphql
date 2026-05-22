@@ -1,0 +1,11 @@
+query BookingMutationContract {
+    updatePrivateBookingInput: __type(name: "UpdatePrivateBookingInput") {
+        inputFields { name }
+    }
+    updateMarketplaceBookingInput: __type(name: "UpdateMarketplaceBookingInput") {
+        inputFields { name }
+    }
+    updatePrivateRecurringBookingInput: __type(name: "UpdatePrivateRecurringBookingInput") {
+        inputFields { name }
+    }
+}

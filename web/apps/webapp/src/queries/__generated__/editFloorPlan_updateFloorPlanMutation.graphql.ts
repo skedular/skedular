@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<768dcff388df66ab9cec90bf3c148867>>
+ * @generated SignedSource<<12db2eb512690f8416bfaf8d06815cc4>>
  * @lightSyntaxTransform
  */
 
@@ -8,8 +8,10 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type FloorPlanPatchField = "IMAGE" | "NAME" | "RESOURCE_POSITIONS" | "%future added value";
 export type UpdateFloorPlanInput = {
   clientMutationId?: string | null | undefined;
+  fieldsToUpdate: ReadonlyArray<FloorPlanPatchField>;
   id: string;
   image: CdnImageFileInput;
   name: string;

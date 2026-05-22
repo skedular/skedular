@@ -2,7 +2,7 @@ using System.Net.Http.Headers;
 
 namespace Organization.Domain.IntegrationTests;
 
-public sealed class TestBearerTokenHandler : DelegatingHandler
+public class TestBearerTokenHandler : DelegatingHandler
 {
     private static readonly AsyncLocal<string?> CurrentToken = new();
 

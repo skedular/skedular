@@ -4,6 +4,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
+using Marketplace.Api.Models;
 using Marketplace.Api.Services.Authorization;
 using Marketplace.Shared.Mappers;
 using Marketplace.Shared.Models;
@@ -22,7 +23,7 @@ public interface IProductService
         ProductVersion productVersion,
         CancellationToken cancellationToken);
 
-    Task<Product> UpdateAsync(string id, ProductVersion productVersion, CancellationToken cancellationToken);
+    Task<Product> UpdateAsync(ProductPatchRequest request, CancellationToken cancellationToken);
     Task<IReadOnlyList<Product>> DeleteAsync(IReadOnlyList<string> productIds, CancellationToken cancellationToken);
     Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<Product>> ActivateAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
@@ -43,7 +44,8 @@ public class ProductService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IMarketplaceOutboxPublisher marketplaceOutboxPublisher,
     IEntityMapper entityMapper,
-    ICachedProductService cachedProductService) : IProductService
+    ICachedProductService cachedProductService,
+    ILogger<ProductService> logger) : IProductService
 {
     public async Task<Product> AddAsync(
         string? id,
@@ -126,15 +128,51 @@ public class ProductService(
         return product;
     }
 
-    public async Task<Product> UpdateAsync(string id, ProductVersion productVersion, CancellationToken cancellationToken)
+    public async Task<Product> UpdateAsync(ProductPatchRequest request, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
-        Validate(productVersion.Type, productVersion.PricingOptions);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(id, cancellationToken) ?? throw new ProductNotFound();
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Product patch autosave started. ProductId: {ProductId}, EditUnits: {EditUnits}",
+            request.Id,
+            editUnits);
 
-        return await UpdateInternalAsync(productVersion, existingProduct, customer, cancellationToken);
+        try
+        {
+            var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+            var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(request.Id, cancellationToken) ??
+                                  throw new ProductNotFound();
+            var currentVersion = entityMapper.MapTo(existingProduct).ProductVersions.OrderByDescending(item => item.CreatedAt).First();
+
+            Apply(request, currentVersion);
+            Validate(currentVersion.Type, currentVersion.PricingOptions);
+
+            var updatedProduct = await UpdateInternalAsync(currentVersion, existingProduct, customer, cancellationToken);
+            logger.LogInformation(
+                "Product patch autosave completed. ProductId: {ProductId}, EditUnits: {EditUnits}",
+                updatedProduct.Id,
+                editUnits);
+            return updatedProduct;
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Product patch autosave rejected by authorization. ProductId: {ProductId}, EditUnits: {EditUnits}",
+                request.Id,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Product patch autosave failed. ProductId: {ProductId}, EditUnits: {EditUnits}",
+                request.Id,
+                editUnits);
+            throw;
+        }
     }
 
     public async Task<IReadOnlyList<Product>> DeleteAsync(IReadOnlyList<string> productIds, CancellationToken cancellationToken)
@@ -310,10 +348,12 @@ public class ProductService(
 
         var organizationTags = tags.Where(item => tagIds.Contains(item.Id)).ToList();
 
-        _ = repositoryFactory.ProductVersionRepository.Add(entityMapper.MapTo(productVersion, existingProduct, organizationTags));
+        var productVersionEntity =
+            repositoryFactory.ProductVersionRepository.Add(entityMapper.MapTo(productVersion, existingProduct, organizationTags));
         existingProduct = entityMapper.MergeTo(existingProduct, existingProduct.Organization);
 
         var product = entityMapper.MapTo(repositoryFactory.ProductRepository.Update(existingProduct));
+        product.ProductVersions = [entityMapper.MapTo(productVersionEntity, existingProduct)];
 
         marketplaceOutboxPublisher.PublishProducts([product], repositoryFactory.UnitOfWork);
 
@@ -330,6 +370,36 @@ public class ProductService(
         foreach (var option in options)
         {
             Validate(productType, option);
+        }
+    }
+
+    private static void Apply(ProductPatchRequest request, ProductVersion productVersion)
+    {
+        foreach (var field in request.FieldsToUpdate)
+        {
+            switch (field)
+            {
+                case ProductPatchField.Type:
+                    productVersion.Type = request.ProductVersion.Type;
+                    break;
+                case ProductPatchField.Currency:
+                    productVersion.Currency = request.ProductVersion.Currency;
+                    break;
+                case ProductPatchField.Tags:
+                    productVersion.OrganizationTags = request.ProductVersion.OrganizationTags;
+                    break;
+                case ProductPatchField.FeatureImages:
+                    productVersion.FeatureImages = request.ProductVersion.FeatureImages;
+                    break;
+                case ProductPatchField.PricingOptions:
+                    productVersion.PricingOptions = request.ProductVersion.PricingOptions;
+                    break;
+                case ProductPatchField.ListingMetadata:
+                    productVersion.ListingMetadata = request.ProductVersion.ListingMetadata;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+            }
         }
     }
 

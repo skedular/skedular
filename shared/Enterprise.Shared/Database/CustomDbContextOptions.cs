@@ -6,4 +6,4 @@ public class CustomDbContextOptions
     public bool IsPostgisEnabled { get; set; }
 }
 
-public sealed class CustomDbContextOptions<TDbContext> : CustomDbContextOptions where TDbContext : class;
+public class CustomDbContextOptions<TDbContext> : CustomDbContextOptions where TDbContext : class;

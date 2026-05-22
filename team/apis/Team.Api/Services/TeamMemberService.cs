@@ -5,6 +5,7 @@ using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
+using Team.Api.Models;
 using Team.Api.Services.Authorization;
 using Team.Shared.Mappers;
 using Team.Shared.Models;
@@ -26,6 +27,9 @@ public interface ITeamMemberService
     Task<TeamMember> ChangeRoleAsync(string id, TeamMemberRole memberRole, CancellationToken cancellationToken);
     Task<IReadOnlyList<TeamMember>> ChangeStatusAsync(IReadOnlyList<string> ids, TeamMemberStatus status, CancellationToken cancellationToken);
     Task<Shared.Models.Team> UpdateMembersAsync(string teamId, IReadOnlyList<TeamMember> members, CancellationToken cancellationToken);
+
+    Task<Shared.Models.Team> UpdateMembersAsync(string teamId, IReadOnlyList<TeamMember> members, IReadOnlySet<TeamMembersPatchField> fieldsToUpdate,
+        CancellationToken cancellationToken);
 
     public Task<List<Shared.Database.Entities.TeamMember>> BuildMembersAsync(
         IReadOnlyList<TeamMember> members,
@@ -228,6 +232,64 @@ public class TeamMemberService(
 
         existingTeam.TeamMembers = existingTeam.TeamMembers.Where(item => item.IsNotDeleted()).ToList();
         return entityMapper.MapTo(existingTeam);
+    }
+
+    public async Task<Shared.Models.Team> UpdateMembersAsync(
+        string teamId,
+        IReadOnlyList<TeamMember> members,
+        IReadOnlySet<TeamMembersPatchField> fieldsToUpdate,
+        CancellationToken cancellationToken)
+    {
+        var editUnits = string.Join(",", fieldsToUpdate);
+        logger.LogInformation(
+            "Team members patch autosave started. TeamId: {TeamId}, EditUnits: {EditUnits}",
+            teamId,
+            editUnits);
+
+        try
+        {
+            if (fieldsToUpdate.Contains(TeamMembersPatchField.Members))
+            {
+                var updatedMembersTeam = await UpdateMembersAsync(teamId, members, cancellationToken);
+                logger.LogInformation(
+                    "Team members patch autosave completed. TeamId: {TeamId}, EditUnits: {EditUnits}",
+                    updatedMembersTeam.Id,
+                    editUnits);
+                return updatedMembersTeam;
+            }
+
+            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+            var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
+            if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customerId, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            var unchangedTeam = entityMapper.MapTo(existingTeam);
+            logger.LogInformation(
+                "Team members patch autosave completed with no changes. TeamId: {TeamId}, EditUnits: {EditUnits}",
+                unchangedTeam.Id,
+                editUnits);
+            return unchangedTeam;
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Team members patch autosave rejected by authorization. TeamId: {TeamId}, EditUnits: {EditUnits}",
+                teamId,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Team members patch autosave failed. TeamId: {TeamId}, EditUnits: {EditUnits}",
+                teamId,
+                editUnits);
+            throw;
+        }
     }
 
     public async Task<List<Shared.Database.Entities.TeamMember>> BuildMembersAsync(

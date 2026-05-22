@@ -1,5 +1,4 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, GridContainer, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
 import { getOrganizationTeamsBaseLink } from '@/components/links';
@@ -11,9 +10,6 @@ import OrganizationTeamMemberManagementList from '@/components/organization/orga
 import OrganizationTeamSectionNav, { OrganizationTeamSection } from '@/components/organization/organizationTeam/organization-team-section-nav';
 import { Search } from '@/components/search';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { defaultPadding } from '@skedular/ui';
-import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
 import type { organizationTeam_changeTeamMemberRoleMutation } from '@/queries/__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
 import type { organizationTeam_changeTeamMembersStatusMutation } from '@/queries/__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
 import type { organizationTeam_deleteTeamMutation } from '@/queries/__generated__/organizationTeam_deleteTeamMutation.graphql';
@@ -21,7 +17,7 @@ import type { organizationTeam_query$key } from '@/queries/__generated__/organiz
 import type { organizationTeam_removeTeamMembersMutation } from '@/queries/__generated__/organizationTeam_removeTeamMembersMutation.graphql';
 import type { organizationTeam_teamMembers_query$key, TeamMemberRole } from '@/queries/__generated__/organizationTeam_teamMembers_query.graphql';
 import type { organizationTeam_teamMembers_refetchableFragment } from '@/queries/__generated__/organizationTeam_teamMembers_refetchableFragment.graphql';
-import type { organizationTeam_updateTeamMutation } from '@/queries/__generated__/organizationTeam_updateTeamMutation.graphql';
+import type { organizationTeam_updateTeamMutation, TeamPatchField } from '@/queries/__generated__/organizationTeam_updateTeamMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -30,13 +26,27 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { EditorActionBar, PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
+import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  defaultPadding,
+  FormFieldLabel,
+  FormStackColumn,
+  GridContainer,
+  PageHeaderPanel,
+  SectionIconTypography,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
@@ -77,6 +87,19 @@ const getActiveSection = (value: string | null): OrganizationTeamSection => {
 const formColumnSx = {
   width: '100%',
   maxWidth: 760,
+};
+const teamAutosaveDebounceTimeout = 1000;
+
+const teamPatchFields: Record<keyof TeamDetails, TeamPatchField> = {
+  name: 'NAME',
+  about: 'ABOUT',
+  timezone: 'TIMEZONE',
+  primaryLocationId: 'PRIMARY_LOCATION',
+};
+
+const getChangedTeamFields = (left: TeamDetails | null, right: TeamDetails): TeamPatchField[] => {
+  if (!left) return [];
+  return (Object.keys(teamPatchFields) as (keyof TeamDetails)[]).filter((field) => left[field] !== right[field]).map((field) => teamPatchFields[field]);
 };
 
 const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembersRelay, organizationCustomDomain, teamId }: Props) => {
@@ -293,6 +316,20 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       : [],
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
+  const initialTeamValues = useMemo<TeamDetails | null>(
+    () =>
+      rootData.team
+        ? {
+            name: rootData.team.name,
+            about: rootData.team.about ?? null,
+            timezone: rootData.team.timezone ?? '',
+            primaryLocationId: rootData.team.primaryLocation ? rootData.team.primaryLocation.id : null,
+          }
+        : null,
+    [rootData.team],
+  );
+  const previousTeamValues = useRef<TeamDetails | null>(initialTeamValues);
+  const previousFeatureImages = useRef<FileUploadResponse[]>(featureImages);
 
   const requiredTeamDetailsFields = makeRequired(teamSchema);
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null);
@@ -368,13 +405,12 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     setSelectedMemberIds((current) => (current.includes(memberId) ? current.filter((id) => id !== memberId) : current.concat(memberId)));
   };
 
-  const handleTeamDetailUpdateClick = ({ name, about, timezone, primaryLocationId }: TeamDetails) => {
+  const handleTeamDetailUpdateClick = (fieldsToUpdate: TeamPatchField[], { name, about, timezone, primaryLocationId }: TeamDetails) => {
     const team = rootData.team;
-    if (!team) {
+    if (!team || !teamSchema.isValidSync({ name, about, timezone, primaryLocationId })) {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating team '${team.name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
       original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
       thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
@@ -385,6 +421,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         input: {
           clientMutationId: uuid(),
           id: team.id,
+          fieldsToUpdate,
           name,
           about,
           timezone,
@@ -394,24 +431,13 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update team '${team?.name}'. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't update team '${team?.name}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`The details for team '${name}' have been updated.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update team '${team?.name}'. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't update team '${team?.name}'. ${error.message}`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         updateTeam: {
@@ -427,6 +453,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       },
     });
   };
+  const debouncedTeamDetailUpdate = useDebounceCallback(handleTeamDetailUpdateClick, teamAutosaveDebounceTimeout);
 
   const handleDeactivateMembersClick = () => {
     const toastId = themedToast(<NotificationContent content={'Deactivating members...'} />, infoNotificationOptions);
@@ -822,13 +849,6 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     return null;
   }
 
-  const teamFormInitialValues = {
-    name: team.name,
-    about: team.about,
-    timezone: team.timezone ?? '',
-    primaryLocationId: rootData.team.primaryLocation ? rootData.team.primaryLocation.id : null,
-  };
-
   const renderActiveSection = () => {
     switch (activeSection) {
       case 'members':
@@ -888,88 +908,96 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       default:
         return (
           <Form
-            onSubmit={handleTeamDetailUpdateClick}
-            initialValues={teamFormInitialValues}
+            onSubmit={() => undefined}
+            initialValues={initialTeamValues}
             validate={validate}
-            render={({ handleSubmit }) => (
-              <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <GridContainer sx={{ justifyContent: 'space-between' }}>
-                    <Grid>
-                      <SectionIconTypography label="Team Setup" />
-                      <BodyIconTypography label="Edit your team name and details" />
-                    </Grid>
-                  </GridContainer>
-                  <Divider />
-                </StackColumn>
+            render={({ handleSubmit, values }) => {
+              const teamValues = values as TeamDetails;
+              const changedFormFields = getChangedTeamFields(previousTeamValues.current, teamValues);
+              const extraFields: TeamPatchField[] = featureImages !== previousFeatureImages.current ? ['FEATURE_IMAGES'] : [];
+              const fieldsToUpdate: TeamPatchField[] = [...changedFormFields, ...extraFields];
+              if (fieldsToUpdate.length > 0) {
+                previousTeamValues.current = teamValues;
+                previousFeatureImages.current = featureImages;
+                debouncedTeamDetailUpdate(fieldsToUpdate, teamValues);
+              }
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Feature Images">
-                    <StackColumn>
-                      <Box
-                        sx={{
-                          display: 'grid',
-                          gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
-                          gap: 2,
-                        }}
-                      >
-                        {featureImages.map((image, index) => (
-                          <Box
-                            key={index}
-                            sx={{
-                              position: 'relative',
-                              borderRadius: 2,
-                              overflow: 'hidden',
-                              border: 1,
-                              borderColor: 'divider',
-                              backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                            }}
-                          >
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                            <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                              <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                            </StackRow>
-                            <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                              {primaryFeatureImage?.original?.url === image.original?.url ? (
-                                <Chip size="small" color="success" label="Cover image" />
-                              ) : (
-                                <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                                  Make cover
-                                </Button>
-                              )}
-                            </StackRow>
-                          </Box>
-                        ))}
-                      </Box>
-                      <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
-                    </StackColumn>
-                  </FormFieldLabel>
+              return (
+                <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <GridContainer sx={{ justifyContent: 'space-between' }}>
+                      <Grid>
+                        <SectionIconTypography label="Team Setup" />
+                        <BodyIconTypography label="Edit your team name and details" />
+                      </Grid>
+                    </GridContainer>
+                    <Divider />
+                  </StackColumn>
 
-                  <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredTeamDetailsFields.name} />
-                  </FormFieldLabel>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
+                    <FormFieldLabel label="Feature Images">
+                      <StackColumn>
+                        <Box
+                          sx={{
+                            display: 'grid',
+                            gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
+                            gap: 2,
+                          }}
+                        >
+                          {featureImages.map((image, index) => (
+                            <Box
+                              key={index}
+                              sx={{
+                                position: 'relative',
+                                borderRadius: 2,
+                                overflow: 'hidden',
+                                border: 1,
+                                borderColor: 'divider',
+                                backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                              }}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                                <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                                  <DeleteIcon fontSize="small" />
+                                </IconButton>
+                              </StackRow>
+                              <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                                {primaryFeatureImage?.original?.url === image.original?.url ? (
+                                  <Chip size="small" color="success" label="Cover image" />
+                                ) : (
+                                  <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                    Make cover
+                                  </Button>
+                                )}
+                              </StackRow>
+                            </Box>
+                          ))}
+                        </Box>
+                        <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
+                      </StackColumn>
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="About">
-                    <TextField name="about" required={requiredTeamDetailsFields.about} multiline rows={3} />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Name">
+                      <TextField name="name" required={requiredTeamDetailsFields.name} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Timezone">
-                    <SingleChoinceTimezone name="timezone" required={requiredTeamDetailsFields.timezone} />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="About">
+                      <TextField name="about" required={requiredTeamDetailsFields.about} multiline rows={3} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Primary Location">
-                    <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
-                  </FormFieldLabel>
-                </StackColumn>
+                    <FormFieldLabel label="Timezone">
+                      <SingleChoinceTimezone name="timezone" required={requiredTeamDetailsFields.timezone} />
+                    </FormFieldLabel>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
-                  <EditorActionBar primaryAction="Update" />
-                </StackColumn>
-              </FormStackColumn>
-            )}
+                    <FormFieldLabel label="Primary Location">
+                      <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
+                    </FormFieldLabel>
+                  </StackColumn>
+                </FormStackColumn>
+              );
+            }}
           />
         );
     }

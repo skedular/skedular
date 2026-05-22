@@ -1,5 +1,6 @@
 using Customer.Api.GraphQL.Customer;
 using Customer.Api.Mappers;
+using Customer.Api.Models;
 using Customer.Api.Services;
 using HotChocolate;
 using HotChocolate.Types;
@@ -26,7 +27,9 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         [Service] IBillingService billingService,
         CancellationToken cancellationToken)
     {
-        var customerBillingDetails = await billingService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken);
+        var customerBillingDetails = await billingService.UpdateAsync(
+            new CustomerBillingDetailsPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
+            cancellationToken);
 
         return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customerBillingDetails) };
     }

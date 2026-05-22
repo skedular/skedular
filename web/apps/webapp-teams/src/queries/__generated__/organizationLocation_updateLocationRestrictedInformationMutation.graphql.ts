@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<35e29401c31ef22103e13c4668a537d2>>
+ * @generated SignedSource<<e827c1020ad7a0f6e5173b1111aa89a7>>
  * @lightSyntaxTransform
  */
 
@@ -9,11 +9,13 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type LocationRestrictedInformationCategory = "ACCESS" | "ACCESSIBILITY" | "AFTER_HOURS" | "CHECK_IN" | "CHECK_OUT" | "CLEANING" | "DELIVERIES" | "EQUIPMENT" | "EVACUATION" | "GUESTS" | "HOUSE_RULES" | "KITCHEN" | "MAINTENANCE" | "MEETING_ROOMS" | "NOISE" | "OTHER" | "PARKING" | "PETS" | "SECURITY" | "SMOKING" | "STORAGE" | "WASTE" | "WIFI" | "%future added value";
+export type LocationRestrictedInformationPatchField = "ACTIVE" | "CATEGORY" | "CONTENT" | "SORT_ORDER" | "TITLE" | "%future added value";
 export type UpdateLocationRestrictedInformationInput = {
   active: boolean;
   category: LocationRestrictedInformationCategory;
   clientMutationId?: string | null | undefined;
   content: string;
+  fieldsToUpdate: ReadonlyArray<LocationRestrictedInformationPatchField>;
   id: string;
   sortOrder: number;
   title: string;

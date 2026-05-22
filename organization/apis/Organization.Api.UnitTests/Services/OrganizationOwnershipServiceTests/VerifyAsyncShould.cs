@@ -43,10 +43,7 @@ public class VerifyAsyncShould
         };
         var mappedOrganization = new Shared.Models.Organization
         {
-            Id = organization.Id,
-            CustomDomain = organization.CustomDomain,
-            Name = organization.Name,
-            IsOwnershipVerified = true
+            Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name, IsOwnershipVerified = true
         };
         var stripeAuthorizeUrl = new Uri("https://example.test/authorize");
 

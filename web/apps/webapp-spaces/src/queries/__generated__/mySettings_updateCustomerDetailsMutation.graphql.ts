@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<938a90e7bb855a14ec5f24ae7b3ac434>>
+ * @generated SignedSource<<17da9eaad227975d3a94e24fb89a5c5e>>
  * @lightSyntaxTransform
  */
 
@@ -8,11 +8,13 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type CustomerDetailsPatchField = "DESIGNATION" | "FAMILY_NAME" | "GIVEN_NAME" | "MIDDLE_NAME" | "NAME" | "PERSONAL_INFORMATION_VISIBILITY" | "PHONE_NUMBER" | "TIMEZONE" | "TITLE" | "%future added value";
 export type PersonalInformationVisibility = "REDACTED" | "VISIBLE" | "%future added value";
 export type UpdateCustomerDetailsInput = {
   clientMutationId?: string | null | undefined;
   designation?: string | null | undefined;
   familyName?: string | null | undefined;
+  fieldsToUpdate: ReadonlyArray<CustomerDetailsPatchField>;
   givenName?: string | null | undefined;
   id: string;
   middleName?: string | null | undefined;

@@ -103,6 +103,15 @@ public class LocationResourceService(
         updateZoneInput.TagIds.AddRange(resource.Zones.Select(item => item.Id));
         updateZoneInput.TagIds.AddRange(resource.ProductTags.Select(item => item.Id));
         updateZoneInput.TagIds.Add(resource.ResourceType.Id);
+        updateZoneInput.FieldsToUpdate.AddRange(
+        [
+            ResourcePatchField.Name,
+            ResourcePatchField.Inactive,
+            ResourcePatchField.RequireBookingApproval,
+            ResourcePatchField.Tags,
+            ResourcePatchField.Color,
+            ResourcePatchField.Capacity
+        ]);
 
         var mappedResource = grpcMapper.MapTo(
             await locationResourcesServiceClient.UpdateResourceAsync(

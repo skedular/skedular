@@ -6,6 +6,7 @@ using Api.Shared.Clients.OpenApi.Skedular.BookingWorkaround.V1;
 using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Grpc.Skedular.InfrastructureTest.V1;
 using Api.Shared.Services;
+using Api.Shared.Services.Configurations.Grpc;
 using Aspire.Hosting.Testing;
 using Booking.Shared;
 using Booking.Shared.Database;
@@ -68,6 +69,10 @@ public class Startup
             .AddSingleton(_ =>
                 new InfrastructureTestService.InfrastructureTestServiceClient(infrastructureSharedGrpcChannel));
 
+        var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>() ??
+                                   new BookingConfiguration { ApiKey = "XXX" };
+        services.AddSingleton(bookingConfiguration);
+
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 
         services
@@ -92,9 +97,13 @@ public class Startup
             .AddSingleton<IBookingWorkaroundClient>(_ => new BookingWorkaroundClient(bookingApiClient))
             .AddSingleton<IBookingXeroWebhookClient>(_ => new BookingXeroWebhookClient(bookingApiClient));
 
+        services.AddTransient<TestBearerTokenHandler>();
+
         services
             .AddSkedularGraphQLV1()
-            .ConfigureHttpClient(httpClient => httpClient.BaseAddress = bookingApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri())
+            .ConfigureHttpClient(
+                httpClient => httpClient.BaseAddress = bookingApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri(),
+                builder => builder.AddHttpMessageHandler<TestBearerTokenHandler>())
             .ConfigureWebSocketClient(webSocketClient =>
             {
                 var wsUri = new UriBuilder(bookingApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri()) { Scheme = "ws" }.Uri;

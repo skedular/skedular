@@ -1,6 +1,8 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
+using Booking.Api.Models;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Enterprise.Shared;
 using Enterprise.Shared.Context;
@@ -12,7 +14,7 @@ namespace Booking.Api.Services;
 public interface IMarketplaceBookingService
 {
     Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
-    Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
+    Task<Shared.Models.Booking> UpdateAsync(MarketplaceBookingPatchRequest request, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -22,7 +24,9 @@ public class MarketplaceBookingService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
     IContext context,
-    Shared.Services.IMarketplaceBookingService sharedMarketplaceBookingService) : IMarketplaceBookingService
+    Shared.Services.IMarketplaceBookingService sharedMarketplaceBookingService,
+    IEntityMapper entityMapper,
+    ILogger<MarketplaceBookingService> logger) : IMarketplaceBookingService
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
@@ -94,18 +98,48 @@ public class MarketplaceBookingService(
         return await sharedMarketplaceBookingService.AddAsync(booking, customer, organizations, teams, null, cancellationToken);
     }
 
-    public async Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Booking> UpdateAsync(MarketplaceBookingPatchRequest request, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Booking.Id);
 
-        var verifiableToken = context.GetVerifiableToken();
-        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Marketplace booking patch autosave started. BookingId: {BookingId}, EditUnits: {EditUnits}",
+            request.Booking.Id,
+            editUnits);
 
-        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
-                       throw new CustomerNotFound();
-        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken) ?? throw new BookingNotFound();
+        try
+        {
+            var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(request.Booking.Id, cancellationToken) ??
+                                  throw new BookingNotFound();
+            var booking = entityMapper.MapTo(existingBooking);
+            Apply(request, booking);
 
-        return await UpdateInternalAsync(booking, existingBooking, customer, cancellationToken);
+            var updatedBooking = await UpdateAsync(booking, cancellationToken);
+            logger.LogInformation(
+                "Marketplace booking patch autosave completed. BookingId: {BookingId}, EditUnits: {EditUnits}",
+                updatedBooking.Id,
+                editUnits);
+            return updatedBooking;
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Marketplace booking patch autosave rejected by authorization. BookingId: {BookingId}, EditUnits: {EditUnits}",
+                request.Booking.Id,
+                editUnits);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Marketplace booking patch autosave failed. BookingId: {BookingId}, EditUnits: {EditUnits}",
+                request.Booking.Id,
+                editUnits);
+            throw;
+        }
     }
 
     public async Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken)
@@ -151,6 +185,20 @@ public class MarketplaceBookingService(
         return await sharedMarketplaceBookingService.DeleteAsync(existingBooking, customer, ignoreCancellationPolicy, true, cancellationToken);
     }
 
+    private async Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
+
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
+                       throw new CustomerNotFound();
+        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken) ?? throw new BookingNotFound();
+
+        return await UpdateInternalAsync(booking, existingBooking, customer, cancellationToken);
+    }
+
     private async Task<Shared.Models.Booking> UpdateInternalAsync(
         Shared.Models.Booking booking,
         Shared.Database.Entities.Booking existingBooking,
@@ -186,5 +234,28 @@ public class MarketplaceBookingService(
             null,
             false,
             cancellationToken);
+    }
+
+    private static void Apply(MarketplaceBookingPatchRequest request, Shared.Models.Booking booking)
+    {
+        foreach (var field in request.FieldsToUpdate)
+        {
+            switch (field)
+            {
+                case MarketplaceBookingPatchField.Participants:
+                    booking.InvolvedCustomers = request.Booking.InvolvedCustomers;
+                    booking.InvolvedOrganizations = request.Booking.InvolvedOrganizations;
+                    booking.InvolvedTeams = request.Booking.InvolvedTeams;
+                    break;
+                case MarketplaceBookingPatchField.Notes:
+                    booking.Notes = request.Booking.Notes;
+                    break;
+                case MarketplaceBookingPatchField.Category:
+                    booking.Category = request.Booking.Category;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+            }
+        }
     }
 }

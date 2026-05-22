@@ -1,5 +1,6 @@
 ﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
+using Customer.Api.Models;
 using Customer.Shared.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Publishers;
@@ -36,7 +37,7 @@ public interface ICustomerService
 
     Task<Shared.Models.Customer> AddAsync(Shared.Models.Customer customer, bool sendNewCustomerJoinedEmail, CancellationToken cancellationToken);
     Task<Shared.Models.Customer> AddIdentityAsync(Identity identity, CancellationToken cancellationToken);
-    Task<Shared.Models.Customer> UpdateIdentityAsync(Identity identity, CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> UpdateIdentityAsync(CustomerIdentityPatchRequest request, CancellationToken cancellationToken);
 }
 
 public class CustomerService(
@@ -48,7 +49,8 @@ public class CustomerService(
     IContext context,
     IRandomHelper randomHelper,
     ICachedCustomerService cachedCustomerService,
-    TimeProvider timeProvider) : ICustomerService
+    TimeProvider timeProvider,
+    ILogger<CustomerService> logger) : ICustomerService
 {
     public async Task<Shared.Models.Customer> GetMeAsync(bool addCustomerIfNotExist, CancellationToken cancellationToken)
     {
@@ -286,7 +288,67 @@ public class CustomerService(
                                   (await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identity.Id, cancellationToken))!);
     }
 
-    public async Task<Shared.Models.Customer> UpdateIdentityAsync(Identity identity, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Customer> UpdateIdentityAsync(CustomerIdentityPatchRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Identity.Customer.Id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Identity.Id);
+
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Customer identity patch update started. CustomerId: {CustomerId}, IdentityId: {IdentityId}, EditUnits: {EditUnits}",
+            request.Identity.Customer.Id,
+            request.Identity.Id,
+            editUnits);
+
+        try
+        {
+            var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(request.Identity.Customer.Id, cancellationToken) ??
+                                   throw new CustomerNotFound();
+            var identity = existingCustomer.Identities.First(item => item.Id == request.Identity.Id);
+            var patch = new Identity
+            {
+                Id = identity.Id,
+                Customer = new Shared.Models.Customer { Id = existingCustomer.Id },
+                Email = identity.Email,
+                EmailVerified = identity.EmailVerified
+            };
+
+            foreach (var field in request.FieldsToUpdate)
+            {
+                switch (field)
+                {
+                    case CustomerIdentityPatchField.Email:
+                        patch.Email = request.Identity.Email;
+                        break;
+                    case CustomerIdentityPatchField.EmailVerified:
+                        patch.EmailVerified = request.Identity.EmailVerified;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+                }
+            }
+
+            var updatedCustomer = await UpdateIdentityAsync(patch, cancellationToken);
+            logger.LogInformation(
+                "Customer identity patch update completed. CustomerId: {CustomerId}, IdentityId: {IdentityId}, EditUnits: {EditUnits}",
+                updatedCustomer.Id,
+                request.Identity.Id,
+                editUnits);
+            return updatedCustomer;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Customer identity patch update failed. CustomerId: {CustomerId}, IdentityId: {IdentityId}, EditUnits: {EditUnits}",
+                request.Identity.Customer.Id,
+                request.Identity.Id,
+                editUnits);
+            throw;
+        }
+    }
+
+    private async Task<Shared.Models.Customer> UpdateIdentityAsync(Identity identity, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Customer.Id);
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Id);

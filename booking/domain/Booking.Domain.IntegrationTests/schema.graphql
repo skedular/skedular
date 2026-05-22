@@ -883,6 +883,7 @@ input ResourceAvailabilityOrderByInput {
 input UpdateMarketplaceBookingInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [MarketplaceBookingPatchField!]!
   customerIds: [String!]!
   organizationIds: [String!]
   organizationCustomDomains: [String!]
@@ -894,6 +895,7 @@ input UpdateMarketplaceBookingInput {
 input UpdatePrivateBookingInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [PrivateBookingPatchField!]!
   customerIds: [String!]!
   organizationIds: [String!]
   organizationCustomDomains: [String!]
@@ -908,6 +910,7 @@ input UpdatePrivateBookingInput {
 input UpdatePrivateRecurringBookingInput {
   clientMutationId: String
   id: String!
+  fieldsToUpdate: [PrivateRecurringBookingPatchField!]!
   customerIds: [String!]!
   organizationIds: [String!]
   organizationCustomDomains: [String!]
@@ -973,6 +976,12 @@ enum DayOfWeek {
   THURSDAY
   FRIDAY
   SATURDAY
+}
+
+enum MarketplaceBookingPatchField {
+  PARTICIPANTS
+  NOTES
+  CATEGORY
 }
 
 enum MarketplaceBookingSubscriptionCancellationMode {
@@ -1185,6 +1194,23 @@ enum PaymentStatus {
   EXPIRED
   RECORD_NEVER_CREATED
   NO_PAYMENT_REQUIRED
+}
+
+enum PrivateBookingPatchField {
+  PARTICIPANTS
+  SCHEDULE
+  NOTES
+  CATEGORY
+  RESOURCES
+}
+
+enum PrivateRecurringBookingPatchField {
+  PARTICIPANTS
+  REQUESTED_RESOURCES
+  SCHEDULE
+  RECURRENCE
+  SKIPPED_DATES
+  CATEGORY
 }
 
 enum ProductPricingBillingMode {

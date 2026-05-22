@@ -1,0 +1,11 @@
+query CustomerMutationContract {
+    updateCustomerDetailsInput: __type(name: "UpdateCustomerDetailsInput") {
+        inputFields { name }
+    }
+    updateMyCustomerDetailsInput: __type(name: "UpdateMyCustomerDetailsInput") {
+        inputFields { name }
+    }
+    updateMyBillingDetailsInput: __type(name: "UpdateMyBillingDetailsInput") {
+        inputFields { name }
+    }
+}

@@ -1,6 +1,7 @@
 using HotChocolate;
 using HotChocolate.Types;
 using Location.Api.Mappers;
+using Location.Api.Models;
 using Location.Api.Services;
 
 namespace Location.Api.GraphQL.FloorPlan;
@@ -29,8 +30,10 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            FloorPlan = graphQlMapper.MapTo(await floorPlanService.UpdateAsync(graphQlMapper.MapTo(input), input.ResourcePositions is not null,
-                cancellationToken))!
+            FloorPlan = graphQlMapper.MapTo(
+                await floorPlanService.UpdateAsync(
+                    new FloorPlanPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
+                    cancellationToken))!
         };
 
     [UseResolverScope]
@@ -53,6 +56,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         {
             ClientMutationId = input.ClientMutationId,
             FloorPlan = graphQlMapper.MapTo(
-                await floorPlanService.UpdateResourcePositionsAsync(input.FloorPlanId, graphQlMapper.MapTo(input).ToList(), cancellationToken))!
+                await floorPlanService.UpdateResourcePositionsAsync(
+                    new ResourcePositionsPatchRequest(input.FloorPlanId, graphQlMapper.MapTo(input).ToList(), input.FieldsToUpdate),
+                    cancellationToken))!
         };
 }

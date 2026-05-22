@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Customer.Api.Models;
 using Customer.Shared.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Publishers;
@@ -11,7 +12,7 @@ namespace Customer.Api.Services;
 public interface IBillingService
 {
     Task<Shared.Models.Customer> AddAsync(CustomerBillingDetails customerBillingDetails, CancellationToken cancellationToken);
-    Task<Shared.Models.Customer> UpdateAsync(CustomerBillingDetails customerBillingDetails, CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> UpdateAsync(CustomerBillingDetailsPatchRequest request, CancellationToken cancellationToken);
     Task<CustomerBillingDetails?> GetBillingAsync(string requestedCustomerId, CancellationToken cancellationToken);
 }
 
@@ -21,7 +22,8 @@ public class BillingService(
     ICustomerService customerService,
     IRandomHelper randomHelper,
     IEntityMapper entityMapper,
-    ICustomerOutboxPublisher organizationOutboxPublisher) : IBillingService
+    ICustomerOutboxPublisher organizationOutboxPublisher,
+    ILogger<BillingService> logger) : IBillingService
 {
     public async Task<Shared.Models.Customer> AddAsync(CustomerBillingDetails customerBillingDetails, CancellationToken cancellationToken)
     {
@@ -67,22 +69,52 @@ public class BillingService(
         return mappedCustomer;
     }
 
-    public async Task<Shared.Models.Customer> UpdateAsync(CustomerBillingDetails customerBillingDetails, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Customer> UpdateAsync(CustomerBillingDetailsPatchRequest request, CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(customerBillingDetails.Id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.BillingDetails.Id);
 
-        var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingCustomerBillingDetails = await repositoryFactory.CustomerBillingDetailsRepository.GetByIdAsync(
-            customerBillingDetails.Id,
-            cancellationToken) ?? throw new CustomerBillingDetailsNotFound();
-        if (existingCustomerBillingDetails.Customer.Id != customer.Id)
+        var editUnits = string.Join(",", request.FieldsToUpdate);
+        logger.LogInformation(
+            "Customer billing details patch autosave started. BillingDetailsId: {BillingDetailsId}, EditUnits: {EditUnits}",
+            request.BillingDetails.Id,
+            editUnits);
+
+        try
         {
-            throw new UnauthorizedAccessException();
+            var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+            var existingCustomerBillingDetails = await repositoryFactory.CustomerBillingDetailsRepository.GetByIdAsync(
+                request.BillingDetails.Id,
+                cancellationToken) ?? throw new CustomerBillingDetailsNotFound();
+            if (existingCustomerBillingDetails.Customer.Id != customer.Id)
+            {
+                logger.LogWarning(
+                    "Customer billing details patch autosave rejected by authorization. CustomerId: {CustomerId}, BillingDetailsId: {BillingDetailsId}, EditUnits: {EditUnits}",
+                    customer.Id,
+                    request.BillingDetails.Id,
+                    editUnits);
+                throw new UnauthorizedAccessException();
+            }
+
+            var billingDetails = entityMapper.MapTo(existingCustomerBillingDetails)!;
+            Apply(request, billingDetails);
+
+            var updatedCustomer = await UpdateInternalAsync(billingDetails, existingCustomerBillingDetails, customerEntity, cancellationToken);
+            logger.LogInformation(
+                "Customer billing details patch autosave completed. CustomerId: {CustomerId}, BillingDetailsId: {BillingDetailsId}, EditUnits: {EditUnits}",
+                updatedCustomer.Id,
+                request.BillingDetails.Id,
+                editUnits);
+            return updatedCustomer;
         }
-
-        customer = await UpdateInternalAsync(customerBillingDetails, existingCustomerBillingDetails, customerEntity, cancellationToken);
-
-        return customer;
+        catch (Exception exception) when (exception is not UnauthorizedAccessException)
+        {
+            logger.LogError(
+                exception,
+                "Customer billing details patch autosave failed. BillingDetailsId: {BillingDetailsId}, EditUnits: {EditUnits}",
+                request.BillingDetails.Id,
+                editUnits);
+            throw;
+        }
     }
 
     public async Task<CustomerBillingDetails?> GetBillingAsync(string requestedCustomerId, CancellationToken cancellationToken)
@@ -120,5 +152,38 @@ public class BillingService(
         await transaction.CommitAsync(cancellationToken);
 
         return mappedCustomer;
+    }
+
+    private static void Apply(CustomerBillingDetailsPatchRequest request, CustomerBillingDetails billingDetails)
+    {
+        foreach (var field in request.FieldsToUpdate)
+        {
+            switch (field)
+            {
+                case CustomerBillingDetailsPatchField.CompanyName:
+                    billingDetails.CompanyName = request.BillingDetails.CompanyName;
+                    break;
+                case CustomerBillingDetailsPatchField.Email:
+                    billingDetails.Email = request.BillingDetails.Email;
+                    break;
+                case CustomerBillingDetailsPatchField.BillingAddress:
+                    billingDetails.OsmType = request.BillingDetails.OsmType;
+                    billingDetails.OsmId = request.BillingDetails.OsmId;
+                    billingDetails.PlaceId = request.BillingDetails.PlaceId;
+                    billingDetails.Coordinates = request.BillingDetails.Coordinates;
+                    billingDetails.FormattedAddress = request.BillingDetails.FormattedAddress;
+                    billingDetails.AddressLine1 = request.BillingDetails.AddressLine1;
+                    billingDetails.AddressLine2 = request.BillingDetails.AddressLine2;
+                    billingDetails.Suburb = request.BillingDetails.Suburb;
+                    billingDetails.City = request.BillingDetails.City;
+                    billingDetails.Province = request.BillingDetails.Province;
+                    billingDetails.Zipcode = request.BillingDetails.Zipcode;
+                    billingDetails.Country = request.BillingDetails.Country;
+                    billingDetails.CountryCode = request.BillingDetails.CountryCode;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+            }
+        }
     }
 }

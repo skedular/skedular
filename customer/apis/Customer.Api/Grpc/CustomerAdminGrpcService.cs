@@ -1,6 +1,7 @@
 using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
 using Api.Shared.Services.Configurations.Grpc;
 using Customer.Api.Mappers;
+using Customer.Api.Models;
 using Customer.Api.Services;
 using Enterprise.Shared.Grpc;
 using Grpc.Core;
@@ -74,7 +75,17 @@ public class CustomerAdminGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return grpcMapper.MapToGrpcResponse(await customerService.UpdateIdentityAsync(grpcMapper.MapTo(request), context.CancellationToken));
+        return grpcMapper.MapToGrpcResponse(
+            await customerService.UpdateIdentityAsync(
+                new CustomerIdentityPatchRequest(
+                    grpcMapper.MapTo(request),
+                    request.FieldsToUpdate.Select(field => field switch
+                    {
+                        IdentityPatchField.Email => CustomerIdentityPatchField.Email,
+                        IdentityPatchField.EmailVerified => CustomerIdentityPatchField.EmailVerified,
+                        _ => throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null)
+                    }).ToHashSet()),
+                context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Customer.Core.V1.Customer> Admin_SetDefaultOrganization(

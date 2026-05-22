@@ -1,4 +1,5 @@
 using Booking.Api.Mappers;
+using Booking.Api.Models;
 using Booking.Api.Services;
 using HotChocolate;
 using HotChocolate.Types;
@@ -24,7 +25,9 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         [Service] IPrivateRecurringBookingService privateRecurringBookingService,
         CancellationToken cancellationToken)
     {
-        var recurringBooking = await privateRecurringBookingService.UpdateAsync(graphQlMapper.MapTo(input), cancellationToken);
+        var recurringBooking = await privateRecurringBookingService.UpdateAsync(
+            new PrivateRecurringBookingPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
+            cancellationToken);
         return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = graphQlMapper.MapTo(recurringBooking)! };
     }
 

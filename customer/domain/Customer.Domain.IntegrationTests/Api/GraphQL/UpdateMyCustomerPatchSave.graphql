@@ -1,0 +1,24 @@
+mutation UpdateMyCustomerPatchSave(
+    $fieldsToUpdate: [CustomerDetailsPatchField!]!
+    $name: String
+    $givenName: String
+    $familyName: String
+) {
+    updateMyCustomerDetails(
+        input: {
+            fieldsToUpdate: $fieldsToUpdate
+            name: $name
+            givenName: $givenName
+            familyName: $familyName
+            personalInformationVisibility: VISIBLE
+        }
+    ) {
+        customer {
+            id
+            name
+            givenName
+            familyName
+            phoneNumber
+        }
+    }
+}

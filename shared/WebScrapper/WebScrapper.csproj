@@ -32,7 +32,7 @@
         <PackageReference Include="CsvHelper" Version="33.1.0"/>
 
         <!-- Browser Automation -->
-        <PackageReference Include="Microsoft.Playwright" Version="1.59.0"/>
+        <PackageReference Include="Microsoft.Playwright" Version="1.60.0"/>
 
         <!-- Analyzers -->
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">

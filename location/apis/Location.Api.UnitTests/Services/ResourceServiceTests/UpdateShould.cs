@@ -1,7 +1,9 @@
 using Api.Shared.Services;
+using Location.Api.Models;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
 using Location.Shared.Database.Entities;
+using Location.Shared.Mappers;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using OrganizationTag = Location.Shared.Models.OrganizationTag;
@@ -15,6 +17,7 @@ public class UpdateShould
     [AutoFakeItEasyData]
     public async Task Exclude_The_Current_Resource_When_Checking_For_A_Duplicate_Name(
         [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IEntityMapper entityMapper,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
@@ -40,6 +43,8 @@ public class UpdateShould
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => resourceRepository.GetByIdAsync("resource-1", cancellationToken)).Returns(existingResource);
+        A.CallTo(() => entityMapper.MapTo(existingResource))
+            .Returns(new Shared.Models.Resource { Id = "resource-1", Location = new Shared.Models.Location { Id = "location-1" } });
         A.CallTo(() => locationRepository.GetByIdAsync("location-1", cancellationToken)).Returns(existingLocation);
         A.CallTo(() => organizationOfferingService.IsMoreInteractionAllowedAsync("org-1", "customer-1", cancellationToken))
             .Returns(new ValueTask<bool>(true));
@@ -48,7 +53,9 @@ public class UpdateShould
         A.CallTo(() => resourceRepository.ExistsActiveWithNameAsync("location-1", "Desk A", "resource-1", cancellationToken))
             .Returns(true);
 
-        await Should.ThrowAsync<ResourceWithSameNameExist>(() => sut.UpdateAsync(resourceToUpdate, cancellationToken));
+        await Should.ThrowAsync<ResourceWithSameNameExist>(() => sut.UpdateAsync(
+            new ResourcePatchRequest(resourceToUpdate, new HashSet<ResourcePatchField> { ResourcePatchField.Name }),
+            cancellationToken));
 
         A.CallTo(() => resourceRepository.ExistsActiveWithNameAsync("location-1", "Desk A", "resource-1", cancellationToken))
             .MustHaveHappenedOnceExactly();

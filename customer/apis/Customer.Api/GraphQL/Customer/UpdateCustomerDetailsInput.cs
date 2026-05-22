@@ -1,4 +1,5 @@
 using Api.Shared.Services.Models;
+using Customer.Api.Models;
 using HotChocolate;
 
 namespace Customer.Api.GraphQL.Customer;
@@ -8,6 +9,7 @@ public class UpdateCustomerDetailsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("fieldsToUpdate")] public HashSet<CustomerDetailsPatchField> FieldsToUpdate { get; set; } = [];
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("designation")] public string? Designation { get; set; }
     [GraphQLName("title")] public string? Title { get; set; }

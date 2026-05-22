@@ -1,6 +1,7 @@
 using HotChocolate;
 using HotChocolate.Types;
 using Team.Api.Mappers;
+using Team.Api.Models;
 using Team.Api.Services;
 
 namespace Team.Api.GraphQL.Team;
@@ -26,7 +27,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
     {
-        var team = await teamService.UpdateAsync(graphQlMapper.MapTo(input), false, cancellationToken);
+        var team = await teamService.UpdateAsync(new TeamPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate), cancellationToken);
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = graphQlMapper.MapTo(team)! };
     }
 
@@ -46,7 +47,9 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
     {
-        var team = await teamService.UpdateAsync(graphQlMapper.MapTo(input), true, cancellationToken);
+        var team = await teamService.UpdateAsync(
+            new TeamAndMembersPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
+            cancellationToken);
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = graphQlMapper.MapTo(team)! };
     }
 }

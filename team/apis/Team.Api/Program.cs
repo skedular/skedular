@@ -1,13 +1,16 @@
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
+using Enterprise.Shared.Context;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Sso;
+using Enterprise.Shared.Security.Token;
 using Enterprise.Shared.Temporal;
 using Team.Api.Grpc;
+using Team.Api.Services;
 using Team.Shared;
 using Team.Shared.Database;
 
@@ -46,6 +49,12 @@ public class Program
             .AddSharedCrossDomainClients(configuration)
             .AddTemporalClient(configuration, "temporal")
             .AddGrpc();
+
+        if (DomainAppHostEnvironmentVariables.IsFakeDependenciesEnabled())
+        {
+            services.AddSingleton<IEnumerable<ITokenService>>(sp =>
+                [new FakeTokenService(sp.GetRequiredService<IContext>())]);
+        }
 
         var app = builder
             .Build()

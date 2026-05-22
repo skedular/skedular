@@ -78,6 +78,12 @@ message Admin_UpdateIdentityInput {
   string id            = 2;
   string email         = 3;
   bool   emailVerified = 4;
+  repeated IdentityPatchField fieldsToUpdate = 5;
+}
+
+enum IdentityPatchField {
+  IdentityPatchField_Email         = 0;
+  IdentityPatchField_EmailVerified = 1;
 }
 
 message Admin_SetDefaultOrganizationInput {

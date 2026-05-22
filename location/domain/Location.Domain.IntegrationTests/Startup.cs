@@ -3,7 +3,9 @@ using Api.Shared.Clients.OpenApi.Skedular.Location.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Location.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Location.Workaround.V1;
 using Api.Shared.Grpc.Skedular.Location.Core.V1;
+using Api.Shared.Grpc.Skedular.Location.Resources.V1;
 using Api.Shared.Services;
+using Api.Shared.Services.Configurations.Grpc;
 using Aspire.Hosting.Testing;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
@@ -58,7 +60,12 @@ public class Startup
         services
             .AddKeyedSingleton("location-api-grpc-channel", locationApiGrpcChannel)
             .AddTestingSharedIntegrationTests()
-            .AddSingleton(_ => new LocationService.LocationServiceClient(locationApiGrpcChannel));
+            .AddSingleton(_ => new LocationService.LocationServiceClient(locationApiGrpcChannel))
+            .AddSingleton(_ => new LocationResourcesService.LocationResourcesServiceClient(locationApiGrpcChannel));
+
+        var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>() ??
+                                    new LocationConfiguration { ApiKey = "XXX" };
+        services.AddSingleton(locationConfiguration);
 
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 

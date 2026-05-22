@@ -1,26 +1,35 @@
-import { BodyIconTypography, ColorPicker, FormFieldLabel, FormStackColumn, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
 import ResourceEditSectionNav, { ResourceEditSection } from '@/components/resource/editResource/resource-edit-section-nav';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
-import { PaletteModeContext } from '@skedular/shared';
-import { defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { editResource_query$key } from '@/queries/__generated__/editResource_query.graphql';
 import type { editResource_updateLocationResourceAvailableHoursMutation } from '@/queries/__generated__/editResource_updateLocationResourceAvailableHoursMutation.graphql';
-import type { editResource_updateResourceMutation } from '@/queries/__generated__/editResource_updateResourceMutation.graphql';
+import type { editResource_updateResourceMutation, ResourcePatchField } from '@/queries/__generated__/editResource_updateResourceMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Switch from '@mui/material/Switch';
-import { EditorActionBar, PageHeaderPanel, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  ColorPicker,
+  defaultPadding,
+  FormFieldLabel,
+  FormStackColumn,
+  PageHeaderPanel,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StickyReviewRail,
+} from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { array, number, object, string } from 'yup';
 
@@ -60,6 +69,31 @@ const getActiveSection = (value: string | null): ResourceEditSection => {
 
 const formColumnSx = {
   width: '100%',
+};
+const resourceAutosaveDebounceTimeout = 1000;
+
+const resourceFieldGroups: ReadonlyArray<[ResourcePatchField, ReadonlyArray<keyof ResourceDetails>]> = [
+  ['NAME', ['name']],
+  ['RESOURCE_TYPE', ['resourceTypeId']],
+  ['TAGS', ['customTagIds', 'zoneIds', 'productTagIds']],
+  ['CAPACITY', ['capacity']],
+];
+
+const getChangedResourceFields = (
+  left: ResourceDetails | null,
+  right: ResourceDetails,
+  leftColor: string | null | undefined,
+  rightColor: string | null | undefined,
+): ResourcePatchField[] => {
+  if (!left) return [];
+  const changed: ResourcePatchField[] = [];
+  for (const [patchField, formFields] of resourceFieldGroups) {
+    if (formFields.some((f) => JSON.stringify(left[f]) !== JSON.stringify(right[f]))) {
+      changed.push(patchField);
+    }
+  }
+  if (leftColor !== rightColor) changed.push('COLOR');
+  return changed;
 };
 
 const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
@@ -381,6 +415,22 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   const [selectedColor, setSelectedColor] = useState(rootData.resource?.color);
   const [isAvailableHoursOverridden, setIsAvailableHoursOverridden] = useState(rootData.resource ? rootData.resource.isAvailableHoursOverridden : false);
   const [stickyTop, setStickyTop] = useState(0);
+  const initialResourceValues = useMemo<ResourceDetails | null>(
+    () =>
+      rootData.resource
+        ? {
+            name: rootData.resource.name,
+            resourceTypeId: rootData.resource.resourceType.id,
+            customTagIds: rootData.resource.customTags.map(({ id }) => id),
+            zoneIds: rootData.resource.zones.map(({ id }) => id),
+            productTagIds: rootData.resource.productTags.map(({ id }) => id),
+            capacity: rootData.resource.capacity,
+          }
+        : null,
+    [rootData.resource],
+  );
+  const previousResourceValues = useRef<ResourceDetails | null>(initialResourceValues);
+  const previousSelectedColor = useRef<string | null | undefined>(rootData.resource?.color);
 
   useEffect(() => {
     const updateStickyTop = () => {
@@ -403,14 +453,20 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
     router.back();
   };
 
-  const handleResourceDetailUpdateClick = ({ resourceTypeId, name, customTagIds, zoneIds, productTagIds, capacity: capacityStr }: ResourceDetails) => {
+  const handleResourceDetailUpdateClick = (
+    fieldsToUpdate: ResourcePatchField[],
+    { resourceTypeId, name, customTagIds, zoneIds, productTagIds, capacity: capacityStr }: ResourceDetails,
+  ) => {
     const resource = rootData.resource;
     if (!resource) {
       return;
     }
 
+    if (!ResourceSchema.isValidSync({ resourceTypeId, name, customTagIds, zoneIds, productTagIds, capacity: capacityStr })) {
+      return;
+    }
+
     const oldName = resource.name;
-    const toastId = themedToast(<NotificationContent content={`Saving changes to '${oldName}'...`} />, infoNotificationOptions);
     const capacity = parseInt(capacityStr.toString(), 10);
 
     commitUpdateResource({
@@ -418,6 +474,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         input: {
           clientMutationId: uuid(),
           id: resource.id,
+          fieldsToUpdate,
           name,
           inactive: resource.inactive,
           requireBookingApproval: resource.requireBookingApproval,
@@ -431,26 +488,13 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update '${oldName}'. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't update '${oldName}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`${name} has been updated.`} />,
-        });
-
-        router.back();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update '${oldName}'. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't update '${oldName}'. ${error.message}`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         updateResource: {
@@ -476,6 +520,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       },
     });
   };
+  const debouncedResourceDetailsUpdate = useDebounceCallback(handleResourceDetailUpdateClick, resourceAutosaveDebounceTimeout);
 
   const handleResourceAvailableHoursUpdateClick = (weekOpeningHours: WeekOpeningHoursDetails) => {
     const resource = rootData.resource;
@@ -490,6 +535,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         input: {
           clientMutationId: uuid(),
           id: resource.id,
+          fieldsToUpdate: ['AVAILABLE_HOURS'],
           overrideAvailableHours: isAvailableHoursOverridden,
           availableHours: isAvailableHoursOverridden ? weekOpeningHours : null,
         },
@@ -555,6 +601,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         input: {
           clientMutationId: uuid(),
           id: resource.id,
+          fieldsToUpdate: ['AVAILABLE_HOURS'],
           overrideAvailableHours: false,
           availableHours: null,
         },
@@ -645,67 +692,66 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       default:
         return (
           <Form
-            onSubmit={handleResourceDetailUpdateClick}
-            initialValues={{
-              name: resource.name,
-              resourceTypeId: resource.resourceType.id,
-              customTagIds: resource.customTags.map(({ id }) => id),
-              zoneIds: resource.zones.map(({ id }) => id),
-              productTagIds: resource.productTags.map(({ id }) => id),
-              capacity: resource.capacity,
-            }}
+            onSubmit={() => undefined}
+            initialValues={initialResourceValues}
             validate={validateResourceDetails}
-            render={({ handleSubmit }) => (
-              <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
-                  <SettingsSectionCard title="Resource details" description="Update the name, type, tags, and capacity for this resource.">
-                    <FormFieldLabel label="Resource Type">
-                      <SingleChoiceResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
-                    </FormFieldLabel>
+            render={({ handleSubmit, values }) => {
+              const resourceValues = values as ResourceDetails;
+              const changedFields = getChangedResourceFields(previousResourceValues.current, resourceValues, previousSelectedColor.current, selectedColor);
+              if (changedFields.length > 0) {
+                previousResourceValues.current = resourceValues;
+                previousSelectedColor.current = selectedColor;
+                debouncedResourceDetailsUpdate(changedFields, resourceValues);
+              }
 
-                    <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredFields.name} helperText="Enter a clear name, such as Desk A1 or Meeting Room 2." />
-                    </FormFieldLabel>
+              return (
+                <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
+                    <SettingsSectionCard title="Resource details" description="Update the name, type, tags, and capacity for this resource.">
+                      <FormFieldLabel label="Resource Type">
+                        <SingleChoiceResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Tags">
-                      <MultipleChoicesCustomTags
-                        rootDataRelay={rootData}
-                        name="customTagIds"
-                        required={requiredFields.customTagIds}
-                        organizationCustomDomain={organizationCustomDomain}
-                      />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Name">
+                        <TextField name="name" required={requiredFields.name} helperText="Enter a clear name, such as Desk A1 or Meeting Room 2." />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Zones">
-                      <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationCustomDomain={organizationCustomDomain} />
-                    </FormFieldLabel>
-
-                    {rootData.organization?.type.type === 'MARKETPLACE' && (
-                      <FormFieldLabel label="Product Tags">
-                        <MultipleChoicesProductTags
+                      <FormFieldLabel label="Tags">
+                        <MultipleChoicesCustomTags
                           rootDataRelay={rootData}
-                          name="productTagIds"
-                          required={requiredFields.productTagIds}
+                          name="customTagIds"
+                          required={requiredFields.customTagIds}
                           organizationCustomDomain={organizationCustomDomain}
                         />
                       </FormFieldLabel>
-                    )}
 
-                    <FormFieldLabel label="Color">
-                      <ColorPicker onChange={handleColorChange} defaultColor={rootData.resource?.color} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Zones">
+                        <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationCustomDomain={organizationCustomDomain} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Capacity">
-                      <TextField name="capacity" required={requiredFields.capacity} />
-                    </FormFieldLabel>
-                  </SettingsSectionCard>
+                      {rootData.organization?.type.type === 'MARKETPLACE' && (
+                        <FormFieldLabel label="Product Tags">
+                          <MultipleChoicesProductTags
+                            rootDataRelay={rootData}
+                            name="productTagIds"
+                            required={requiredFields.productTagIds}
+                            organizationCustomDomain={organizationCustomDomain}
+                          />
+                        </FormFieldLabel>
+                      )}
 
-                  <Box sx={{ pb: defaultPadding }}>
-                    <EditorActionBar primaryAction="Update" />
-                  </Box>
-                </StackColumn>
-              </FormStackColumn>
-            )}
+                      <FormFieldLabel label="Color">
+                        <ColorPicker onChange={handleColorChange} defaultColor={rootData.resource?.color} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Capacity">
+                        <TextField name="capacity" required={requiredFields.capacity} />
+                      </FormFieldLabel>
+                    </SettingsSectionCard>
+                  </StackColumn>
+                </FormStackColumn>
+              );
+            }}
           />
         );
     }
