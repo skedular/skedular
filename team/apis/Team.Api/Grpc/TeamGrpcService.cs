@@ -141,21 +141,41 @@ public class TeamGrpcService(
         ArgumentException.ThrowIfNullOrEmpty(request.OrganizationId);
 
         var requestedTeam = grpcMapper.MapTo(request);
-        var fields = request.FieldsToUpdate.ToHashSet();
-        var patchFields = new HashSet<TeamAndMembersPatchField>();
-        if (fields.Any(field => field != TeamPatchField.Members))
+        var protoFields = request.FieldsToUpdate.ToHashSet();
+        var teamFields = protoFields
+            .Where(f => f != TeamPatchField.Members)
+            .Select(f => f switch
+            {
+                TeamPatchField.Name => Models.TeamPatchField.Name,
+                TeamPatchField.About => Models.TeamPatchField.About,
+                TeamPatchField.Timezone => Models.TeamPatchField.Timezone,
+                TeamPatchField.PrimaryLocation => Models.TeamPatchField.PrimaryLocation,
+                TeamPatchField.FeatureImages => Models.TeamPatchField.FeatureImages,
+                _ => throw new ArgumentOutOfRangeException(nameof(f), f, null)
+            })
+            .ToHashSet();
+        var hasMembers = protoFields.Contains(TeamPatchField.Members);
+
+        Shared.Models.Team updated;
+        if (!hasMembers)
         {
-            patchFields.Add(TeamAndMembersPatchField.Team);
+            updated = await teamService.UpdateAsync(
+                new TeamPatchRequest(requestedTeam, teamFields),
+                context.CancellationToken);
+        }
+        else
+        {
+            var patchFields = new HashSet<TeamAndMembersPatchField> { TeamAndMembersPatchField.Members };
+            if (teamFields.Count > 0)
+            {
+                patchFields.Add(TeamAndMembersPatchField.Team);
+            }
+
+            updated = await teamService.UpdateAsync(
+                new TeamAndMembersPatchRequest(requestedTeam, patchFields),
+                context.CancellationToken);
         }
 
-        if (fields.Contains(TeamPatchField.Members))
-        {
-            patchFields.Add(TeamAndMembersPatchField.Members);
-        }
-
-        var updated = await teamService.UpdateAsync(
-            new TeamAndMembersPatchRequest(requestedTeam, patchFields),
-            context.CancellationToken);
         logger.LogInformation("gRPC Update modified team {TeamId}", updated.Id);
 
         return grpcMapper.MapToGrpcResponse(updated);

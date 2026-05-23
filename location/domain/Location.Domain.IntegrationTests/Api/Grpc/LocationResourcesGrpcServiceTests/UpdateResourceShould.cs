@@ -43,10 +43,10 @@ public class UpdateResourceShould(
         result.ShouldNotBeNull();
         result.Name.ShouldBe(updatedName);
 
-        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(resourceId, cancellationToken);
-        resource.ShouldNotBeNull();
+        var resources = await repositoryFactory.ResourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync([resourceId], cancellationToken);
+        var resource = resources.ShouldHaveSingleItem();
         resource.Name.ShouldBe(updatedName);
-        resource.Color.ShouldBe(originalColor);
+        resource.Color.ShouldBe(originalColor[..Math.Min(originalColor.Length, 32)]);
     }
 
     private async Task SeedResourceAsync(
@@ -85,13 +85,19 @@ public class UpdateResourceShould(
         };
         repositoryFactory.LocationRepository.Add(location);
 
+        var resourceTypeTag = repositoryFactory.OrganizationTagRepository.Add(new OrganizationTag
+        {
+            Id = Guid.NewGuid().ToString(), Organization = organization, Type = OrganizationTagTypeConstants.ResourceDesk, Name = "Desk"
+        });
+
         repositoryFactory.ResourceRepository.Add(new Resource
         {
             Id = resourceId,
             Location = location,
             Name = name,
-            Color = color,
-            Capacity = 1
+            Color = color[..Math.Min(color.Length, 32)],
+            Capacity = 1,
+            OrganizationTags = [resourceTypeTag]
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

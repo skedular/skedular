@@ -85,6 +85,15 @@ public class LocationService(
             throw new InvalidOperationException("Either id or customDomain must be provided.");
         }
 
+        var allowedLocationType = organization.Type == OrganizationTypeConstants.Private
+            ? LocationType.Private
+            : LocationType.Marketplace;
+
+        if (location.Type != allowedLocationType)
+        {
+            throw new LocationTypeNotAllowedForOrganizationType();
+        }
+
         if (!ignoreAuthorizationCheck)
         {
             if (customer is null)
@@ -472,9 +481,6 @@ public class LocationService(
                     break;
                 case LocationPatchField.Timezone:
                     location.Timezone = request.Location.Timezone;
-                    break;
-                case LocationPatchField.Type:
-                    location.Type = request.Location.Type;
                     break;
                 case LocationPatchField.Organization:
                     location.Organization = request.Location.Organization;

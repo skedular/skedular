@@ -6,7 +6,6 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Grpc.Skedular.Location.Core.V1";
 
 service LocationService {
-
   rpc Admin_Add (Admin_AddInput) returns (Location);
   rpc Admin_Update (Admin_UpdateInput) returns (Location);
   rpc Admin_GetPaginatedLocations (Admin_GetPaginatedLocationsInput) returns (LocationConnection);
@@ -19,7 +18,6 @@ service LocationService {
   rpc Add (AddInput) returns (Location);
   rpc Update (UpdateInput) returns (Location);
   rpc Remove (RemoveInput) returns (Location);
-
 }
 
 message VersionInput {
@@ -228,10 +226,9 @@ enum LocationPatchField {
   LocationPatchField_Timezone        = 3;
   LocationPatchField_Tags            = 4;
   LocationPatchField_FeatureImages   = 5;
-  LocationPatchField_Type            = 6;
-  LocationPatchField_ExtraMetadata   = 7;
-  LocationPatchField_PhysicalAddress = 8;
-  LocationPatchField_UniqueClaimCode = 9;
+  LocationPatchField_ExtraMetadata   = 6;
+  LocationPatchField_PhysicalAddress = 7;
+  LocationPatchField_UniqueClaimCode = 8;
 }
 
 message RemoveInput {

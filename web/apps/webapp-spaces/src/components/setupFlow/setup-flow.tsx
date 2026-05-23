@@ -1,7 +1,5 @@
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
-import BusinessIcon from '@mui/icons-material/Business';
 import CoffeeIcon from '@mui/icons-material/Coffee';
-import CottageIcon from '@mui/icons-material/Cottage';
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
@@ -66,39 +64,16 @@ const SetupFlow = ({ userTypesToShow, onUserTypeClick, showBackButton }: Props) 
             title="Powerful yet intuitive tools"
             description="Feature-rich tools that remain simple and intuitive for everyone to use."
           />
-          <SetupFeatureCard
-            icon={<CottageIcon sx={{ color: '#FF7043', fontSize: 40 }} />}
-            title="Individual hosting"
-            description="List a spare studio, loft, or backyard office, keep each listing unique, and still manage payouts under one host profile."
-          />
         </>
       }
       mainDescription="To get started, tell us what type of user you are. This lets us tailor the product around the work you actually need to do."
     >
-      {(!userTypesToShow || userTypesToShow.some((item) => item === 'private')) && (
-        <UserTypeCard
-          icon={<BusinessIcon sx={{ color: '#74d77eff', fontSize: 40 }} />}
-          title="Enterprise organization"
-          subtitle="I represent a company that needs to manage multiple workspaces and resources"
-          onClick={() => onUserTypeClick('private')}
-        />
-      )}
-
       {(!userTypesToShow || userTypesToShow.some((item) => item === 'marketplace')) && (
         <UserTypeCard
           icon={<CoffeeIcon sx={{ color: '#6F4E37', fontSize: 40 }} />}
           title="Co-working Space Provider"
           subtitle="I own or manage a co-working space and want to list it on the marketplace"
           onClick={() => onUserTypeClick('marketplace')}
-        />
-      )}
-
-      {(!userTypesToShow || userTypesToShow.some((item) => item === 'individual-organization')) && (
-        <UserTypeCard
-          icon={<CottageIcon sx={{ color: '#FF7043', fontSize: 40 }} />}
-          title="Individual Host"
-          subtitle="I’m an individual who wants to list my own space, take bookings, and manage payouts"
-          onClick={() => onUserTypeClick('individual-organization')}
         />
       )}
 

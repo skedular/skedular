@@ -5,7 +5,7 @@ import { DeleteIcon } from '@/components/icons';
 import { getOrganizationLocationsBaseLink } from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
-import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationRestrictedInformationCategory, SingleChoiceLocationType } from '@/components/location';
+import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationRestrictedInformationCategory } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesAmenities } from '@/components/organization';
 import OrganizationLocationFloorPlansSection from '@/components/organization/organizationLocation/organization-location-floor-plans-section';
@@ -72,7 +72,6 @@ type LocationDetails = {
   subTitle: string | null;
   includedFeatures: string | null;
   timezone: string;
-  type: string;
   contactPeople: string | null;
   contactEmails: string | null;
   contactPhones: string | null;
@@ -114,7 +113,6 @@ const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   ...listingMetadataSchemaShape,
   timezone: string().required('Timezone is required'),
-  type: string().required('Type is required'),
   contactPeople: string().nullable(),
   contactEmails: string().nullable(),
   contactPhones: string().nullable(),
@@ -170,7 +168,6 @@ const locationFieldGroups: ReadonlyArray<[LocationPatchField, ReadonlyArray<Loca
   ['NAME', ['name']],
   ['LISTING_METADATA', ['title', 'subTitle', 'includedFeatures']],
   ['TIMEZONE', ['timezone']],
-  ['TYPE', ['type']],
   [
     'EXTRA_METADATA',
     [
@@ -349,7 +346,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
           }
         }
         ...weekOpeningHours_query
-        ...singleChoiceLocationType_query
         ...singleChoiceLocationRestrictedInformationCategory_query
         ...multipleChoicesLocationSpaceTypes_query
         ...multipleChoicesAmenities_query
@@ -611,8 +607,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   const debounceSetLocationIncludedFeatures = useDebounceCallback(setLocationIncludedFeatures, keyboardTextFieldDebounceTimeout);
   const [locationTimezone, setLocationTimezone] = useState<string>(rootData.location?.timezone ?? '');
   const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
-  const [locationType, setLocationType] = useState<string>(rootData.location?.type.type ?? '');
-  const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
   const [spaceTypeIds, setSpaceTypeIds] = useState<string[]>(rootData.location?.spaceTypes.map((item) => item.id) ?? []);
   const debounceSetSpaceTypeIds = useDebounceCallback(setSpaceTypeIds, keyboardTextFieldDebounceTimeout);
   const [amenityIds, setAmenityIds] = useState<string[]>(rootData.location?.amenities.map((item) => item.id) ?? []);
@@ -752,7 +746,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       subTitle,
       includedFeatures,
       timezone,
-      type,
       contactPeople,
       contactEmails,
       contactPhones,
@@ -790,7 +783,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
               .filter((feature) => feature !== ''),
           },
           timezone,
-          type: type as LocationType,
+          type: location.type.type as LocationType,
           extraMetadata: {
             contactDetails: {
               contactPeople: stringToMultiLines(contactPeople),
@@ -832,7 +825,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
             },
             timezone,
             type: {
-              type: type as LocationType,
+              type: location.type.type as LocationType,
               name: '',
             },
             extraMetadata: {
@@ -1256,7 +1249,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         subTitle: locationSubTitle,
         includedFeatures: locationIncludedFeatures,
         timezone: locationTimezone,
-        type: locationType,
         spaceTypeIds,
         amenityIds,
         contactPeople: locationContactPerson,
@@ -1275,7 +1267,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       render={({ handleSubmit, values }) => {
         debounceSetLocationName(values!.name);
         debounceSetLocationTimezone(values!.timezone);
-        debounceSetLocationType(values!.type);
         debounceSetSpaceTypeIds(values!.spaceTypeIds);
         debounceSetAmenityIds(values!.amenityIds);
         debounceSetLocationContactPerson(values!.contactPeople);
@@ -1378,9 +1369,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
 
                     {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
                       <>
-                        <FormFieldLabel label="Type">
-                          <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
-                        </FormFieldLabel>
                         <FormFieldLabel label="Area From(sqm)" required={requiredFields.areaRangeFromInSqm}>
                           <TextField name="areaRangeFromInSqm" required={requiredFields.areaRangeFromInSqm} />
                         </FormFieldLabel>

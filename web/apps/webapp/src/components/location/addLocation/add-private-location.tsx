@@ -1,17 +1,10 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
-import { Loading } from '@/components/loading';
-import { SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { PaletteModeContext } from '@skedular/shared';
-import { defaultButtonStyle } from '@skedular/ui';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import type { addPrivateLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addPrivateLocation_addLocationMutation.graphql';
-import type { addPrivateLocation_rootQuery } from '@/queries/__generated__/addPrivateLocation_rootQuery.graphql';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import ChairAltIcon from '@mui/icons-material/ChairAlt';
 import EventNoteIcon from '@mui/icons-material/EventNote';
@@ -22,34 +15,31 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import { EditorActionBar, SettingsSectionCard, SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  defaultButtonStyle,
+  EditorActionBar,
+  FormFieldLabel,
+  FormStackColumn,
+  HelperText,
+  SettingsSectionCard,
+  SetupFeatureCard,
+  SetupSplitLayout,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useContext, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
-const RootQuery = graphql`
-  query addPrivateLocation_rootQuery($organizationCustomDomain: String!) {
-    emailsToShowLatestCapabilities
-    me {
-      emails
-    }
-    organization(customDomain: $organizationCustomDomain) {
-      type {
-        type
-      }
-    }
-    ...singleChoiceLocationType_query
-  }
-`;
-
 type Props = {
-  queryReference: PreloadedQuery<addPrivateLocation_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationCustomDomain: string;
   onAdded: (id: string) => void;
@@ -61,18 +51,14 @@ type Props = {
 type LocationDetails = {
   name: string;
   timezone: string;
-  type: string;
 };
 
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   timezone: string().required('Timezone is required'),
-  type: string().required('Type is required'),
 });
 
-const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationCustomDomain, onAdded, onCancel, cancelLabel, createLabel }: Props) => {
-  const rootData = usePreloadedQuery<addPrivateLocation_rootQuery>(RootQuery, queryReference);
-
+const AddPrivateLocation = ({ onReloadRequired, organizationCustomDomain, onAdded, onCancel, cancelLabel, createLabel }: Props) => {
   const [commitAddLocation] = useMutation<addPrivateLocation_addLocationMutation>(graphql`
     mutation addPrivateLocation_addLocationMutation($input: AddLocationInput!) @raw_response_type {
       addLocation(input: $input) {
@@ -124,15 +110,12 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationCust
   const debounceSetLocationName = useDebounceCallback(setLocationName, keyboardTextFieldDebounceTimeout);
   const [locationTimezone, setLocationTimezone] = useState<string>('');
   const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
-  const [locationType, setLocationType] = useState<string>('PRIVATE');
-  const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
-
   const handleCloseClick = () => {
     onCancel();
     onReloadRequired();
   };
 
-  const handleLocationAddClick = ({ name, timezone, type }: LocationDetails) => {
+  const handleLocationAddClick = ({ name, timezone }: LocationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
@@ -154,7 +137,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationCust
           },
           organizationCustomDomain,
           timezone,
-          type: type as LocationType,
+          type: 'PRIVATE' as LocationType,
           featureImages: finalFeatureImages,
           tagIds: [],
         },
@@ -196,7 +179,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationCust
             },
             timezone,
             type: {
-              type: type as LocationType,
+              type: 'PRIVATE' as LocationType,
               name: '',
             },
             featureImages: finalFeatureImages,
@@ -275,13 +258,11 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationCust
         initialValues={{
           name: locationName,
           timezone: locationTimezone,
-          type: locationType,
         }}
         validate={validateLocationDetails}
         render={({ handleSubmit, values }) => {
           debounceSetLocationName(values!.name);
           debounceSetLocationTimezone(values!.timezone);
-          debounceSetLocationType(values!.type);
 
           return (
             <FormStackColumn onSubmit={handleSubmit}>
@@ -308,12 +289,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationCust
                         helperText="Select the time zone for this location. It ensures that bookings, events, and notifications are displayed in the correct local time for everyone using this site."
                       />
                     </FormFieldLabel>
-
-                    {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-                      <FormFieldLabel label="Type" required={requiredFields.type}>
-                        <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
-                      </FormFieldLabel>
-                    )}
                   </StackColumn>
                 </SettingsSectionCard>
 
@@ -400,36 +375,17 @@ type RelayProps = {
 };
 
 const AddPrivateLocationWithRelay = ({ onReloadRequired, organizationCustomDomain, onAdded, onCancel, cancelLabel, createLabel }: RelayProps) => {
-  const [queryReference, loadQuery] = useQueryLoader<addPrivateLocation_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-
-  useEffect(() => {
-    loadQuery(
-      {
-        organizationCustomDomain,
-      },
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(uuid());
       onReloadRequired();
     });
   };
 
-  if (!queryReference) {
-    return <Loading />;
-  }
-
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoAddPrivateLocation
-        queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
         organizationCustomDomain={organizationCustomDomain}
         onAdded={onAdded}

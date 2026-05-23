@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<89a0da6c388a3003edb921d71a4b7e28>>
+ * @generated SignedSource<<5cfcbc0b775a4572c90e6164d97f95ca>>
  * @lightSyntaxTransform
  */
 
@@ -149,7 +149,7 @@ export type organizationLocation_query$data = {
       readonly type: OrganizationType;
     };
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesLocationSpaceTypes_query" | "singleChoiceLocationRestrictedInformationCategory_query" | "singleChoiceLocationType_query" | "weekOpeningHours_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesLocationSpaceTypes_query" | "singleChoiceLocationRestrictedInformationCategory_query" | "weekOpeningHours_query">;
   readonly " $fragmentType": "organizationLocation_query";
 };
 export type organizationLocation_query$key = {
@@ -803,11 +803,6 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "singleChoiceLocationType_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "singleChoiceLocationRestrictedInformationCategory_query"
     },
     {
@@ -826,6 +821,6 @@ return {
 };
 })();
 
-(node as any).hash = "aa2831a5670b585ff0e0252262db69ec";
+(node as any).hash = "e5f3777910ad52f1f5b85825f9cc8da0";
 
 export default node;

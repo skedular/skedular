@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Location.Api.Services;
@@ -39,7 +40,7 @@ public class AddShould
         {
             Name = "Head Office", Organization = new Organization { Id = "org-1" }, OrganizationTags = [new OrganizationTag { Id = "tag-1" }]
         };
-        var organizationEntity = new Shared.Database.Entities.Organization { Id = "org-1" };
+        var organizationEntity = new Shared.Database.Entities.Organization { Id = "org-1", Type = OrganizationTypeConstants.Private };
         var organizationTagEntity = new Shared.Database.Entities.OrganizationTag { Id = "tag-1", Organization = organizationEntity };
         var locationEntity = new Shared.Database.Entities.Location
         {

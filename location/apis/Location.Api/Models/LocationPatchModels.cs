@@ -9,7 +9,6 @@ public enum LocationPatchField
 {
     Name,
     Timezone,
-    Type,
     Organization,
     Tags,
     FeatureImages,

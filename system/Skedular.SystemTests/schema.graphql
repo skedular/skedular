@@ -5109,7 +5109,6 @@ enum LocationOrderField @fusion__type(schema: LOCATION_API) {
 enum LocationPatchField @fusion__type(schema: LOCATION_API) {
   NAME @fusion__enumValue(schema: LOCATION_API)
   TIMEZONE @fusion__enumValue(schema: LOCATION_API)
-  TYPE @fusion__enumValue(schema: LOCATION_API)
   ORGANIZATION @fusion__enumValue(schema: LOCATION_API)
   TAGS @fusion__enumValue(schema: LOCATION_API)
   FEATURE_IMAGES @fusion__enumValue(schema: LOCATION_API)

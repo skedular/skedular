@@ -152,27 +152,18 @@ public class LocationService(
                 {
                     Id = location.Id,
                     Name = location.Name,
-                    ListingMetadata = new ListingMetadata
-                    {
-                        About = location.ListingMetadata.About,
-                        Title = location.ListingMetadata.Title,
-                        SubTitle = location.ListingMetadata.SubTitle
-                    },
+                    ListingMetadata =
+                        new ListingMetadata
+                        {
+                            About = location.ListingMetadata.About,
+                            Title = location.ListingMetadata.Title,
+                            SubTitle = location.ListingMetadata.SubTitle
+                        },
                     Timezone = location.Timezone,
                     OrganizationId = location.Organization!.Id,
-                    Type = location.Type switch
-                    {
-                        LocationType.Private => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private,
-                        LocationType.Marketplace => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace,
-                        _ => throw new ArgumentOutOfRangeException()
-                    },
                     FieldsToUpdate =
                     {
-                        LocationPatchField.Name,
-                        LocationPatchField.ListingMetadata,
-                        LocationPatchField.Organization,
-                        LocationPatchField.Timezone,
-                        LocationPatchField.Type
+                        LocationPatchField.Name, LocationPatchField.ListingMetadata, LocationPatchField.Organization, LocationPatchField.Timezone
                     }
                 },
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),

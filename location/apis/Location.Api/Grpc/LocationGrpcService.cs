@@ -252,7 +252,6 @@ public class LocationGrpcService(
             global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.Tags => LocationPatchField.Tags,
             global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.FeatureImages =>
                 LocationPatchField.FeatureImages,
-            global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.Type => LocationPatchField.Type,
             global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.ExtraMetadata =>
                 LocationPatchField.ExtraMetadata,
             global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.PhysicalAddress =>

@@ -822,7 +822,6 @@ enum LocationOrderField {
 enum LocationPatchField {
   NAME
   TIMEZONE
-  TYPE
   ORGANIZATION
   TAGS
   FEATURE_IMAGES

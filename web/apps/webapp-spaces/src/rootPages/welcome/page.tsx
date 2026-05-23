@@ -1,14 +1,13 @@
-import { getOrganizationAddIndividualLink, getOrganizationAddMarketplaceLink, getOrganizationAddPrivateLink, getRootLink } from '@/components/links';
+import { getOrganizationAddMarketplaceLink, getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { NoOrganizationRootShell } from '@/components/rootShell';
 import type { UserType } from '@/components/setupFlow';
 import { SetupFlow } from '@/components/setupFlow';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { pageWelcome_completeOnboardingMutation } from '@/queries/__generated__/pageWelcome_completeOnboardingMutation.graphql';
 import type { pageWelcome_rootQuery } from '@/queries/__generated__/pageWelcome_rootQuery.graphql';
+import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -51,16 +50,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
 
   const handleUserTypeClick = (userType: UserType) => {
     switch (userType) {
-      case 'private':
-        router.push(getOrganizationAddPrivateLink(integratedPlatrform));
-        break;
-
       case 'marketplace':
         router.push(getOrganizationAddMarketplaceLink(integratedPlatrform));
-        break;
-
-      case 'individual-organization':
-        router.push(getOrganizationAddIndividualLink(integratedPlatrform));
         break;
 
       case 'individual-user':
@@ -108,7 +99,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
 
   return (
     <NoOrganizationRootShell hideOrganizationSelector collapsed>
-      <SetupFlow onUserTypeClick={handleUserTypeClick} userTypesToShow={['private', 'marketplace', 'individual-organization', 'individual-user']} />
+      <SetupFlow onUserTypeClick={handleUserTypeClick} userTypesToShow={['marketplace', 'individual-user']} />
     </NoOrganizationRootShell>
   );
 };

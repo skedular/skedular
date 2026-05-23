@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3e35102832c36ac324c16ed0ad283049>>
+ * @generated SignedSource<<616047938151e814dd60a33c75399d5b>>
  * @lightSyntaxTransform
  */
 
@@ -70,18 +70,14 @@ v6 = {
   "name": "type",
   "storageKey": null
 },
-v7 = [
-  (v6/*:: as any*/),
-  (v3/*:: as any*/)
-],
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "from",
   "storageKey": null
 },
-v9 = [
+v8 = [
   {
     "alias": null,
     "args": null,
@@ -104,7 +100,7 @@ v9 = [
     "storageKey": null
   }
 ],
-v10 = [
+v9 = [
   (v4/*:: as any*/),
   (v3/*:: as any*/),
   {
@@ -115,17 +111,17 @@ v10 = [
     "storageKey": null
   }
 ],
-v11 = {
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "OrganizationTagDetails",
   "kind": "LinkedField",
   "name": "amenities",
   "plural": true,
-  "selections": (v10/*:: as any*/),
+  "selections": (v9/*:: as any*/),
   "storageKey": null
 },
-v12 = [
+v11 = [
   {
     "alias": null,
     "args": null,
@@ -140,7 +136,7 @@ v12 = [
     "name": "openAllDay",
     "storageKey": null
   },
-  (v8/*:: as any*/),
+  (v7/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -149,7 +145,7 @@ v12 = [
     "storageKey": null
   }
 ],
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -246,7 +242,10 @@ return {
             "kind": "LinkedField",
             "name": "type",
             "plural": false,
-            "selections": (v7/*:: as any*/),
+            "selections": [
+              (v6/*:: as any*/),
+              (v3/*:: as any*/)
+            ],
             "storageKey": null
           },
           {
@@ -322,7 +321,7 @@ return {
                 "name": "peopleCapacity",
                 "plural": false,
                 "selections": [
-                  (v8/*:: as any*/),
+                  (v7/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -379,7 +378,7 @@ return {
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v9/*:: as any*/),
+                "selections": (v8/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -389,7 +388,7 @@ return {
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v9/*:: as any*/),
+                "selections": (v8/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -512,10 +511,10 @@ return {
             "kind": "LinkedField",
             "name": "spaceTypes",
             "plural": true,
-            "selections": (v10/*:: as any*/),
+            "selections": (v9/*:: as any*/),
             "storageKey": null
           },
-          (v11/*:: as any*/),
+          (v10/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -539,7 +538,7 @@ return {
                     "kind": "LinkedField",
                     "name": "monday",
                     "plural": false,
-                    "selections": (v12/*:: as any*/),
+                    "selections": (v11/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -549,7 +548,7 @@ return {
                     "kind": "LinkedField",
                     "name": "tuesday",
                     "plural": false,
-                    "selections": (v12/*:: as any*/),
+                    "selections": (v11/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -559,7 +558,7 @@ return {
                     "kind": "LinkedField",
                     "name": "wednesday",
                     "plural": false,
-                    "selections": (v12/*:: as any*/),
+                    "selections": (v11/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -569,7 +568,7 @@ return {
                     "kind": "LinkedField",
                     "name": "thursday",
                     "plural": false,
-                    "selections": (v12/*:: as any*/),
+                    "selections": (v11/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -579,7 +578,7 @@ return {
                     "kind": "LinkedField",
                     "name": "friday",
                     "plural": false,
-                    "selections": (v12/*:: as any*/),
+                    "selections": (v11/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -589,7 +588,7 @@ return {
                     "kind": "LinkedField",
                     "name": "saturday",
                     "plural": false,
-                    "selections": (v12/*:: as any*/),
+                    "selections": (v11/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -599,7 +598,7 @@ return {
                     "kind": "LinkedField",
                     "name": "sunday",
                     "plural": false,
-                    "selections": (v12/*:: as any*/),
+                    "selections": (v11/*:: as any*/),
                     "storageKey": null
                   }
                 ],
@@ -618,7 +617,7 @@ return {
             "selections": [
               (v4/*:: as any*/),
               (v5/*:: as any*/),
-              (v13/*:: as any*/),
+              (v12/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -706,10 +705,10 @@ return {
             "kind": "LinkedField",
             "name": "locationSpaceTypes",
             "plural": true,
-            "selections": (v10/*:: as any*/),
+            "selections": (v9/*:: as any*/),
             "storageKey": null
           },
-          (v11/*:: as any*/)
+          (v10/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -723,22 +722,12 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "LocationTypeDetails",
-        "kind": "LinkedField",
-        "name": "locationTypes",
-        "plural": true,
-        "selections": (v7/*:: as any*/),
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
         "concreteType": "LocationRestrictedInformationCategoryDetails",
         "kind": "LinkedField",
         "name": "locationRestrictedInformationCategories",
         "plural": true,
         "selections": [
-          (v13/*:: as any*/),
+          (v12/*:: as any*/),
           (v3/*:: as any*/)
         ],
         "storageKey": null
@@ -746,12 +735,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3a948918cb734185411ee00a74b5181a",
+    "cacheID": "9b7f4af05d43b745050b6545bedf7723",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocation_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocation_rootQuery(\n  $organizationCustomDomain: String!\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    name\n    id\n  }\n  ...organizationLocation_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesLocationSpaceTypes_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    locationSpaceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment organizationLocation_query on Query {\n  emailsToShowLatestCapabilities\n  me {\n    id\n    emails\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    type {\n      type\n    }\n    id\n  }\n  location(id: $locationId) {\n    id\n    name\n    listingMetadata {\n      title\n      subTitle\n      includedFeatures\n    }\n    timezone\n    type {\n      type\n      name\n    }\n    extraMetadata {\n      contactDetails {\n        contactPeople\n        contactEmails\n        contactPhones\n      }\n      areaRange {\n        fromInSqm\n        toInSqm\n      }\n      peopleCapacity {\n        from\n        to\n      }\n      website\n      relatedImageLinks\n      relatedVideoLinks\n      otherLinks\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    physicalAddress {\n      id\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    spaceTypes {\n      id\n      name\n      color\n    }\n    amenities {\n      id\n      name\n      color\n    }\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n    restrictedInformation {\n      id\n      title\n      category\n      content\n      active\n      sortOrder\n    }\n  }\n  ...weekOpeningHours_query\n  ...singleChoiceLocationType_query\n  ...singleChoiceLocationRestrictedInformationCategory_query\n  ...multipleChoicesLocationSpaceTypes_query\n  ...multipleChoicesAmenities_query\n}\n\nfragment singleChoiceLocationRestrictedInformationCategory_query on Query {\n  locationRestrictedInformationCategories {\n    category\n    name\n  }\n}\n\nfragment singleChoiceLocationType_query on Query {\n  locationTypes {\n    type\n    name\n  }\n}\n\nfragment weekOpeningHours_query on Query {\n  bookingSlotSizeInMinutes\n}\n"
+    "text": "query pageOrganizationLocation_rootQuery(\n  $organizationCustomDomain: String!\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    name\n    id\n  }\n  ...organizationLocation_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesLocationSpaceTypes_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    locationSpaceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment organizationLocation_query on Query {\n  emailsToShowLatestCapabilities\n  me {\n    id\n    emails\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    type {\n      type\n    }\n    id\n  }\n  location(id: $locationId) {\n    id\n    name\n    listingMetadata {\n      title\n      subTitle\n      includedFeatures\n    }\n    timezone\n    type {\n      type\n      name\n    }\n    extraMetadata {\n      contactDetails {\n        contactPeople\n        contactEmails\n        contactPhones\n      }\n      areaRange {\n        fromInSqm\n        toInSqm\n      }\n      peopleCapacity {\n        from\n        to\n      }\n      website\n      relatedImageLinks\n      relatedVideoLinks\n      otherLinks\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    physicalAddress {\n      id\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    spaceTypes {\n      id\n      name\n      color\n    }\n    amenities {\n      id\n      name\n      color\n    }\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n    restrictedInformation {\n      id\n      title\n      category\n      content\n      active\n      sortOrder\n    }\n  }\n  ...weekOpeningHours_query\n  ...singleChoiceLocationRestrictedInformationCategory_query\n  ...multipleChoicesLocationSpaceTypes_query\n  ...multipleChoicesAmenities_query\n}\n\nfragment singleChoiceLocationRestrictedInformationCategory_query on Query {\n  locationRestrictedInformationCategories {\n    category\n    name\n  }\n}\n\nfragment weekOpeningHours_query on Query {\n  bookingSlotSizeInMinutes\n}\n"
   }
 };
 })();

@@ -1,16 +1,12 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { Address, PhysicalAddress } from '@/components/address';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
-import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationType } from '@/components/location';
+import { MultipleChoicesLocationSpaceTypes } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { PaletteModeContext } from '@skedular/shared';
-import { defaultButtonStyle } from '@skedular/ui';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, stringToMultiLines } from '@skedular/shared';
 import type { addMarketplaceLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addMarketplaceLocation_addLocationMutation.graphql';
 import type { addMarketplaceLocation_rootQuery } from '@/queries/__generated__/addMarketplaceLocation_rootQuery.graphql';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -22,7 +18,20 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import { EditorActionBar, SettingsSectionCard, SetupFeatureCard, SetupSplitLayout } from '@skedular/ui';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext, stringToMultiLines } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  defaultButtonStyle,
+  EditorActionBar,
+  FormFieldLabel,
+  FormStackColumn,
+  HelperText,
+  SettingsSectionCard,
+  SetupFeatureCard,
+  SetupSplitLayout,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -46,7 +55,6 @@ const RootQuery = graphql`
         type
       }
     }
-    ...singleChoiceLocationType_query
     ...multipleChoicesLocationSpaceTypes_query
   }
 `;
@@ -64,7 +72,6 @@ type Props = {
 type LocationDetails = {
   name: string;
   timezone: string;
-  type: string;
   spaceTypeIds: string[];
   contactPeople: string | null;
   contactEmails: string | null;
@@ -89,7 +96,6 @@ type LocationDetails = {
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   timezone: string().required('Timezone is required'),
-  type: string().required('Type is required'),
   spaceTypeIds: array().nullable(),
   contactPeople: string().nullable(),
   contactEmails: string().nullable(),
@@ -198,8 +204,6 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
   const debounceSetLocationName = useDebounceCallback(setLocationName, keyboardTextFieldDebounceTimeout);
   const [locationTimezone, setLocationTimezone] = useState<string>('');
   const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
-  const [locationType, setLocationType] = useState<string>('MARKETPLACE');
-  const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
 
   const [spaceTypeIds, setSpaceTypeIds] = useState<string[]>([]);
   const debounceSetSpaceTypeIds = useDebounceCallback(setSpaceTypeIds, keyboardTextFieldDebounceTimeout);
@@ -280,7 +284,6 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
   const handleLocationAddClick = ({
     name,
     timezone,
-    type,
     spaceTypeIds,
     contactPeople,
     contactEmails,
@@ -328,7 +331,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
           },
           organizationCustomDomain,
           timezone,
-          type: type as LocationType,
+          type: 'MARKETPLACE' as LocationType,
           extraMetadata: {
             contactDetails: {
               contactPeople: stringToMultiLines(contactPeople),
@@ -411,7 +414,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             },
             timezone,
             type: {
-              type: type as LocationType,
+              type: 'MARKETPLACE' as LocationType,
               name: '',
             },
             extraMetadata: {
@@ -527,7 +530,6 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
         initialValues={{
           name: locationName,
           timezone: locationTimezone,
-          type: locationType,
           spaceTypeIds,
 
           contactPeople: locationContactPerson,
@@ -555,7 +557,6 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
         render={({ handleSubmit, values, form }) => {
           debounceSetLocationName(values!.name);
           debounceSetLocationTimezone(values!.timezone);
-          debounceSetLocationType(values!.type);
           debounceSetSpaceTypeIds(values!.spaceTypeIds);
 
           debounceSetLocationContactPerson(values!.contactPeople);
@@ -606,15 +607,9 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                     </FormFieldLabel>
 
                     {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-                      <>
-                        <FormFieldLabel label="Space Type">
-                          <MultipleChoicesLocationSpaceTypes rootDataRelay={rootData} name="spaceTypeIds" required={requiredFields.spaceTypeIds} />
-                        </FormFieldLabel>
-
-                        <FormFieldLabel label="Type" required={requiredFields.type}>
-                          <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
-                        </FormFieldLabel>
-                      </>
+                      <FormFieldLabel label="Space Type">
+                        <MultipleChoicesLocationSpaceTypes rootDataRelay={rootData} name="spaceTypeIds" required={requiredFields.spaceTypeIds} />
+                      </FormFieldLabel>
                     )}
                   </StackColumn>
                 </SettingsSectionCard>

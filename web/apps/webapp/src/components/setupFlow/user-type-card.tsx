@@ -1,9 +1,9 @@
-import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { memo, type JSX } from 'react';
 
-export type UserType = 'private' | 'marketplace' | 'individual-organization' | 'individual-user';
+export type UserType = 'private' | 'marketplace' | 'individual-user';
 
 type Props = {
   icon?: React.ReactNode | JSX.Element;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dcb567fd97c44af6687a3fc011c3ad80>>
+ * @generated SignedSource<<d3998f692cd7e45ce4cf648f7f0002f7>>
  * @lightSyntaxTransform
  */
 
@@ -8,7 +8,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type LocationPatchField = "EXTRA_METADATA" | "FEATURE_IMAGES" | "LISTING_METADATA" | "NAME" | "ORGANIZATION" | "PHYSICAL_ADDRESS" | "TAGS" | "TIMEZONE" | "TYPE" | "UNIQUE_CLAIM_CODE" | "%future added value";
+export type LocationPatchField = "EXTRA_METADATA" | "FEATURE_IMAGES" | "LISTING_METADATA" | "NAME" | "ORGANIZATION" | "PHYSICAL_ADDRESS" | "TAGS" | "TIMEZONE" | "UNIQUE_CLAIM_CODE" | "%future added value";
 export type LocationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type UpdateLocationInput = {
   clientMutationId?: string | null | undefined;

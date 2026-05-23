@@ -87,6 +87,8 @@ public class InvalidSsoConfiguration() : Exception("The single sign-on setup is 
 
 public class OrganizationPaymentMethodNotFound() : Exception("We couldn't find that organization payment method.");
 
+public class LocationTypeNotAllowedForOrganizationType() : Exception("This location type is not allowed for this organization type.");
+
 public class ResourceAndFloorPlanLocationMismatch() : Exception("The resource and floor plan must belong to the same location.");
 
 public class ResourceIsPlacedOnDifferentFloorPlan() : Exception("This resource is assigned to a different floor plan.");
