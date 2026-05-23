@@ -49,7 +49,7 @@ public class FileUploaderService(
 
         var id = randomHelper.Generate();
         var (storageUrl, cdnUrl) = await cdnService.UploadAsync(stream, contentType, id, extension, cancellationToken);
-        var response = await imageHelper.GetImageWidthHeightAsync(stream, cancellationToken);
+        var response = imageHelper.GetImageWidthHeight(stream);
         var cdnFile = new Shared.Database.Entities.CdnFile
         {
             Id = id,
@@ -63,7 +63,7 @@ public class FileUploaderService(
 
         if (response.IsImage)
         {
-            var thumbnailResponse = await imageHelper.CreateThumbnailAsync(stream, cancellationToken);
+            var thumbnailResponse = imageHelper.CreateThumbnail(stream);
 
             try
             {
@@ -102,7 +102,7 @@ public class FileUploaderService(
 
         var id = randomHelper.Generate();
         var storageUrl = await fileService.UploadAsync(stream, contentType, id, extension, cancellationToken);
-        var response = await imageHelper.GetImageWidthHeightAsync(stream, cancellationToken);
+        var response = imageHelper.GetImageWidthHeight(stream);
         var privateFile = new Shared.Database.Entities.PrivateFile
         {
             Id = id,
@@ -115,7 +115,7 @@ public class FileUploaderService(
 
         if (response.IsImage)
         {
-            var thumbnailResponse = await imageHelper.CreateThumbnailAsync(stream, cancellationToken);
+            var thumbnailResponse = imageHelper.CreateThumbnail(stream);
 
             try
             {

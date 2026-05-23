@@ -6,7 +6,6 @@ using Location.Api.Services.Authorization;
 using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Testing.Shared.Assertions;
 
@@ -23,7 +22,6 @@ public class UpdateOpeningHoursPatchAsyncShould
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] IDbContextTransaction transaction,
         [Frozen] ILogger<LocationOpeningHoursService> logger,
         LocationOpeningHoursService sut,
         CancellationToken cancellationToken)
@@ -43,15 +41,13 @@ public class UpdateOpeningHoursPatchAsyncShould
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("cust-1");
         A.CallTo(() => organizationOfferingService.IsMoreInteractionAllowedAsync("org-1", "cust-1", cancellationToken))
             .Returns(new ValueTask<bool>(true));
-        A.CallTo(() => organizationAuthorizationService.CanModifyAsync("org-1", "cust-1", cancellationToken))
-            .Returns(new ValueTask<bool>(false));
+        A.CallTo(() => organizationAuthorizationService.CanModifyAsync("org-1", "cust-1", cancellationToken)).Returns(new ValueTask<bool>(false));
 
         await Should.ThrowAsync<UnauthorizedAccessException>(() =>
             sut.UpdateOpeningHoursAsync(request, cancellationToken));
 
         LogAssertions.ACallToLog(logger, LogLevel.Warning)
-            .Where(call => call.GetArgument<IReadOnlyList<KeyValuePair<string, object>>>(2)!.ToString()!
-                .Contains("rejected by authorization"))
+            .Where(call => call.GetArgument<IReadOnlyList<KeyValuePair<string, object>>>(2)!.ToString()!.Contains("rejected by authorization"))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -74,8 +70,7 @@ public class UpdateOpeningHoursPatchAsyncShould
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken))
             .ThrowsAsync(new InvalidOperationException("cache failure"));
 
-        await Should.ThrowAsync<InvalidOperationException>(() =>
-            sut.UpdateOpeningHoursAsync(request, cancellationToken));
+        await Should.ThrowAsync<InvalidOperationException>(() => sut.UpdateOpeningHoursAsync(request, cancellationToken));
 
         LogAssertions.ACallToLog(logger, LogLevel.Error)
             .Where(call => call.GetArgument<IReadOnlyList<KeyValuePair<string, object>>>(2)!.ToString()!
@@ -99,13 +94,10 @@ public class UpdateOpeningHoursPatchAsyncShould
             new HashSet<LocationOpeningHoursPatchField> { LocationOpeningHoursPatchField.WeekOpeningHours });
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
-        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken))
-            .ThrowsAsync(new InvalidOperationException("forced early failure"));
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).ThrowsAsync(new InvalidOperationException("forced early failure"));
 
-        await Should.ThrowAsync<InvalidOperationException>(() =>
-            sut.UpdateOpeningHoursAsync(request, cancellationToken));
+        await Should.ThrowAsync<InvalidOperationException>(() => sut.UpdateOpeningHoursAsync(request, cancellationToken));
 
-        LogAssertions.ACallToLogInfoContaining(logger, "Location opening hours patch autosave started")
-            .MustHaveHappenedOnceExactly();
+        LogAssertions.ACallToLogInfoContaining(logger, "Location opening hours patch autosave started").MustHaveHappenedOnceExactly();
     }
 }

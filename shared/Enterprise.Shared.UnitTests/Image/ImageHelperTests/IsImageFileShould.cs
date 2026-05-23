@@ -1,7 +1,5 @@
 using Enterprise.Shared.Image;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.PixelFormats;
+using SkiaSharp;
 
 namespace Enterprise.Shared.UnitTests.Image.ImageHelperTests;
 
@@ -10,36 +8,35 @@ public class IsImageFileShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Return_true_for_valid_image(ImageHelper sut, CancellationToken cancellationToken)
+    public void Return_true_for_valid_image(ImageHelper sut)
     {
-        // Create a minimal valid PNG in memory (8 bytes header + IHDR)
         var pngBytes = CreateMinimalPng();
         using var stream = new MemoryStream(pngBytes);
 
-        var result = await sut.IsImageFileAsync(stream, cancellationToken);
+        var result = sut.IsImageFile(stream);
 
         result.ShouldBeTrue();
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Return_false_for_non_image_stream(ImageHelper sut, CancellationToken cancellationToken)
+    public void Return_false_for_non_image_stream(ImageHelper sut)
     {
         using var stream = new MemoryStream("not an image"u8.ToArray());
 
-        var result = await sut.IsImageFileAsync(stream, cancellationToken);
+        var result = sut.IsImageFile(stream);
 
         result.ShouldBeFalse();
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Return_width_height_for_valid_image(ImageHelper sut, CancellationToken cancellationToken)
+    public void Return_width_height_for_valid_image(ImageHelper sut)
     {
         var pngBytes = CreateMinimalPng();
         using var stream = new MemoryStream(pngBytes);
 
-        var (isImage, width, height) = await sut.GetImageWidthHeightAsync(stream, cancellationToken);
+        var (isImage, width, height) = sut.GetImageWidthHeight(stream);
 
         isImage.ShouldBeTrue();
         width.ShouldBeGreaterThan(0);
@@ -48,11 +45,11 @@ public class IsImageFileShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Return_false_for_non_image_on_get_dimensions(ImageHelper sut, CancellationToken cancellationToken)
+    public void Return_false_for_non_image_on_get_dimensions(ImageHelper sut)
     {
         using var stream = new MemoryStream("not an image"u8.ToArray());
 
-        var (isImage, width, height) = await sut.GetImageWidthHeightAsync(stream, cancellationToken);
+        var (isImage, width, height) = sut.GetImageWidthHeight(stream);
 
         isImage.ShouldBeFalse();
         width.ShouldBe(0);
@@ -61,12 +58,9 @@ public class IsImageFileShould
 
     private static byte[] CreateMinimalPng()
     {
-        var ms = new MemoryStream();
-        using (var image = new Image<Rgba32>(1, 1))
-        {
-            image.Save(ms, new PngEncoder());
-        }
-
-        return ms.ToArray();
+        using var bitmap = new SKBitmap(1, 1);
+        using var image = SKImage.FromBitmap(bitmap);
+        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+        return data.ToArray();
     }
 }
