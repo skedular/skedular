@@ -40,6 +40,20 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Free disk space
+        # Docker image builds can stress disk on ubuntu-latest.
+        # Remove pre-installed toolchains (Android SDK, Haskell) to reclaim ~15 GB.
+        # large-packages is intentionally disabled: it removes 'powershell' which wipes pwsh.
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: false
+          haskell: true
+          large-packages: false
+          docker-images: false
+          swap-storage: false
+
       - name: Build, Test and validate
         uses: "./.github/actions/build-test-push"
         with:
