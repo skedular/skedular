@@ -7,7 +7,7 @@ import { useContext, type PropsWithChildren } from 'react';
 import StackColumn from '../stack-column';
 import StackRow from '../stack-row';
 import { PaletteModeContext } from '../theme/palette-mode-context';
-import { defaultPadding, maxScreenWidth } from '../theme/theme';
+import { defaultPadding } from '../theme/theme';
 import { coal, sandstone } from '../theme/theme-primitives';
 import SmallHeadingIconTypography from '../typography/small-heading-icon-typography';
 import SmallIconTypography from '../typography/small-icon-typography';
@@ -57,7 +57,7 @@ const AppBarWithStackColumn = ({ children, label, onClose, hideClose }: PropsWit
         </Toolbar>
       </AppBar>
 
-      <StackColumn sx={{ maxWidth: maxScreenWidth, paddingBottom: defaultPadding }}>{children}</StackColumn>
+      <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', paddingBottom: defaultPadding }}>{children}</StackColumn>
     </StackColumn>
   );
 };
