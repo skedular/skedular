@@ -8,8 +8,8 @@ import Input from '@mui/material/Input';
 import Slider from '@mui/material/Slider';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { BodyIconTypography, PaletteModeContext, StackColumn, TwoButtonsDialogActions } from '@skedular/ui';
-import React, { memo, useContext, useRef, useState } from 'react';
+import { BodyIconTypography, StackColumn, TwoButtonsDialogActions } from '@skedular/ui';
+import React, { memo, useRef, useState } from 'react';
 import ReactCrop, { centerCrop, Crop, makeAspectCrop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { toast } from 'react-toastify';
@@ -49,8 +49,6 @@ const popularAspectRatioOptions: AspectRatioOption[] = [
 ];
 
 const ImageFileUploaderWithCropper = ({ onUpload, helperText }: Props) => {
-  const paletteMode = useContext(PaletteModeContext);
-  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [imageSource, setImgSrc] = useState<string>('');
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -175,22 +173,11 @@ const ImageFileUploaderWithCropper = ({ onUpload, helperText }: Props) => {
   };
 
   const uploadFile = async (file: Blob) => {
-    const toastId = themedToast('Uploading feature image file...');
-
     try {
       await onUpload(file);
-
-      toast.update(toastId, {
-        type: 'success',
-        render: 'Feature image file uploaded.',
-      });
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-      toast.update(toastId, {
-        type: 'error',
-        render: `Failed to upload feature image. Error: ${errorMessage}.`,
-      });
+      toast.error(`Failed to upload image file. Error: ${errorMessage}.`);
     }
   };
 
