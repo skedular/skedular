@@ -31,7 +31,7 @@ export const getInstallMsTeamsLink = () => '/msteams/install-msteams';
 
 export const getOrganizationsBaseLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/organizations` : '/organizations');
 
-export const getOrganizationSetupLink = (integratedPlatrform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatrform)}/setup`;
+export const getOrganizationSetupLink = (integratedPlatrform: string | undefined) => getOrganizationAddPrivateLink(integratedPlatrform);
 export const getOrganizationAddPrivateLink = (integratedPlatrform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatrform)}/add-private`;
 export const getOrganizationBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationsBaseLink(integratedPlatrform)}/${id}`;
 

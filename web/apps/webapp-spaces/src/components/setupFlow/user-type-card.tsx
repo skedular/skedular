@@ -3,7 +3,7 @@ import CardContent from '@mui/material/CardContent';
 import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { memo, type JSX } from 'react';
 
-export type UserType = 'private' | 'marketplace' | 'individual-user';
+export type UserType = 'marketplace';
 
 type Props = {
   icon?: React.ReactNode | JSX.Element;

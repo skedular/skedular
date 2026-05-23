@@ -30,7 +30,7 @@ export const getInstallMsTeamsLink = () => '/msteams/install-msteams';
 
 export const getOrganizationsBaseLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/organizations` : '/organizations');
 
-export const getOrganizationSetupLink = (integratedPlatrform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatrform)}/setup`;
+export const getOrganizationSetupLink = (integratedPlatrform: string | undefined) => getOrganizationAddMarketplaceLink(integratedPlatrform);
 export const getOrganizationAddMarketplaceLink = (integratedPlatrform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatrform)}/add-marketplace`;
 export const getOrganizationBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationsBaseLink(integratedPlatrform)}/${id}`;
 

@@ -1,10 +1,8 @@
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import BusinessIcon from '@mui/icons-material/Business';
-import CoffeeIcon from '@mui/icons-material/Coffee';
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import PersonIcon from '@mui/icons-material/Person';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Button from '@mui/material/Button';
@@ -78,23 +76,6 @@ const SetupFlow = ({ userTypesToShow, onUserTypeClick, showBackButton }: Props) 
         />
       )}
 
-      {(!userTypesToShow || userTypesToShow.some((item) => item === 'marketplace')) && (
-        <UserTypeCard
-          icon={<CoffeeIcon sx={{ color: '#6F4E37', fontSize: 40 }} />}
-          title="Co-working Space Provider"
-          subtitle="I own or manage a co-working space and want to list it on the marketplace"
-          onClick={() => onUserTypeClick('marketplace')}
-        />
-      )}
-
-      {(!userTypesToShow || userTypesToShow.some((item) => item === 'individual-user')) && (
-        <UserTypeCard
-          icon={<PersonIcon sx={{ color: '#03A9F4', fontSize: 40 }} />}
-          title="Individual User"
-          subtitle="I'm looking for workspace solutions or want to join an organization"
-          onClick={() => onUserTypeClick('individual-user')}
-        />
-      )}
       {showBackButton && (
         <StackRow>
           <Button variant="contained" sx={defaultButtonStyle} onClick={handleBackClick}>
