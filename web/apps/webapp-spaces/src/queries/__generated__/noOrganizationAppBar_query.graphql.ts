@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d254a3423fb57a3ac95152ad37d00794>>
+ * @generated SignedSource<<dfdcc7ab4acdfe025e1877444b10e071>>
  * @lightSyntaxTransform
  */
 
@@ -25,8 +25,6 @@ export type noOrganizationAppBar_query$data = {
     readonly name: string;
     readonly uniqueId: string;
   }>;
-  readonly pendingOrganizationInvitationsCount: number;
-  readonly pendingTeamInvitationsCount: number;
   readonly " $fragmentSpreads": FragmentRefs<"newFeedbackDialog_query">;
   readonly " $fragmentType": "noOrganizationAppBar_query";
 };
@@ -150,20 +148,6 @@ const node: ReaderFragment = {
       "storageKey": "myOrganizations(types:[\"MARKETPLACE\",\"INDIVIDUAL\"])"
     },
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "pendingOrganizationInvitationsCount",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "pendingTeamInvitationsCount",
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "newFeedbackDialog_query"
@@ -173,6 +157,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "e34c1529770908574dc0a0f37698d83c";
+(node as any).hash = "1a8c2108d7599569cede91e97b112764";
 
 export default node;

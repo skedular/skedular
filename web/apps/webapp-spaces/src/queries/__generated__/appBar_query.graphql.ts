@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f7a4111fbc12b79caed751df4f725ec1>>
+ * @generated SignedSource<<75c19174ed06ffcb9c054be6fd003bbb>>
  * @lightSyntaxTransform
  */
 
@@ -25,8 +25,6 @@ export type appBar_query$data = {
     readonly name: string;
     readonly uniqueId: string;
   }>;
-  readonly pendingOrganizationInvitationsCount: number;
-  readonly pendingTeamInvitationsCount: number;
   readonly " $fragmentSpreads": FragmentRefs<"mobileLeftSideNavigationMenu_query" | "newFeedbackDialog_query">;
   readonly " $fragmentType": "appBar_query";
 };
@@ -150,20 +148,6 @@ const node: ReaderFragment = {
       "storageKey": "myOrganizations(types:[\"MARKETPLACE\",\"INDIVIDUAL\"])"
     },
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "pendingOrganizationInvitationsCount",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "pendingTeamInvitationsCount",
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "mobileLeftSideNavigationMenu_query"
@@ -178,6 +162,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "d78b6b849a50c6a57512bca7ff9880a3";
+(node as any).hash = "3cfd407e30934bb0ed8fa3a2250b81ff";
 
 export default node;

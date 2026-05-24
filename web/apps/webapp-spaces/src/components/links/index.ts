@@ -22,10 +22,6 @@ export const getRootLink = (integratedPlatrform: string | undefined) => (integra
 export const getSignInLink = () => '/signin';
 export const getSignUpLink = () => '/signup';
 export const getWelcomeLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/welcome` : '/welcome');
-export const getNotificationsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/notifications` : '/notifications');
-export const getBillingAndPaymentLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/billing-and-payment` : '/billing-and-payment');
-export const getSettingsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/settings` : '/settings');
-
 export const getInstallMsTeamsLink = () => '/msteams/install-msteams';
 
 export const getOrganizationsBaseLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/organizations` : '/organizations');

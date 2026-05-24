@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c3bf77549a92529c729ee5bcf9dd8b1c>>
+ * @generated SignedSource<<8f59bf60334c37c8fb098a0bc9ce1537>>
  * @lightSyntaxTransform
  */
 
@@ -295,30 +295,16 @@ return {
           (v12/*:: as any*/)
         ],
         "storageKey": "myOrganizations(types:[\"MARKETPLACE\",\"INDIVIDUAL\"])"
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "pendingOrganizationInvitationsCount",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "pendingTeamInvitationsCount",
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "b3acda3be9eb0cea604b7cfccbaa6176",
+    "cacheID": "d8d508dd2fb41323159bc9981c951d5e",
     "id": null,
     "metadata": {},
     "name": "noOrganizationRootShell_rootQuery",
     "operationKind": "query",
-    "text": "query noOrganizationRootShell_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  marketplaceCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  organizationCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  coreCustomerRecordSynced\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  ...noOrganizationAppBar_query\n  ...observability_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment noOrganizationAppBar_query on Query {\n  me {\n    id\n    email\n    emails\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations(types: [MARKETPLACE, INDIVIDUAL]) {\n    uniqueId\n    customDomain\n    logoUrl\n    name\n  }\n  pendingOrganizationInvitationsCount\n  pendingTeamInvitationsCount\n  ...newFeedbackDialog_query\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
+    "text": "query noOrganizationRootShell_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  marketplaceCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  organizationCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  coreCustomerRecordSynced\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  ...noOrganizationAppBar_query\n  ...observability_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment noOrganizationAppBar_query on Query {\n  me {\n    id\n    email\n    emails\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations(types: [MARKETPLACE, INDIVIDUAL]) {\n    uniqueId\n    customDomain\n    logoUrl\n    name\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
   }
 };
 })();

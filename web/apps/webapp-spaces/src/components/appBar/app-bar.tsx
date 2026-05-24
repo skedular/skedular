@@ -1,36 +1,15 @@
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
-import {
-  AddIcon,
-  BillingAndPaymentIcon,
-  ClaimOwnership,
-  FeedbackIcon,
-  HamburgerMenuIcon,
-  NotificationsIcon,
-  OrganizationIcon,
-  SettingsIcon,
-  SignOutIcon,
-  SystemModeIcon,
-} from '@/components/icons';
-import {
-  getBillingAndPaymentLink,
-  getNotificationsLink,
-  getOrganizationBaseLink,
-  getOrganizationLocationsBaseLink,
-  getOrganizationSetupLink,
-  getSettingsLink,
-  getSignOutReturnToLink,
-} from '@/components/links';
+import { AddIcon, ClaimOwnership, FeedbackIcon, HamburgerMenuIcon, OrganizationIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
+import { getOrganizationBaseLink, getOrganizationLocationsBaseLink, getOrganizationSetupLink, getSignOutReturnToLink } from '@/components/links';
 import { ClaimLocationOwnershipDialog } from '@/components/location';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import MuiAppBar from '@mui/material/AppBar';
-import Badge from '@mui/material/Badge';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import type { SelectChangeEvent } from '@mui/material/Select';
@@ -49,7 +28,6 @@ import {
 } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
@@ -85,8 +63,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
           logoUrl
           name
         }
-        pendingOrganizationInvitationsCount
-        pendingTeamInvitationsCount
         ...mobileLeftSideNavigationMenu_query
         ...newFeedbackDialog_query
       }
@@ -197,10 +173,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
     familyName: rootData.me?.familyName,
   });
 
-  const settingsLink = getSettingsLink(integratedPlatrform);
-  const billingAndPaymentLink = getBillingAndPaymentLink(integratedPlatrform);
-  const notificationsLink = getNotificationsLink(integratedPlatrform);
-  const pendingInvitationsCount = rootData.pendingOrganizationInvitationsCount + rootData.pendingTeamInvitationsCount;
   const selectedThemeIcon =
     selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;
 
@@ -344,17 +316,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                 <BodyIconTypography startElement={<SystemModeIcon fontSize="small" />} label="System" spacing={2} />
               </MenuItem>
             </Menu>
-
-            <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
-              <Link component={NextLink} href={notificationsLink}>
-                {pendingInvitationsCount === 0 && <NotificationsIcon excludeTooltip />}
-                {pendingInvitationsCount > 0 && (
-                  <Badge badgeContent={pendingInvitationsCount} color="primary">
-                    <NotificationsIcon excludeTooltip />
-                  </Badge>
-                )}
-              </Link>
-            </IconButton>
           </Box>
 
           <IconButton onClick={handleProfileMenuOpenClick}>
@@ -400,22 +361,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
             <Divider />
 
-            {selectedOrganizationId && (
-              <MenuItem>
-                <Link component={NextLink} href={settingsLink}>
-                  <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
-                </Link>
-              </MenuItem>
-            )}
-
-            {selectedOrganizationId && (
-              <MenuItem>
-                <Link component={NextLink} href={billingAndPaymentLink}>
-                  <SmallIconTypography startElement={<BillingAndPaymentIcon />} label="Billing & Payment" />
-                </Link>
-              </MenuItem>
-            )}
-
             {organizationCustomDomain && (
               <MenuItem onClick={handleClaimLocationOwnershipClicked}>
                 <SmallIconTypography startElement={<ClaimOwnership />} label="Claim Location" />
@@ -424,18 +369,8 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
             <Divider />
 
-            {/* Notifications & theme — shown in profile menu on mobile only */}
+            {/* Theme mode — shown in profile menu on mobile only */}
             <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-              <MenuItem component={NextLink} href={notificationsLink} onClick={handleProfileMenuCloseClick}>
-                {pendingInvitationsCount > 0 ? (
-                  <Badge badgeContent={pendingInvitationsCount} color="primary">
-                    <SmallIconTypography startElement={<NotificationsIcon excludeTooltip />} label="Notifications" />
-                  </Badge>
-                ) : (
-                  <SmallIconTypography startElement={<NotificationsIcon excludeTooltip />} label="Notifications" />
-                )}
-              </MenuItem>
-
               <MenuItem
                 selected={selectedThemeMode === 'light'}
                 onClick={() => {

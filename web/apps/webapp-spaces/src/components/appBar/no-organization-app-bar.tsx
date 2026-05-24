@@ -1,26 +1,14 @@
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
-import {
-  AddIcon,
-  BillingAndPaymentIcon,
-  FeedbackIcon,
-  HamburgerMenuIcon,
-  NotificationsIcon,
-  OrganizationIcon,
-  SettingsIcon,
-  SignOutIcon,
-  SystemModeIcon,
-} from '@/components/icons';
-import { getBillingAndPaymentLink, getNotificationsLink, getOrganizationBaseLink, getOrganizationSetupLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
+import { AddIcon, FeedbackIcon, HamburgerMenuIcon, OrganizationIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
+import { getOrganizationBaseLink, getOrganizationSetupLink, getSignOutReturnToLink } from '@/components/links';
 import { NoOrganizationMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import type { noOrganizationAppBar_query$key } from '@/queries/__generated__/noOrganizationAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import MuiAppBar from '@mui/material/AppBar';
-import Badge from '@mui/material/Badge';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import type { SelectChangeEvent } from '@mui/material/Select';
@@ -30,7 +18,6 @@ import Box from '@mui/system/Box';
 import { getCustomerFullName, localNow, PaletteModeContext, SelectedPaletteModeContext, toLongDateTime, UpdatePaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
@@ -66,8 +53,6 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
           logoUrl
           name
         }
-        pendingOrganizationInvitationsCount
-        pendingTeamInvitationsCount
         ...newFeedbackDialog_query
       }
     `,
@@ -148,10 +133,6 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
     familyName: rootData.me?.familyName,
   });
 
-  const settingsLink = getSettingsLink(integratedPlatrform);
-  const billingAndPaymentLink = getBillingAndPaymentLink(integratedPlatrform);
-  const notificationsLink = getNotificationsLink(integratedPlatrform);
-  const pendingInvitationsCount = rootData.pendingOrganizationInvitationsCount + rootData.pendingTeamInvitationsCount;
   const selectedThemeIcon =
     selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;
 
@@ -295,17 +276,6 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
                 <BodyIconTypography startElement={<SystemModeIcon fontSize="small" />} label="System" spacing={2} />
               </MenuItem>
             </Menu>
-
-            <IconButton color="inherit">
-              <Link component={NextLink} href={notificationsLink}>
-                {pendingInvitationsCount === 0 && <NotificationsIcon excludeTooltip />}
-                {pendingInvitationsCount > 0 && (
-                  <Badge badgeContent={pendingInvitationsCount} color="primary">
-                    <NotificationsIcon excludeTooltip />
-                  </Badge>
-                )}
-              </Link>
-            </IconButton>
           </Box>
 
           <IconButton onClick={handleProfileMenuOpenClick}>
@@ -351,31 +321,10 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
 
             <Divider />
 
-            <MenuItem>
-              <Link component={NextLink} href={settingsLink}>
-                <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
-              </Link>
-            </MenuItem>
-
-            <MenuItem>
-              <Link component={NextLink} href={billingAndPaymentLink}>
-                <SmallIconTypography startElement={<BillingAndPaymentIcon />} label="Billing & Payment" />
-              </Link>
-            </MenuItem>
             <Divider />
 
-            {/* Notifications & theme — shown in profile menu on mobile only */}
+            {/* Theme mode — shown in profile menu on mobile only */}
             <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-              <MenuItem component={NextLink} href={notificationsLink} onClick={handleProfileMenuCloseClick}>
-                {pendingInvitationsCount > 0 ? (
-                  <Badge badgeContent={pendingInvitationsCount} color="primary">
-                    <SmallIconTypography startElement={<NotificationsIcon excludeTooltip />} label="Notifications" />
-                  </Badge>
-                ) : (
-                  <SmallIconTypography startElement={<NotificationsIcon excludeTooltip />} label="Notifications" />
-                )}
-              </MenuItem>
-
               <MenuItem
                 selected={selectedThemeMode === 'light'}
                 onClick={() => {

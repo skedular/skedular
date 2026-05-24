@@ -44,7 +44,6 @@ const RootQuery = graphql`
     slackCustomerRecordSynced
     teamCustomerRecordSynced
     coreCustomerRecordSynced
-    pendingOrganizationInvitationsCount
     isAzureTenantInstalled
     azureTenantOrganization {
       id
