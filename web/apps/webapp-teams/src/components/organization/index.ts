@@ -1,7 +1,6 @@
 export { default as MultipleChoicesAmenities } from './multiple-choices-amenities';
 export { default as MultipleChoicesCustomTags } from './multiple-choices-custom-tags';
 export { default as MultipleChoicesPaymentMethodTypes } from './multiple-choices-payment-method-types';
-export { default as MultipleChoicesProductTags } from './multiple-choices-product-tags';
 export { default as MultipleChoicesZones } from './multiple-choices-zones';
 export { default as OrganizationMemberSelector } from './organization-member-selector';
 export { default as OrganizationMultipleChoicesIndustries } from './organization-multiple-choices-industries';

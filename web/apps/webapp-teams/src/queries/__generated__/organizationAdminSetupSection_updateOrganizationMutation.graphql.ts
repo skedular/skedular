@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<07392eaad1c7ba56f133320d8cb66e6c>>
+ * @generated SignedSource<<95f448854f0add59c54331d7e9a86d45>>
  * @lightSyntaxTransform
  */
 
@@ -101,12 +101,6 @@ export type organizationAdminSetupSection_updateOrganizationMutation$data = {
         readonly title: string | null | undefined;
       };
       readonly logoUrl: string | null | undefined;
-      readonly marketplaceListingMetadata: {
-        readonly about: string | null | undefined;
-        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
-        readonly subTitle: string | null | undefined;
-        readonly title: string | null | undefined;
-      };
       readonly name: string;
       readonly refundNotificationEmails: ReadonlyArray<string>;
       readonly website: string | null | undefined;
@@ -140,28 +134,7 @@ v2 = {
   "name": "name",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "about",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "subTitle",
-  "storageKey": null
-},
-v6 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -184,7 +157,7 @@ v6 = [
     "storageKey": null
   }
 ],
-v7 = [
+v4 = [
   {
     "alias": null,
     "args": [
@@ -224,9 +197,27 @@ v7 = [
             "name": "listingMetadata",
             "plural": false,
             "selections": [
-              (v3/*:: as any*/),
-              (v4/*:: as any*/),
-              (v5/*:: as any*/)
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "about",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "title",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "subTitle",
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
@@ -235,27 +226,6 @@ v7 = [
             "args": null,
             "kind": "ScalarField",
             "name": "logoUrl",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ListingMetadata",
-            "kind": "LinkedField",
-            "name": "marketplaceListingMetadata",
-            "plural": false,
-            "selections": [
-              (v3/*:: as any*/),
-              (v4/*:: as any*/),
-              (v5/*:: as any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "includedFeatures",
-                "storageKey": null
-              }
-            ],
             "storageKey": null
           },
           {
@@ -321,7 +291,7 @@ v7 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v6/*:: as any*/),
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -331,7 +301,7 @@ v7 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v6/*:: as any*/),
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -376,7 +346,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminSetupSection_updateOrganizationMutation",
-    "selections": (v7/*:: as any*/),
+    "selections": (v4/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -385,19 +355,19 @@ return {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminSetupSection_updateOrganizationMutation",
-    "selections": (v7/*:: as any*/)
+    "selections": (v4/*:: as any*/)
   },
   "params": {
-    "cacheID": "05457baa29efbe18c4d963a6583451d0",
+    "cacheID": "b370795803652e3d740c43bc84413ad0",
     "id": null,
     "metadata": {},
     "name": "organizationAdminSetupSection_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdminSetupSection_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      logoUrl\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      refundNotificationEmails\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      billingCycle {\n        type\n        name\n      }\n      invoiceDueInDays\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminSetupSection_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      logoUrl\n      website\n      customerFacingTermsAndConditionsUrl\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      refundNotificationEmails\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      billingCycle {\n        type\n        name\n      }\n      invoiceDueInDays\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8956f93381325e646f2e4032c2e49438";
+(node as any).hash = "24a9f5f78934f0c3f62a1c55c97328d7";
 
 export default node;

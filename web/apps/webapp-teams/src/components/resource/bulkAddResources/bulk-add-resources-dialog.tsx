@@ -28,7 +28,6 @@ type RowData = {
   quantity: number;
   customTagIds: string[];
   zoneIds: string[];
-  productTagIds: string[];
 };
 
 type RowResult = {
@@ -50,7 +49,6 @@ const RootQuery = graphql`
     $organizationCustomDomain: String!
     $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
-    $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
   ) {
     organization(customDomain: $organizationCustomDomain) {
       type {
@@ -60,7 +58,6 @@ const RootQuery = graphql`
     ...singleChoiceResourceType_query
     ...multipleChoicesCustomTags_query
     ...multipleChoicesZones_query
-    ...multipleChoicesProductTags_query
   }
 `;
 
@@ -72,7 +69,6 @@ const makeEmptyRow = (): RowData => ({
   quantity: 1,
   customTagIds: [],
   zoneIds: [],
-  productTagIds: [],
 });
 
 // ─── Inner dialog (receives preloaded query) ─────────────────────────────────
@@ -114,7 +110,6 @@ const BulkAddResourcesDialogInner = ({ queryReference, locationId, organizationC
   const [formKey, setFormKey] = useState(0);
   const [currentInitialValues, setCurrentInitialValues] = useState<FormValues>({ rows: [makeEmptyRow()] });
 
-  const isMarketplace = rootData.organization?.type.type === 'MARKETPLACE';
   const isResultsView = results !== null;
 
   const totalCreated = results?.reduce((sum, r) => sum + r.createdResources.length, 0) ?? 0;
@@ -159,7 +154,7 @@ const BulkAddResourcesDialogInner = ({ queryReference, locationId, organizationC
             quantity: row.quantity,
             customTagIds: row.customTagIds ?? [],
             zoneIds: row.zoneIds ?? [],
-            productTagIds: row.productTagIds ?? [],
+            productTagIds: [],
           })),
         },
       },
@@ -281,7 +276,6 @@ const BulkAddResourcesDialogInner = ({ queryReference, locationId, organizationC
                   rootDataRelay={rootData}
                   organizationCustomDomain={organizationCustomDomain}
                   onRemove={() => handleRemoveRow(index, values, form.change)}
-                  showProductTags={isMarketplace}
                 />
               ))}
 
@@ -323,7 +317,6 @@ const BulkAddResourcesDialog = ({ locationId, organizationCustomDomain, isDialog
         organizationCustomDomain,
         multipleChoicesCustomTagsSortingValues: [{ direction: 'ASCENDING', field: 'NAME' }],
         multipleChoicesZonesSortingValues: [{ direction: 'ASCENDING', field: 'NAME' }],
-        multipleChoicesProductTagsSortingValues: [{ direction: 'ASCENDING', field: 'NAME' }],
       },
       { fetchPolicy: 'store-and-network' },
     );

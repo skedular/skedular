@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dac9b8e80b519092bdb12552e2354bb3>>
+ * @generated SignedSource<<122dc416551a9d89fa9cbd3ac338395b>>
  * @lightSyntaxTransform
  */
 
@@ -46,11 +46,6 @@ export type organizationLocationManageResourcesSectionQuery$data = {
           readonly id: string;
           readonly inactive: boolean;
           readonly name: string;
-          readonly productTags: ReadonlyArray<{
-            readonly color: string | null | undefined;
-            readonly id: string;
-            readonly name: string;
-          }>;
           readonly requireBookingApproval: boolean;
           readonly resourceType: {
             readonly color: string | null | undefined;
@@ -289,16 +284,6 @@ v15 = {
               "args": null,
               "concreteType": "OrganizationTagDetails",
               "kind": "LinkedField",
-              "name": "productTags",
-              "plural": true,
-              "selections": (v13/*:: as any*/),
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "OrganizationTagDetails",
-              "kind": "LinkedField",
               "name": "resourceType",
               "plural": false,
               "selections": (v13/*:: as any*/),
@@ -470,16 +455,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "51368b95718931f90e3aee75bcde0291",
+    "cacheID": "7379a4698be219f8f6677ab0eec4df5c",
     "id": null,
     "metadata": {},
     "name": "organizationLocationManageResourcesSectionQuery",
     "operationKind": "query",
-    "text": "query organizationLocationManageResourcesSectionQuery(\n  $organizationCustomDomain: String!\n  $locationId: String!\n  $resourceNameSearchText: String\n  $resourceZoneIds: [String!]\n  $resourceCustomTagIds: [String!]\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  me {\n    id\n    preferredResources {\n      id\n    }\n  }\n  location(id: $locationId) {\n    resources(where: {nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds}, orderBy: $resourcesSortingValues) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          requireBookingApproval\n          color\n          capacity\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n          productTags {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n    id\n  }\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    customTags(orderBy: $customTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    zones(orderBy: $zonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query organizationLocationManageResourcesSectionQuery(\n  $organizationCustomDomain: String!\n  $locationId: String!\n  $resourceNameSearchText: String\n  $resourceZoneIds: [String!]\n  $resourceCustomTagIds: [String!]\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  me {\n    id\n    preferredResources {\n      id\n    }\n  }\n  location(id: $locationId) {\n    resources(where: {nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds}, orderBy: $resourcesSortingValues) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          requireBookingApproval\n          color\n          capacity\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n    id\n  }\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    customTags(orderBy: $customTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    zones(orderBy: $zonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8afc95bbc48858f510afa761b41bbf5d";
+(node as any).hash = "5bc0ea0dfe64b984dc9370316251fd7f";
 
 export default node;

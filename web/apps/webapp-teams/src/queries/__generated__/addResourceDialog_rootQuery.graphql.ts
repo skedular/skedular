@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<02b8e49c9cd94964a7e3375ef17627f7>>
+ * @generated SignedSource<<5652203f130b69286b99bf30dfb3e215>>
  * @lightSyntaxTransform
  */
 
@@ -24,7 +24,6 @@ export type LocationOrderInput = {
 export type addResourceDialog_rootQuery$variables = {
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
   multipleChoicesCustomTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
-  multipleChoicesProductTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   multipleChoicesZonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   organizationCustomDomain: string;
 };
@@ -44,7 +43,7 @@ export type addResourceDialog_rootQuery$data = {
       readonly type: OrganizationType;
     };
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesCustomTags_query" | "multipleChoicesProductTags_query" | "multipleChoicesZones_query" | "singleChoiceResourceType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesCustomTags_query" | "multipleChoicesZones_query" | "singleChoiceResourceType_query">;
 };
 export type addResourceDialog_rootQuery = {
   response: addResourceDialog_rootQuery$data;
@@ -65,26 +64,21 @@ v1 = {
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "multipleChoicesProductTagsSortingValues"
+  "name": "multipleChoicesZonesSortingValues"
 },
 v3 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "multipleChoicesZonesSortingValues"
-},
-v4 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
   "name": "organizationCustomDomain"
 },
-v5 = [
+v4 = [
   {
     "kind": "Variable",
     "name": "customDomain",
     "variableName": "organizationCustomDomain"
   }
 ],
-v6 = {
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "OrganizationTypeDetails",
@@ -102,28 +96,28 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v9 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v10 = {
+v9 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -135,7 +129,7 @@ v10 = {
     }
   ]
 },
-v11 = {
+v10 = {
   "alias": null,
   "args": [
     {
@@ -160,7 +154,7 @@ v11 = {
   "name": "locations",
   "plural": false,
   "selections": [
-    (v7/*:: as any*/),
+    (v6/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -177,34 +171,34 @@ v11 = {
           "name": "node",
           "plural": false,
           "selections": [
-            (v8/*:: as any*/),
-            (v9/*:: as any*/)
+            (v7/*:: as any*/),
+            (v8/*:: as any*/)
           ],
           "storageKey": null
         }
       ],
       "storageKey": null
     },
-    (v10/*:: as any*/)
+    (v9/*:: as any*/)
   ],
   "storageKey": null
 },
-v12 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v13 = [
+v12 = [
   {
     "kind": "Variable",
     "name": "orderBy",
     "variableName": "multipleChoicesCustomTagsSortingValues"
   }
 ],
-v14 = [
-  (v7/*:: as any*/),
+v13 = [
+  (v6/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -221,9 +215,9 @@ v14 = [
         "name": "node",
         "plural": false,
         "selections": [
+          (v7/*:: as any*/),
           (v8/*:: as any*/),
-          (v9/*:: as any*/),
-          (v12/*:: as any*/),
+          (v11/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -269,23 +263,16 @@ v14 = [
     ],
     "storageKey": null
   },
-  (v10/*:: as any*/)
+  (v9/*:: as any*/)
 ],
-v15 = [
+v14 = [
   "orderBy"
 ],
-v16 = [
+v15 = [
   {
     "kind": "Variable",
     "name": "orderBy",
     "variableName": "multipleChoicesZonesSortingValues"
-  }
-],
-v17 = [
-  {
-    "kind": "Variable",
-    "name": "orderBy",
-    "variableName": "multipleChoicesProductTagsSortingValues"
   }
 ];
 return {
@@ -294,8 +281,7 @@ return {
       (v0/*:: as any*/),
       (v1/*:: as any*/),
       (v2/*:: as any*/),
-      (v3/*:: as any*/),
-      (v4/*:: as any*/)
+      (v3/*:: as any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -303,17 +289,17 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v5/*:: as any*/),
+        "args": (v4/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v6/*:: as any*/)
+          (v5/*:: as any*/)
         ],
         "storageKey": null
       },
-      (v11/*:: as any*/),
+      (v10/*:: as any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -328,11 +314,6 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "multipleChoicesZones_query"
-      },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "multipleChoicesProductTags_query"
       }
     ],
     "type": "Query",
@@ -341,9 +322,8 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v4/*:: as any*/),
-      (v1/*:: as any*/),
       (v3/*:: as any*/),
+      (v1/*:: as any*/),
       (v2/*:: as any*/),
       (v0/*:: as any*/)
     ],
@@ -352,14 +332,14 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v5/*:: as any*/),
+        "args": (v4/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v6/*:: as any*/),
-          (v8/*:: as any*/),
+          (v5/*:: as any*/),
+          (v7/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -368,26 +348,26 @@ return {
             "name": "resourceTypes",
             "plural": true,
             "selections": [
+              (v7/*:: as any*/),
               (v8/*:: as any*/),
-              (v9/*:: as any*/),
-              (v12/*:: as any*/)
+              (v11/*:: as any*/)
             ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v13/*:: as any*/),
+            "args": (v12/*:: as any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "customTags",
             "plural": false,
-            "selections": (v14/*:: as any*/),
+            "selections": (v13/*:: as any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v13/*:: as any*/),
-            "filters": (v15/*:: as any*/),
+            "args": (v12/*:: as any*/),
+            "filters": (v14/*:: as any*/),
             "handle": "connection",
             "key": "multipleChoicesCustomTags_customTags",
             "kind": "LinkedHandle",
@@ -395,59 +375,40 @@ return {
           },
           {
             "alias": null,
-            "args": (v16/*:: as any*/),
+            "args": (v15/*:: as any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "zones",
             "plural": false,
-            "selections": (v14/*:: as any*/),
+            "selections": (v13/*:: as any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v16/*:: as any*/),
-            "filters": (v15/*:: as any*/),
+            "args": (v15/*:: as any*/),
+            "filters": (v14/*:: as any*/),
             "handle": "connection",
             "key": "multipleChoicesZones_zones",
             "kind": "LinkedHandle",
             "name": "zones"
-          },
-          {
-            "alias": null,
-            "args": (v17/*:: as any*/),
-            "concreteType": "ConnectionOfOrganizationTagEdge",
-            "kind": "LinkedField",
-            "name": "productTags",
-            "plural": false,
-            "selections": (v14/*:: as any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": (v17/*:: as any*/),
-            "filters": (v15/*:: as any*/),
-            "handle": "connection",
-            "key": "multipleChoicesProductTags_productTags",
-            "kind": "LinkedHandle",
-            "name": "productTags"
           }
         ],
         "storageKey": null
       },
-      (v11/*:: as any*/)
+      (v10/*:: as any*/)
     ]
   },
   "params": {
-    "cacheID": "132294907b245eb7aabe578ab852a2d2",
+    "cacheID": "556484e7d3b7aa5cee84f1fa56982971",
     "id": null,
     "metadata": {},
     "name": "addResourceDialog_rootQuery",
     "operationKind": "query",
-    "text": "query addResourceDialog_rootQuery(\n  $organizationCustomDomain: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    type {\n      type\n    }\n    id\n  }\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  ...singleChoiceResourceType_query\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n  ...multipleChoicesProductTags_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    customTags(orderBy: $multipleChoicesCustomTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    zones(orderBy: $multipleChoicesZonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceResourceType_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    resourceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n"
+    "text": "query addResourceDialog_rootQuery(\n  $organizationCustomDomain: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    type {\n      type\n    }\n    id\n  }\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  ...singleChoiceResourceType_query\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    customTags(orderBy: $multipleChoicesCustomTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    zones(orderBy: $multipleChoicesZonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceResourceType_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    resourceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "bc4ac9b259df06dd170006cc904d3dfd";
+(node as any).hash = "b49c9c87d183980d0ef28a301acf221b";
 
 export default node;

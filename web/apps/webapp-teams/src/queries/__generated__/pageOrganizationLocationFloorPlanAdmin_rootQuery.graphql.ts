@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a04ec0053eacf8c18faf5dc6a0b99445>>
+ * @generated SignedSource<<6f3f7e8fc72e923f4836c406c54bc8ee>>
  * @lightSyntaxTransform
  */
 
@@ -351,16 +351,6 @@ return {
                         "args": null,
                         "concreteType": "OrganizationTagDetails",
                         "kind": "LinkedField",
-                        "name": "productTags",
-                        "plural": true,
-                        "selections": (v9/*:: as any*/),
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "OrganizationTagDetails",
-                        "kind": "LinkedField",
                         "name": "resourceType",
                         "plural": false,
                         "selections": [
@@ -444,12 +434,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e2ab8faa55ffdd4395d02b02cb14014f",
+    "cacheID": "22e14d3306c449f40ee673a590d7c08c",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocationFloorPlanAdmin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocationFloorPlanAdmin_rootQuery(\n  $locationId: String!\n  $floorPlanId: String!\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  floorPlan(id: $floorPlanId) {\n    name\n    id\n  }\n  ...editFloorPlan_query\n  ...editFloorPlan_resources_query\n}\n\nfragment editFloorPlan_query on Query {\n  floorPlan(id: $floorPlanId) {\n    id\n    name\n    image {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    resourcePositions {\n      x\n      y\n      resource {\n        id\n      }\n      id\n    }\n  }\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n}\n\nfragment editFloorPlan_resources_query on Query {\n  location(id: $locationId) {\n    resources(where: {floorPlanId: $floorPlanId}, orderBy: $resourcesSortingValues) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          color\n          capacity\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n          productTags {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n            type\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query pageOrganizationLocationFloorPlanAdmin_rootQuery(\n  $locationId: String!\n  $floorPlanId: String!\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  floorPlan(id: $floorPlanId) {\n    name\n    id\n  }\n  ...editFloorPlan_query\n  ...editFloorPlan_resources_query\n}\n\nfragment editFloorPlan_query on Query {\n  floorPlan(id: $floorPlanId) {\n    id\n    name\n    image {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    resourcePositions {\n      x\n      y\n      resource {\n        id\n      }\n      id\n    }\n  }\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n}\n\nfragment editFloorPlan_resources_query on Query {\n  location(id: $locationId) {\n    resources(where: {floorPlanId: $floorPlanId}, orderBy: $resourcesSortingValues) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          color\n          capacity\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n            type\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();

@@ -1,16 +1,16 @@
 import { NoOrganizationAppBar } from '@/components/appBar';
-import { SmallHeadingIconTypography } from '@skedular/ui';
 import { SignOutIcon } from '@/components/icons';
 import { getInstallMsTeamsLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { NoOrganizationLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
 import { RelayError, toRootError } from '@/components/relayError';
-import { InMsTeamsContext, useIntegratedPlatrform } from '@skedular/shared';
 import type { noOrganizationRootShell_rootQuery } from '@/queries/__generated__/noOrganizationRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
+import { InMsTeamsContext, useIntegratedPlatrform } from '@skedular/shared';
+import { SmallHeadingIconTypography } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { usePathname, useRouter } from 'next/navigation';
 import type { JSX, PropsWithChildren } from 'react';
@@ -37,7 +37,6 @@ const RootQuery = graphql`
     }
     bookingCustomerRecordSynced
     locationCustomerRecordSynced
-    marketplaceCustomerRecordSynced
     msTeamsCustomerRecordSynced
     organizationCustomerRecordSynced
     slackCustomerRecordSynced
@@ -77,7 +76,6 @@ const NoOrganizationRootShell = ({
   const areCustomerRecordsSync = !!(
     rootData?.bookingCustomerRecordSynced &&
     rootData?.locationCustomerRecordSynced &&
-    rootData?.marketplaceCustomerRecordSynced &&
     rootData?.msTeamsCustomerRecordSynced &&
     rootData?.organizationCustomerRecordSynced &&
     rootData?.slackCustomerRecordSynced &&

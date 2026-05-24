@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<99da42b6aa62da37fc8b9c1b956d251b>>
+ * @generated SignedSource<<7e6abda0ce66f2051f0a929d718d15b2>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,6 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type BookingChannel = "MARKETPLACE" | "PRIVATE" | "%future added value";
-export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type myBookingCard_BookingDetails$data = {
   readonly bookingResources: ReadonlyArray<{
@@ -50,14 +49,6 @@ export type myBookingCard_BookingDetails$data = {
     readonly id: string;
     readonly name: string;
   }>;
-  readonly marketplaceBooking: {
-    readonly invoiceUrl: string | null | undefined;
-    readonly isPaymentRequired: boolean;
-    readonly paymentStatus: {
-      readonly name: string;
-      readonly type: PaymentStatus;
-    };
-  } | null | undefined;
   readonly notes: string | null | undefined;
   readonly recurringBooking: {
     readonly endDate: any | null | undefined;
@@ -65,9 +56,6 @@ export type myBookingCard_BookingDetails$data = {
       readonly name: string;
     };
     readonly id: string;
-    readonly marketplaceBooking: {
-      readonly id: string;
-    } | null | undefined;
     readonly startDate: any;
   } | null | undefined;
   readonly until: any;
@@ -272,50 +260,6 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "MarketplaceBookingDetails",
-      "kind": "LinkedField",
-      "name": "marketplaceBooking",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "isPaymentRequired",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PaymentStatusDetails",
-          "kind": "LinkedField",
-          "name": "paymentStatus",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "type",
-              "storageKey": null
-            },
-            (v1/*:: as any*/)
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "invoiceUrl",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "RecurringBookingDetails",
       "kind": "LinkedField",
       "name": "recurringBooking",
@@ -347,18 +291,6 @@ return {
             (v1/*:: as any*/)
           ],
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "MarketplaceBookingDetails",
-          "kind": "LinkedField",
-          "name": "marketplaceBooking",
-          "plural": false,
-          "selections": [
-            (v0/*:: as any*/)
-          ],
-          "storageKey": null
         }
       ],
       "storageKey": null
@@ -369,6 +301,6 @@ return {
 };
 })();
 
-(node as any).hash = "4fab7f20b5a32242b9e546e5fa584272";
+(node as any).hash = "795924258c7bc0e4d4835e3288029c10";
 
 export default node;

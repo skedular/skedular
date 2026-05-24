@@ -1,5 +1,5 @@
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
+import { MultipleChoicesCustomTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
 import ResourceEditSectionNav, { ResourceEditSection } from '@/components/resource/editResource/resource-edit-section-nav';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import type { editResource_query$key } from '@/queries/__generated__/editResource_query.graphql';
@@ -44,7 +44,6 @@ type ResourceDetails = {
   resourceTypeId: string;
   customTagIds: string[];
   zoneIds: string[];
-  productTagIds: string[];
   capacity: number;
 };
 
@@ -53,7 +52,6 @@ const ResourceSchema = object({
   name: string().required('Resource name is required'),
   customTagIds: array().nullable(),
   zoneIds: array().nullable(),
-  productTagIds: array().nullable(),
   capacity: number().required('Capacity is required').min(1, 'Capacity must be greater than 0'),
 });
 
@@ -75,7 +73,7 @@ const resourceAutosaveDebounceTimeout = 1000;
 const resourceFieldGroups: ReadonlyArray<[ResourcePatchField, ReadonlyArray<keyof ResourceDetails>]> = [
   ['NAME', ['name']],
   ['RESOURCE_TYPE', ['resourceTypeId']],
-  ['TAGS', ['customTagIds', 'zoneIds', 'productTagIds']],
+  ['TAGS', ['customTagIds', 'zoneIds']],
   ['CAPACITY', ['capacity']],
 ];
 
@@ -172,11 +170,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             name
             color
           }
-          productTags {
-            id
-            name
-            color
-          }
           resourceType {
             id
             name
@@ -233,7 +226,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         ...singleChoiceResourceType_query
         ...multipleChoicesCustomTags_query
         ...multipleChoicesZones_query
-        ...multipleChoicesProductTags_query
         ...weekOpeningHours_query
       }
     `,
@@ -256,11 +248,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             color
           }
           zones {
-            id
-            name
-            color
-          }
-          productTags {
             id
             name
             color
@@ -342,11 +329,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             name
             color
           }
-          productTags {
-            id
-            name
-            color
-          }
           resourceType {
             id
             name
@@ -423,7 +405,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             resourceTypeId: rootData.resource.resourceType.id,
             customTagIds: rootData.resource.customTags.map(({ id }) => id),
             zoneIds: rootData.resource.zones.map(({ id }) => id),
-            productTagIds: rootData.resource.productTags.map(({ id }) => id),
             capacity: rootData.resource.capacity,
           }
         : null,
@@ -453,16 +434,13 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
     router.back();
   };
 
-  const handleResourceDetailUpdateClick = (
-    fieldsToUpdate: ResourcePatchField[],
-    { resourceTypeId, name, customTagIds, zoneIds, productTagIds, capacity: capacityStr }: ResourceDetails,
-  ) => {
+  const handleResourceDetailUpdateClick = (fieldsToUpdate: ResourcePatchField[], { resourceTypeId, name, customTagIds, zoneIds, capacity: capacityStr }: ResourceDetails) => {
     const resource = rootData.resource;
     if (!resource) {
       return;
     }
 
-    if (!ResourceSchema.isValidSync({ resourceTypeId, name, customTagIds, zoneIds, productTagIds, capacity: capacityStr })) {
+    if (!ResourceSchema.isValidSync({ resourceTypeId, name, customTagIds, zoneIds, capacity: capacityStr })) {
       return;
     }
 
@@ -480,7 +458,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
           requireBookingApproval: resource.requireBookingApproval,
           customTagIds,
           zoneIds,
-          productTagIds,
+          productTagIds: [],
           color: selectedColor,
           capacity,
           organizationResourceTypeId: resourceTypeId,
@@ -505,7 +483,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             requireBookingApproval: resource.requireBookingApproval,
             customTags: [],
             zones: [],
-            productTags: [],
             color: selectedColor,
             capacity,
             resourceType: {
@@ -570,7 +547,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             requireBookingApproval: resource.requireBookingApproval,
             customTags: resource.customTags,
             zones: resource.zones,
-            productTags: resource.productTags,
             color: resource.color,
             capacity: resource.capacity,
             resourceType: resource.resourceType,
@@ -636,7 +612,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             requireBookingApproval: resource.requireBookingApproval,
             customTags: resource.customTags,
             zones: resource.zones,
-            productTags: resource.productTags,
             color: resource.color,
             capacity: resource.capacity,
             resourceType: resource.resourceType,
@@ -729,17 +704,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                         <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationCustomDomain={organizationCustomDomain} />
                       </FormFieldLabel>
 
-                      {rootData.organization?.type.type === 'MARKETPLACE' && (
-                        <FormFieldLabel label="Product Tags">
-                          <MultipleChoicesProductTags
-                            rootDataRelay={rootData}
-                            name="productTagIds"
-                            required={requiredFields.productTagIds}
-                            organizationCustomDomain={organizationCustomDomain}
-                          />
-                        </FormFieldLabel>
-                      )}
-
                       <FormFieldLabel label="Color">
                         <ColorPicker onChange={handleColorChange} defaultColor={rootData.resource?.color} />
                       </FormFieldLabel>
@@ -812,7 +776,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                 <Divider />
                 <BodyIconTypography label={`Custom tags: ${resource.customTags.length}`} />
                 <BodyIconTypography label={`Zones: ${resource.zones.length}`} />
-                {rootData.organization?.type.type === 'MARKETPLACE' ? <BodyIconTypography label={`Product tags: ${resource.productTags.length}`} /> : null}
               </StackColumn>
             </SettingsSectionCard>
           </StickyReviewRail>

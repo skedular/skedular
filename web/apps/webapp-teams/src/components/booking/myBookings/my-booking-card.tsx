@@ -1,19 +1,13 @@
 import { CustomerAvatar } from '@/components/avatars';
 import RecurringBookingDeleteConfirmationDialog from '@/components/booking/recurring-booking-delete-confirmation-dialog';
-import { CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
-import { CalendarIcon, EllipseMenuIcon, NotesIcon, PaymentStatusIcon, PdfIcon, TeamIcon } from '@/components/icons';
+import { CalendarIcon, EllipseMenuIcon, NotesIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import Resources from '@/components/resource/resources';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { coal } from '@skedular/ui';
-import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, toShortDate } from '@skedular/shared';
 import type { myBookingCard_BookingDetails$key } from '@/queries/__generated__/myBookingCard_BookingDetails.graphql';
-import type { myBookingCard_deleteMarketplaceBookingMutation } from '@/queries/__generated__/myBookingCard_deleteMarketplaceBookingMutation.graphql';
-import type { myBookingCard_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/myBookingCard_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { myBookingCard_deletePrivateBookingMutation } from '@/queries/__generated__/myBookingCard_deletePrivateBookingMutation.graphql';
 import type { myBookingCard_deletePrivateRecurringBookingMutation } from '@/queries/__generated__/myBookingCard_deletePrivateRecurringBookingMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -26,6 +20,8 @@ import Link from '@mui/material/Link';
 import Tooltip from '@mui/material/Tooltip';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
+import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, PaletteModeContext, toShortDate, useIntegratedPlatrform } from '@skedular/shared';
+import { CaptionIconTypography, coal, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -39,7 +35,6 @@ type Props = {
   organizationCustomDomain: string;
   connectionIds: string[];
   otherTeammates: CustomerDetails[];
-  recurringMarketplaceSubscriptionIds?: Record<string, string>;
 };
 
 type CustomTagDetails = {
@@ -65,9 +60,6 @@ type CustomerDetails = {
   photoUrl?: string | null | undefined;
 };
 
-const isConfirmedPaymentStatus = (paymentStatusType: string) => paymentStatusType === 'CONFIRMED' || paymentStatusType === 'PAID';
-const isPendingPaymentStatus = (paymentStatusType: string) => paymentStatusType === 'PENDING';
-
 const sectionSx: SxProps<Theme> = {
   border: 1,
   borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
@@ -76,7 +68,7 @@ const sectionSx: SxProps<Theme> = {
   backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.02)' : 'transparent'),
 };
 
-const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTeammates, connectionIds, recurringMarketplaceSubscriptionIds = {} }: Props) => {
+const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTeammates, connectionIds }: Props) => {
   const bookingDetails = useFragment(
     graphql`
       fragment myBookingCard_BookingDetails on BookingDetails {
@@ -120,23 +112,12 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
             }
           }
         }
-        marketplaceBooking {
-          isPaymentRequired
-          paymentStatus {
-            type
-            name
-          }
-          invoiceUrl
-        }
         recurringBooking {
           id
           startDate
           endDate
           frequency {
             name
-          }
-          marketplaceBooking {
-            id
           }
         }
       }
@@ -154,37 +135,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
     }
   `);
 
-  const [commitDeleteMarketplaceBooking] = useMutation<myBookingCard_deleteMarketplaceBookingMutation>(graphql`
-    mutation myBookingCard_deleteMarketplaceBookingMutation($connectionIds: [ID!]!, $input: DeleteMarketplaceBookingInput!) {
-      deleteMarketplaceBooking(input: $input) {
-        booking {
-          id @deleteEdge(connections: $connectionIds)
-        }
-      }
-    }
-  `);
-
   const [commitDeletePrivateRecurringBooking] = useMutation<myBookingCard_deletePrivateRecurringBookingMutation>(graphql`
     mutation myBookingCard_deletePrivateRecurringBookingMutation($input: DeletePrivateRecurringBookingInput!) {
       deletePrivateRecurringBooking(input: $input) {
         recurringBooking {
           id
-        }
-      }
-    }
-  `);
-
-  const [commitDeleteMarketplaceBookingSubscription] = useMutation<myBookingCard_deleteMarketplaceBookingSubscriptionMutation>(graphql`
-    mutation myBookingCard_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
-      deleteMarketplaceBookingSubscription(input: $input) {
-        marketplaceBookingSubscription {
-          id
-          cancelAtPeriodEnd
-          nextRenewalAt
-          status {
-            type
-            name
-          }
         }
       }
     }
@@ -199,8 +154,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const shortDateFormatFrom = toShortDate(bookingDetails.from);
   const recurringBooking = bookingDetails.recurringBooking;
-  const isMarketplaceRecurringBooking = !!recurringBooking?.marketplaceBooking;
-  const canDeleteRecurringOccurrence = !!recurringBooking && !isMarketplaceRecurringBooking && bookingDetails.channel.channel === 'PRIVATE';
+  const canDeleteRecurringOccurrence = !!recurringBooking && bookingDetails.channel.channel === 'PRIVATE';
   const canEditRecurringSeries = canDeleteRecurringOccurrence;
   const recurringSeriesLabel = recurringBooking ? `${recurringBooking.frequency.name} recurring booking` : null;
   const recurringSeriesDateLabel = recurringBooking
@@ -212,15 +166,14 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
   const recurringSeriesActionLabel = recurringBooking ? 'Remove recurring series' : null;
   const recurringOccurrenceActionLabel = canDeleteRecurringOccurrence ? 'Remove this occurrence' : null;
   const recurringDeleteConfirmationMessage = recurringBooking
-    ? `This booking is part of a recurring series. ${isMarketplaceRecurringBooking ? 'If you continue, the full recurring series will be cancelled' : 'If you continue, the full recurring series will be removed'}, not just this booking.`
+    ? `This booking is part of a recurring series. If you continue, the full recurring series will be removed, not just this booking.`
     : null;
   const recurringOccurrenceDeleteConfirmationMessage = canDeleteRecurringOccurrence
     ? 'Only this booking will be removed. The rest of the recurring series will stay active.'
     : null;
   const recurringDeleteDialogTitle = pendingRecurringDeleteAction === 'occurrence' ? 'Remove This Booking' : 'Remove Recurring Series';
   const recurringDeleteDialogDescription = pendingRecurringDeleteAction === 'occurrence' ? recurringOccurrenceDeleteConfirmationMessage : recurringDeleteConfirmationMessage;
-  const recurringDeleteDialogPrimaryLabel =
-    pendingRecurringDeleteAction === 'occurrence' ? 'Remove this booking' : isMarketplaceRecurringBooking ? 'Cancel series' : 'Remove series';
+  const recurringDeleteDialogPrimaryLabel = pendingRecurringDeleteAction === 'occurrence' ? 'Remove this booking' : 'Remove series';
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     canEditRecurringSeries
@@ -349,41 +302,6 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
           });
         },
       });
-    } else {
-      commitDeleteMarketplaceBooking({
-        variables: {
-          connectionIds,
-          input: {
-            clientMutationId: uuid(),
-            id: bookingDetails.id,
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />,
-            });
-
-            return;
-          }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Booking ${bookingDetailsInfo} has been removed.${canDeleteRecurringOccurrence ? ' The rest of the recurring series will stay active.' : ''}`}
-              />
-            ),
-          });
-        },
-        onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />,
-          });
-        },
-      });
     }
   };
 
@@ -400,57 +318,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`${isMarketplaceRecurringBooking ? 'Cancelling' : 'Removing'} ${recurringSeriesLabel.toLowerCase()}...`} />,
-      infoNotificationOptions,
-    );
-
-    if (isMarketplaceRecurringBooking) {
-      const subscriptionId = recurringMarketplaceSubscriptionIds[recurringBooking.id];
-
-      if (!subscriptionId) {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content="We couldn't find the recurring series for this booking." />,
-        });
-
-        return;
-      }
-
-      commitDeleteMarketplaceBookingSubscription({
-        variables: {
-          input: {
-            clientMutationId: uuid(),
-            id: subscriptionId,
-            cancellationMode: 'IMMEDIATE',
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(errors)}`} />,
-            });
-
-            return;
-          }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`${recurringSeriesLabel} has been cancelled. This applies to the full recurring series, not just this booking.`} />,
-          });
-          router.refresh();
-        },
-        onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(error)}`} />,
-          });
-        },
-      });
-
-      return;
-    }
+    const toastId = themedToast(<NotificationContent content={`Removing ${recurringSeriesLabel.toLowerCase()}...`} />, infoNotificationOptions);
 
     commitDeletePrivateRecurringBooking({
       variables: {
@@ -559,30 +427,6 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
                 <Tooltip title={`${recurringSeriesLabel}. ${recurringSeriesDateLabel ?? ''}`.trim()}>
                   <Chip label="Recurring" size="small" variant="outlined" />
                 </Tooltip>
-              ) : null}
-              {bookingDetails.marketplaceBooking?.isPaymentRequired ? (
-                <Chip
-                  label={bookingDetails.marketplaceBooking.paymentStatus.name}
-                  size="small"
-                  icon={<PaymentStatusIcon />}
-                  color={
-                    isConfirmedPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type)
-                      ? 'success'
-                      : isPendingPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type)
-                        ? 'warning'
-                        : 'default'
-                  }
-                  variant={
-                    isConfirmedPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type) || isPendingPaymentStatus(bookingDetails.marketplaceBooking.paymentStatus.type)
-                      ? 'filled'
-                      : 'outlined'
-                  }
-                />
-              ) : null}
-              {bookingDetails.marketplaceBooking?.invoiceUrl ? (
-                <Link component={NextLink} href={bookingDetails.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer" underline="none">
-                  <Chip label="View Invoice" size="small" icon={<PdfIcon />} clickable />
-                </Link>
               ) : null}
             </StackRow>
 

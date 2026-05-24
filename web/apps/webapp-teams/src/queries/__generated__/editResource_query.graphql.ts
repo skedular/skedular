@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c234969dd07017be8e3aa9e7d21efd6b>>
+ * @generated SignedSource<<54826b2de7a6826eeae745d122fa1df3>>
  * @lightSyntaxTransform
  */
 
@@ -124,11 +124,6 @@ export type editResource_query$data = {
     readonly inactive: boolean;
     readonly isAvailableHoursOverridden: boolean;
     readonly name: string;
-    readonly productTags: ReadonlyArray<{
-      readonly color: string | null | undefined;
-      readonly id: string;
-      readonly name: string;
-    }>;
     readonly requireBookingApproval: boolean;
     readonly resourceType: {
       readonly color: string | null | undefined;
@@ -141,7 +136,7 @@ export type editResource_query$data = {
       readonly name: string;
     }>;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesCustomTags_query" | "multipleChoicesProductTags_query" | "multipleChoicesZones_query" | "singleChoiceResourceType_query" | "weekOpeningHours_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesCustomTags_query" | "multipleChoicesZones_query" | "singleChoiceResourceType_query" | "weekOpeningHours_query">;
   readonly " $fragmentType": "editResource_query";
 };
 export type editResource_query$key = {
@@ -435,16 +430,6 @@ return {
           "args": null,
           "concreteType": "OrganizationTagDetails",
           "kind": "LinkedField",
-          "name": "productTags",
-          "plural": true,
-          "selections": (v5/*:: as any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationTagDetails",
-          "kind": "LinkedField",
           "name": "resourceType",
           "plural": false,
           "selections": (v5/*:: as any*/),
@@ -488,11 +473,6 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "multipleChoicesProductTags_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "weekOpeningHours_query"
     }
   ],
@@ -501,6 +481,6 @@ return {
 };
 })();
 
-(node as any).hash = "05b917a89d01d7d82258e88f76a348e1";
+(node as any).hash = "ae5e58ac3f78c65d7ba408b276ce963c";
 
 export default node;

@@ -1,15 +1,15 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { MyBookings } from '@/components/booking/myBookings';
-import { GridContainer, StackColumn } from '@skedular/ui';
 import { WeekRangePicker } from '@/components/datePickers';
 import { GettingStarted } from '@/components/gettingStarted';
 import { Loading } from '@/components/loading';
 import { LocationSelector } from '@/components/location/locationSelector';
 import { RelayError, toRootError } from '@/components/relayError';
 import { TeamSelector } from '@/components/team/teamSelector';
-import { endOfWeek, startOfDay, startOfWeek } from '@skedular/shared';
 import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
 import Box from '@mui/system/Box';
+import { endOfWeek, startOfDay, startOfWeek } from '@skedular/shared';
+import { GridContainer, StackColumn } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -33,20 +33,6 @@ const RootQuery = graphql`
   ) {
     organization(customDomain: $organizationCustomDomain) {
       canModify
-    }
-    marketplaceBookingSubscriptionCancellationModes {
-      type
-      name
-    }
-    marketplaceBookingSubscriptions(first: 100, where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain }) {
-      edges {
-        node {
-          id
-          recurringBookings {
-            id
-          }
-        }
-      }
     }
     ...locationSelector_allLocations_query
     ...teamSelector_allTeams_query

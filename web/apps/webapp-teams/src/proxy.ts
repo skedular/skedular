@@ -3,11 +3,11 @@ import { authkit, handleAuthkitHeaders } from '@workos-inc/authkit-nextjs';
 import type { NextRequest } from 'next/server';
 
 const isUnauthenticatedPath = (pathname: string) => {
-  if (pathname === '/' || pathname === '/marketplace' || pathname.startsWith('/auth/')) {
+  if (pathname === '/' || pathname.startsWith('/auth/')) {
     return true;
   }
 
-  return pathname.startsWith('/marketplace/');
+  return false;
 };
 
 export default async function proxy(request: NextRequest) {
@@ -32,8 +32,6 @@ export const config = {
     '/notifications',
     '/billing-and-payment',
     '/settings',
-    '/marketplace',
-    '/marketplace/:path*',
     '/auth/:path*',
     '/organizations',
     '/organizations/:path*',

@@ -54,19 +54,12 @@ type ZoneDetails = {
   color: string | null | undefined;
 };
 
-type ProductTagDetails = {
-  id: string;
-  name: string | null | undefined;
-  color: string | null | undefined;
-};
-
 type ResourceManagementItem = {
   id: string;
   resource: ResourceDetails;
   resourceType: ResourceTypeDetails;
   customTags: CustomTagDetails[];
   zones: ZoneDetails[];
-  productTags: ProductTagDetails[];
   isActive: boolean;
   isPreferred: boolean;
   capacity: number;
@@ -106,11 +99,6 @@ const ResourcesSectionQuery = graphql`
               color
             }
             zones {
-              id
-              name
-              color
-            }
-            productTags {
               id
               name
               color
@@ -247,7 +235,6 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
     },
     customTags: resource.customTags.map((item) => ({ id: item.id, name: item.name, color: item.color })),
     zones: resource.zones.map((item) => ({ id: item.id, name: item.name, color: item.color })),
-    productTags: resource.productTags.map((item) => ({ id: item.id, name: item.name, color: item.color })),
     isActive: !resource.inactive,
     isPreferred: preferredResources.includes(resource.id),
     capacity: resource.capacity,
@@ -551,7 +538,6 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
                 resourceType: resourceItem.resourceType,
                 customTags: resourceItem.customTags,
                 zones: resourceItem.zones,
-                productTags: resourceItem.productTags,
                 isActive: resourceItem.isActive,
                 isPreferred: resourceItem.isPreferred,
                 capacity: resourceItem.capacity,

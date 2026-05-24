@@ -1,13 +1,9 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeskIcon, OtherResourceIcon, ParkingIcon, RoomIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { ImageFileUploader } from '@/libs/image-file-uploader';
-import { PaletteModeContext } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { addFloorPlan_addFloorPlanMutation } from '@/queries/__generated__/addFloorPlan_addFloorPlanMutation.graphql';
 import type { addFloorPlan_resources_query$key } from '@/queries/__generated__/addFloorPlan_resources_query.graphql';
 import type { addFloorPlan_resources_refetchableFragment } from '@/queries/__generated__/addFloorPlan_resources_refetchableFragment.graphql';
@@ -21,6 +17,18 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import {
+  AppBarWithStackColumn,
+  BodyIconTypography,
+  defaultButtonStyle,
+  defaultPadding,
+  FormFieldLabel,
+  FormStackColumn,
+  SectionIconTypography,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -80,11 +88,6 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
                   color
                 }
                 zones {
-                  id
-                  name
-                  color
-                }
-                productTags {
                   id
                   name
                   color

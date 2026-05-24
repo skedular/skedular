@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c9672dd3f7753ec1d64c7a51f1059c4a>>
+ * @generated SignedSource<<1b414a0436335022c4a3486720186b82>>
  * @lightSyntaxTransform
  */
 
@@ -21,11 +21,6 @@ export type resourceCard_ResourceDetails$data = {
   readonly id: string;
   readonly inactive: boolean;
   readonly name: string;
-  readonly productTags: ReadonlyArray<{
-    readonly color: string | null | undefined;
-    readonly id: string;
-    readonly name: string;
-  }>;
   readonly resourceType: {
     readonly color: string | null | undefined;
     readonly id: string;
@@ -119,16 +114,6 @@ return {
       "args": null,
       "concreteType": "OrganizationTagDetails",
       "kind": "LinkedField",
-      "name": "productTags",
-      "plural": true,
-      "selections": (v3/*:: as any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "OrganizationTagDetails",
-      "kind": "LinkedField",
       "name": "resourceType",
       "plural": false,
       "selections": [
@@ -151,6 +136,6 @@ return {
 };
 })();
 
-(node as any).hash = "07eea60bff65727844dde2b2d305e14a";
+(node as any).hash = "b94abab68c6ee6ddbd8d3f75a4c97aad";
 
 export default node;

@@ -1,10 +1,8 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
-import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
 import { DeskIcon, OtherResourceIcon, ParkingIcon, RoomIcon } from '@/components/icons';
 import { getOrganizationLocationResourceBaseLink } from '@/components/links';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import type { resourceCard_ResourceDetails$key } from '@/queries/__generated__/resourceCard_ResourceDetails.graphql';
 import type { resourceCard_query$key } from '@/queries/__generated__/resourceCard_query.graphql';
 import Card from '@mui/material/Card';
@@ -12,6 +10,8 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import NextLink from 'next/link';
 import { memo, useContext } from 'react';
@@ -52,11 +52,6 @@ const ResourceCard = ({ rootDataRelay, resourceDetailsRelay, onReloadRequired, o
           color
         }
         zones {
-          id
-          name
-          color
-        }
-        productTags {
           id
           name
           color

@@ -87,8 +87,6 @@ export { default as SystemModeIcon } from '@mui/icons-material/SettingsBrightnes
 export { default as ShareIcon } from '@mui/icons-material/Share';
 export { default as PreferredIcon } from '@mui/icons-material/Star';
 export { default as NotPreferredIcon } from '@mui/icons-material/StarBorder';
-export { default as MarketplaceIcon } from '@mui/icons-material/Store';
-export { default as SetupMarketplaceIcon } from '@mui/icons-material/Storefront';
 export { default as SubscriptionsIcon } from '@mui/icons-material/Subscriptions';
 export { default as SsoSettingsIcon } from '@mui/icons-material/SyncLock';
 export { default as TodayIcon } from '@mui/icons-material/Today';
@@ -301,15 +299,6 @@ export const HomeIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   ) : (
     <TooltipIcon tip={tip ?? 'Home'}>
       <Home fontSize={fontSize} sx={sx} color={color ?? 'action'} />
-    </TooltipIcon>
-  );
-
-export const ProductTagIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
-  excludeTooltip ? (
-    <LocalOffer fontSize={fontSize} sx={sx} color={color} />
-  ) : (
-    <TooltipIcon tip={tip ?? 'Product Tag'}>
-      <LocalOffer fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 

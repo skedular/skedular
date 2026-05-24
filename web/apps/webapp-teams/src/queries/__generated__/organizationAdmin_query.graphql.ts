@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a3417b7d591d8ed94368b417c70cc258>>
+ * @generated SignedSource<<d253de898efb78b3caec6b4733a4811c>>
  * @lightSyntaxTransform
  */
 
@@ -14,9 +14,6 @@ export type organizationAdmin_query$data = {
     readonly listingMetadata: {
       readonly title: string | null | undefined;
     };
-    readonly marketplaceListingMetadata: {
-      readonly title: string | null | undefined;
-    };
     readonly name: string;
   } | null | undefined;
   readonly " $fragmentType": "organizationAdmin_query";
@@ -26,17 +23,7 @@ export type organizationAdmin_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_query">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "title",
-    "storageKey": null
-  }
-];
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -75,17 +62,15 @@ return {
           "kind": "LinkedField",
           "name": "listingMetadata",
           "plural": false,
-          "selections": (v0/*:: as any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ListingMetadata",
-          "kind": "LinkedField",
-          "name": "marketplaceListingMetadata",
-          "plural": false,
-          "selections": (v0/*:: as any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "title",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -95,8 +80,7 @@ return {
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "0ec5d0fb474259763bb19965ec62bef7";
+(node as any).hash = "38ea752ba1f740e6ebeb23a4b94e4ecb";
 
 export default node;

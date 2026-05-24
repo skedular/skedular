@@ -1,22 +1,25 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
 import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
-import { ProductTags } from '@/components/productTag';
 import { ResourceType } from '@/components/resourceType';
 import { Zones } from '@/components/zone';
-import {
-  compactManagementActionButtonSx,
-  compactManagementIconButtonSx,
-  compactManagementNeutralChipSx,
-  compactManagementWarningChipSx,
-  defaultGridActionPadding,
-} from '@skedular/ui';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
+import {
+  BodyIconTypography,
+  compactManagementActionButtonSx,
+  compactManagementIconButtonSx,
+  compactManagementNeutralChipSx,
+  compactManagementWarningChipSx,
+  defaultGridActionPadding,
+  LeadIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import { memo, useState } from 'react';
 
 export type ResourceManagementListItem = {
@@ -33,11 +36,6 @@ export type ResourceManagementListItem = {
     color: string | null | undefined;
   }[];
   zones: {
-    id: string;
-    name: string | null | undefined;
-    color: string | null | undefined;
-  }[];
-  productTags: {
     id: string;
     name: string | null | undefined;
     color: string | null | undefined;
@@ -123,7 +121,7 @@ const OrganizationLocationResourceManagementList = ({
       {items.map((item) => {
         const isSelected = selectedIds.includes(item.id);
         const isExpanded = expandedIds.includes(item.id);
-        const hasMetadata = item.zones.length > 0 || item.customTags.length > 0 || item.productTags.length > 0;
+        const hasMetadata = item.zones.length > 0 || item.customTags.length > 0;
 
         return (
           <Box
@@ -151,7 +149,6 @@ const OrganizationLocationResourceManagementList = ({
                     <>
                       {item.zones.length > 0 && <Zones zones={item.zones} hideIcon hideNAText />}
                       {item.customTags.length > 0 && <CustomTags customTags={item.customTags} hideIcon hideNAText />}
-                      {item.productTags.length > 0 && <ProductTags productTags={item.productTags} hideIcon hideNAText />}
                     </>
                   )}
                 </StackRow>
@@ -213,18 +210,6 @@ const OrganizationLocationResourceManagementList = ({
                   >
                     <BodyIconTypography label="Custom tags" />
                     <CustomTags customTags={item.customTags} hideIcon hideNAText={false} sx={{ pt: 1 }} />
-                  </Box>
-                  <Box
-                    sx={{
-                      borderRadius: 2,
-                      border: 1,
-                      borderColor: 'divider',
-                      p: 1.25,
-                      backgroundColor: 'background.default',
-                    }}
-                  >
-                    <BodyIconTypography label="Product tags" />
-                    <ProductTags productTags={item.productTags} hideIcon hideNAText={false} sx={{ pt: 1 }} />
                   </Box>
                 </Box>
               </Collapse>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b0b0ef679034c44ce037b94f8aa15f16>>
+ * @generated SignedSource<<1bfb029138d8d03f939b88f2036f202f>>
  * @lightSyntaxTransform
  */
 
@@ -53,6 +53,9 @@ export type myBookings_bookings_query$data = {
           readonly id: string;
           readonly name: string;
         }>;
+        readonly marketplaceBooking: {
+          readonly __typename: "MarketplaceBookingDetails";
+        } | null | undefined;
         readonly notes: string | null | undefined;
         readonly until: any;
         readonly " $fragmentSpreads": FragmentRefs<"myBookingCard_BookingDetails">;
@@ -98,7 +101,14 @@ v4 = [
   (v1/*:: as any*/),
   (v2/*:: as any*/),
   (v3/*:: as any*/)
-];
+],
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -389,17 +399,23 @@ return {
                   "storageKey": null
                 },
                 {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "MarketplaceBookingDetails",
+                  "kind": "LinkedField",
+                  "name": "marketplaceBooking",
+                  "plural": false,
+                  "selections": [
+                    (v5/*:: as any*/)
+                  ],
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "myBookingCard_BookingDetails"
                 },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
-                  "storageKey": null
-                }
+                (v5/*:: as any*/)
               ],
               "storageKey": null
             },
@@ -459,6 +475,6 @@ return {
 };
 })();
 
-(node as any).hash = "0474e466a532512469601eae43239fcf";
+(node as any).hash = "b13f0906480f883c6e9dadea8206c249";
 
 export default node;

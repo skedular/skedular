@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c97b62933b077ab7814052bddfd14367>>
+ * @generated SignedSource<<32fb3007eb1955c82696a16eec3c4e21>>
  * @lightSyntaxTransform
  */
 
@@ -86,11 +86,6 @@ export type editResource_updateResourceMutation$data = {
       readonly inactive: boolean;
       readonly isAvailableHoursOverridden: boolean;
       readonly name: string;
-      readonly productTags: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      }>;
       readonly requireBookingApproval: boolean;
       readonly resourceType: {
         readonly color: string | null | undefined;
@@ -165,11 +160,6 @@ export type editResource_updateResourceMutation$rawResponse = {
       readonly inactive: boolean;
       readonly isAvailableHoursOverridden: boolean;
       readonly name: string;
-      readonly productTags: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      }>;
       readonly requireBookingApproval: boolean;
       readonly resourceType: {
         readonly color: string | null | undefined;
@@ -326,16 +316,6 @@ v6 = [
             "args": null,
             "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
-            "name": "productTags",
-            "plural": true,
-            "selections": (v4/*:: as any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationTagDetails",
-            "kind": "LinkedField",
             "name": "resourceType",
             "plural": false,
             "selections": (v4/*:: as any*/),
@@ -465,16 +445,16 @@ return {
     "selections": (v6/*:: as any*/)
   },
   "params": {
-    "cacheID": "4b63d0909fc405cef0a9fb4a25367995",
+    "cacheID": "f31c868bc5b07c43060888a560a21f10",
     "id": null,
     "metadata": {},
     "name": "editResource_updateResourceMutation",
     "operationKind": "mutation",
-    "text": "mutation editResource_updateResourceMutation(\n  $input: UpdateResourceInput!\n) {\n  updateResource(input: $input) {\n    resource {\n      id\n      name\n      inactive\n      requireBookingApproval\n      color\n      capacity\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      resourceType {\n        id\n        name\n        color\n      }\n      isAvailableHoursOverridden\n      availableHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editResource_updateResourceMutation(\n  $input: UpdateResourceInput!\n) {\n  updateResource(input: $input) {\n    resource {\n      id\n      name\n      inactive\n      requireBookingApproval\n      color\n      capacity\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n      resourceType {\n        id\n        name\n        color\n      }\n      isAvailableHoursOverridden\n      availableHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9a3425617ae7260e2c959a752475764d";
+(node as any).hash = "63b66262c268d752f6dfb810b759d6b5";
 
 export default node;

@@ -11,7 +11,7 @@ const bookingFragmentData = {
   from: '2026-04-12T09:00:00.000Z',
   until: '2026-04-12T11:00:00.000Z',
   notes: 'Bring laptop',
-  channel: { channel: 'MARKETPLACE' },
+  channel: { channel: 'PRIVATE' },
   involvedCustomers: [],
   involvedLocations: [{ uniqueId: 'location-1', name: 'Level 2 Hot Desk' }],
   involvedTeams: [{ id: 'team-1', name: 'Operations' }],
@@ -26,17 +26,11 @@ const bookingFragmentData = {
       },
     },
   ],
-  marketplaceBooking: {
-    isPaymentRequired: true,
-    paymentStatus: { type: 'PAID', name: 'Paid' },
-    invoiceUrl: 'https://example.com/invoice.pdf',
-  },
   recurringBooking: {
     id: 'recurring-booking-1',
     startDate: '2026-04-01T09:00:00.000Z',
     endDate: '2026-06-30T11:00:00.000Z',
     frequency: { name: 'Weekly' },
-    marketplaceBooking: null,
   },
 };
 
@@ -88,8 +82,6 @@ vi.mock('@/components/icons', () => ({
   CalendarIcon: () => <span>calendar-icon</span>,
   EllipseMenuIcon: () => <span>menu</span>,
   NotesIcon: () => <span>notes-icon</span>,
-  PaymentStatusIcon: () => <span>payment-icon</span>,
-  PdfIcon: () => <span>pdf-icon</span>,
   TeamIcon: () => <span>team-icon</span>,
 }));
 
@@ -132,20 +124,17 @@ describe('MyBookingCard', () => {
             photoUrl: null,
           },
         ]}
-        recurringMarketplaceSubscriptionIds={{}}
       />,
     );
 
     expect(screen.getByText('Level 2 Hot Desk')).toBeInTheDocument();
     expect(screen.getByText('Operations')).toBeInTheDocument();
-    expect(screen.getByText('Paid')).toBeInTheDocument();
     expect(screen.getByText('Recurring')).toBeInTheDocument();
     expect(screen.getByText('Booking details')).toBeInTheDocument();
     expect(screen.getByText('Desk A1')).toBeInTheDocument();
     expect(screen.getByText('Monitor')).toBeInTheDocument();
     expect(screen.getByText('North Wing')).toBeInTheDocument();
     expect(screen.getByText('Bring laptop')).toBeInTheDocument();
-    expect(screen.getByText('View Invoice')).toBeInTheDocument();
     expect(screen.queryByText('Weekly recurring booking')).not.toBeInTheDocument();
     expect(screen.queryByText('Recurring booking')).not.toBeInTheDocument();
     expect(screen.queryByText('Open booking')).not.toBeInTheDocument();
@@ -156,10 +145,9 @@ describe('MyBookingCard', () => {
     useFragmentMock.mockImplementation(() => ({
       ...bookingFragmentData,
       channel: { channel: 'PRIVATE' },
-      marketplaceBooking: null,
     }));
 
-    render(<MyBookingCard bookingDetailsRelay={{} as never} organizationCustomDomain="acme" connectionIds={[]} otherTeammates={[]} recurringMarketplaceSubscriptionIds={{}} />);
+    render(<MyBookingCard bookingDetailsRelay={{} as never} organizationCustomDomain="acme" connectionIds={[]} otherTeammates={[]} />);
 
     expect(lastMenuOptions.map((item) => item.label)).toContain('Edit this occurrence');
     expect(lastMenuOptions.map((item) => item.label)).toContain('Edit recurring booking');

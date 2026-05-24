@@ -9,9 +9,9 @@ import { OrganizationDetails, organizationSchema, splitNotificationEmails } from
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import type { organizationAdminSetupSectionQuery } from '@/queries/__generated__/organizationAdminSetupSectionQuery.graphql';
 import type {
+  organizationAdminSetupSection_updateOrganizationMutation,
   OrganizationBillingCycle,
   OrganizationPatchField,
-  organizationAdminSetupSection_updateOrganizationMutation,
 } from '@/queries/__generated__/organizationAdminSetupSection_updateOrganizationMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -56,15 +56,6 @@ type OrganizationSetupPatchValues = {
   }[];
   billingCycle: OrganizationBillingCycle | null | undefined;
   invoiceDueInDays: number | null | undefined;
-  marketplaceListingMetadata:
-    | {
-        about: string | null | undefined;
-        title: string | null | undefined;
-        subTitle: string | null | undefined;
-        includedFeatures: readonly string[] | null | undefined;
-      }
-    | null
-    | undefined;
 };
 
 const mapFeatureImagesToPatchInput = (featureImages: FileUploadResponse[]): OrganizationSetupPatchValues['featureImages'] =>
@@ -131,12 +122,6 @@ const RootQuery = graphql`
         subTitle
       }
       logoUrl
-      marketplaceListingMetadata {
-        about
-        title
-        subTitle
-        includedFeatures
-      }
       website
       customerFacingTermsAndConditionsUrl
       industrySubCategories {
@@ -178,12 +163,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
             subTitle
           }
           logoUrl
-          marketplaceListingMetadata {
-            about
-            title
-            subTitle
-            includedFeatures
-          }
           website
           customerFacingTermsAndConditionsUrl
           industrySubCategories {
@@ -260,7 +239,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
       })) ?? [],
     billingCycle: organization?.billingCycle.type,
     invoiceDueInDays: organization?.invoiceDueInDays,
-    marketplaceListingMetadata: organization?.marketplaceListingMetadata,
   };
   const draftPatchValues = useRef<OrganizationSetupPatchValues>(initialPatchValues);
   const submittedPatchValues = useRef<OrganizationSetupPatchValues>(initialPatchValues);
@@ -302,7 +280,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
         })) ?? [],
       billingCycle: organization?.billingCycle.type,
       invoiceDueInDays: organization?.invoiceDueInDays,
-      marketplaceListingMetadata: organization?.marketplaceListingMetadata,
     };
     draftPatchValues.current = values;
     submittedPatchValues.current = values;
@@ -326,7 +303,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
         featureImages: values.featureImages ?? submittedPatchValues.current.featureImages,
         billingCycle: values.billingCycle ?? submittedPatchValues.current.billingCycle,
         invoiceDueInDays: values.invoiceDueInDays ?? submittedPatchValues.current.invoiceDueInDays,
-        marketplaceListingMetadata: values.marketplaceListingMetadata ?? submittedPatchValues.current.marketplaceListingMetadata,
       };
 
       if (fieldsToUpdate.includes('NAME') && nextPatchValues.name.trim().length < 3) {
@@ -374,8 +350,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
             return nextPatchValues.billingCycle !== submittedValues.billingCycle;
           case 'INVOICE_DUE_IN_DAYS':
             return nextPatchValues.invoiceDueInDays !== submittedValues.invoiceDueInDays;
-          case 'MARKETPLACE_LISTING_METADATA':
-            return JSON.stringify(nextPatchValues.marketplaceListingMetadata) !== JSON.stringify(submittedValues.marketplaceListingMetadata);
           default:
             return true;
         }
@@ -415,7 +389,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
             ...(fieldsToUpdate.includes('FEATURE_IMAGES') ? { featureImages: nextPatchValues.featureImages } : {}),
             ...(fieldsToUpdate.includes('BILLING_CYCLE') ? { billingCycle: nextPatchValues.billingCycle } : {}),
             ...(fieldsToUpdate.includes('INVOICE_DUE_IN_DAYS') ? { invoiceDueInDays: nextPatchValues.invoiceDueInDays } : {}),
-            ...(fieldsToUpdate.includes('MARKETPLACE_LISTING_METADATA') ? { marketplaceListingMetadata: nextPatchValues.marketplaceListingMetadata } : {}),
           },
         },
         onCompleted: (response, errors) => {
@@ -446,7 +419,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                 subTitle: nextPatchValues.subTitle,
               },
               logoUrl: nextPatchValues.logoUrl,
-              marketplaceListingMetadata: nextPatchValues.marketplaceListingMetadata,
               website: nextPatchValues.website,
               customerFacingTermsAndConditionsUrl: nextPatchValues.customerFacingTermsAndConditionsUrl,
               industrySubCategories: selectedIndustrySubCategories,

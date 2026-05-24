@@ -22,12 +22,6 @@ const organization = {
     subTitle: 'Original subtitle',
   },
   logoUrl: null,
-  marketplaceListingMetadata: {
-    about: 'Marketplace about',
-    title: 'Marketplace title',
-    subTitle: 'Marketplace subtitle',
-    includedFeatures: [],
-  },
   website: null,
   customerFacingTermsAndConditionsUrl: null,
   industrySubCategories: [],

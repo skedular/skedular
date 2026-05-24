@@ -1,11 +1,9 @@
-import { BodyIconTypography, LeadIconTypography, StackColumn } from '@skedular/ui';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
 import Box from '@mui/material/Box';
-import { PageHeaderPanel } from '@skedular/ui';
+import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel, StackColumn } from '@skedular/ui';
+import { useSearchParams } from 'next/navigation';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { defaultPadding } from '@skedular/ui';
-import { useSearchParams } from 'next/navigation';
 import OrganizationAdminBillingPaymentSection from './organization-admin-billing-payment-section';
 import OrganizationAdminManageOrganizationSection from './organization-admin-manage-organization-section';
 import OrganizationAdminPhysicalAddressSection from './organization-admin-physical-address-section';
@@ -47,9 +45,6 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
         organization(customDomain: $organizationCustomDomain) {
           name
           listingMetadata {
-            title
-          }
-          marketplaceListingMetadata {
             title
           }
         }
@@ -96,9 +91,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
         >
           <StackColumn spacing={0.5}>
             <LeadIconTypography label="Settings & controls" />
-            <BodyIconTypography
-              label={organization?.listingMetadata?.title || organization?.marketplaceListingMetadata?.title || 'Billing, address, identity, tags, and subscriptions'}
-            />
+            <BodyIconTypography label={organization?.listingMetadata?.title || 'Billing, address, identity, tags, and subscriptions'} />
           </StackColumn>
         </PageHeaderPanel>
 

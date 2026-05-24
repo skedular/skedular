@@ -1,13 +1,13 @@
-import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { EditResource } from '@/components/resource/editResource';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
 import type { pageOrganizationLocationResource_rootQuery } from '@/queries/__generated__/pageOrganizationLocationResource_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
+import { useKnownParams } from '@skedular/shared';
+import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -21,7 +21,6 @@ const RootQuery = graphql`
     $resourceId: String!
     $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
-    $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
   ) {
     resource(id: $resourceId) {
       name
@@ -102,12 +101,6 @@ const RootPageWithRelay = () => {
           },
         ],
         multipleChoicesZonesSortingValues: [
-          {
-            direction: 'ASCENDING',
-            field: 'NAME',
-          },
-        ],
-        multipleChoicesProductTagsSortingValues: [
           {
             direction: 'ASCENDING',
             field: 'NAME',

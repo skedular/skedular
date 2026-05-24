@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c5bd7f8c6817260143c29b273147dce7>>
+ * @generated SignedSource<<4b7f62e4b247378c0a9b8bf68df833ca>>
  * @lightSyntaxTransform
  */
 
@@ -25,11 +25,6 @@ export type addFloorPlan_resources_query$data = {
           readonly id: string;
           readonly inactive: boolean;
           readonly name: string;
-          readonly productTags: ReadonlyArray<{
-            readonly color: string | null | undefined;
-            readonly id: string;
-            readonly name: string;
-          }>;
           readonly resourceType: {
             readonly color: string | null | undefined;
             readonly id: string;
@@ -232,16 +227,6 @@ return {
                       "args": null,
                       "concreteType": "OrganizationTagDetails",
                       "kind": "LinkedField",
-                      "name": "productTags",
-                      "plural": true,
-                      "selections": (v4/*:: as any*/),
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "OrganizationTagDetails",
-                      "kind": "LinkedField",
                       "name": "resourceType",
                       "plural": false,
                       "selections": [
@@ -315,6 +300,6 @@ return {
 };
 })();
 
-(node as any).hash = "291a7e7e8f0702f9a457ec513def9fed";
+(node as any).hash = "87f040877c73732bdb6d93218bb98748";
 
 export default node;

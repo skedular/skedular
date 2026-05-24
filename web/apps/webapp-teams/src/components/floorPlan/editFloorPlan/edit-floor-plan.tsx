@@ -101,11 +101,6 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
                   name
                   color
                 }
-                productTags {
-                  id
-                  name
-                  color
-                }
                 resourceType {
                   id
                   name

@@ -1,6 +1,5 @@
-import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
+import { MultipleChoicesCustomTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
 import type { multipleChoicesCustomTags_query$key } from '@/queries/__generated__/multipleChoicesCustomTags_query.graphql';
-import type { multipleChoicesProductTags_query$key } from '@/queries/__generated__/multipleChoicesProductTags_query.graphql';
 import type { multipleChoicesZones_query$key } from '@/queries/__generated__/multipleChoicesZones_query.graphql';
 import type { singleChoiceResourceType_query$key } from '@/queries/__generated__/singleChoiceResourceType_query.graphql';
 import Button from '@mui/material/Button';
@@ -11,13 +10,12 @@ import { memo } from 'react';
 
 type Props = {
   rowIndex: number;
-  rootDataRelay: singleChoiceResourceType_query$key & multipleChoicesCustomTags_query$key & multipleChoicesZones_query$key & multipleChoicesProductTags_query$key;
+  rootDataRelay: singleChoiceResourceType_query$key & multipleChoicesCustomTags_query$key & multipleChoicesZones_query$key;
   organizationCustomDomain: string;
   onRemove: () => void;
-  showProductTags: boolean;
 };
 
-const BulkAddResourceRowForm = ({ rowIndex, rootDataRelay, organizationCustomDomain, onRemove, showProductTags }: Props) => {
+const BulkAddResourceRowForm = ({ rowIndex, rootDataRelay, organizationCustomDomain, onRemove }: Props) => {
   const prefix = `rows[${rowIndex}]`;
 
   return (
@@ -56,12 +54,6 @@ const BulkAddResourceRowForm = ({ rowIndex, rootDataRelay, organizationCustomDom
         <FormFieldLabel label="Zones">
           <MultipleChoicesZones rootDataRelay={rootDataRelay} name={`${prefix}.zoneIds`} organizationCustomDomain={organizationCustomDomain} />
         </FormFieldLabel>
-
-        {showProductTags && (
-          <FormFieldLabel label="Product Tags">
-            <MultipleChoicesProductTags rootDataRelay={rootDataRelay} name={`${prefix}.productTagIds`} organizationCustomDomain={organizationCustomDomain} />
-          </FormFieldLabel>
-        )}
 
         <Button variant="text" onClick={onRemove} color="error" sx={{ alignSelf: 'flex-start', textTransform: 'none' }}>
           <SmallIconTypography label="Remove row" />

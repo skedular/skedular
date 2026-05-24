@@ -1,9 +1,9 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { NewIcon } from '@/components/icons';
-import { getOrganizationLocationAddMarketplaceLink, getOrganizationLocationAddPrivateLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { getOrganizationLocationAddPrivateLink } from '@/components/links';
 import type { newLocationButton_query$key } from '@/queries/__generated__/newLocationButton_query.graphql';
 import Button from '@mui/material/Button';
+import { useIntegratedPlatrform } from '@skedular/shared';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { memo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
@@ -38,15 +38,7 @@ const NewLocationButton = ({ rootDataRelay, organizationCustomDomain, fullWidth,
   }
 
   return (
-    <Button
-      href={
-        rootData.organization.type.type === 'PRIVATE'
-          ? getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationCustomDomain)
-          : getOrganizationLocationAddMarketplaceLink(integratedPlatrform, organizationCustomDomain)
-      }
-      variant={variant ?? 'text'}
-      fullWidth={fullWidth}
-    >
+    <Button href={getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationCustomDomain)} variant={variant ?? 'text'} fullWidth={fullWidth}>
       {size === 'small' && <SmallIconTypography label={label ?? 'Add Location'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />}
       {size === 'medium' && <BodyIconTypography label={label ?? 'Add Location'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}
       {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Add Location'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}

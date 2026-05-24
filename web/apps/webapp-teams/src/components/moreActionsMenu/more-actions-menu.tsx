@@ -1,7 +1,7 @@
-import { SmallIconTypography } from '@skedular/ui';
 import { BookingIcon, DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { SmallIconTypography } from '@skedular/ui';
 import type { JSX } from 'react';
 
 type Props = {
@@ -46,8 +46,6 @@ export enum MoreActionsMenuOptionType {
   DeleteCustomTag,
   SetAsPreferredCustomTag,
   RemoveAsPreferredCustomTag,
-  EditProductTag,
-  DeleteProductTag,
   EditResource,
   DeleteResource,
   ActivateResource,
@@ -240,16 +238,6 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.RemoveAsPreferredCustomTag,
     label: 'Remove as preferred tag',
     icon: <PreferredIcon />,
-  },
-  [MoreActionsMenuOptionType.EditProductTag]: {
-    id: MoreActionsMenuOptionType.EditProductTag,
-    label: 'Edit Product Tag',
-    icon: <EditIcon />,
-  },
-  [MoreActionsMenuOptionType.DeleteProductTag]: {
-    id: MoreActionsMenuOptionType.DeleteProductTag,
-    label: 'Remove Product Tag',
-    icon: <DeleteIcon color="warning" />,
   },
   [MoreActionsMenuOptionType.EditResource]: {
     id: MoreActionsMenuOptionType.EditResource,

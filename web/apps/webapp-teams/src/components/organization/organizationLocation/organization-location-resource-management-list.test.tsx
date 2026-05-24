@@ -14,10 +14,6 @@ vi.mock('@/components/zone', () => ({
   Zones: ({ zones }: { zones: { name?: string | null }[] }) => <div>{zones.map((item) => item.name).join(', ') || 'N/A'}</div>,
 }));
 
-vi.mock('@/components/productTag', () => ({
-  ProductTags: ({ productTags }: { productTags: { name?: string | null }[] }) => <div>{productTags.map((item) => item.name).join(', ') || 'N/A'}</div>,
-}));
-
 describe('OrganizationLocationResourceManagementList', () => {
   it('renders a compact resource row and expands details on demand', () => {
     render(
@@ -29,7 +25,6 @@ describe('OrganizationLocationResourceManagementList', () => {
             resourceType: { id: 'desk', name: 'Desk', color: null },
             customTags: [{ id: 'quiet', name: 'Quiet', color: null }],
             zones: [{ id: 'north', name: 'North Wing', color: null }],
-            productTags: [{ id: 'day', name: 'Day Pass', color: null }],
             isActive: true,
             isPreferred: false,
             capacity: 1,
@@ -49,7 +44,6 @@ describe('OrganizationLocationResourceManagementList', () => {
     expect(screen.getByText('Capacity 1')).toBeInTheDocument();
     expect(screen.getByText('North Wing')).toBeInTheDocument();
     expect(screen.getByText('Quiet')).toBeInTheDocument();
-    expect(screen.getByText('Day Pass')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Details' }));
 
@@ -68,7 +62,6 @@ describe('OrganizationLocationResourceManagementList', () => {
             resourceType: { id: 'desk', name: 'Desk', color: null },
             customTags: [],
             zones: [],
-            productTags: [],
             isActive: true,
             isPreferred: false,
             capacity: 1,

@@ -38,7 +38,6 @@ const RootQuery = graphql`
     }
     bookingCustomerRecordSynced
     locationCustomerRecordSynced
-    marketplaceCustomerRecordSynced
     msTeamsCustomerRecordSynced
     organizationCustomerRecordSynced
     slackCustomerRecordSynced
@@ -90,7 +89,6 @@ const RootShell = ({
   const areCustomerRecordsSync = !!(
     rootData?.bookingCustomerRecordSynced &&
     rootData?.locationCustomerRecordSynced &&
-    rootData?.marketplaceCustomerRecordSynced &&
     rootData?.msTeamsCustomerRecordSynced &&
     rootData?.organizationCustomerRecordSynced &&
     rootData?.slackCustomerRecordSynced &&

@@ -101,18 +101,6 @@ export const getOrganizationLocationAddPrivateLink = (integratedPlatrform: strin
     : `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-private`;
 };
 
-export const getOrganizationLocationAddMarketplaceLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) => {
-  let params = '';
-
-  if (options?.redirectUrl) {
-    params += `redirectUrl=${options.redirectUrl}`;
-  }
-
-  return params
-    ? `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-marketplace?${params}`
-    : `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-marketplace`;
-};
-
 export const getOrganizationLocationAddIndividualLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) => {
   let params = '';
 
@@ -168,25 +156,6 @@ export const getOrganizationAdminSubscriptionsBaseLink = (integratedPlatrform: s
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=subscriptions`;
 export const getOrganizationAdminManageOrganizationBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=manage-organization`;
-
-export const getOrganizationMarketplaceSetupBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace`;
-export const getOrganizationMarketplaceSetupProductTagsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=product-tags-setup`;
-export const getOrganizationMarketplaceSetupMarketplaceListingBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=marketplace-listing`;
-export const getOrganizationMarketplaceSetupBillingCycleBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=billing-cycle`;
-export const getOrganizationMarketplaceSetupXeroBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=xero-setup`;
-export const getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=stripe-connect-accounts-setup`;
-export const getOrganizationMarketplaceSetupBankAccountsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=bank-accounts-setup`;
-export const getOrganizationProductsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/products`;
-export const getOrganizationProductBaseLink = (integratedPlatrform: string | undefined, id: string, productId: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/products/${productId}`;
-export const getOrganizationProductAddLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/products/add`;
 
 export const getOrganizationSsoSignInBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/sso-signin?redirectUrl=${window.location.href}`;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d1e635e869997664ed9b3a0d282726f1>>
+ * @generated SignedSource<<e5bc064385b21716abfb7b44d4c97986>>
  * @lightSyntaxTransform
  */
 
@@ -324,16 +324,6 @@ return {
                             "plural": true,
                             "selections": (v4/*:: as any*/),
                             "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "OrganizationTagDetails",
-                            "kind": "LinkedField",
-                            "name": "productTags",
-                            "plural": true,
-                            "selections": (v4/*:: as any*/),
-                            "storageKey": null
                           }
                         ],
                         "storageKey": null
@@ -353,12 +343,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2cd98ea4b7b9023e5a2abca9f94d089e",
+    "cacheID": "54b71829677a4b3c783feaaa6a1e9297",
     "id": null,
     "metadata": {},
     "name": "floorPlans_floorPlan_refetchableFragment",
     "operationKind": "query",
-    "text": "query floorPlans_floorPlan_refetchableFragment(\n  $floorPlanExists: Boolean!\n  $floorPlanId: String!\n  $locationId: String!\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  ...floorPlans_floorPlan_query\n}\n\nfragment floorPlans_floorPlan_query on Query {\n  floorPlan(id: $floorPlanId) @include(if: $floorPlanExists) {\n    id\n    name\n    image {\n      original {\n        url\n        height\n        width\n      }\n    }\n    resourcePositions {\n      x\n      y\n      resource {\n        id\n      }\n      id\n    }\n  }\n  location(id: $locationId) {\n    resources(where: {floorPlanId: $floorPlanId}, orderBy: $resourcesSortingValues) @include(if: $floorPlanExists) {\n      edges {\n        node {\n          id\n          name\n          resourceType {\n            type\n            id\n          }\n          ...resourceCard_ResourceDetails\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment resourceCard_ResourceDetails on ResourceDetails {\n  id\n  name\n  inactive\n  color\n  capacity\n  customTags {\n    id\n    name\n    color\n  }\n  zones {\n    id\n    name\n    color\n  }\n  productTags {\n    id\n    name\n    color\n  }\n  resourceType {\n    id\n    name\n    color\n    type\n  }\n}\n"
+    "text": "query floorPlans_floorPlan_refetchableFragment(\n  $floorPlanExists: Boolean!\n  $floorPlanId: String!\n  $locationId: String!\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  ...floorPlans_floorPlan_query\n}\n\nfragment floorPlans_floorPlan_query on Query {\n  floorPlan(id: $floorPlanId) @include(if: $floorPlanExists) {\n    id\n    name\n    image {\n      original {\n        url\n        height\n        width\n      }\n    }\n    resourcePositions {\n      x\n      y\n      resource {\n        id\n      }\n      id\n    }\n  }\n  location(id: $locationId) {\n    resources(where: {floorPlanId: $floorPlanId}, orderBy: $resourcesSortingValues) @include(if: $floorPlanExists) {\n      edges {\n        node {\n          id\n          name\n          resourceType {\n            type\n            id\n          }\n          ...resourceCard_ResourceDetails\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment resourceCard_ResourceDetails on ResourceDetails {\n  id\n  name\n  inactive\n  color\n  capacity\n  customTags {\n    id\n    name\n    color\n  }\n  zones {\n    id\n    name\n    color\n  }\n  resourceType {\n    id\n    name\n    color\n    type\n  }\n}\n"
   }
 };
 })();

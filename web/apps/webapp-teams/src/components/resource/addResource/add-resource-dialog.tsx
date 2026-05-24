@@ -1,3 +1,14 @@
+import { Loading } from '@/components/loading';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { MultipleChoicesCustomTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
+import { RelayError, toRootError } from '@/components/relayError';
+import { DialogTransition } from '@/components/transitions';
+import type { addResourceDialog_addResourceMutation } from '@/queries/__generated__/addResourceDialog_addResourceMutation.graphql';
+import type { addResourceDialog_rootQuery } from '@/queries/__generated__/addResourceDialog_rootQuery.graphql';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import { createFilterOptions } from '@mui/material/useAutocomplete';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
 import {
   BodyIconTypography,
   ColorPicker,
@@ -8,18 +19,6 @@ import {
   SmallIconTypography,
   TwoButtonsDialogActions,
 } from '@skedular/ui';
-import { Loading } from '@/components/loading';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
-import { RelayError, toRootError } from '@/components/relayError';
-import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
-import type { addResourceDialog_addResourceMutation } from '@/queries/__generated__/addResourceDialog_addResourceMutation.graphql';
-import type { addResourceDialog_rootQuery } from '@/queries/__generated__/addResourceDialog_rootQuery.graphql';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -45,7 +44,6 @@ const RootQuery = graphql`
     $organizationCustomDomain: String!
     $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
-    $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
     $locationsSortingValues: [LocationOrderInput!]
   ) {
     organization(customDomain: $organizationCustomDomain) {
@@ -66,7 +64,6 @@ const RootQuery = graphql`
     ...singleChoiceResourceType_query
     ...multipleChoicesCustomTags_query
     ...multipleChoicesZones_query
-    ...multipleChoicesProductTags_query
   }
 `;
 
@@ -81,7 +78,6 @@ type ResourceDetails = {
   name: string;
   customTagIds: string[];
   zoneIds: string[];
-  productTagIds: string[];
   capacity: number;
 };
 
@@ -91,7 +87,6 @@ const ResourceSchema = object({
   name: string().required('Please enter a resource name.'),
   customTagIds: array().nullable(),
   zoneIds: array().nullable(),
-  productTagIds: array().nullable(),
   capacity: number().required('Please enter a capacity.').min(1, 'Capacity must be at least 1.'),
 });
 
@@ -118,11 +113,6 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
             name
             color
           }
-          productTags {
-            id
-            name
-            color
-          }
           resourceType {
             id
             name
@@ -145,7 +135,7 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
     setSelectedColor(color);
   };
 
-  const handleAddClick = ({ location: locationId, resourceTypeId, name, customTagIds, zoneIds, productTagIds, capacity: capacityStr }: ResourceDetails) => {
+  const handleAddClick = ({ location: locationId, resourceTypeId, name, customTagIds, zoneIds, capacity: capacityStr }: ResourceDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding ${name}...`} />, infoNotificationOptions);
     const capacity = parseInt(capacityStr.toString(), 10);
@@ -160,7 +150,7 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
           name,
           customTagIds,
           zoneIds,
-          productTagIds,
+          productTagIds: [],
           inactive: false,
           requireBookingApproval: false,
           color: selectedColor,
@@ -200,7 +190,6 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
             requireBookingApproval: false,
             customTags: [],
             zones: [],
-            productTags: [],
             color: selectedColor,
             capacity,
             resourceType: {
@@ -226,7 +215,6 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
             name: '',
             customTagIds: [],
             zoneIds: [],
-            productTagIds: [],
             capacity: 1,
           }}
           validate={validate}
@@ -282,17 +270,6 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
                 <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationCustomDomain={organizationCustomDomain} />
               </FormFieldLabel>
 
-              {rootData.organization?.type.type === 'MARKETPLACE' && (
-                <FormFieldLabel label="Product Tags">
-                  <MultipleChoicesProductTags
-                    rootDataRelay={rootData}
-                    name="productTagIds"
-                    required={requiredFields.productTagIds}
-                    organizationCustomDomain={organizationCustomDomain}
-                  />
-                </FormFieldLabel>
-              )}
-
               <FormFieldLabel label="Color">
                 <ColorPicker onChange={handleColorChange} />
               </FormFieldLabel>
@@ -342,12 +319,6 @@ const AddResourceDialogWithRelay = ({ onReloadRequired, organizationCustomDomain
           },
         ],
         multipleChoicesZonesSortingValues: [
-          {
-            direction: 'ASCENDING',
-            field: 'NAME',
-          },
-        ],
-        multipleChoicesProductTagsSortingValues: [
           {
             direction: 'ASCENDING',
             field: 'NAME',
