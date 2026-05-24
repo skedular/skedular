@@ -17,8 +17,11 @@
 **/Dockerfile*
 **/node_modules
 **/npm-debug.log
+**/*.log
+**/*.log*
 **/obj
 **/TestResults
+**/coverage
 **/.turbo
 **/.next
 **/dist

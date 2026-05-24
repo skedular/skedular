@@ -18,6 +18,7 @@ import Box from '@mui/system/Box';
 import { getCustomerFullName, localNow, PaletteModeContext, SelectedPaletteModeContext, toLongDateTime, UpdatePaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
@@ -28,13 +29,14 @@ type Props = {
   rootDataRelay: noOrganizationAppBar_query$key;
   hideOrganizationSelector?: boolean;
   hideWelcomeMessage?: boolean;
+  showLogo?: boolean;
   showBreadcrumps?: boolean;
   breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
 const createOrganizationId = '76eZvntIX6YA5FboBJlRk';
 
-const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: Props) => {
+const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, showLogo, showBreadcrumps, breadcrumbs }: Props) => {
   const rootData = useFragment<noOrganizationAppBar_query$key>(
     graphql`
       fragment noOrganizationAppBar_query on Query {
@@ -135,6 +137,11 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
 
   const selectedThemeIcon =
     selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;
+  const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
+  const originalLogoWidth = 779;
+  const originalLogoHeight = 163;
+  const logoWidth = 230;
+  const logoHeight = (originalLogoHeight * logoWidth) / originalLogoWidth;
 
   return (
     <>
@@ -146,6 +153,8 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
             borderColor: (theme) => theme.palette.divider,
           }}
         >
+          {showLogo && <Image src={logoUrl} width={logoWidth} height={logoHeight} alt="Skedular" />}
+
           {!hideOrganizationSelector && (
             <Select
               onChange={handleSelectedOrganizationChange}

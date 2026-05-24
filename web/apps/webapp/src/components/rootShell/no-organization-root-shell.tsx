@@ -23,6 +23,7 @@ type Props = {
   queryReference: PreloadedQuery<noOrganizationRootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   collapsed?: boolean;
+  hideSideNav?: boolean;
   hideOrganizationSelector?: boolean;
   hideWelcomeMessage?: boolean;
   showBreadcrumps?: boolean;
@@ -59,6 +60,7 @@ const NoOrganizationRootShell = ({
   children,
   onReloadRequired,
   collapsed,
+  hideSideNav,
   hideOrganizationSelector,
   hideWelcomeMessage,
   showBreadcrumps,
@@ -140,12 +142,13 @@ const NoOrganizationRootShell = ({
       <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
-        <NoOrganizationLeftSideNavigationMenu collapsed={collapsed} />
+        {!hideSideNav && <NoOrganizationLeftSideNavigationMenu collapsed={collapsed} />}
         <Box sx={{ flexGrow: 1 }}>
           <NoOrganizationAppBar
             rootDataRelay={rootData}
             hideOrganizationSelector={hideOrganizationSelector}
             hideWelcomeMessage={hideWelcomeMessage}
+            showLogo={hideSideNav}
             showBreadcrumps={showBreadcrumps}
             breadcrumbs={breadcrumbs}
           />
@@ -160,13 +163,22 @@ const MemoNoOrganizationRootShell = memo(NoOrganizationRootShell);
 
 type RelayProps = {
   collapsed?: boolean;
+  hideSideNav?: boolean;
   hideOrganizationSelector?: boolean;
   hideWelcomeMessage?: boolean;
   showBreadcrumps?: boolean;
   breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
-const NoOrganizationRootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: PropsWithChildren<RelayProps>) => {
+const NoOrganizationRootShellWithRelay = ({
+  children,
+  collapsed,
+  hideSideNav,
+  hideOrganizationSelector,
+  hideWelcomeMessage,
+  showBreadcrumps,
+  breadcrumbs,
+}: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<noOrganizationRootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -196,6 +208,7 @@ const NoOrganizationRootShellWithRelay = ({ children, collapsed, hideOrganizatio
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
         collapsed={collapsed}
+        hideSideNav={hideSideNav}
         hideOrganizationSelector={hideOrganizationSelector}
         hideWelcomeMessage={hideWelcomeMessage}
         showBreadcrumps={showBreadcrumps}

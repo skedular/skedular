@@ -32,7 +32,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
 
   if (user) {
     return (
-      <NoOrganizationRootShell collapsed={true}>
+      <NoOrganizationRootShell collapsed={true} hideSideNav>
         <MarketplaceLocations rootDataRelay={rootData} rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
       </NoOrganizationRootShell>
     );

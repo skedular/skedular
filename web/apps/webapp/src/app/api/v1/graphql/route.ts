@@ -8,13 +8,17 @@ const handler = async (request: NextRequest) => {
   const { session } = await authkit(request);
   const authorization = request.headers.get('Authorization');
   const correlationId = request.headers.get('X-Correlation-Id') ?? uuid();
+  const accessToken = authorization ?? session.accessToken;
 
-  const headers = {
+  const headers: Record<string, string> = {
     'Content-Type': request.headers.get('Content-Type') ?? 'application/json',
     'X-Correlation-Id': correlationId,
-    Authorization: authorization ? authorization : `Bearer ${session.accessToken}`,
     'X-SSO-Cookies': Buffer.from(JSON.stringify(request.cookies.getAll().filter((item) => item.name.startsWith('organization-sso'))), 'binary').toString('base64'),
   };
+
+  if (accessToken) {
+    headers.Authorization = authorization ?? `Bearer ${accessToken}`;
+  }
 
   const response = await fetch(federatedGraphQLEndpoint, {
     method: request.method,

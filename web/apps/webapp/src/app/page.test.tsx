@@ -23,10 +23,25 @@ vi.mock('@/rootPages/marketplace/page', () => ({
   default: () => <div>Customer-facing subdomain</div>,
 }));
 
+const knownParams = {
+  bookingId: '',
+  customerId: '',
+  floorPlanId: '',
+  isCustomDomain: false,
+  locationId: '',
+  organizationBankAccountId: '',
+  organizationCustomDomain: '',
+  organizationStripeConnectAccountId: '',
+  productId: '',
+  resourceId: '',
+  subscriptionId: '',
+  teamId: '',
+};
+
 describe('WebApp root page foundation', () => {
   beforeEach(() => {
     sessionStorage.clear();
-    vi.mocked(useKnownParams).mockReturnValue({ isCustomDomain: false });
+    vi.mocked(useKnownParams).mockReturnValue(knownParams);
   });
 
   it('keeps the root URL focused on public marketplace discovery', () => {
@@ -38,7 +53,7 @@ describe('WebApp root page foundation', () => {
   });
 
   it('keeps custom domains on the customer-facing co-working storefront until private subdomain detection is wired', () => {
-    vi.mocked(useKnownParams).mockReturnValue({ isCustomDomain: true });
+    vi.mocked(useKnownParams).mockReturnValue({ ...knownParams, isCustomDomain: true });
 
     render(<RootPage />);
 

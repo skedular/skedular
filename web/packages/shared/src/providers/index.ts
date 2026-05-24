@@ -1,3 +1,4 @@
+export { default as AuthenticatedRelayProvider } from './authenticated-relay-provider';
 export { default as DatePickerLocalizationProvider } from './date-picker-localization-provider';
 export { default as GoogleAnalyticsProvider } from './google-analytics-provider';
 export { InMsTeamsContext, default as InMsTeamsProvider } from './in-msteams-provider';

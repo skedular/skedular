@@ -105,6 +105,7 @@ export function createNetwork(endpoint: string, token?: string | null | undefine
 }
 
 let clientEnvironment: Environment | undefined;
+let clientEnvironmentKey: string | undefined;
 
 export function getEnvironment(endpoint: string, token?: string | null | undefined): Environment {
   if (isServer) {
@@ -114,11 +115,14 @@ export function getEnvironment(endpoint: string, token?: string | null | undefin
       isServer: true,
     });
   } else {
-    if (clientEnvironment == null) {
+    const environmentKey = `${endpoint}:${token ?? ''}`;
+
+    if (clientEnvironment == null || clientEnvironmentKey !== environmentKey) {
       clientEnvironment = new Environment({
         network: createNetwork(endpoint, token),
         store: new Store(new RecordSource()),
       });
+      clientEnvironmentKey = environmentKey;
     }
 
     return clientEnvironment;

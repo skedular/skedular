@@ -5,12 +5,12 @@ import { MuiXLicense } from '@skedular/shared';
 import {
   DatePickerLocalizationProvider,
   GoogleAnalyticsProvider,
+  AuthenticatedRelayProvider,
   InMsTeamsContext,
   InMsTeamsProvider,
   LogRocketProvider,
   PaletteModeContext,
   PaletteModeProvider,
-  RelayProvider,
   ThemeProvider,
 } from '@skedular/shared';
 import { TeamsUserCredential } from '@microsoft/teamsfx';
@@ -18,12 +18,27 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { AuthKitProvider } from '@workos-inc/authkit-nextjs/components';
+import { AuthKitProvider, useAccessToken, useAuth } from '@workos-inc/authkit-nextjs/components';
 import Script from 'next/script';
 import type { PropsWithChildren } from 'react';
 import { memo, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+type AppAuthenticatedRelayProviderProps = PropsWithChildren<{
+  teamsToken: string | null;
+}>;
+
+const AppAuthenticatedRelayProvider = ({ children, teamsToken }: AppAuthenticatedRelayProviderProps) => {
+  const { user, loading: authLoading } = useAuth();
+  const { accessToken, loading: accessTokenLoading } = useAccessToken();
+
+  return (
+    <AuthenticatedRelayProvider accessToken={accessToken} accessTokenLoading={accessTokenLoading} authLoading={authLoading} teamsToken={teamsToken} userSignedIn={!!user}>
+      {children}
+    </AuthenticatedRelayProvider>
+  );
+};
 
 const InnerRootLayout = ({ children }: PropsWithChildren) => {
   const paletteMode = useContext(PaletteModeContext);
@@ -75,7 +90,7 @@ const InnerRootLayout = ({ children }: PropsWithChildren) => {
       <CssBaseline />
       <DatePickerLocalizationProvider>
         <AuthKitProvider>
-          <RelayProvider token={token}>{children}</RelayProvider>
+          <AppAuthenticatedRelayProvider teamsToken={token}>{children}</AppAuthenticatedRelayProvider>
         </AuthKitProvider>
       </DatePickerLocalizationProvider>
     </ThemeProvider>

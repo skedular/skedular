@@ -1,32 +1,82 @@
-import { getSignInLink } from '@/components/links';
+import { NoOrganizationLandingContent, NoOrganizationLandingPageRootQuery } from '@/components/noOrganizationLanding';
+import type { noOrganizationLandingPage_rootQuery } from '@/queries/__generated__/noOrganizationLandingPage_rootQuery.graphql';
 import { NoOrganizationRootShell } from '@/components/rootShell';
+import { RelayError, toRootError } from '@/components/relayError';
+import { getSignInLink } from '@/components/links';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import CircularProgress from '@mui/material/CircularProgress';
 import { BodyIconTypography, LeadIconTypography, StackColumn } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import { memo } from 'react';
+import { memo, Suspense, useEffect } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useQueryLoader } from 'react-relay';
 
 const RootPage = () => {
-  const { user } = useAuth();
+  const [queryRef, loadQuery] = useQueryLoader<noOrganizationLandingPage_rootQuery>(NoOrganizationLandingPageRootQuery);
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (loading || !user) {
+      return;
+    }
+
+    loadQuery(
+      {},
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, loading, user]);
 
   return (
-    <NoOrganizationRootShell collapsed hideWelcomeMessage={!user}>
-      <StackColumn sx={{ p: { xs: 2, md: 4 }, maxWidth: 760 }}>
-        <Card variant="outlined">
-          <CardContent>
-            <StackColumn>
-              <LeadIconTypography label="Select a workspace organisation" />
-              <BodyIconTypography label="Spaces is for coworking and individual organisations, locations, products, resources, bookings, and operational workflows." />
-              {!user && (
+    <NoOrganizationRootShell collapsed hideSideNav hideOrganizationSelector hideWelcomeMessage={!user}>
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: { xs: 2, md: 4 } }}>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {!loading && !user && (
+        <StackColumn sx={{ p: { xs: 2, md: 4 }, maxWidth: 760 }}>
+          <Card variant="outlined">
+            <CardContent>
+              <StackColumn>
+                <LeadIconTypography label="Select a workspace organisation" />
+                <BodyIconTypography label="Spaces is for coworking and individual organisations, locations, products, resources, bookings, and operational workflows." />
                 <Button href={getSignInLink()} variant="contained" sx={{ alignSelf: 'flex-start', textTransform: 'none' }}>
                   Sign in
                 </Button>
-              )}
-            </StackColumn>
-          </CardContent>
-        </Card>
-      </StackColumn>
+              </StackColumn>
+            </CardContent>
+          </Card>
+        </StackColumn>
+      )}
+
+      {!loading && user && (
+        <ErrorBoundary
+          fallbackRender={({ error }) => {
+            console.warn('org_landing_query_failed', {
+              event: 'org_landing_query_failed',
+              message: error instanceof Error ? error.message : String(error),
+            });
+
+            return <RelayError error={toRootError(error)} />;
+          }}
+        >
+          <Suspense
+            fallback={
+              <Box sx={{ display: 'flex', justifyContent: 'center', p: { xs: 2, md: 4 } }}>
+                <CircularProgress />
+              </Box>
+            }
+          >
+            {queryRef ? <NoOrganizationLandingContent queryRef={queryRef} /> : <CircularProgress />}
+          </Suspense>
+        </ErrorBoundary>
+      )}
     </NoOrganizationRootShell>
   );
 };
