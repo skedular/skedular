@@ -22,9 +22,7 @@ export const getRootLink = (integratedPlatrform: string | undefined) => (integra
 export const getSignInLink = () => '/signin';
 export const getSignUpLink = () => '/signup';
 export const getWelcomeLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/welcome` : '/welcome');
-export const getMyBookingsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/bookings` : '/bookings');
 export const getNotificationsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/notifications` : '/notifications');
-export const getBillingAndPaymentLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/billing-and-payment` : '/billing-and-payment');
 export const getSettingsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/settings` : '/settings');
 export const getMarketplaceLocationLink = (integratedPlatrform: string | undefined, locationId: string) =>
   integratedPlatrform ? `/${integratedPlatrform}/marketplace/locations/${locationId}` : `/marketplace/locations/${locationId}`;
@@ -198,18 +196,6 @@ export const getOrganizationLocationAddMarketplaceLink = (integratedPlatrform: s
   return params
     ? `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-marketplace?${params}`
     : `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-marketplace`;
-};
-
-export const getOrganizationLocationAddIndividualLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) => {
-  let params = '';
-
-  if (options?.redirectUrl) {
-    params += `redirectUrl=${options.redirectUrl}`;
-  }
-
-  return params
-    ? `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-individual?${params}`
-    : `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-individual`;
 };
 
 export const getOrganizationLocationsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/locations`;

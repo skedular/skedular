@@ -61,6 +61,6 @@ C# on .NET 10: Follow standard conventions
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/013-spaces-remove-member-features/plan.md
+at specs/014-remove-user-billing-ui/plan.md
 
 <!-- SPECKIT END -->

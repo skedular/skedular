@@ -108,18 +108,6 @@ export const getOrganizationLocationAddMarketplaceLink = (integratedPlatrform: s
     : `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-marketplace`;
 };
 
-export const getOrganizationLocationAddIndividualLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) => {
-  let params = '';
-
-  if (options?.redirectUrl) {
-    params += `redirectUrl=${options.redirectUrl}`;
-  }
-
-  return params
-    ? `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-individual?${params}`
-    : `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-individual`;
-};
-
 export const getOrganizationLocationsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/locations`;
 export const getOrganizationLocationSetupBaseLink = (integratedPlatrform: string | undefined, id: string, locationId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}?section=setup`;

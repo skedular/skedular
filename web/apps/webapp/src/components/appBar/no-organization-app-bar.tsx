@@ -1,17 +1,7 @@
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
-import {
-  AddIcon,
-  BillingAndPaymentIcon,
-  FeedbackIcon,
-  HamburgerMenuIcon,
-  NotificationsIcon,
-  OrganizationIcon,
-  SettingsIcon,
-  SignOutIcon,
-  SystemModeIcon,
-} from '@/components/icons';
-import { getBillingAndPaymentLink, getNotificationsLink, getOrganizationBaseLink, getOrganizationSetupLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
+import { AddIcon, FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
+import { getNotificationsLink, getOrganizationBaseLink, getOrganizationSetupLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
 import { NoOrganizationMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import type { noOrganizationAppBar_query$key } from '@/queries/__generated__/noOrganizationAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -149,7 +139,6 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
   });
 
   const settingsLink = getSettingsLink(integratedPlatrform);
-  const billingAndPaymentLink = getBillingAndPaymentLink(integratedPlatrform);
   const notificationsLink = getNotificationsLink(integratedPlatrform);
   const pendingInvitationsCount = rootData.pendingOrganizationInvitationsCount + rootData.pendingTeamInvitationsCount;
   const selectedThemeIcon =
@@ -357,11 +346,6 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
               </Link>
             </MenuItem>
 
-            <MenuItem>
-              <Link component={NextLink} href={billingAndPaymentLink}>
-                <SmallIconTypography startElement={<BillingAndPaymentIcon />} label="Billing & Payment" />
-              </Link>
-            </MenuItem>
             <Divider />
 
             {/* Notifications & theme — shown in profile menu on mobile only */}

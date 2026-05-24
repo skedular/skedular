@@ -1,14 +1,13 @@
-import { BodyIconTypography } from '@skedular/ui';
-import { BillingAndPaymentIcon, CollpaseDrawerIcon, HomeIcon, NotificationsIcon, SettingsIcon } from '@/components/icons';
-import { getBillingAndPaymentLink, getNotificationsLink, getRootLink, getSettingsLink } from '@/components/links';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@skedular/ui';
+import { CollpaseDrawerIcon, HomeIcon, NotificationsIcon, SettingsIcon } from '@/components/icons';
+import { getNotificationsLink, getRootLink, getSettingsLink } from '@/components/links';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { BodyIconTypography, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@skedular/ui';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -77,7 +76,6 @@ const NoOrganizationLeftSideNavigationMenuContent = ({ collapsed, enableCollapse
 
   const homeLink = getRootLink(integratedPlatrform);
   const notificationsLink = getNotificationsLink(integratedPlatrform);
-  const billingAndPaymentLink = getBillingAndPaymentLink(integratedPlatrform);
   const settingsBaseLink = getSettingsLink(integratedPlatrform);
 
   return (
@@ -139,27 +137,6 @@ const NoOrganizationLeftSideNavigationMenuContent = ({ collapsed, enableCollapse
                     startElement={!hideIcons && <NotificationsIcon excludeTooltip color="inherit" />}
                     spacing={3}
                     invertDefaultColor={pathName === notificationsLink && paletteMode === 'dark'}
-                  />
-                )}
-              </ListItemButton>
-            </Link>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <Link component={NextLink} href={billingAndPaymentLink}>
-              <ListItemButton selected={pathName === billingAndPaymentLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === billingAndPaymentLink) }}>
-                {collapsed && (
-                  <BodyIconTypography
-                    startElement={!hideIcons && <BillingAndPaymentIcon color="inherit" />}
-                    invertDefaultColor={pathName === billingAndPaymentLink && paletteMode === 'dark'}
-                  />
-                )}
-                {!collapsed && (
-                  <BodyIconTypography
-                    label="Billing & Payment"
-                    startElement={!hideIcons && <BillingAndPaymentIcon color="inherit" />}
-                    spacing={3}
-                    invertDefaultColor={pathName === billingAndPaymentLink && paletteMode === 'dark'}
                   />
                 )}
               </ListItemButton>

@@ -1,19 +1,7 @@
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
+import { AddIcon, ClaimOwnership, FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
 import {
-  AddIcon,
-  BillingAndPaymentIcon,
-  ClaimOwnership,
-  FeedbackIcon,
-  HamburgerMenuIcon,
-  NotificationsIcon,
-  OrganizationIcon,
-  SettingsIcon,
-  SignOutIcon,
-  SystemModeIcon,
-} from '@/components/icons';
-import {
-  getBillingAndPaymentLink,
   getNotificationsLink,
   getOrganizationBaseLink,
   getOrganizationLocationsBaseLink,
@@ -198,7 +186,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   });
 
   const settingsLink = getSettingsLink(integratedPlatrform);
-  const billingAndPaymentLink = getBillingAndPaymentLink(integratedPlatrform);
   const notificationsLink = getNotificationsLink(integratedPlatrform);
   const pendingInvitationsCount = rootData.pendingOrganizationInvitationsCount + rootData.pendingTeamInvitationsCount;
   const selectedThemeIcon =
@@ -404,14 +391,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
               <MenuItem>
                 <Link component={NextLink} href={settingsLink}>
                   <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
-                </Link>
-              </MenuItem>
-            )}
-
-            {selectedOrganizationId && (
-              <MenuItem>
-                <Link component={NextLink} href={billingAndPaymentLink}>
-                  <SmallIconTypography startElement={<BillingAndPaymentIcon />} label="Billing & Payment" />
                 </Link>
               </MenuItem>
             )}

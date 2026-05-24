@@ -1,11 +1,8 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { NewFeedbackDialog } from '@/components/feedback';
-import { ArrowDownIcon, BillingAndPaymentIcon, FeedbackIcon, HamburgerMenuIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
-import { getBillingAndPaymentLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
+import { ArrowDownIcon, FeedbackIcon, HamburgerMenuIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
+import { getSettingsLink, getSignOutReturnToLink } from '@/components/links';
 import { NoOrganizationMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { getCustomerFullName } from '@skedular/shared';
 import type { organizationStoreFrontAppBar_query$key } from '@/queries/__generated__/organizationStoreFrontAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -19,6 +16,8 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
+import { getCustomerFullName, SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
 import { memo, useContext, useState } from 'react';
@@ -114,7 +113,6 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
   });
 
   const settingsLink = getSettingsLink(integratedPlatrform);
-  const billingAndPaymentLink = getBillingAndPaymentLink(integratedPlatrform);
   const selectedThemeIcon =
     selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;
 
@@ -296,12 +294,6 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
           <MenuItem>
             <Link component={NextLink} href={settingsLink}>
               <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
-            </Link>
-          </MenuItem>
-
-          <MenuItem>
-            <Link component={NextLink} href={billingAndPaymentLink}>
-              <SmallIconTypography startElement={<BillingAndPaymentIcon />} label="Billing & Payment" />
             </Link>
           </MenuItem>
 

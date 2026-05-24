@@ -22,9 +22,7 @@ export const getRootLink = (integratedPlatrform: string | undefined) => (integra
 export const getSignInLink = () => '/signin';
 export const getSignUpLink = () => '/signup';
 export const getWelcomeLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/welcome` : '/welcome');
-export const getMyBookingsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/bookings` : '/bookings');
 export const getNotificationsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/notifications` : '/notifications');
-export const getBillingAndPaymentLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/billing-and-payment` : '/billing-and-payment');
 export const getSettingsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/settings` : '/settings');
 
 export const getInstallMsTeamsLink = () => '/msteams/install-msteams';
@@ -63,9 +61,6 @@ export const getOrganizationBookingAddLink = (
     resourceIds: options?.resourceIds,
     redirectUrl: options?.redirectUrl,
   });
-export const getOrganizationSubscriptionsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/subscriptions`;
-export const getOrganizationSubscriptionBaseLink = (integratedPlatrform: string | undefined, id: string, subscriptionId: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/subscriptions/${subscriptionId}`;
 export const getOrganizationUsersBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/users`;
 export const getOrganizationUserProfileBaseLink = (integratedPlatrform: string | undefined, id: string, customerId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/users/${customerId}?section=profile`;
@@ -99,18 +94,6 @@ export const getOrganizationLocationAddPrivateLink = (integratedPlatrform: strin
   return params
     ? `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-private?${params}`
     : `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-private`;
-};
-
-export const getOrganizationLocationAddIndividualLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) => {
-  let params = '';
-
-  if (options?.redirectUrl) {
-    params += `redirectUrl=${options.redirectUrl}`;
-  }
-
-  return params
-    ? `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-individual?${params}`
-    : `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-individual`;
 };
 
 export const getOrganizationLocationsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/locations`;
@@ -160,11 +143,6 @@ export const getOrganizationAdminManageOrganizationBaseLink = (integratedPlatrfo
 export const getOrganizationSsoSignInBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/sso-signin?redirectUrl=${window.location.href}`;
 
-export const getOrganizationStripeConnectAccountBaseLink = (integratedPlatrform: string | undefined, id: string, stripeConnectAccountId: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/stripe-connect-accounts/${stripeConnectAccountId}`;
-export const getOrganizationStripeConnectAccountAddLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/stripe-connect-accounts/add`;
-
 export const getOrganizationLocationFloorPlanAddLink = (integratedPlatrform: string | undefined, id: string, locationId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}/floorPlans/add`;
 
@@ -173,10 +151,6 @@ export const getOrganizationLocationFloorPlanAdminEditLink = (integratedPlatrfor
 
 export const getOrganizationLocationFloorPlansLink = (integratedPlatrform: string | undefined, id: string, locationId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}/floorPlans`;
-
-export const getOrganizationBankAccountBaseLink = (integratedPlatrform: string | undefined, id: string, bankAccountId: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/bank-accounts/${bankAccountId}`;
-export const getOrganizationBankAccountAddLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/bank-accounts/add`;
 
 export const postSignOutReturnToKey = 'postSignOutReturnTo';
 export const getSignOutReturnToLink = () => {
