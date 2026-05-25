@@ -4,6 +4,13 @@ CURRENT_DIRECTORY = $(shell pwd)
 # Go variables
 GOFILES = $(shell find . -type f -name '*.go' -not -path "*/mock/*.go" -not -path "*.pb.go" -not -path "*_eventgen.go" -not -path "*_gen.go")
 
+# Docker Compose base command
+DC = docker compose -p unityhubio -f docker-compose-production.yml --env-file .env
+
+# Service groups
+STAGING_SERVICES = staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01
+PROD_SERVICES    = prod-infra-provision prod-processors-01 prod-jobs-01 prod-apis-01
+
 .PHONY: all
 all: dep generate ## Runs dep generate
 
@@ -33,51 +40,85 @@ format: ## Format the source
 
 .PHONY: images-pull
 images-pull:
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
+	$(DC) pull
 
 .PHONY: dep-restart
 dep-restart:
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down dozzle postgres18 redis redisinsight kafka1 kowl
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d dozzle postgres18 redis redisinsight kafka1 kowl
+	$(DC) pull
+	$(DC) down dozzle postgres18 redis redisinsight kafka1 kowl
+	$(DC) up --build -d dozzle postgres18 redis redisinsight kafka1 kowl
 
 .PHONY: services-all-restart
 services-all-restart:
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d
+	$(DC) pull
+	$(DC) build
+	$(DC) down
+	$(DC) up --build -d
 
 .PHONY: services-all-start
 services-all-start:
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d
+	$(DC) pull
+	$(DC) build
+	$(DC) up --build -d
 
 .PHONY: services-all-stop
 services-all-stop:
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down
+	$(DC) down
 
 .PHONY: services-all-terminate
 services-all-terminate:
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down -v
+	$(DC) down -v
 
 .PHONY: services-restart
 services-restart:
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
+	$(DC) pull
+	$(DC) build
+	$(DC) down $(STAGING_SERVICES) $(PROD_SERVICES)
+	$(DC) up --build -d $(STAGING_SERVICES) $(PROD_SERVICES)
 
 .PHONY: services-start
 services-start:
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
+	$(DC) pull
+	$(DC) build
+	$(DC) up --build -d $(STAGING_SERVICES) $(PROD_SERVICES)
 
 .PHONY: services-stop
 services-stop:
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
+	$(DC) down $(STAGING_SERVICES) $(PROD_SERVICES)
+
+.PHONY: staging-restart
+staging-restart: ## Restart staging services only
+	$(DC) pull
+	$(DC) build
+	$(DC) down $(STAGING_SERVICES)
+	$(DC) up --build -d $(STAGING_SERVICES)
+
+.PHONY: staging-start
+staging-start: ## Start staging services only
+	$(DC) pull
+	$(DC) build
+	$(DC) up --build -d $(STAGING_SERVICES)
+
+.PHONY: staging-stop
+staging-stop: ## Stop staging services only
+	$(DC) down $(STAGING_SERVICES)
+
+.PHONY: prod-restart
+prod-restart: ## Restart production services only
+	$(DC) pull
+	$(DC) build
+	$(DC) down $(PROD_SERVICES)
+	$(DC) up --build -d $(PROD_SERVICES)
+
+.PHONY: prod-start
+prod-start: ## Start production services only
+	$(DC) pull
+	$(DC) build
+	$(DC) up --build -d $(PROD_SERVICES)
+
+.PHONY: prod-stop
+prod-stop: ## Stop production services only
+	$(DC) down $(PROD_SERVICES)
 
 .PHONY: crm-restart
 crm-restart:
