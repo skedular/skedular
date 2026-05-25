@@ -1,5 +1,4 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { SingleChoiceBookingCategory } from '@/components/booking';
 import { CustomTags } from '@/components/customTag';
 import { CalendarIcon } from '@/components/icons';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
@@ -103,7 +102,6 @@ type BookingDetails = {
   member: string;
   location: string | undefined;
   resources: string[];
-  category: string;
 };
 
 type RecurrenceFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY';
@@ -118,7 +116,6 @@ const bookingSchema = object({
   member: string().required('User is required'),
   location: string().notRequired(),
   resources: array().nullable(),
-  category: string().required('Category is required'),
 });
 
 const toAllDayBoolean = (value: unknown): boolean => value === true || value === 'allDay' || (Array.isArray(value) && value.includes('allDay'));
@@ -147,7 +144,6 @@ const getChangedRecurringBookingFields = (
   if (JSON.stringify(left.resources) !== JSON.stringify(right.resources)) changed.push('REQUESTED_RESOURCES');
   if (left.date !== right.date || left.allDay !== right.allDay || JSON.stringify(leftTimeRange) !== JSON.stringify(rightTimeRange)) changed.push('SCHEDULE');
   if (JSON.stringify(leftRecurrence) !== JSON.stringify(rightRecurrence)) changed.push('RECURRENCE');
-  if (left.category !== right.category) changed.push('CATEGORY');
   return changed;
 };
 
@@ -286,7 +282,6 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
           }
         }
         bookingSlotSizeInMinutes
-        ...singleChoiceBookingCategory_query
       }
     `,
     rootDataRelay,
@@ -388,7 +383,6 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
   const [customerId, setCustomerId] = useState<string | undefined>(recurringBooking?.involvedCustomers[0]?.id);
   const [locationId, setLocationId] = useState<string | undefined>(booking?.involvedLocations[0]?.uniqueId);
   const [resourceIds, setResourceIds] = useState<string[]>(recurringBooking?.requestedResources.map((item) => item.id) ?? []);
-  const [category, setCategory] = useState<string>(recurringBooking?.category.category ?? 'WORKING_FROM_OFFICE');
   const [recurrenceFrequency, setRecurrenceFrequency] = useState<RecurrenceFrequency>((recurringBooking?.frequency.frequency as RecurrenceFrequency | undefined) ?? 'WEEKLY');
   const [recurrenceInterval, setRecurrenceInterval] = useState<number>(recurringBooking?.interval ?? 1);
   const [recurrenceWeekDays, setRecurrenceWeekDays] = useState<RecurrenceDayOfWeek[]>(
@@ -449,10 +443,9 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
             allDay,
             location: locationId,
             resources: resourceIds,
-            category,
           }
         : null,
-    [allDay, category, customerId, from, locationId, recurringBooking, resourceIds],
+    [allDay, customerId, from, locationId, recurringBooking, resourceIds],
   );
   const previousBookingValues = useRef<BookingDetails | null>(initialBookingValues);
   const previousBookingTimeRange = useRef<DateRange<Dayjs>>(timeRange);
@@ -508,10 +501,7 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
     router.back();
   };
 
-  const handleSubmit = (
-    fieldsToUpdate: PrivateRecurringBookingPatchField[],
-    { date, allDay: allDayValue, member, resources: selectedResourceIds, category: categoryValue }: BookingDetails,
-  ) => {
+  const handleSubmit = (fieldsToUpdate: PrivateRecurringBookingPatchField[], { date, allDay: allDayValue, member, resources: selectedResourceIds }: BookingDetails) => {
     const [timeFrom, timeUntil] = timeRange;
     const computedDateRange = getDateRange(toAllDayBoolean(allDayValue), date, { timeFrom, timeUntil });
 
@@ -537,7 +527,7 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
           clientMutationId: uuid(),
           id: recurringBooking.id,
           fieldsToUpdate,
-          category: categoryValue as UpdatePrivateRecurringBookingCategory,
+          category: recurringBooking.category.category as UpdatePrivateRecurringBookingCategory,
           customerIds: [member],
           organizationIds: booking.involvedOrganizations.map(({ id }) => id),
           teamIds: [],
@@ -620,11 +610,10 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
                       const normalizedAllDay = toAllDayBoolean(currentValues.allDay);
                       if (normalizedAllDay !== allDay) setAllDay(normalizedAllDay);
                       if (JSON.stringify(currentValues.resources) !== JSON.stringify(resourceIds)) setResourceIds(currentValues.resources);
-                      if (currentValues.category !== category) setCategory(currentValues.category);
                     }}
                   />
 
-                  <SettingsSectionCard title="Booking basics" description="Choose who this recurring booking is for and what kind of work it represents.">
+                  <SettingsSectionCard title="Booking basics" description="Choose who this recurring booking is for.">
                     <StackColumn spacing={2}>
                       <FormFieldLabel label="User">
                         <Autocomplete
@@ -661,10 +650,6 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
                             setCustomerId(nextCustomerId);
                           }}
                         />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Category">
-                        <SingleChoiceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
                       </FormFieldLabel>
                     </StackColumn>
                   </SettingsSectionCard>

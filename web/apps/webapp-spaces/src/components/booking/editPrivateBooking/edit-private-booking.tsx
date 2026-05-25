@@ -1,5 +1,4 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { SingleChoiceBookingCategory } from '@/components/booking';
 import { CustomTags } from '@/components/customTag';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { Zones } from '@/components/zone';
@@ -29,7 +28,7 @@ import {
 } from '@skedular/shared';
 import { BodyIconTypography, defaultPadding, ErrorTypography, FormFieldLabel, FormStackColumn, PageHeaderPanel, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
 import dayjs, { Dayjs } from 'dayjs';
-import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
+import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches } from 'mui-rff';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form, FormSpy } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
@@ -94,10 +93,8 @@ type BookingDetails = {
   date: Dayjs;
   allDay: boolean;
   member: string;
-  notes: string | null | undefined;
   location: string | undefined;
   resources: string[];
-  category: string;
 };
 
 const bookingSchema = object({
@@ -108,21 +105,17 @@ const bookingSchema = object({
     .required('Date/Time is required'),
   allDay: boolean(),
   member: string().required('User is required'),
-  notes: string().notRequired(),
   location: string().notRequired(),
   resources: array().nullable(),
-  category: string().required('Category is required'),
 });
 
 const toAllDayBoolean = (value: unknown): boolean => value === true || value === 'allDay' || (Array.isArray(value) && value.includes('allDay'));
 const bookingAutosaveDebounceTimeout = 1000;
 
-type PrivateBookingFormField = keyof Pick<BookingDetails, 'member' | 'date' | 'allDay' | 'notes' | 'category' | 'resources'>;
+type PrivateBookingFormField = keyof Pick<BookingDetails, 'member' | 'date' | 'allDay' | 'resources'>;
 const privateBookingFieldGroups: ReadonlyArray<[PrivateBookingPatchField, ReadonlyArray<PrivateBookingFormField>]> = [
   ['PARTICIPANTS', ['member']],
   ['SCHEDULE', ['date', 'allDay']],
-  ['NOTES', ['notes']],
-  ['CATEGORY', ['category']],
   ['RESOURCES', ['resources']],
 ];
 
@@ -203,7 +196,6 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, r
           }
         }
         bookingSlotSizeInMinutes
-        ...singleChoiceBookingCategory_query
       }
     `,
     rootDataRelay,
@@ -468,10 +460,8 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, r
             member: customerId ?? '',
             date: from,
             allDay,
-            notes: booking.notes,
             location: locationId,
             resources: booking.bookingResources ? booking.bookingResources.map(({ resource }) => resource.id) : [],
-            category: booking.category.category,
           }
         : null,
     [allDay, booking, customerId, from, locationId],
@@ -487,11 +477,8 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, r
     handleRefetchAvailableResources(dateRangeValidation, locationId);
   }, [dateRangeValidation, handleRefetchAvailableResources, locationId]);
 
-  const handleBookingDetailUpdateClick = (
-    fieldsToUpdate: PrivateBookingPatchField[],
-    { date, allDay, member: memberId, notes, resources: resourceIds, category }: BookingDetails,
-  ) => {
-    if (!booking || !bookingSchema.isValidSync({ date, allDay, member: memberId, notes, resources: resourceIds, category })) {
+  const handleBookingDetailUpdateClick = (fieldsToUpdate: PrivateBookingPatchField[], { date, allDay, member: memberId, resources: resourceIds }: BookingDetails) => {
+    if (!booking || !bookingSchema.isValidSync({ date, allDay, member: memberId, resources: resourceIds })) {
       return;
     }
 
@@ -514,8 +501,8 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, r
           fieldsToUpdate,
           from,
           until,
-          notes,
-          category: category as BookingCategory,
+          notes: booking.notes,
+          category: booking.category.category as BookingCategory,
           customerIds: [memberId],
           organizationIds: booking.involvedOrganizations.map(({ id }) => id),
           teamIds: [],
@@ -538,9 +525,9 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, r
             id: booking.id,
             from,
             until,
-            notes,
+            notes: booking.notes,
             category: {
-              category: category as BookingCategory,
+              category: booking.category.category as BookingCategory,
               name: '',
             },
             involvedCustomers: [
@@ -637,7 +624,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, r
                   }}
                 />
                 <StackColumn spacing={3}>
-                  <SettingsSectionCard title="Booking Details" description="Edit the member, date, time, category, location and resources for this booking.">
+                  <SettingsSectionCard title="Booking Details" description="Edit the member, date, time, location and resources for this booking.">
                     <StackColumn>
                       <FormFieldLabel label="User">
                         <Autocomplete
@@ -700,14 +687,6 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, r
 
                       <FormFieldLabel>
                         <ErrorTypography errorMessage={dateTimeErrorMessage} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Notes">
-                        <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Category">
-                        <SingleChoiceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Location">

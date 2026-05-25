@@ -1,5 +1,4 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { SingleChoiceBookingCategory } from '@/components/booking';
 import { CustomTags } from '@/components/customTag';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
@@ -28,7 +27,7 @@ import {
 } from '@skedular/shared';
 import { BodyIconTypography, DefaultDialogTitle, ErrorTypography, FormFieldLabel, FormStackColumn, StackColumn, StackRow, TwoButtonsDialogActions } from '@skedular/ui';
 import dayjs, { Dayjs } from 'dayjs';
-import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
+import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches } from 'mui-rff';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form, FormSpy } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
@@ -93,11 +92,12 @@ type BookingDetails = {
   date: Dayjs;
   allDay: boolean;
   member: string;
-  notes: string;
   location: string | undefined;
   resources: string[];
-  category: string;
 };
+
+const DEFAULT_PRIVATE_BOOKING_CATEGORY = 'WORKING_FROM_OFFICE';
+const DEFAULT_PRIVATE_BOOKING_NOTES = '';
 
 const bookingSchema = object({
   date: mixed<Dayjs>()
@@ -107,10 +107,8 @@ const bookingSchema = object({
     .required('Date/Time is required'),
   allDay: boolean(),
   member: string().required('User is required'),
-  notes: string().notRequired(),
   location: string().notRequired(),
   resources: array().nullable(),
-  category: string().required('Category is required'),
 });
 
 const NewBookingDialog = ({
@@ -143,7 +141,6 @@ const NewBookingDialog = ({
           }
         }
         bookingSlotSizeInMinutes
-        ...singleChoiceBookingCategory_query
       }
     `,
     rootDataRelay,
@@ -277,8 +274,6 @@ const NewBookingDialog = ({
   // date/time validation message is derived from inputs (computed later)
   const [customerId, setCustomerId] = useState<string | undefined>();
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
-  const [notes, setNotes] = useState<string>('');
-  const [category, setCategory] = useState<string>('WORKING_FROM_OFFICE');
   const [resourceIds, setResourceIds] = useState<string[]>(defaultResourceIds ?? []);
 
   // Note: `resourceIds` is initialized from `defaultResourceIds` and thereafter controlled by the form.
@@ -388,7 +383,7 @@ const NewBookingDialog = ({
     [rootDataAvailableResources.availableResources, timeRangeValidDerived],
   );
 
-  const handleAddClick = ({ date, allDay, member, notes, location: locationId, resources: resourceIds, category }: BookingDetails) => {
+  const handleAddClick = ({ date, allDay, member, location: locationId, resources: resourceIds }: BookingDetails) => {
     const id = uuid();
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
@@ -411,8 +406,8 @@ const NewBookingDialog = ({
           id,
           from,
           until,
-          notes,
-          category: category as BookingCategory,
+          notes: DEFAULT_PRIVATE_BOOKING_NOTES,
+          category: DEFAULT_PRIVATE_BOOKING_CATEGORY as BookingCategory,
           customerIds: [customerId],
           organizationCustomDomains: [organizationCustomDomain],
           teamIds: [],
@@ -468,9 +463,9 @@ const NewBookingDialog = ({
             id,
             from,
             until,
-            notes,
+            notes: DEFAULT_PRIVATE_BOOKING_NOTES,
             category: {
-              category: category as BookingCategory,
+              category: DEFAULT_PRIVATE_BOOKING_CATEGORY as BookingCategory,
               name: '',
             },
             involvedCustomers: [
@@ -531,10 +526,8 @@ const NewBookingDialog = ({
             member: customerId,
             date: from,
             allDay,
-            notes,
             location: locationId,
             resources: resourceIds,
-            category,
           }}
           validate={validate}
           render={({ handleSubmit }) => {
@@ -546,9 +539,7 @@ const NewBookingDialog = ({
                     if (!values) return;
                     if (values.date !== from) setFrom(values.date);
                     if (values.allDay !== allDay) setAllDay(values.allDay);
-                    if (values.notes !== notes) setNotes(values.notes);
                     if (JSON.stringify(values.resources) !== JSON.stringify(resourceIds)) setResourceIds(values.resources);
-                    if (values.category !== category) setCategory(values.category);
                   }}
                 />
                 <FormFieldLabel label="User">
@@ -602,14 +593,6 @@ const NewBookingDialog = ({
 
                 <FormFieldLabel>
                   <ErrorTypography errorMessage={dateTimeErrorMessageDerived} />
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Notes">
-                  <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Category">
-                  <SingleChoiceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Location">

@@ -1,13 +1,9 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { SingleChoiceBookingCategory } from '@/components/booking';
-import { BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
 import { CalendarIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
-import { getCustomerFullName, getRelayErrorMessage, isMidnight, keyboardSearchDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@skedular/shared';
 import type {
   BookingCategory as AddPrivateBookingCategory,
   addPrivateBookingPage_addPrivateBookingMutation,
@@ -32,7 +28,31 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
-import { EditorActionBar, PageHeaderPanel, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
+import {
+  getCustomerFullName,
+  getRelayErrorMessage,
+  isMidnight,
+  keyboardSearchDebounceTimeout,
+  PaletteModeContext,
+  startOfDay,
+  toOpeningHoursFromTime,
+  toShortDate,
+  useIntegratedPlatrform,
+  useKnownParams,
+} from '@skedular/shared';
+import {
+  BodyIconTypography,
+  EditorActionBar,
+  ErrorTypography,
+  FormFieldLabel,
+  FormStackColumn,
+  PageHeaderPanel,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  StickyReviewRail,
+} from '@skedular/ui';
 import dayjs, { Dayjs } from 'dayjs';
 import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -86,11 +106,12 @@ type BookingDetails = {
   date: Dayjs;
   allDay: boolean;
   member: string;
-  notes: string;
   location: string | undefined;
   resources: string[];
-  category: string;
 };
+
+const DEFAULT_PRIVATE_BOOKING_CATEGORY = 'WORKING_FROM_OFFICE';
+const DEFAULT_PRIVATE_BOOKING_NOTES = '';
 
 type RecurrenceMode = 'single' | 'recurring';
 type RecurrenceFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY';
@@ -119,10 +140,8 @@ const bookingSchema = object({
     .required('Date/Time is required'),
   allDay: boolean(),
   member: string().required('User is required'),
-  notes: string().notRequired(),
   location: string().notRequired(),
   resources: array().nullable(),
-  category: string().required('Category is required'),
 });
 
 const recurrenceFrequencyOptions: { value: RecurrenceFrequency; label: string }[] = [
@@ -214,7 +233,6 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
           }
         }
         bookingSlotSizeInMinutes
-        ...singleChoiceBookingCategory_query
       }
     `,
     rootData,
@@ -346,8 +364,6 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
   const [peopleNameSearchText, setPeopleNameSearchText] = useState('');
   const [customerId, setCustomerId] = useState<string | undefined>();
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
-  const [notes, setNotes] = useState('');
-  const [category, setCategory] = useState('WORKING_FROM_OFFICE');
   const [resourceIds, setResourceIds] = useState<string[]>(defaultResourceIds);
   const [recurrenceMode, setRecurrenceMode] = useState<RecurrenceMode>('single');
   const [recurrenceFrequency, setRecurrenceFrequency] = useState<RecurrenceFrequency>('WEEKLY');
@@ -424,7 +440,7 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
     router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain));
   };
 
-  const handleSubmit = ({ date, allDay: allDayValue, member, notes: notesValue, resources: selectedResourceIds, category: categoryValue }: BookingDetails) => {
+  const handleSubmit = ({ date, allDay: allDayValue, member, resources: selectedResourceIds }: BookingDetails) => {
     const [timeFrom, timeUntil] = timeRange;
     const computedDateRange = getDateRange(allDayValue, date, { timeFrom, timeUntil });
 
@@ -459,8 +475,8 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
             id: uuid(),
             from: computedDateRange.from.toISOString(),
             until: computedDateRange.until.toISOString(),
-            notes: notesValue,
-            category: categoryValue as AddPrivateBookingCategory,
+            notes: DEFAULT_PRIVATE_BOOKING_NOTES,
+            category: DEFAULT_PRIVATE_BOOKING_CATEGORY as AddPrivateBookingCategory,
             customerIds: [member],
             organizationCustomDomains: [organizationCustomDomain],
             teamIds: [],
@@ -499,7 +515,7 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
         input: {
           clientMutationId: uuid(),
           id: uuid(),
-          category: categoryValue as AddPrivateRecurringBookingCategory,
+          category: DEFAULT_PRIVATE_BOOKING_CATEGORY as AddPrivateRecurringBookingCategory,
           customerIds: [member],
           organizationCustomDomains: [organizationCustomDomain],
           teamIds: [],
@@ -572,10 +588,8 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
               member: customerId,
               date: from,
               allDay,
-              notes,
               location: locationId,
               resources: resourceIds,
-              category,
             }}
             validate={validate}
             render={({ handleSubmit: handleFormSubmit }) => (
@@ -586,13 +600,11 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
                     if (!currentValues) return;
                     if (currentValues.date !== from) setFrom(currentValues.date);
                     if (currentValues.allDay !== allDay) setAllDay(currentValues.allDay);
-                    if (currentValues.notes !== notes) setNotes(currentValues.notes);
                     if (JSON.stringify(currentValues.resources) !== JSON.stringify(resourceIds)) setResourceIds(currentValues.resources);
-                    if (currentValues.category !== category) setCategory(currentValues.category);
                   }}
                 />
 
-                <SettingsSectionCard title="Booking basics" description="Choose who the booking is for and what kind of work this booking represents.">
+                <SettingsSectionCard title="Booking basics" description="Choose who the booking is for.">
                   <StackColumn spacing={2}>
                     <FormFieldLabel label="User">
                       <Autocomplete
@@ -629,14 +641,6 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
                           setCustomerId(nextCustomerId);
                         }}
                       />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Category">
-                      <SingleChoiceBookingCategory rootDataRelay={rootDataMain} name="category" required={requiredFields.category} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Notes">
-                      <TextField name="notes" required={requiredFields.notes} multiline rows={3} />
                     </FormFieldLabel>
                   </StackColumn>
                 </SettingsSectionCard>

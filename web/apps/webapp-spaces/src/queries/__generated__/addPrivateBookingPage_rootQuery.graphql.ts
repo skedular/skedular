@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e2f1a8d4aec852932543b558e8eba5c8>>
+ * @generated SignedSource<<aec5d90ac112adac1bef6cee026e36bf>>
  * @lightSyntaxTransform
  */
 
@@ -238,25 +238,6 @@ return {
       },
       {
         "alias": null,
-        "args": null,
-        "concreteType": "BookingCategoryDetails",
-        "kind": "LinkedField",
-        "name": "bookingCategories",
-        "plural": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "category",
-            "storageKey": null
-          },
-          (v9/*:: as any*/)
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
         "args": [
           {
             "kind": "Variable",
@@ -469,12 +450,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "229729328e7aaa6c3f2d1a85005eb64c",
+    "cacheID": "7be527e3014c1c69167ab077e12f938e",
     "id": null,
     "metadata": {},
     "name": "addPrivateBookingPage_rootQuery",
     "operationKind": "query",
-    "text": "query addPrivateBookingPage_rootQuery(\n  $organizationCustomDomain: String!\n  $peopleNameSearchText: String\n  $locationId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...addPrivateBookingPage_query\n  ...addPrivateBookingPage_organizationMembers_query\n  ...addPrivateBookingPage_availableResources_query\n}\n\nfragment addPrivateBookingPage_availableResources_query on Query {\n  availableResources(where: {organizationCustomDomain: $organizationCustomDomain, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment addPrivateBookingPage_organizationMembers_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(where: {nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment addPrivateBookingPage_query on Query {\n  me {\n    id\n  }\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  bookingSlotSizeInMinutes\n  ...singleChoiceBookingCategory_query\n}\n\nfragment singleChoiceBookingCategory_query on Query {\n  bookingCategories {\n    category\n    name\n  }\n}\n"
+    "text": "query addPrivateBookingPage_rootQuery(\n  $organizationCustomDomain: String!\n  $peopleNameSearchText: String\n  $locationId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...addPrivateBookingPage_query\n  ...addPrivateBookingPage_organizationMembers_query\n  ...addPrivateBookingPage_availableResources_query\n}\n\nfragment addPrivateBookingPage_availableResources_query on Query {\n  availableResources(where: {organizationCustomDomain: $organizationCustomDomain, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment addPrivateBookingPage_organizationMembers_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(where: {nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment addPrivateBookingPage_query on Query {\n  me {\n    id\n  }\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  bookingSlotSizeInMinutes\n}\n"
   }
 };
 })();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b4e9e0cf8178561108a0f5f674f3b85c>>
+ * @generated SignedSource<<30f489761a30d8881bdd21ba7b5de416>>
  * @lightSyntaxTransform
  */
 
@@ -24,7 +24,6 @@ export type newBookingDialog_query$data = {
   readonly me: {
     readonly id: string;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingCategory_query">;
   readonly " $fragmentType": "newBookingDialog_query";
 };
 export type newBookingDialog_query$key = {
@@ -150,11 +149,6 @@ return {
       "kind": "ScalarField",
       "name": "bookingSlotSizeInMinutes",
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "singleChoiceBookingCategory_query"
     }
   ],
   "type": "Query",
@@ -162,6 +156,6 @@ return {
 };
 })();
 
-(node as any).hash = "ba60bcfed9f35d8c71e5b47f8545100e";
+(node as any).hash = "09f010e490a70645018eba74c664b7b7";
 
 export default node;

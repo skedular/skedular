@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<55a52b9c4c0c9492791d2481293623b4>>
+ * @generated SignedSource<<761713df62e93bb85e7ed5397a669729>>
  * @lightSyntaxTransform
  */
 
@@ -68,7 +68,6 @@ export type editPrivateBooking_query$data = {
     }>;
     readonly totalCount: number;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingCategory_query">;
   readonly " $fragmentType": "editPrivateBooking_query";
 };
 export type editPrivateBooking_query$key = {
@@ -382,11 +381,6 @@ return {
       "kind": "ScalarField",
       "name": "bookingSlotSizeInMinutes",
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "singleChoiceBookingCategory_query"
     }
   ],
   "type": "Query",
@@ -394,6 +388,6 @@ return {
 };
 })();
 
-(node as any).hash = "3a25a9e0ab90b172d86079bc5de4b53d";
+(node as any).hash = "920166d12cdf329df60e8c930cedb725";
 
 export default node;
