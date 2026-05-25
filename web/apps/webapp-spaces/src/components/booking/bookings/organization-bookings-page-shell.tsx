@@ -10,6 +10,7 @@ type Props = {
   toolbar?: ReactNode;
   isEmpty: boolean;
   emptyMessage?: string;
+  hasTopInset?: boolean;
   children?: ReactNode;
 };
 
@@ -21,10 +22,10 @@ const surfaceSx: SxProps<Theme> = {
   boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : '0 1px 3px rgba(0, 0, 0, 0.24)'),
 };
 
-const OrganizationBookingsPageShell = ({ actions, toolbar, isEmpty, emptyMessage = 'No bookings match the current filters.', children }: Props) => (
+const OrganizationBookingsPageShell = ({ actions, toolbar, isEmpty, emptyMessage = 'No bookings match the current filters.', hasTopInset = true, children }: Props) => (
   <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', pb: defaultPadding }}>
-    <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
-      <PageHeaderPanel title="Bookings" description="Review and manage bookings across the organization for the selected week." />
+    <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pt: hasTopInset ? { xs: 1, sm: 1, md: 2 } : 0 }} spacing={2}>
+      <PageHeaderPanel title="Home" description="Review and manage bookings across the organization for the selected week." />
 
       <CollectionToolbar filters={toolbar} actions={actions} />
 

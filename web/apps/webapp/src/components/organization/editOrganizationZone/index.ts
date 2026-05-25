@@ -1,1 +1,1 @@
-export { default as EditOrganizationZoneDialog } from './edit-organization-zone-dialog';
+export { default as EditOrganizationZonePage } from './edit-organization-zone-dialog';

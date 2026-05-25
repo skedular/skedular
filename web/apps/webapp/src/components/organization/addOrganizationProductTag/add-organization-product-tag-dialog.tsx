@@ -1,11 +1,20 @@
-import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
+import {
+  ColorPicker,
+  EditorActionBar,
+  FormFieldLabel,
+  FormStackColumn,
+  PageHeaderPanel,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StickyReviewRail,
+} from '@skedular/ui';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@skedular/shared';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { addOrganizationProductTagDialog_addProductTagMutation } from '@/queries/__generated__/addOrganizationProductTagDialog_addProductTagMutation.graphql';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -16,8 +25,7 @@ import { object, string } from 'yup';
 
 type Props = {
   organizationCustomDomain: string;
-  connectionIds: string[];
-  isDialogOpen: boolean;
+  connectionIds?: string[];
   onAddClicked: () => void;
   onCancel: () => void;
 };
@@ -32,7 +40,7 @@ const productTagSchema = object({
   description: string().nullable(),
 });
 
-const AddOrganizationProductTagDialog = ({ organizationCustomDomain, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const AddOrganizationProductTagPageComponent = ({ organizationCustomDomain, connectionIds = [], onAddClicked, onCancel }: Props) => {
   const [commitAddProductTag] = useMutation<addOrganizationProductTagDialog_addProductTagMutation>(graphql`
     mutation addOrganizationProductTagDialog_addProductTagMutation($connectionIds: [ID!]!, $input: AddProductTagInput!) @raw_response_type {
       addProductTag(input: $input) {
@@ -109,39 +117,70 @@ const AddOrganizationProductTagDialog = ({ organizationCustomDomain, connectionI
   };
 
   return (
-    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
-      <DefaultDialogTitle title="Add Product Tag" />
-      <DialogContent sx={{ marginTop: 2 }}>
-        <Form
-          onSubmit={handleAddClick}
-          initialValues={{}}
-          validate={validate}
-          render={({ handleSubmit }) => {
-            return (
-              <FormStackColumn onSubmit={handleSubmit}>
-                <LeadIconTypography label="Add product tag to this organization" />
-                <SmallIconTypography label="Enter the name of the product tag to add to this organization." />
+    <Box sx={{ px: { xs: 2, md: 3 }, py: 3 }}>
+      <Box sx={{ maxWidth: 1320, mx: 'auto', display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', xl: 'minmax(0, 2fr) 320px' }, gap: 2 }}>
+        <StackColumn spacing={2.5} sx={{ minWidth: 0 }}>
+          <PageHeaderPanel title="Add product tag" description="Create a customer-facing product tag for marketplace listings and resource-product matching." />
 
-                <FormFieldLabel label="Name">
-                  <TextField name="name" required={requiredFields.name} />
-                </FormFieldLabel>
+          <Form
+            onSubmit={handleAddClick}
+            initialValues={{}}
+            validate={validate}
+            render={({ handleSubmit }) => {
+              return (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <SettingsSectionCard title="Product tag details" description="Set the label and description shown when products and resources are grouped.">
+                    <StackColumn spacing={2}>
+                      <FormFieldLabel label="Name">
+                        <TextField name="name" required={requiredFields.name} helperText="Use a clear customer-facing category name." />
+                      </FormFieldLabel>
 
-                <FormFieldLabel label="Description">
-                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
-                </FormFieldLabel>
+                      <FormFieldLabel label="Description">
+                        <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                      </FormFieldLabel>
+                    </StackColumn>
+                  </SettingsSectionCard>
 
-                <FormFieldLabel label="Color">
-                  <ColorPicker onChange={handleColorChange} />
-                </FormFieldLabel>
+                  <SettingsSectionCard title="Appearance" description="Choose a colour so this product tag is easy to recognise in marketplace setup.">
+                    <FormFieldLabel label="Colour">
+                      <ColorPicker onChange={handleColorChange} />
+                    </FormFieldLabel>
+                  </SettingsSectionCard>
 
-                <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
-              </FormStackColumn>
-            );
-          }}
-        />
-      </DialogContent>
-    </Dialog>
+                  <EditorActionBar
+                    secondaryActions={
+                      <Button type="button" variant="text" onClick={onCancel} sx={{ textTransform: 'none' }}>
+                        Cancel
+                      </Button>
+                    }
+                    primaryAction="Add product tag"
+                  />
+                </FormStackColumn>
+              );
+            }}
+          />
+        </StackColumn>
+
+        <StickyReviewRail title="Product tag help" description="Product tags connect marketplace products with the resources they can book.">
+          <SettingsSectionCard title="Suggested setup" description="Use product tags as customer-facing categories.">
+            <StackColumn spacing={1}>
+              <SmallIconTypography label="Keep names aligned with product categories customers understand." />
+              <SmallIconTypography label="Use descriptions to explain when operators should apply the tag." />
+              <SmallIconTypography label="Assign the tag to matching resources after creating it." />
+            </StackColumn>
+          </SettingsSectionCard>
+
+          <SettingsSectionCard title="After adding" description="The product tag can be used in product and resource setup.">
+            <StackColumn spacing={1}>
+              <SmallIconTypography label="Return to the previous page to apply it where needed." />
+            </StackColumn>
+          </SettingsSectionCard>
+        </StickyReviewRail>
+      </Box>
+    </Box>
   );
 };
 
-export default memo(AddOrganizationProductTagDialog);
+export const AddOrganizationProductTagPage = memo(AddOrganizationProductTagPageComponent);
+
+export default AddOrganizationProductTagPage;

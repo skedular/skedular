@@ -139,8 +139,16 @@ export const getOrganizationAdminSsoSettingsBaseLink = (integratedPlatrform: str
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=sso-setup`;
 export const getOrganizationAdminZonesBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=zones-setup`;
+export const getOrganizationAdminAddZoneBaseLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/admin/zones/add`, { redirectUrl: options?.redirectUrl });
+export const getOrganizationAdminEditZoneBaseLink = (integratedPlatrform: string | undefined, id: string, zoneId: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/admin/zones/${zoneId}/edit`, { redirectUrl: options?.redirectUrl });
 export const getOrganizationAdminCustomTagsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=tags-setup`;
+export const getOrganizationAdminAddCustomTagBaseLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/admin/tags/add`, { redirectUrl: options?.redirectUrl });
+export const getOrganizationAdminEditCustomTagBaseLink = (integratedPlatrform: string | undefined, id: string, customTagId: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/admin/tags/${customTagId}/edit`, { redirectUrl: options?.redirectUrl });
 export const getOrganizationAdminSubscriptionsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=subscriptions`;
 export const getOrganizationAdminManageOrganizationBaseLink = (integratedPlatrform: string | undefined, id: string) =>

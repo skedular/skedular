@@ -1,16 +1,25 @@
-import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
+import {
+  ColorPicker,
+  EditorActionBar,
+  FormFieldLabel,
+  FormStackColumn,
+  PageHeaderPanel,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StickyReviewRail,
+} from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@skedular/shared';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { editOrganizationProductTagDialog_rootQuery } from '@/queries/__generated__/editOrganizationProductTagDialog_rootQuery.graphql';
 import type { editOrganizationProductTagDialog_updateProductTagMutation } from '@/queries/__generated__/editOrganizationProductTagDialog_updateProductTagMutation.graphql';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -20,10 +29,8 @@ import { object, string } from 'yup';
 
 type Props = {
   queryReference: PreloadedQuery<editOrganizationProductTagDialog_rootQuery, Record<string, unknown>>;
-  onReloadRequired?: () => void;
   productTagId: string;
-  isDialogOpen: boolean;
-  onAddClicked: () => void;
+  onSaved: () => void;
   onCancel: () => void;
 };
 
@@ -46,13 +53,12 @@ type ProductTagDetails = {
 type TagPatchField = 'NAME' | 'DESCRIPTION' | 'COLOR';
 
 const productTagSchema = object({
-  name: string().required('Tag name is required'),
+  name: string().required('Product tag name is required'),
   description: string().nullable(),
 });
 
-const EditOrganizationProductTagDialog = ({ queryReference, productTagId, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId, onSaved, onCancel }: Props) => {
   const rootData = usePreloadedQuery<editOrganizationProductTagDialog_rootQuery>(RootQuery, queryReference);
-
   const [commitUpdateProductTagPatch] = useMutation<editOrganizationProductTagDialog_updateProductTagMutation>(graphql`
     mutation editOrganizationProductTagDialog_updateProductTagMutation($input: UpdateOrganizationTagInput!) @raw_response_type {
       updateProductTag(input: $input) {
@@ -72,10 +78,6 @@ const EditOrganizationProductTagDialog = ({ queryReference, productTagId, isDial
   const requiredFields = makeRequired(productTagSchema);
   const [selectedColor, setSelectedColor] = useState(rootData.productTag?.color);
 
-  const handleColorChange = (color: string) => {
-    setSelectedColor(color);
-  };
-
   const handleAddClick = ({ name, description }: ProductTagDetails) => {
     if (!rootData.productTag) {
       return;
@@ -93,9 +95,10 @@ const EditOrganizationProductTagDialog = ({ queryReference, productTagId, isDial
       fieldsToUpdate.push('COLOR');
     }
     if (fieldsToUpdate.length === 0) {
-      onAddClicked();
+      onSaved();
       return;
     }
+
     const toastId = themedToast(<NotificationContent content={`Updating product tag '${oldName}'...`} />, infoNotificationOptions);
 
     commitUpdateProductTagPatch({
@@ -124,7 +127,7 @@ const EditOrganizationProductTagDialog = ({ queryReference, productTagId, isDial
           render: <NotificationContent content={`Product tag ${name} updated.`} />,
         });
 
-        onAddClicked();
+        onSaved();
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -150,79 +153,75 @@ const EditOrganizationProductTagDialog = ({ queryReference, productTagId, isDial
   }
 
   return (
-    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
-      <DefaultDialogTitle title="Edit Product Tag" />
-      <DialogContent sx={{ marginTop: 2 }}>
-        <Form
-          onSubmit={handleAddClick}
-          initialValues={{
-            name: rootData.productTag.name,
-            description: rootData.productTag.description,
-          }}
-          validate={validate}
-          render={({ handleSubmit }) => {
-            return (
+    <Box sx={{ px: { xs: 2, md: 3 }, py: 3 }}>
+      <Box sx={{ maxWidth: 1320, mx: 'auto', display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', xl: 'minmax(0, 2fr) 320px' }, gap: 2 }}>
+        <StackColumn spacing={2.5} sx={{ minWidth: 0 }}>
+          <PageHeaderPanel title="Edit product tag" description="Update the product tag name, description, and colour used across marketplace products and resources." />
+
+          <Form
+            onSubmit={handleAddClick}
+            initialValues={{ name: rootData.productTag.name, description: rootData.productTag.description }}
+            validate={validate}
+            render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <LeadIconTypography label="Edit product tag details" />
-                <SmallIconTypography label="Enter the name of the product tag to update." />
+                <SettingsSectionCard title="Product tag details" description="Keep the product tag label clear for operators applying it across marketplace setup.">
+                  <StackColumn spacing={2}>
+                    <FormFieldLabel label="Name">
+                      <TextField name="name" required={requiredFields.name} helperText="Use a short, recognisable product tag name." />
+                    </FormFieldLabel>
 
-                <FormFieldLabel label="Name">
-                  <TextField name="name" required={requiredFields.name} />
-                </FormFieldLabel>
+                    <FormFieldLabel label="Description">
+                      <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                    </FormFieldLabel>
+                  </StackColumn>
+                </SettingsSectionCard>
 
-                <FormFieldLabel label="Description">
-                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
-                </FormFieldLabel>
+                <SettingsSectionCard title="Appearance" description="Choose a colour so this product tag is easy to recognise in lists and filters.">
+                  <FormFieldLabel label="Colour">
+                    <ColorPicker onChange={setSelectedColor} defaultColor={rootData.productTag?.color} />
+                  </FormFieldLabel>
+                </SettingsSectionCard>
 
-                <FormFieldLabel label="Color">
-                  <ColorPicker onChange={handleColorChange} defaultColor={rootData.productTag?.color} />
-                </FormFieldLabel>
-
-                <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Save" secondaryLabel="Cancel" />
+                <EditorActionBar
+                  secondaryActions={
+                    <Button type="button" variant="text" onClick={onCancel} sx={{ textTransform: 'none' }}>
+                      Cancel
+                    </Button>
+                  }
+                  primaryAction="Save product tag"
+                />
               </FormStackColumn>
-            );
-          }}
-        />
-      </DialogContent>
-    </Dialog>
+            )}
+          />
+        </StackColumn>
+
+        <StickyReviewRail title="Product tag help" description="Changes apply wherever this product tag is already used.">
+          <SettingsSectionCard title="Before saving" description="Avoid renaming tags in a way that changes their operational meaning unexpectedly.">
+            <StackColumn spacing={1}>
+              <SmallIconTypography label="Keep names consistent with how operators search and filter." />
+              <SmallIconTypography label="Use the description for usage rules or edge cases." />
+            </StackColumn>
+          </SettingsSectionCard>
+        </StickyReviewRail>
+      </Box>
+    </Box>
   );
 };
 
-const MemoEditOrganizationProductTagDialog = memo(EditOrganizationProductTagDialog);
+const MemoEditOrganizationProductTagPage = memo(EditOrganizationProductTagPageComponent);
 
 type RelayProps = {
-  onReloadRequired?: () => void;
   productTagId: string;
-  isDialogOpen: boolean;
-  onAddClicked: () => void;
+  onSaved: () => void;
   onCancel: () => void;
 };
 
-const EditOrganizationProductTagDialogWithRelay = ({ onReloadRequired, productTagId, isDialogOpen, onAddClicked, onCancel }: RelayProps) => {
+const EditOrganizationProductTagPageWithRelay = ({ productTagId, onSaved, onCancel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<editOrganizationProductTagDialog_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
-  const [, startTransition] = useTransition();
 
   useEffect(() => {
-    loadQuery(
-      {
-        productTagId,
-      },
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, triggerReloadId, productTagId]);
-
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReloadId(uuid());
-
-      if (onReloadRequired) {
-        onReloadRequired();
-      }
-    });
-  };
+    loadQuery({ productTagId }, { fetchPolicy: 'store-and-network' });
+  }, [productTagId, loadQuery]);
 
   if (!queryReference) {
     return <Loading />;
@@ -230,16 +229,11 @@ const EditOrganizationProductTagDialogWithRelay = ({ onReloadRequired, productTa
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoEditOrganizationProductTagDialog
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        productTagId={productTagId}
-        isDialogOpen={isDialogOpen}
-        onAddClicked={onAddClicked}
-        onCancel={onCancel}
-      />
+      <MemoEditOrganizationProductTagPage queryReference={queryReference} productTagId={productTagId} onSaved={onSaved} onCancel={onCancel} />
     </ErrorBoundary>
   );
 };
 
-export default memo(EditOrganizationProductTagDialogWithRelay);
+export const EditOrganizationProductTagPage = memo(EditOrganizationProductTagPageWithRelay);
+
+export default EditOrganizationProductTagPage;

@@ -23,6 +23,7 @@ type Props = {
   queryReference: PreloadedQuery<noOrganizationRootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   hideSideNav?: boolean;
+  hideOrganizationSelector?: boolean;
 };
 
 const RootQuery = graphql`
@@ -43,7 +44,7 @@ const RootQuery = graphql`
 
 const maxRetryAttemptsToReload = 20;
 
-const NoOrganizationRootShell = ({ queryReference, children, onReloadRequired, hideSideNav }: PropsWithChildren<Props>) => {
+const NoOrganizationRootShell = ({ queryReference, children, onReloadRequired, hideSideNav, hideOrganizationSelector }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<noOrganizationRootShell_rootQuery>(RootQuery, queryReference);
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
@@ -101,7 +102,7 @@ const NoOrganizationRootShell = ({ queryReference, children, onReloadRequired, h
         <CssBaseline enableColorScheme />
         {!hideSideNav && <NoOrganizationLeftSideNavigationMenu />}
         <Box sx={{ flexGrow: 1 }}>
-          <NoOrganizationAppBar rootDataRelay={rootData} showLogo={hideSideNav} />
+          <NoOrganizationAppBar rootDataRelay={rootData} showLogo={hideSideNav} hideOrganizationSelector={hideOrganizationSelector} />
           {children}
         </Box>
       </Box>
@@ -113,9 +114,10 @@ const MemoNoOrganizationRootShell = memo(NoOrganizationRootShell);
 
 type RelayProps = {
   hideSideNav?: boolean;
+  hideOrganizationSelector?: boolean;
 };
 
-const NoOrganizationRootShellWithRelay = ({ children, hideSideNav }: PropsWithChildren<RelayProps>) => {
+const NoOrganizationRootShellWithRelay = ({ children, hideSideNav, hideOrganizationSelector }: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<noOrganizationRootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -141,7 +143,12 @@ const NoOrganizationRootShellWithRelay = ({ children, hideSideNav }: PropsWithCh
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoNoOrganizationRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} hideSideNav={hideSideNav}>
+      <MemoNoOrganizationRootShell
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        hideSideNav={hideSideNav}
+        hideOrganizationSelector={hideOrganizationSelector}
+      >
         {children}
       </MemoNoOrganizationRootShell>
     </ErrorBoundary>

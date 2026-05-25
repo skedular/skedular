@@ -40,7 +40,7 @@ export const getOrganizationBookingsBaseLink = (integratedPlatrform: string | un
     params += params ? `&locationId=${options.locationId}` : `locationId=${options.locationId}`;
   }
 
-  return params ? `${getOrganizationBaseLink(integratedPlatrform, id)}/bookings?${params}` : `${getOrganizationBaseLink(integratedPlatrform, id)}/bookings`;
+  return params ? `${getOrganizationBaseLink(integratedPlatrform, id)}?${params}` : getOrganizationBaseLink(integratedPlatrform, id);
 };
 export const getOrganizationBookingAddLink = (
   integratedPlatrform: string | undefined,
@@ -138,8 +138,16 @@ export const getOrganizationAdminTaxDetailsBaseLink = (integratedPlatrform: stri
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=tax-details-setup`;
 export const getOrganizationAdminZonesBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=zones-setup`;
+export const getOrganizationAdminAddZoneBaseLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/admin/zones/add`, { redirectUrl: options?.redirectUrl });
+export const getOrganizationAdminEditZoneBaseLink = (integratedPlatrform: string | undefined, id: string, zoneId: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/admin/zones/${zoneId}/edit`, { redirectUrl: options?.redirectUrl });
 export const getOrganizationAdminCustomTagsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=tags-setup`;
+export const getOrganizationAdminAddCustomTagBaseLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/admin/tags/add`, { redirectUrl: options?.redirectUrl });
+export const getOrganizationAdminEditCustomTagBaseLink = (integratedPlatrform: string | undefined, id: string, customTagId: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/admin/tags/${customTagId}/edit`, { redirectUrl: options?.redirectUrl });
 export const getOrganizationAdminSubscriptionsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=subscriptions`;
 export const getOrganizationAdminManageOrganizationBaseLink = (integratedPlatrform: string | undefined, id: string) =>
@@ -149,6 +157,10 @@ export const getOrganizationMarketplaceSetupBaseLink = (integratedPlatrform: str
   getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatrform, id);
 export const getOrganizationMarketplaceSetupProductTagsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=product-tags-setup`;
+export const getOrganizationAdminAddProductTagBaseLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/admin/product-tags/add`, { redirectUrl: options?.redirectUrl });
+export const getOrganizationAdminEditProductTagBaseLink = (integratedPlatrform: string | undefined, id: string, productTagId: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/admin/product-tags/${productTagId}/edit`, { redirectUrl: options?.redirectUrl });
 export const getOrganizationMarketplaceSetupMarketplaceListingBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=marketplace-listing`;
 export const getOrganizationMarketplaceSetupBillingCycleBaseLink = (integratedPlatrform: string | undefined, id: string) =>

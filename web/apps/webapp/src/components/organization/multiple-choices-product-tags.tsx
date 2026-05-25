@@ -42,11 +42,10 @@ const MultipleChoicesProductTags = ({ rootDataRelay, name, required, organizatio
   );
 
   const items = useMemo<ProductTagDetails[]>(() => (rootData.organization ? rootData.organization.productTags.edges.map(({ node }) => node) : []), [rootData.organization]);
-  const connectionIds = useMemo(() => (rootData.organization ? [rootData.organization.productTags.__id] : []), [rootData.organization]);
   const filter = createFilterOptions<ProductTagDetails>();
 
   if (items.length === 0) {
-    return <AddOrganizationProductTagButton organizationCustomDomain={organizationCustomDomain} connectionIds={connectionIds} size="medium" />;
+    return <AddOrganizationProductTagButton organizationCustomDomain={organizationCustomDomain} size="medium" />;
   }
 
   return (

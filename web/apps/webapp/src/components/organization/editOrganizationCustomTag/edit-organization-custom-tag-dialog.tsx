@@ -1,16 +1,25 @@
-import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
+import {
+  ColorPicker,
+  EditorActionBar,
+  FormFieldLabel,
+  FormStackColumn,
+  PageHeaderPanel,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StickyReviewRail,
+} from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@skedular/shared';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { editOrganizationCustomTagDialog_rootQuery } from '@/queries/__generated__/editOrganizationCustomTagDialog_rootQuery.graphql';
 import type { editOrganizationCustomTagDialog_updateCustomTagMutation } from '@/queries/__generated__/editOrganizationCustomTagDialog_updateCustomTagMutation.graphql';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -20,10 +29,8 @@ import { object, string } from 'yup';
 
 type Props = {
   queryReference: PreloadedQuery<editOrganizationCustomTagDialog_rootQuery, Record<string, unknown>>;
-  onReloadRequired?: () => void;
   customTagId: string;
-  isDialogOpen: boolean;
-  onAddClicked: () => void;
+  onSaved: () => void;
   onCancel: () => void;
 };
 
@@ -50,9 +57,8 @@ const customTagSchema = object({
   description: string().nullable(),
 });
 
-const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const EditOrganizationCustomTagPageComponent = ({ queryReference, customTagId, onSaved, onCancel }: Props) => {
   const rootData = usePreloadedQuery<editOrganizationCustomTagDialog_rootQuery>(RootQuery, queryReference);
-
   const [commitUpdateCustomTagPatch] = useMutation<editOrganizationCustomTagDialog_updateCustomTagMutation>(graphql`
     mutation editOrganizationCustomTagDialog_updateCustomTagMutation($input: UpdateOrganizationTagInput!) @raw_response_type {
       updateCustomTag(input: $input) {
@@ -72,10 +78,6 @@ const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialog
   const requiredFields = makeRequired(customTagSchema);
   const [selectedColor, setSelectedColor] = useState(rootData.customTag?.color);
 
-  const handleColorChange = (color: string) => {
-    setSelectedColor(color);
-  };
-
   const handleAddClick = ({ name, description }: CustomTagDetails) => {
     if (!rootData.customTag) {
       return;
@@ -93,9 +95,10 @@ const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialog
       fieldsToUpdate.push('COLOR');
     }
     if (fieldsToUpdate.length === 0) {
-      onAddClicked();
+      onSaved();
       return;
     }
+
     const toastId = themedToast(<NotificationContent content={`Updating tag '${oldName}'...`} />, infoNotificationOptions);
 
     commitUpdateCustomTagPatch({
@@ -124,7 +127,7 @@ const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialog
           render: <NotificationContent content={`Tag ${name} updated.`} />,
         });
 
-        onAddClicked();
+        onSaved();
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -150,79 +153,75 @@ const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialog
   }
 
   return (
-    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
-      <DefaultDialogTitle title="Edit Tag" />
-      <DialogContent sx={{ marginTop: 2 }}>
-        <Form
-          onSubmit={handleAddClick}
-          initialValues={{
-            name: rootData.customTag.name,
-            description: rootData.customTag.description,
-          }}
-          validate={validate}
-          render={({ handleSubmit }) => {
-            return (
+    <Box sx={{ px: { xs: 2, md: 3 }, py: 3 }}>
+      <Box sx={{ maxWidth: 1320, mx: 'auto', display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', xl: 'minmax(0, 2fr) 320px' }, gap: 2 }}>
+        <StackColumn spacing={2.5} sx={{ minWidth: 0 }}>
+          <PageHeaderPanel title="Edit tag" description="Update the tag name, description, and colour used across resources, bookings, and preferences." />
+
+          <Form
+            onSubmit={handleAddClick}
+            initialValues={{ name: rootData.customTag.name, description: rootData.customTag.description }}
+            validate={validate}
+            render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <LeadIconTypography label="Edit tag details" />
-                <SmallIconTypography label="Enter the name of the tag to update." />
+                <SettingsSectionCard title="Tag details" description="Keep the tag label clear for operators applying it across the organisation.">
+                  <StackColumn spacing={2}>
+                    <FormFieldLabel label="Name">
+                      <TextField name="name" required={requiredFields.name} helperText="Use a short, recognisable tag name." />
+                    </FormFieldLabel>
 
-                <FormFieldLabel label="Name">
-                  <TextField name="name" required={requiredFields.name} />
-                </FormFieldLabel>
+                    <FormFieldLabel label="Description">
+                      <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                    </FormFieldLabel>
+                  </StackColumn>
+                </SettingsSectionCard>
 
-                <FormFieldLabel label="Description">
-                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
-                </FormFieldLabel>
+                <SettingsSectionCard title="Appearance" description="Choose a colour so this tag is easy to recognise in lists and filters.">
+                  <FormFieldLabel label="Colour">
+                    <ColorPicker onChange={setSelectedColor} defaultColor={rootData.customTag?.color} />
+                  </FormFieldLabel>
+                </SettingsSectionCard>
 
-                <FormFieldLabel label="Color">
-                  <ColorPicker onChange={handleColorChange} defaultColor={rootData.customTag?.color} />
-                </FormFieldLabel>
-
-                <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Save" secondaryLabel="Cancel" />
+                <EditorActionBar
+                  secondaryActions={
+                    <Button type="button" variant="text" onClick={onCancel} sx={{ textTransform: 'none' }}>
+                      Cancel
+                    </Button>
+                  }
+                  primaryAction="Save tag"
+                />
               </FormStackColumn>
-            );
-          }}
-        />
-      </DialogContent>
-    </Dialog>
+            )}
+          />
+        </StackColumn>
+
+        <StickyReviewRail title="Tag help" description="Changes apply wherever this tag is already used.">
+          <SettingsSectionCard title="Before saving" description="Avoid renaming tags in a way that changes their operational meaning unexpectedly.">
+            <StackColumn spacing={1}>
+              <SmallIconTypography label="Keep names consistent with how operators search and filter." />
+              <SmallIconTypography label="Use the description for usage rules or edge cases." />
+            </StackColumn>
+          </SettingsSectionCard>
+        </StickyReviewRail>
+      </Box>
+    </Box>
   );
 };
 
-const MemoEditOrganizationCustomTagDialog = memo(EditOrganizationCustomTagDialog);
+const MemoEditOrganizationCustomTagPage = memo(EditOrganizationCustomTagPageComponent);
 
 type RelayProps = {
-  onReloadRequired?: () => void;
   customTagId: string;
-  isDialogOpen: boolean;
-  onAddClicked: () => void;
+  onSaved: () => void;
   onCancel: () => void;
 };
 
-const EditOrganizationCustomTagDialogWithRelay = ({ onReloadRequired, customTagId, isDialogOpen, onAddClicked, onCancel }: RelayProps) => {
+const EditOrganizationCustomTagPageWithRelay = ({ customTagId, onSaved, onCancel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<editOrganizationCustomTagDialog_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
-  const [, startTransition] = useTransition();
 
   useEffect(() => {
-    loadQuery(
-      {
-        customTagId,
-      },
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, triggerReloadId, customTagId]);
-
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReloadId(uuid());
-
-      if (onReloadRequired) {
-        onReloadRequired();
-      }
-    });
-  };
+    loadQuery({ customTagId }, { fetchPolicy: 'store-and-network' });
+  }, [customTagId, loadQuery]);
 
   if (!queryReference) {
     return <Loading />;
@@ -230,16 +229,11 @@ const EditOrganizationCustomTagDialogWithRelay = ({ onReloadRequired, customTagI
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoEditOrganizationCustomTagDialog
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        customTagId={customTagId}
-        isDialogOpen={isDialogOpen}
-        onAddClicked={onAddClicked}
-        onCancel={onCancel}
-      />
+      <MemoEditOrganizationCustomTagPage queryReference={queryReference} customTagId={customTagId} onSaved={onSaved} onCancel={onCancel} />
     </ErrorBoundary>
   );
 };
 
-export default memo(EditOrganizationCustomTagDialogWithRelay);
+export const EditOrganizationCustomTagPage = memo(EditOrganizationCustomTagPageWithRelay);
+
+export default EditOrganizationCustomTagPage;

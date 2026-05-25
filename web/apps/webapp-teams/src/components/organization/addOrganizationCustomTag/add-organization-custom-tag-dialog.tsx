@@ -1,11 +1,20 @@
-import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
+import {
+  ColorPicker,
+  EditorActionBar,
+  FormFieldLabel,
+  FormStackColumn,
+  PageHeaderPanel,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StickyReviewRail,
+} from '@skedular/ui';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@skedular/shared';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { addOrganizationCustomTagDialog_addCustomTagMutation } from '@/queries/__generated__/addOrganizationCustomTagDialog_addCustomTagMutation.graphql';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -16,8 +25,7 @@ import { object, string } from 'yup';
 
 type Props = {
   organizationCustomDomain: string;
-  connectionIds: string[];
-  isDialogOpen: boolean;
+  connectionIds?: string[];
   onAddClicked: () => void;
   onCancel: () => void;
 };
@@ -32,7 +40,7 @@ const customTagSchema = object({
   description: string().nullable(),
 });
 
-const AddOrganizationCustomTagDialog = ({ organizationCustomDomain, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const AddOrganizationCustomTagPageComponent = ({ organizationCustomDomain, connectionIds = [], onAddClicked, onCancel }: Props) => {
   const [commitAddCustomTag] = useMutation<addOrganizationCustomTagDialog_addCustomTagMutation>(graphql`
     mutation addOrganizationCustomTagDialog_addCustomTagMutation($connectionIds: [ID!]!, $input: AddCustomTagInput!) @raw_response_type {
       addCustomTag(input: $input) {
@@ -109,39 +117,70 @@ const AddOrganizationCustomTagDialog = ({ organizationCustomDomain, connectionId
   };
 
   return (
-    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
-      <DefaultDialogTitle title="Add Tag" />
-      <DialogContent sx={{ marginTop: 2 }}>
-        <Form
-          onSubmit={handleAddClick}
-          initialValues={{}}
-          validate={validate}
-          render={({ handleSubmit }) => {
-            return (
-              <FormStackColumn onSubmit={handleSubmit}>
-                <LeadIconTypography label="Add tag to this organization" />
-                <SmallIconTypography label="Enter the name of the tag to add to this organization." />
+    <Box sx={{ px: { xs: 2, md: 3 }, py: 3 }}>
+      <Box sx={{ maxWidth: 1320, mx: 'auto', display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', xl: 'minmax(0, 2fr) 320px' }, gap: 2 }}>
+        <StackColumn spacing={2.5} sx={{ minWidth: 0 }}>
+          <PageHeaderPanel title="Add tag" description="Create a reusable tag for filtering resources, bookings, and organisation preferences." />
 
-                <FormFieldLabel label="Name">
-                  <TextField name="name" required={requiredFields.name} />
-                </FormFieldLabel>
+          <Form
+            onSubmit={handleAddClick}
+            initialValues={{}}
+            validate={validate}
+            render={({ handleSubmit }) => {
+              return (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <SettingsSectionCard title="Tag details" description="Set the label and description operators will use when assigning this tag.">
+                    <StackColumn spacing={2}>
+                      <FormFieldLabel label="Name">
+                        <TextField name="name" required={requiredFields.name} helperText="Use a short, recognisable tag name." />
+                      </FormFieldLabel>
 
-                <FormFieldLabel label="Description">
-                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
-                </FormFieldLabel>
+                      <FormFieldLabel label="Description">
+                        <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                      </FormFieldLabel>
+                    </StackColumn>
+                  </SettingsSectionCard>
 
-                <FormFieldLabel label="Color">
-                  <ColorPicker onChange={handleColorChange} />
-                </FormFieldLabel>
+                  <SettingsSectionCard title="Appearance" description="Choose a colour so this tag is easy to recognise in lists and filters.">
+                    <FormFieldLabel label="Colour">
+                      <ColorPicker onChange={handleColorChange} />
+                    </FormFieldLabel>
+                  </SettingsSectionCard>
 
-                <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
-              </FormStackColumn>
-            );
-          }}
-        />
-      </DialogContent>
-    </Dialog>
+                  <EditorActionBar
+                    secondaryActions={
+                      <Button type="button" variant="text" onClick={onCancel} sx={{ textTransform: 'none' }}>
+                        Cancel
+                      </Button>
+                    }
+                    primaryAction="Add tag"
+                  />
+                </FormStackColumn>
+              );
+            }}
+          />
+        </StackColumn>
+
+        <StickyReviewRail title="Tag help" description="Tags make resource and booking lists easier to scan.">
+          <SettingsSectionCard title="Suggested setup" description="Keep the tag library compact and meaningful.">
+            <StackColumn spacing={1}>
+              <SmallIconTypography label="Use names that match how operators search or group resources." />
+              <SmallIconTypography label="Add a description when the tag needs a clear usage rule." />
+              <SmallIconTypography label="Pick colours that differ from existing tags." />
+            </StackColumn>
+          </SettingsSectionCard>
+
+          <SettingsSectionCard title="After adding" description="The tag can be assigned from resource and preference setup screens.">
+            <StackColumn spacing={1}>
+              <SmallIconTypography label="Return to the previous page to apply it where needed." />
+            </StackColumn>
+          </SettingsSectionCard>
+        </StickyReviewRail>
+      </Box>
+    </Box>
   );
 };
 
-export default memo(AddOrganizationCustomTagDialog);
+export const AddOrganizationCustomTagPage = memo(AddOrganizationCustomTagPageComponent);
+
+export default AddOrganizationCustomTagPage;

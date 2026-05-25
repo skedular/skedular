@@ -42,11 +42,10 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required, organizationCusto
   );
 
   const items = useMemo<ZoneDetails[]>(() => (rootData.organization ? rootData.organization.zones.edges.map(({ node }) => node) : []), [rootData.organization]);
-  const connectionIds = useMemo(() => (rootData.organization ? [rootData.organization.zones.__id] : []), [rootData.organization]);
   const filter = createFilterOptions<ZoneDetails>();
 
   if (items.length === 0) {
-    return <AddOrganizationZoneButton organizationCustomDomain={organizationCustomDomain} connectionIds={connectionIds} size="medium" />;
+    return <AddOrganizationZoneButton organizationCustomDomain={organizationCustomDomain} size="medium" />;
   }
 
   return (

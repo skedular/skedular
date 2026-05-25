@@ -3,12 +3,12 @@ import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { getOrganizationAdminEditZoneBaseLink } from '@/components/links';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
-import { EditOrganizationZoneDialog } from '@/components/organization/editOrganizationZone';
 import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
 import { Search } from '@/components/search';
 import { Zone } from '@/components/zone';
-import { PaletteModeContext } from '@skedular/shared';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { defaultGridActionPadding } from '@skedular/ui';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationAdminZonesSectionQuery } from '@/queries/__generated__/organizationAdminZonesSectionQuery.graphql';
@@ -19,6 +19,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { SettingsSectionCard } from '@skedular/ui';
 import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
@@ -30,7 +31,6 @@ type Props = {
 type InnerProps = {
   organizationCustomDomain: string;
   onSearchTextChange: (value: string) => void;
-  onReloadRequired: () => void;
   queryReference: PreloadedQuery<organizationAdminZonesSectionQuery>;
 };
 
@@ -58,8 +58,12 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onReloadRequired, onSearchTextChange, queryReference }: InnerProps) => {
+const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSearchTextChange, queryReference }: InnerProps) => {
   const rootData = usePreloadedQuery<organizationAdminZonesSectionQuery>(RootQuery, queryReference);
+  const { integratedPlatrform } = useIntegratedPlatrform();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [commitDeleteZones] = useMutation<organizationAdminZonesSection_deleteZonesMutation>(graphql`
     mutation organizationAdminZonesSection_deleteZonesMutation($connectionIds: [ID!]!, $input: DeleteZonesInput!) {
       deleteZones(input: $input) {
@@ -100,7 +104,6 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onRelo
   const [selectedZoneId, setSelectedZoneId] = useState<null | string>(null);
   const [zoneMoreActionsAnchorEl, setZoneMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const zoneMoreActionsMenuOpen = Boolean(zoneMoreActionsAnchorEl);
-  const [isEditZoneDialogOpen, setIsEditZoneDialogOpen] = useState(false);
   const preferredZones = useMemo(() => rootData.me?.preferredZones.map(({ id }) => id) ?? [], [rootData.me]);
 
   const zones = useMemo(() => (rootData.organization ? rootData.organization.zones.edges.map(({ node }) => node) : []), [rootData.organization]);
@@ -295,7 +298,11 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onRelo
 
     switch (id) {
       case MoreActionsMenuOptionType.EditZone:
-        setIsEditZoneDialogOpen(true);
+        if (selectedZoneId) {
+          const currentQuery = searchParams.toString();
+          const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
+          router.push(getOrganizationAdminEditZoneBaseLink(integratedPlatrform, organizationCustomDomain, selectedZoneId, { redirectUrl }));
+        }
         break;
       case MoreActionsMenuOptionType.DeleteZone:
         handleRemoveZoneClick();
@@ -319,7 +326,7 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onRelo
         <SettingsSectionCard
           title="Zones"
           description="Manage shared place-based tags used for organization filters and preferences."
-          actions={<AddOrganizationZoneButton organizationCustomDomain={organizationCustomDomain} connectionIds={zonesConnectionIds} />}
+          actions={<AddOrganizationZoneButton organizationCustomDomain={organizationCustomDomain} />}
         >
           <StackColumn spacing={2}>
             <StackRow sx={{ justifyContent: 'flex-end' }}>
@@ -366,16 +373,6 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onRelo
       </Box>
 
       <MoreActionsMenu anchorEl={zoneMoreActionsAnchorEl} open={zoneMoreActionsMenuOpen} onMenuItemClick={handleZoneMoreActionsMenuItemClick} options={zoneMoreActionsOption} />
-
-      {selectedZoneId && (
-        <EditOrganizationZoneDialog
-          onReloadRequired={onReloadRequired}
-          zoneId={selectedZoneId}
-          isDialogOpen={isEditZoneDialogOpen}
-          onAddClicked={() => setIsEditZoneDialogOpen(false)}
-          onCancel={() => setIsEditZoneDialogOpen(false)}
-        />
-      )}
     </>
   );
 };
@@ -383,7 +380,7 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onRelo
 const OrganizationAdminZonesSection = ({ organizationCustomDomain }: Props) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationAdminZonesSectionQuery>(RootQuery);
   const [zoneNameSearchText, setZoneNameSearchText] = useState('');
-  const [reloadKey, setReloadKey] = useState(uuid());
+  const [reloadKey] = useState(uuid());
 
   useEffect(() => {
     loadQuery(
@@ -406,7 +403,6 @@ const OrganizationAdminZonesSection = ({ organizationCustomDomain }: Props) => {
       key={`${reloadKey}-${zoneNameSearchText}`}
       organizationCustomDomain={organizationCustomDomain}
       onSearchTextChange={setZoneNameSearchText}
-      onReloadRequired={() => setReloadKey(uuid())}
       queryReference={queryReference}
     />
   );

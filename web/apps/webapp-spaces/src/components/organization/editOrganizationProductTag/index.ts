@@ -1,1 +1,1 @@
-export { default as EditOrganizationProductTagDialog } from './edit-organization-product-tag-dialog';
+export { default as EditOrganizationProductTagPage } from './edit-organization-product-tag-dialog';

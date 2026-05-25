@@ -32,7 +32,7 @@ const RootPage = () => {
   }, [loadQuery, loading, user]);
 
   return (
-    <NoOrganizationRootShell hideSideNav={!user}>
+    <NoOrganizationRootShell hideSideNav={!user} hideOrganizationSelector>
       {loading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', p: { xs: 2, md: 4 } }}>
           <CircularProgress />

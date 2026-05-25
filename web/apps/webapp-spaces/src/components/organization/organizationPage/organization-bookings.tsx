@@ -1,5 +1,6 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { Bookings } from '@/components/booking/bookings';
+import { GettingStarted } from '@/components/gettingStarted';
 import { GridContainer, StackColumn } from '@skedular/ui';
 import { WeekRangePicker } from '@/components/datePickers';
 import { Loading } from '@/components/loading';
@@ -63,6 +64,7 @@ const RootQuery = graphql`
     }
     ...organizationUserSelector_organizationMembers_query
     ...locationSelector_allLocations_query
+    ...gettingStarted_query
     ...bookings_query
     ...bookings_bookings_query
   }
@@ -99,7 +101,8 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationCu
 
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-      <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto' }} spacing={2}>
+      <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 } }} spacing={2}>
+        <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
         <Bookings
           rootDataRelay={rootData}
           rootDataBookingRelay={rootData}
@@ -115,6 +118,7 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationCu
               <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
             </GridContainer>
           }
+          hasTopInset={false}
           actions={<NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationCustomDomain={organizationCustomDomain} />}
         />
       </StackColumn>

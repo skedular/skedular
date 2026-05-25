@@ -1,6 +1,5 @@
 import {
   AnalyticsIcon,
-  BookingIcon,
   CollpaseDrawerIcon,
   GridViewIcon,
   HomeIcon,
@@ -17,7 +16,6 @@ import {
   getOrganizationAnalyticsBaseLink,
   getOrganizationAvailabilityDashboardBaseLink,
   getOrganizationBaseLink,
-  getOrganizationBookingsBaseLink,
   getOrganizationLocationsBaseLink,
   getOrganizationProductsBaseLink,
   getOrganizationSubscriptionsBaseLink,
@@ -143,7 +141,6 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   }
 
   const organizationBaseLink = getOrganizationBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationBookingsBaseLink = getOrganizationBookingsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationLocationsBaseLink = getOrganizationLocationsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
@@ -192,30 +189,6 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                     startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
                     spacing={3}
                     invertDefaultColor={pathName === organizationBaseLink && paletteMode === 'dark'}
-                  />
-                )}
-              </ListItemButton>
-            </Link>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <Link component={NextLink} href={organizationBookingsBaseLink}>
-              <ListItemButton
-                selected={pathName === organizationBookingsBaseLink}
-                sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === organizationBookingsBaseLink) }}
-              >
-                {collapsed && (
-                  <BodyIconTypography
-                    startElement={!hideIcons && <BookingIcon color="inherit" />}
-                    invertDefaultColor={pathName === organizationBookingsBaseLink && paletteMode === 'dark'}
-                  />
-                )}
-                {!collapsed && (
-                  <BodyIconTypography
-                    label="Bookings"
-                    startElement={!hideIcons && <BookingIcon excludeTooltip color="inherit" />}
-                    spacing={3}
-                    invertDefaultColor={pathName === organizationBookingsBaseLink && paletteMode === 'dark'}
                   />
                 )}
               </ListItemButton>

@@ -18,11 +18,12 @@ type Props = {
   customerIds: string[];
   toolbar?: ReactNode;
   actions?: ReactNode;
+  hasTopInset?: boolean;
 };
 
 type MarketplaceSubscriptionLookup = Record<string, string>;
 
-const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomain, from, to, locationIds, customerIds, toolbar, actions }: Props) => {
+const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomain, from, to, locationIds, customerIds, toolbar, actions, hasTopInset = true }: Props) => {
   const rootData = useFragment<bookings_query$key>(
     graphql`
       fragment bookings_query on Query {
@@ -130,7 +131,13 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
   }
 
   return (
-    <OrganizationBookingsPageShell actions={actions} toolbar={toolbar} isEmpty={bookings.length === 0} emptyMessage="No bookings match the selected week and filters.">
+    <OrganizationBookingsPageShell
+      actions={actions}
+      toolbar={toolbar}
+      isEmpty={bookings.length === 0}
+      emptyMessage="No bookings match the selected week and filters."
+      hasTopInset={hasTopInset}
+    >
       <Box
         sx={{
           display: 'grid',

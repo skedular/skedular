@@ -36,7 +36,7 @@ vi.mock(import('@skedular/shared'), async (importOriginal) => {
 });
 
 vi.mock('@/components/links', () => ({
-  getOrganizationBookingsBaseLink: () => '/organizations/acme/bookings?locationId=location-1',
+  getOrganizationBookingsBaseLink: () => '/organizations/acme?locationId=location-1',
   getOrganizationLocationSetupBaseLink: () => '/organizations/acme/locations/location-1?section=setup',
   getOrganizationLocationPhysicalAddressSetupBaseLink: () => '/organizations/acme/locations/location-1?section=physical-address-setup',
   getOrganizationLocationOpeningHoursBaseLink: () => '/organizations/acme/locations/location-1?section=opening-hours',
@@ -58,7 +58,7 @@ describe('OrganizationLocationSectionNav', () => {
 
     expect(resourcesTab).toHaveAttribute('href', '/organizations/acme/locations/location-1?section=manage-resources');
     expect(setupTab).toHaveAttribute('href', '/organizations/acme/locations/location-1?section=setup');
-    expect(bookingsLink).toHaveAttribute('href', '/organizations/acme/bookings?locationId=location-1');
+    expect(bookingsLink).toHaveAttribute('href', '/organizations/acme?locationId=location-1');
     expect(resourcesTab.className).toContain('MuiButton-contained');
     expect(setupTab.className).toContain('MuiButton-text');
   });
@@ -71,7 +71,7 @@ describe('OrganizationLocationSectionNav', () => {
     const sectionButton = screen.getByRole('button', { name: 'Section: Resources' });
     const bookingsLink = screen.getByRole('link', { name: 'View location bookings' });
 
-    expect(bookingsLink).toHaveAttribute('href', '/organizations/acme/bookings?locationId=location-1');
+    expect(bookingsLink).toHaveAttribute('href', '/organizations/acme?locationId=location-1');
 
     fireEvent.click(sectionButton);
 

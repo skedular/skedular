@@ -119,12 +119,14 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
               xl: 'repeat(3, minmax(0, 1fr))',
             },
             gap: 2,
-            alignItems: 'start',
+            alignItems: 'stretch',
             paddingTop: 2,
           }}
         >
           <StackColumn spacing={1} sx={{ minWidth: 0 }}>
-            <SmallIconTypography label="Let's start by setting up the organization's first location." />
+            <Box sx={{ minHeight: { sm: 48, xl: 40 } }}>
+              <SmallIconTypography label="Let's start by setting up the organization's first location." />
+            </Box>
             <Link component={NextLink} href={getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationCustomDomain)} sx={{ display: 'block' }}>
               <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                 <LeadIconTypography
@@ -138,7 +140,9 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
           </StackColumn>
 
           <StackColumn spacing={1} sx={{ minWidth: 0 }}>
-            <SmallIconTypography label="Add resources for your locations." />
+            <Box sx={{ minHeight: { sm: 48, xl: 40 } }}>
+              <SmallIconTypography label="Add resources for your locations." />
+            </Box>
             <Link component={NextLink} href={getOrganizationAddResourceBaseLink(integratedPlatrform, organizationCustomDomain)} sx={{ display: 'block' }}>
               <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                 <LeadIconTypography
@@ -152,7 +156,9 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
           </StackColumn>
 
           <StackColumn spacing={1} sx={{ minWidth: 0 }}>
-            <SmallIconTypography label="Invite people to your organization and start booking." />
+            <Box sx={{ minHeight: { sm: 48, xl: 40 } }}>
+              <SmallIconTypography label="Invite people to your organization and start booking." />
+            </Box>
             <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleInvitePeopleClicked}>
               <LeadIconTypography
                 label="Invite People"

@@ -1,4 +1,4 @@
-import { Organization } from '@/components/organization/organizationPage';
+import { OrganizationBookings } from '@/components/organization/organizationPage';
 import { RootShell } from '@/components/rootShell';
 import { useKnownParams } from '@skedular/shared';
 import { memo } from 'react';
@@ -12,7 +12,7 @@ const RootPage = () => {
 
   return (
     <RootShell>
-      <Organization organizationCustomDomain={organizationCustomDomain} />
+      <OrganizationBookings organizationCustomDomain={organizationCustomDomain} />
     </RootShell>
   );
 };

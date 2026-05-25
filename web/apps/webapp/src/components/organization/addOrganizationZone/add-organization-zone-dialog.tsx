@@ -1,11 +1,20 @@
-import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
+import {
+  ColorPicker,
+  EditorActionBar,
+  FormFieldLabel,
+  FormStackColumn,
+  PageHeaderPanel,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StickyReviewRail,
+} from '@skedular/ui';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@skedular/shared';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { addOrganizationZoneDialog_addZoneMutation } from '@/queries/__generated__/addOrganizationZoneDialog_addZoneMutation.graphql';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -16,8 +25,7 @@ import { object, string } from 'yup';
 
 type Props = {
   organizationCustomDomain: string;
-  connectionIds: string[];
-  isDialogOpen: boolean;
+  connectionIds?: string[];
   onAddClicked: () => void;
   onCancel: () => void;
 };
@@ -32,7 +40,7 @@ const zoneSchema = object({
   description: string().nullable(),
 });
 
-const AddOrganizationZoneDialog = ({ organizationCustomDomain, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const AddOrganizationZonePageComponent = ({ organizationCustomDomain, connectionIds = [], onAddClicked, onCancel }: Props) => {
   const [commitAddZone] = useMutation<addOrganizationZoneDialog_addZoneMutation>(graphql`
     mutation addOrganizationZoneDialog_addZoneMutation($connectionIds: [ID!]!, $input: AddZoneInput!) @raw_response_type {
       addZone(input: $input) {
@@ -109,39 +117,70 @@ const AddOrganizationZoneDialog = ({ organizationCustomDomain, connectionIds, is
   };
 
   return (
-    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
-      <DefaultDialogTitle title="Add Zone" />
-      <DialogContent sx={{ marginTop: 2 }}>
-        <Form
-          onSubmit={handleAddClick}
-          initialValues={{}}
-          validate={validate}
-          render={({ handleSubmit }) => {
-            return (
-              <FormStackColumn onSubmit={handleSubmit}>
-                <LeadIconTypography label="Add zone to this organization" />
-                <SmallIconTypography label="Enter the name of the zone to add to this organization." />
+    <Box sx={{ px: { xs: 2, md: 3 }, py: 3 }}>
+      <Box sx={{ maxWidth: 1320, mx: 'auto', display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', xl: 'minmax(0, 2fr) 320px' }, gap: 2 }}>
+        <StackColumn spacing={2.5} sx={{ minWidth: 0 }}>
+          <PageHeaderPanel title="Add zone" description="Create a place-based zone used to group resources, floor plans, and availability filters." />
 
-                <FormFieldLabel label="Name">
-                  <TextField name="name" required={requiredFields.name} />
-                </FormFieldLabel>
+          <Form
+            onSubmit={handleAddClick}
+            initialValues={{}}
+            validate={validate}
+            render={({ handleSubmit }) => {
+              return (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <SettingsSectionCard title="Zone details" description="Set the name and description operators will see when assigning this zone.">
+                    <StackColumn spacing={2}>
+                      <FormFieldLabel label="Name">
+                        <TextField name="name" required={requiredFields.name} helperText="Use a clear place name such as Level 2 or North Wing." />
+                      </FormFieldLabel>
 
-                <FormFieldLabel label="Description">
-                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
-                </FormFieldLabel>
+                      <FormFieldLabel label="Description">
+                        <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                      </FormFieldLabel>
+                    </StackColumn>
+                  </SettingsSectionCard>
 
-                <FormFieldLabel label="Color">
-                  <ColorPicker onChange={handleColorChange} />
-                </FormFieldLabel>
+                  <SettingsSectionCard title="Appearance" description="Choose a colour so this zone is easy to recognise in resource lists.">
+                    <FormFieldLabel label="Colour">
+                      <ColorPicker onChange={handleColorChange} />
+                    </FormFieldLabel>
+                  </SettingsSectionCard>
 
-                <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
-              </FormStackColumn>
-            );
-          }}
-        />
-      </DialogContent>
-    </Dialog>
+                  <EditorActionBar
+                    secondaryActions={
+                      <Button type="button" variant="text" onClick={onCancel} sx={{ textTransform: 'none' }}>
+                        Cancel
+                      </Button>
+                    }
+                    primaryAction="Add zone"
+                  />
+                </FormStackColumn>
+              );
+            }}
+          />
+        </StackColumn>
+
+        <StickyReviewRail title="Zone help" description="Zones work best when they map to real areas users recognise.">
+          <SettingsSectionCard title="Suggested setup" description="Keep zones broad enough to help filtering without creating noise.">
+            <StackColumn spacing={1}>
+              <SmallIconTypography label="Use zones for floors, wings, neighbourhoods, or resource clusters." />
+              <SmallIconTypography label="Avoid duplicating tags that are not location-based." />
+              <SmallIconTypography label="Pick colours that make adjacent zones easy to tell apart." />
+            </StackColumn>
+          </SettingsSectionCard>
+
+          <SettingsSectionCard title="After adding" description="The zone can be assigned from resource and floor-plan setup screens.">
+            <StackColumn spacing={1}>
+              <SmallIconTypography label="Return to the previous page to apply it where needed." />
+            </StackColumn>
+          </SettingsSectionCard>
+        </StickyReviewRail>
+      </Box>
+    </Box>
   );
 };
 
-export default memo(AddOrganizationZoneDialog);
+export const AddOrganizationZonePage = memo(AddOrganizationZonePageComponent);
+
+export default AddOrganizationZonePage;

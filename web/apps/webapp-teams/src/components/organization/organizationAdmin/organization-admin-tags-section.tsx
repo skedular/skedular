@@ -4,11 +4,11 @@ import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { getOrganizationAdminEditCustomTagBaseLink } from '@/components/links';
 import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
-import { EditOrganizationCustomTagDialog } from '@/components/organization/editOrganizationCustomTag';
 import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
 import { Search } from '@/components/search';
-import { PaletteModeContext } from '@skedular/shared';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { defaultGridActionPadding } from '@skedular/ui';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationAdminTagsSectionQuery } from '@/queries/__generated__/organizationAdminTagsSectionQuery.graphql';
@@ -19,6 +19,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { SettingsSectionCard } from '@skedular/ui';
 import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
@@ -30,7 +31,6 @@ type Props = {
 type InnerProps = {
   organizationCustomDomain: string;
   onSearchTextChange: (value: string) => void;
-  onReloadRequired: () => void;
   queryReference: PreloadedQuery<organizationAdminTagsSectionQuery>;
 };
 
@@ -58,8 +58,12 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloadRequired, onSearchTextChange, queryReference }: InnerProps) => {
+const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearchTextChange, queryReference }: InnerProps) => {
   const rootData = usePreloadedQuery<organizationAdminTagsSectionQuery>(RootQuery, queryReference);
+  const { integratedPlatrform } = useIntegratedPlatrform();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [commitDeleteCustomTags] = useMutation<organizationAdminTagsSection_deleteCustomTagsMutation>(graphql`
     mutation organizationAdminTagsSection_deleteCustomTagsMutation($connectionIds: [ID!]!, $input: DeleteCustomTagsInput!) {
       deleteCustomTags(input: $input) {
@@ -100,7 +104,6 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
   const [selectedCustomTagId, setSelectedCustomTagId] = useState<null | string>(null);
   const [customTagMoreActionsAnchorEl, setCustomTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const customTagMoreActionsMenuOpen = Boolean(customTagMoreActionsAnchorEl);
-  const [isEditCustomTagDialogOpen, setIsEditCustomTagDialogOpen] = useState(false);
   const preferredCustomTags = useMemo(() => rootData.me?.preferredCustomTags.map(({ id }) => id) ?? [], [rootData.me]);
 
   const customTags = useMemo(() => (rootData.organization ? rootData.organization.customTags.edges.map(({ node }) => node) : []), [rootData.organization]);
@@ -300,7 +303,11 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
 
     switch (id) {
       case MoreActionsMenuOptionType.EditCustomTag:
-        setIsEditCustomTagDialogOpen(true);
+        if (selectedCustomTagId) {
+          const currentQuery = searchParams.toString();
+          const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
+          router.push(getOrganizationAdminEditCustomTagBaseLink(integratedPlatrform, organizationCustomDomain, selectedCustomTagId, { redirectUrl }));
+        }
         break;
       case MoreActionsMenuOptionType.DeleteCustomTag:
         handleRemoveCustomTagClick();
@@ -324,7 +331,7 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
         <SettingsSectionCard
           title="Tags"
           description="Manage custom tags used to classify bookings, spaces, and member preferences."
-          actions={<AddOrganizationCustomTagButton organizationCustomDomain={organizationCustomDomain} connectionIds={customTagsConnectionIds} />}
+          actions={<AddOrganizationCustomTagButton organizationCustomDomain={organizationCustomDomain} />}
         >
           <StackColumn spacing={2}>
             <StackRow sx={{ justifyContent: 'flex-end' }}>
@@ -376,16 +383,6 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
         onMenuItemClick={handleCustomTagMoreActionsMenuItemClick}
         options={customTagMoreActionsOption}
       />
-
-      {selectedCustomTagId && (
-        <EditOrganizationCustomTagDialog
-          onReloadRequired={onReloadRequired}
-          customTagId={selectedCustomTagId}
-          isDialogOpen={isEditCustomTagDialogOpen}
-          onAddClicked={() => setIsEditCustomTagDialogOpen(false)}
-          onCancel={() => setIsEditCustomTagDialogOpen(false)}
-        />
-      )}
     </>
   );
 };
@@ -393,7 +390,7 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onReloa
 const OrganizationAdminTagsSection = ({ organizationCustomDomain }: Props) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationAdminTagsSectionQuery>(RootQuery);
   const [customTagNameSearchText, setCustomTagNameSearchText] = useState('');
-  const [reloadKey, setReloadKey] = useState(uuid());
+  const [reloadKey] = useState(uuid());
 
   useEffect(() => {
     loadQuery(
@@ -416,7 +413,6 @@ const OrganizationAdminTagsSection = ({ organizationCustomDomain }: Props) => {
       key={`${reloadKey}-${customTagNameSearchText}`}
       organizationCustomDomain={organizationCustomDomain}
       onSearchTextChange={setCustomTagNameSearchText}
-      onReloadRequired={() => setReloadKey(uuid())}
       queryReference={queryReference}
     />
   );

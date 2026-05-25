@@ -27,7 +27,7 @@ const barlow = localFont({
 const appDefinition = getProductAppDefinition('webapp');
 
 export const metadata: Metadata = {
-  title: 'Skedular',
+  title: 'Skedular Teams',
   description: 'The premier solution for modern workspace management',
   icons: '/images/skedular-icon-primary.svg',
 };

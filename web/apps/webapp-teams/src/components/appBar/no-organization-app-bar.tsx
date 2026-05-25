@@ -30,11 +30,12 @@ import { useInterval } from 'usehooks-ts';
 type Props = {
   rootDataRelay: noOrganizationAppBar_query$key;
   showLogo?: boolean;
+  hideOrganizationSelector?: boolean;
 };
 
 const createOrganizationId = '76eZvntIX6YA5FboBJlRk';
 
-const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
+const NoOrganizationAppBar = ({ rootDataRelay, showLogo, hideOrganizationSelector }: Props) => {
   const rootData = useFragment<noOrganizationAppBar_query$key>(
     graphql`
       fragment noOrganizationAppBar_query on Query {
@@ -158,80 +159,84 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
         >
           {showLogo && <Image src={logoUrl} width={logoWidth} height={logoHeight} alt="Skedular" />}
 
-          <Select
-            onChange={handleSelectedOrganizationChange}
-            displayEmpty
-            sx={{
-              '& fieldset': {
-                border: 0,
-                borderRight: 0,
-                borderRadius: 0,
-              },
-            }}
-            renderValue={(selectedId) => {
-              if (!rootData.myOrganizations) {
-                return (
-                  <>
-                    <BodyIconTypography
-                      label="Please select an organization"
-                      sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
-                    />
-                    <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
-                  </>
-                );
-              }
+          {!hideOrganizationSelector && (
+            <>
+              <Select
+                onChange={handleSelectedOrganizationChange}
+                displayEmpty
+                sx={{
+                  '& fieldset': {
+                    border: 0,
+                    borderRight: 0,
+                    borderRadius: 0,
+                  },
+                }}
+                renderValue={(selectedId) => {
+                  if (!rootData.myOrganizations) {
+                    return (
+                      <>
+                        <BodyIconTypography
+                          label="Please select an organization"
+                          sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        />
+                        <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
+                      </>
+                    );
+                  }
 
-              const selectedItem = rootData.myOrganizations.find((item) => item.customDomain === selectedId);
-              if (!selectedItem) {
-                return (
-                  <>
-                    <BodyIconTypography
-                      label="Please select an organization"
-                      sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
-                    />
-                    <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
-                  </>
-                );
-              }
+                  const selectedItem = rootData.myOrganizations.find((item) => item.customDomain === selectedId);
+                  if (!selectedItem) {
+                    return (
+                      <>
+                        <BodyIconTypography
+                          label="Please select an organization"
+                          sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        />
+                        <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
+                      </>
+                    );
+                  }
 
-              return (
-                <>
-                  <Box sx={{ display: { xs: 'none', sm: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    <LeadIconTypography
-                      label={selectedItem.name}
-                      sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-                      startElement={<OrganizationAvatar name={{ name: selectedItem.name }} photo={{ url: selectedItem.logoUrl }} />}
-                    />
-                  </Box>
+                  return (
+                    <>
+                      <Box sx={{ display: { xs: 'none', sm: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <LeadIconTypography
+                          label={selectedItem.name}
+                          sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                          startElement={<OrganizationAvatar name={{ name: selectedItem.name }} photo={{ url: selectedItem.logoUrl }} />}
+                        />
+                      </Box>
 
-                  <Box sx={{ display: { xs: 'block', sm: 'none' }, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    <LeadIconTypography label={selectedItem.name} sx={{ width: 150, overflow: 'hidden', textOverflow: 'ellipsis' }} />
-                  </Box>
-                </>
-              );
-            }}
-          >
-            {rootData.myOrganizations.map((organization) => (
-              <MenuItem key={organization.uniqueId} value={organization.customDomain ?? ''}>
-                <StackRow>
-                  <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
-                  <StackColumn spacing={-0.5}>
-                    <LeadIconTypography label={organization.name} />
-                    <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
-                  </StackColumn>
-                </StackRow>
-              </MenuItem>
-            ))}
+                      <Box sx={{ display: { xs: 'block', sm: 'none' }, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <LeadIconTypography label={selectedItem.name} sx={{ width: 150, overflow: 'hidden', textOverflow: 'ellipsis' }} />
+                      </Box>
+                    </>
+                  );
+                }}
+              >
+                {rootData.myOrganizations.map((organization) => (
+                  <MenuItem key={organization.uniqueId} value={organization.customDomain ?? ''}>
+                    <StackRow>
+                      <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
+                      <StackColumn spacing={-0.5}>
+                        <LeadIconTypography label={organization.name} />
+                        <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
+                      </StackColumn>
+                    </StackRow>
+                  </MenuItem>
+                ))}
 
-            {rootData.myOrganizations.length !== 0 && <Divider />}
+                {rootData.myOrganizations.length !== 0 && <Divider />}
 
-            <MenuItem value={createOrganizationId}>
-              <LeadIconTypography label="Create organization" startElement={<AddIcon />} />
-            </MenuItem>
-          </Select>
+                <MenuItem value={createOrganizationId}>
+                  <LeadIconTypography label="Create organization" startElement={<AddIcon />} />
+                </MenuItem>
+              </Select>
 
-          {rootData.myOrganizations.length !== 0 && <Divider orientation="vertical" flexItem />}
-          <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, paddingLeft: 2 }} />
+              {rootData.myOrganizations.length !== 0 && <Divider orientation="vertical" flexItem />}
+            </>
+          )}
+          <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, paddingLeft: hideOrganizationSelector ? 0 : 2 }} />
 
           <PushToRight />
 

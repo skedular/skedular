@@ -1,13 +1,12 @@
 import { NewBankAccountButton } from '@/components/bankAccount/addBankAccount';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { BillingIcon, DeleteIcon } from '@/components/icons';
-import { getOrganizationBankAccountBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
+import { getOrganizationAdminEditProductTagBaseLink, getOrganizationBankAccountBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { SingleChoiceOrganizationBillingCycle, SingleChoiceOrganizationXeroBillingMode } from '@/components/organization';
 import { AddOrganizationProductTagButton } from '@/components/organization/addOrganizationProductTag';
-import { EditOrganizationProductTagDialog } from '@/components/organization/editOrganizationProductTag';
 import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
 import OrganizationMarketplaceBankAccountManagementList from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-bank-account-management-list';
 import OrganizationMarketplaceSetupSectionNav, {
@@ -579,7 +578,6 @@ const OrganizationMarketplaceSetup = ({
   const [selectedProductTagId, setSelectedProductTagId] = useState<null | string>(null);
   const [productTagMoreActionsAnchorEl, setProductTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const productTagMoreActionsMenuOpen = Boolean(productTagMoreActionsAnchorEl);
-  const [isEditProductTagDialogOpen, setIsEditProductTagDialogOpen] = useState(false);
   const productTags = useMemo(
     () => (rootDataProductTags.organization ? rootDataProductTags.organization.productTags.edges.map(({ node }) => node) : []),
     [rootDataProductTags.organization],
@@ -714,21 +712,17 @@ const OrganizationMarketplaceSetup = ({
 
     switch (id) {
       case MoreActionsMenuOptionType.EditProductTag:
-        setIsEditProductTagDialogOpen(true);
+        if (selectedProductTagId) {
+          const currentQuery = searchParams.toString();
+          const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
+          router.push(getOrganizationAdminEditProductTagBaseLink(integratedPlatrform, organizationCustomDomain, selectedProductTagId, { redirectUrl }));
+        }
         break;
 
       case MoreActionsMenuOptionType.DeleteProductTag:
         handleRemoveProductTagClick();
         break;
     }
-  };
-
-  const handleEditProductTagClick = () => {
-    setIsEditProductTagDialogOpen(false);
-  };
-
-  const handleEditProductTagCancel = () => {
-    setIsEditProductTagDialogOpen(false);
   };
 
   const handleRemoveProductTagsClick = () => {
@@ -1762,7 +1756,7 @@ const OrganizationMarketplaceSetup = ({
                 <BodyIconTypography label="Manage the marketplace-facing tags used to classify products, resources, and customer filters." />
               </StackColumn>
               <PushToRight />
-              <AddOrganizationProductTagButton organizationCustomDomain={organizationCustomDomain} connectionIds={productTagsConnectionIds} />
+              <AddOrganizationProductTagButton organizationCustomDomain={organizationCustomDomain} />
             </StackRow>
 
             <Divider />
@@ -1903,16 +1897,6 @@ const OrganizationMarketplaceSetup = ({
         onMenuItemClick={handleOrganizationBankAccountMoreActionsMenuItemClick}
         options={organizationBankAccountMoreActionsOption}
       />
-
-      {selectedProductTagId && (
-        <EditOrganizationProductTagDialog
-          onReloadRequired={onReloadRequired}
-          productTagId={selectedProductTagId}
-          isDialogOpen={isEditProductTagDialogOpen}
-          onAddClicked={handleEditProductTagClick}
-          onCancel={handleEditProductTagCancel}
-        />
-      )}
     </>
   );
 };

@@ -1,16 +1,25 @@
-import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
+import {
+  ColorPicker,
+  EditorActionBar,
+  FormFieldLabel,
+  FormStackColumn,
+  PageHeaderPanel,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StickyReviewRail,
+} from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@skedular/shared';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { editOrganizationZoneDialog_rootQuery } from '@/queries/__generated__/editOrganizationZoneDialog_rootQuery.graphql';
 import type { editOrganizationZoneDialog_updateZoneMutation } from '@/queries/__generated__/editOrganizationZoneDialog_updateZoneMutation.graphql';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -20,10 +29,8 @@ import { object, string } from 'yup';
 
 type Props = {
   queryReference: PreloadedQuery<editOrganizationZoneDialog_rootQuery, Record<string, unknown>>;
-  onReloadRequired?: () => void;
   zoneId: string;
-  isDialogOpen: boolean;
-  onAddClicked: () => void;
+  onSaved: () => void;
   onCancel: () => void;
 };
 
@@ -50,9 +57,8 @@ const zoneSchema = object({
   description: string().nullable(),
 });
 
-const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const EditOrganizationZonePageComponent = ({ queryReference, zoneId, onSaved, onCancel }: Props) => {
   const rootData = usePreloadedQuery<editOrganizationZoneDialog_rootQuery>(RootQuery, queryReference);
-
   const [commitUpdateZonePatch] = useMutation<editOrganizationZoneDialog_updateZoneMutation>(graphql`
     mutation editOrganizationZoneDialog_updateZoneMutation($input: UpdateOrganizationTagInput!) @raw_response_type {
       updateZone(input: $input) {
@@ -72,10 +78,6 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
   const requiredFields = makeRequired(zoneSchema);
   const [selectedColor, setSelectedColor] = useState(rootData.zone?.color);
 
-  const handleColorChange = (color: string) => {
-    setSelectedColor(color);
-  };
-
   const handleAddClick = ({ name, description }: ZoneDetails) => {
     if (!rootData.zone) {
       return;
@@ -93,9 +95,10 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
       fieldsToUpdate.push('COLOR');
     }
     if (fieldsToUpdate.length === 0) {
-      onAddClicked();
+      onSaved();
       return;
     }
+
     const toastId = themedToast(<NotificationContent content={`Updating zone '${oldName}'...`} />, infoNotificationOptions);
 
     commitUpdateZonePatch({
@@ -121,10 +124,10 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Zone ${name} updateed.`} />,
+          render: <NotificationContent content={`Zone ${name} updated.`} />,
         });
 
-        onAddClicked();
+        onSaved();
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -150,79 +153,75 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
   }
 
   return (
-    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
-      <DefaultDialogTitle title="Edit Zone" />
-      <DialogContent sx={{ marginTop: 2 }}>
-        <Form
-          onSubmit={handleAddClick}
-          initialValues={{
-            name: rootData.zone.name,
-            description: rootData.zone.description,
-          }}
-          validate={validate}
-          render={({ handleSubmit }) => {
-            return (
+    <Box sx={{ px: { xs: 2, md: 3 }, py: 3 }}>
+      <Box sx={{ maxWidth: 1320, mx: 'auto', display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', xl: 'minmax(0, 2fr) 320px' }, gap: 2 }}>
+        <StackColumn spacing={2.5} sx={{ minWidth: 0 }}>
+          <PageHeaderPanel title="Edit zone" description="Update the zone name, description, and colour used across resources and availability filters." />
+
+          <Form
+            onSubmit={handleAddClick}
+            initialValues={{ name: rootData.zone.name, description: rootData.zone.description }}
+            validate={validate}
+            render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <LeadIconTypography label="Edit zone details" />
-                <SmallIconTypography label="Enter the name of the zone to update." />
+                <SettingsSectionCard title="Zone details" description="Keep the zone label clear for operators applying it across the organisation.">
+                  <StackColumn spacing={2}>
+                    <FormFieldLabel label="Name">
+                      <TextField name="name" required={requiredFields.name} helperText="Use a short, recognisable zone name." />
+                    </FormFieldLabel>
 
-                <FormFieldLabel label="Name">
-                  <TextField name="name" required={requiredFields.name} />
-                </FormFieldLabel>
+                    <FormFieldLabel label="Description">
+                      <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                    </FormFieldLabel>
+                  </StackColumn>
+                </SettingsSectionCard>
 
-                <FormFieldLabel label="Description">
-                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
-                </FormFieldLabel>
+                <SettingsSectionCard title="Appearance" description="Choose a colour so this zone is easy to recognise in lists and filters.">
+                  <FormFieldLabel label="Colour">
+                    <ColorPicker onChange={setSelectedColor} defaultColor={rootData.zone?.color} />
+                  </FormFieldLabel>
+                </SettingsSectionCard>
 
-                <FormFieldLabel label="Color">
-                  <ColorPicker onChange={handleColorChange} defaultColor={rootData.zone?.color} />
-                </FormFieldLabel>
-
-                <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Save" secondaryLabel="Cancel" />
+                <EditorActionBar
+                  secondaryActions={
+                    <Button type="button" variant="text" onClick={onCancel} sx={{ textTransform: 'none' }}>
+                      Cancel
+                    </Button>
+                  }
+                  primaryAction="Save zone"
+                />
               </FormStackColumn>
-            );
-          }}
-        />
-      </DialogContent>
-    </Dialog>
+            )}
+          />
+        </StackColumn>
+
+        <StickyReviewRail title="Zone help" description="Changes apply wherever this zone is already used.">
+          <SettingsSectionCard title="Before saving" description="Avoid renaming tags in a way that changes their operational meaning unexpectedly.">
+            <StackColumn spacing={1}>
+              <SmallIconTypography label="Keep names consistent with how operators search and filter." />
+              <SmallIconTypography label="Use the description for usage rules or edge cases." />
+            </StackColumn>
+          </SettingsSectionCard>
+        </StickyReviewRail>
+      </Box>
+    </Box>
   );
 };
 
-const MemoEditOrganizationZoneDialog = memo(EditOrganizationZoneDialog);
+const MemoEditOrganizationZonePage = memo(EditOrganizationZonePageComponent);
 
 type RelayProps = {
-  onReloadRequired?: () => void;
   zoneId: string;
-  isDialogOpen: boolean;
-  onAddClicked: () => void;
+  onSaved: () => void;
   onCancel: () => void;
 };
 
-const EditOrganizationZoneDialogWithRelay = ({ onReloadRequired, zoneId, isDialogOpen, onAddClicked, onCancel }: RelayProps) => {
+const EditOrganizationZonePageWithRelay = ({ zoneId, onSaved, onCancel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<editOrganizationZoneDialog_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
-  const [, startTransition] = useTransition();
 
   useEffect(() => {
-    loadQuery(
-      {
-        zoneId,
-      },
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, triggerReloadId, zoneId]);
-
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReloadId(uuid());
-
-      if (onReloadRequired) {
-        onReloadRequired();
-      }
-    });
-  };
+    loadQuery({ zoneId }, { fetchPolicy: 'store-and-network' });
+  }, [zoneId, loadQuery]);
 
   if (!queryReference) {
     return <Loading />;
@@ -230,16 +229,11 @@ const EditOrganizationZoneDialogWithRelay = ({ onReloadRequired, zoneId, isDialo
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoEditOrganizationZoneDialog
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        zoneId={zoneId}
-        isDialogOpen={isDialogOpen}
-        onAddClicked={onAddClicked}
-        onCancel={onCancel}
-      />
+      <MemoEditOrganizationZonePage queryReference={queryReference} zoneId={zoneId} onSaved={onSaved} onCancel={onCancel} />
     </ErrorBoundary>
   );
 };
 
-export default memo(EditOrganizationZoneDialogWithRelay);
+export const EditOrganizationZonePage = memo(EditOrganizationZonePageWithRelay);
+
+export default EditOrganizationZonePage;
