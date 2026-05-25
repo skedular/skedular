@@ -31,7 +31,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   }
 
   return (
-    <RootShell hideOrganizationSelector hideWelcomeMessage>
+    <RootShell>
       <EditStripeConnectAccount rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
     </RootShell>
   );

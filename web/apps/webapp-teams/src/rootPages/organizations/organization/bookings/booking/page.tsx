@@ -1,17 +1,13 @@
 import { EditPrivateBooking } from '@/components/booking/editPrivateBooking';
 import { EditPrivateRecurringBooking } from '@/components/booking/editPrivateRecurringBooking';
-import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { useKnownParams } from '@skedular/shared';
-import { startOfDay, toShortDateWithAdditionalDayInfo } from '@skedular/shared';
+import { startOfDay } from '@skedular/shared';
 import type { pageOrganizationBooking_rootQuery } from '@/queries/__generated__/pageOrganizationBooking_rootQuery.graphql';
-import { Breadcrumbs } from '@mui/material';
-import Button from '@mui/material/Button';
-import Box from '@mui/system/Box';
 import dayjs from 'dayjs';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -58,12 +54,7 @@ type Props = {
 
 const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationBooking_rootQuery>(RootQuery, queryReference);
-  const router = useRouter();
   const searchParams = useSearchParams();
-
-  const handleBackClick = () => {
-    router.back();
-  };
 
   if (!rootData.booking) {
     return null;
@@ -78,22 +69,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
 
   const date = dayjs(rootData.booking.from);
 
-  const breadcrumbs = (
-    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-        {'< back'}
-      </Button>
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Breadcrumbs>
-          <BodyIconTypography label="Booking" />
-          <BodyIconTypography label={toShortDateWithAdditionalDayInfo(date)} />
-        </Breadcrumbs>
-      </Box>
-    </StackColumn>
-  );
-
   return (
-    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell>
       {showRecurringPrivateBookingEditor ? (
         <EditPrivateRecurringBooking
           rootDataRelay={rootData}

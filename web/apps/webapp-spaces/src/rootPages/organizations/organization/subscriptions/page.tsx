@@ -1,4 +1,4 @@
-import { getOrganizationBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
+import { getOrganizationSubscriptionBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
 import {
@@ -27,7 +27,6 @@ import type { pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequir
 import type { pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptions_rootQuery } from '@/queries/__generated__/pageOrganizationSubscriptions_rootQuery.graphql';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -367,9 +366,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
       }),
     [filteredSubscriptions],
   );
-  const handleBackClick = () => {
-    router.push(getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain));
-  };
 
   const handleOpenSubscriptionClick = useCallback(
     (subscriptionId: string) => {
@@ -668,19 +664,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
     });
   };
 
-  const breadcrumbs = (
-    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-        {'< back'}
-      </Button>
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Breadcrumbs>
-          <BodyIconTypography label="Subscriptions" />
-          <BodyIconTypography label={rootData.organization?.name} />
-        </Breadcrumbs>
-      </Box>
-    </StackColumn>
-  );
   const pageToolbar = (
     <CollectionToolbar
       filters={
@@ -721,7 +704,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
   );
 
   return (
-    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell>
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
         <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pb: defaultPadding }} spacing={2}>
           <PageHeaderPanel

@@ -1,13 +1,9 @@
-import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { AddFloorPlan } from '@/components/floorPlan/addFloorPlan';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { useKnownParams } from '@skedular/shared';
 import type { pageOrganizationLocationFloorPlansAdd_rootQuery } from '@/queries/__generated__/pageOrganizationLocationFloorPlansAdd_rootQuery.graphql';
-import { Breadcrumbs } from '@mui/material';
-import Button from '@mui/material/Button';
-import Box from '@mui/system/Box';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -32,10 +28,6 @@ const RootPage = ({ queryReference, locationId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationLocationFloorPlansAdd_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
-  const handleBackClick = () => {
-    router.back();
-  };
-
   const handleAdded = () => {
     router.back();
   };
@@ -50,23 +42,8 @@ const RootPage = ({ queryReference, locationId }: Props) => {
     return null;
   }
 
-  const breadcrumbs = (
-    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-        {'< back'}
-      </Button>
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Breadcrumbs>
-          <BodyIconTypography label="Location" />
-          <BodyIconTypography label={rootData.location.name} />
-          <BodyIconTypography label="Add new floor plan" />
-        </Breadcrumbs>
-      </Box>
-    </StackColumn>
-  );
-
   return (
-    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell>
       <AddFloorPlan locationId={locationId} showDismiss={false} onAdded={handleAdded} onCancel={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );

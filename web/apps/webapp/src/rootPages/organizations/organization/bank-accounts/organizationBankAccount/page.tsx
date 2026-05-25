@@ -1,13 +1,8 @@
 import { EditBankAccount } from '@/components/bankAccount/editBanktAccount';
-import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationBankAccount_rootQuery } from '@/queries/__generated__/pageOrganizationBankAccount_rootQuery.graphql';
-import { Breadcrumbs } from '@mui/material';
-import Button from '@mui/material/Button';
-import Box from '@mui/system/Box';
-import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -30,32 +25,13 @@ type Props = {
 
 const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationBankAccount_rootQuery>(RootQuery, queryReference);
-  const router = useRouter();
-
-  const handleBackClick = () => {
-    router.back();
-  };
 
   if (!rootData.organizationBankAccount) {
     return null;
   }
 
-  const breadcrumbs = (
-    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-        {'< back'}
-      </Button>
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Breadcrumbs>
-          <BodyIconTypography label="Bank Account" />
-          <BodyIconTypography label={rootData.organizationBankAccount.name} />
-        </Breadcrumbs>
-      </Box>
-    </StackColumn>
-  );
-
   return (
-    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell>
       <EditBankAccount rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
     </RootShell>
   );

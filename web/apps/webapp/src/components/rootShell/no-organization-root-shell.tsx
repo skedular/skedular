@@ -13,7 +13,7 @@ import { InMsTeamsContext, useIntegratedPlatrform } from '@skedular/shared';
 import { SmallHeadingIconTypography } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { usePathname, useRouter } from 'next/navigation';
-import type { JSX, PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -23,10 +23,6 @@ type Props = {
   queryReference: PreloadedQuery<noOrganizationRootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   hideSideNav?: boolean;
-  hideOrganizationSelector?: boolean;
-  hideWelcomeMessage?: boolean;
-  showBreadcrumps?: boolean;
-  breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
 const RootQuery = graphql`
@@ -47,16 +43,7 @@ const RootQuery = graphql`
 
 const maxRetryAttemptsToReload = 20;
 
-const NoOrganizationRootShell = ({
-  queryReference,
-  children,
-  onReloadRequired,
-  hideSideNav,
-  hideOrganizationSelector,
-  hideWelcomeMessage,
-  showBreadcrumps,
-  breadcrumbs,
-}: PropsWithChildren<Props>) => {
+const NoOrganizationRootShell = ({ queryReference, children, onReloadRequired, hideSideNav }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<noOrganizationRootShell_rootQuery>(RootQuery, queryReference);
   const { integratedPlatrform } = useIntegratedPlatrform();
   const inMsTeams = useContext(InMsTeamsContext);
@@ -126,14 +113,7 @@ const NoOrganizationRootShell = ({
         <CssBaseline enableColorScheme />
         {!hideSideNav && <NoOrganizationLeftSideNavigationMenu />}
         <Box sx={{ flexGrow: 1 }}>
-          <NoOrganizationAppBar
-            rootDataRelay={rootData}
-            hideOrganizationSelector={hideOrganizationSelector}
-            hideWelcomeMessage={hideWelcomeMessage}
-            showLogo={hideSideNav}
-            showBreadcrumps={showBreadcrumps}
-            breadcrumbs={breadcrumbs}
-          />
+          <NoOrganizationAppBar rootDataRelay={rootData} showLogo={hideSideNav} />
           {children}
         </Box>
       </Box>
@@ -145,13 +125,9 @@ const MemoNoOrganizationRootShell = memo(NoOrganizationRootShell);
 
 type RelayProps = {
   hideSideNav?: boolean;
-  hideOrganizationSelector?: boolean;
-  hideWelcomeMessage?: boolean;
-  showBreadcrumps?: boolean;
-  breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
-const NoOrganizationRootShellWithRelay = ({ children, hideSideNav, hideOrganizationSelector, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: PropsWithChildren<RelayProps>) => {
+const NoOrganizationRootShellWithRelay = ({ children, hideSideNav }: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<noOrganizationRootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -177,15 +153,7 @@ const NoOrganizationRootShellWithRelay = ({ children, hideSideNav, hideOrganizat
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoNoOrganizationRootShell
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        hideSideNav={hideSideNav}
-        hideOrganizationSelector={hideOrganizationSelector}
-        hideWelcomeMessage={hideWelcomeMessage}
-        showBreadcrumps={showBreadcrumps}
-        breadcrumbs={breadcrumbs}
-      >
+      <MemoNoOrganizationRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} hideSideNav={hideSideNav}>
         {children}
       </MemoNoOrganizationRootShell>
     </ErrorBoundary>

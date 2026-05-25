@@ -1,4 +1,4 @@
-import { getOrganizationBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
+import { getOrganizationSubscriptionBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
 import {
@@ -21,13 +21,13 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { MultipleChoicesMarketplaceBookingPaymentStatuses, MultipleChoicesMarketplaceBookingSubscriptionStatuses } from '@/components/organization';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
+import useKnownParams from '@/hooks/use-known-params';
 import type { pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation.graphql';
 import type { pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptions_rootQuery } from '@/queries/__generated__/pageOrganizationSubscriptions_rootQuery.graphql';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -68,7 +68,6 @@ import { Form, FormSpy } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-import useKnownParams from '@/hooks/use-known-params';
 
 const surfaceSx: SxProps<Theme> = {
   borderRadius: 4,
@@ -368,9 +367,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
       }),
     [filteredSubscriptions],
   );
-  const handleBackClick = () => {
-    router.push(getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain));
-  };
 
   const handleOpenSubscriptionClick = useCallback(
     (subscriptionId: string) => {
@@ -669,19 +665,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
     });
   };
 
-  const breadcrumbs = (
-    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-        {'< back'}
-      </Button>
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Breadcrumbs>
-          <BodyIconTypography label="Subscriptions" />
-          <BodyIconTypography label={rootData.organization?.name} />
-        </Breadcrumbs>
-      </Box>
-    </StackColumn>
-  );
   const pageToolbar = (
     <CollectionToolbar
       filters={
@@ -722,7 +705,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
   );
 
   return (
-    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell>
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
         <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pb: defaultPadding }} spacing={2}>
           <PageHeaderPanel

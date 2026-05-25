@@ -2,25 +2,34 @@ import {
   BodyIconTypography,
   ColorPicker,
   DefaultDialogTitle,
+  EditorActionBar,
   FormFieldLabel,
   FormStackColumn,
   LeadIconTypography,
+  PageHeaderPanel,
+  SettingsSectionCard,
   SmallIconTypography,
+  StackColumn,
   TwoButtonsDialogActions,
+  StickyReviewRail,
 } from '@skedular/ui';
 import { Loading } from '@/components/loading';
+import { getOrganizationLocationManageResourcesBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
 import { RelayError, toRootError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext } from '@skedular/shared';
+import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { addResourceDialog_addResourceMutation } from '@/queries/__generated__/addResourceDialog_addResourceMutation.graphql';
 import type { addResourceDialog_rootQuery } from '@/queries/__generated__/addResourceDialog_rootQuery.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete, makeRequired, makeValidate, TextField } from 'mui-rff';
+import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
@@ -38,6 +47,7 @@ type Props = {
   isDialogOpen: boolean;
   onAddClicked: (locationId: string) => void;
   onCancel: () => void;
+  presentation?: 'dialog' | 'page';
 };
 
 const RootQuery = graphql`
@@ -95,7 +105,7 @@ const ResourceSchema = object({
   capacity: number().required('Please enter a capacity.').min(1, 'Capacity must be at least 1.'),
 });
 
-const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel, presentation = 'dialog' }: Props) => {
   const rootData = usePreloadedQuery<addResourceDialog_rootQuery>(RootQuery, queryReference);
 
   const [commitAddResource] = useMutation<addResourceDialog_addResourceMutation>(graphql`
@@ -214,27 +224,82 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
     });
   };
 
-  return (
-    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
-      <DefaultDialogTitle title="Add Resource" />
-      <DialogContent sx={{ marginTop: 2 }}>
-        <Form
-          onSubmit={handleAddClick}
-          initialValues={{
-            location: locationId,
-            resourceTypeId: '',
-            name: '',
-            customTagIds: [],
-            zoneIds: [],
-            productTagIds: [],
-            capacity: 1,
-          }}
-          validate={validate}
-          render={({ handleSubmit }) => (
-            <FormStackColumn onSubmit={handleSubmit}>
+  const form = (
+    <Form
+      onSubmit={handleAddClick}
+      initialValues={{
+        location: locationId,
+        resourceTypeId: '',
+        name: '',
+        customTagIds: [],
+        zoneIds: [],
+        productTagIds: [],
+        capacity: 1,
+      }}
+      validate={validate}
+      render={({ handleSubmit }) => (
+        <FormStackColumn onSubmit={handleSubmit}>
+          {presentation === 'dialog' ? (
+            <>
               <LeadIconTypography label="Add a resource" />
               <SmallIconTypography label="Create a new resource for this location." />
+            </>
+          ) : (
+            <PageHeaderPanel title="Add resource" description="Create a bookable resource and attach the tags, zones, and capacity used by availability and product setup." />
+          )}
 
+          {presentation === 'page' ? (
+            <>
+              <SettingsSectionCard title="Resource basics" description="Set the core identity and capacity operators will see when managing bookings and availability.">
+                <StackColumn spacing={2}>
+                  <FormFieldLabel label="Resource Type">
+                    <SingleChoiceResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Name">
+                    <TextField name="name" required={requiredFields.name} helperText="Enter a clear name, such as Desk A1 or Meeting Room 2." />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Capacity">
+                    <TextField name="capacity" required={requiredFields.capacity} />
+                  </FormFieldLabel>
+                </StackColumn>
+              </SettingsSectionCard>
+
+              <SettingsSectionCard title="Classification" description="Use tags, zones, and colour to make this resource easy to filter and recognise.">
+                <StackColumn spacing={2}>
+                  <FormFieldLabel label="Tags">
+                    <MultipleChoicesCustomTags
+                      rootDataRelay={rootData}
+                      name="customTagIds"
+                      required={requiredFields.customTagIds}
+                      organizationCustomDomain={organizationCustomDomain}
+                    />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Zones">
+                    <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationCustomDomain={organizationCustomDomain} />
+                  </FormFieldLabel>
+
+                  {rootData.organization?.type.type === 'MARKETPLACE' && (
+                    <FormFieldLabel label="Product Tags">
+                      <MultipleChoicesProductTags
+                        rootDataRelay={rootData}
+                        name="productTagIds"
+                        required={requiredFields.productTagIds}
+                        organizationCustomDomain={organizationCustomDomain}
+                      />
+                    </FormFieldLabel>
+                  )}
+
+                  <FormFieldLabel label="Colour">
+                    <ColorPicker onChange={handleColorChange} />
+                  </FormFieldLabel>
+                </StackColumn>
+              </SettingsSectionCard>
+            </>
+          ) : (
+            <>
               {!locationId && (
                 <FormFieldLabel label="Location">
                   <Autocomplete
@@ -293,19 +358,66 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
                 </FormFieldLabel>
               )}
 
-              <FormFieldLabel label="Color">
+              <FormFieldLabel label="Colour">
                 <ColorPicker onChange={handleColorChange} />
               </FormFieldLabel>
 
               <FormFieldLabel label="Capacity">
                 <TextField name="capacity" required={requiredFields.capacity} />
               </FormFieldLabel>
-
-              <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
-            </FormStackColumn>
+            </>
           )}
-        />
-      </DialogContent>
+
+          {presentation === 'page' ? (
+            <EditorActionBar
+              secondaryActions={
+                <Button type="button" variant="text" onClick={onCancel} sx={{ textTransform: 'none' }}>
+                  Cancel
+                </Button>
+              }
+              primaryAction="Add resource"
+            />
+          ) : (
+            <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
+          )}
+        </FormStackColumn>
+      )}
+    />
+  );
+
+  if (presentation === 'page') {
+    return (
+      <Box sx={{ px: { xs: 2, md: 3 }, py: 3 }}>
+        <Box sx={{ maxWidth: 1320, mx: 'auto', display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', xl: 'minmax(0, 2fr) 320px' }, gap: 2 }}>
+          <StackColumn spacing={2.5} sx={{ minWidth: 0 }}>
+            {form}
+          </StackColumn>
+
+          <StickyReviewRail title="Resource help" description="Create the resource first, then fine-tune opening hours or booking rules from resource settings.">
+            <SettingsSectionCard title="Suggested setup" description="Keep resource records consistent so bookings, floor plans, and reporting stay useful.">
+              <StackColumn spacing={1}>
+                <SmallIconTypography label="Use a recognisable name that matches signage or floor-plan labels." />
+                <SmallIconTypography label="Set capacity to the number of people or units the resource can support." />
+                <SmallIconTypography label="Apply zones and tags now so users can filter availability immediately." />
+              </StackColumn>
+            </SettingsSectionCard>
+
+            <SettingsSectionCard title="After adding" description="The resource will be available in this location's resource list.">
+              <StackColumn spacing={1}>
+                <SmallIconTypography label="Open the resource settings to adjust opening hours." />
+                <SmallIconTypography label="Use product tags for marketplace resources that should be bookable through products." />
+              </StackColumn>
+            </SettingsSectionCard>
+          </StickyReviewRail>
+        </Box>
+      </Box>
+    );
+  }
+
+  return (
+    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
+      <DefaultDialogTitle title="Add Resource" />
+      <DialogContent sx={{ marginTop: 2 }}>{form}</DialogContent>
     </Dialog>
   );
 };
@@ -320,9 +432,19 @@ type RelayProps = {
   isDialogOpen: boolean;
   onAddClicked: (locationId: string) => void;
   onCancel: () => void;
+  presentation?: 'dialog' | 'page';
 };
 
-const AddResourceDialogWithRelay = ({ onReloadRequired, organizationCustomDomain, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: RelayProps) => {
+const AddResourceDialogWithRelay = ({
+  onReloadRequired,
+  organizationCustomDomain,
+  locationId,
+  connectionIds,
+  isDialogOpen,
+  onAddClicked,
+  onCancel,
+  presentation = 'dialog',
+}: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addResourceDialog_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -395,9 +517,46 @@ const AddResourceDialogWithRelay = ({ onReloadRequired, organizationCustomDomain
         isDialogOpen={isDialogOpen}
         onAddClicked={onAddClicked}
         onCancel={onCancel}
+        presentation={presentation}
       />
     </ErrorBoundary>
   );
 };
+
+type PageProps = {
+  organizationCustomDomain: string;
+  locationId?: string;
+};
+
+const AddResourcePageComponent = ({ organizationCustomDomain, locationId }: PageProps) => {
+  const router = useRouter();
+  const { integratedPlatrform } = useIntegratedPlatrform();
+
+  const handleDone = (createdLocationId: string) => {
+    router.push(getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationCustomDomain, createdLocationId));
+  };
+
+  const handleCancel = () => {
+    router.push(
+      locationId
+        ? getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationCustomDomain, locationId)
+        : getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain),
+    );
+  };
+
+  return (
+    <AddResourceDialogWithRelay
+      organizationCustomDomain={organizationCustomDomain}
+      locationId={locationId}
+      connectionIds={[]}
+      isDialogOpen={true}
+      onAddClicked={handleDone}
+      onCancel={handleCancel}
+      presentation="page"
+    />
+  );
+};
+
+export const AddResourcePage = memo(AddResourcePageComponent);
 
 export default memo(AddResourceDialogWithRelay);

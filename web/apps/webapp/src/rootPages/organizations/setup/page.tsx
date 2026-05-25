@@ -23,7 +23,7 @@ const RootPage = () => {
   };
 
   return (
-    <NoOrganizationRootShell hideOrganizationSelector>
+    <NoOrganizationRootShell>
       <SetupFlow onUserTypeClick={handleUserTypeClick} userTypesToShow={['private', 'marketplace']} showBackButton />
     </NoOrganizationRootShell>
   );

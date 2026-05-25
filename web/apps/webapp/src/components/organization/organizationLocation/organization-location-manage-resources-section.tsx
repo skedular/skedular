@@ -1,12 +1,10 @@
 import { NewIcon } from '@/components/icons';
-import { getOrganizationLocationResourceBaseLink } from '@/components/links';
+import { getOrganizationLocationAddResourceBaseLink, getOrganizationLocationBulkAddResourcesBaseLink, getOrganizationLocationResourceBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { CustomTagSelector } from '@/components/organization/customTagSelector';
 import OrganizationLocationResourceManagementList from '@/components/organization/organizationLocation/organization-location-resource-management-list';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
-import { AddResourceButton } from '@/components/resource/addResource';
-import { BulkAddResourcesDialog } from '@/components/resource/bulkAddResources';
 import { Search } from '@/components/search';
 import type { organizationLocationManageResourcesSectionQuery } from '@/queries/__generated__/organizationLocationManageResourcesSectionQuery.graphql';
 import type { organizationLocationManageResourcesSection_activateResourcesMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_activateResourcesMutation.graphql';
@@ -129,7 +127,7 @@ const ResourcesSectionQuery = graphql`
   }
 `;
 
-const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organizationCustomDomain, locationId }: Props) => {
+const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, locationId }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
@@ -139,7 +137,6 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
   const [resourceZoneIds, setResourceZoneIds] = useState<string[]>([]);
   const [selectedResourceId, setSelectedResourceId] = useState<null | string>(null);
   const [selectedResourceIds, setSelectedResourceIds] = useState<string[]>([]);
-  const [isBulkAddDialogOpen, setIsBulkAddDialogOpen] = useState(false);
   const [resourceMoreActionsAnchorEl, setResourceMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const resourceMoreActionsMenuOpen = Boolean(resourceMoreActionsAnchorEl);
 
@@ -524,13 +521,18 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
           description="Search, filter, and operate on the resources assigned to this location."
           actions={
             <StackRow sx={{ gap: 1 }}>
-              <AddResourceButton
-                onReloadRequired={onReloadRequired}
-                organizationCustomDomain={organizationCustomDomain}
-                locationId={locationId}
-                connectionIds={resourcesConnectionIds}
-              />
-              <Button variant="text" onClick={() => setIsBulkAddDialogOpen(true)} sx={{ textTransform: 'none' }}>
+              <Button
+                variant="text"
+                onClick={() => router.push(getOrganizationLocationAddResourceBaseLink(integratedPlatrform, organizationCustomDomain, locationId))}
+                sx={{ textTransform: 'none' }}
+              >
+                <LeadIconTypography label="Add Resource" endElement={<NewIcon fontSize="large" />} />
+              </Button>
+              <Button
+                variant="text"
+                onClick={() => router.push(getOrganizationLocationBulkAddResourcesBaseLink(integratedPlatrform, organizationCustomDomain, locationId))}
+                sx={{ textTransform: 'none' }}
+              >
                 <LeadIconTypography label="Bulk Add Resources" endElement={<NewIcon fontSize="large" />} />
               </Button>
             </StackRow>
@@ -576,14 +578,6 @@ const OrganizationLocationManageResourcesSection = ({ onReloadRequired, organiza
         open={resourceMoreActionsMenuOpen}
         onMenuItemClick={handleResourceMoreActionsMenuItemClick}
         options={resourceMoreActionsOption}
-      />
-
-      <BulkAddResourcesDialog
-        locationId={locationId}
-        organizationCustomDomain={organizationCustomDomain}
-        isDialogOpen={isBulkAddDialogOpen}
-        onReloadRequired={onReloadRequired}
-        onCancel={() => setIsBulkAddDialogOpen(false)}
       />
     </>
   );

@@ -13,7 +13,7 @@ import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, PushToRight, SmallHeadingIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { usePathname, useRouter } from 'next/navigation';
-import type { JSX, PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -22,10 +22,6 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  hideOrganizationSelector?: boolean;
-  hideWelcomeMessage?: boolean;
-  showBreadcrumps?: boolean;
-  breadcrumbs?: React.ReactNode | JSX.Element;
   organizationCustomDomain: string;
 };
 
@@ -57,16 +53,7 @@ const RootQuery = graphql`
 
 const maxRetryAttemptsToReload = 20;
 
-const RootShell = ({
-  queryReference,
-  children,
-  onReloadRequired,
-  hideOrganizationSelector,
-  hideWelcomeMessage,
-  showBreadcrumps,
-  breadcrumbs,
-  organizationCustomDomain,
-}: PropsWithChildren<Props>) => {
+const RootShell = ({ queryReference, children, onReloadRequired, organizationCustomDomain }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
@@ -124,13 +111,7 @@ const RootShell = ({
         <CssBaseline enableColorScheme />
         <LeftSideNavigationMenu rootDataRelay={rootData} />
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar
-            rootDataRelay={rootData}
-            hideOrganizationSelector={hideOrganizationSelector}
-            hideWelcomeMessage={hideWelcomeMessage}
-            showBreadcrumps={showBreadcrumps}
-            breadcrumbs={breadcrumbs}
-          />
+          <AppBar rootDataRelay={rootData} />
           {rootData.me.isOnboardingDone && !rootData.organization?.isSsoTokenValid && (
             <Box sx={{ display: 'flex', justifyContent: 'center', px: { xs: 1, sm: 2, md: 3 }, pt: 1.5 }}>
               <Box
@@ -201,14 +182,9 @@ const RootShell = ({
 
 const MemoRootShell = memo(RootShell);
 
-type RelayProps = {
-  hideOrganizationSelector?: boolean;
-  hideWelcomeMessage?: boolean;
-  showBreadcrumps?: boolean;
-  breadcrumbs?: React.ReactNode | JSX.Element;
-};
+type RelayProps = object;
 
-const RootShellWithRelay = ({ children, hideOrganizationSelector, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: PropsWithChildren<RelayProps>) => {
+const RootShellWithRelay = ({ children }: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -241,15 +217,7 @@ const RootShellWithRelay = ({ children, hideOrganizationSelector, hideWelcomeMes
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootShell
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        hideOrganizationSelector={hideOrganizationSelector}
-        hideWelcomeMessage={hideWelcomeMessage}
-        showBreadcrumps={showBreadcrumps}
-        breadcrumbs={breadcrumbs}
-        organizationCustomDomain={organizationCustomDomain}
-      >
+      <MemoRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain}>
         {children}
       </MemoRootShell>
     </ErrorBoundary>

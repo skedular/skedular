@@ -1,9 +1,8 @@
 import { LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { CancelIcon, InviteMemberIcon, LocationIcon, ResourceIcon } from '@/components/icons';
-import { getOrganizationLocationAddPrivateLink, getOrganizationLocationManageResourcesBaseLink, getOrganizationUsersBaseLink } from '@/components/links';
+import { getOrganizationAddResourceBaseLink, getOrganizationLocationAddPrivateLink, getOrganizationUsersBaseLink } from '@/components/links';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { InvitePeopleToJoinOrganizationDialog } from '@/components/organization/invitePeopleToJoinOrganization';
-import { AddResourceDialog } from '@/components/resource/addResource';
 import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { defaultPadding, emerald } from '@skedular/ui';
 import { getRelayErrorMessage } from '@skedular/shared';
@@ -51,21 +50,6 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [isInvitePeopleToJoinOrganizationDialogOpen, setIsInvitePeopleToJoinOrganizationDialogOpen] = useState(false);
-  const [isAddResourceDialogOpen, setIsAddResourceDialogOpen] = useState(false);
-
-  const handleAddResourcesClicked = () => {
-    setIsAddResourceDialogOpen(true);
-  };
-
-  const handleAddResourceClicked = (locationId: string) => {
-    setIsAddResourceDialogOpen(false);
-
-    router.push(getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationCustomDomain, locationId));
-  };
-
-  const handleCancelAddResourceClicked = () => {
-    setIsAddResourceDialogOpen(false);
-  };
 
   const handleInvitePeopleClicked = () => {
     setIsInvitePeopleToJoinOrganizationDialogOpen(true);
@@ -155,14 +139,16 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
 
           <StackColumn spacing={1} sx={{ minWidth: 0 }}>
             <SmallIconTypography label="Add resources for your locations." />
-            <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleAddResourcesClicked}>
-              <LeadIconTypography
-                label="Add Resources"
-                stackMode="column"
-                startElement={<ResourceIcon fontSize="large" excludeTooltip sx={{ color: emerald }} />}
-                sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
-              />
-            </Paper>
+            <Link component={NextLink} href={getOrganizationAddResourceBaseLink(integratedPlatrform, organizationCustomDomain)} sx={{ display: 'block' }}>
+              <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
+                <LeadIconTypography
+                  label="Add Resources"
+                  stackMode="column"
+                  startElement={<ResourceIcon fontSize="large" excludeTooltip sx={{ color: emerald }} />}
+                  sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
+                />
+              </Paper>
+            </Link>
           </StackColumn>
 
           <StackColumn spacing={1} sx={{ minWidth: 0 }}>
@@ -178,17 +164,6 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
           </StackColumn>
         </Box>
       </Box>
-
-      {isAddResourceDialogOpen && (
-        <AddResourceDialog
-          onReloadRequired={onReloadRequired}
-          organizationCustomDomain={organizationCustomDomain}
-          connectionIds={[]}
-          isDialogOpen={isAddResourceDialogOpen}
-          onAddClicked={handleAddResourceClicked}
-          onCancel={handleCancelAddResourceClicked}
-        />
-      )}
 
       <InvitePeopleToJoinOrganizationDialog
         isDialogOpen={isInvitePeopleToJoinOrganizationDialogOpen}

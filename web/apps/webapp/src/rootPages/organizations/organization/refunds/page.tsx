@@ -3,15 +3,11 @@ import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketpl
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationRefunds_rootQuery } from '@/queries/__generated__/pageOrganizationRefunds_rootQuery.graphql';
-import { Breadcrumbs } from '@mui/material';
 import Alert from '@mui/material/Alert';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import { BodyIconTypography, CaptionIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
-import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -79,36 +75,17 @@ type Props = {
 
 const RootPage = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationRefunds_rootQuery>(RootQuery, queryReference);
-  const router = useRouter();
-
-  const handleBackClick = () => {
-    router.back();
-  };
-
-  const breadcrumbs = (
-    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-        {'< back'}
-      </Button>
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Breadcrumbs>
-          <BodyIconTypography label="Refunds" />
-          <BodyIconTypography label={rootData.organization?.name} />
-        </Breadcrumbs>
-      </Box>
-    </StackColumn>
-  );
 
   if (!rootData.organizationBookingPermissions?.canModifyPaymentMethod) {
     return (
-      <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+      <RootShell>
         <Alert severity="warning">You do not have permission to manage refunds for this organization.</Alert>
       </RootShell>
     );
   }
 
   return (
-    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell>
       <StackColumn spacing={2}>
         <StackColumn spacing={0.5}>
           <CaptionIconTypography label="Refunds" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.68 }} />

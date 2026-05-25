@@ -1,6 +1,6 @@
 'use client';
 
-import { getOrganizationBaseLink, getOrganizationSubscriptionsBaseLink } from '@/components/links';
+import { getOrganizationSubscriptionsBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import {
   SupportedMarketplaceBookingSubscriptionCancellationMode,
@@ -13,12 +13,12 @@ import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketpl
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
+import useKnownParams from '@/hooks/use-known-params';
 import type { pageOrganizationSubscriptionDetail_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_confirmRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptionDetail_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { pageOrganizationSubscriptionDetail_makeRecurringBookingPaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_makeRecurringBookingPaymentNotRequiredMutation.graphql';
 import type { pageOrganizationSubscriptionDetail_rejectRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_rejectRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptionDetail_rootQuery } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_rootQuery.graphql';
-import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -34,13 +34,11 @@ import { getRelayErrorMessage, useIntegratedPlatrform } from '@skedular/shared';
 import { BodyIconTypography, DefaultDialogTitle, defaultPadding, PageHeaderPanel, StackColumn, StackRow, SubtitleIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-import useKnownParams from '@/hooks/use-known-params';
 
 const surfaceSx: SxProps<Theme> = {
   borderRadius: 4,
@@ -175,7 +173,6 @@ const toStoredDate = (date?: string | null) => (date ? dayjs.utc(date).format('D
 
 const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationSubscriptionDetail_rootQuery>(RootQuery, queryReference);
-  const router = useRouter();
   const { integratedPlatrform } = useIntegratedPlatrform();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
   const [commitDeleteMarketplaceBookingSubscription, isDeleteMarketplaceBookingSubscriptionInFlight] =
@@ -418,27 +415,9 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     });
   };
 
-  const breadcrumbs = (
-    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-      <Button
-        variant="text"
-        onClick={() => router.push(getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain))}
-        sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}
-      >
-        {'< back'}
-      </Button>
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Breadcrumbs>
-          <BodyIconTypography label="Subscriptions" />
-          <BodyIconTypography label={rootData.organization?.name} />
-        </Breadcrumbs>
-      </Box>
-    </StackColumn>
-  );
-
   if (!rootData.organizationBookingPermissions.canModifyPaymentMethod) {
     return (
-      <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+      <RootShell>
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
           <Box sx={{ ...surfaceSx, width: '100%', maxWidth: 1200, px: 3, py: 4 }}>
             <BodyIconTypography label="You do not have permission to manage subscription payments for this organization." />
@@ -462,7 +441,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     subscription?.involvedCustomers.length && subscription.involvedCustomers.length > 0 ? getCustomerDisplayName(subscription.involvedCustomers[0]) : 'Customer unavailable';
 
   return (
-    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell>
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
         <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pb: defaultPadding }} spacing={2}>
           <PageHeaderPanel

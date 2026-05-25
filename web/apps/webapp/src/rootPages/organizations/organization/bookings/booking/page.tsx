@@ -2,22 +2,17 @@ import { EditMarketplaceBooking } from '@/components/booking/editMarketplaceBook
 import { EditPrivateBooking } from '@/components/booking/editPrivateBooking';
 import { EditPrivateRecurringBooking } from '@/components/booking/editPrivateRecurringBooking';
 import { PayMarketplaceBooking } from '@/components/booking/payMarketplaceBooking';
-import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { startOfDay, toShortDateWithAdditionalDayInfo } from '@skedular/shared';
+import useKnownParams from '@/hooks/use-known-params';
 import type { pageOrganizationBooking_rootQuery } from '@/queries/__generated__/pageOrganizationBooking_rootQuery.graphql';
-import { Breadcrumbs } from '@mui/material';
-import Button from '@mui/material/Button';
-import Box from '@mui/system/Box';
-import dayjs from 'dayjs';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { startOfDay } from '@skedular/shared';
+import { useSearchParams } from 'next/navigation';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
-import useKnownParams from '@/hooks/use-known-params';
 
 const RootQuery = graphql`
   query pageOrganizationBooking_rootQuery(
@@ -72,7 +67,6 @@ type Props = {
 
 const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationBooking_rootQuery>(RootQuery, queryReference);
-  const router = useRouter();
   const searchParams = useSearchParams();
   const shouldPay = useMemo(() => {
     if (!rootData.booking?.marketplaceBooking) {
@@ -83,10 +77,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     return marketplaceBooking.isPaymentRequired && (!marketplaceBooking.paymentStatus || marketplaceBooking.paymentStatus.type === 'PENDING');
   }, [rootData.booking]);
 
-  const handleBackClick = () => {
-    router.back();
-  };
-
   if (!rootData.booking) {
     return null;
   }
@@ -94,24 +84,8 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
   const editMode = searchParams.get('editMode');
   const showRecurringPrivateBookingEditor = rootData.booking.channel.channel === 'PRIVATE' && !!rootData.booking.recurringBooking && editMode === 'recurring';
 
-  const date = dayjs(rootData.booking.from);
-
-  const breadcrumbs = (
-    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-        {'< back'}
-      </Button>
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Breadcrumbs>
-          <BodyIconTypography label="Booking" />
-          <BodyIconTypography label={toShortDateWithAdditionalDayInfo(date)} />
-        </Breadcrumbs>
-      </Box>
-    </StackColumn>
-  );
-
   return (
-    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell>
       {rootData.booking.channel.channel === 'MARKETPLACE' && shouldPay && (
         <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
       )}

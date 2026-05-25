@@ -190,7 +190,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   };
 
   return (
-    <NoOrganizationRootShell hideOrganizationSelector>
+    <NoOrganizationRootShell>
       <AddPrivateOrganization
         rootDataRelay={rootData}
         onAdded={handleAdded}

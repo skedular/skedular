@@ -6,7 +6,7 @@ const RootPage = () => {
   const handleReloadRequired = () => {};
 
   return (
-    <NoOrganizationRootShell hideOrganizationSelector>
+    <NoOrganizationRootShell>
       <MySettings onReloadRequired={handleReloadRequired} />
     </NoOrganizationRootShell>
   );

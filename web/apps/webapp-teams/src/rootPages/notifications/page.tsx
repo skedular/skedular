@@ -3,7 +3,7 @@ import { NoOrganizationRootShell } from '@/components/rootShell';
 import { memo } from 'react';
 
 const RootPage = () => (
-  <NoOrganizationRootShell hideOrganizationSelector>
+  <NoOrganizationRootShell>
     <Notifications />
   </NoOrganizationRootShell>
 );

@@ -1,14 +1,9 @@
-import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { OrganizationAdmin } from '@/components/organization/organizationAdmin';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { useKnownParams } from '@skedular/shared';
 import type { pageOrganizationAdmin_rootQuery } from '@/queries/__generated__/pageOrganizationAdmin_rootQuery.graphql';
-import { Breadcrumbs } from '@mui/material';
-import Button from '@mui/material/Button';
-import Box from '@mui/system/Box';
-import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -29,28 +24,9 @@ const RootQuery = graphql`
 
 const RootPage = ({ queryReference, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationAdmin_rootQuery>(RootQuery, queryReference);
-  const router = useRouter();
-
-  const handleBackClick = () => {
-    router.back();
-  };
-
-  const breadcrumbs = (
-    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-        {'< back'}
-      </Button>
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Breadcrumbs>
-          <BodyIconTypography label="Admin" />
-          <BodyIconTypography label={rootData.organization?.name} />
-        </Breadcrumbs>
-      </Box>
-    </StackColumn>
-  );
 
   return (
-    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell>
       <OrganizationAdmin rootDataRelay={rootData} organizationCustomDomain={organizationCustomDomain} />
     </RootShell>
   );
