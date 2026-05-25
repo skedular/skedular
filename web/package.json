@@ -20,6 +20,7 @@
     "test:watch": "turbo run test:watch",
     "lint-fix": "turbo run lint-fix",
     "format": "turbo run format",
+    "check:workspace-version-sync": "node ./scripts/check-workspace-version-sync.mjs",
     "relay": "turbo run relay",
     "webapp#build": "turbo run webapp#build",
     "webapp#start": "turbo run webapp#start",
@@ -68,20 +69,5 @@
     "global": "^4.4.0",
     "next": "^16.2.6",
     "turbo": "^2.9.14"
-  },
-  "pnpm": {
-    "overrides": {
-      "react": "19.2.6",
-      "react-dom": "19.2.6"
-    },
-    "onlyBuiltDependencies": [
-      "@vercel/speed-insights",
-      "botbuilder-dialogs",
-      "globalize",
-      "sharp"
-    ],
-    "patchedDependencies": {
-      "globalize@1.7.1": "patches/globalize@1.7.1.patch"
-    }
   }
 }
