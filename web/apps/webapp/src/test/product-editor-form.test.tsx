@@ -156,19 +156,14 @@ describe('ProductEditorForm', () => {
     expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument();
   });
 
-  it('uses review and update as the final edit-product step and only shows submit there', async () => {
-    const user = userEvent.setup();
-
+  it('does not show a review step or update button in edit mode', () => {
     render(<ProductEditorForm {...baseProps} mode="edit" />);
 
-    expect(screen.getByRole('button', { name: 'Review & Update' })).toBeInTheDocument();
+    // Edit mode: review step removed entirely — autosave handles updates
+    expect(screen.queryByText('Review & Update')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Basics' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Offers' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Update' })).not.toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: 'Review & Update' }));
-
-    expect(screen.getAllByText('Review & Update')).not.toHaveLength(0);
-    expect(screen.getByText('Check the high-level shape before updating the product. This is the compact product story your team needs to understand.')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Update' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument();
   });
 });

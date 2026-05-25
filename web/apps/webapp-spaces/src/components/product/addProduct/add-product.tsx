@@ -4,18 +4,16 @@ import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import ProductEditorForm from '@/components/product/product-editor-form';
 import { RelayError, toRootError } from '@/components/relayError';
-import { PaletteModeContext, useKnownParams } from '@skedular/shared';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@skedular/shared';
 import type { addProduct_addProductMutation, Currency, PaymentMethod, ProductPricingCadence, ProductType } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
 import Box from '@mui/material/Box';
+import { getRelayErrorMessage, PaletteModeContext, useKnownParams } from '@skedular/shared';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
-import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { array, boolean, object, string } from 'yup';
 
@@ -392,23 +390,16 @@ const AddProduct = (props: Props) => {
   const validateProductDetails = makeValidate(productSchema(rootData.bookingSlotSizeInMinutes));
   const requiredFields = makeRequired(productSchema(rootData.bookingSlotSizeInMinutes));
 
-  const [title, setTitle] = useState<string | null>(null);
-  const debounceSetTitle = useDebounceCallback(setTitle, keyboardTextFieldDebounceTimeout);
-  const [subTitle, setSubTitle] = useState<string | null>(null);
-  const debounceSetSubTitle = useDebounceCallback(setSubTitle, keyboardTextFieldDebounceTimeout);
-  const [includedFeatures, setIncludedFeatures] = useState<string | null>(null);
-  const debounceSetIncludedFeatures = useDebounceCallback(setIncludedFeatures, keyboardTextFieldDebounceTimeout);
-
-  const [type, setType] = useState('');
-  const debounceSetType = useDebounceCallback(setType, keyboardTextFieldDebounceTimeout);
-  const [currency, setCurrency] = useState('');
-  const debounceSetCurrency = useDebounceCallback(setCurrency, keyboardTextFieldDebounceTimeout);
-
-  const [productTagIds, setProductTagIds] = useState<string[]>([]);
-  const debounceSetProductTagIds = useDebounceCallback(setProductTagIds, keyboardTextFieldDebounceTimeout);
-
-  const [amenityIds, setAmenityIds] = useState<string[]>([]);
-  const debounceSetAmenityIds = useDebounceCallback(setAmenityIds, keyboardTextFieldDebounceTimeout);
+  const [initialProductValues] = useState(() => ({
+    title: null as string | null,
+    subTitle: null as string | null,
+    includedFeatures: null as string | null,
+    type: '',
+    currency: '',
+    productTagIds: [] as string[],
+    amenityIds: [] as string[],
+    pricingOptions: [createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer)],
+  }));
 
   const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>([]);
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(null);
@@ -574,26 +565,9 @@ const AddProduct = (props: Props) => {
       <Box sx={{ flexGrow: 1 }}>
         <Form
           onSubmit={handleProductAddClick}
-          initialValues={{
-            title,
-            subTitle,
-            includedFeatures,
-            type,
-            currency,
-            productTagIds,
-            amenityIds,
-            pricingOptions: [createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer)],
-          }}
+          initialValues={initialProductValues}
           validate={validateProductDetails}
           render={({ handleSubmit, values, form, errors }) => {
-            debounceSetTitle(values!.title);
-            debounceSetSubTitle(values!.subTitle);
-            debounceSetIncludedFeatures(values!.includedFeatures);
-            debounceSetType(values!.type);
-            debounceSetCurrency(values!.currency);
-            debounceSetProductTagIds(values!.productTagIds);
-            debounceSetAmenityIds(values!.amenityIds);
-
             return (
               <ProductEditorForm
                 mode="add"

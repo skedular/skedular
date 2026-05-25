@@ -180,15 +180,17 @@ const ProductEditorForm = ({
       ? 'Move through the setup in a clearer order: basics first, then offers, then a final review.'
       : 'Update the product in focused sections instead of editing one long block.';
   const submitLabel = mode === 'add' ? 'Create' : 'Update';
-  const steps: ProductEditorStep[] = baseSteps.map((step) =>
-    step.id === 'review'
-      ? {
-          ...step,
-          title: mode === 'add' ? 'Review & Create' : 'Review & Update',
-          subtitle: mode === 'add' ? 'Final check before creating the product' : 'Final check before updating the product',
-        }
-      : step,
-  );
+  const steps: ProductEditorStep[] = baseSteps
+    .filter((step) => mode !== 'edit' || step.id !== 'review')
+    .map((step) =>
+      step.id === 'review'
+        ? {
+            ...step,
+            title: 'Review & Create',
+            subtitle: 'Final check before creating the product',
+          }
+        : step,
+    );
 
   const changeNestedField = (path: string, value: unknown) => {
     form.change(path, value);
@@ -202,6 +204,18 @@ const ProductEditorForm = ({
     const nextPricingOptions = [...(values?.pricingOptions ?? []), nextOffer];
     form.change('pricingOptions', nextPricingOptions);
     setExpandedOfferId(nextOffer.id);
+  };
+
+  const handleCreateClick = () => {
+    void onSubmit();
+    if (errors && typeof errors === 'object' && !Array.isArray(errors)) {
+      const errorsRecord = errors as Record<string, unknown>;
+      if (Object.keys(errorsRecord).length > 0) {
+        const basicsFields = ['title', 'subTitle', 'includedFeatures', 'type', 'currency', 'productTagIds', 'amenityIds'];
+        const hasBasicsErrors = basicsFields.some((f) => errorsRecord[f] !== undefined);
+        setActiveStep(hasBasicsErrors ? 'basics' : 'offers');
+      }
+    }
   };
 
   const renderOfferEditor = (pricingOption: PricingOptionForm, index: number) => (
@@ -588,14 +602,8 @@ const ProductEditorForm = ({
 
   const renderReview = () => (
     <StackColumn>
-      <SectionIconTypography label={mode === 'add' ? 'Review & Create' : 'Review & Update'} />
-      <BodyIconTypography
-        label={
-          mode === 'add'
-            ? 'Check the high-level shape before creating the product. This is the compact product story your team needs to understand.'
-            : 'Check the high-level shape before updating the product. This is the compact product story your team needs to understand.'
-        }
-      />
+      <SectionIconTypography label="Review & Create" />
+      <BodyIconTypography label="Check the high-level shape before creating the product. This is the compact product story your team needs to understand." />
       <Divider />
 
       <Card variant="outlined">
@@ -635,14 +643,14 @@ const ProductEditorForm = ({
 
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 2 }}>
             <StackColumn>
-              {activeStep === 'basics' ? renderBasics() : null}
-              {activeStep === 'offers' ? renderOffers() : null}
+              <Box sx={{ display: activeStep !== 'basics' ? 'none' : undefined }}>{renderBasics()}</Box>
+              <Box sx={{ display: activeStep !== 'offers' ? 'none' : undefined }}>{renderOffers()}</Box>
               {activeStep === 'review' ? renderReview() : null}
 
-              {activeStep === 'review' ? (
+              {mode === 'add' && activeStep === 'review' ? (
                 <StackColumn>
                   <StackRow sx={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                    <Button variant="contained" onClick={handleCreateClick} sx={defaultButtonStyle}>
                       {submitLabel}
                     </Button>
                   </StackRow>

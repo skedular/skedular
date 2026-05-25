@@ -1,5 +1,4 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon } from '@/components/icons';
 import { ListingMetadata } from '@/components/listingMetadata';
 import {
@@ -14,7 +13,6 @@ import {
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import { createCancellationRefundRule, createPricingOption, isEventType, PricingOptionForm, ProductDetails } from '@/components/product/product-editor-shared';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -22,7 +20,22 @@ import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import { GuidedEditorProgress, PageHeaderPanel, SettingsSectionCard, StickyReviewRail } from '@skedular/ui';
+import {
+  BodyIconTypography,
+  defaultButtonStyle,
+  defaultPadding,
+  FormFieldLabel,
+  FormStackColumn,
+  GuidedEditorProgress,
+  LeadIconTypography,
+  PageHeaderPanel,
+  SectionIconTypography,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  StickyReviewRail,
+} from '@skedular/ui';
 import { Switches, TextField } from 'mui-rff';
 import { memo, useMemo, useState } from 'react';
 
@@ -167,15 +180,17 @@ const ProductEditorForm = ({
       ? 'Move through the setup in a clearer order: basics first, then offers, then a final review.'
       : 'Update the product in focused sections instead of editing one long block.';
   const submitLabel = mode === 'add' ? 'Create' : 'Update';
-  const steps: ProductEditorStep[] = baseSteps.map((step) =>
-    step.id === 'review'
-      ? {
-          ...step,
-          title: mode === 'add' ? 'Review & Create' : 'Review & Update',
-          subtitle: mode === 'add' ? 'Final check before creating the product' : 'Final check before updating the product',
-        }
-      : step,
-  );
+  const steps: ProductEditorStep[] = baseSteps
+    .filter((step) => mode !== 'edit' || step.id !== 'review')
+    .map((step) =>
+      step.id === 'review'
+        ? {
+            ...step,
+            title: 'Review & Create',
+            subtitle: 'Final check before creating the product',
+          }
+        : step,
+    );
 
   const changeNestedField = (path: string, value: unknown) => {
     form.change(path, value);
@@ -189,6 +204,18 @@ const ProductEditorForm = ({
     const nextPricingOptions = [...(values?.pricingOptions ?? []), nextOffer];
     form.change('pricingOptions', nextPricingOptions);
     setExpandedOfferId(nextOffer.id);
+  };
+
+  const handleCreateClick = () => {
+    void onSubmit();
+    if (errors && typeof errors === 'object' && !Array.isArray(errors)) {
+      const errorsRecord = errors as Record<string, unknown>;
+      if (Object.keys(errorsRecord).length > 0) {
+        const basicsFields = ['title', 'subTitle', 'includedFeatures', 'type', 'currency', 'productTagIds', 'amenityIds'];
+        const hasBasicsErrors = basicsFields.some((f) => errorsRecord[f] !== undefined);
+        setActiveStep(hasBasicsErrors ? 'basics' : 'offers');
+      }
+    }
   };
 
   const renderOfferEditor = (pricingOption: PricingOptionForm, index: number) => (
@@ -575,14 +602,8 @@ const ProductEditorForm = ({
 
   const renderReview = () => (
     <StackColumn>
-      <SectionIconTypography label={mode === 'add' ? 'Review & Create' : 'Review & Update'} />
-      <BodyIconTypography
-        label={
-          mode === 'add'
-            ? 'Check the high-level shape before creating the product. This is the compact product story people need to understand.'
-            : 'Check the high-level shape before updating the product. This is the compact product story people need to understand.'
-        }
-      />
+      <SectionIconTypography label="Review & Create" />
+      <BodyIconTypography label="Check the high-level shape before creating the product. This is the compact product story people need to understand." />
       <Divider />
 
       <Card variant="outlined">
@@ -622,14 +643,14 @@ const ProductEditorForm = ({
 
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 2 }}>
             <StackColumn>
-              {activeStep === 'basics' ? renderBasics() : null}
-              {activeStep === 'offers' ? renderOffers() : null}
+              <Box sx={{ display: activeStep !== 'basics' ? 'none' : undefined }}>{renderBasics()}</Box>
+              <Box sx={{ display: activeStep !== 'offers' ? 'none' : undefined }}>{renderOffers()}</Box>
               {activeStep === 'review' ? renderReview() : null}
 
               {mode === 'add' && activeStep === 'review' ? (
                 <StackColumn>
                   <StackRow sx={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                    <Button variant="contained" onClick={handleCreateClick} sx={defaultButtonStyle}>
                       {submitLabel}
                     </Button>
                   </StackRow>
