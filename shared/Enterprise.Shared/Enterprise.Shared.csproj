@@ -134,6 +134,7 @@
 
         <!-- Image Processing -->
         <PackageReference Include="SkiaSharp" Version="3.119.2"/>
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.2"/>
 
         <!-- API Documentation -->
         <PackageReference Include="NSwag.AspNetCore" Version="14.7.1"/>
