@@ -40,8 +40,8 @@ const SetupFlow = ({ userTypesToShow, onUserTypeClick, showBackButton }: Props) 
           />
           <SetupFeatureCard
             icon={<GroupsIcon sx={{ color: '#2196F3', fontSize: 40 }} />}
-            title="Real-time team visibility & collaboration"
-            description="See who's in the office and collaborate better with live team presence updates."
+            title="Real-time workplace visibility"
+            description="See who's in the office and coordinate better with live presence updates."
           />
           <SetupFeatureCard
             icon={<DashboardCustomizeIcon sx={{ color: '#FF9800', fontSize: 40 }} />}

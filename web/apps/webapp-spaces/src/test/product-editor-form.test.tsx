@@ -151,7 +151,7 @@ describe('ProductEditorForm', () => {
     await user.click(screen.getByRole('button', { name: 'Review & Create' }));
 
     expect(screen.getAllByText('Review & Create')).not.toHaveLength(0);
-    expect(screen.getByText('Check the high-level shape before creating the product. This is the compact product story your team needs to understand.')).toBeInTheDocument();
+    expect(screen.getByText('Check the high-level shape before creating the product. This is the compact product story people need to understand.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Create' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument();
   });
@@ -167,7 +167,7 @@ describe('ProductEditorForm', () => {
     await user.click(screen.getByRole('button', { name: 'Review & Update' }));
 
     expect(screen.getAllByText('Review & Update')).not.toHaveLength(0);
-    expect(screen.getByText('Check the high-level shape before updating the product. This is the compact product story your team needs to understand.')).toBeInTheDocument();
+    expect(screen.getByText('Check the high-level shape before updating the product. This is the compact product story people need to understand.')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Update' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument();
   });

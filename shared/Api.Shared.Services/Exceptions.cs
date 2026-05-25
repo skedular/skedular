@@ -70,6 +70,8 @@ public class OrganizationTagWithSameNameExist() : Exception("An organization tag
 public class TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization()
     : Exception("The team's main location must belong to the same organization as the team.");
 
+public class TeamNotAllowedForOrganizationType() : Exception("Teams can only be created for private organizations.");
+
 public class ProductNotFound() : Exception("We couldn't find that product.");
 
 public class ProductPricingNotFound() : Exception("We couldn't find that pricing option.");

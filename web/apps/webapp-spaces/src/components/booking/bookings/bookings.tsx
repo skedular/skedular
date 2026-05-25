@@ -15,7 +15,6 @@ type Props = {
   from: Dayjs;
   to: Dayjs;
   locationIds: string[];
-  teamIds: string[];
   customerIds: string[];
   toolbar?: ReactNode;
   actions?: ReactNode;
@@ -23,7 +22,7 @@ type Props = {
 
 type MarketplaceSubscriptionLookup = Record<string, string>;
 
-const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomain, from, to, locationIds, teamIds, customerIds, toolbar, actions }: Props) => {
+const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomain, from, to, locationIds, customerIds, toolbar, actions }: Props) => {
   const rootData = useFragment<bookings_query$key>(
     graphql`
       fragment bookings_query on Query {
@@ -61,7 +60,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
           where: {
             organizationCustomDomain: $organizationCustomDomain
             locationIds: $locationIds
-            teamIds: $teamIds
+            teamIds: []
             customerIds: $customerIds
             fromGte: $bookingsSearchCriteriaFrom
             fromLte: $bookingsSearchCriteriaTo
@@ -106,14 +105,13 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
   }, [rootData.marketplaceBookingSubscriptions.edges]);
 
   const handleRefetch = useCallback(
-    (from: Dayjs, to: Dayjs, locationIds: string[], teamIds: string[], customerIds: string[]) => {
+    (from: Dayjs, to: Dayjs, locationIds: string[], customerIds: string[]) => {
       startTransition(() => {
         refetch(
           {
             bookingsSearchCriteriaFrom: from.toISOString(),
             bookingsSearchCriteriaTo: to.toISOString(),
             locationIds,
-            teamIds,
             customerIds,
           },
           {
@@ -125,7 +123,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
     [refetch],
   );
 
-  useEffect(() => handleRefetch(from, to, locationIds, teamIds, customerIds), [handleRefetch, from, to, locationIds, teamIds, customerIds]);
+  useEffect(() => handleRefetch(from, to, locationIds, customerIds), [handleRefetch, from, to, locationIds, customerIds]);
 
   if (!rootDataRefetchable.bookings) {
     return null;

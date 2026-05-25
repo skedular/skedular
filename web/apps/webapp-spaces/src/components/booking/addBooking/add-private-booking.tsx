@@ -18,8 +18,6 @@ import type {
 } from '@/queries/__generated__/addPrivateBookingPage_addPrivateRecurringBookingMutation.graphql';
 import type { addPrivateBookingPage_availableResources_query$key } from '@/queries/__generated__/addPrivateBookingPage_availableResources_query.graphql';
 import type { addPrivateBookingPage_availableResources_refetchableFragment } from '@/queries/__generated__/addPrivateBookingPage_availableResources_refetchableFragment.graphql';
-import type { addPrivateBookingPage_customerTeams_query$key } from '@/queries/__generated__/addPrivateBookingPage_customerTeams_query.graphql';
-import type { addPrivateBookingPage_customerTeams_refetchableFragment } from '@/queries/__generated__/addPrivateBookingPage_customerTeams_refetchableFragment.graphql';
 import type { addPrivateBookingPage_organizationMembers_query$key } from '@/queries/__generated__/addPrivateBookingPage_organizationMembers_query.graphql';
 import type { addPrivateBookingPage_organizationMembers_refetchableFragment } from '@/queries/__generated__/addPrivateBookingPage_organizationMembers_refetchableFragment.graphql';
 import type { addPrivateBookingPage_query$key } from '@/queries/__generated__/addPrivateBookingPage_query.graphql';
@@ -60,11 +58,6 @@ type OrganizationMemberDetails = {
   customer: CustomerDetails;
 };
 
-type TeamDetails = {
-  id: string;
-  name: string;
-};
-
 type LocationDetails = {
   id: string;
   name: string;
@@ -94,7 +87,6 @@ type BookingDetails = {
   allDay: boolean;
   member: string;
   notes: string;
-  team: string | undefined;
   location: string | undefined;
   resources: string[];
   category: string;
@@ -113,14 +105,10 @@ const RootQuery = graphql`
     $dateFromToGetAvailableResources: DateTime!
     $dateUntilToGetAvailableResources: DateTime!
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $customerId: String!
-    $customerExists: Boolean!
-    $teamsSortingValues: [TeamOrderInput!]
     $locationsSortingValues: [LocationOrderInput!]
   ) {
     ...addPrivateBookingPage_query
     ...addPrivateBookingPage_organizationMembers_query
-    ...addPrivateBookingPage_customerTeams_query
     ...addPrivateBookingPage_availableResources_query
   }
 `;
@@ -132,7 +120,6 @@ const bookingSchema = object({
   allDay: boolean(),
   member: string().required('User is required'),
   notes: string().notRequired(),
-  team: string().notRequired(),
   location: string().notRequired(),
   resources: array().nullable(),
   category: string().required('Category is required'),
@@ -264,22 +251,6 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
     rootData,
   );
 
-  const [rootDataTeams, refetchTeams] = useRefetchableFragment<addPrivateBookingPage_customerTeams_refetchableFragment, addPrivateBookingPage_customerTeams_query$key>(
-    graphql`
-      fragment addPrivateBookingPage_customerTeams_query on Query @refetchable(queryName: "addPrivateBookingPage_customerTeams_refetchableFragment") {
-        customerTeams(where: { organizationCustomDomain: $organizationCustomDomain, customerId: $customerId }, orderBy: $teamsSortingValues) @include(if: $customerExists) {
-          edges {
-            node {
-              id
-              name
-            }
-          }
-        }
-      }
-    `,
-    rootData,
-  );
-
   const [rootDataAvailableResources, refetchAvailableResources] = useRefetchableFragment<
     addPrivateBookingPage_availableResources_refetchableFragment,
     addPrivateBookingPage_availableResources_query$key
@@ -391,10 +362,6 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
     () => (rootDataOrganizationMembers.organization ? rootDataOrganizationMembers.organization.members.edges.map(({ node }: { node: OrganizationMemberDetails }) => node) : []),
     [rootDataOrganizationMembers.organization],
   );
-  const teams = useMemo<TeamDetails[]>(
-    () => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }: { node: TeamDetails }) => node) : []),
-    [rootDataTeams.customerTeams],
-  );
   const locations = useMemo<LocationDetails[]>(() => rootDataMain.locations.edges.map(({ node }: { node: LocationDetails }) => node), [rootDataMain.locations]);
   const resources = useMemo<ResourceDetails[]>(
     () =>
@@ -429,7 +396,6 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
     });
   }, [dateRange, locationId, refetchAvailableResources, startTransition]);
 
-  const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
 
@@ -440,15 +406,6 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
       });
     },
     [refetchOrganizationMembers, startTransition],
-  );
-
-  const handleRefetchTeams = useCallback(
-    (customerIdValue: string | undefined) => {
-      startTransition(() => {
-        refetchTeams({ customerId: customerIdValue ?? '', customerExists: !!customerIdValue }, { fetchPolicy: 'store-and-network' });
-      });
-    },
-    [refetchTeams, startTransition],
   );
 
   const handlePeopleNameSearchTextChange = (value: string) => {
@@ -467,7 +424,7 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
     router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain));
   };
 
-  const handleSubmit = ({ date, allDay: allDayValue, member, notes: notesValue, team, resources: selectedResourceIds, category: categoryValue }: BookingDetails) => {
+  const handleSubmit = ({ date, allDay: allDayValue, member, notes: notesValue, resources: selectedResourceIds, category: categoryValue }: BookingDetails) => {
     const [timeFrom, timeUntil] = timeRange;
     const computedDateRange = getDateRange(allDayValue, date, { timeFrom, timeUntil });
 
@@ -506,7 +463,7 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
             category: categoryValue as AddPrivateBookingCategory,
             customerIds: [member],
             organizationCustomDomains: [organizationCustomDomain],
-            teamIds: team ? [team] : [],
+            teamIds: [],
             resourceIds: selectedResourceIds ?? [],
           },
         },
@@ -545,7 +502,7 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
           category: categoryValue as AddPrivateRecurringBookingCategory,
           customerIds: [member],
           organizationCustomDomains: [organizationCustomDomain],
-          teamIds: team ? [team] : [],
+          teamIds: [],
           from: computedDateRange.from.toISOString(),
           until: computedDateRange.until.toISOString(),
           startDate: dayjs(date).utc().startOf('day').toISOString(),
@@ -616,7 +573,6 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
               date: from,
               allDay,
               notes,
-              team: undefined,
               location: locationId,
               resources: resourceIds,
               category,
@@ -671,7 +627,6 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
                         onChange={(_, option) => {
                           const nextCustomerId = (option as OrganizationMemberDetails | null)?.customer.id;
                           setCustomerId(nextCustomerId);
-                          handleRefetchTeams(nextCustomerId);
                         }}
                       />
                     </FormFieldLabel>
@@ -806,31 +761,8 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
                   </StackColumn>
                 </SettingsSectionCard>
 
-                <SettingsSectionCard title="Assignments" description="Pick the team, location, and any specific resources to reserve for this booking.">
+                <SettingsSectionCard title="Assignments" description="Pick the location and any specific resources to reserve for this booking.">
                   <StackColumn spacing={2}>
-                    <FormFieldLabel label="Team">
-                      <Autocomplete
-                        name="team"
-                        multiple={false}
-                        required={requiredFields.team}
-                        options={teams}
-                        getOptionValue={(option) => (option as TeamDetails).id}
-                        getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
-                        renderOption={(props, option) => {
-                          const castedOption = option as TeamDetails;
-                          return (
-                            <li {...props} key={castedOption.id}>
-                              <BodyIconTypography label={castedOption.name} />
-                            </li>
-                          );
-                        }}
-                        filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
-                        selectOnFocus
-                        clearOnBlur
-                        handleHomeEndKeys
-                      />
-                    </FormFieldLabel>
-
                     <FormFieldLabel label="Location">
                       <Autocomplete
                         name="location"
@@ -982,9 +914,6 @@ const AddPrivateBookingPageWithRelay = () => {
         locationId: defaultLocationId ?? '',
         dateFromToGetAvailableResources: initialQueryWindow.from,
         dateUntilToGetAvailableResources: initialQueryWindow.until,
-        customerId: '',
-        customerExists: false,
-        teamsSortingValues: [{ direction: 'ASCENDING', field: 'NAME' }],
         locationsSortingValues: [{ direction: 'ASCENDING', field: 'NAME' }],
         organizationMembersSortingValues: [{ direction: 'ASCENDING', field: 'NAME' }],
       },

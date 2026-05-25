@@ -28,9 +28,6 @@ const RootQuery = graphql`
     $locationId: String!
     $dateFromToGetAvailableResources: DateTime!
     $dateUntilToGetAvailableResources: DateTime!
-    $customerId: String!
-    $customerExists: Boolean!
-    $teamsSortingValues: [TeamOrderInput!]
     $locationsSortingValues: [LocationOrderInput!]
   ) {
     booking(id: $bookingId) {
@@ -51,15 +48,12 @@ const RootQuery = graphql`
     ...editPrivateBooking_query
     ...editPrivateRecurringBooking_query
     ...editPrivateBooking_organizationMembers_query
-    ...editPrivateBooking_customerTeams_query
     ...editPrivateBooking_availableResources_query
     ...editPrivateRecurringBooking_organizationMembers_query
-    ...editPrivateRecurringBooking_customerTeams_query
     ...editPrivateRecurringBooking_availableResources_query
     ...editMarketplaceBooking_query
     ...editMarketplaceBooking_booking_query
     ...editMarketplaceBooking_organizationMembers_query
-    ...editMarketplaceBooking_customerTeams_query
     ...payMarketplaceBooking_booking_query
   }
 `;
@@ -116,31 +110,18 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
         <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
       )}
       {rootData.booking.channel.channel === 'MARKETPLACE' && !shouldPay && (
-        <EditMarketplaceBooking
-          rootDataRelay={rootData}
-          rootDataBookingRelay={rootData}
-          rootDataTeamsRelay={rootData}
-          rootDataOrganizationMembersRelay={rootData}
-          onReloadRequired={onReloadRequired}
-        />
+        <EditMarketplaceBooking rootDataRelay={rootData} rootDataBookingRelay={rootData} rootDataOrganizationMembersRelay={rootData} onReloadRequired={onReloadRequired} />
       )}
       {rootData.booking.channel.channel === 'PRIVATE' &&
         (showRecurringPrivateBookingEditor ? (
           <EditPrivateRecurringBooking
             rootDataRelay={rootData}
-            rootDataTeamsRelay={rootData}
             rootDataOrganizationMembersRelay={rootData}
             rootDataAvailableResourcesRelay={rootData}
             onReloadRequired={onReloadRequired}
           />
         ) : (
-          <EditPrivateBooking
-            rootDataRelay={rootData}
-            rootDataTeamsRelay={rootData}
-            rootDataOrganizationMembersRelay={rootData}
-            rootDataAvailableResourcesRelay={rootData}
-            onReloadRequired={onReloadRequired}
-          />
+          <EditPrivateBooking rootDataRelay={rootData} rootDataOrganizationMembersRelay={rootData} rootDataAvailableResourcesRelay={rootData} onReloadRequired={onReloadRequired} />
         ))}
     </RootShell>
   );
@@ -180,14 +161,6 @@ const RootPageWithRelay = () => {
         locationId: '',
         dateFromToGetAvailableResources: startDate,
         dateUntilToGetAvailableResources: endDate,
-        customerId: '',
-        customerExists: false,
-        teamsSortingValues: [
-          {
-            direction: 'ASCENDING',
-            field: 'NAME',
-          },
-        ],
         locationsSortingValues: [
           {
             direction: 'ASCENDING',

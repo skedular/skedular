@@ -121,7 +121,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
               />
 
               <TextField label="Feedback" name="feedback" required={requiredFields.feedback} multiline rows={10} />
-              <BodyIconTypography label="A note from the team:" sx={{ fontStyle: 'italic' }} />
+              <BodyIconTypography label="A note from us:" sx={{ fontStyle: 'italic' }} />
               <BodyIconTypography label="We value every bit of feedback, whether it is about a major issue or a small detail. If something feels unclear, missing, or frustrating, please tell us so we can improve it." />
               <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Send" secondaryLabel="Cancel" />
             </FormStackColumn>

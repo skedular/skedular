@@ -4,8 +4,6 @@ import InvoiceDownloadLinks from '@/components/booking/invoice-download-links';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import type { editMarketplaceBooking_booking_query$key } from '@/queries/__generated__/editMarketplaceBooking_booking_query.graphql';
 import type { editMarketplaceBooking_booking_refetchableFragment } from '@/queries/__generated__/editMarketplaceBooking_booking_refetchableFragment.graphql';
-import type { editMarketplaceBooking_customerTeams_query$key } from '@/queries/__generated__/editMarketplaceBooking_customerTeams_query.graphql';
-import type { editMarketplaceBooking_customerTeams_refetchableFragment } from '@/queries/__generated__/editMarketplaceBooking_customerTeams_refetchableFragment.graphql';
 import type { editMarketplaceBooking_organizationMembers_query$key } from '@/queries/__generated__/editMarketplaceBooking_organizationMembers_query.graphql';
 import type { editMarketplaceBooking_organizationMembers_refetchableFragment } from '@/queries/__generated__/editMarketplaceBooking_organizationMembers_refetchableFragment.graphql';
 import type { editMarketplaceBooking_query$key } from '@/queries/__generated__/editMarketplaceBooking_query.graphql';
@@ -16,7 +14,6 @@ import type {
 } from '@/queries/__generated__/editMarketplaceBooking_updateBookingMutation.graphql';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import {
   getCustomerFullName,
@@ -43,7 +40,7 @@ import {
 import { Dayjs } from 'dayjs';
 import { Autocomplete, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -55,7 +52,6 @@ type Props = {
   rootDataRelay: editMarketplaceBooking_query$key;
   rootDataBookingRelay: editMarketplaceBooking_booking_query$key;
   rootDataOrganizationMembersRelay: editMarketplaceBooking_organizationMembers_query$key;
-  rootDataTeamsRelay: editMarketplaceBooking_customerTeams_query$key;
   onReloadRequired?: () => void;
 };
 
@@ -73,22 +69,15 @@ type OrganizationMemberDetails = {
   customer: CustomerDetails;
 };
 
-type TeamDetails = {
-  id: string;
-  name: string;
-};
-
 type BookingDetails = {
   member: string;
   notes: string | null | undefined;
-  team: string | undefined;
   category: string;
 };
 
 const bookingSchema = object({
   member: string().required('User is required'),
   notes: string().notRequired(),
-  team: string().notRequired(),
   category: string().required('Category is required'),
 });
 const bookingAutosaveDebounceTimeout = 1000;
@@ -96,13 +85,13 @@ const bookingAutosaveDebounceTimeout = 1000;
 const getChangedMarketplaceBookingFields = (left: BookingDetails | null, right: BookingDetails): MarketplaceBookingPatchField[] => {
   if (!left) return [];
   const changed: MarketplaceBookingPatchField[] = [];
-  if (left.member !== right.member || left.team !== right.team) changed.push('PARTICIPANTS');
+  if (left.member !== right.member) changed.push('PARTICIPANTS');
   if (left.notes !== right.notes) changed.push('NOTES');
   if (left.category !== right.category) changed.push('CATEGORY');
   return changed;
 };
 
-const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay }: Props) => {
+const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataOrganizationMembersRelay }: Props) => {
   const rootData = useFragment<editMarketplaceBooking_query$key>(
     graphql`
       fragment editMarketplaceBooking_query on Query {
@@ -212,24 +201,6 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
     rootDataOrganizationMembersRelay,
   );
 
-  const [rootDataTeams, refetchTeams] = useRefetchableFragment<editMarketplaceBooking_customerTeams_refetchableFragment, editMarketplaceBooking_customerTeams_query$key>(
-    graphql`
-      fragment editMarketplaceBooking_customerTeams_query on Query @refetchable(queryName: "editMarketplaceBooking_customerTeams_refetchableFragment") {
-        customerTeams(where: { organizationCustomDomain: $organizationCustomDomain, customerId: $customerId }, orderBy: $teamsSortingValues) @include(if: $customerExists) {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-            }
-          }
-        }
-      }
-    `,
-    rootDataTeamsRelay,
-  );
-
   const [commitUpdateMarketplaceBooking] = useMutation<editMarketplaceBooking_updateBookingMutation>(graphql`
     mutation editMarketplaceBooking_updateBookingMutation($input: UpdateMarketplaceBookingInput!) @raw_response_type {
       updateMarketplaceBooking(input: $input) {
@@ -301,27 +272,20 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
   const [customerId, setCustomerId] = useState<string | undefined>(
     rootDataBooking.booking?.involvedCustomers && rootDataBooking.booking?.involvedCustomers.length > 0 ? rootDataBooking.booking?.involvedCustomers[0].id : undefined,
   );
-  const [teamId, setTeamId] = useState<string | undefined>(
-    rootDataBooking.booking?.involvedTeams && rootDataBooking.booking?.involvedTeams.length > 0 ? rootDataBooking.booking?.involvedTeams[0].id : undefined,
-  );
-  const filterTeam = createFilterOptions<TeamDetails>();
-
   const customers = useMemo<OrganizationMemberDetails[]>(
     () => (rootDataOrganizationMembers.organization?.members ? rootDataOrganizationMembers.organization?.members.edges.map(({ node }) => node) : []),
     [rootDataOrganizationMembers.organization?.members],
   );
-  const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
   const initialBookingValues = useMemo<BookingDetails | null>(
     () =>
       rootDataBooking.booking
         ? {
             member: customerId ?? '',
             notes: rootDataBooking.booking.notes,
-            team: teamId,
             category: rootDataBooking.booking.category.category,
           }
         : null,
-    [customerId, rootDataBooking.booking, teamId],
+    [customerId, rootDataBooking.booking],
   );
   const previousBookingValues = useRef<BookingDetails | null>(initialBookingValues);
 
@@ -341,40 +305,15 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
     [startTransition, refetchOrganizationMembers],
   );
 
-  const handleRefetchTeams = useCallback(
-    (customerId: string | undefined) => {
-      startTransition(() => {
-        refetchTeams(
-          {
-            customerId: customerId ?? '',
-            customerExists: !!customerId,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-          },
-        );
-      });
-    },
-    [startTransition, refetchTeams],
-  );
-
-  useEffect(() => {
-    if (!rootDataBooking.booking?.involvedCustomers || rootDataBooking.booking?.involvedCustomers.length === 0) {
-      return;
-    }
-
-    handleRefetchTeams(rootDataBooking.booking.involvedCustomers[0].id);
-  }, [handleRefetchTeams, rootDataBooking.booking?.involvedCustomers]);
-
   const handleCloseClick = () => {
     router.back();
   };
 
-  const handleBookingDetailUpdateClick = (fieldsToUpdate: MarketplaceBookingPatchField[], { member: memberId, notes, team: teamId, category }: BookingDetails) => {
+  const handleBookingDetailUpdateClick = (fieldsToUpdate: MarketplaceBookingPatchField[], { member: memberId, notes, category }: BookingDetails) => {
     const booking = rootDataBooking.booking;
     if (
       !booking ||
-      !bookingSchema.isValidSync({ member: memberId, notes, team: teamId, category }) ||
+      !bookingSchema.isValidSync({ member: memberId, notes, category }) ||
       (booking.marketplaceBooking?.paymentStatus.type !== 'NO_PAYMENT_REQUIRED' && booking.marketplaceBooking?.paymentStatus.type !== 'CONFIRMED')
     ) {
       return;
@@ -392,7 +331,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
           category: category as BookingCategory,
           customerIds: [memberId],
           organizationIds: booking.involvedOrganizations.map(({ id }) => id),
-          teamIds: teamId ? [teamId] : [],
+          teamIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -444,15 +383,6 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
 
     const customerId = option?.customer.id;
     setCustomerId(customerId);
-    handleRefetchTeams(customerId);
-  };
-
-  const handleTeamChange = (option: TeamDetails | null) => {
-    if (!rootDataBooking.booking) {
-      return;
-    }
-
-    setTeamId(option?.id);
   };
 
   const handlePeopleNameSearchTextChange = (str: string) => {
@@ -550,31 +480,6 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
 
                     <FormFieldLabel label="Category">
                       <SingleChoiceMarketplaceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Team">
-                      <Autocomplete
-                        name="team"
-                        multiple={false}
-                        required={requiredFields.team}
-                        options={teams}
-                        getOptionValue={(option) => (option as TeamDetails).id}
-                        getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
-                        renderOption={(props, option) => {
-                          const castedOption = option as TeamDetails;
-
-                          return (
-                            <li {...props} key={castedOption.id}>
-                              <BodyIconTypography label={castedOption.name} />
-                            </li>
-                          );
-                        }}
-                        filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
-                        selectOnFocus
-                        clearOnBlur
-                        handleHomeEndKeys
-                        onChange={(_, option) => handleTeamChange(option as TeamDetails)}
-                      />
                     </FormFieldLabel>
                   </StackColumn>
                 </FormStackColumn>

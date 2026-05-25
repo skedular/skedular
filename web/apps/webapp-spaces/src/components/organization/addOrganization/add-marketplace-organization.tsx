@@ -233,7 +233,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
   return (
     <SetupSplitLayout
       asideTitle="Set up your co-working space"
-      asideDescription="List your space, manage availability, and connect with individuals or teams looking for flexible work environments."
+      asideDescription="List your space, manage availability, and connect with people looking for flexible work environments."
       asideChildren={
         <>
           <SetupFeatureCard
@@ -249,7 +249,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           <SetupFeatureCard
             icon={<PublicIcon sx={{ color: '#FF9800', fontSize: 40 }} />}
             title="Marketplace Visibility"
-            description="Showcase your space to individuals and teams looking for flexible workspaces."
+            description="Showcase your space to people looking for flexible workspaces."
           />
           <SetupFeatureCard
             icon={<ForumIcon sx={{ color: '#9C27B0', fontSize: 40 }} />}

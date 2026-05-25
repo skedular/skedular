@@ -1,6 +1,6 @@
 import { AppBar } from '@/components/appBar';
 import { InfoIcon, SignOutIcon } from '@/components/icons';
-import { getInstallMsTeamsLink, getOrganizationSsoSignInBaseLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
+import { getOrganizationSsoSignInBaseLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
@@ -9,12 +9,12 @@ import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_root
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import { InMsTeamsContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, PushToRight, SmallHeadingIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { usePathname, useRouter } from 'next/navigation';
 import type { JSX, PropsWithChildren } from 'react';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
@@ -71,14 +71,12 @@ const RootShell = ({
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const { integratedPlatrform } = useIntegratedPlatrform();
-  const inMsTeams = useContext(InMsTeamsContext);
   const router = useRouter();
   const pathName = usePathname();
   const { signOut } = useAuth();
   const [reloadCount, setReloadCount] = useState(0);
   const rootLink = getRootLink(integratedPlatrform);
   const welcomeLink = getWelcomeLink(integratedPlatrform);
-  const installMsTeamsLink = getInstallMsTeamsLink();
   const areCustomerRecordsSync = !!rootData?.customerReadinessSynced;
 
   useEffect(() => {
@@ -95,16 +93,6 @@ const RootShell = ({
       clearInterval(intervalId);
     };
   }, [rootData.me, reloadCount, onReloadRequired, areCustomerRecordsSync]);
-
-  useEffect(() => {
-    if (!inMsTeams) {
-      return;
-    }
-
-    if (!rootData.isAzureTenantInstalled || !rootData.azureTenantOrganization) {
-      router.push(installMsTeamsLink);
-    }
-  }, [inMsTeams, rootData.isAzureTenantInstalled, rootData.azureTenantOrganization, installMsTeamsLink, router]);
 
   useEffect(() => {
     if (pathName === rootLink && !rootData.me.isOnboardingDone) {

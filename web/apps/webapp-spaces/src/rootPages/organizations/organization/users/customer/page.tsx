@@ -23,7 +23,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageOrganizationUser_rootQuery($organizationCustomDomain: String!, $customerId: String!, $teamsSortingValues: [TeamOrderInput!]) {
+  query pageOrganizationUser_rootQuery($organizationCustomDomain: String!, $customerId: String!) {
     customer(id: $customerId) {
       name
       givenName
@@ -84,12 +84,6 @@ const UserPageWithRelay = () => {
       {
         organizationCustomDomain,
         customerId,
-        teamsSortingValues: [
-          {
-            direction: 'ASCENDING',
-            field: 'NAME',
-          },
-        ],
       },
       {
         fetchPolicy: 'store-and-network',

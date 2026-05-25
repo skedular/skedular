@@ -22,7 +22,6 @@ export const getRootLink = (integratedPlatrform: string | undefined) => (integra
 export const getSignInLink = () => '/signin';
 export const getSignUpLink = () => '/signup';
 export const getWelcomeLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/welcome` : '/welcome');
-export const getInstallMsTeamsLink = () => '/msteams/install-msteams';
 
 export const getOrganizationsBaseLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/organizations` : '/organizations');
 
@@ -30,7 +29,7 @@ export const getOrganizationSetupLink = (integratedPlatrform: string | undefined
 export const getOrganizationAddMarketplaceLink = (integratedPlatrform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatrform)}/add-marketplace`;
 export const getOrganizationBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationsBaseLink(integratedPlatrform)}/${id}`;
 
-export const getOrganizationBookingsBaseLink = (integratedPlatrform: string | undefined, id: string, options?: { customerId?: string; locationId?: string; teamId?: string }) => {
+export const getOrganizationBookingsBaseLink = (integratedPlatrform: string | undefined, id: string, options?: { customerId?: string; locationId?: string }) => {
   let params = '';
 
   if (options?.customerId) {
@@ -39,10 +38,6 @@ export const getOrganizationBookingsBaseLink = (integratedPlatrform: string | un
 
   if (options?.locationId) {
     params += params ? `&locationId=${options.locationId}` : `locationId=${options.locationId}`;
-  }
-
-  if (options?.teamId) {
-    params += params ? `&teamId=${options.teamId}` : `teamId=${options.teamId}`;
   }
 
   return params ? `${getOrganizationBaseLink(integratedPlatrform, id)}/bookings?${params}` : `${getOrganizationBaseLink(integratedPlatrform, id)}/bookings`;
@@ -64,21 +59,11 @@ export const getOrganizationSubscriptionBaseLink = (integratedPlatrform: string 
 export const getOrganizationUsersBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/users`;
 export const getOrganizationUserProfileBaseLink = (integratedPlatrform: string | undefined, id: string, customerId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/users/${customerId}?section=profile`;
-export const getOrganizationUserManageTeamsBaseLink = (integratedPlatrform: string | undefined, id: string, customerId: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/users/${customerId}?section=manage-teams`;
 export const getOrganizationUserBillingAndPaymentBaseLink = (integratedPlatrform: string | undefined, id: string, customerId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/users/${customerId}?section=billing-payment-setup`;
 export const getOrganizationUserManageBaseLink = (integratedPlatrform: string | undefined, id: string, customerId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/users/${customerId}?section=manage-user`;
 
-export const getOrganizationTeamAddLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/add`;
-export const getOrganizationTeamsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/teams`;
-export const getOrganizationTeamSetupBaseLink = (integratedPlatrform: string | undefined, id: string, teamId: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/${teamId}?section=setup`;
-export const getOrganizationTeamMembersBaseLink = (integratedPlatrform: string | undefined, id: string, teamId: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/${teamId}?section=members`;
-export const getOrganizationTeamManageTeamBaseLink = (integratedPlatrform: string | undefined, id: string, teamId: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/${teamId}?section=manage-team`;
 export const getOrganizationBookingBaseLink = (integratedPlatrform: string | undefined, id: string, bookingId: string, options?: { editMode?: 'occurrence' | 'recurring' }) =>
   appendQueryParams(`${getOrganizationBaseLink(integratedPlatrform, id)}/bookings/${bookingId}`, {
     editMode: options?.editMode,

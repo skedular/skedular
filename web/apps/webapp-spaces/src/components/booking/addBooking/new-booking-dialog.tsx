@@ -7,8 +7,6 @@ import { Zones } from '@/components/zone';
 import type { BookingCategory, newBookingDialog_addPrivateBookingMutation } from '@/queries/__generated__/newBookingDialog_addPrivateBookingMutation.graphql';
 import type { newBookingDialog_availableResources_query$key } from '@/queries/__generated__/newBookingDialog_availableResources_query.graphql';
 import type { newBookingDialog_availableResources_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableResources_refetchableFragment.graphql';
-import type { newBookingDialog_customerTeams_query$key } from '@/queries/__generated__/newBookingDialog_customerTeams_query.graphql';
-import type { newBookingDialog_customerTeams_refetchableFragment } from '@/queries/__generated__/newBookingDialog_customerTeams_refetchableFragment.graphql';
 import type { newBookingDialog_organizationMembers_query$key } from '@/queries/__generated__/newBookingDialog_organizationMembers_query.graphql';
 import type { newBookingDialog_organizationMembers_refetchableFragment } from '@/queries/__generated__/newBookingDialog_organizationMembers_refetchableFragment.graphql';
 import type { newBookingDialog_query$key } from '@/queries/__generated__/newBookingDialog_query.graphql';
@@ -42,7 +40,6 @@ import { array, boolean, mixed, object, string } from 'yup';
 type Props = {
   rootDataRelay: newBookingDialog_query$key;
   rootDataOrganizationMembersRelay: newBookingDialog_organizationMembers_query$key;
-  rootDataTeamsRelay: newBookingDialog_customerTeams_query$key;
   rootDataAvailableResourcesRelay: newBookingDialog_availableResources_query$key;
   connectionIds: string[];
   isDialogOpen: boolean;
@@ -66,11 +63,6 @@ type CustomerDetails = {
 type OrganizationMemberDetails = {
   id: string;
   customer: CustomerDetails;
-};
-
-type TeamDetails = {
-  id: string;
-  name: string;
 };
 
 type LocationDetails = {
@@ -102,7 +94,6 @@ type BookingDetails = {
   allDay: boolean;
   member: string;
   notes: string;
-  team: string | undefined;
   location: string | undefined;
   resources: string[];
   category: string;
@@ -117,7 +108,6 @@ const bookingSchema = object({
   allDay: boolean(),
   member: string().required('User is required'),
   notes: string().notRequired(),
-  team: string().notRequired(),
   location: string().notRequired(),
   resources: array().nullable(),
   category: string().required('Category is required'),
@@ -125,7 +115,6 @@ const bookingSchema = object({
 
 const NewBookingDialog = ({
   rootDataRelay,
-  rootDataTeamsRelay,
   rootDataOrganizationMembersRelay,
   rootDataAvailableResourcesRelay,
   connectionIds,
@@ -191,24 +180,6 @@ const NewBookingDialog = ({
       }
     `,
     rootDataOrganizationMembersRelay,
-  );
-
-  const [rootDataTeams, refetchTeams] = useRefetchableFragment<newBookingDialog_customerTeams_refetchableFragment, newBookingDialog_customerTeams_query$key>(
-    graphql`
-      fragment newBookingDialog_customerTeams_query on Query @refetchable(queryName: "newBookingDialog_customerTeams_refetchableFragment") {
-        customerTeams(where: { organizationCustomDomain: $organizationCustomDomain, customerId: $customerId }, orderBy: $teamsSortingValues) @include(if: $customerExists) {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-            }
-          }
-        }
-      }
-    `,
-    rootDataTeamsRelay,
   );
 
   const [rootDataAvailableResources, refetchAvailableResources] = useRefetchableFragment<
@@ -305,21 +276,18 @@ const NewBookingDialog = ({
   const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([toOpeningHoursFromTime('00:00'), toOpeningHoursFromTime('00:00')]);
   // date/time validation message is derived from inputs (computed later)
   const [customerId, setCustomerId] = useState<string | undefined>();
-  const [teamId, setTeamId] = useState<string | undefined>();
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
   const [notes, setNotes] = useState<string>('');
   const [category, setCategory] = useState<string>('WORKING_FROM_OFFICE');
   const [resourceIds, setResourceIds] = useState<string[]>(defaultResourceIds ?? []);
 
   // Note: `resourceIds` is initialized from `defaultResourceIds` and thereafter controlled by the form.
-  const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
   const customers = useMemo<OrganizationMemberDetails[]>(
     () => (rootDataOrganizationMembers.organization ? rootDataOrganizationMembers.organization.members.edges.map(({ node }) => node) : []),
     [rootDataOrganizationMembers.organization],
   );
-  const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
   const locations = useMemo<LocationDetails[]>(() => rootData.locations.edges.map(({ node }) => node), [rootData.locations]);
   // resources will be derived after validating the time range (see dateRange below)
 
@@ -337,23 +305,6 @@ const NewBookingDialog = ({
       });
     },
     [startTransition, refetchOrganizationMembers],
-  );
-
-  const handleRefetchTeams = useCallback(
-    (customerId: string | undefined) => {
-      startTransition(() => {
-        refetchTeams(
-          {
-            customerId: customerId ?? '',
-            customerExists: !!customerId,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-          },
-        );
-      });
-    },
-    [startTransition, refetchTeams],
   );
 
   const handleRefetchAvailableResources = useCallback(
@@ -437,7 +388,7 @@ const NewBookingDialog = ({
     [rootDataAvailableResources.availableResources, timeRangeValidDerived],
   );
 
-  const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, resources: resourceIds, category }: BookingDetails) => {
+  const handleAddClick = ({ date, allDay, member, notes, location: locationId, resources: resourceIds, category }: BookingDetails) => {
     const id = uuid();
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
@@ -464,7 +415,7 @@ const NewBookingDialog = ({
           category: category as BookingCategory,
           customerIds: [customerId],
           organizationCustomDomains: [organizationCustomDomain],
-          teamIds: teamId ? [teamId] : [],
+          teamIds: [],
           resourceIds,
         },
       },
@@ -546,11 +497,6 @@ const NewBookingDialog = ({
     const customerId = option?.customer.id;
 
     setCustomerId(customerId);
-    handleRefetchTeams(customerId);
-  };
-
-  const handleTeamChange = (option: LocationDetails | null) => {
-    setTeamId(option?.id);
   };
 
   const handleLocationChange = (option: LocationDetails | null) => {
@@ -586,7 +532,6 @@ const NewBookingDialog = ({
             date: from,
             allDay,
             notes,
-            team: teamId,
             location: locationId,
             resources: resourceIds,
             category,
@@ -665,31 +610,6 @@ const NewBookingDialog = ({
 
                 <FormFieldLabel label="Category">
                   <SingleChoiceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Team">
-                  <Autocomplete
-                    name="team"
-                    multiple={false}
-                    required={requiredFields.team}
-                    options={teams}
-                    getOptionValue={(option) => (option as TeamDetails).id}
-                    getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
-                    renderOption={(props, option) => {
-                      const castedOption = option as TeamDetails;
-
-                      return (
-                        <li {...props} key={castedOption.id}>
-                          <BodyIconTypography label={castedOption.name} />
-                        </li>
-                      );
-                    }}
-                    filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
-                    selectOnFocus
-                    clearOnBlur
-                    handleHomeEndKeys
-                    onChange={(_, option) => handleTeamChange(option as TeamDetails)}
-                  />
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Location">

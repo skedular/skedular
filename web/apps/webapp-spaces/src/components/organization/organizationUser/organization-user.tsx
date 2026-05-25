@@ -39,7 +39,6 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 import OrganizationUserSectionNav, { OrganizationUserSection } from './organization-user-section-nav';
-import OrganizationUserTeamList, { OrganizationUserTeamListItem } from './organization-user-team-list';
 
 type Props = {
   rootDataRelay: organizationUser_query$key;
@@ -72,7 +71,7 @@ const profileDetailsSchema = object({
   personalInformationVisibility: string().required('Personal Information Visibility is required'),
 });
 
-const validSections: OrganizationUserSection[] = ['profile', 'manage-teams', 'manage-user'];
+const validSections: OrganizationUserSection[] = ['profile', 'manage-user'];
 
 const getActiveSection = (value: string | null): OrganizationUserSection => {
   if (value && validSections.includes(value as OrganizationUserSection)) {
@@ -107,7 +106,7 @@ const getChangedProfileFields = (left: ProfileDetailsDetails, right: ProfileDeta
 const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId }: Props) => {
   const rootData = useFragment<organizationUser_query$key>(
     graphql`
-      fragment organizationUser_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
+      fragment organizationUser_query on Query {
         me {
           id
         }
@@ -126,46 +125,6 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
           personalInformationVisibility {
             type
             name
-          }
-        }
-        customerTeams(first: $count, after: $cursor, where: { organizationCustomDomain: $organizationCustomDomain, customerId: $customerId }, orderBy: $teamsSortingValues)
-          @connection(key: "organizationUser_customerTeams") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              organization {
-                id
-              }
-              featureImages {
-                thumbnail {
-                  url
-                }
-              }
-              members {
-                edges {
-                  node {
-                    organizationMember {
-                      uniqueId
-                      customer {
-                        id
-                        givenName
-                        middleName
-                        familyName
-                        name
-                        photoUrl
-                        personalInformationVisibility {
-                          type
-                          name
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
           }
         }
         organization(customDomain: $organizationCustomDomain) {
@@ -245,32 +204,11 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
   const [stickyTop, setStickyTop] = useState(0);
   const validateProfileDetails = makeValidate(profileDetailsSchema);
   const requiredProfileDetailsFields = makeRequired(profileDetailsSchema);
-  const teams = useMemo(() => rootData.customerTeams.edges.map((edge) => edge.node), [rootData.customerTeams]);
-  const teamItems = useMemo<OrganizationUserTeamListItem[]>(
-    () =>
-      teams.map((team) => ({
-        id: team.id,
-        name: team.name,
-        featureImageUrl: team.featureImages[0]?.thumbnail?.url,
-        members: team.members.edges
-          .map(({ node }) => node.organizationMember?.customer)
-          .filter((member): member is NonNullable<typeof member> => !!member)
-          .map((member) => ({
-            id: member.id,
-            givenName: member.givenName,
-            middleName: member.middleName,
-            familyName: member.familyName,
-            name: member.name,
-            photoUrl: member.photoUrl,
-          })),
-      })),
-    [teams],
-  );
-  const teamsConnectionIds = useMemo(() => [rootData.customerTeams.__id], [rootData.customerTeams]);
   const member = useMemo(
     () => (rootData.organization?.members && rootData.organization.members.edges.length > 0 ? rootData.organization.members.edges[0]?.node : null),
     [rootData.organization],
   );
+  const organizationMemberConnectionIds = useMemo(() => (rootData.organization?.members ? [rootData.organization.members.__id] : []), [rootData.organization]);
 
   useEffect(() => {
     const updateStickyTop = () => {
@@ -441,7 +379,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
 
     commitRemoveOrganizationMembers({
       variables: {
-        connectionIds: teamsConnectionIds,
+        connectionIds: organizationMemberConnectionIds,
         input: {
           clientMutationId: uuid(),
           ids: [member.id],
@@ -559,12 +497,6 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
     </Box>
   );
 
-  const renderTeamsSection = () => (
-    <Box sx={{ p: defaultPadding }}>
-      <OrganizationUserTeamList items={teamItems} />
-    </Box>
-  );
-
   const renderManageSection = () => (
     <Box sx={{ p: defaultPadding }}>
       <StackColumn spacing={2}>
@@ -605,8 +537,6 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
 
   const renderActiveSection = () => {
     switch (activeSection) {
-      case 'manage-teams':
-        return renderTeamsSection();
       case 'manage-user':
         return renderManageSection();
       case 'profile':
@@ -626,11 +556,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
           gap: 2,
         }}
       >
-        <PageHeaderPanel
-          eyebrow="User profile"
-          title={getCustomerFullName(customer)}
-          description="Manage profile details, team membership, booking context, and lifecycle controls."
-        >
+        <PageHeaderPanel eyebrow="User profile" title={getCustomerFullName(customer)} description="Manage profile details, booking context, and lifecycle controls.">
           <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
             <StackRow>
               <CustomerAvatar name={customer} photo={{ url: customer?.photoUrl }} size="large" />

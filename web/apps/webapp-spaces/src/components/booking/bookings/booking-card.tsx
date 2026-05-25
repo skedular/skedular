@@ -2,7 +2,7 @@ import { CustomerAvatar } from '@/components/avatars';
 import RecurringBookingDeleteConfirmationDialog from '@/components/booking/recurring-booking-delete-confirmation-dialog';
 import { CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
-import { CalendarIcon, EllipseMenuIcon, JoinIcon, NotesIcon, PaymentStatusIcon, PdfIcon, TeamIcon } from '@/components/icons';
+import { CalendarIcon, EllipseMenuIcon, JoinIcon, NotesIcon, PaymentStatusIcon, PdfIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -673,7 +673,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
           until: bookingDetails.until,
           customerIds: [rootData.me.id],
           organizationIds: bookingDetails.involvedOrganizations.map(({ id }) => id),
-          teamIds: bookingDetails.involvedTeams.map(({ id }) => id),
+          teamIds: [],
           resourceIds: [],
           category: bookingDetails.category.category,
         },
@@ -917,8 +917,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       .map((location) => location.name)
       .filter(Boolean)
       .join(', ') || 'Location pending';
-  const teamName = bookingDetails.involvedTeams[0]?.name;
-
   return (
     <>
       <Card
@@ -967,7 +965,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
             </StackRow>
 
             <StackRow sx={{ gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
-              {teamName ? <Chip label={teamName} size="small" icon={<TeamIcon />} /> : null}
               {recurringSeriesLabel ? (
                 <Tooltip title={`${recurringSeriesLabel}. ${recurringSeriesDateLabel ?? ''}`.trim()}>
                   <Chip label="Recurring" size="small" variant="outlined" />

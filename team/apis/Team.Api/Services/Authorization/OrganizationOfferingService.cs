@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Team.Shared.Services.Cache;
 
@@ -17,6 +18,15 @@ public class OrganizationOfferingService(ICachedOrganizationService cachedOrgani
     {
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
+
+        if (organization.Type != OrganizationTypeConstants.Private)
+        {
+            logger.LogWarning(
+                "Create-team offering check denied for organization {OrganizationId} because organization type {OrganizationType} is not private",
+                organizationId,
+                organization.Type);
+            throw new TeamNotAllowedForOrganizationType();
+        }
 
         var offering = organization.Offering;
         var allowed = offering is not null && (offering.Code.GetOffering().MaxTeamCount == -1 ||

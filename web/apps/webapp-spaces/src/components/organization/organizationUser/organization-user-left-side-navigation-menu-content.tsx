@@ -1,11 +1,6 @@
 import { BodyIconTypography } from '@skedular/ui';
 import { BillingAndPaymentIcon, EditIcon, ProfileIcon } from '@/components/icons';
-import {
-  getOrganizationUserBillingAndPaymentBaseLink,
-  getOrganizationUserManageBaseLink,
-  getOrganizationUserManageTeamsBaseLink,
-  getOrganizationUserProfileBaseLink,
-} from '@/components/links';
+import { getOrganizationUserBillingAndPaymentBaseLink, getOrganizationUserManageBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
 import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import {
   getSelectedListItemBorderRadius,
@@ -81,7 +76,6 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organiza
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const porofileLink = getOrganizationUserProfileBaseLink(integratedPlatrform, organizationCustomDomain, customerId);
-  const manageTeamsLink = getOrganizationUserManageTeamsBaseLink(integratedPlatrform, organizationCustomDomain, customerId);
   const billingAndPaymentLink = getOrganizationUserBillingAndPaymentBaseLink(integratedPlatrform, organizationCustomDomain, customerId);
   const manageUserLink = getOrganizationUserManageBaseLink(integratedPlatrform, organizationCustomDomain, customerId);
 
@@ -109,25 +103,6 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organiza
                 startElement={!hideIcons && <ProfileIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === porofileLink && paletteMode === 'dark'}
-                noWrap
-              />
-            )}
-          </ListItemButton>
-        </Link>
-      </ListItem>
-
-      <ListItem disablePadding>
-        <Link component={NextLink} href={manageTeamsLink}>
-          <ListItemButton selected={fullPath === manageTeamsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageTeamsLink) }}>
-            {collapsed && (
-              <BodyIconTypography startElement={!hideIcons && <EditIcon color="inherit" />} invertDefaultColor={fullPath === manageTeamsLink && paletteMode === 'dark'} />
-            )}
-            {!collapsed && (
-              <BodyIconTypography
-                label="Manage Teams"
-                startElement={!hideIcons && <EditIcon color="inherit" />}
-                spacing={3}
-                invertDefaultColor={fullPath === manageTeamsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

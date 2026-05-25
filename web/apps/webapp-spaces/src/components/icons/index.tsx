@@ -6,7 +6,6 @@ import Business from '@mui/icons-material/Business';
 import Category from '@mui/icons-material/Category';
 import CorporateFare from '@mui/icons-material/CorporateFare';
 import DateRange from '@mui/icons-material/DateRange';
-import Diversity3 from '@mui/icons-material/Diversity3';
 import EventSeat from '@mui/icons-material/EventSeat';
 import Fullscreen from '@mui/icons-material/Fullscreen';
 import Home from '@mui/icons-material/Home';
@@ -148,15 +147,6 @@ export const LocationIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props
   ) : (
     <TooltipIcon tip={tip ?? 'Location'}>
       <Place fontSize={fontSize} sx={sx} color={color} />
-    </TooltipIcon>
-  );
-
-export const TeamIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
-  excludeTooltip ? (
-    <Diversity3 fontSize={fontSize} sx={sx} color={color} />
-  ) : (
-    <TooltipIcon tip={tip ?? 'Team'}>
-      <Diversity3 fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 

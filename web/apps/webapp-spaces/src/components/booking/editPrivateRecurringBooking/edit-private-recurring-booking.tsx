@@ -6,8 +6,6 @@ import { errorNotificationOptions, NotificationContent } from '@/components/noti
 import { Zones } from '@/components/zone';
 import type { editPrivateRecurringBooking_availableResources_query$key } from '@/queries/__generated__/editPrivateRecurringBooking_availableResources_query.graphql';
 import type { editPrivateRecurringBooking_availableResources_refetchableFragment } from '@/queries/__generated__/editPrivateRecurringBooking_availableResources_refetchableFragment.graphql';
-import type { editPrivateRecurringBooking_customerTeams_query$key } from '@/queries/__generated__/editPrivateRecurringBooking_customerTeams_query.graphql';
-import type { editPrivateRecurringBooking_customerTeams_refetchableFragment } from '@/queries/__generated__/editPrivateRecurringBooking_customerTeams_refetchableFragment.graphql';
 import type { editPrivateRecurringBooking_organizationMembers_query$key } from '@/queries/__generated__/editPrivateRecurringBooking_organizationMembers_query.graphql';
 import type { editPrivateRecurringBooking_organizationMembers_refetchableFragment } from '@/queries/__generated__/editPrivateRecurringBooking_organizationMembers_refetchableFragment.graphql';
 import type { editPrivateRecurringBooking_query$key } from '@/queries/__generated__/editPrivateRecurringBooking_query.graphql';
@@ -57,7 +55,6 @@ import { array, boolean, mixed, object, string } from 'yup';
 type Props = {
   rootDataRelay: editPrivateRecurringBooking_query$key;
   rootDataOrganizationMembersRelay: editPrivateRecurringBooking_organizationMembers_query$key;
-  rootDataTeamsRelay: editPrivateRecurringBooking_customerTeams_query$key;
   rootDataAvailableResourcesRelay: editPrivateRecurringBooking_availableResources_query$key;
   onReloadRequired?: () => void;
 };
@@ -74,11 +71,6 @@ type CustomerDetails = {
 type OrganizationMemberDetails = {
   id: string;
   customer: CustomerDetails;
-};
-
-type TeamDetails = {
-  id: string;
-  name: string;
 };
 
 type LocationDetails = {
@@ -109,7 +101,6 @@ type BookingDetails = {
   date: Dayjs;
   allDay: boolean;
   member: string;
-  team: string | undefined;
   location: string | undefined;
   resources: string[];
   category: string;
@@ -125,7 +116,6 @@ const bookingSchema = object({
     .required('Date/Time is required'),
   allDay: boolean(),
   member: string().required('User is required'),
-  team: string().notRequired(),
   location: string().notRequired(),
   resources: array().nullable(),
   category: string().required('Category is required'),
@@ -153,7 +143,7 @@ const getChangedRecurringBookingFields = (
 ): PrivateRecurringBookingPatchField[] => {
   if (!left) return [];
   const changed: PrivateRecurringBookingPatchField[] = [];
-  if (left.member !== right.member || left.team !== right.team) changed.push('PARTICIPANTS');
+  if (left.member !== right.member) changed.push('PARTICIPANTS');
   if (JSON.stringify(left.resources) !== JSON.stringify(right.resources)) changed.push('REQUESTED_RESOURCES');
   if (left.date !== right.date || left.allDay !== right.allDay || JSON.stringify(leftTimeRange) !== JSON.stringify(rightTimeRange)) changed.push('SCHEDULE');
   if (JSON.stringify(leftRecurrence) !== JSON.stringify(rightRecurrence)) changed.push('RECURRENCE');
@@ -218,7 +208,7 @@ const getDateRange = (allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil
   };
 };
 
-const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootDataTeamsRelay, rootDataAvailableResourcesRelay }: Props) => {
+const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootDataAvailableResourcesRelay }: Props) => {
   const rootData = useFragment<editPrivateRecurringBooking_query$key>(
     graphql`
       fragment editPrivateRecurringBooking_query on Query {
@@ -333,22 +323,6 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
     rootDataOrganizationMembersRelay,
   );
 
-  const [rootDataTeams, refetchTeams] = useRefetchableFragment<editPrivateRecurringBooking_customerTeams_refetchableFragment, editPrivateRecurringBooking_customerTeams_query$key>(
-    graphql`
-      fragment editPrivateRecurringBooking_customerTeams_query on Query @refetchable(queryName: "editPrivateRecurringBooking_customerTeams_refetchableFragment") {
-        customerTeams(where: { organizationCustomDomain: $organizationCustomDomain, customerId: $customerId }, orderBy: $teamsSortingValues) @include(if: $customerExists) {
-          edges {
-            node {
-              id
-              name
-            }
-          }
-        }
-      }
-    `,
-    rootDataTeamsRelay,
-  );
-
   const [rootDataAvailableResources, refetchAvailableResources] = useRefetchableFragment<
     editPrivateRecurringBooking_availableResources_refetchableFragment,
     editPrivateRecurringBooking_availableResources_query$key
@@ -433,10 +407,6 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
     () => (rootDataOrganizationMembers.organization ? rootDataOrganizationMembers.organization.members.edges.map(({ node }: { node: OrganizationMemberDetails }) => node) : []),
     [rootDataOrganizationMembers.organization],
   );
-  const teams = useMemo<TeamDetails[]>(
-    () => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }: { node: TeamDetails }) => node) : []),
-    [rootDataTeams.customerTeams],
-  );
   const locations = useMemo<LocationDetails[]>(() => rootData.locations.edges.map(({ node }: { node: LocationDetails }) => node), [rootData.locations]);
   const availableResources = useMemo<ResourceDetails[]>(
     () =>
@@ -477,7 +447,6 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
             member: customerId ?? '',
             date: from,
             allDay,
-            team: recurringBooking.involvedTeams[0]?.id,
             location: locationId,
             resources: resourceIds,
             category,
@@ -497,7 +466,6 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
   });
   const debouncedBookingDetailUpdate = useDebounceCallback((save: () => void) => save(), bookingAutosaveDebounceTimeout);
 
-  const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
 
@@ -510,27 +478,10 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
     [refetchOrganizationMembers, startTransition],
   );
 
-  const handleRefetchTeams = useCallback(
-    (customerIdValue: string | undefined) => {
-      startTransition(() => {
-        refetchTeams({ customerId: customerIdValue ?? '', customerExists: !!customerIdValue }, { fetchPolicy: 'store-and-network' });
-      });
-    },
-    [refetchTeams, startTransition],
-  );
-
   const debounceSearchTextChange = useDebounceCallback((value: string) => {
     setPeopleNameSearchText(value);
     handleRefetchOrganizationMembers(value);
   }, keyboardSearchDebounceTimeout);
-
-  useEffect(() => {
-    if (!customerId) {
-      return;
-    }
-
-    handleRefetchTeams(customerId);
-  }, [customerId, handleRefetchTeams]);
 
   useEffect(() => {
     if (!dateRange.valid) {
@@ -559,7 +510,7 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
 
   const handleSubmit = (
     fieldsToUpdate: PrivateRecurringBookingPatchField[],
-    { date, allDay: allDayValue, member, team, resources: selectedResourceIds, category: categoryValue }: BookingDetails,
+    { date, allDay: allDayValue, member, resources: selectedResourceIds, category: categoryValue }: BookingDetails,
   ) => {
     const [timeFrom, timeUntil] = timeRange;
     const computedDateRange = getDateRange(toAllDayBoolean(allDayValue), date, { timeFrom, timeUntil });
@@ -589,7 +540,7 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
           category: categoryValue as UpdatePrivateRecurringBookingCategory,
           customerIds: [member],
           organizationIds: booking.involvedOrganizations.map(({ id }) => id),
-          teamIds: team ? [team] : [],
+          teamIds: [],
           from: computedDateRange.from.toISOString(),
           until: computedDateRange.until.toISOString(),
           startDate: dayjs(date).utc().startOf('day').toISOString(),
@@ -708,7 +659,6 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
                           onChange={(_, option) => {
                             const nextCustomerId = (option as OrganizationMemberDetails | null)?.customer.id;
                             setCustomerId(nextCustomerId);
-                            handleRefetchTeams(nextCustomerId);
                           }}
                         />
                       </FormFieldLabel>
@@ -831,31 +781,8 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
                     </StackColumn>
                   </SettingsSectionCard>
 
-                  <SettingsSectionCard title="Assignments" description="Pick the team, location, and requested resources for future bookings in this series.">
+                  <SettingsSectionCard title="Assignments" description="Pick the location and requested resources for future bookings in this series.">
                     <StackColumn spacing={2}>
-                      <FormFieldLabel label="Team">
-                        <Autocomplete
-                          name="team"
-                          multiple={false}
-                          required={requiredFields.team}
-                          options={teams}
-                          getOptionValue={(option) => (option as TeamDetails).id}
-                          getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
-                          renderOption={(props, option) => {
-                            const castedOption = option as TeamDetails;
-                            return (
-                              <li {...props} key={castedOption.id}>
-                                <BodyIconTypography label={castedOption.name} />
-                              </li>
-                            );
-                          }}
-                          filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
-                          selectOnFocus
-                          clearOnBlur
-                          handleHomeEndKeys
-                        />
-                      </FormFieldLabel>
-
                       <FormFieldLabel label="Location">
                         <Autocomplete
                           name="location"
@@ -940,7 +867,7 @@ const EditPrivateRecurringBooking = ({ rootDataRelay, rootDataOrganizationMember
         <StickyReviewRail title="Recurring booking help" description="This editor updates the whole recurring series, not just the current occurrence.">
           <SettingsSectionCard title="How edits work" description="Recurring bookings stay recurring for their whole lifetime.">
             <StackColumn spacing={1}>
-              <SmallIconTypography label="Use this page to redefine the recurring rule, team, customer, or requested resources for the series." />
+              <SmallIconTypography label="Use this page to redefine the recurring rule, customer, or requested resources for the series." />
               <SmallIconTypography label="Use the standard booking editor when you only need to change one generated booking occurrence." />
               <SmallIconTypography label="Deleted occurrences stay skipped because the existing skipped dates are preserved when you update the series." />
             </StackColumn>

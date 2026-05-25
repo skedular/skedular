@@ -1,11 +1,6 @@
 import { LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
-import { CancelIcon, InviteMemberIcon, LocationIcon, ResourceIcon, TeamIcon } from '@/components/icons';
-import {
-  getOrganizationLocationAddPrivateLink,
-  getOrganizationLocationManageResourcesBaseLink,
-  getOrganizationTeamAddLink,
-  getOrganizationUsersBaseLink,
-} from '@/components/links';
+import { CancelIcon, InviteMemberIcon, LocationIcon, ResourceIcon } from '@/components/icons';
+import { getOrganizationLocationAddPrivateLink, getOrganizationLocationManageResourcesBaseLink, getOrganizationUsersBaseLink } from '@/components/links';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { InvitePeopleToJoinOrganizationDialog } from '@/components/organization/invitePeopleToJoinOrganization';
 import { AddResourceDialog } from '@/components/resource/addResource';
@@ -72,7 +67,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
     setIsAddResourceDialogOpen(false);
   };
 
-  const handleInviteTeammatesClicked = () => {
+  const handleInvitePeopleClicked = () => {
     setIsInvitePeopleToJoinOrganizationDialogOpen(true);
   };
 
@@ -137,7 +132,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
             gridTemplateColumns: {
               xs: '1fr',
               sm: 'repeat(2, minmax(0, 1fr))',
-              xl: 'repeat(4, minmax(0, 1fr))',
+              xl: 'repeat(3, minmax(0, 1fr))',
             },
             gap: 2,
             alignItems: 'start',
@@ -159,21 +154,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
           </StackColumn>
 
           <StackColumn spacing={1} sx={{ minWidth: 0 }}>
-            <SmallIconTypography label="Create teams that regularly work or meet together." />
-            <Link component={NextLink} href={getOrganizationTeamAddLink(integratedPlatrform, organizationCustomDomain)} sx={{ display: 'block' }}>
-              <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
-                <LeadIconTypography
-                  label="Create Team"
-                  stackMode="column"
-                  startElement={<TeamIcon fontSize="large" excludeTooltip sx={{ color: emerald }} />}
-                  sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
-                />
-              </Paper>
-            </Link>
-          </StackColumn>
-
-          <StackColumn spacing={1} sx={{ minWidth: 0 }}>
-            <SmallIconTypography label="Add resources for your locations and teams." />
+            <SmallIconTypography label="Add resources for your locations." />
             <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleAddResourcesClicked}>
               <LeadIconTypography
                 label="Add Resources"
@@ -185,10 +166,10 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
           </StackColumn>
 
           <StackColumn spacing={1} sx={{ minWidth: 0 }}>
-            <SmallIconTypography label="Invite your team members to your organization and start booking!" />
-            <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleInviteTeammatesClicked}>
+            <SmallIconTypography label="Invite people to your organization and start booking." />
+            <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleInvitePeopleClicked}>
               <LeadIconTypography
-                label="Invite Teammates"
+                label="Invite People"
                 stackMode="column"
                 startElement={<InviteMemberIcon fontSize="large" sx={{ color: emerald }} />}
                 sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}

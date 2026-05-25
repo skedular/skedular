@@ -1,4 +1,4 @@
-import { getOrganizationBookingsBaseLink, getOrganizationUserManageBaseLink, getOrganizationUserManageTeamsBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationUserManageBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
 import { useIntegratedPlatrform } from '@skedular/shared';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -9,7 +9,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import NextLink from 'next/link';
 import { memo, useState, type MouseEvent } from 'react';
 
-export type OrganizationUserSection = 'profile' | 'manage-teams' | 'manage-user';
+export type OrganizationUserSection = 'profile' | 'manage-user';
 
 type Props = {
   activeSection: OrganizationUserSection;
@@ -20,7 +20,6 @@ type Props = {
 
 const sectionLabels: Record<OrganizationUserSection, string> = {
   profile: 'Profile',
-  'manage-teams': 'Teams',
   'manage-user': 'Manage',
 };
 
@@ -32,7 +31,6 @@ const OrganizationUserSectionNav = ({ activeSection, organizationCustomDomain, c
   const bookingsLink = getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain, { customerId });
   const sectionLinks: Record<OrganizationUserSection, string> = {
     profile: getOrganizationUserProfileBaseLink(integratedPlatrform, organizationCustomDomain, customerId),
-    'manage-teams': getOrganizationUserManageTeamsBaseLink(integratedPlatrform, organizationCustomDomain, customerId),
     'manage-user': getOrganizationUserManageBaseLink(integratedPlatrform, organizationCustomDomain, customerId),
   };
 

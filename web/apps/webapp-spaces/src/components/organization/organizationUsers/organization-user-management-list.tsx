@@ -35,7 +35,6 @@ export type OrganizationUserManagementListItem = {
   name: string;
   email: string | null | undefined;
   phoneNumber: string | null | undefined;
-  teams: string[];
   role: string | null | undefined;
   statusName: string;
   isActive: boolean;
@@ -207,12 +206,6 @@ const OrganizationUserManagementList = ({
                     <BodyIconTypography label="Status" />
                     <StackColumn spacing={0.75} sx={{ pt: 1 }}>
                       <SmallIconTypography label={item.statusName} />
-                    </StackColumn>
-                  </Box>
-                  <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider', p: 1.25, backgroundColor: 'background.default' }}>
-                    <BodyIconTypography label="Teams" />
-                    <StackColumn spacing={0.75} sx={{ pt: 1 }}>
-                      <SmallIconTypography label={item.teams.length > 0 ? item.teams.join(', ') : 'No teams assigned'} />
                     </StackColumn>
                   </Box>
                 </Box>

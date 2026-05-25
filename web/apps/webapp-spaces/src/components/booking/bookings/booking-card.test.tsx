@@ -38,7 +38,7 @@ const bookingFragmentData = {
   ],
   involvedOrganizations: [{ id: 'organization-1' }],
   involvedLocations: [{ uniqueId: 'location-1', name: 'HQ Level 3' }],
-  involvedTeams: [{ id: 'team-1', name: 'Operations' }],
+  involvedTeams: [],
   bookingResources: [
     {
       resource: {
@@ -123,7 +123,6 @@ vi.mock('@/components/icons', () => ({
   NotesIcon: () => <span>notes-icon</span>,
   PaymentStatusIcon: () => <span>payment-icon</span>,
   PdfIcon: () => <span>pdf-icon</span>,
-  TeamIcon: () => <span>team-icon</span>,
 }));
 
 vi.mock('@/components/resource', () => ({
@@ -175,7 +174,6 @@ describe('BookingCard', () => {
     );
 
     expect(screen.getByText('HQ Level 3')).toBeInTheDocument();
-    expect(screen.getByText('Operations')).toBeInTheDocument();
     expect(screen.getByText('Confirmed')).toBeInTheDocument();
     expect(screen.getByText('Recurring')).toBeInTheDocument();
     expect(screen.queryByText('People')).not.toBeInTheDocument();

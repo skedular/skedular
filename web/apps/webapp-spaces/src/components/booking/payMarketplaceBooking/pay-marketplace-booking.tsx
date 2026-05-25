@@ -1,6 +1,5 @@
 import { CustomerAvatar } from '@/components/avatars';
 import LocationAvatar from '@/components/avatars/location-avatar';
-import TeamAvatar from '@/components/avatars/team-avatar';
 import InvoiceDownloadLinks from '@/components/booking/invoice-download-links';
 import { getOrganizationProductsBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -525,16 +524,6 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
                       label={getCustomerFullName(customer)}
                       startElement={<CustomerAvatar name={customer} photo={{ url: booking.involvedCustomers[0].photoUrl }} size="small" />}
                     />
-                  ))}
-                </StackRow>
-              </FormFieldLabel>
-            )}
-
-            {booking.involvedTeams.length > 0 && (
-              <FormFieldLabel label="Teams" stackLabelOnTop>
-                <StackRow>
-                  {booking.involvedTeams.map((team) => (
-                    <BodyIconTypography key={team.id} label={team.name} startElement={<TeamAvatar name={team} size="small" />} />
                   ))}
                 </StackRow>
               </FormFieldLabel>

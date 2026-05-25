@@ -579,8 +579,8 @@ const ProductEditorForm = ({
       <BodyIconTypography
         label={
           mode === 'add'
-            ? 'Check the high-level shape before creating the product. This is the compact product story your team needs to understand.'
-            : 'Check the high-level shape before updating the product. This is the compact product story your team needs to understand.'
+            ? 'Check the high-level shape before creating the product. This is the compact product story people need to understand.'
+            : 'Check the high-level shape before updating the product. This is the compact product story people need to understand.'
         }
       />
       <Divider />
@@ -643,7 +643,7 @@ const ProductEditorForm = ({
               top={24}
               sx={{ pl: { xs: 0, xl: 0 }, pr: 0, pt: 0 }}
             >
-              <SettingsSectionCard title="Summary" description="A compact view of the product your team is shaping.">
+              <SettingsSectionCard title="Summary" description="A compact view of the product you are shaping.">
                 <StackColumn spacing={1.5}>
                   <LeadIconTypography label={values.title?.trim() || 'Untitled product'} />
                   <SmallIconTypography label={values.subTitle?.trim() || 'Add a subtitle so people understand the offer quickly.'} />

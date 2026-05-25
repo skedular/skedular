@@ -10,7 +10,6 @@ import {
   SettingsIcon,
   SetupMarketplaceIcon,
   SubscriptionsIcon,
-  TeamIcon,
   UpgradeIcon,
 } from '@/components/icons';
 import {
@@ -23,7 +22,6 @@ import {
   getOrganizationMarketplaceSetupBaseLink,
   getOrganizationProductsBaseLink,
   getOrganizationSubscriptionsBaseLink,
-  getOrganizationTeamsBaseLink,
   getOrganizationUsersBaseLink,
 } from '@/components/links';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
@@ -148,7 +146,6 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationBaseLink = getOrganizationBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationBookingsBaseLink = getOrganizationBookingsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationLocationsBaseLink = getOrganizationLocationsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAvailabilityDashboardBaseLink = getOrganizationAvailabilityDashboardBaseLink(integratedPlatrform, rootData.organization.customDomain!);
@@ -269,30 +266,6 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                     startElement={!hideIcons && <LocationIcon excludeTooltip color="inherit" />}
                     spacing={3}
                     invertDefaultColor={pathName.startsWith(organizationLocationsBaseLink) && paletteMode === 'dark'}
-                  />
-                )}
-              </ListItemButton>
-            </Link>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <Link component={NextLink} href={organizationTeamsBaseLink}>
-              <ListItemButton
-                selected={pathName.startsWith(organizationTeamsBaseLink)}
-                sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationTeamsBaseLink)) }}
-              >
-                {collapsed && (
-                  <BodyIconTypography
-                    startElement={!hideIcons && <TeamIcon color="inherit" />}
-                    invertDefaultColor={pathName.startsWith(organizationTeamsBaseLink) && paletteMode === 'dark'}
-                  />
-                )}
-                {!collapsed && (
-                  <BodyIconTypography
-                    label="Teams"
-                    startElement={!hideIcons && <TeamIcon excludeTooltip color="inherit" />}
-                    spacing={3}
-                    invertDefaultColor={pathName.startsWith(organizationTeamsBaseLink) && paletteMode === 'dark'}
                   />
                 )}
               </ListItemButton>
@@ -469,12 +442,12 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
               <InvitePeopleToJoinOrganizationButton
                 variant="contained"
                 organizationCustomDomain={organizationCustomDomain}
-                label="Invite Teammates"
+                label="Invite People"
                 size="medium"
                 sx={{ backgroundColor: paletteMode === 'dark' ? coal : emerald, paddingTop: 1, paddingBottom: 1, width: 210 }}
                 color={paletteMode === 'dark' ? sandstone : coal}
               />
-              <SmallIconTypography label="Add teammates to your organization" invertDefaultColor />
+              <SmallIconTypography label="Add people to your organization" invertDefaultColor />
             </StackColumn>
           </Box>
         </>

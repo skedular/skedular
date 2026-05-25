@@ -5,8 +5,6 @@ import { errorNotificationOptions, NotificationContent } from '@/components/noti
 import { Zones } from '@/components/zone';
 import type { editPrivateBooking_availableResources_query$key } from '@/queries/__generated__/editPrivateBooking_availableResources_query.graphql';
 import type { editPrivateBooking_availableResources_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_availableResources_refetchableFragment.graphql';
-import type { editPrivateBooking_customerTeams_query$key } from '@/queries/__generated__/editPrivateBooking_customerTeams_query.graphql';
-import type { editPrivateBooking_customerTeams_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_customerTeams_refetchableFragment.graphql';
 import type { editPrivateBooking_organizationMembers_query$key } from '@/queries/__generated__/editPrivateBooking_organizationMembers_query.graphql';
 import type { editPrivateBooking_organizationMembers_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_organizationMembers_refetchableFragment.graphql';
 import type { editPrivateBooking_query$key } from '@/queries/__generated__/editPrivateBooking_query.graphql';
@@ -43,7 +41,6 @@ import { array, boolean, mixed, object, string } from 'yup';
 type Props = {
   rootDataRelay: editPrivateBooking_query$key;
   rootDataOrganizationMembersRelay: editPrivateBooking_organizationMembers_query$key;
-  rootDataTeamsRelay: editPrivateBooking_customerTeams_query$key;
   rootDataAvailableResourcesRelay: editPrivateBooking_availableResources_query$key;
   onReloadRequired?: () => void;
 };
@@ -60,11 +57,6 @@ type CustomerDetails = {
 type OrganizationMemberDetails = {
   id: string;
   customer: CustomerDetails;
-};
-
-type TeamDetails = {
-  id: string;
-  name: string;
 };
 
 type LocationDetails = {
@@ -103,7 +95,6 @@ type BookingDetails = {
   allDay: boolean;
   member: string;
   notes: string | null | undefined;
-  team: string | undefined;
   location: string | undefined;
   resources: string[];
   category: string;
@@ -118,7 +109,6 @@ const bookingSchema = object({
   allDay: boolean(),
   member: string().required('User is required'),
   notes: string().notRequired(),
-  team: string().notRequired(),
   location: string().notRequired(),
   resources: array().nullable(),
   category: string().required('Category is required'),
@@ -127,9 +117,9 @@ const bookingSchema = object({
 const toAllDayBoolean = (value: unknown): boolean => value === true || value === 'allDay' || (Array.isArray(value) && value.includes('allDay'));
 const bookingAutosaveDebounceTimeout = 1000;
 
-type PrivateBookingFormField = keyof Pick<BookingDetails, 'member' | 'team' | 'date' | 'allDay' | 'notes' | 'category' | 'resources'>;
+type PrivateBookingFormField = keyof Pick<BookingDetails, 'member' | 'date' | 'allDay' | 'notes' | 'category' | 'resources'>;
 const privateBookingFieldGroups: ReadonlyArray<[PrivateBookingPatchField, ReadonlyArray<PrivateBookingFormField>]> = [
-  ['PARTICIPANTS', ['member', 'team']],
+  ['PARTICIPANTS', ['member']],
   ['SCHEDULE', ['date', 'allDay']],
   ['NOTES', ['notes']],
   ['CATEGORY', ['category']],
@@ -152,7 +142,7 @@ const getChangedPrivateBookingFields = (
   return changed;
 };
 
-const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay, rootDataAvailableResourcesRelay }: Props) => {
+const EditPrivateBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootDataAvailableResourcesRelay }: Props) => {
   const rootData = useFragment<editPrivateBooking_query$key>(
     graphql`
       fragment editPrivateBooking_query on Query {
@@ -250,24 +240,6 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
       }
     `,
     rootDataOrganizationMembersRelay,
-  );
-
-  const [rootDataTeams, refetchTeams] = useRefetchableFragment<editPrivateBooking_customerTeams_refetchableFragment, editPrivateBooking_customerTeams_query$key>(
-    graphql`
-      fragment editPrivateBooking_customerTeams_query on Query @refetchable(queryName: "editPrivateBooking_customerTeams_refetchableFragment") {
-        customerTeams(where: { organizationCustomDomain: $organizationCustomDomain, customerId: $customerId }, orderBy: $teamsSortingValues) @include(if: $customerExists) {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-            }
-          }
-        }
-      }
-    `,
-    rootDataTeamsRelay,
   );
 
   const [rootDataAvailableResources, refetchAvailableResources] = useRefetchableFragment<
@@ -369,20 +341,15 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
   const [customerId, setCustomerId] = useState<string | undefined>(
     rootData.booking?.involvedCustomers && rootData.booking?.involvedCustomers.length > 0 ? rootData.booking?.involvedCustomers[0].id : undefined,
   );
-  const [teamId, setTeamId] = useState<string | undefined>(
-    rootData.booking?.involvedTeams && rootData.booking?.involvedTeams.length > 0 ? rootData.booking?.involvedTeams[0].id : undefined,
-  );
   const [locationId, setLocationId] = useState<string | undefined>(
     rootData.booking?.involvedLocations && rootData.booking?.involvedLocations.length > 0 ? rootData.booking?.involvedLocations[0].uniqueId : undefined,
   );
-  const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
   const customers = useMemo<OrganizationMemberDetails[]>(
     () => (rootDataOrganizationMembers.organization?.members ? rootDataOrganizationMembers.organization.members.edges.map(({ node }) => node) : []),
     [rootDataOrganizationMembers.organization],
   );
-  const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
   const locations = useMemo<LocationDetails[]>(() => rootData.locations.edges.map(({ node }) => node), [rootData.locations]);
 
   const handleRefetchOrganizationMembers = useCallback(
@@ -399,23 +366,6 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
       });
     },
     [startTransition, refetchOrganizationMembers],
-  );
-
-  const handleRefetchTeams = useCallback(
-    (customerId: string | undefined) => {
-      startTransition(() => {
-        refetchTeams(
-          {
-            customerId: customerId ?? '',
-            customerExists: !!customerId,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-          },
-        );
-      });
-    },
-    [startTransition, refetchTeams],
   );
 
   const handleRefetchAvailableResources = useCallback(
@@ -519,24 +469,15 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             date: from,
             allDay,
             notes: booking.notes,
-            team: teamId,
             location: locationId,
             resources: booking.bookingResources ? booking.bookingResources.map(({ resource }) => resource.id) : [],
             category: booking.category.category,
           }
         : null,
-    [allDay, booking, customerId, from, locationId, teamId],
+    [allDay, booking, customerId, from, locationId],
   );
   const previousBookingValues = useRef<BookingDetails | null>(initialBookingValues);
   const previousBookingTimeRange = useRef<DateRange<Dayjs>>(timeRange);
-
-  useEffect(() => {
-    if (!rootData.booking?.involvedCustomers || rootData.booking?.involvedCustomers.length === 0) {
-      return;
-    }
-
-    handleRefetchTeams(rootData.booking.involvedCustomers[0].id);
-  }, [handleRefetchTeams, rootData.booking?.involvedCustomers]);
 
   useEffect(() => {
     if (!dateRangeValidation.valid) {
@@ -548,9 +489,9 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
 
   const handleBookingDetailUpdateClick = (
     fieldsToUpdate: PrivateBookingPatchField[],
-    { date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, category }: BookingDetails,
+    { date, allDay, member: memberId, notes, resources: resourceIds, category }: BookingDetails,
   ) => {
-    if (!booking || !bookingSchema.isValidSync({ date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, category })) {
+    if (!booking || !bookingSchema.isValidSync({ date, allDay, member: memberId, notes, resources: resourceIds, category })) {
       return;
     }
 
@@ -577,7 +518,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
           category: category as BookingCategory,
           customerIds: [memberId],
           organizationIds: booking.involvedOrganizations.map(({ id }) => id),
-          teamIds: teamId ? [teamId] : [],
+          teamIds: [],
           resourceIds,
         },
       },
@@ -631,15 +572,6 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
 
     const customerId = option?.customer.id;
     setCustomerId(customerId);
-    handleRefetchTeams(customerId);
-  };
-
-  const handleTeamChange = (option: TeamDetails | null) => {
-    if (!rootData.booking) {
-      return;
-    }
-
-    setTeamId(option?.id);
   };
 
   const handleLocationChange = (option: LocationDetails | null) => {
@@ -705,7 +637,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
                   }}
                 />
                 <StackColumn spacing={3}>
-                  <SettingsSectionCard title="Booking Details" description="Edit the member, date, time, category, team, location and resources for this booking.">
+                  <SettingsSectionCard title="Booking Details" description="Edit the member, date, time, category, location and resources for this booking.">
                     <StackColumn>
                       <FormFieldLabel label="User">
                         <Autocomplete
@@ -776,31 +708,6 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
 
                       <FormFieldLabel label="Category">
                         <SingleChoiceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Team">
-                        <Autocomplete
-                          name="team"
-                          multiple={false}
-                          required={requiredFields.team}
-                          options={teams}
-                          getOptionValue={(option) => (option as TeamDetails).id}
-                          getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
-                          renderOption={(props, option) => {
-                            const castedOption = option as TeamDetails;
-
-                            return (
-                              <li {...props} key={castedOption.id}>
-                                <BodyIconTypography label={castedOption.name} />
-                              </li>
-                            );
-                          }}
-                          filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
-                          selectOnFocus
-                          clearOnBlur
-                          handleHomeEndKeys
-                          onChange={(_, option) => handleTeamChange(option as TeamDetails)}
-                        />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Location">

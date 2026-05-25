@@ -7,7 +7,6 @@ import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/
 import OrganizationUserManagementList from '@/components/organization/organizationUsers/organization-user-management-list';
 import { RelayError, toRootError } from '@/components/relayError';
 import { Search } from '@/components/search';
-import { TeamSelector } from '@/components/team/teamSelector';
 import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { defaultPadding } from '@skedular/ui';
 import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
@@ -39,34 +38,10 @@ const RootQuery = graphql`
     organization(customDomain: $organizationCustomDomain) {
       canInvitePeople
     }
-    teams(where: { organizationCustomDomain: $organizationCustomDomain }) {
-      __id
-      totalCount
-      edges {
-        node {
-          id
-          name
-          members {
-            edges {
-              node {
-                organizationMember {
-                  uniqueId
-                  customer {
-                    id
-                  }
-                }
-              }
-            }
-          }
-          ...teamCard_TeamDetails
-        }
-      }
-    }
     organizationMemberRoles {
       type
       name
     }
-    ...teamSelector_allTeams_query
     ...organizationUsers_organizationMembers_query
   }
 `;
@@ -186,7 +161,6 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const router = useRouter();
-  const [teamIds, setTeamIds] = useState<string[]>([]);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null);
@@ -212,7 +186,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
     [rootDataOrganizationUsers.organization],
   );
   const members = useMemo(() => {
-    const members = rootDataOrganizationUsers.organization
+    return rootDataOrganizationUsers.organization
       ? rootDataOrganizationUsers.organization.members.edges
           .map(({ node }) => node)
           .sort((a, b) => {
@@ -221,28 +195,8 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
 
             return name1.localeCompare(name2);
           })
-          .map((member) => {
-            const teams = rootData.teams
-              ? rootData.teams.edges
-                  .map(({ node }) => node)
-                  .filter((item) => item.members.edges.map(({ node }) => node).some(({ organizationMember }) => organizationMember?.customer.id === member.customer.id))
-              : [];
-
-            return {
-              ...member,
-              teams,
-            };
-          })
       : [];
-
-    return members.filter((member) => {
-      if (teamIds.length === 0) {
-        return true;
-      }
-
-      return member.teams.some((team) => teamIds.includes(team.id));
-    });
-  }, [rootData.teams, rootDataOrganizationUsers.organization, teamIds]);
+  }, [rootDataOrganizationUsers.organization]);
   const organizationMemberRoleNameByType = useMemo(() => new Map(rootData.organizationMemberRoles.map((item) => [item.type, item.name])), [rootData.organizationMemberRoles]);
 
   const handleRefetchOrganizationUsers = useCallback(
@@ -260,10 +214,6 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
     },
     [startTransition, refetchOrganizationUsers],
   );
-
-  const handlTeamChanged = (id?: string) => {
-    setTeamIds(id ? [id] : []);
-  };
 
   const handleSearchTextChange = (str: string) => {
     setPeopleNameSearchText(str);
@@ -610,7 +560,6 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
     id: member.id,
     customer: member.customer,
     name: getCustomerFullName(member.customer),
-    teams: member.teams.map((team) => team.name),
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
     role: member.role.name,
@@ -631,12 +580,8 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
             gap: 2,
           }}
         >
-          <PageHeaderPanel
-            eyebrow="User management"
-            title="Organization Users"
-            description="Manage membership, roles, team associations, and account lifecycle controls for your organization."
-          >
-            <BodyIconTypography label="Search, filter by team, change roles, and open individual user profiles from one place." />
+          <PageHeaderPanel eyebrow="User management" title="Organization Users" description="Manage membership, roles, and account lifecycle controls for your organization.">
+            <BodyIconTypography label="Search, change roles, and open individual user profiles from one place." />
           </PageHeaderPanel>
 
           <Box
@@ -651,12 +596,11 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
           >
             <SettingsSectionCard
               title="Users"
-              description="Browse users, refine by team, review contact details, and manage organization access."
+              description="Browse users, review contact details, and manage organization access."
               actions={<InvitePeopleToJoinOrganizationButton organizationCustomDomain={organizationCustomDomain} />}
             >
               <StackColumn spacing={2}>
                 <StackRow sx={{ gap: 1, flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
                   <Search size="small" placeholder="Search for users" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
                 </StackRow>
 

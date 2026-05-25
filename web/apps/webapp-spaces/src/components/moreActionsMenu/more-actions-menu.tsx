@@ -19,8 +19,6 @@ export enum MoreActionsMenuOptionType {
   ConfirmBookingPayment,
   RejectBookingPayment,
   MakeBookingPaymentNotRequired,
-  EditTeam,
-  DeleteTeam,
   SetAsPreferredLocation,
   RemoveAsPreferredLocation,
   EditLocation,
@@ -28,16 +26,10 @@ export enum MoreActionsMenuOptionType {
   MarkAsDefaultOrganization,
   ClearAsPreferredOrganization,
   RemoveOrganization,
-  SetAsPreferredTeam,
-  RemoveAsPreferredTeam,
-  RemoveTeam,
   RemoveOrganizationUser,
   EditOrganizationUser,
   DeactivateOrganizationUser,
   ActivateOrganizationUser,
-  RemoveTeamMember,
-  DeactivateTeamMember,
-  ActivateTeamMember,
   EditZone,
   DeleteZone,
   SetAsPreferredZone,
@@ -56,7 +48,6 @@ export enum MoreActionsMenuOptionType {
   RemoveAsPreferredResource,
   ViewUserBookings,
   ViewLocationBookings,
-  ViewTeamBookings,
   EditProduct,
   DeleteProduct,
   ActivateProduct,
@@ -110,31 +101,6 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.MakeBookingPaymentNotRequired,
     label: 'Make Payment Not Required',
   },
-  [MoreActionsMenuOptionType.EditTeam]: {
-    id: MoreActionsMenuOptionType.EditTeam,
-    label: 'Edit Team',
-    icon: <EditIcon />,
-  },
-  [MoreActionsMenuOptionType.DeleteTeam]: {
-    id: MoreActionsMenuOptionType.DeleteTeam,
-    label: 'Remove Team',
-    icon: <DeleteIcon color="warning" />,
-  },
-  [MoreActionsMenuOptionType.SetAsPreferredTeam]: {
-    id: MoreActionsMenuOptionType.SetAsPreferredTeam,
-    label: 'Set as preferred team',
-    icon: <NotPreferredIcon />,
-  },
-  [MoreActionsMenuOptionType.RemoveAsPreferredTeam]: {
-    id: MoreActionsMenuOptionType.RemoveAsPreferredTeam,
-    label: 'Remove as preferred team',
-    icon: <PreferredIcon />,
-  },
-  [MoreActionsMenuOptionType.RemoveTeam]: {
-    id: MoreActionsMenuOptionType.RemoveTeam,
-    label: 'Remove team',
-    icon: <DeleteIcon color="warning" />,
-  },
   [MoreActionsMenuOptionType.SetAsPreferredLocation]: {
     id: MoreActionsMenuOptionType.SetAsPreferredLocation,
     label: 'Set as preferred location',
@@ -187,19 +153,6 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.ActivateOrganizationUser]: {
     id: MoreActionsMenuOptionType.ActivateOrganizationUser,
     label: 'Activate User',
-  },
-  [MoreActionsMenuOptionType.RemoveTeamMember]: {
-    id: MoreActionsMenuOptionType.RemoveTeamMember,
-    label: 'Remove Member',
-    icon: <DeleteIcon color="warning" />,
-  },
-  [MoreActionsMenuOptionType.DeactivateTeamMember]: {
-    id: MoreActionsMenuOptionType.DeactivateTeamMember,
-    label: 'Deactivate Member',
-  },
-  [MoreActionsMenuOptionType.ActivateTeamMember]: {
-    id: MoreActionsMenuOptionType.ActivateTeamMember,
-    label: 'Activate Member',
   },
   [MoreActionsMenuOptionType.EditZone]: {
     id: MoreActionsMenuOptionType.EditZone,
@@ -286,11 +239,6 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   },
   [MoreActionsMenuOptionType.ViewLocationBookings]: {
     id: MoreActionsMenuOptionType.ViewLocationBookings,
-    label: 'View Bookings',
-    icon: <BookingIcon />,
-  },
-  [MoreActionsMenuOptionType.ViewTeamBookings]: {
-    id: MoreActionsMenuOptionType.ViewTeamBookings,
     label: 'View Bookings',
     icon: <BookingIcon />,
   },
