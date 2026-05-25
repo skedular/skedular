@@ -25,7 +25,7 @@ import {
 } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { memo, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -415,19 +415,17 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   const [selectedColor, setSelectedColor] = useState(rootData.resource?.color);
   const [isAvailableHoursOverridden, setIsAvailableHoursOverridden] = useState(rootData.resource ? rootData.resource.isAvailableHoursOverridden : false);
   const [stickyTop, setStickyTop] = useState(0);
-  const initialResourceValues = useMemo<ResourceDetails | null>(
-    () =>
-      rootData.resource
-        ? {
-            name: rootData.resource.name,
-            resourceTypeId: rootData.resource.resourceType.id,
-            customTagIds: rootData.resource.customTags.map(({ id }) => id),
-            zoneIds: rootData.resource.zones.map(({ id }) => id),
-            productTagIds: rootData.resource.productTags.map(({ id }) => id),
-            capacity: rootData.resource.capacity,
-          }
-        : null,
-    [rootData.resource],
+  const [initialResourceValues] = useState<ResourceDetails | null>(() =>
+    rootData.resource
+      ? {
+          name: rootData.resource.name,
+          resourceTypeId: rootData.resource.resourceType.id,
+          customTagIds: rootData.resource.customTags.map(({ id }) => id),
+          zoneIds: rootData.resource.zones.map(({ id }) => id),
+          productTagIds: rootData.resource.productTags.map(({ id }) => id),
+          capacity: rootData.resource.capacity,
+        }
+      : null,
   );
   const previousResourceValues = useRef<ResourceDetails | null>(initialResourceValues);
   const previousSelectedColor = useRef<string | null | undefined>(rootData.resource?.color);
@@ -693,7 +691,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         return (
           <Form
             onSubmit={() => undefined}
-            initialValues={initialResourceValues}
+            initialValues={initialResourceValues ?? undefined}
             validate={validateResourceDetails}
             render={({ handleSubmit, values }) => {
               const resourceValues = values as ResourceDetails;
