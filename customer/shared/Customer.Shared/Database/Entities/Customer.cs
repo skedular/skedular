@@ -11,6 +11,7 @@ namespace Customer.Shared.Database.Entities;
 public class Customer : EntityBaseWithDeleted, ICustomerPersonalDetails
 {
     public bool IsOnboardingDone { get; set; }
+    public ICollection<string>? ProvisionedDomains { get; set; }
 
     public virtual ICollection<Identity> Identities { get; set; } = [];
     public virtual ICollection<CustomerFeedback> CustomerFeedbacks { get; set; } = [];
@@ -51,7 +52,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.IsOnboardingDone).HasDefaultValue(true);
-
+        builder.Property(item => item.ProvisionedDomains).HasColumnType("jsonb");
         builder.Property(item => item.Designation).HasMaxLength(Constants.MaxPersonDesignationLength);
         builder.Property(item => item.Title).HasMaxLength(Constants.MaxPersonTitleLength);
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxPersonNameLength);

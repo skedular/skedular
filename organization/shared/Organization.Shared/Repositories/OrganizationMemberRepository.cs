@@ -24,7 +24,7 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
     Task<(PaginatedInfo, IReadOnlyList<Edge<OrganizationMember>>, int)> GetPaginatedOrganizationMembersAsync(
         PaginationInputParam paginationInputParam,
         OrganizationMemberSearchCriteria searchCriteria,
-        IEnumerable<OrganizationMemberOrder> orderByFields,
+        IReadOnlyList<OrganizationMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -129,14 +129,14 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
         GetPaginatedOrganizationMembersAsync(
             PaginationInputParam paginationInputParam,
             OrganizationMemberSearchCriteria searchCriteria,
-            IEnumerable<OrganizationMemberOrder> orderByFields,
+            IReadOnlyList<OrganizationMemberOrder> orderByFields,
             CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects()
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<OrganizationMember>> GetPaginationFields(IEnumerable<OrganizationMemberOrder> orderByFields)
+    private static List<KeysetPaginationField<OrganizationMember>> GetPaginationFields(IReadOnlyList<OrganizationMemberOrder> orderByFields)
     {
         if (!orderByFields.Any())
         {

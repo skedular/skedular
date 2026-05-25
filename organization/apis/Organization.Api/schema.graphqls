@@ -37,7 +37,6 @@ type Query {
   organizationTypes: [OrganizationTypeDetails!]!
   organizationBillingCycles: [OrganizationBillingCycleDetails!]!
   organizationXeroBillingModes: [OrganizationXeroBillingModeDetails!]!
-  organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]!
     @cost(weight: "10")

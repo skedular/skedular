@@ -9,6 +9,7 @@ using OrganizationMember_V1_Value_Event = Api.Shared.Clients.Events.Skedular.Org
 using Team_V1_Value_Event = Api.Shared.Clients.Events.Skedular.Team.V1.Event;
 using V1_Value_Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Value_Event = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Event;
+using CustomerReadiness_V1_Value_Event = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Event;
 
 namespace Infrastructure.Shared.Services;
 
@@ -34,6 +35,10 @@ public class MigrationService(IKafkaHelper kafkaHelper) : IMigrationService
         await kafkaHelper.CreateTopicForEventAsync<V1_Value_Event>();
         await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Key>();
         await kafkaHelper.RegisterValueProtobufSchemaAsync<V1_Value_Event>();
+
+        await kafkaHelper.CreateTopicForEventAsync<CustomerReadiness_V1_Value_Event>();
+        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Key>();
+        await kafkaHelper.RegisterValueProtobufSchemaAsync<CustomerReadiness_V1_Value_Event>();
 
         await kafkaHelper.CreateTopicForEventAsync<Location_V1_Value_Event>();
         await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Location.V1.Key>();

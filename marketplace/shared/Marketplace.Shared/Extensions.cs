@@ -48,7 +48,8 @@ public static class Extensions
 
         public IServiceCollection AddPublishers() =>
             services
-                .AddScoped<IMarketplacePublisher, MarketplacePublisher>();
+                .AddScoped<IMarketplacePublisher, MarketplacePublisher>()
+                .AddSingleton<ICustomerReadinessPublisher, CustomerReadinessPublisher>();
 
         public IServiceCollection AddOutboxPublishers() =>
             services

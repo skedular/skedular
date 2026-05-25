@@ -5,6 +5,7 @@ import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
 import { RelayError, toRootError } from '@/components/relayError';
+import useKnownParams from '@/hooks/use-known-params';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -18,7 +19,6 @@ import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
-import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;
@@ -37,14 +37,7 @@ const RootQuery = graphql`
       id
       isOnboardingDone
     }
-    bookingCustomerRecordSynced
-    locationCustomerRecordSynced
-    marketplaceCustomerRecordSynced
-    msTeamsCustomerRecordSynced
-    organizationCustomerRecordSynced
-    slackCustomerRecordSynced
-    teamCustomerRecordSynced
-    coreCustomerRecordSynced
+    customerReadinessSynced
     pendingOrganizationInvitationsCount
     isAzureTenantInstalled
     azureTenantOrganization {
@@ -88,16 +81,7 @@ const RootShell = ({
   const rootLink = getRootLink(integratedPlatrform);
   const welcomeLink = getWelcomeLink(integratedPlatrform);
   const installMsTeamsLink = getInstallMsTeamsLink();
-  const areCustomerRecordsSync = !!(
-    rootData?.bookingCustomerRecordSynced &&
-    rootData?.locationCustomerRecordSynced &&
-    rootData?.marketplaceCustomerRecordSynced &&
-    rootData?.msTeamsCustomerRecordSynced &&
-    rootData?.organizationCustomerRecordSynced &&
-    rootData?.slackCustomerRecordSynced &&
-    rootData?.teamCustomerRecordSynced &&
-    rootData?.coreCustomerRecordSynced
-  );
+  const areCustomerRecordsSync = !!rootData?.customerReadinessSynced;
 
   useEffect(() => {
     if (reloadCount === maxRetryAttemptsToReload || (rootData.me && areCustomerRecordsSync)) {

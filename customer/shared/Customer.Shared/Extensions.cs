@@ -35,6 +35,7 @@ public static class Extensions
                 .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalService, TemporalService>()
+                .AddSingleton<IRequiredCustomerReadinessDomainService, RequiredCustomerReadinessDomainService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>();
 

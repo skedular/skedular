@@ -46,7 +46,7 @@ public class TeamDetails : Node
         var (paginatedInfo, edges, totalCount) = await teamMemberService.GetPaginatedMembersAsync(
             new PaginationInputParam(after, first, before, last),
             new TeamMemberSearchCriteria(team.Id, where?.NameContains),
-            orderBy.ToSafeCollection().Select(item => new TeamMemberOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new TeamMemberOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new Connection<TeamMemberEdge>

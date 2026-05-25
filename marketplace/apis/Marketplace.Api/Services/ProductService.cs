@@ -32,7 +32,7 @@ public interface IProductService
     Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int)> GetPaginatedProductsAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
-        IEnumerable<ProductOrder> orderByFields,
+        IReadOnlyList<ProductOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -312,7 +312,7 @@ public class ProductService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int)> GetPaginatedProductsAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
-        IEnumerable<ProductOrder> orderByFields,
+        IReadOnlyList<ProductOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.ProductRepository.GetPaginatedProductsUntrackedAsync(

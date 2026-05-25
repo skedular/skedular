@@ -1,4 +1,5 @@
 using Core.Shared.Mappers;
+using Core.Shared.Publishers;
 using Core.Shared.Repositories;
 using Core.Shared.Services;
 using Core.Shared.Services.Cache;
@@ -42,7 +43,8 @@ public static class Extensions
                 .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>();
 
         public IServiceCollection AddPublishers() =>
-            services;
+            services
+                .AddSingleton<ICustomerReadinessPublisher, CustomerReadinessPublisher>();
 
         public IServiceCollection AddOutboxPublishers() =>
             services;

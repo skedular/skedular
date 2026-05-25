@@ -9,6 +9,7 @@ type Query {
   customer(id: String!): CustomerDetails @cost(weight: "10")
   customerById(id: ID!): CustomerDetails @lookup @internal @cost(weight: "10")
   customerVersion: Version!
+  customerReadinessSynced: Boolean! @cost(weight: "10")
   customersByPreferredLocation(
     after: String
     first: Int

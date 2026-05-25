@@ -26,8 +26,10 @@ public interface ICustomerRepository : IRepository<Database.Entities.Customer>
     Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersUntrackedAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
-        IEnumerable<CustomerOrder> orderByFields,
+        IReadOnlyList<CustomerOrder> orderByFields,
         CancellationToken cancellationToken);
+
+    Task MarkDomainProvisionedAsync(string customerId, string domain, CancellationToken cancellationToken);
 }
 
 public static class CustomerExtensions
@@ -154,14 +156,37 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersUntrackedAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
-        IEnumerable<CustomerOrder> orderByFields,
+        IReadOnlyList<CustomerOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Customer
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Database.Entities.Customer>> GetPaginationFields(IEnumerable<CustomerOrder> orderByFields)
+    public async Task MarkDomainProvisionedAsync(string customerId, string domain, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(domain);
+
+        var customer = await DbContext.Customer.FirstOrDefaultAsync(
+            item => item.Id == customerId && !item.DeletedAt.HasValue,
+            cancellationToken);
+        if (customer is null)
+        {
+            return;
+        }
+
+        var domains = customer.ProvisionedDomains?.ToHashSet(StringComparer.Ordinal) ?? [];
+        if (!domains.Add(domain))
+        {
+            return;
+        }
+
+        customer.ProvisionedDomains = domains;
+        Update(customer);
+    }
+
+    private static List<KeysetPaginationField<Database.Entities.Customer>> GetPaginationFields(IReadOnlyList<CustomerOrder> orderByFields)
     {
         if (!orderByFields.Any())
         {

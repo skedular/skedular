@@ -18,7 +18,7 @@ namespace Customer.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.6")
+                .HasAnnotation("ProductVersion", "10.0.8")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -118,6 +118,9 @@ namespace Customer.Shared.Database.Migrations
                     b.Property<string>("PhotoUrl72")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
+
+                    b.PrimitiveCollection<string>("ProvisionedDomains")
+                        .HasColumnType("jsonb");
 
                     b.Property<string>("Timezone")
                         .HasMaxLength(64)

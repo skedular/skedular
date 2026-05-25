@@ -22,7 +22,7 @@ public interface ILocationAnalyticsService
         DateTimeOffset from,
         DateTimeOffset until,
         LocationSearchCriteria searchCriteria,
-        IEnumerable<LocationOrder> orderByFields,
+        IReadOnlyList<LocationOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -59,7 +59,7 @@ public class LocationAnalyticsService(
         DateTimeOffset from,
         DateTimeOffset until,
         LocationSearchCriteria searchCriteria,
-        IEnumerable<LocationOrder> orderByFields,
+        IReadOnlyList<LocationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetNullableAsync(cancellationToken);

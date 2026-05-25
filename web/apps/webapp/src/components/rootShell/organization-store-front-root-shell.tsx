@@ -5,6 +5,7 @@ import { Loading } from '@/components/loading';
 import { Observability } from '@/components/observability';
 import StoreFrontBrowserMetadata from '@/components/organizationStoreFrontGuest/store-front-browser-metadata';
 import { RelayError, toRootError } from '@/components/relayError';
+import useKnownParams from '@/hooks/use-known-params';
 import type { organizationStoreFrontRootShell_rootQuery } from '@/queries/__generated__/organizationStoreFrontRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -16,7 +17,6 @@ import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
-import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<organizationStoreFrontRootShell_rootQuery, Record<string, unknown>>;
@@ -28,14 +28,7 @@ const RootQuery = graphql`
     me {
       id
     }
-    bookingCustomerRecordSynced
-    locationCustomerRecordSynced
-    marketplaceCustomerRecordSynced
-    msTeamsCustomerRecordSynced
-    organizationCustomerRecordSynced
-    slackCustomerRecordSynced
-    teamCustomerRecordSynced
-    coreCustomerRecordSynced
+    customerReadinessSynced
     organizationPublic(customDomain: $organizationCustomDomain) {
       name
       logoUrl
@@ -51,16 +44,7 @@ const OrganizationStoreFrontRootShell = ({ queryReference, children, onReloadReq
   const rootData = usePreloadedQuery<organizationStoreFrontRootShell_rootQuery>(RootQuery, queryReference);
   const { signOut } = useAuth();
   const [reloadCount, setReloadCount] = useState(0);
-  const areCustomerRecordsSync = !!(
-    rootData?.bookingCustomerRecordSynced &&
-    rootData?.locationCustomerRecordSynced &&
-    rootData?.marketplaceCustomerRecordSynced &&
-    rootData?.msTeamsCustomerRecordSynced &&
-    rootData?.organizationCustomerRecordSynced &&
-    rootData?.slackCustomerRecordSynced &&
-    rootData?.teamCustomerRecordSynced &&
-    rootData?.coreCustomerRecordSynced
-  );
+  const areCustomerRecordsSync = !!rootData?.customerReadinessSynced;
 
   useEffect(() => {
     if (reloadCount === maxRetryAttemptsToReload || (rootData.me && areCustomerRecordsSync)) {

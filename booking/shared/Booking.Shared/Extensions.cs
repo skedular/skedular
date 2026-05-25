@@ -123,7 +123,8 @@ public static class Extensions
         public IServiceCollection AddPublishers() =>
             services
                 .AddSingleton<IBookingInternalPublisher, BookingInternalPublisher>()
-                .AddSingleton<IBookingPublisher, BookingPublisher>();
+                .AddSingleton<IBookingPublisher, BookingPublisher>()
+                .AddSingleton<ICustomerReadinessPublisher, CustomerReadinessPublisher>();
 
         public IServiceCollection AddOutboxPublishers() =>
             services

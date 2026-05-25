@@ -15,6 +15,7 @@ public interface ICachedCustomerService : ICustomerHelper
     ValueTask<Database.Entities.Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     ValueTask UpdateAsync(IReadOnlyList<Database.Entities.Customer> customers, CancellationToken cancellationToken);
     ValueTask RemoveAsync(IReadOnlyList<Database.Entities.Customer> customers, CancellationToken cancellationToken);
+    ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
 public class CachedCustomerService(
@@ -131,7 +132,7 @@ public class CachedCustomerService(
         }
     }
 
-    private async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
+    public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
 
     private async ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>

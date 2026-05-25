@@ -23,7 +23,7 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
     Task<(PaginatedInfo, IReadOnlyList<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
-        IEnumerable<JoinTeamInvitationOrder> orderByFields,
+        IReadOnlyList<JoinTeamInvitationOrder> orderByFields,
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
@@ -109,7 +109,7 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
-        IEnumerable<JoinTeamInvitationOrder> orderByFields,
+        IReadOnlyList<JoinTeamInvitationOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
             .AddSearchCriteria(searchCriteria)
@@ -126,7 +126,7 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
                 emails.Any(email => query.Email != null && EF.Functions.ILike(query.Email, email)))
             .ToListAsync(cancellationToken);
 
-    private static List<KeysetPaginationField<JoinInvitation>> GetPaginationFields(IEnumerable<JoinTeamInvitationOrder> orderByFields)
+    private static List<KeysetPaginationField<JoinInvitation>> GetPaginationFields(IReadOnlyList<JoinTeamInvitationOrder> orderByFields)
     {
         if (!orderByFields.Any())
         {

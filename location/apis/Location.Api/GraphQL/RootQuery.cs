@@ -1,7 +1,5 @@
 using Enterprise.Shared.Version;
-using HotChocolate;
 using HotChocolate.Types;
-using Location.Shared.Services.Cache;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Location.Api.GraphQL;
@@ -16,10 +14,4 @@ public class RootQuery(IVersionService versionService)
 
         return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
     }
-
-    [UseResolverScope]
-    public async Task<bool> LocationCustomerRecordSyncedAsync(
-        [Service] ICachedCustomerService cachedCustomerService,
-        CancellationToken cancellationToken) =>
-        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 }

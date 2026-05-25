@@ -34,7 +34,7 @@ public interface IInvitationService
     Task<(PaginatedInfo, IReadOnlyList<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
-        IEnumerable<JoinOrganizationInvitationOrder> orderByFields,
+        IReadOnlyList<JoinOrganizationInvitationOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -258,7 +258,7 @@ public class InvitationService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
-        IEnumerable<JoinOrganizationInvitationOrder> orderByFields,
+        IReadOnlyList<JoinOrganizationInvitationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
@@ -283,19 +283,11 @@ public class InvitationService(
         Shared.Database.Entities.JoinInvitation joinInvitation,
         Customer customer)
     {
-        if (joinInvitation.Invitee is null && joinInvitation.Email is null)
-        {
-            throw new UnauthorizedAccessException();
-        }
-
-        if (joinInvitation.Invitee is not null && joinInvitation.Invitee.Id != customer.Id)
-        {
-            throw new UnauthorizedAccessException();
-        }
-
-        if (joinInvitation.Email is not null && !customer.Identities
+        if ((joinInvitation.Invitee is null && joinInvitation.Email is null) ||
+            (joinInvitation.Invitee is not null && joinInvitation.Invitee.Id != customer.Id) || (joinInvitation.Email is not null && !customer
+                .Identities
                 .Where(item => !string.IsNullOrWhiteSpace(item.Email))
-                .Select(item => item.Email).Any(item => string.Equals(item, joinInvitation.Email, StringComparison.InvariantCultureIgnoreCase)))
+                .Select(item => item.Email).Any(item => string.Equals(item, joinInvitation.Email, StringComparison.InvariantCultureIgnoreCase))))
         {
             throw new UnauthorizedAccessException();
         }

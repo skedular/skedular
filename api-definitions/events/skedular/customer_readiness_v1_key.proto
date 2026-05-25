@@ -1,0 +1,8 @@
+syntax = "proto3";
+package customer_readiness;
+
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1";
+
+message Key {
+  string customerId = 1;
+}

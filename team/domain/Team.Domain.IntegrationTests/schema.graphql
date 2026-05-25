@@ -17,7 +17,6 @@ type Query {
   teamMemberRoles: [TeamMemberRoleDetails!]!
   teamMemberStatuses: [TeamMemberStatusDetails!]!
   teamVersion: Version!
-  teamCustomerRecordSynced: Boolean! @cost(weight: "10")
   team(id: String!): TeamDetails @cost(weight: "10")
   teamById(id: ID!): TeamDetails @lookup @internal @cost(weight: "10")
   teams(

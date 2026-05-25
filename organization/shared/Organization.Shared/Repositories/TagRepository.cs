@@ -31,7 +31,7 @@ public interface ITagRepository : IRepository<Tag>
     Task<(PaginatedInfo, IReadOnlyList<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
-        IEnumerable<TagOrder> orderByFields,
+        IReadOnlyList<TagOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -152,14 +152,14 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
-        IEnumerable<TagOrder> orderByFields,
+        IReadOnlyList<TagOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Tag
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects()
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Tag>> GetPaginationFields(IEnumerable<TagOrder> orderByFields)
+    private static List<KeysetPaginationField<Tag>> GetPaginationFields(IReadOnlyList<TagOrder> orderByFields)
     {
         if (!orderByFields.Any())
         {

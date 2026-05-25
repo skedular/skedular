@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Enterprise.Shared.Kafka.Consume;
 using Team.Processors.Mappers;
+using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Team.Shared.Services.Cache;
 using Customer = Team.Shared.Models.Customer;
@@ -12,7 +13,8 @@ public class CustomerSubscriber(
     ILogger<CustomerSubscriber> logger,
     IEventMapper eventMapper,
     IRepositoryFactory repositoryFactory,
-    ICachedCustomerService cachedCustomerService)
+    ICachedCustomerService cachedCustomerService,
+    ICustomerReadinessPublisher customerReadinessPublisher)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -32,6 +34,7 @@ public class CustomerSubscriber(
 
                     await HandleCustomerUpsertedEventAsync(customer, existingCustomer, cancellationToken);
                     logger.LogInformation("Customer upsert event processed for customer {CustomerId}", customer.Id);
+                    await customerReadinessPublisher.PublishProvisionedAsync(customer.Id, @event.Metadata.CorrelationId, cancellationToken);
                 }
                 break;
 

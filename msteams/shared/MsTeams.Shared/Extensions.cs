@@ -2,6 +2,7 @@ using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MsTeams.Shared.Mappers;
+using MsTeams.Shared.Publishers;
 using MsTeams.Shared.Repositories;
 using MsTeams.Shared.Services;
 using MsTeams.Shared.Services.Cache;
@@ -48,7 +49,8 @@ public static class Extensions
                 .AddScoped<ITeamRepository, TeamRepository>();
 
         public IServiceCollection AddPublishers() =>
-            services;
+            services
+                .AddSingleton<ICustomerReadinessPublisher, CustomerReadinessPublisher>();
 
         public IServiceCollection AddOutboxPublishers() =>
             services;

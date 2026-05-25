@@ -49,7 +49,7 @@ public interface IOrganizationService
     Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationSearchCriteria searchCriteria,
-        IEnumerable<OrganizationOrder> orderByFields,
+        IReadOnlyList<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -417,7 +417,7 @@ public class OrganizationService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationSearchCriteria searchCriteria,
-        IEnumerable<OrganizationOrder> orderByFields,
+        IReadOnlyList<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);

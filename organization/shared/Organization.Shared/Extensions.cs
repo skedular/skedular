@@ -83,7 +83,8 @@ public static class Extensions
         public IServiceCollection AddPublishers() =>
             services
                 .AddScoped<IOrganizationInternalPublisher, OrganizationInternalPublisher>()
-                .AddScoped<IOrganizationPublisher, OrganizationPublisher>();
+                .AddScoped<IOrganizationPublisher, OrganizationPublisher>()
+                .AddSingleton<ICustomerReadinessPublisher, CustomerReadinessPublisher>();
 
         public IServiceCollection AddOutboxPublishers() =>
             services

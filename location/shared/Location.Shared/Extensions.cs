@@ -69,7 +69,8 @@ public static class Extensions
 
         public IServiceCollection AddPublishers() =>
             services
-                .AddSingleton<ILocationPublisher, LocationPublisher>();
+                .AddSingleton<ILocationPublisher, LocationPublisher>()
+                .AddSingleton<ICustomerReadinessPublisher, CustomerReadinessPublisher>();
 
         public IServiceCollection AddOutboxPublishers() =>
             services

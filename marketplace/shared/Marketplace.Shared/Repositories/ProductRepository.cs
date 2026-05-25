@@ -26,7 +26,7 @@ public interface IProductRepository : IRepository<Product>
     Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int)> GetPaginatedProductsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
-        IEnumerable<ProductOrder> orderByFields,
+        IReadOnlyList<ProductOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -130,12 +130,12 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Product>>, int)> GetPaginatedProductsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
-        IEnumerable<ProductOrder> orderByFields,
+        IReadOnlyList<ProductOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Product
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Product>> GetPaginationFields(IEnumerable<ProductOrder> orderByFields) => [];
+    private static List<KeysetPaginationField<Product>> GetPaginationFields(IReadOnlyList<ProductOrder> orderByFields) => [];
 }

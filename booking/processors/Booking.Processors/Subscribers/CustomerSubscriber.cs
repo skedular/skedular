@@ -1,5 +1,6 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Booking.Processors.Mappers;
+using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Kafka.Consume;
@@ -15,7 +16,8 @@ public class CustomerSubscriber(
     ILogger<CustomerSubscriber> logger,
     IEventMapper eventMapper,
     IRepositoryFactory repositoryFactory,
-    ICachedCustomerService cachedCustomerService)
+    ICachedCustomerService cachedCustomerService,
+    ICustomerReadinessPublisher customerReadinessPublisher)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -34,6 +36,7 @@ public class CustomerSubscriber(
                     }
 
                     await HandleCustomerUpsertedEventAsync(customer, existingCustomer, cancellationToken);
+                    await customerReadinessPublisher.PublishProvisionedAsync(customer.Id, @event.Metadata.CorrelationId, cancellationToken);
                 }
                 break;
 

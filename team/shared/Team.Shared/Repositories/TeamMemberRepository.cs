@@ -24,7 +24,7 @@ public interface ITeamMemberRepository : IRepository<TeamMember>
     Task<(PaginatedInfo, IReadOnlyList<Edge<TeamMember>>, int)> GetPaginatedTeamMembersUntrackedAsync(
         PaginationInputParam paginationInputParam,
         TeamMemberSearchCriteria searchCriteria,
-        IEnumerable<TeamMemberOrder> orderByFields,
+        IReadOnlyList<TeamMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken);
@@ -129,7 +129,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
         GetPaginatedTeamMembersUntrackedAsync(
             PaginationInputParam paginationInputParam,
             TeamMemberSearchCriteria searchCriteria,
-            IEnumerable<TeamMemberOrder> orderByFields,
+            IReadOnlyList<TeamMemberOrder> orderByFields,
             CancellationToken cancellationToken) =>
         await DbContext.TeamMember
             .AddSearchCriteria(searchCriteria)
@@ -154,7 +154,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
                          query.OrganizationMember.Id == organizationMemberId,
                 cancellationToken);
 
-    private static List<KeysetPaginationField<TeamMember>> GetPaginationFields(IEnumerable<TeamMemberOrder> orderByFields)
+    private static List<KeysetPaginationField<TeamMember>> GetPaginationFields(IReadOnlyList<TeamMemberOrder> orderByFields)
     {
         if (!orderByFields.Any())
         {

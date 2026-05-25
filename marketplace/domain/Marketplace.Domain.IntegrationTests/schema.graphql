@@ -20,7 +20,6 @@ type Query {
     orderBy: [ProductOrderInput!]
   ): ConnectionOfProductEdge! @cost(weight: "10")
   marketplaceVersion: Version!
-  marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
   currencies: [CurrencyDetails!]!
   defaultMaxAllowedResourcesLockTimePaidViaCard: Int!
   defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: Int!

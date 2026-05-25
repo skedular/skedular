@@ -182,7 +182,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where.ResourceType,
                 null,
                 where.ProductIds.ToSafeCollection()),
-            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
 
@@ -234,7 +234,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where.ResourceType,
                 true,
                 where.ProductIds.ToSafeCollection()),
-            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             true,
             cancellationToken);
 

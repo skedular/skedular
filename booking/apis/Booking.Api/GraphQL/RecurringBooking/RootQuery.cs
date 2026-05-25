@@ -63,7 +63,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where.OrganizationCustomDomain,
                 where.TeamIds.ToSafeCollection(),
                 where.CustomerIds.ToSafeCollection()),
-            orderBy.ToSafeCollection().Select(item => new RecurringBookingOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new RecurringBookingOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
 

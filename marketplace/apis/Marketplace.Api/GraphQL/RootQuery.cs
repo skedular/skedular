@@ -1,9 +1,7 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Version;
-using HotChocolate;
 using HotChocolate.Types;
 using Marketplace.Api.GraphQL.Product;
-using Marketplace.Shared.Services.Cache;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
 using Constants = Api.Shared.Services.Constants;
 
@@ -79,12 +77,6 @@ public class RootQuery(IVersionService versionService)
 
         return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
     }
-
-    [UseResolverScope]
-    public async Task<bool> MarketplaceCustomerRecordSyncedAsync(
-        [Service] ICachedCustomerService cachedCustomerService,
-        CancellationToken cancellationToken) =>
-        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
     public IEnumerable<CurrencyDetails> Currencies() =>

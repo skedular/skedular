@@ -47,7 +47,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         var (paginatedInfo, edges, totalCount) = await invitationService.GetMyPaginatedJoinInvitationsAsync(
             new PaginationInputParam(after, first, before, last),
             new JoinInvitationSearchCriteria(where?.OrganizationCustomDomain, where?.TeamId, where?.Status, null),
-            orderBy.ToSafeCollection().Select(item => new JoinTeamInvitationOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new JoinTeamInvitationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new Connection<TeamJoinInvitationEdge>

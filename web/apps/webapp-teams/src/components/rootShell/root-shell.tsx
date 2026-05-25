@@ -36,13 +36,7 @@ const RootQuery = graphql`
       id
       isOnboardingDone
     }
-    bookingCustomerRecordSynced
-    locationCustomerRecordSynced
-    msTeamsCustomerRecordSynced
-    organizationCustomerRecordSynced
-    slackCustomerRecordSynced
-    teamCustomerRecordSynced
-    coreCustomerRecordSynced
+    customerReadinessSynced
     pendingOrganizationInvitationsCount
     isAzureTenantInstalled
     azureTenantOrganization {
@@ -86,15 +80,7 @@ const RootShell = ({
   const rootLink = getRootLink(integratedPlatrform);
   const welcomeLink = getWelcomeLink(integratedPlatrform);
   const installMsTeamsLink = getInstallMsTeamsLink();
-  const areCustomerRecordsSync = !!(
-    rootData?.bookingCustomerRecordSynced &&
-    rootData?.locationCustomerRecordSynced &&
-    rootData?.msTeamsCustomerRecordSynced &&
-    rootData?.organizationCustomerRecordSynced &&
-    rootData?.slackCustomerRecordSynced &&
-    rootData?.teamCustomerRecordSynced &&
-    rootData?.coreCustomerRecordSynced
-  );
+  const areCustomerRecordsSync = !!rootData?.customerReadinessSynced;
 
   useEffect(() => {
     if (reloadCount === maxRetryAttemptsToReload || (rootData.me && areCustomerRecordsSync)) {

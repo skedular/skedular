@@ -46,12 +46,6 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     ];
 
     [UseResolverScope]
-    public async Task<bool> OrganizationCustomerRecordSyncedAsync(
-        [Service] ICachedCustomerService cachedCustomerService,
-        CancellationToken cancellationToken) =>
-        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
-
-    [UseResolverScope]
     public async Task<OrganizationTermsOfUse> ActiveOrganizationTermsOfUseAsync(
         [Service] IOrganizationTermsOfUseService organizationTermsOfUseService,
         CancellationToken cancellationToken) =>
@@ -102,7 +96,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         var (paginatedInfo, edges, totalCount) = await organizationService.GetPaginatedOrganizationsAsync(
             new PaginationInputParam(after, first, before, last),
             new OrganizationSearchCriteria(where.NameContains, null),
-            orderBy.ToSafeCollection().Select(item => new OrganizationOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new OrganizationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new Connection<OrganizationEdge>

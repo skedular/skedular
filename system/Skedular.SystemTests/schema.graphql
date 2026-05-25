@@ -62,10 +62,6 @@ type Query
     @fusion__field(schema: BOOKING_API)
   bookingCategories: [BookingCategoryDetails!]!
     @fusion__field(schema: BOOKING_API)
-  bookingCustomerRecordSynced: Boolean!
-    @cost(weight: "10")
-    @fusion__cost(schema: BOOKING_API, weight: "10")
-    @fusion__field(schema: BOOKING_API)
   bookings(
     after: String @fusion__inputField(schema: BOOKING_API)
     before: String @fusion__inputField(schema: BOOKING_API)
@@ -79,13 +75,13 @@ type Query
     @fusion__field(schema: BOOKING_API)
   bookingSlotSizeInMinutes: Int! @fusion__field(schema: ORGANIZATION_API)
   bookingVersion: Version! @fusion__field(schema: BOOKING_API)
-  coreCustomerRecordSynced: Boolean!
-    @cost(weight: "10")
-    @fusion__cost(schema: CORE_API, weight: "10")
-    @fusion__field(schema: CORE_API)
   coreVersion: Version! @fusion__field(schema: CORE_API)
   currencies: [CurrencyDetails!]! @fusion__field(schema: MARKETPLACE_API)
   customer(id: String! @fusion__inputField(schema: CUSTOMER_API)): CustomerDetails
+    @cost(weight: "10")
+    @fusion__cost(schema: CUSTOMER_API, weight: "10")
+    @fusion__field(schema: CUSTOMER_API)
+  customerReadinessSynced: Boolean!
     @cost(weight: "10")
     @fusion__cost(schema: CUSTOMER_API, weight: "10")
     @fusion__field(schema: CUSTOMER_API)
@@ -146,10 +142,6 @@ type Query
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
   location(id: String! @fusion__inputField(schema: LOCATION_API)): LocationDetails
-    @cost(weight: "10")
-    @fusion__cost(schema: LOCATION_API, weight: "10")
-    @fusion__field(schema: LOCATION_API)
-  locationCustomerRecordSynced: Boolean!
     @cost(weight: "10")
     @fusion__cost(schema: LOCATION_API, weight: "10")
     @fusion__field(schema: LOCATION_API)
@@ -216,10 +208,6 @@ type Query
     @fusion__field(schema: BOOKING_API)
   marketplaceBookingSubscriptionStatuses: [MarketplaceBookingSubscriptionStatusDetails!]!
     @fusion__field(schema: BOOKING_API)
-  marketplaceCustomerRecordSynced: Boolean!
-    @cost(weight: "10")
-    @fusion__cost(schema: MARKETPLACE_API, weight: "10")
-    @fusion__field(schema: MARKETPLACE_API)
   marketplaceLocations(
     after: String @fusion__inputField(schema: LOCATION_API)
     before: String @fusion__inputField(schema: LOCATION_API)
@@ -249,10 +237,6 @@ type Query
     @cost(weight: "10")
     @fusion__cost(schema: CUSTOMER_API, weight: "10")
     @fusion__field(schema: CUSTOMER_API)
-  msTeamsCustomerRecordSynced: Boolean!
-    @cost(weight: "10")
-    @fusion__cost(schema: MSTEAMS_API, weight: "10")
-    @fusion__field(schema: MSTEAMS_API)
   msTeamsVersion: Version! @fusion__field(schema: MSTEAMS_API)
   myInvitationsToJoinOrganizations(
     after: String @fusion__inputField(schema: ORGANIZATION_API)
@@ -329,10 +313,6 @@ type Query
     @cost(weight: "10")
     @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
-  organizationCustomerRecordSynced: Boolean!
-    @cost(weight: "10")
-    @fusion__cost(schema: ORGANIZATION_API, weight: "10")
-    @fusion__field(schema: ORGANIZATION_API)
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]!
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
@@ -473,10 +453,6 @@ type Query
     @fusion__field(schema: ORGANIZATION_API)
   roomResourceType: OrganizationTagType!
     @fusion__field(schema: ORGANIZATION_API)
-  slackCustomerRecordSynced: Boolean!
-    @cost(weight: "10")
-    @fusion__cost(schema: SLACK_API, weight: "10")
-    @fusion__field(schema: SLACK_API)
   slackVersion: Version! @fusion__field(schema: SLACK_API)
   team(id: String! @fusion__inputField(schema: TEAM_API)): TeamDetails
     @cost(weight: "10")
@@ -488,10 +464,6 @@ type Query
     @cost(weight: "10")
     @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
-  teamCustomerRecordSynced: Boolean!
-    @cost(weight: "10")
-    @fusion__cost(schema: TEAM_API, weight: "10")
-    @fusion__field(schema: TEAM_API)
   teamInvitationStatuses: [TeamInvitationStatusDetails!]!
     @fusion__field(schema: TEAM_API)
   teamMemberRoles: [TeamMemberRoleDetails!]! @fusion__field(schema: TEAM_API)

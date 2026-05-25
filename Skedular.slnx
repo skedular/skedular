@@ -33,6 +33,8 @@
         <File Path="api-definitions/events/skedular/organization_v1_value.proto"/>
         <File Path="api-definitions/events/skedular/team_v1_key.proto"/>
         <File Path="api-definitions/events/skedular/team_v1_value.proto"/>
+        <File Path="api-definitions/events/skedular/customer_readiness_v1_key.proto"/>
+        <File Path="api-definitions/events/skedular/customer_readiness_v1_value.proto"/>
     </Folder>
     <Folder Name="/api-definitions/graphql/"/>
     <Folder Name="/api-definitions/graphql/skedular/"/>

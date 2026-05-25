@@ -29,7 +29,7 @@ public interface ITeamRepository : IRepository<Database.Entities.Team>
     Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Team>>, int)> GetPaginatedTeamsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         TeamSearchCriteria searchCriteria,
-        IEnumerable<TeamOrder> orderByFields,
+        IReadOnlyList<TeamOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -156,14 +156,14 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Team>>, int)> GetPaginatedTeamsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         TeamSearchCriteria searchCriteria,
-        IEnumerable<TeamOrder> orderByFields,
+        IReadOnlyList<TeamOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Team
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Database.Entities.Team>> GetPaginationFields(IEnumerable<TeamOrder> orderByFields)
+    private static List<KeysetPaginationField<Database.Entities.Team>> GetPaginationFields(IReadOnlyList<TeamOrder> orderByFields)
     {
         if (!orderByFields.Any())
         {

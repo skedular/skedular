@@ -305,11 +305,13 @@ This file applies to the whole repository.
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/015-smart-org-landing-page/plan.md
+at specs/016-customer-readiness-tracking/plan.md
 
 <!-- SPECKIT END -->
 
 ## Active Technologies
+- C# .NET 10 for customer/booking/organisation/team/marketplace/location APIs, processors, shared libraries, and integration tests; protobuf event definitions under `api-definitions/events/skedular` + Existing Kafka protobuf event envelope and metadata companions, Enterprise.Shared Kafka producer/consumer/outbox infrastructure, EF Core repositories and migrations, customer workaround republish API, HotChocolate/Fusion GraphQL/auth integration points where readiness gating is enforced, Microsoft/Serilog structured logging conventions (016-customer-readiness-tracking)
+- PostgreSQL via EF Core in `customer/shared/Customer.Shared`; add central readiness state tables/entities and repository methods. Participating domains reuse existing local customer/identity persistence. (016-customer-readiness-tracking)
 
 - C# .NET 10 for booking/customer/location/marketplace/team API and domain services; HotChocolate/Fusion GraphQL schema
   generation; TypeScript 6 / React 19 / Next.js 16 / Relay 20 for web consumers + Existing GraphQL mutation roots and

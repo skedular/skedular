@@ -31,7 +31,7 @@ public interface IFloorPlanService
     Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int)> GetPaginatedFloorPlansAsync(
         PaginationInputParam paginationInputParam,
         FloorPlanSearchCriteria searchCriteria,
-        IEnumerable<FloorPlanOrder> orderByFields,
+        IReadOnlyList<FloorPlanOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -365,7 +365,7 @@ public class FloorPlanService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int)> GetPaginatedFloorPlansAsync(
         PaginationInputParam paginationInputParam,
         FloorPlanSearchCriteria searchCriteria,
-        IEnumerable<FloorPlanOrder> orderByFields,
+        IReadOnlyList<FloorPlanOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.LocationId);

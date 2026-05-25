@@ -108,7 +108,7 @@ public class OrganizationPublicDetails
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(after, first, before, last),
             tagSearchCriteria,
-            orderBy.ToSafeCollection().Select(item => new TagOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new TagOrder(item.Direction, item.Field)).ToList(),
             true,
             cancellationToken);
 

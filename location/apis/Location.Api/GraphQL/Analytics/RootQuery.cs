@@ -36,7 +36,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where?.ResourceType,
                 null,
                 []),
-            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return locationsAnalytics

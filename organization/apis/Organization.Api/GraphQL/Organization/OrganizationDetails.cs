@@ -92,7 +92,7 @@ public class OrganizationDetails : Node
         var (paginatedInfo, edges, totalCount) = await organizationMemberService.GetPaginatedOrganizationMembersAsync(
             new PaginationInputParam(after, first, before, last),
             new OrganizationMemberSearchCriteria(organization.Id, organization.CustomDomain, where?.NameContains, where?.CustomerId),
-            orderBy.ToSafeCollection().Select(item => new OrganizationMemberOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new OrganizationMemberOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new Connection<OrganizationMemberEdge>
@@ -236,7 +236,7 @@ public class OrganizationDetails : Node
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(after, first, before, last),
             tagSearchCriteria,
-            orderBy.ToSafeCollection().Select(item => new TagOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new TagOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
 

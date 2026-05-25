@@ -61,7 +61,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where.OrganizationCustomDomains.ToSafeCollection(),
                 where.ProductIds.ToSafeCollection(),
                 where.IncludeInactive),
-            orderBy.ToSafeCollection().Select(item => new ProductOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new ProductOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new Connection<ProductEdge>

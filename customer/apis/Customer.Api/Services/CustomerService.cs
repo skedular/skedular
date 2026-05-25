@@ -32,7 +32,7 @@ public interface ICustomerService
     Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Customer>>, int)> GetPaginatedCustomersAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
-        IEnumerable<CustomerOrder> orderByFields,
+        IReadOnlyList<CustomerOrder> orderByFields,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Customer> AddAsync(Shared.Models.Customer customer, bool sendNewCustomerJoinedEmail, CancellationToken cancellationToken);
@@ -130,7 +130,7 @@ public class CustomerService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Customer>>, int)> GetPaginatedCustomersAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
-        IEnumerable<CustomerOrder> orderByFields,
+        IReadOnlyList<CustomerOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.CustomerRepository.GetPaginatedCustomersUntrackedAsync(

@@ -1,0 +1,44 @@
+syntax = "proto3";
+package customer_readiness;
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1";
+
+enum Type {
+  Type_CustomerIdentityProvisioned = 0;
+}
+
+enum Domain {
+  Domain_Booking      = 0;
+  Domain_Organization = 1;
+  Domain_Team         = 2;
+  Domain_Marketplace  = 3;
+  Domain_Location     = 4;
+  Domain_Core         = 5;
+  Domain_Slack        = 6;
+  Domain_MsTeams      = 7;
+}
+
+message Event {
+  Metadata metadata = 1;
+  Data     data     = 2;
+}
+
+message Metadata {
+  string                    id            = 1;
+  string                    domainSource  = 2;
+  string                    appSource     = 3;
+  Type                      type          = 4;
+  google.protobuf.Timestamp time          = 5;
+  string                    correlationId = 6;
+}
+
+message Data {
+  CustomerIdentityProvisioned customerIdentityProvisioned = 1;
+}
+
+message CustomerIdentityProvisioned {
+  string customerId = 1;
+  Domain domain     = 2;
+}

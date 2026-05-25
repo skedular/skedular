@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Slack.Shared.Components;
 using Slack.Shared.Configurations;
 using Slack.Shared.Mappers;
+using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
 using Slack.Shared.Services.Cache;
@@ -124,7 +125,8 @@ public static class Extensions
                 .AddScoped<IWorkspaceRepository, WorkspaceRepository>();
 
         public IServiceCollection AddPublishers() =>
-            services;
+            services
+                .AddSingleton<ICustomerReadinessPublisher, CustomerReadinessPublisher>();
 
         public IServiceCollection AddOutboxPublishers() =>
             services;

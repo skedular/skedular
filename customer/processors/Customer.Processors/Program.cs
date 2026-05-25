@@ -8,6 +8,8 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Temporal;
+using CustomerReadinessKey = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Key;
+using CustomerReadinessEvent = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Event;
 
 namespace Customer.Processors;
 
@@ -34,6 +36,10 @@ public class Program
                 OrganizationSubscriber,
                 Key,
                 Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
+                CustomerReadinessEventSubscriber,
+                CustomerReadinessKey,
+                CustomerReadinessEvent>(kafkaConfiguration)
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddDomainSharedServices()

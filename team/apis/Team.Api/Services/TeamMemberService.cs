@@ -21,7 +21,7 @@ public interface ITeamMemberService
     Task<(PaginatedInfo, IReadOnlyList<Edge<TeamMember>>, int)> GetPaginatedMembersAsync(
         PaginationInputParam paginationInputParam,
         TeamMemberSearchCriteria searchCriteria,
-        IEnumerable<TeamMemberOrder> orderByFields,
+        IReadOnlyList<TeamMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 
     Task<TeamMember> ChangeRoleAsync(string id, TeamMemberRole memberRole, CancellationToken cancellationToken);
@@ -60,7 +60,7 @@ public class TeamMemberService(
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<TeamMember>>, int)> GetPaginatedMembersAsync(
         PaginationInputParam paginationInputParam,
         TeamMemberSearchCriteria searchCriteria,
-        IEnumerable<TeamMemberOrder> orderByFields,
+        IReadOnlyList<TeamMemberOrder> orderByFields,
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);

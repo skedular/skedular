@@ -45,7 +45,6 @@ type Query {
   resource(id: String!): ResourceDetails @cost(weight: "10")
   resourceById(id: ID!): ResourceDetails @lookup @internal @cost(weight: "10")
   locationVersion: Version!
-  locationCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
 type Mutation {

@@ -44,7 +44,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         var (paginatedInfo, edges, totalCount) = await floorPlanService.GetPaginatedFloorPlansAsync(
             new PaginationInputParam(after, first, before, last),
             new FloorPlanSearchCriteria(where.LocationId),
-            orderBy.ToSafeCollection().Select(item => new FloorPlanOrder(item.Direction, item.Field)),
+            orderBy.ToSafeCollection().Select(item => new FloorPlanOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new Connection<FloorPlanEdge>

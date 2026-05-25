@@ -82,7 +82,6 @@ type Query {
     where: OrganizationAvailableResourcesWhereInput!
   ): OrganizationAvailableResources! @cost(weight: "10")
   bookingVersion: Version!
-  bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
 type Mutation {

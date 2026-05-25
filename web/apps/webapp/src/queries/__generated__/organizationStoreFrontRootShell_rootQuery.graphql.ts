@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8c002f4372d43ef26a6fdac8ff90235b>>
+ * @generated SignedSource<<a380213b6df8d3a00585e6fcdbaeda3b>>
  * @lightSyntaxTransform
  */
 
@@ -13,21 +13,14 @@ export type organizationStoreFrontRootShell_rootQuery$variables = {
   organizationCustomDomain: string;
 };
 export type organizationStoreFrontRootShell_rootQuery$data = {
-  readonly bookingCustomerRecordSynced: boolean;
-  readonly coreCustomerRecordSynced: boolean;
-  readonly locationCustomerRecordSynced: boolean;
-  readonly marketplaceCustomerRecordSynced: boolean;
+  readonly customerReadinessSynced: boolean;
   readonly me: {
     readonly id: string;
   };
-  readonly msTeamsCustomerRecordSynced: boolean;
-  readonly organizationCustomerRecordSynced: boolean;
   readonly organizationPublic: {
     readonly logoUrl: string | null | undefined;
     readonly name: string;
   } | null | undefined;
-  readonly slackCustomerRecordSynced: boolean;
-  readonly teamCustomerRecordSynced: boolean;
   readonly " $fragmentSpreads": FragmentRefs<"observability_query" | "organizationStoreFrontAppBar_query">;
 };
 export type organizationStoreFrontRootShell_rootQuery = {
@@ -54,66 +47,17 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "bookingCustomerRecordSynced",
+  "name": "customerReadinessSynced",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "locationCustomerRecordSynced",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "marketplaceCustomerRecordSynced",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "msTeamsCustomerRecordSynced",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "organizationCustomerRecordSynced",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "slackCustomerRecordSynced",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "teamCustomerRecordSynced",
-  "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "coreCustomerRecordSynced",
-  "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v11 = {
+v4 = {
   "alias": null,
   "args": [
     {
@@ -127,7 +71,7 @@ v11 = {
   "name": "organizationPublic",
   "plural": false,
   "selections": [
-    (v10/*:: as any*/),
+    (v3/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -158,14 +102,7 @@ return {
         "storageKey": null
       },
       (v2/*:: as any*/),
-      (v3/*:: as any*/),
       (v4/*:: as any*/),
-      (v5/*:: as any*/),
-      (v6/*:: as any*/),
-      (v7/*:: as any*/),
-      (v8/*:: as any*/),
-      (v9/*:: as any*/),
-      (v11/*:: as any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -237,7 +174,7 @@ return {
             "name": "photoUrl",
             "storageKey": null
           },
-          (v10/*:: as any*/),
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -249,27 +186,20 @@ return {
         "storageKey": null
       },
       (v2/*:: as any*/),
-      (v3/*:: as any*/),
-      (v4/*:: as any*/),
-      (v5/*:: as any*/),
-      (v6/*:: as any*/),
-      (v7/*:: as any*/),
-      (v8/*:: as any*/),
-      (v9/*:: as any*/),
-      (v11/*:: as any*/)
+      (v4/*:: as any*/)
     ]
   },
   "params": {
-    "cacheID": "b49950f8251485a6887ef3875e3dfc8d",
+    "cacheID": "0bd6380449eac36730bf4c6885ee9ee0",
     "id": null,
     "metadata": {},
     "name": "organizationStoreFrontRootShell_rootQuery",
     "operationKind": "query",
-    "text": "query organizationStoreFrontRootShell_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  me {\n    id\n  }\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  marketplaceCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  organizationCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  coreCustomerRecordSynced\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    logoUrl\n  }\n  ...organizationStoreFrontAppBar_query\n  ...observability_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationStoreFrontAppBar_query on Query {\n  me {\n    id\n    email\n    emails\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n  }\n  ...newFeedbackDialog_query\n}\n"
+    "text": "query organizationStoreFrontRootShell_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  me {\n    id\n  }\n  customerReadinessSynced\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    logoUrl\n  }\n  ...organizationStoreFrontAppBar_query\n  ...observability_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationStoreFrontAppBar_query on Query {\n  me {\n    id\n    email\n    emails\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n  }\n  ...newFeedbackDialog_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "edbd2d3672adc6a37b004cc7365dd76e";
+(node as any).hash = "f5448c34a0e44748dc9c4790629db5c0";
 
 export default node;

@@ -25,7 +25,7 @@ public interface IResourceRepository : IRepository<Resource>
     Task<(PaginatedInfo, IReadOnlyList<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
         ResourceSearchCriteria searchCriteria,
-        IEnumerable<ResourceOrder> orderByFields,
+        IReadOnlyList<ResourceOrder> orderByFields,
         CancellationToken cancellationToken);
 
     /// <summary>
@@ -168,23 +168,21 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
         ResourceSearchCriteria searchCriteria,
-        IEnumerable<ResourceOrder> orderByFields,
+        IReadOnlyList<ResourceOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Resource
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    public async Task<IReadOnlyList<string>> GetActiveNamesByLocationIdAsync(
-        string locationId,
-        CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<string>> GetActiveNamesByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
         await DbContext.Resource
             .AsNoTracking()
             .Where(r => !r.DeletedAt.HasValue && r.Location.Id == locationId)
             .Select(r => r.Name)
             .ToListAsync(cancellationToken);
 
-    private static List<KeysetPaginationField<Resource>> GetPaginationFields(IEnumerable<ResourceOrder> orderByFields)
+    private static List<KeysetPaginationField<Resource>> GetPaginationFields(IReadOnlyList<ResourceOrder> orderByFields)
     {
         if (!orderByFields.Any())
         {

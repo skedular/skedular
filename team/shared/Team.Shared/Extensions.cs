@@ -59,7 +59,8 @@ public static class Extensions
 
         public IServiceCollection AddPublishers() =>
             services
-                .AddSingleton<ITeamPublisher, TeamPublisher>();
+                .AddSingleton<ITeamPublisher, TeamPublisher>()
+                .AddSingleton<ICustomerReadinessPublisher, CustomerReadinessPublisher>();
 
         public IServiceCollection AddOutboxPublishers() =>
             services

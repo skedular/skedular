@@ -40,7 +40,7 @@ public interface IOrganizationRepository : IRepository<Database.Entities.Organiz
     Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Organization>>, int)> GetPaginatedOrganizationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         OrganizationSearchCriteria searchCriteria,
-        IEnumerable<OrganizationOrder> orderByFields,
+        IReadOnlyList<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
@@ -302,14 +302,14 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Organization>>, int)> GetPaginatedOrganizationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         OrganizationSearchCriteria searchCriteria,
-        IEnumerable<OrganizationOrder> orderByFields,
+        IReadOnlyList<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
             .AddSearchCriteria(searchCriteria)
             .AddDependentObjects(false, false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Database.Entities.Organization>> GetPaginationFields(IEnumerable<OrganizationOrder> orderByFields)
+    private static List<KeysetPaginationField<Database.Entities.Organization>> GetPaginationFields(IReadOnlyList<OrganizationOrder> orderByFields)
     {
         if (!orderByFields.Any())
         {

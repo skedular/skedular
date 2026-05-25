@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <AssemblyName>Api.Shared.Clients</AssemblyName>
         <AssemblyTitle>Api.Shared.Clients</AssemblyTitle>
@@ -33,6 +33,8 @@
         <Protobuf Include="../../api-definitions/events/skedular/booking_internal_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
         <Protobuf Include="../../api-definitions/events/skedular/customer_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
         <Protobuf Include="../../api-definitions/events/skedular/customer_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/customer_readiness_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/customer_readiness_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
         <Protobuf Include="../../api-definitions/events/skedular/location_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
         <Protobuf Include="../../api-definitions/events/skedular/location_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
         <Protobuf Include="../../api-definitions/events/skedular/marketplace_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
