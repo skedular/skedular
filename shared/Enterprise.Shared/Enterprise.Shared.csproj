@@ -83,7 +83,7 @@
 
         <!-- Microsoft Identity / Graph -->
         <PackageReference Include="Microsoft.Graph" Version="6.1.0"/>
-        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.9.0"/>
+        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.10.0"/>
 
         <!-- OpenTelemetry -->
         <PackageReference Include="OpenTelemetry.Api" Version="1.15.3"/>
@@ -133,8 +133,8 @@
         <PackageReference Include="QuestPDF" Version="2026.5.0"/>
 
         <!-- Image Processing -->
-        <PackageReference Include="SkiaSharp" Version="3.119.2"/>
-        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.2"/>
+        <PackageReference Include="SkiaSharp" Version="3.119.4"/>
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.4"/>
 
         <!-- API Documentation -->
         <PackageReference Include="NSwag.AspNetCore" Version="14.7.1"/>
