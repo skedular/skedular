@@ -192,21 +192,10 @@ describe('OrganizationAdminSetupSection', () => {
     });
   });
 
-  it('patches the description from the About field after inline debounce', async () => {
+  it('does not render the private-facing About field', () => {
     render(<OrganizationAdminSetupSection organizationCustomDomain="acme" />);
 
-    fireEvent.change(screen.getByRole('textbox', { name: 'About' }), { target: { value: 'Updated about text' } });
-    await act(async () => {
-      vi.advanceTimersByTime(1000);
-    });
-
-    expect(patchUpdateCommit).toHaveBeenCalledTimes(1);
-    expect(patchUpdateCommit.mock.calls[0][0].variables.input).toMatchObject({
-      id: 'org-1',
-      fieldsToUpdate: ['DESCRIPTION'],
-      description: 'Updated about text',
-    });
-    expect(patchUpdateCommit.mock.calls[0][0].variables.input.name).toBeUndefined();
+    expect(screen.queryByRole('textbox', { name: 'About' })).not.toBeInTheDocument();
   });
 
   it('patches the website after inline debounce', async () => {
@@ -314,7 +303,7 @@ describe('OrganizationAdminSetupSection', () => {
     render(<OrganizationAdminSetupSection organizationCustomDomain="acme" />);
 
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Upload a square logo or icon for organization branding.' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Upload a square logo or icon for organisation branding.' }));
     });
 
     expect(patchUpdateCommit).toHaveBeenCalledTimes(1);

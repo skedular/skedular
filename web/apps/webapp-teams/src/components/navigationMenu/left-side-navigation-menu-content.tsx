@@ -1,6 +1,7 @@
-import { AnalyticsIcon, BookingIcon, CollpaseDrawerIcon, GridViewIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon } from '@/components/icons';
+import { AnalyticsIcon, BookingIcon, CollpaseDrawerIcon, GridViewIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon, UpgradeIcon } from '@/components/icons';
 import {
-  getOrganizationAdminSetupBaseLink,
+  getOrganizationAdminBaseLink,
+  getOrganizationAdminSubscriptionsBaseLink,
   getOrganizationAnalyticsBaseLink,
   getOrganizationAvailabilityDashboardBaseLink,
   getOrganizationBaseLink,
@@ -12,6 +13,7 @@ import {
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import type { leftSideNavigationMenuContent_query$key } from '@/queries/__generated__/leftSideNavigationMenuContent_query.graphql';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
@@ -53,6 +55,10 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
           customDomain
           canModify
           canViewAnalytics
+          activeOffering {
+            free
+            earlyBird
+          }
         }
       }
     `,
@@ -127,7 +133,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAvailabilityDashboardBaseLink = getOrganizationAvailabilityDashboardBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationAdminBaseLink = getOrganizationAdminBaseLink(integratedPlatrform, rootData.organization.customDomain!);
 
   return (
     <>
@@ -297,15 +303,15 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
 
           {rootData.organization.canModify && (
             <ListItem disablePadding>
-              <Link component={NextLink} href={organizationAdminSetupBaseLink}>
+              <Link component={NextLink} href={organizationAdminBaseLink}>
                 <ListItemButton
-                  selected={pathName.startsWith(organizationAdminSetupBaseLink)}
-                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAdminSetupBaseLink)) }}
+                  selected={pathName.startsWith(organizationAdminBaseLink)}
+                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAdminBaseLink)) }}
                 >
                   {collapsed && (
                     <BodyIconTypography
                       startElement={!hideIcons && <SettingsIcon color="inherit" />}
-                      invertDefaultColor={pathName.startsWith(organizationAdminSetupBaseLink) && paletteMode === 'dark'}
+                      invertDefaultColor={pathName.startsWith(organizationAdminBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                   {!collapsed && (
@@ -313,7 +319,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                       label="Admin"
                       startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
                       spacing={3}
-                      invertDefaultColor={pathName.startsWith(organizationAdminSetupBaseLink) && paletteMode === 'dark'}
+                      invertDefaultColor={pathName.startsWith(organizationAdminBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                 </ListItemButton>
@@ -354,6 +360,16 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ backgroundColor: paletteMode === 'dark' ? emerald : coal, position: 'absolute', bottom: 0, width: '100%' }}>
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
+              {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
+                <Button
+                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, rootData.organization.customDomain!)}
+                  variant="contained"
+                  color="secondary"
+                  sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}
+                >
+                  <BodyIconTypography label="Upgrade Plan" endElement={<UpgradeIcon fontSize="medium" />} color="inherit" />
+                </Button>
+              )}
               <InvitePeopleToJoinOrganizationButton
                 variant="contained"
                 organizationCustomDomain={organizationCustomDomain}

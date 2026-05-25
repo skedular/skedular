@@ -1,7 +1,6 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { DeleteIcon } from '@/components/icons';
 import { getOrganizationAdminSetupBaseLink } from '@/components/links';
-import { ListingMetadata } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { OrganizationMultipleChoicesIndustries } from '@/components/organization';
@@ -587,7 +586,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
           <FormStackColumn onSubmit={handleSubmit}>
             <Box sx={{ pb: 2 }}>
               <StackColumn spacing={2}>
-                <SettingsSectionCard title="Organization setup" description="Edit identity, presentation, domain, industry, and customer-facing details.">
+                <SettingsSectionCard title="Organisation profile" description="Edit the marketplace organisation identity, domain, industry, and customer-facing details.">
                   <StackColumn sx={formColumnSx}>
                     <FormFieldLabel label="Logo">
                       <StackColumn>
@@ -612,7 +611,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                         ) : null}
 
                         <StackRow>
-                          <ImageFileUploaderWithCropper helperText="Upload a square logo or icon for organization branding." onUploadCompleted={handleLogoUploadCompleted} />
+                          <ImageFileUploaderWithCropper helperText="Upload a square logo or icon for organisation branding." onUploadCompleted={handleLogoUploadCompleted} />
                           {organizationLogoUrl ? (
                             <Button variant="outlined" size="small" onClick={handleRemoveLogo} sx={{ textTransform: 'none' }}>
                               Remove logo
@@ -681,17 +680,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                       </FormFieldLabel>
                     )}
 
-                    <ListingMetadata
-                      fields={['about', 'title', 'subTitle']}
-                      requiredFields={requiredOrganizationDetailsFields}
-                      textFieldProps={{
-                        about: { name: 'about' },
-                      }}
-                      onFieldBlur={{
-                        about: () => commitOrganizationPatch(['DESCRIPTION'], { description: draftPatchValues.current.description }),
-                      }}
-                    />
-
                     <FormFieldLabel label="Website">
                       <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
                     </FormFieldLabel>
@@ -700,7 +688,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                       <TextField
                         name="customerFacingTermsAndConditionsUrl"
                         required={requiredOrganizationDetailsFields.customerFacingTermsAndConditionsUrl}
-                        helperText={<HelperText text="Provide your company's official website so members can learn more or verify your organization." />}
+                        helperText={<HelperText text="Provide your company's official website so members can learn more or verify your organisation." />}
                       />
                     </FormFieldLabel>
 

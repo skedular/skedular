@@ -8,18 +8,17 @@ import {
   MembersIcon,
   ProductIcon,
   SettingsIcon,
-  SetupMarketplaceIcon,
   SubscriptionsIcon,
   UpgradeIcon,
 } from '@/components/icons';
 import {
-  getOrganizationAdminSetupBaseLink,
+  getOrganizationAdminBaseLink,
+  getOrganizationAdminSubscriptionsBaseLink,
   getOrganizationAnalyticsBaseLink,
   getOrganizationAvailabilityDashboardBaseLink,
   getOrganizationBaseLink,
   getOrganizationBookingsBaseLink,
   getOrganizationLocationsBaseLink,
-  getOrganizationMarketplaceSetupBaseLink,
   getOrganizationProductsBaseLink,
   getOrganizationSubscriptionsBaseLink,
   getOrganizationUsersBaseLink,
@@ -149,10 +148,9 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAvailabilityDashboardBaseLink = getOrganizationAvailabilityDashboardBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationMarketplaceSetupBaseLink = getOrganizationMarketplaceSetupBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationProductsBaseLink = getOrganizationProductsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationSubscriptionsBaseLink = getOrganizationSubscriptionsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationAdminBaseLink = getOrganizationAdminBaseLink(integratedPlatrform, rootData.organization.customDomain!);
 
   return (
     <>
@@ -296,32 +294,6 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             </Link>
           </ListItem>
 
-          {rootData.organization.canModify && rootData.organization.type.type === 'MARKETPLACE' && (
-            <ListItem disablePadding>
-              <Link component={NextLink} href={organizationMarketplaceSetupBaseLink}>
-                <ListItemButton
-                  selected={pathName.startsWith(organizationMarketplaceSetupBaseLink)}
-                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationMarketplaceSetupBaseLink)) }}
-                >
-                  {collapsed && (
-                    <BodyIconTypography
-                      startElement={!hideIcons && <SetupMarketplaceIcon color="inherit" />}
-                      invertDefaultColor={pathName.startsWith(organizationMarketplaceSetupBaseLink) && paletteMode === 'dark'}
-                    />
-                  )}
-                  {!collapsed && (
-                    <BodyIconTypography
-                      label="Setup Marketplace"
-                      startElement={!hideIcons && <SetupMarketplaceIcon color="inherit" />}
-                      spacing={3}
-                      invertDefaultColor={pathName.startsWith(organizationMarketplaceSetupBaseLink) && paletteMode === 'dark'}
-                    />
-                  )}
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          )}
-
           {rootData.organization.type.type === 'MARKETPLACE' && (
             <ListItem disablePadding>
               <Link component={NextLink} href={organizationProductsBaseLink}>
@@ -376,15 +348,15 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
 
           {rootData.organization.canModify && (
             <ListItem disablePadding>
-              <Link component={NextLink} href={organizationAdminSetupBaseLink}>
+              <Link component={NextLink} href={organizationAdminBaseLink}>
                 <ListItemButton
-                  selected={pathName.startsWith(organizationAdminSetupBaseLink)}
-                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAdminSetupBaseLink)) }}
+                  selected={pathName.startsWith(organizationAdminBaseLink)}
+                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAdminBaseLink)) }}
                 >
                   {collapsed && (
                     <BodyIconTypography
                       startElement={!hideIcons && <SettingsIcon color="inherit" />}
-                      invertDefaultColor={pathName.startsWith(organizationAdminSetupBaseLink) && paletteMode === 'dark'}
+                      invertDefaultColor={pathName.startsWith(organizationAdminBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                   {!collapsed && (
@@ -392,7 +364,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                       label="Admin"
                       startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
                       spacing={3}
-                      invertDefaultColor={pathName.startsWith(organizationAdminSetupBaseLink) && paletteMode === 'dark'}
+                      invertDefaultColor={pathName.startsWith(organizationAdminBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                 </ListItemButton>
@@ -434,7 +406,12 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
           <Box sx={{ backgroundColor: paletteMode === 'dark' ? emerald : coal, position: 'absolute', bottom: 0, width: '100%' }}>
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
               {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
-                <Button href={organizationSubscriptionsBaseLink} variant="contained" color="secondary" sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}>
+                <Button
+                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, rootData.organization.customDomain!)}
+                  variant="contained"
+                  color="secondary"
+                  sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}
+                >
                   <BodyIconTypography label="Upgrade Plan" endElement={<UpgradeIcon fontSize="medium" />} color="inherit" />
                 </Button>
               )}

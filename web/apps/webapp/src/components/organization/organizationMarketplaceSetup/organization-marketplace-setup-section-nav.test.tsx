@@ -36,12 +36,12 @@ vi.mock(import('@skedular/shared'), async (importOriginal) => {
 });
 
 vi.mock('@/components/links', () => ({
-  getOrganizationMarketplaceSetupMarketplaceListingBaseLink: () => '/organizations/acme/setup-marketplace?section=marketplace-listing',
-  getOrganizationMarketplaceSetupBillingCycleBaseLink: () => '/organizations/acme/setup-marketplace?section=billing-cycle',
-  getOrganizationMarketplaceSetupXeroBaseLink: () => '/organizations/acme/setup-marketplace?section=xero-setup',
-  getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink: () => '/organizations/acme/setup-marketplace?section=stripe-connect-accounts-setup',
-  getOrganizationMarketplaceSetupBankAccountsBaseLink: () => '/organizations/acme/setup-marketplace?section=bank-accounts-setup',
-  getOrganizationMarketplaceSetupProductTagsBaseLink: () => '/organizations/acme/setup-marketplace?section=product-tags-setup',
+  getOrganizationMarketplaceSetupMarketplaceListingBaseLink: () => '/organizations/acme/admin?section=marketplace-listing',
+  getOrganizationMarketplaceSetupBillingCycleBaseLink: () => '/organizations/acme/admin?section=billing-cycle',
+  getOrganizationMarketplaceSetupXeroBaseLink: () => '/organizations/acme/admin?section=xero-setup',
+  getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink: () => '/organizations/acme/admin?section=stripe-connect-accounts-setup',
+  getOrganizationMarketplaceSetupBankAccountsBaseLink: () => '/organizations/acme/admin?section=bank-accounts-setup',
+  getOrganizationMarketplaceSetupProductTagsBaseLink: () => '/organizations/acme/admin?section=product-tags-setup',
 }));
 
 describe('OrganizationMarketplaceSetupSectionNav', () => {
@@ -53,8 +53,8 @@ describe('OrganizationMarketplaceSetupSectionNav', () => {
     const xeroTab = screen.getByRole('link', { name: 'Xero' });
     const listingTab = screen.getByRole('link', { name: 'Listing' });
 
-    expect(xeroTab).toHaveAttribute('href', '/organizations/acme/setup-marketplace?section=xero-setup');
-    expect(listingTab).toHaveAttribute('href', '/organizations/acme/setup-marketplace?section=marketplace-listing');
+    expect(xeroTab).toHaveAttribute('href', '/organizations/acme/admin?section=xero-setup');
+    expect(listingTab).toHaveAttribute('href', '/organizations/acme/admin?section=marketplace-listing');
     expect(xeroTab.className).toContain('MuiButton-contained');
     expect(listingTab.className).toContain('MuiButton-text');
   });
@@ -69,8 +69,8 @@ describe('OrganizationMarketplaceSetupSectionNav', () => {
     const listingMenuItem = screen.getByRole('menuitem', { name: 'Listing' });
     const xeroMenuItem = screen.getByRole('menuitem', { name: 'Xero' });
 
-    expect(listingMenuItem).toHaveAttribute('href', '/organizations/acme/setup-marketplace?section=marketplace-listing');
-    expect(xeroMenuItem).toHaveAttribute('href', '/organizations/acme/setup-marketplace?section=xero-setup');
+    expect(listingMenuItem).toHaveAttribute('href', '/organizations/acme/admin?section=marketplace-listing');
+    expect(xeroMenuItem).toHaveAttribute('href', '/organizations/acme/admin?section=xero-setup');
     expect(xeroMenuItem.className).toContain('Mui-selected');
   });
 });

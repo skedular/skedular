@@ -1,116 +1,30 @@
-import { BodyIconTypography, StackColumn } from '@skedular/ui';
+import { getOrganizationMarketplaceSetupMarketplaceListingBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
-import { OrganizationMarketplaceSetup } from '@/components/organization/organizationMarketplaceSetup';
-import { RelayError, toRootError } from '@/components/relayError';
-import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
-import type { pageOrganizationMarketplaceSetup_rootQuery } from '@/queries/__generated__/pageOrganizationMarketplaceSetup_rootQuery.graphql';
-import { Breadcrumbs } from '@mui/material';
-import Button from '@mui/material/Button';
-import Box from '@mui/system/Box';
-import { useRouter } from 'next/navigation';
-import { memo, useEffect, useState, useTransition } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import { v7 as uuid } from 'uuid';
+import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { memo, useEffect } from 'react';
 
-type Props = {
-  queryReference: PreloadedQuery<pageOrganizationMarketplaceSetup_rootQuery, Record<string, unknown>>;
-  onReloadRequired: () => void;
-  organizationCustomDomain: string;
-};
+const legacySections = new Set(['marketplace-listing', 'billing-cycle', 'xero-setup', 'stripe-connect-accounts-setup', 'bank-accounts-setup', 'product-tags-setup']);
 
-const RootQuery = graphql`
-  query pageOrganizationMarketplaceSetup_rootQuery(
-    $organizationCustomDomain: String!
-    $productTagNameSearchText: String
-    $organizationStripeConnectAccountNameSearchText: String
-    $organizationBankAccountNameSearchText: String
-  ) {
-    organization(customDomain: $organizationCustomDomain) {
-      name
-    }
-    ...organizationMarketplaceSetup_query
-    ...organizationMarketplaceSetup_productTags_query
-    ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query
-    ...organizationMarketplaceSetup_organizationBankAccounts_query
-  }
-`;
-
-const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
-  const rootData = usePreloadedQuery<pageOrganizationMarketplaceSetup_rootQuery>(RootQuery, queryReference);
+const RootPage = () => {
   const router = useRouter();
-
-  const handleBackClick = () => {
-    router.back();
-  };
-
-  const breadcrumbs = (
-    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-        {'< back'}
-      </Button>
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Breadcrumbs>
-          <BodyIconTypography label="Marketplace Setup" />
-          <BodyIconTypography label={rootData.organization?.name} />
-        </Breadcrumbs>
-      </Box>
-    </StackColumn>
-  );
-
-  return (
-    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationMarketplaceSetup
-        rootDataRelay={rootData}
-        rootDataProductTagsRelay={rootData}
-        rootDataOrganizationStripeConnectAccountsRelay={rootData}
-        rootDataOrganizationBankAccountsRelay={rootData}
-        onReloadRequired={onReloadRequired}
-        organizationCustomDomain={organizationCustomDomain}
-      />
-    </RootShell>
-  );
-};
-
-const MemoRootPage = memo(RootPage);
-
-const RootPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<pageOrganizationMarketplaceSetup_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
-  const [, startTransition] = useTransition();
+  const searchParams = useSearchParams();
   const { organizationCustomDomain } = useKnownParams();
+  const { integratedPlatrform } = useIntegratedPlatrform();
 
   if (!organizationCustomDomain) {
     throw new Error('organizationCustomDomain is required');
   }
 
   useEffect(() => {
-    loadQuery(
-      {
-        organizationCustomDomain,
-      },
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
+    const requestedSection = searchParams.get('section');
+    const section = requestedSection && legacySections.has(requestedSection) ? requestedSection : 'marketplace-listing';
+    const target = `${getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatrform, organizationCustomDomain).split('?')[0]}?section=${section}`;
 
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReloadId(uuid());
-    });
-  };
+    router.replace(target);
+  }, [integratedPlatrform, organizationCustomDomain, router, searchParams]);
 
-  if (!queryReference) {
-    return <Loading />;
-  }
-
-  return (
-    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
-    </ErrorBoundary>
-  );
+  return <Loading />;
 };
 
-export default memo(RootPageWithRelay);
+export default memo(RootPage);

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a3417b7d591d8ed94368b417c70cc258>>
+ * @generated SignedSource<<143a5786c110779c3f9328b4b4079046>>
  * @lightSyntaxTransform
  */
 
@@ -11,9 +11,6 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
   readonly organization: {
-    readonly listingMetadata: {
-      readonly title: string | null | undefined;
-    };
     readonly marketplaceListingMetadata: {
       readonly title: string | null | undefined;
     };
@@ -26,17 +23,7 @@ export type organizationAdmin_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_query">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "title",
-    "storageKey": null
-  }
-];
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -73,19 +60,17 @@ return {
           "args": null,
           "concreteType": "ListingMetadata",
           "kind": "LinkedField",
-          "name": "listingMetadata",
-          "plural": false,
-          "selections": (v0/*:: as any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ListingMetadata",
-          "kind": "LinkedField",
           "name": "marketplaceListingMetadata",
           "plural": false,
-          "selections": (v0/*:: as any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "title",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -95,8 +80,7 @@ return {
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "0ec5d0fb474259763bb19965ec62bef7";
+(node as any).hash = "262593da1c0624233e86762a5bc55840";
 
 export default node;

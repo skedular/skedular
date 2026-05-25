@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<47026e5acf0a398736163275634e5846>>
+ * @generated SignedSource<<7f9d14e979330a0c6da4aa0ed9f789f9>>
  * @lightSyntaxTransform
  */
 
@@ -44,16 +44,7 @@ v2 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v3 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "title",
-    "storageKey": null
-  }
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*:: as any*/),
@@ -107,11 +98,19 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "ListingMetadata",
+            "concreteType": "OrganizationTypeDetails",
             "kind": "LinkedField",
-            "name": "listingMetadata",
+            "name": "type",
             "plural": false,
-            "selections": (v3/*:: as any*/),
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           },
           {
@@ -121,7 +120,15 @@ return {
             "kind": "LinkedField",
             "name": "marketplaceListingMetadata",
             "plural": false,
-            "selections": (v3/*:: as any*/),
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "title",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           }
         ],
@@ -130,12 +137,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2a2d8e298fea8a3e798250405ce7d351",
+    "cacheID": "193f19e043c9f4e33f10458106e48f9b",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationAdmin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n}\n\nfragment organizationAdmin_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    listingMetadata {\n      title\n    }\n    marketplaceListingMetadata {\n      title\n    }\n    id\n  }\n}\n"
+    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n}\n\nfragment organizationAdmin_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    type {\n      type\n    }\n    marketplaceListingMetadata {\n      title\n    }\n    id\n  }\n}\n"
   }
 };
 })();

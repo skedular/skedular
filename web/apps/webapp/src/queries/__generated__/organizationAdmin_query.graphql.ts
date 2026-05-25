@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a3417b7d591d8ed94368b417c70cc258>>
+ * @generated SignedSource<<707629703255e3beee38088d9a3debf3>>
  * @lightSyntaxTransform
  */
 
@@ -8,16 +8,17 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
   readonly organization: {
-    readonly listingMetadata: {
-      readonly title: string | null | undefined;
-    };
     readonly marketplaceListingMetadata: {
       readonly title: string | null | undefined;
     };
     readonly name: string;
+    readonly type: {
+      readonly type: OrganizationType;
+    };
   } | null | undefined;
   readonly " $fragmentType": "organizationAdmin_query";
 };
@@ -26,17 +27,7 @@ export type organizationAdmin_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_query">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "title",
-    "storageKey": null
-  }
-];
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -71,11 +62,19 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "ListingMetadata",
+          "concreteType": "OrganizationTypeDetails",
           "kind": "LinkedField",
-          "name": "listingMetadata",
+          "name": "type",
           "plural": false,
-          "selections": (v0/*:: as any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         },
         {
@@ -85,7 +84,15 @@ return {
           "kind": "LinkedField",
           "name": "marketplaceListingMetadata",
           "plural": false,
-          "selections": (v0/*:: as any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "title",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -95,8 +102,7 @@ return {
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "0ec5d0fb474259763bb19965ec62bef7";
+(node as any).hash = "957afbd59a0cda4ad66e7a1da180c275";
 
 export default node;

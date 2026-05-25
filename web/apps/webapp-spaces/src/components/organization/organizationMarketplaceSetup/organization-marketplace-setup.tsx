@@ -68,6 +68,7 @@ type Props = {
   rootDataOrganizationBankAccountsRelay: organizationMarketplaceSetup_organizationBankAccounts_query$key;
   onReloadRequired: () => void;
   organizationCustomDomain: string;
+  embedded?: boolean;
 };
 
 const inlinePatchDebounceTimeout = 1000;
@@ -174,6 +175,7 @@ const OrganizationMarketplaceSetup = ({
   rootDataOrganizationBankAccountsRelay,
   onReloadRequired,
   organizationCustomDomain,
+  embedded = false,
 }: Props) => {
   const rootData = useFragment<organizationMarketplaceSetup_query$key>(
     graphql`
@@ -1850,18 +1852,22 @@ const OrganizationMarketplaceSetup = ({
             gap: 2,
           }}
         >
-          <PageHeaderPanel
-            eyebrow="Marketplace setup"
-            title={organization?.name ?? 'Marketplace settings'}
-            description="Manage listing details, billing cadence, Xero, payout rails, and product tags."
-          >
-            <StackColumn spacing={0.5}>
-              <SmallIconTypography label="Commerce & payouts" />
-              <BodyIconTypography label={organization?.marketplaceListingMetadata?.title || organization?.name || 'Listing, billing, Xero, Stripe, and bank accounts'} />
-            </StackColumn>
-          </PageHeaderPanel>
+          {!embedded && (
+            <>
+              <PageHeaderPanel
+                eyebrow="Marketplace setup"
+                title={organization?.name ?? 'Marketplace settings'}
+                description="Manage listing details, billing cadence, Xero, payout rails, and product tags."
+              >
+                <StackColumn spacing={0.5}>
+                  <SmallIconTypography label="Commerce & payouts" />
+                  <BodyIconTypography label={organization?.marketplaceListingMetadata?.title || organization?.name || 'Listing, billing, Xero, Stripe, and bank accounts'} />
+                </StackColumn>
+              </PageHeaderPanel>
 
-          <OrganizationMarketplaceSetupSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} stickyTop={stickyTop} />
+              <OrganizationMarketplaceSetupSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} stickyTop={stickyTop} />
+            </>
+          )}
           <Box
             sx={{
               borderRadius: 4,

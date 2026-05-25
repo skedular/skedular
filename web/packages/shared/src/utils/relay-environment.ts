@@ -45,7 +45,7 @@ export function createNetwork(endpoint: string, token?: string | null | undefine
         }),
       });
 
-      if (response.status === 504) {
+      if (response.status === 504 || response.status === 502) {
         await sleep(HTTP_RETRY_DELAY_MS);
         continue;
       }
