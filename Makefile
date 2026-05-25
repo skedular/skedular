@@ -8,6 +8,7 @@ GOFILES = $(shell find . -type f -name '*.go' -not -path "*/mock/*.go" -not -pat
 DC = docker compose -p unityhubio -f docker-compose-production.yml --env-file .env
 
 # Service groups
+DEP_SERVICES     = dozzle postgres18 redis redisinsight kafka1 kowl temporal temporal-admin-tools temporal-ui
 STAGING_SERVICES = staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01
 PROD_SERVICES    = prod-infra-provision prod-processors-01 prod-jobs-01 prod-apis-01
 
@@ -42,11 +43,20 @@ format: ## Format the source
 images-pull:
 	$(DC) pull
 
-.PHONY: dep-restart
-dep-restart:
+.PHONY: dep-start
+dep-start: ## Start dependency/infrastructure services
 	$(DC) pull
-	$(DC) down dozzle postgres18 redis redisinsight kafka1 kowl
-	$(DC) up --build -d dozzle postgres18 redis redisinsight kafka1 kowl
+	$(DC) up --build -d $(DEP_SERVICES)
+
+.PHONY: dep-stop
+dep-stop: ## Stop dependency/infrastructure services
+	$(DC) down $(DEP_SERVICES)
+
+.PHONY: dep-restart
+dep-restart: ## Restart dependency/infrastructure services
+	$(DC) pull
+	$(DC) down $(DEP_SERVICES)
+	$(DC) up --build -d $(DEP_SERVICES)
 
 .PHONY: services-all-restart
 services-all-restart:
