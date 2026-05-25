@@ -8,6 +8,7 @@ using Organization.Shared.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
+using Organization.Shared.Services.Cache;
 using Organization.Shared.Workflows;
 using Stripe;
 
@@ -15,7 +16,8 @@ namespace Organization.Api.Services;
 
 public interface IPaymentService
 {
-    Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, CancellationToken cancellationToken);
+    Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, string? redirectTo,
+        CancellationToken cancellationToken);
 
     Task<string> AddPaymentMethodIntentAsync(
         string? organizationId,
@@ -38,13 +40,15 @@ public class PaymentService(
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     TimeProvider timeProvider,
     IRandomHelper randomHelper,
+    ICachedOrganizationService cachedOrganizationService,
     ITemporalOutboxService temporalOutboxService,
     ITemporalService temporalService) : IPaymentService
 {
-    public async Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, CancellationToken cancellationToken) =>
+    public async Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, string? redirectTo,
+        CancellationToken cancellationToken) =>
         await temporalService.SignalAddOrganizationStripePaymentMethodAndGetResultAsync(
             clientSecret,
-            new StripePaymentMethodEventState(redirectStatus),
+            new StripePaymentMethodEventState(redirectStatus, redirectTo),
             cancellationToken);
 
     public async Task<string> AddPaymentMethodIntentAsync(
@@ -110,6 +114,7 @@ public class PaymentService(
                 {
                     PublishOrganization(organization);
                     await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+                    await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
                     await transaction.CommitAsync(cancellationToken);
 
                     return;
@@ -178,6 +183,7 @@ public class PaymentService(
         }
 
         _ = await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 

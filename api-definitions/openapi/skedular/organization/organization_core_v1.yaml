@@ -232,6 +232,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: redirect_to
+          in: query
+          required: false
+          schema:
+            type: string
+            nullable: true
 
       responses:
         "200":

@@ -18,11 +18,12 @@ public class AddCustomerPaymentMethodShould
         string url,
         CancellationToken cancellationToken)
     {
-        A.CallTo(() => paymentService.HandleStripePaymentMethodEventAsync(A<string>._, A<string>._, A<CancellationToken>._)).Returns(url);
+        A.CallTo(() => paymentService.HandleStripePaymentMethodEventAsync(A<string>._, A<string>._, A<string?>._, A<CancellationToken>._))
+            .Returns(url);
 
-        _ = await sut.AddCustomerPaymentMethod(setupIntent, setupIntentClientSecret, redirectStatus, cancellationToken);
+        _ = await sut.AddCustomerPaymentMethod(setupIntent, setupIntentClientSecret, redirectStatus, cancellationToken: cancellationToken);
 
-        A.CallTo(() => paymentService.HandleStripePaymentMethodEventAsync(setupIntentClientSecret, redirectStatus, cancellationToken))
+        A.CallTo(() => paymentService.HandleStripePaymentMethodEventAsync(setupIntentClientSecret, redirectStatus, null, cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -37,9 +38,10 @@ public class AddCustomerPaymentMethodShould
         string url,
         CancellationToken cancellationToken)
     {
-        A.CallTo(() => paymentService.HandleStripePaymentMethodEventAsync(A<string>._, A<string>._, A<CancellationToken>._)).Returns(url);
+        A.CallTo(() => paymentService.HandleStripePaymentMethodEventAsync(A<string>._, A<string>._, A<string?>._, A<CancellationToken>._))
+            .Returns(url);
 
-        var result = await sut.AddCustomerPaymentMethod(setupIntent, setupIntentClientSecret, redirectStatus, cancellationToken);
+        var result = await sut.AddCustomerPaymentMethod(setupIntent, setupIntentClientSecret, redirectStatus, cancellationToken: cancellationToken);
 
         result.ShouldBeOfType<RedirectResult>();
 
@@ -58,9 +60,11 @@ public class AddCustomerPaymentMethodShould
         string redirectStatus,
         CancellationToken cancellationToken)
     {
-        A.CallTo(() => paymentService.HandleStripePaymentMethodEventAsync(A<string>._, A<string>._, A<CancellationToken>._)).Throws<Exception>();
+        A.CallTo(() => paymentService.HandleStripePaymentMethodEventAsync(A<string>._, A<string>._, A<string?>._, A<CancellationToken>._))
+            .Throws<Exception>();
 
-        var action = async () => await sut.AddCustomerPaymentMethod(setupIntent, setupIntentClientSecret, redirectStatus, cancellationToken);
+        var action = async () =>
+            await sut.AddCustomerPaymentMethod(setupIntent, setupIntentClientSecret, redirectStatus, cancellationToken: cancellationToken);
 
         await action.ShouldThrowAsync<Exception>();
     }

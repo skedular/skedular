@@ -12,7 +12,9 @@ public class CustomerStripeController(IPaymentService paymentService) : Customer
         string setup_intent,
         string setup_intent_client_secret,
         string redirect_status,
+        string? redirect_to = null,
         // ReSharper restore InconsistentNaming
         CancellationToken cancellationToken = default) =>
-        Redirect(await paymentService.HandleStripePaymentMethodEventAsync(setup_intent_client_secret, redirect_status, cancellationToken));
+        Redirect(
+            await paymentService.HandleStripePaymentMethodEventAsync(setup_intent_client_secret, redirect_status, redirect_to, cancellationToken));
 }

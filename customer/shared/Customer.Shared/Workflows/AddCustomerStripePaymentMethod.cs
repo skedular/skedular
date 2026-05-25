@@ -11,7 +11,7 @@ public record AddCustomerStripePaymentMethodState(
     AddCustomerStripePaymentMethodInput Args,
     StripePaymentMethodEventState? StripePaymentMethodEventState);
 
-public record StripePaymentMethodEventState(string RedirectStatus);
+public record StripePaymentMethodEventState(string RedirectStatus, string? RedirectTo = null);
 
 [Workflow]
 public class AddCustomerStripePaymentMethod
@@ -32,7 +32,8 @@ public class AddCustomerStripePaymentMethod
 
         var redirectUrl = await Workflow.ExecuteActivityAsync(
             (StripeIntegrations activity) => activity.SetCustomerPaymentMethodAsync(
-                new SetCustomerPaymentMethodInput(args.CustomerId, args.SetupIntentId, _state.StripePaymentMethodEventState.RedirectStatus)),
+                new SetCustomerPaymentMethodInput(args.CustomerId, args.SetupIntentId, _state.StripePaymentMethodEventState.RedirectStatus,
+                    _state.StripePaymentMethodEventState.RedirectTo)),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromSeconds(30),

@@ -11,7 +11,12 @@ namespace Customer.Api.Services;
 
 public interface IPaymentService
 {
-    Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, CancellationToken cancellationToken);
+    Task<string> HandleStripePaymentMethodEventAsync(
+        string clientSecret,
+        string redirectStatus,
+        string? redirectTo,
+        CancellationToken cancellationToken);
+
     Task<string> AddPaymentMethodIntentAsync(CancellationToken cancellationToken);
     Task RemovePaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken);
     Task<IReadOnlyList<StripePaymentMethod>> GetPaymentMethodsAsync(string requestedCustomerId, CancellationToken cancellationToken);
@@ -29,10 +34,14 @@ public class PaymentService(
     ITemporalService temporalService,
     IEntityMapper entityMapper) : IPaymentService
 {
-    public async Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, CancellationToken cancellationToken) =>
+    public async Task<string> HandleStripePaymentMethodEventAsync(
+        string clientSecret,
+        string redirectStatus,
+        string? redirectTo,
+        CancellationToken cancellationToken) =>
         await temporalService.SignalAddCustomerStripePaymentMethodAndGetResultAsync(
             clientSecret,
-            new StripePaymentMethodEventState(redirectStatus),
+            new StripePaymentMethodEventState(redirectStatus, redirectTo),
             cancellationToken);
 
     public async Task<string> AddPaymentMethodIntentAsync(CancellationToken cancellationToken)

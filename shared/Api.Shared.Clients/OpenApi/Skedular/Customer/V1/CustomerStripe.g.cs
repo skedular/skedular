@@ -36,7 +36,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1
         /// </summary>
         /// <returns>the readiness status</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task AddCustomerPaymentMethodAsync(string setup_intent, string setup_intent_client_secret, string redirect_status, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task AddCustomerPaymentMethodAsync(string setup_intent, string setup_intent_client_secret, string redirect_status, string? redirect_to = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
@@ -47,9 +47,9 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1
         private static System.Lazy<System.Text.Json.JsonSerializerOptions> _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings, true);
         private System.Text.Json.JsonSerializerOptions _instanceSettings;
 
-    #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public CustomerStripeClient(System.Net.Http.HttpClient httpClient)
-    #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _httpClient = httpClient;
             Initialize();
@@ -78,7 +78,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1
         /// </summary>
         /// <returns>the readiness status</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task AddCustomerPaymentMethodAsync(string setup_intent, string setup_intent_client_secret, string redirect_status, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task AddCustomerPaymentMethodAsync(string setup_intent, string setup_intent_client_secret, string redirect_status, string? redirect_to = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (setup_intent == null)
                 throw new System.ArgumentNullException("setup_intent");
@@ -98,13 +98,17 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1
                     request_.Method = new System.Net.Http.HttpMethod("GET");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "v1/customer/add-payment-method"
                     urlBuilder_.Append("v1/customer/add-payment-method");
                     urlBuilder_.Append('?');
                     urlBuilder_.Append(System.Uri.EscapeDataString("setup_intent")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(setup_intent, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     urlBuilder_.Append(System.Uri.EscapeDataString("setup_intent_client_secret")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(setup_intent_client_secret, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     urlBuilder_.Append(System.Uri.EscapeDataString("redirect_status")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(redirect_status, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    if (redirect_to != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("redirect_to")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(redirect_to, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
                     urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -174,21 +178,21 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private static System.Threading.Tasks.Task<string> ReadAsStringAsync(System.Net.Http.HttpContent content, System.Threading.CancellationToken cancellationToken)
         {
-    #if NET5_0_OR_GREATER
+#if NET5_0_OR_GREATER
             return content.ReadAsStringAsync(cancellationToken);
-    #else
+#else
             return content.ReadAsStringAsync();
-    #endif
+#endif
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private static System.Threading.Tasks.Task<System.IO.Stream> ReadAsStreamAsync(System.Net.Http.HttpContent content, System.Threading.CancellationToken cancellationToken)
         {
-    #if NET5_0_OR_GREATER
+#if NET5_0_OR_GREATER
             return content.ReadAsStreamAsync(cancellationToken);
-    #else
+#else
             return content.ReadAsStreamAsync();
-    #endif
+#endif
         }
 
         public bool ReadResponseAsString { get; set; }
@@ -247,7 +251,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1
                     var field_ = System.Reflection.IntrospectionExtensions.GetTypeInfo(value.GetType()).GetDeclaredField(name);
                     if (field_ != null)
                     {
-                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field_, typeof(System.Runtime.Serialization.EnumMemberAttribute)) 
+                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field_, typeof(System.Runtime.Serialization.EnumMemberAttribute))
                             as System.Runtime.Serialization.EnumMemberAttribute;
                         if (attribute != null)
                         {
@@ -267,13 +271,13 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1
             {
                 return dateTime.ToString("O", cultureInfo);
             }
-            else if (value is bool) 
+            else if (value is bool)
             {
                 return System.Convert.ToString((bool)value, cultureInfo).ToLowerInvariant();
             }
             else if (value is byte[])
             {
-                return System.Convert.ToBase64String((byte[]) value);
+                return System.Convert.ToBase64String((byte[])value);
             }
             else if (value is string[])
             {
@@ -403,11 +407,11 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1
 
 }
 
-#pragma warning restore  108
-#pragma warning restore  114
-#pragma warning restore  472
-#pragma warning restore  612
-#pragma warning restore  649
+#pragma warning restore 108
+#pragma warning restore 114
+#pragma warning restore 472
+#pragma warning restore 612
+#pragma warning restore 649
 #pragma warning restore 1573
 #pragma warning restore 1591
 #pragma warning restore 8073

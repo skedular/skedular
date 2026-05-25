@@ -7,7 +7,7 @@ namespace Organization.Shared.Workflows;
 
 public record AddOrganizationStripePaymentMethodInput(string OrganizationId, string ClientSecret, string SetupIntentId);
 
-public record StripePaymentMethodEventState(string RedirectStatus);
+public record StripePaymentMethodEventState(string RedirectStatus, string? RedirectTo = null);
 
 public record AddOrganizationStripePaymentMethodState(
     AddOrganizationStripePaymentMethodInput Args,
@@ -32,7 +32,8 @@ public class AddOrganizationStripePaymentMethod
 
         var redirectUrl = await Workflow.ExecuteActivityAsync(
             (StripeIntegrations activity) => activity.SetOrganizationPaymentMethodAsync(
-                new SetOrganizationPaymentMethodInput(args.OrganizationId, args.SetupIntentId, _state.StripePaymentMethodEventState.RedirectStatus)),
+                new SetOrganizationPaymentMethodInput(args.OrganizationId, args.SetupIntentId, _state.StripePaymentMethodEventState.RedirectStatus,
+                    _state.StripePaymentMethodEventState.RedirectTo)),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromSeconds(30),

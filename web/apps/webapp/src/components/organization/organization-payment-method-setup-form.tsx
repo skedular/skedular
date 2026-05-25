@@ -1,6 +1,6 @@
-import { FormStackColumn, TwoButtonsDialogActions } from '@skedular/ui';
 import { NotificationContent, errorNotificationOptions } from '@/components/notification';
 import { PaletteModeContext } from '@skedular/shared';
+import { FormStackColumn, TwoButtonsDialogActions } from '@skedular/ui';
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -27,7 +27,7 @@ const OrganizationPaymentMethodSetupForm = ({ onCancel }: Props) => {
     const { error } = await stripe.confirmSetup({
       elements,
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/v1/organization/add-payment-method`,
+        return_url: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/v1/organization/add-payment-method?redirect_to=${encodeURIComponent(window.location.href)}`,
       },
     });
 

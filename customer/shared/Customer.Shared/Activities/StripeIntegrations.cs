@@ -9,7 +9,7 @@ using Temporalio.Activities;
 
 namespace Customer.Shared.Activities;
 
-public record SetCustomerPaymentMethodInput(string CustomerId, string SetupIntentId, string RedirectStatus);
+public record SetCustomerPaymentMethodInput(string CustomerId, string SetupIntentId, string RedirectStatus, string? RedirectTo = null);
 
 public class StripeIntegrations(
     ApplicationConfiguration applicationConfiguration,
@@ -24,7 +24,9 @@ public class StripeIntegrations(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(args.CustomerId, cancellationToken) ?? throw new CustomerNotFound();
-        var redirectUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "billing-and-payment");
+        var redirectUrl = IsValidRedirectUrl(args.RedirectTo)
+            ? args.RedirectTo!
+            : Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "billing-and-payment");
 
         if (args.RedirectStatus == "succeeded")
         {
@@ -50,4 +52,9 @@ public class StripeIntegrations(
 
         return redirectUrl;
     }
+
+    private static bool IsValidRedirectUrl(string? url) =>
+        !string.IsNullOrWhiteSpace(url) &&
+        Uri.TryCreate(url, UriKind.Absolute, out var uri) &&
+        (uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp);
 }
