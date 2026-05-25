@@ -3,10 +3,8 @@ import { EditPrivateRecurringBooking } from '@/components/booking/editPrivateRec
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
-import { startOfDay } from '@skedular/shared';
 import type { pageOrganizationBooking_rootQuery } from '@/queries/__generated__/pageOrganizationBooking_rootQuery.graphql';
-import dayjs from 'dayjs';
+import { startOfDay, useKnownParams } from '@skedular/shared';
 import { useSearchParams } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -66,8 +64,6 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
 
   const editMode = searchParams.get('editMode');
   const showRecurringPrivateBookingEditor = !!rootData.booking.recurringBooking && editMode === 'recurring';
-
-  const date = dayjs(rootData.booking.from);
 
   return (
     <RootShell>

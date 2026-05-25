@@ -2,7 +2,16 @@ import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetc
 import { Address, PhysicalAddress } from '@/components/address';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
-import { getOrganizationLocationsBaseLink } from '@/components/links';
+import {
+  getOrganizationLocationFloorPlansBaseLink,
+  getOrganizationLocationManageLocationBaseLink,
+  getOrganizationLocationManageResourcesBaseLink,
+  getOrganizationLocationOpeningHoursBaseLink,
+  getOrganizationLocationPhysicalAddressSetupBaseLink,
+  getOrganizationLocationRestrictedInformationBaseLink,
+  getOrganizationLocationsBaseLink,
+  getOrganizationLocationSetupBaseLink,
+} from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationRestrictedInformationCategory } from '@/components/location';
@@ -10,7 +19,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { MultipleChoicesAmenities } from '@/components/organization';
 import OrganizationLocationFloorPlansSection from '@/components/organization/organizationLocation/organization-location-floor-plans-section';
 import OrganizationLocationManageResourcesSection from '@/components/organization/organizationLocation/organization-location-manage-resources-section';
-import OrganizationLocationSectionNav, { OrganizationLocationSection } from '@/components/organization/organizationLocation/organization-location-section-nav';
+import { OrganizationLocationSection } from '@/components/organization/organizationLocation/organization-location-section-nav';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import type { organizationLocation_addLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_addLocationPhysicalAddressMutation.graphql';
@@ -30,7 +39,10 @@ import type {
 } from '@/queries/__generated__/organizationLocation_updateLocationRestrictedInformationMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext, stringCollectionToString, stringToMultiLines, useIntegratedPlatrform } from '@skedular/shared';
 import {
@@ -50,6 +62,7 @@ import {
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import NextLink from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, Suspense, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -154,12 +167,22 @@ const validSections: OrganizationLocationSection[] = [
   'manage-location',
 ];
 
-const getActiveSection = (value: string | null): OrganizationLocationSection => {
+const getActiveSection = (value: string | null): OrganizationLocationSection | null => {
   if (value && validSections.includes(value as OrganizationLocationSection)) {
     return value as OrganizationLocationSection;
   }
 
-  return 'setup';
+  return null;
+};
+
+const sectionLabels: Record<OrganizationLocationSection, string> = {
+  setup: 'Location setup',
+  'physical-address-setup': 'Physical address',
+  'opening-hours': 'Opening hours',
+  'floor-plans': 'Floor plans',
+  'manage-resources': 'Resources',
+  'restricted-information': 'Restricted info',
+  'manage-location': 'Manage location',
 };
 const locationAutosaveDebounceTimeout = 1000;
 
@@ -1241,7 +1264,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   );
 
   const renderSetupSection = () => (
-    <Form
+    <Form<LocationDetails>
       onSubmit={() => undefined}
       initialValues={{
         name: locationName,
@@ -1267,8 +1290,8 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       render={({ handleSubmit, values }) => {
         debounceSetLocationName(values!.name);
         debounceSetLocationTimezone(values!.timezone);
-        debounceSetSpaceTypeIds(values!.spaceTypeIds);
-        debounceSetAmenityIds(values!.amenityIds);
+        debounceSetSpaceTypeIds(values!.spaceTypeIds ?? []);
+        debounceSetAmenityIds(values!.amenityIds ?? []);
         debounceSetLocationContactPerson(values!.contactPeople);
         debounceSetLocationContactEmail(values!.contactEmails);
         debounceSetLocationContactPhone(values!.contactPhones);
@@ -1280,9 +1303,9 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         debounceSetLocationRelatedImageLinks(values!.relatedImageLinks);
         debounceSetLocationRelatedVideoLinks(values!.relatedVideoLinks);
         debounceSetLocationOtherLinks(values!.otherLinks);
-        debounceSetLocationTitle(values!.title);
-        debounceSetLocationSubTitle(values!.subTitle);
-        debounceSetLocationIncludedFeatures(values!.includedFeatures);
+        debounceSetLocationTitle(values!.title ?? null);
+        debounceSetLocationSubTitle(values!.subTitle ?? null);
+        debounceSetLocationIncludedFeatures(values!.includedFeatures ?? null);
         const locationValues = values as LocationDetails;
         const changedFormFields = getChangedLocationFields(previousLocationValues.current, locationValues);
         const extraFields: LocationPatchField[] =
@@ -1549,7 +1572,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
               <BodyIconTypography label="No restricted information has been added for this location." />
             ) : (
               restrictedInformation.map((item) => (
-                <Form
+                <Form<RestrictedInformationDetails>
                   key={item.id}
                   onSubmit={() => undefined}
                   initialValues={{
@@ -1598,7 +1621,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
           title="Add Restricted Information"
           description="Create a new private note for access, Wi-Fi, cleaning, security, parking, or other operational details."
         >
-          <Form
+          <Form<RestrictedInformationDetails>
             onSubmit={(values) => handleAddRestrictedInformationClick(values as RestrictedInformationDetails)}
             initialValues={{
               title: '',
@@ -1642,6 +1665,108 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     </Box>
   );
 
+  const locationBaseLink = getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain).replace('/locations', `/locations/${locationId}`);
+  const sectionLinks: Record<OrganizationLocationSection, string> = {
+    setup: getOrganizationLocationSetupBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
+    'physical-address-setup': getOrganizationLocationPhysicalAddressSetupBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
+    'opening-hours': getOrganizationLocationOpeningHoursBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
+    'floor-plans': getOrganizationLocationFloorPlansBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
+    'manage-resources': getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
+    'restricted-information': getOrganizationLocationRestrictedInformationBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
+    'manage-location': getOrganizationLocationManageLocationBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
+  };
+  const locationCards = [
+    {
+      title: 'Profile',
+      description: 'Location identity, listing content, images, contact details, amenities, and space types.',
+      sections: ['setup', 'physical-address-setup'] satisfies OrganizationLocationSection[],
+    },
+    {
+      title: 'Availability',
+      description: 'Opening hours, floor plans, and resources that shape bookings and capacity.',
+      sections: ['opening-hours', 'floor-plans', 'manage-resources'] satisfies OrganizationLocationSection[],
+    },
+    {
+      title: 'Operations',
+      description: 'Private operating notes and location lifecycle controls.',
+      sections: ['restricted-information', 'manage-location'] satisfies OrganizationLocationSection[],
+    },
+  ];
+
+  const renderOverview = () => (
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+        gap: 2,
+      }}
+    >
+      {locationCards.map((card) => {
+        const primarySection = card.sections[0];
+
+        return (
+          <Card
+            key={card.title}
+            variant="outlined"
+            sx={{
+              borderRadius: 3,
+              borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+              boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.06)' : theme.shadows[1]),
+              overflow: 'hidden',
+            }}
+          >
+            <CardContent>
+              <StackColumn spacing={1.5}>
+                <StackColumn spacing={0.5}>
+                  <LeadIconTypography label={card.title} />
+                  <BodyIconTypography label={card.description} />
+                </StackColumn>
+                <Divider />
+                <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
+                  {card.sections.map((item) => (
+                    <Button
+                      key={item}
+                      component={NextLink}
+                      href={sectionLinks[item]}
+                      variant="outlined"
+                      size="small"
+                      sx={{
+                        borderRadius: 999,
+                        textTransform: 'none',
+                        fontWeight: 700,
+                        ...(item === primarySection
+                          ? {
+                              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.900' : 'grey.100'),
+                              borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.900' : 'grey.100'),
+                              color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.900'),
+                              '&:hover': {
+                                bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.800' : 'common.white'),
+                                borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.800' : 'common.white'),
+                              },
+                            }
+                          : {
+                              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'transparent'),
+                              borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.400' : 'grey.500'),
+                              color: 'text.primary',
+                              '&:hover': {
+                                bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.50' : 'rgba(255, 255, 255, 0.08)'),
+                                borderColor: 'text.primary',
+                              },
+                            }),
+                      }}
+                    >
+                      {sectionLabels[item]}
+                    </Button>
+                  ))}
+                </StackRow>
+              </StackColumn>
+            </CardContent>
+          </Card>
+        );
+      })}
+    </Box>
+  );
+
   const renderSection = () => {
     switch (activeSection) {
       case 'physical-address-setup':
@@ -1665,8 +1790,9 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       case 'manage-location':
         return renderManageLocationSection();
       case 'setup':
-      default:
         return renderSetupSection();
+      default:
+        return renderOverview();
     }
   };
 
@@ -1683,12 +1809,34 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       >
         <PageHeaderPanel eyebrow="Location settings" title={location.name} description="Setup, address, opening hours, floor plans, resources, and lifecycle controls.">
           <StackColumn spacing={0.5}>
-            <LeadIconTypography label="Setup & operations" />
-            <BodyIconTypography label={location.listingMetadata.title || location.type.name} />
+            {activeSection ? (
+              <Button
+                component={NextLink}
+                href={locationBaseLink}
+                variant="outlined"
+                sx={{
+                  alignSelf: 'flex-start',
+                  borderRadius: 999,
+                  textTransform: 'none',
+                  fontWeight: 700,
+                  borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.500' : 'grey.400'),
+                  color: 'text.primary',
+                  '&:hover': {
+                    bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.50' : 'rgba(255, 255, 255, 0.08)'),
+                    borderColor: 'text.primary',
+                  },
+                }}
+              >
+                Back to location
+              </Button>
+            ) : (
+              <>
+                <LeadIconTypography label="Setup & operations" />
+                <BodyIconTypography label={location.listingMetadata.title || location.type.name} />
+              </>
+            )}
           </StackColumn>
         </PageHeaderPanel>
-
-        <OrganizationLocationSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} locationId={locationId} stickyTop={stickyTop} />
         {renderSection()}
       </StackColumn>
     </Box>

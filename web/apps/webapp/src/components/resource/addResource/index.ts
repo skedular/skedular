@@ -1,2 +1,1 @@
-export { default as AddResourceButton } from './add-resource-button';
-export { default as AddResourceDialog } from './add-resource-dialog';
+export { AddResourcePage } from './add-resource-dialog';
