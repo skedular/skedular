@@ -4,9 +4,9 @@ import { Environment, Network, Observable, RecordSource, Store } from 'relay-run
 import { v7 as uuid } from 'uuid';
 import { isServer } from './constants';
 
-const HTTP_RETRY_ATTEMPTS = 5;
+const HTTP_RETRY_ATTEMPTS = 10;
 const HTTP_RETRY_DELAY_MS = 1000;
-const GRAPHQL_ERROR_RETRY_ATTEMPTS = 3;
+const GRAPHQL_ERROR_RETRY_ATTEMPTS = 10;
 
 const sleep = async (milliseconds: number) => {
   await new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -45,7 +45,7 @@ export function createNetwork(endpoint: string, token?: string | null | undefine
         }),
       });
 
-      if (response.status === 504 && attempt < HTTP_RETRY_ATTEMPTS) {
+      if (response.status === 504) {
         await sleep(HTTP_RETRY_DELAY_MS);
         continue;
       }
@@ -59,7 +59,9 @@ export function createNetwork(endpoint: string, token?: string | null | undefine
         continue;
       }
 
-      return payload;
+      if (!hasGraphqlErrors || !isQueryOperation) {
+        return payload;
+      }
     }
 
     throw new Error('GraphQL request retries exhausted.');
