@@ -10,7 +10,7 @@ import {
   TwoButtonsDialogActions,
 } from '@skedular/ui';
 import { EllipseMenuIcon, FloorPlanIcon, LocationIcon, ResourceIcon } from '@/components/icons';
-import { getOrganizationBookingsBaseLink, getOrganizationLocationFloorPlansLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationLocationBaseLink, getOrganizationLocationFloorPlansLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
@@ -167,7 +167,7 @@ const LocationCard = ({
 
   moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings]);
 
-  const editLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization!.customDomain!, locationDetails.id);
+  const editLink = getOrganizationLocationBaseLink(integratedPlatrform, locationDetails.organization!.customDomain!, locationDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);

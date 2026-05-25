@@ -51,7 +51,7 @@ vi.mock(import('@skedular/shared'), async (importOriginal) => {
 vi.mock('@/components/links', () => ({
   getOrganizationBookingsBaseLink: () => '/bookings',
   getOrganizationLocationFloorPlansLink: () => '/floor-plans',
-  getOrganizationLocationSetupBaseLink: () => '/locations/setup',
+  getOrganizationLocationBaseLink: () => '/locations/location-1',
 }));
 
 vi.mock('@/components/booking/addBooking', () => ({

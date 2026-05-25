@@ -200,6 +200,8 @@ export const getOrganizationLocationAddMarketplaceLink = (integratedPlatrform: s
 
 export const getOrganizationLocationsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/locations`;
 export const getOrganizationAddResourceBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/resources/add`;
+export const getOrganizationLocationBaseLink = (integratedPlatrform: string | undefined, id: string, locationId: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}`;
 export const getOrganizationLocationSetupBaseLink = (integratedPlatrform: string | undefined, id: string, locationId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}?section=setup`;
 export const getOrganizationLocationPhysicalAddressSetupBaseLink = (integratedPlatrform: string | undefined, id: string, locationId: string) =>
