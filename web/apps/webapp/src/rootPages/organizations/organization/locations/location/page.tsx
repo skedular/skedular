@@ -53,7 +53,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
   );
 
   return (
-    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       <OrganizationLocation rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} locationId={locationId} />
     </RootShell>
   );

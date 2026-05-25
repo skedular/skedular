@@ -22,7 +22,6 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  collapsed?: boolean;
   hideOrganizationSelector?: boolean;
   hideWelcomeMessage?: boolean;
   showBreadcrumps?: boolean;
@@ -63,7 +62,6 @@ const RootShell = ({
   queryReference,
   children,
   onReloadRequired,
-  collapsed,
   hideOrganizationSelector,
   hideWelcomeMessage,
   showBreadcrumps,
@@ -137,7 +135,7 @@ const RootShell = ({
       <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
-        <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />
+        <LeftSideNavigationMenu rootDataRelay={rootData} />
         <Box sx={{ flexGrow: 1 }}>
           <AppBar
             rootDataRelay={rootData}
@@ -217,14 +215,13 @@ const RootShell = ({
 const MemoRootShell = memo(RootShell);
 
 type RelayProps = {
-  collapsed?: boolean;
   hideOrganizationSelector?: boolean;
   hideWelcomeMessage?: boolean;
   showBreadcrumps?: boolean;
   breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
-const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: PropsWithChildren<RelayProps>) => {
+const RootShellWithRelay = ({ children, hideOrganizationSelector, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -260,7 +257,6 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
       <MemoRootShell
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        collapsed={collapsed}
         hideOrganizationSelector={hideOrganizationSelector}
         hideWelcomeMessage={hideWelcomeMessage}
         showBreadcrumps={showBreadcrumps}

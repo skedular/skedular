@@ -101,14 +101,14 @@ const RootPage = ({ queryReference }: Props) => {
 
   if (!rootData.organizationBookingPermissions?.canModifyPaymentMethod) {
     return (
-      <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+      <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
         <Alert severity="warning">You do not have permission to manage refunds for this organization.</Alert>
       </RootShell>
     );
   }
 
   return (
-    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       <StackColumn spacing={2}>
         <StackColumn spacing={0.5}>
           <CaptionIconTypography label="Refunds" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.68 }} />

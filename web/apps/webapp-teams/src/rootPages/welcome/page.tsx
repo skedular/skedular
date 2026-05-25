@@ -10,7 +10,7 @@ const RootPage = () => {
   const router = useRouter();
 
   return (
-    <NoOrganizationRootShell hideOrganizationSelector collapsed>
+    <NoOrganizationRootShell hideOrganizationSelector>
       <SetupFlow onUserTypeClick={() => router.push(getOrganizationAddPrivateLink(integratedPlatrform))} />
     </NoOrganizationRootShell>
   );

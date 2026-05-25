@@ -111,7 +111,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
   );
 
   return (
-    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       {rootData.booking.channel.channel === 'MARKETPLACE' && shouldPay && (
         <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
       )}

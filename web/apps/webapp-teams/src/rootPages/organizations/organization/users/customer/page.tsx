@@ -57,7 +57,7 @@ const UserPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
   );
 
   return (
-    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       <OrganizationUser rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} customerId={customerId} />
     </RootShell>
   );

@@ -33,7 +33,7 @@ const RootPage = () => {
   const handleReloadRequired = () => {};
 
   return (
-    <RootShell collapsed>
+    <RootShell>
       <AddPrivateLocation organizationCustomDomain={organizationCustomDomain} onAdded={handleAdded} onCancel={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );

@@ -35,7 +35,7 @@ const RootPage = ({ queryReference }: Props) => {
       );
     } else {
       return (
-        <NoOrganizationRootShell collapsed={true}>
+        <NoOrganizationRootShell>
           <MarketplaceLocation rootDataRelay={rootData} />
         </NoOrganizationRootShell>
       );

@@ -437,7 +437,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
 
   if (!rootData.organizationBookingPermissions.canModifyPaymentMethod) {
     return (
-      <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+      <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
           <Box sx={{ ...surfaceSx, width: '100%', maxWidth: 1200, px: 3, py: 4 }}>
             <BodyIconTypography label="You do not have permission to manage subscription payments for this organization." />
@@ -461,7 +461,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     subscription?.involvedCustomers.length && subscription.involvedCustomers.length > 0 ? getCustomerDisplayName(subscription.involvedCustomers[0]) : 'Customer unavailable';
 
   return (
-    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
         <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pb: defaultPadding }} spacing={2}>
           <PageHeaderPanel

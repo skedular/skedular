@@ -722,7 +722,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
   );
 
   return (
-    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
         <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pb: defaultPadding }} spacing={2}>
           <PageHeaderPanel

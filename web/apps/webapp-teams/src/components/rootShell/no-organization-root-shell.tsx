@@ -22,7 +22,6 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   queryReference: PreloadedQuery<noOrganizationRootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  collapsed?: boolean;
   hideSideNav?: boolean;
   hideOrganizationSelector?: boolean;
   hideWelcomeMessage?: boolean;
@@ -52,7 +51,6 @@ const NoOrganizationRootShell = ({
   queryReference,
   children,
   onReloadRequired,
-  collapsed,
   hideSideNav,
   hideOrganizationSelector,
   hideWelcomeMessage,
@@ -126,7 +124,7 @@ const NoOrganizationRootShell = ({
       <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
-        {!hideSideNav && <NoOrganizationLeftSideNavigationMenu collapsed={collapsed} />}
+        {!hideSideNav && <NoOrganizationLeftSideNavigationMenu />}
         <Box sx={{ flexGrow: 1 }}>
           <NoOrganizationAppBar
             rootDataRelay={rootData}
@@ -146,7 +144,6 @@ const NoOrganizationRootShell = ({
 const MemoNoOrganizationRootShell = memo(NoOrganizationRootShell);
 
 type RelayProps = {
-  collapsed?: boolean;
   hideSideNav?: boolean;
   hideOrganizationSelector?: boolean;
   hideWelcomeMessage?: boolean;
@@ -154,15 +151,7 @@ type RelayProps = {
   breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
-const NoOrganizationRootShellWithRelay = ({
-  children,
-  collapsed,
-  hideSideNav,
-  hideOrganizationSelector,
-  hideWelcomeMessage,
-  showBreadcrumps,
-  breadcrumbs,
-}: PropsWithChildren<RelayProps>) => {
+const NoOrganizationRootShellWithRelay = ({ children, hideSideNav, hideOrganizationSelector, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<noOrganizationRootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -191,7 +180,6 @@ const NoOrganizationRootShellWithRelay = ({
       <MemoNoOrganizationRootShell
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        collapsed={collapsed}
         hideSideNav={hideSideNav}
         hideOrganizationSelector={hideOrganizationSelector}
         hideWelcomeMessage={hideWelcomeMessage}

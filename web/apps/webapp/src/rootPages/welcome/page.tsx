@@ -102,7 +102,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   };
 
   return (
-    <NoOrganizationRootShell hideOrganizationSelector collapsed>
+    <NoOrganizationRootShell hideOrganizationSelector>
       <SetupFlow onUserTypeClick={handleUserTypeClick} userTypesToShow={['private', 'marketplace', 'individual-user']} />
     </NoOrganizationRootShell>
   );

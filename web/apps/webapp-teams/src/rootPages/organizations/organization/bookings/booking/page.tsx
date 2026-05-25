@@ -93,7 +93,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   );
 
   return (
-    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+    <RootShell hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       {showRecurringPrivateBookingEditor ? (
         <EditPrivateRecurringBooking
           rootDataRelay={rootData}
