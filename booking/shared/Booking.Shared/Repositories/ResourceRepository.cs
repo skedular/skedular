@@ -10,6 +10,7 @@ using ResourceAvailabilityClassification = Booking.Shared.Models.ResourceAvailab
 using ResourceAvailabilityOrder = Booking.Shared.Models.ResourceAvailabilityOrder;
 using ResourceAvailabilityOrderByField = Booking.Shared.Models.ResourceAvailabilityOrderByField;
 using ResourceAvailabilityResourceRow = Booking.Shared.Models.ResourceAvailabilityResourceRow;
+using ResourceBookingWindowRow = Booking.Shared.Models.ResourceBookingWindowRow;
 
 namespace Booking.Shared.Repositories;
 
@@ -199,7 +200,30 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                         organizationTag.Type != null &&
                         OrganizationTagTypeConstants.ResourceTagTypes.Contains(organizationTag.Type))
                     .Select(organizationTag => organizationTag.Type)
-                    .FirstOrDefault() ?? string.Empty
+                    .FirstOrDefault() ?? string.Empty,
+                // Booking windows come from the direct Booking many-to-many (BookingResource
+                // join table) rather than the ResourceBookingSlot → Booking path.  Filtering
+                // by Booking.From/Until overlap covers the whole day in one pass; the
+                // BookingResource.InvolvedResourcesId FK index keeps the join efficient.
+                BookingWindows = item.InvolvedBookings
+                    .Where(b => b.DeletedByCustomer == null &&
+                                b.From < dayEnd &&
+                                b.Until > dayStart)
+                    .Select(b => new ResourceBookingWindowRow
+                    {
+                        ResourceId = item.Id,
+                        BookingId = b.Id,
+                        From = b.From,
+                        Until = b.Until,
+                        IsRecurring = b.RecurringBooking != null,
+                        CustomerId = b.CreatedByCustomer != null ? b.CreatedByCustomer.Id : null,
+                        CustomerName = b.CreatedByCustomer != null ? b.CreatedByCustomer.Name : null,
+                        CustomerGivenName = b.CreatedByCustomer != null ? b.CreatedByCustomer.GivenName : null,
+                        CustomerFamilyName = b.CreatedByCustomer != null ? b.CreatedByCustomer.FamilyName : null,
+                        Notes = b.Notes
+                    })
+                    .OrderBy(b => b.From)
+                    .ToList()
             })
             .ToListAsync(cancellationToken);
     }
@@ -305,20 +329,24 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
 
         var bookedStatuses = new[] { ResourceAvailabilityClassification.PartiallyBooked, ResourceAvailabilityClassification.FullyBooked };
 
+        // Pre-filter uses InvolvedBookings (the direct Booking M2M) instead of the old
+        // ResourceBookingSlot path.  Interval-overlap semantics (From < dayEnd && Until > dayStart)
+        // match the projection filter, so the pre-filter and the final in-memory classification
+        // stay consistent with each other.
         if (statusSet.All(status => bookedStatuses.Contains(status)))
         {
-            return query.Where(item => item.ResourceBookingSlots.Any(slot =>
-                slot.Start >= dayStart &&
-                slot.Start < dayEnd &&
-                slot.Bookings.Any(booking => booking.DeletedByCustomer == null)));
+            return query.Where(item => item.InvolvedBookings.Any(b =>
+                b.DeletedByCustomer == null &&
+                b.From < dayEnd &&
+                b.Until > dayStart));
         }
 
         if (statusSet.SetEquals([ResourceAvailabilityClassification.Available]))
         {
-            return query.Where(item => !item.ResourceBookingSlots.Any(slot =>
-                slot.Start >= dayStart &&
-                slot.Start < dayEnd &&
-                slot.Bookings.Any(booking => booking.DeletedByCustomer == null)));
+            return query.Where(item => !item.InvolvedBookings.Any(b =>
+                b.DeletedByCustomer == null &&
+                b.From < dayEnd &&
+                b.Until > dayStart));
         }
 
         return query;

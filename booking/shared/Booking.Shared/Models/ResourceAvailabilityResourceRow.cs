@@ -14,4 +14,5 @@ public sealed record ResourceAvailabilityResourceRow
     public required string? ZoneId { get; init; }
     public required string? ZoneName { get; init; }
     public required string ResourceType { get; init; }
+    public required IReadOnlyList<ResourceBookingWindowRow> BookingWindows { get; init; }
 }

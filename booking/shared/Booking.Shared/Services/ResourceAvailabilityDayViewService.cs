@@ -12,6 +12,14 @@ namespace Booking.Shared.Services;
 ///     Reads live booking data directly from the Booking domain DB — no cross-domain gRPC,
 ///     no analytics snapshots.
 /// </summary>
+/// <remarks>
+///     Query strategy: a single database round-trip fetches every matching resource together
+///     with its day-scoped booking windows via the <c>Booking.InvolvedResources</c> many-to-many
+///     join table.  The previous two-query approach (resources first, booking slots second) was
+///     replaced to eliminate the second round-trip, remove the wide <c>IN (…resourceIds…)</c>
+///     clause on <c>ResourceBookingSlot</c>, and avoid loading slot rows that were only needed
+///     to navigate to their parent bookings.
+/// </remarks>
 public interface IResourceAvailabilityDayViewService
 {
     /// <summary>
@@ -20,7 +28,7 @@ public interface IResourceAvailabilityDayViewService
     /// </summary>
     /// <param name="filter">Date, location, floor, zone, resource type, and status constraints.</param>
     /// <param name="orderBy">
-    ///     Ordered list of sort clauses. The first clause is the primary sort; subsequent clauses
+    ///     Ordered list of sort clauses. The first clause is the primary sort; further clauses
     ///     act as tie-breakers. When <c>null</c> or empty, defaults to
     ///     <see cref="ResourceAvailabilityOrderByField.ResourceName" /> ascending.
     /// </param>
@@ -66,7 +74,9 @@ public class ResourceAvailabilityDayViewService(
         var dayStart = new DateTimeOffset(filter.Date.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), TimeSpan.Zero);
         var dayEnd = dayStart.AddDays(1);
 
-        // Load resources with their location, organization tags, and booking slots for the day
+        // Single query: resources arrive with their day-scoped booking windows already embedded.
+        // The repository projects Resource.InvolvedBookings directly — no second round-trip to
+        // ResourceBookingSlot, and no wide IN-clause fanout across resource IDs.
         var resources = await repositoryFactory.ResourceRepository.GetForAvailabilityDayViewAsync(
             filter.OrganizationCustomDomain,
             filter.LocationIds,
@@ -78,24 +88,10 @@ public class ResourceAvailabilityDayViewService(
             orderBy,
             cancellationToken);
 
-        var resourceIds = resources.Select(r => r.Id).ToList();
-        var bookingWindowRows = ShouldLoadBookingWindows(filter.Statuses)
-            ? await repositoryFactory.ResourceBookingSlotRepository.GetBookingWindowsByResourceIdsAndDayAsync(resourceIds, dayStart, dayEnd,
-                cancellationToken)
-            : [];
-        var bookingWindowsByResource = bookingWindowRows
-            .GroupBy(item => item.ResourceId)
-            .ToDictionary(
-                item => item.Key,
-                item => item
-                    .Select(ToBookingWindow)
-                    .OrderBy(window => window.From)
-                    .ToList());
-
         var views = new List<ResourceDayView>(resources.Count);
         foreach (var resource in resources)
         {
-            var view = BuildDayView(resource, filter.Date, dayStart, bookingWindowsByResource, classifier);
+            var view = BuildDayView(resource, filter.Date, dayStart, classifier);
 
             // LOG-002: state-transition diagnostic per resource
             logger.LogDebug(
@@ -111,8 +107,7 @@ public class ResourceAvailabilityDayViewService(
         }
 
         // Apply booking visibility filter based on org type and user roles
-        var orgType = resources.Select(r => r.OrganizationType).FirstOrDefault(item => item is not null) ??
-                      OrganizationTypeConstants.Private;
+        var orgType = resources.Select(item => item.OrganizationType).FirstOrDefault() ?? OrganizationTypeConstants.Private;
         var visibleViews = visibilityFilter.Apply(views, orgType, requestingUserRoles);
         var subscriptionKey = subscriptionKeyService.Compute(filter);
 
@@ -148,7 +143,6 @@ public class ResourceAvailabilityDayViewService(
         ResourceAvailabilityResourceRow resource,
         DateOnly date,
         DateTimeOffset dayStart,
-        Dictionary<string, List<BookingWindow>> bookingWindowsByResource,
         IResourceAvailabilityClassifier classifier)
     {
         // Opening hours resolution
@@ -172,7 +166,7 @@ public class ResourceAvailabilityDayViewService(
                         openingUntil = TimeOnly.MaxValue;
                         totalOpeningMinutes = 24 * 60;
                     }
-                    else if (details.From.HasValue && details.Until.HasValue)
+                    else if (details is { From: not null, Until: not null })
                     {
                         openingFrom = details.From;
                         openingUntil = details.Until;
@@ -184,20 +178,10 @@ public class ResourceAvailabilityDayViewService(
             }
         }
 
-        var bookingWindows = new List<BookingWindow>();
-        var seenBookingIds = new HashSet<string>();
-        if (bookingWindowsByResource.TryGetValue(resource.Id, out var resourceBookingWindows))
-        {
-            foreach (var bookingWindow in resourceBookingWindows)
-            {
-                if (!seenBookingIds.Add(bookingWindow.BookingId))
-                {
-                    continue;
-                }
-
-                bookingWindows.Add(bookingWindow);
-            }
-        }
+        var bookingWindows = resource.BookingWindows
+            .Select(ToBookingWindow)
+            .OrderBy(w => w.From)
+            .ToList();
 
         var bookedMinutes = CalculateBookedMinutes(bookingWindows, dayStart, openingFrom, openingUntil);
 
@@ -299,24 +283,6 @@ public class ResourceAvailabilityDayViewService(
                 DayOfWeek.Sunday => openingHours.WeekOpeningHours.Sunday,
                 _ => throw new ArgumentOutOfRangeException(nameof(dayStart), dayStart, null)
             };
-
-    private static bool ShouldLoadBookingWindows(IReadOnlyList<ResourceAvailabilityClassification> statuses)
-    {
-        if (statuses.Count == 0)
-        {
-            return true;
-        }
-
-        var statusSet = statuses.ToHashSet();
-        if (statusSet.SetEquals([ResourceAvailabilityClassification.Available]))
-        {
-            return false;
-        }
-
-        return statusSet.Contains(ResourceAvailabilityClassification.Available) ||
-               statusSet.Contains(ResourceAvailabilityClassification.PartiallyBooked) ||
-               statusSet.Contains(ResourceAvailabilityClassification.FullyBooked);
-    }
 
     private static BookingWindow ToBookingWindow(ResourceBookingWindowRow row)
     {

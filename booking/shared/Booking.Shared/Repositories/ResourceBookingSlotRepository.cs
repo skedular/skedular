@@ -3,7 +3,6 @@ using Booking.Shared.Database.Entities;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
-using ResourceBookingWindowRow = Booking.Shared.Models.ResourceBookingWindowRow;
 
 namespace Booking.Shared.Repositories;
 
@@ -18,12 +17,6 @@ public interface IResourceBookingSlotRepository : IRepository<ResourceBookingSlo
         IReadOnlyList<string> resourceIds,
         DateTimeOffset dayStart,
         DateTimeOffset dayEnd, CancellationToken cancellationToken);
-
-    Task<IReadOnlyList<ResourceBookingWindowRow>> GetBookingWindowsByResourceIdsAndDayAsync(
-        IReadOnlyList<string> resourceIds,
-        DateTimeOffset dayStart,
-        DateTimeOffset dayEnd,
-        CancellationToken cancellationToken);
 }
 
 public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -85,42 +78,6 @@ public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvi
             .ThenInclude(item => item.CreatedByCustomer)
             .Include(item => item.Bookings.Where(booking => booking.DeletedByCustomer == null))
             .ThenInclude(item => item.RecurringBooking)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<IReadOnlyList<ResourceBookingWindowRow>> GetBookingWindowsByResourceIdsAndDayAsync(
-        IReadOnlyList<string> resourceIds,
-        DateTimeOffset dayStart,
-        DateTimeOffset dayEnd,
-        CancellationToken cancellationToken)
-    {
-        if (resourceIds.Count == 0)
-        {
-            return [];
-        }
-
-        return await DbContext.ResourceBookingSlot
-            .AsNoTracking()
-            .Where(slot => resourceIds.Contains(slot.ResourceId) &&
-                           slot.Start >= dayStart &&
-                           slot.Start < dayEnd &&
-                           slot.Bookings.Any(booking => booking.DeletedByCustomer == null))
-            .SelectMany(slot => slot.Bookings
-                .Where(booking => booking.DeletedByCustomer == null)
-                .Select(booking => new ResourceBookingWindowRow
-                {
-                    ResourceId = slot.ResourceId,
-                    BookingId = booking.Id,
-                    From = booking.From,
-                    Until = booking.Until,
-                    IsRecurring = booking.RecurringBooking != null,
-                    CustomerId = booking.CreatedByCustomer != null ? booking.CreatedByCustomer.Id : null,
-                    CustomerName = booking.CreatedByCustomer != null ? booking.CreatedByCustomer.Name : null,
-                    CustomerGivenName = booking.CreatedByCustomer != null ? booking.CreatedByCustomer.GivenName : null,
-                    CustomerFamilyName = booking.CreatedByCustomer != null ? booking.CreatedByCustomer.FamilyName : null,
-                    Notes = booking.Notes
-                }))
-            .Distinct()
             .ToListAsync(cancellationToken);
     }
 }
