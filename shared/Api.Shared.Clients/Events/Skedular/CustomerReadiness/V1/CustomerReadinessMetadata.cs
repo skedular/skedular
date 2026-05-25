@@ -4,10 +4,10 @@ namespace Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1;
 
 file static class CustomerReadinessMetadataShape
 {
-    internal const string TopicName = "customer_readiness";
-    internal const string RetryTopicNamePrefix = "customer_readiness.retry";
+    internal const string TopicName = "customer_readiness.event";
+    internal const string RetryTopicNamePrefix = "customer_readiness.event.retry";
     internal const int RetryTopicCount = 1;
-    internal const string DeadLetterTopicName = "customer_readiness.deadletter";
+    internal const string DeadLetterTopicName = "customer_readiness.event.deadletter";
 }
 
 [KafkaTopic(3, 1, 3, 3)]

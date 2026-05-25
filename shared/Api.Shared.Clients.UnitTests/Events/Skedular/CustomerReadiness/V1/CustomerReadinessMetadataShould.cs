@@ -11,7 +11,7 @@ public class CustomerReadinessMetadataShould
     {
         IEvent key = new Key();
 
-        key.TopicName.ShouldBe("customer_readiness");
+        key.TopicName.ShouldBe("customer_readiness.event");
     }
 
     [Fact]
@@ -19,7 +19,7 @@ public class CustomerReadinessMetadataShould
     {
         IEvent e = new Event();
 
-        e.TopicName.ShouldBe("customer_readiness");
+        e.TopicName.ShouldBe("customer_readiness.event");
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class CustomerReadinessMetadataShould
     {
         IEvent key = new Key();
 
-        key.RetryTopicNamePrefix.ShouldBe("customer_readiness.retry");
+        key.RetryTopicNamePrefix.ShouldBe("customer_readiness.event.retry");
     }
 
     [Fact]
@@ -35,6 +35,6 @@ public class CustomerReadinessMetadataShould
     {
         IEvent key = new Key();
 
-        key.DeadLetterTopicName.ShouldBe("customer_readiness.deadletter");
+        key.DeadLetterTopicName.ShouldBe("customer_readiness.event.deadletter");
     }
 }

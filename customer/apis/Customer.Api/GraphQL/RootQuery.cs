@@ -1,5 +1,4 @@
 using Customer.Api.Services;
-using Customer.Shared.Services.Cache;
 using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
@@ -20,18 +19,7 @@ public class RootQuery(IVersionService versionService)
 
     [UseResolverScope]
     public async Task<bool> CustomerReadinessSyncedAsync(
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ICustomerReadinessAccessService customerReadinessAccessService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await cachedCustomerService.GetNullableAsync(cancellationToken);
-        if (customer is null)
-        {
-            return false;
-        }
-
-        var result = await customerReadinessAccessService.CheckAccessAsync(customer.Id, customer.ProvisionedDomains?.ToList(), cancellationToken);
-
-        return result.IsAllowed;
-    }
+        CancellationToken cancellationToken) =>
+        await customerReadinessAccessService.IsReadyAsync(cancellationToken);
 }

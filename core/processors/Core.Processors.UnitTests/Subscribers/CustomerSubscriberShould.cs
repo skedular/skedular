@@ -3,7 +3,6 @@ using Core.Processors.Mappers;
 using Core.Processors.Subscribers;
 using Core.Shared.Publishers;
 using Core.Shared.Repositories;
-using Core.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using ValueMetadata = Api.Shared.Clients.Events.Skedular.Customer.V1.Metadata;
@@ -23,7 +22,6 @@ public class CustomerSubscriberShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ICustomerRepository customerRepository,
         [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICustomerReadinessPublisher customerReadinessPublisher,
         [Frozen] EventContext eventContext,
         CustomerSubscriber sut,
@@ -82,7 +80,6 @@ public class CustomerSubscriberShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ICustomerRepository customerRepository,
         [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICustomerReadinessPublisher customerReadinessPublisher,
         [Frozen] EventContext eventContext,
         CustomerSubscriber sut,

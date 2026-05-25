@@ -5,7 +5,6 @@ using Organization.Processors.Mappers;
 using Organization.Processors.Subscribers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
-using Organization.Shared.Services.Cache;
 using ValueMetadata = Api.Shared.Clients.Events.Skedular.Customer.V1.Metadata;
 using ValueType = Api.Shared.Clients.Events.Skedular.Customer.V1.Type;
 using CustomerModel = Organization.Shared.Models.Customer;
@@ -23,7 +22,6 @@ public class CustomerSubscriberShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ICustomerRepository customerRepository,
         [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICustomerReadinessPublisher customerReadinessPublisher,
         [Frozen] EventContext eventContext,
         CustomerSubscriber sut,
@@ -82,7 +80,6 @@ public class CustomerSubscriberShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ICustomerRepository customerRepository,
         [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICustomerReadinessPublisher customerReadinessPublisher,
         [Frozen] EventContext eventContext,
         CustomerSubscriber sut,
