@@ -8,6 +8,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services.Cache;
 
 namespace Organization.Api.Services;
 
@@ -26,7 +27,8 @@ public class OrganizationBillingService(
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IRandomHelper randomHelper,
     IGraphQlMapper graphQlMapper,
-    IOrganizationOutboxPublisher organizationOutboxPublisher) : IOrganizationBillingService
+    IOrganizationOutboxPublisher organizationOutboxPublisher,
+    ICachedOrganizationService cachedOrganizationService) : IOrganizationBillingService
 {
     public async Task<OrganizationBillingDetails?> GetAsync(
         string? organizationId,
@@ -102,6 +104,15 @@ public class OrganizationBillingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
+        await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(existingOrganization.Id, existingOrganization.CustomDomain, cancellationToken);
+        var memberCustomerIds = existingOrganization.OrganizationMembers.Select(m => m.CustomerId).ToList();
+        if (memberCustomerIds.Count == 0)
+        {
+            memberCustomerIds.Add(customer.Id);
+        }
+
+        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(memberCustomerIds, cancellationToken);
+
         return mappedOrganization;
     }
 
@@ -156,6 +167,15 @@ public class OrganizationBillingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
+        await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(existingOrganization.Id, existingOrganization.CustomDomain, cancellationToken);
+        var patchMemberCustomerIds = existingOrganization.OrganizationMembers.Select(m => m.CustomerId).ToList();
+        if (patchMemberCustomerIds.Count == 0)
+        {
+            patchMemberCustomerIds.Add(customer.Id);
+        }
+
+        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(patchMemberCustomerIds, cancellationToken);
+
         return mappedOrganization;
     }
 
@@ -180,6 +200,11 @@ public class OrganizationBillingService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(existingOrganization.Id, existingOrganization.CustomDomain, cancellationToken);
+        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
+            existingOrganization.OrganizationMembers.Select(m => m.CustomerId).ToList(),
+            cancellationToken);
 
         return mappedOrganization;
     }

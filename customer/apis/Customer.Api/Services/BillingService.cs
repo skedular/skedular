@@ -4,6 +4,7 @@ using Customer.Shared.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
+using Customer.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 
@@ -23,6 +24,7 @@ public class BillingService(
     IRandomHelper randomHelper,
     IEntityMapper entityMapper,
     ICustomerOutboxPublisher organizationOutboxPublisher,
+    ICachedCustomerService cachedCustomerService,
     ILogger<BillingService> logger) : IBillingService
 {
     public async Task<Shared.Models.Customer> AddAsync(CustomerBillingDetails customerBillingDetails, CancellationToken cancellationToken)
@@ -65,6 +67,8 @@ public class BillingService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedCustomerService.UpdateAsync([customerEntity], cancellationToken);
 
         return mappedCustomer;
     }
@@ -150,6 +154,8 @@ public class BillingService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedCustomerService.UpdateAsync([existingCustomer], cancellationToken);
 
         return mappedCustomer;
     }
