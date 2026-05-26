@@ -39,9 +39,6 @@ const inlinePatchDebounceTimeout = 1000;
 type OrganizationSetupPatchValues = {
   customDomain: string | null | undefined;
   name: string;
-  description: string;
-  title: string;
-  subTitle: string;
   website: string | null | undefined;
   logoUrl: string | null | undefined;
   customerFacingTermsAndConditionsUrl: string | null | undefined;
@@ -77,9 +74,6 @@ const areStringListsEqual = (left: readonly string[], right: readonly string[]) 
 const patchValidationFields: Partial<Record<OrganizationPatchField, (keyof OrganizationDetails)[]>> = {
   CUSTOM_DOMAIN: ['customDomain'],
   NAME: ['name'],
-  DESCRIPTION: ['about'],
-  TITLE: ['title'],
-  SUB_TITLE: ['subTitle'],
   WEBSITE: ['website'],
   CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL: ['customerFacingTermsAndConditionsUrl'],
   INDUSTRY_SUB_CATEGORIES: ['industrySubCategoryIds'],
@@ -91,9 +85,6 @@ const patchValidationFields: Partial<Record<OrganizationPatchField, (keyof Organ
 const getValidationValues = (values: OrganizationSetupPatchValues): OrganizationDetails => ({
   customDomain: values.customDomain ?? null,
   name: values.name,
-  about: values.description,
-  title: values.title,
-  subTitle: values.subTitle,
   website: values.website ?? null,
   customerFacingTermsAndConditionsUrl: values.customerFacingTermsAndConditionsUrl ?? null,
   industrySubCategoryIds: values.industrySubCategoryIds,
@@ -124,11 +115,6 @@ const RootQuery = graphql`
         name
       }
       invoiceDueInDays
-      listingMetadata {
-        about
-        title
-        subTitle
-      }
       logoUrl
       marketplaceListingMetadata {
         about
@@ -171,11 +157,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
           id
           customDomain
           name
-          listingMetadata {
-            about
-            title
-            subTitle
-          }
           logoUrl
           marketplaceListingMetadata {
             about
@@ -241,9 +222,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
   const initialPatchValues: OrganizationSetupPatchValues = {
     customDomain: organization?.customDomain,
-    description: organization?.listingMetadata.about ?? '',
-    title: organization?.listingMetadata.title ?? '',
-    subTitle: organization?.listingMetadata.subTitle ?? '',
     name: organization?.name ?? '',
     website: organization?.website,
     logoUrl: organization?.logoUrl,
@@ -267,9 +245,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
     () => ({
       customDomain: organization?.customDomain,
       name: organization?.name ?? '',
-      about: organization?.listingMetadata.about ?? null,
-      title: organization?.listingMetadata.title ?? null,
-      subTitle: organization?.listingMetadata.subTitle ?? null,
       website: organization?.website,
       customerFacingTermsAndConditionsUrl: organization?.customerFacingTermsAndConditionsUrl,
       industrySubCategoryIds: organization?.industrySubCategories.map(({ id }) => id) ?? [],
@@ -283,9 +258,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
   useEffect(() => {
     const values: OrganizationSetupPatchValues = {
       customDomain: organization?.customDomain,
-      description: organization?.listingMetadata.about ?? '',
-      title: organization?.listingMetadata.title ?? '',
-      subTitle: organization?.listingMetadata.subTitle ?? '',
       name: organization?.name ?? '',
       website: organization?.website,
       logoUrl: organization?.logoUrl,
@@ -316,9 +288,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
       const nextPatchValues: OrganizationSetupPatchValues = {
         ...submittedPatchValues.current,
         ...values,
-        description: values.description ?? submittedPatchValues.current.description,
-        title: values.title ?? submittedPatchValues.current.title,
-        subTitle: values.subTitle ?? submittedPatchValues.current.subTitle,
         name: values.name ?? submittedPatchValues.current.name,
         industrySubCategoryIds: values.industrySubCategoryIds ?? submittedPatchValues.current.industrySubCategoryIds,
         refundNotificationEmails: values.refundNotificationEmails ?? submittedPatchValues.current.refundNotificationEmails,
@@ -347,12 +316,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
             return nextPatchValues.customDomain !== submittedValues.customDomain;
           case 'NAME':
             return nextPatchValues.name !== submittedValues.name;
-          case 'DESCRIPTION':
-            return nextPatchValues.description !== submittedValues.description;
-          case 'TITLE':
-            return nextPatchValues.title !== submittedValues.title;
-          case 'SUB_TITLE':
-            return nextPatchValues.subTitle !== submittedValues.subTitle;
           case 'WEBSITE':
             return nextPatchValues.website !== submittedValues.website;
           case 'LOGO_URL':
@@ -399,9 +362,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
             fieldsToUpdate,
             ...(fieldsToUpdate.includes('CUSTOM_DOMAIN') ? { customDomain: nextPatchValues.customDomain } : {}),
             ...(fieldsToUpdate.includes('NAME') ? { name: nextPatchValues.name } : {}),
-            ...(fieldsToUpdate.includes('DESCRIPTION') ? { description: nextPatchValues.description } : {}),
-            ...(fieldsToUpdate.includes('TITLE') ? { title: nextPatchValues.title } : {}),
-            ...(fieldsToUpdate.includes('SUB_TITLE') ? { subTitle: nextPatchValues.subTitle } : {}),
             ...(fieldsToUpdate.includes('WEBSITE') ? { website: nextPatchValues.website } : {}),
             ...(fieldsToUpdate.includes('LOGO_URL') ? { logoUrl: nextPatchValues.logoUrl } : {}),
             ...(fieldsToUpdate.includes('CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL')
@@ -439,11 +399,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
               id: organization.id,
               customDomain: nextPatchValues.customDomain,
               name: nextPatchValues.name,
-              listingMetadata: {
-                about: nextPatchValues.description,
-                title: nextPatchValues.title,
-                subTitle: nextPatchValues.subTitle,
-              },
               logoUrl: nextPatchValues.logoUrl,
               marketplaceListingMetadata: nextPatchValues.marketplaceListingMetadata,
               website: nextPatchValues.website,
@@ -523,10 +478,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
         const formValues = values!;
 
         const nextName = formValues.name ?? '';
-        const nextAbout = formValues.about ?? '';
         const nextCustomDomain = formValues.customDomain;
-        const nextTitle = formValues.title ?? '';
-        const nextSubTitle = formValues.subTitle ?? '';
         const nextWebsite = formValues.website;
         const nextCustomerFacingTermsAndConditionsUrl = formValues.customerFacingTermsAndConditionsUrl;
         const nextIndustrySubCategoryIds = formValues.industrySubCategoryIds ?? [];
@@ -542,18 +494,6 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
         if (draftPatchValues.current.name !== nextName) {
           draftPatchValues.current = { ...draftPatchValues.current, name: nextName };
           debouncedCommitOrganizationPatch(['NAME'], { name: nextName });
-        }
-        if (draftPatchValues.current.description !== nextAbout) {
-          draftPatchValues.current = { ...draftPatchValues.current, description: nextAbout };
-          debouncedCommitOrganizationPatch(['DESCRIPTION'], { description: nextAbout });
-        }
-        if (draftPatchValues.current.title !== nextTitle) {
-          draftPatchValues.current = { ...draftPatchValues.current, title: nextTitle };
-          debouncedCommitOrganizationPatch(['TITLE'], { title: nextTitle });
-        }
-        if (draftPatchValues.current.subTitle !== nextSubTitle) {
-          draftPatchValues.current = { ...draftPatchValues.current, subTitle: nextSubTitle };
-          debouncedCommitOrganizationPatch(['SUB_TITLE'], { subTitle: nextSubTitle });
         }
         if (draftPatchValues.current.website !== nextWebsite) {
           draftPatchValues.current = { ...draftPatchValues.current, website: nextWebsite };
@@ -681,7 +621,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                     )}
 
                     <FormFieldLabel label="Website">
-                      <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
+                      <TextField name="website" required={requiredOrganizationDetailsFields.website} helperText="https://" />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Terms and Conditions">

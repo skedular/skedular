@@ -73,9 +73,6 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
       fragment organizationAdmin_query on Query {
         organization(customDomain: $organizationCustomDomain) {
           name
-          listingMetadata {
-            title
-          }
         }
       }
     `,
@@ -241,7 +238,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
             ) : (
               <>
                 <LeadIconTypography label="Settings & controls" />
-                <BodyIconTypography label={organization?.listingMetadata?.title || 'Billing, address, identity, tags, and subscriptions'} />
+                <BodyIconTypography label="Billing, address, identity, tags, and subscriptions" />
               </>
             )}
           </StackColumn>

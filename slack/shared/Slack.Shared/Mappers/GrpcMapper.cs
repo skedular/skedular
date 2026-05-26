@@ -148,7 +148,6 @@ public class GrpcMapper : IGrpcMapper
             Id = src.Id,
             CustomDomain = src.CustomDomain.ToSafeString(),
             Name = src.Name.ToSafeString(),
-            ListingMetadata = MapTo(src.ListingMetadata),
             MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
             Website = src.Website.ToSafeString(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,

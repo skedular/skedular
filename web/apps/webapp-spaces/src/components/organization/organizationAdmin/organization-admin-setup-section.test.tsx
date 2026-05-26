@@ -16,11 +16,6 @@ const organization = {
     name: 'Monthly',
   },
   invoiceDueInDays: 7,
-  listingMetadata: {
-    about: 'Original about',
-    title: 'Original title',
-    subTitle: 'Original subtitle',
-  },
   logoUrl: null,
   marketplaceListingMetadata: {
     about: 'Marketplace about',
@@ -85,14 +80,11 @@ vi.mock('mui-rff', async () => {
   const { Field } = await import('react-final-form');
 
   const labels: Record<string, string> = {
-    about: 'About',
     contactEmail: 'Email',
     contactPhone: 'Phone Number',
     customerFacingTermsAndConditionsUrl: 'Terms and Conditions',
     name: 'Name',
     refundNotificationEmailsText: 'Refund Notification Emails',
-    subTitle: 'Sub Title',
-    title: 'Title',
     website: 'Website',
   };
 

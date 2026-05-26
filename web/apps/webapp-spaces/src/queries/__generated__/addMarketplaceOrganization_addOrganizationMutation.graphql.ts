@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f51f2d21de47469bcb4a838748d2b4a8>>
+ * @generated SignedSource<<e543e5a8c62d5e6c5c357a3e6685998a>>
  * @lightSyntaxTransform
  */
 
@@ -22,7 +22,6 @@ export type AddOrganizationInput = {
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
   invoiceDueInDays: number;
-  listingMetadata?: ListingMetadataInput | null | undefined;
   logoUrl?: string | null | undefined;
   marketplaceListingMetadata?: ListingMetadataInput | null | undefined;
   name: string;
@@ -67,13 +66,13 @@ export type addMarketplaceOrganization_addOrganizationMutation$data = {
         } | null | undefined;
       }>;
       readonly id: string;
-      readonly listingMetadata: {
+      readonly logoUrl: string | null | undefined;
+      readonly marketplaceListingMetadata: {
         readonly about: string | null | undefined;
         readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
-      readonly logoUrl: string | null | undefined;
       readonly name: string;
       readonly website: string | null | undefined;
     };
@@ -97,13 +96,13 @@ export type addMarketplaceOrganization_addOrganizationMutation$rawResponse = {
         } | null | undefined;
       }>;
       readonly id: string;
-      readonly listingMetadata: {
+      readonly logoUrl: string | null | undefined;
+      readonly marketplaceListingMetadata: {
         readonly about: string | null | undefined;
         readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
-      readonly logoUrl: string | null | undefined;
       readonly name: string;
       readonly website: string | null | undefined;
     };
@@ -202,7 +201,7 @@ v2 = [
             "args": null,
             "concreteType": "ListingMetadata",
             "kind": "LinkedField",
-            "name": "listingMetadata",
+            "name": "marketplaceListingMetadata",
             "plural": false,
             "selections": [
               {
@@ -306,16 +305,16 @@ return {
     "selections": (v2/*:: as any*/)
   },
   "params": {
-    "cacheID": "f51245f8073a4d381363bcbfd39ce0f4",
+    "cacheID": "c57f8f9c664deac8f231e95a604a0ab1",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addMarketplaceOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      logoUrl\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation addMarketplaceOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      logoUrl\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "765215a8ce51bc09fb907e717034fe2a";
+(node as any).hash = "ff89f2efe7c97a6156dd3d57a0a1f1fb";
 
 export default node;

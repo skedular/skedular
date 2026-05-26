@@ -44,11 +44,7 @@ public class UpdatePatchAsyncShould
     {
         var organization = new Shared.Database.Entities.Organization
         {
-            Id = "org-1",
-            CustomDomain = "acme",
-            Name = "Old name",
-            Type = OrganizationTypeConstants.Private,
-            ListingMetadata = new ListingMetadata("Old description", "Title", "Sub title", ["Wifi"])
+            Id = "org-1", CustomDomain = "acme", Name = "Old name", Type = OrganizationTypeConstants.Private
         };
         var customer = new Customer { Id = "customer-1" };
         var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
@@ -59,8 +55,7 @@ public class UpdatePatchAsyncShould
             organization.Id,
             null,
             new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
-            "New name",
-            "Ignored description");
+            "New name");
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -80,8 +75,6 @@ public class UpdatePatchAsyncShould
 
         result.Organization.ShouldBeSameAs(updatedOrganization);
         organization.Name.ShouldBe("New name");
-        organization.ListingMetadata.ShouldNotBeNull();
-        organization.ListingMetadata.About.ShouldBe("Old description");
         A.CallTo(() => organizationOutboxPublisher.PublishOrganizations(
                 A<IEnumerable<Shared.Models.Organization>>.That.Matches(organizations => organizations.Single() == updatedOrganization),
                 unitOfWork))
@@ -139,8 +132,7 @@ public class UpdatePatchAsyncShould
             organization.Id,
             updatedOrganization.CustomDomain,
             new HashSet<OrganizationPatchField> { OrganizationPatchField.CustomDomain },
-            organization.Name,
-            null);
+            organization.Name);
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -172,66 +164,6 @@ public class UpdatePatchAsyncShould
                 A<IEnumerable<Shared.Models.Organization>>.That.Matches(organizations => organizations.Single() == updatedOrganization),
                 unitOfWork))
             .MustHaveHappenedOnceExactly();
-    }
-
-    [Theory]
-    [AutoFakeItEasyData]
-    public async Task Update_Only_Selected_Description_And_Preserve_Listing_Metadata(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationPatchMapper organizationPatchMapper,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        OrganizationService sut,
-        CancellationToken cancellationToken)
-    {
-        var organization = new Shared.Database.Entities.Organization
-        {
-            Id = "org-1",
-            CustomDomain = "acme",
-            Name = "Existing name",
-            Type = OrganizationTypeConstants.Private,
-            ListingMetadata = new ListingMetadata("Old description", "Title", "Sub title", ["Wifi"])
-        };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
-        var updatedOrganization =
-            new Shared.Models.Organization { Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name };
-        var stripeAuthorizeUrl = Constants.EmptyUri;
-        var request = new OrganizationPatchRequest(
-            organization.Id,
-            null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.Description },
-            "Ignored name",
-            "New description");
-
-        A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
-        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => customerService.GetCustomerAsync(cancellationToken)).Returns((customer, customerEntity));
-        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(organization.Id, null, cancellationToken)).Returns(organization);
-        A.CallTo(() => organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken)).Returns(true);
-        A.CallTo(() => organizationPatchMapper.ApplyTo(request, organization, A<IReadOnlyList<IndustrySubCategory>>._))
-            .Invokes(() => organization.ListingMetadata = organization.ListingMetadata! with { About = "New description" })
-            .Returns(true);
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
-        A.CallTo(() => organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))
-            .Returns(stripeAuthorizeUrl);
-        A.CallTo(() => organizationRepository.Update(organization)).Returns(organization);
-        A.CallTo(() => graphQlMapper.MapTo(organization, stripeAuthorizeUrl)).Returns(updatedOrganization);
-
-        await sut.UpdatePatchAsync(request, cancellationToken);
-
-        organization.Name.ShouldBe("Existing name");
-        organization.ListingMetadata.ShouldNotBeNull();
-        organization.ListingMetadata.About.ShouldBe("New description");
-        organization.ListingMetadata.Title.ShouldBe("Title");
-        organization.ListingMetadata.SubTitle.ShouldBe("Sub title");
-        organization.ListingMetadata.IncludedFeatures.ShouldBe(["Wifi"]);
     }
 
     [Theory]
@@ -281,7 +213,6 @@ public class UpdatePatchAsyncShould
             null,
             new HashSet<OrganizationPatchField> { OrganizationPatchField.PhysicalAddress },
             organization.Name,
-            null,
             PhysicalAddress: physicalAddress);
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -332,11 +263,7 @@ public class UpdatePatchAsyncShould
     {
         var organization = new Shared.Database.Entities.Organization
         {
-            Id = "org-1",
-            CustomDomain = "acme",
-            Name = "Existing name",
-            Type = OrganizationTypeConstants.Private,
-            ListingMetadata = new ListingMetadata("Existing description", "Title", "Sub title", [])
+            Id = "org-1", CustomDomain = "acme", Name = "Existing name", Type = OrganizationTypeConstants.Private
         };
         var customer = new Customer { Id = "customer-1" };
         var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
@@ -346,9 +273,8 @@ public class UpdatePatchAsyncShould
         var request = new OrganizationPatchRequest(
             organization.Id,
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.Name, OrganizationPatchField.Description },
-            organization.Name,
-            organization.ListingMetadata.About);
+            new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
+            organization.Name);
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -399,19 +325,14 @@ public class UpdatePatchAsyncShould
             new CustomDbContextOptions<OrganizationDbContext> { IsPostgisEnabled = true });
         var staleOrganization = new Shared.Database.Entities.Organization
         {
-            Id = "org-1",
-            CustomDomain = "acme",
-            Name = "Old name",
-            Type = OrganizationTypeConstants.Private,
-            ListingMetadata = new ListingMetadata("Old description", "Title", "Sub title", [])
+            Id = "org-1", CustomDomain = "acme", Name = "Old name", Type = OrganizationTypeConstants.Private
         };
         var latestOrganization = new Shared.Database.Entities.Organization
         {
             Id = staleOrganization.Id,
             CustomDomain = staleOrganization.CustomDomain,
             Name = staleOrganization.Name,
-            Type = OrganizationTypeConstants.Private,
-            ListingMetadata = new ListingMetadata("Latest description", "Title", "Sub title", [])
+            Type = OrganizationTypeConstants.Private
         };
         var customer = new Customer { Id = "customer-1" };
         var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
@@ -420,8 +341,7 @@ public class UpdatePatchAsyncShould
             staleOrganization.Id,
             null,
             new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
-            "New name",
-            null);
+            "New name");
         var saveAttempt = 0;
 
         A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);
@@ -459,8 +379,6 @@ public class UpdatePatchAsyncShould
 
         result.Organization.Name.ShouldBe(request.Name);
         latestOrganization.Name.ShouldBe(request.Name);
-        latestOrganization.ListingMetadata.ShouldNotBeNull();
-        latestOrganization.ListingMetadata.About.ShouldBe("Latest description");
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(staleOrganization.Id, null, cancellationToken))
             .MustHaveHappenedTwiceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedTwiceExactly();
@@ -489,8 +407,7 @@ public class UpdatePatchAsyncShould
             "org-1",
             null,
             new HashSet<OrganizationPatchField> { (OrganizationPatchField)999 },
-            "Name",
-            null);
+            "Name");
 
         A.CallTo(() => organizationPatchMapper.Validate(request))
             .Throws(new ArgumentOutOfRangeException(nameof(request), request.FieldsToUpdate.Single(),
@@ -515,8 +432,7 @@ public class UpdatePatchAsyncShould
             "org-1",
             null,
             new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
-            " ",
-            null);
+            " ");
 
         A.CallTo(() => organizationPatchMapper.Validate(request))
             .Throws(new ArgumentException("Organisation name is required.", nameof(request)));

@@ -12,6 +12,7 @@ export class CustomerService {
      * @param setupIntent
      * @param setupIntentClientSecret
      * @param redirectStatus
+     * @param redirectTo
      * @returns any the readiness status
      * @returns ProblemDetails unexpected error
      * @throws ApiError
@@ -20,6 +21,7 @@ export class CustomerService {
         setupIntent: string,
         setupIntentClientSecret: string,
         redirectStatus: string,
+        redirectTo?: string | null,
     ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'GET',
@@ -28,6 +30,7 @@ export class CustomerService {
                 'setup_intent': setupIntent,
                 'setup_intent_client_secret': setupIntentClientSecret,
                 'redirect_status': redirectStatus,
+                'redirect_to': redirectTo,
             },
         });
     }

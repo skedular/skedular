@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<409837e5df7e7821f64c1d10e7861dd8>>
+ * @generated SignedSource<<8d1e96ca28d1bdc18c7c66b69df35874>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%future added value";
-export type OrganizationPatchField = "BILLING_CYCLE" | "CONTACT_EMAIL" | "CONTACT_PHONE" | "CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL" | "CUSTOM_DOMAIN" | "DESCRIPTION" | "FEATURE_IMAGES" | "INDUSTRY_SUB_CATEGORIES" | "INVOICE_DUE_IN_DAYS" | "LOGO_URL" | "MARKETPLACE_LISTING_METADATA" | "NAME" | "PHYSICAL_ADDRESS" | "REFUND_NOTIFICATION_EMAILS" | "SUB_TITLE" | "TITLE" | "WEBSITE" | "%future added value";
+export type OrganizationPatchField = "BILLING_CYCLE" | "CONTACT_EMAIL" | "CONTACT_PHONE" | "CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL" | "CUSTOM_DOMAIN" | "FEATURE_IMAGES" | "INDUSTRY_SUB_CATEGORIES" | "INVOICE_DUE_IN_DAYS" | "LOGO_URL" | "MARKETPLACE_LISTING_METADATA" | "NAME" | "PHYSICAL_ADDRESS" | "REFUND_NOTIFICATION_EMAILS" | "WEBSITE" | "%future added value";
 export type UpdateOrganizationInput = {
   billingCycle?: OrganizationBillingCycle | null | undefined;
   clientMutationId?: string | null | undefined;
@@ -17,7 +17,6 @@ export type UpdateOrganizationInput = {
   contactPhone?: string | null | undefined;
   customDomain?: string | null | undefined;
   customerFacingTermsAndConditionsUrl?: string | null | undefined;
-  description?: string | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   fieldsToUpdate: ReadonlyArray<OrganizationPatchField>;
   id?: string | null | undefined;
@@ -28,8 +27,6 @@ export type UpdateOrganizationInput = {
   name?: string | null | undefined;
   physicalAddress?: OrganizationPhysicalAddressPatchInput | null | undefined;
   refundNotificationEmails?: ReadonlyArray<string> | null | undefined;
-  subTitle?: string | null | undefined;
-  title?: string | null | undefined;
   website?: string | null | undefined;
 };
 export type CdnImageFileInput = {

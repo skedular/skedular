@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8f26e4fd81f907b2cbdb344a6f95665f>>
+ * @generated SignedSource<<195a4d2303ba38d7e6a2fb0442022e10>>
  * @lightSyntaxTransform
  */
 
@@ -46,11 +46,6 @@ export type organizationAdminSetupSectionQuery$data = {
       readonly name: string;
     }>;
     readonly invoiceDueInDays: number;
-    readonly listingMetadata: {
-      readonly about: string | null | undefined;
-      readonly subTitle: string | null | undefined;
-      readonly title: string | null | undefined;
-    };
     readonly logoUrl: string | null | undefined;
     readonly name: string;
     readonly refundNotificationEmails: ReadonlyArray<string>;
@@ -206,38 +201,6 @@ v8 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "ListingMetadata",
-      "kind": "LinkedField",
-      "name": "listingMetadata",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "about",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "title",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "subTitle",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "kind": "ScalarField",
       "name": "logoUrl",
       "storageKey": null
@@ -378,16 +341,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "aa698a6b5af7f5a61c974d9b9c882bcf",
+    "cacheID": "2d1c318a845369b045c6423e6b6db036",
     "id": null,
     "metadata": {},
     "name": "organizationAdminSetupSectionQuery",
     "operationKind": "query",
-    "text": "query organizationAdminSetupSectionQuery(\n  $organizationCustomDomain: String!\n) {\n  emailsToShowLatestCapabilities\n  me {\n    id\n    emails\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    customDomain\n    name\n    billingCycle {\n      type\n      name\n    }\n    invoiceDueInDays\n    listingMetadata {\n      about\n      title\n      subTitle\n    }\n    logoUrl\n    website\n    customerFacingTermsAndConditionsUrl\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    refundNotificationEmails\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...organizationMultipleChoicesIndustries_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "query organizationAdminSetupSectionQuery(\n  $organizationCustomDomain: String!\n) {\n  emailsToShowLatestCapabilities\n  me {\n    id\n    emails\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    customDomain\n    name\n    billingCycle {\n      type\n      name\n    }\n    invoiceDueInDays\n    logoUrl\n    website\n    customerFacingTermsAndConditionsUrl\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    refundNotificationEmails\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...organizationMultipleChoicesIndustries_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "95ace3d36d024cd40d395b211bc3fc9f";
+(node as any).hash = "d31c63c02522c15dcad2a4d92b38960c";
 
 export default node;

@@ -60,7 +60,6 @@ public class OrganizationDetails : Node
     [GraphQLName("taxDetails")] public OrganizationTaxDetails? TaxDetails { get; set; }
     [GraphQLName("xeroConnection")] public OrganizationXeroConnectionDetails? XeroConnection { get; set; }
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
-    [GraphQLName("listingMetadata")] public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
 
     [GraphQLName("industrySubCategories")]
     public IEnumerable<OrganizationIndustrySubCategoryReferenceDetails> IndustrySubCategories { get; set; } = [];

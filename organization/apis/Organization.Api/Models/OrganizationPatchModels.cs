@@ -8,9 +8,6 @@ namespace Organization.Api.Models;
 public enum OrganizationPatchField
 {
     Name,
-    Description,
-    Title,
-    SubTitle,
     CustomDomain,
     Website,
     LogoUrl,
@@ -31,9 +28,6 @@ public record OrganizationPatchRequest(
     string? CustomDomain,
     IReadOnlySet<OrganizationPatchField> FieldsToUpdate,
     string? Name,
-    string? Description,
-    string? Title = null,
-    string? SubTitle = null,
     string? Website = null,
     string? LogoUrl = null,
     string? CustomerFacingTermsAndConditionsUrl = null,

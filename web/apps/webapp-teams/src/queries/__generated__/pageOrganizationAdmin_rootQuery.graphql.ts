@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9ad9b20f25b1ba696d401dfe71876883>>
+ * @generated SignedSource<<1d116705e9bb54442e3b15e2f61c8adb>>
  * @lightSyntaxTransform
  */
 
@@ -94,24 +94,6 @@ return {
             "kind": "ScalarField",
             "name": "id",
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ListingMetadata",
-            "kind": "LinkedField",
-            "name": "listingMetadata",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "title",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -119,12 +101,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9993b29fde4cb45ef66c966928d80e85",
+    "cacheID": "51a087727b6b2fe47e36e6b364a839d8",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationAdmin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n}\n\nfragment organizationAdmin_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    listingMetadata {\n      title\n    }\n    id\n  }\n}\n"
+    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n}\n\nfragment organizationAdmin_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n}\n"
   }
 };
 })();

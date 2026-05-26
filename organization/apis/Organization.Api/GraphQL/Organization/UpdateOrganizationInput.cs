@@ -15,9 +15,6 @@ public class UpdateOrganizationInput
     [GraphQLName("fieldsToUpdate")] public IEnumerable<OrganizationPatchField> FieldsToUpdate { get; set; } = [];
 
     [GraphQLName("name")] public string? Name { get; set; }
-    [GraphQLName("description")] public string? Description { get; set; }
-    [GraphQLName("title")] public string? Title { get; set; }
-    [GraphQLName("subTitle")] public string? SubTitle { get; set; }
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
 

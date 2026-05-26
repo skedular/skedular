@@ -1,6 +1,5 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { AnalyticsIcon, CalendarIcon, DeleteIcon } from '@/components/icons';
-import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationTermsOfUse } from '@/components/organization';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
@@ -47,7 +46,6 @@ type Props = {
 type OrganizationDetails = {
   customDomain: string | null;
   name: string;
-  about: string | null;
   website: string | null;
   customerFacingTermsAndConditionsUrl: string | null;
   agreedToTermsOfUse: boolean;
@@ -56,7 +54,6 @@ type OrganizationDetails = {
 const organizationSchema = object({
   customDomain: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
-  ...listingMetadataSchemaShape,
   website: string().url('Website must be a valid Url').nullable(),
   customerFacingTermsAndConditionsUrl: string().url('Terms and Conditions must be a valid Url').nullable(),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
@@ -87,12 +84,6 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           customDomain
           name
           logoUrl
-          listingMetadata {
-            about
-            title
-            subTitle
-            includedFeatures
-          }
           website
           customerFacingTermsAndConditionsUrl
           featureImages {
@@ -121,7 +112,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(null);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
 
-  const handleOrganizationAddClick = ({ customDomain, name, about, website, customerFacingTermsAndConditionsUrl }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ customDomain, name, website, customerFacingTermsAndConditionsUrl }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
@@ -137,12 +128,6 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           customDomain,
           name,
           logoUrl,
-          listingMetadata: {
-            about: about ?? '',
-            title: '',
-            subTitle: '',
-            includedFeatures: [],
-          },
           website,
           customerFacingTermsAndConditionsUrl,
           type: 'PRIVATE',
@@ -186,12 +171,6 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
             customDomain,
             name,
             logoUrl,
-            listingMetadata: {
-              about: about ?? '',
-              title: '',
-              subTitle: '',
-              includedFeatures: [],
-            },
             website,
             customerFacingTermsAndConditionsUrl,
             featureImages: finalFeatureImages,
@@ -264,7 +243,6 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
         initialValues={{
           customDomain: null,
           name: '',
-          about: null,
           website: null,
           customerFacingTermsAndConditionsUrl: null,
         }}
@@ -373,14 +351,6 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
                       <TextField name="customDomain" required={requiredFields.customDomain} />
                     </FormFieldLabel>
                   )}
-
-                  <ListingMetadata
-                    fields={['about']}
-                    helperTexts={{
-                      about: <HelperText text="Briefly describe what your organization does. This helps coworkers and team members understand your company’s focus and purpose." />,
-                    }}
-                    requiredFields={requiredFields}
-                  />
                 </StackColumn>
               </SettingsSectionCard>
 

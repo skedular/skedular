@@ -20,5 +20,4 @@ public class MyOrganizationDetails
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
     [GraphQLName("isMyOnboardingDone")] public bool IsMyOnboardingDone { get; set; }
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
-    [GraphQLName("listingMetadata")] public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
 }

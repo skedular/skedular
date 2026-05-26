@@ -156,9 +156,9 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
         private static System.Lazy<System.Text.Json.JsonSerializerOptions> _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings, true);
         private System.Text.Json.JsonSerializerOptions _instanceSettings;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public OrganizationCoreClient(System.Net.Http.HttpClient httpClient)
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _httpClient = httpClient;
             Initialize();
@@ -199,7 +199,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/version"
                     urlBuilder_.Append("v1/organization/version");
 
@@ -288,7 +288,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/{organizationId}/offering/{offeringCode}"
                     urlBuilder_.Append("v1/organization/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(organizationId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -372,7 +372,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/ownership/verifyById/{organizationId}"
                     urlBuilder_.Append("v1/organization/ownership/verifyById/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(organizationId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -454,7 +454,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/ownership/verifyByCustomDomain/{customDomain}"
                     urlBuilder_.Append("v1/organization/ownership/verifyByCustomDomain/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(customDomain, System.Globalization.CultureInfo.InvariantCulture)));
@@ -526,7 +526,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("GET");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/azure-tenant-admin-consent-url"
                     urlBuilder_.Append("v1/organization/azure-tenant-admin-consent-url");
 
@@ -555,21 +555,21 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 302)
                         {
-                            string responseText_ = (response_.Content == null) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
                             throw new ApiException("redirect status response code", status_, responseText_, headers_, null);
                         }
                         else
 
-                            if (status_ == 200 || status_ == 204)
-                            {
+                        if (status_ == 200 || status_ == 204)
+                        {
 
-                                return;
-                            }
-                            else
-                            {
-                                var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                                throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                            }
+                            return;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
                     }
                     finally
                     {
@@ -611,7 +611,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("GET");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/onboard-azure-tenant"
                     urlBuilder_.Append("v1/organization/onboard-azure-tenant");
                     urlBuilder_.Append('?');
@@ -693,7 +693,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("POST");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/sso/saml/acs"
                     urlBuilder_.Append("v1/organization/sso/saml/acs");
 
@@ -774,7 +774,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("GET");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/add-payment-method"
                     urlBuilder_.Append("v1/organization/add-payment-method");
                     urlBuilder_.Append('?');
@@ -858,7 +858,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("GET");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/organization-stripe-connect-account/refresh-onboarding-url"
                     urlBuilder_.Append("v1/organization/organization-stripe-connect-account/refresh-onboarding-url");
                     urlBuilder_.Append('?');
@@ -893,20 +893,20 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                             return;
                         }
                         else
-                            if (status_ == 302)
+                        if (status_ == 302)
+                        {
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
+                            throw new ApiException("redirect to OrganizationStripeConnectAccounts new onboarding URL", status_, responseText_, headers_, null);
+                        }
+                        else
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
                             {
-                                string responseText_ = (response_.Content == null) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                                throw new ApiException("redirect to OrganizationStripeConnectAccounts new onboarding URL", status_, responseText_, headers_, null);
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            else
-                            {
-                                var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                                if (objectResponse_.Object == null)
-                                {
-                                    throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                                }
-                                throw new ApiException<ProblemDetails>("unexpected error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                            }
+                            throw new ApiException<ProblemDetails>("unexpected error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
                     }
                     finally
                     {
@@ -944,7 +944,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("POST");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/stripe/platform/account/webhook"
                     urlBuilder_.Append("v1/organization/stripe/platform/account/webhook");
 
@@ -1021,7 +1021,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("POST");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/stripe/connect/account/webhook"
                     urlBuilder_.Append("v1/organization/stripe/connect/account/webhook");
 
@@ -1105,7 +1105,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("GET");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/stripe/connect/account/oauth/callback"
                     urlBuilder_.Append("v1/organization/stripe/connect/account/oauth/callback");
                     urlBuilder_.Append('?');
@@ -1181,7 +1181,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("GET");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/xero/oauth/start"
                     urlBuilder_.Append("v1/organization/xero/oauth/start");
                     urlBuilder_.Append('?');
@@ -1220,21 +1220,21 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 302)
                         {
-                            string responseText_ = (response_.Content == null) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
                             throw new ApiException("redirect to Xero consent page", status_, responseText_, headers_, null);
                         }
                         else
 
-                            if (status_ == 200 || status_ == 204)
-                            {
+                        if (status_ == 200 || status_ == 204)
+                        {
 
-                                return;
-                            }
-                            else
-                            {
-                                var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                                throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                            }
+                            return;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
                     }
                     finally
                     {
@@ -1272,7 +1272,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     request_.Method = new System.Net.Http.HttpMethod("GET");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/organization/xero/oauth/callback"
                     urlBuilder_.Append("v1/organization/xero/oauth/callback");
                     urlBuilder_.Append('?');
@@ -1305,21 +1305,21 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 302)
                         {
-                            string responseText_ = (response_.Content == null) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
                             throw new ApiException("redirect back to organization marketplace setup", status_, responseText_, headers_, null);
                         }
                         else
 
-                            if (status_ == 200 || status_ == 204)
-                            {
+                        if (status_ == 200 || status_ == 204)
+                        {
 
-                                return;
-                            }
-                            else
-                            {
-                                var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
-                                throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                            }
+                            return;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await ReadAsStringAsync(response_.Content, cancellationToken).ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
                     }
                     finally
                     {
@@ -1351,21 +1351,21 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private static System.Threading.Tasks.Task<string> ReadAsStringAsync(System.Net.Http.HttpContent content, System.Threading.CancellationToken cancellationToken)
         {
-#if NET5_0_OR_GREATER
+    #if NET5_0_OR_GREATER
             return content.ReadAsStringAsync(cancellationToken);
-#else
+    #else
             return content.ReadAsStringAsync();
-#endif
+    #endif
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private static System.Threading.Tasks.Task<System.IO.Stream> ReadAsStreamAsync(System.Net.Http.HttpContent content, System.Threading.CancellationToken cancellationToken)
         {
-#if NET5_0_OR_GREATER
+    #if NET5_0_OR_GREATER
             return content.ReadAsStreamAsync(cancellationToken);
-#else
+    #else
             return content.ReadAsStreamAsync();
-#endif
+    #endif
         }
 
         public bool ReadResponseAsString { get; set; }
@@ -1424,7 +1424,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
                     var field_ = System.Reflection.IntrospectionExtensions.GetTypeInfo(value.GetType()).GetDeclaredField(name);
                     if (field_ != null)
                     {
-                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field_, typeof(System.Runtime.Serialization.EnumMemberAttribute))
+                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field_, typeof(System.Runtime.Serialization.EnumMemberAttribute)) 
                             as System.Runtime.Serialization.EnumMemberAttribute;
                         if (attribute != null)
                         {
@@ -1444,13 +1444,13 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
             {
                 return dateTime.ToString("O", cultureInfo);
             }
-            else if (value is bool)
+            else if (value is bool) 
             {
                 return System.Convert.ToString((bool)value, cultureInfo).ToLowerInvariant();
             }
             else if (value is byte[])
             {
-                return System.Convert.ToBase64String((byte[])value);
+                return System.Convert.ToBase64String((byte[]) value);
             }
             else if (value is string[])
             {
@@ -1580,11 +1580,11 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
 
 }
 
-#pragma warning restore 108
-#pragma warning restore 114
-#pragma warning restore 472
-#pragma warning restore 612
-#pragma warning restore 649
+#pragma warning restore  108
+#pragma warning restore  114
+#pragma warning restore  472
+#pragma warning restore  612
+#pragma warning restore  649
 #pragma warning restore 1573
 #pragma warning restore 1591
 #pragma warning restore 8073

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<07392eaad1c7ba56f133320d8cb66e6c>>
+ * @generated SignedSource<<9c6256b251dccefa164393175ba03b2c>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%future added value";
-export type OrganizationPatchField = "BILLING_CYCLE" | "CONTACT_EMAIL" | "CONTACT_PHONE" | "CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL" | "CUSTOM_DOMAIN" | "DESCRIPTION" | "FEATURE_IMAGES" | "INDUSTRY_SUB_CATEGORIES" | "INVOICE_DUE_IN_DAYS" | "LOGO_URL" | "MARKETPLACE_LISTING_METADATA" | "NAME" | "PHYSICAL_ADDRESS" | "REFUND_NOTIFICATION_EMAILS" | "SUB_TITLE" | "TITLE" | "WEBSITE" | "%future added value";
+export type OrganizationPatchField = "BILLING_CYCLE" | "CONTACT_EMAIL" | "CONTACT_PHONE" | "CUSTOMER_FACING_TERMS_AND_CONDITIONS_URL" | "CUSTOM_DOMAIN" | "FEATURE_IMAGES" | "INDUSTRY_SUB_CATEGORIES" | "INVOICE_DUE_IN_DAYS" | "LOGO_URL" | "MARKETPLACE_LISTING_METADATA" | "NAME" | "PHYSICAL_ADDRESS" | "REFUND_NOTIFICATION_EMAILS" | "WEBSITE" | "%future added value";
 export type UpdateOrganizationInput = {
   billingCycle?: OrganizationBillingCycle | null | undefined;
   clientMutationId?: string | null | undefined;
@@ -17,7 +17,6 @@ export type UpdateOrganizationInput = {
   contactPhone?: string | null | undefined;
   customDomain?: string | null | undefined;
   customerFacingTermsAndConditionsUrl?: string | null | undefined;
-  description?: string | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   fieldsToUpdate: ReadonlyArray<OrganizationPatchField>;
   id?: string | null | undefined;
@@ -28,8 +27,6 @@ export type UpdateOrganizationInput = {
   name?: string | null | undefined;
   physicalAddress?: OrganizationPhysicalAddressPatchInput | null | undefined;
   refundNotificationEmails?: ReadonlyArray<string> | null | undefined;
-  subTitle?: string | null | undefined;
-  title?: string | null | undefined;
   website?: string | null | undefined;
 };
 export type CdnImageFileInput = {
@@ -95,11 +92,6 @@ export type organizationAdminSetupSection_updateOrganizationMutation$data = {
         readonly name: string;
       }>;
       readonly invoiceDueInDays: number;
-      readonly listingMetadata: {
-        readonly about: string | null | undefined;
-        readonly subTitle: string | null | undefined;
-        readonly title: string | null | undefined;
-      };
       readonly logoUrl: string | null | undefined;
       readonly marketplaceListingMetadata: {
         readonly about: string | null | undefined;
@@ -140,28 +132,7 @@ v2 = {
   "name": "name",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "about",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "subTitle",
-  "storageKey": null
-},
-v6 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -184,7 +155,7 @@ v6 = [
     "storageKey": null
   }
 ],
-v7 = [
+v4 = [
   {
     "alias": null,
     "args": [
@@ -219,20 +190,6 @@ v7 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "ListingMetadata",
-            "kind": "LinkedField",
-            "name": "listingMetadata",
-            "plural": false,
-            "selections": [
-              (v3/*:: as any*/),
-              (v4/*:: as any*/),
-              (v5/*:: as any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "kind": "ScalarField",
             "name": "logoUrl",
             "storageKey": null
@@ -245,9 +202,27 @@ v7 = [
             "name": "marketplaceListingMetadata",
             "plural": false,
             "selections": [
-              (v3/*:: as any*/),
-              (v4/*:: as any*/),
-              (v5/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "about",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "title",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "subTitle",
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -321,7 +296,7 @@ v7 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v6/*:: as any*/),
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -331,7 +306,7 @@ v7 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v6/*:: as any*/),
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -376,7 +351,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminSetupSection_updateOrganizationMutation",
-    "selections": (v7/*:: as any*/),
+    "selections": (v4/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -385,19 +360,19 @@ return {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminSetupSection_updateOrganizationMutation",
-    "selections": (v7/*:: as any*/)
+    "selections": (v4/*:: as any*/)
   },
   "params": {
-    "cacheID": "05457baa29efbe18c4d963a6583451d0",
+    "cacheID": "a14a409ea56c72843dbfee693190d1f5",
     "id": null,
     "metadata": {},
     "name": "organizationAdminSetupSection_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdminSetupSection_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      logoUrl\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      refundNotificationEmails\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      billingCycle {\n        type\n        name\n      }\n      invoiceDueInDays\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminSetupSection_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      logoUrl\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      refundNotificationEmails\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      billingCycle {\n        type\n        name\n      }\n      invoiceDueInDays\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8956f93381325e646f2e4032c2e49438";
+(node as any).hash = "c626268331b8691f4fbd8e2dac78fd38";
 
 export default node;

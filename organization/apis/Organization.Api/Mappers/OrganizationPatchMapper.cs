@@ -51,28 +51,6 @@ public class OrganizationPatchMapper : IOrganizationPatchMapper
             }
         }
 
-        if (request.FieldsToUpdate.Contains(OrganizationPatchField.Description) &&
-            request.Description?.Length > ApiServiceConstants.MaxDescriptionLength)
-        {
-            throw new ArgumentException(
-                $"Organisation description must be {ApiServiceConstants.MaxDescriptionLength} characters or fewer.",
-                nameof(request));
-        }
-
-        ValidateMaxLength(
-            request.FieldsToUpdate,
-            OrganizationPatchField.Title,
-            request.Title,
-            ApiServiceConstants.MaxDescriptionLength,
-            "Organisation title");
-
-        ValidateMaxLength(
-            request.FieldsToUpdate,
-            OrganizationPatchField.SubTitle,
-            request.SubTitle,
-            ApiServiceConstants.MaxDescriptionLength,
-            "Organisation sub title");
-
         ValidateMaxLength(
             request.FieldsToUpdate,
             OrganizationPatchField.CustomDomain,
@@ -147,9 +125,6 @@ public class OrganizationPatchMapper : IOrganizationPatchMapper
             changed = field switch
             {
                 OrganizationPatchField.Name => ApplyNamePatch(request.Name, organization) || changed,
-                OrganizationPatchField.Description => ApplyDescriptionPatch(request.Description, organization) || changed,
-                OrganizationPatchField.Title => ApplyTitlePatch(request.Title, organization) || changed,
-                OrganizationPatchField.SubTitle => ApplySubTitlePatch(request.SubTitle, organization) || changed,
                 OrganizationPatchField.CustomDomain => ApplyCustomDomainPatch(request.CustomDomain, organization) || changed,
                 OrganizationPatchField.Website => ApplyStringPatch(request.Website, organization.Website, value => organization.Website = value) ||
                                                   changed,
@@ -190,42 +165,6 @@ public class OrganizationPatchMapper : IOrganizationPatchMapper
         }
 
         organization.Name = name!;
-        return true;
-    }
-
-    private static bool ApplyDescriptionPatch(string? description, Shared.Database.Entities.Organization organization)
-    {
-        var listingMetadata = organization.ListingMetadata ?? ListingMetadata.Empty;
-        if (listingMetadata.About == description)
-        {
-            return false;
-        }
-
-        organization.ListingMetadata = listingMetadata with { About = description };
-        return true;
-    }
-
-    private static bool ApplyTitlePatch(string? title, Shared.Database.Entities.Organization organization)
-    {
-        var listingMetadata = organization.ListingMetadata ?? ListingMetadata.Empty;
-        if (listingMetadata.Title == title)
-        {
-            return false;
-        }
-
-        organization.ListingMetadata = listingMetadata with { Title = title };
-        return true;
-    }
-
-    private static bool ApplySubTitlePatch(string? subTitle, Shared.Database.Entities.Organization organization)
-    {
-        var listingMetadata = organization.ListingMetadata ?? ListingMetadata.Empty;
-        if (listingMetadata.SubTitle == subTitle)
-        {
-            return false;
-        }
-
-        organization.ListingMetadata = listingMetadata with { SubTitle = subTitle };
         return true;
     }
 

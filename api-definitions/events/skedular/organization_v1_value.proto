@@ -37,26 +37,25 @@ message Organization {
   google.protobuf.Timestamp   deletedAt                           = 2;
   string                      customDomain                        = 3;
   string                      name                                = 4;
-  ListingMetadata             listingMetadata                     = 5;
-  string                      logoUrl                             = 6;
-  string                      website                             = 7;
-  repeated OrganizationMember members                             = 8;
-  Offering                    Offering                            = 9;
-  repeated string             azureTenantIds                      = 10;
-  repeated Tag                tags                                = 11;
-  OrganizationSsoSettings     ssoSettings                         = 12;
-  OrganizationTaxDetails      taxDetails                          = 13;
-  OrganizationType            type                                = 14;
-  string                      contactEmail                        = 15;
-  string                      contactPhone                        = 16;
-  PhysicalAddress             physicalAddress                     = 17;
-  bool                        isOwnershipVerified                 = 18;
-  bool                        hasAttachedPaymentMethod            = 19;
-  repeated CdnImageFile       featureImages                       = 20;
-  ListingMetadata             marketplaceListingMetadata          = 21;
-  OrganizationBillingCycle    billingCycle                        = 22;
-  string                      customerFacingTermsAndConditionsUrl = 23;
-  repeated string             refundNotificationEmails            = 24;
+  string                      logoUrl                             = 5;
+  string                      website                             = 6;
+  repeated OrganizationMember members                             = 7;
+  Offering                    offering                            = 8;
+  repeated string             azureTenantIds                      = 9;
+  repeated Tag                tags                                = 10;
+  OrganizationSsoSettings     ssoSettings                         = 11;
+  OrganizationTaxDetails      taxDetails                          = 12;
+  OrganizationType            type                                = 13;
+  string                      contactEmail                        = 14;
+  string                      contactPhone                        = 15;
+  PhysicalAddress             physicalAddress                     = 16;
+  bool                        isOwnershipVerified                 = 17;
+  bool                        hasAttachedPaymentMethod            = 18;
+  repeated CdnImageFile       featureImages                       = 19;
+  ListingMetadata             marketplaceListingMetadata          = 20;
+  OrganizationBillingCycle    billingCycle                        = 21;
+  string                      customerFacingTermsAndConditionsUrl = 22;
+  repeated string             refundNotificationEmails            = 23;
 }
 
 enum OrganizationType {

@@ -16,11 +16,6 @@ const organization = {
     name: 'Monthly',
   },
   invoiceDueInDays: 7,
-  listingMetadata: {
-    about: 'Original about',
-    title: 'Original title',
-    subTitle: 'Original subtitle',
-  },
   logoUrl: null,
   website: null,
   customerFacingTermsAndConditionsUrl: null,
@@ -79,14 +74,11 @@ vi.mock('mui-rff', async () => {
   const { Field } = await import('react-final-form');
 
   const labels: Record<string, string> = {
-    about: 'About',
     contactEmail: 'Email',
     contactPhone: 'Phone Number',
     customerFacingTermsAndConditionsUrl: 'Terms and Conditions',
     name: 'Name',
     refundNotificationEmailsText: 'Refund Notification Emails',
-    subTitle: 'Sub Title',
-    title: 'Title',
     website: 'Website',
   };
 
@@ -184,23 +176,6 @@ describe('OrganizationAdminSetupSection', () => {
       fieldsToUpdate: ['NAME'],
       name: 'Acme HQ',
     });
-  });
-
-  it('patches the description from the About field after inline debounce', async () => {
-    render(<OrganizationAdminSetupSection organizationCustomDomain="acme" />);
-
-    fireEvent.change(screen.getByRole('textbox', { name: 'About' }), { target: { value: 'Updated about text' } });
-    await act(async () => {
-      vi.advanceTimersByTime(1000);
-    });
-
-    expect(patchUpdateCommit).toHaveBeenCalledTimes(1);
-    expect(patchUpdateCommit.mock.calls[0][0].variables.input).toMatchObject({
-      id: 'org-1',
-      fieldsToUpdate: ['DESCRIPTION'],
-      description: 'Updated about text',
-    });
-    expect(patchUpdateCommit.mock.calls[0][0].variables.input.name).toBeUndefined();
   });
 
   it('patches the website after inline debounce', async () => {

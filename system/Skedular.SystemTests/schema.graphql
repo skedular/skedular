@@ -2137,7 +2137,6 @@ type MyOrganizationDetails @fusion__type(schema: ORGANIZATION_API) {
     @fusion__field(schema: ORGANIZATION_API)
   featureImages: [CdnImageFile!]! @fusion__field(schema: ORGANIZATION_API)
   isMyOnboardingDone: Boolean! @fusion__field(schema: ORGANIZATION_API)
-  listingMetadata: ListingMetadata! @fusion__field(schema: ORGANIZATION_API)
   logoUrl: String @fusion__field(schema: ORGANIZATION_API)
   name: String! @fusion__field(schema: ORGANIZATION_API)
   type: OrganizationTypeDetails! @fusion__field(schema: ORGANIZATION_API)
@@ -2346,7 +2345,6 @@ type OrganizationDetails
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
-  listingMetadata: ListingMetadata! @fusion__field(schema: ORGANIZATION_API)
   locationSpaceTypes: [OrganizationTagDetails!]!
     @fusion__field(schema: ORGANIZATION_API)
   logoUrl: String @fusion__field(schema: ORGANIZATION_API)
@@ -2558,7 +2556,6 @@ type OrganizationPublicDetails @fusion__type(schema: ORGANIZATION_API) {
   featureImages: [CdnImageFile!]! @fusion__field(schema: ORGANIZATION_API)
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
     @fusion__field(schema: ORGANIZATION_API)
-  listingMetadata: ListingMetadata! @fusion__field(schema: ORGANIZATION_API)
   locationSpaceTypes: [OrganizationTagDetails!]!
     @fusion__field(schema: ORGANIZATION_API)
   logoUrl: String @fusion__field(schema: ORGANIZATION_API)
@@ -3541,7 +3538,6 @@ input AddOrganizationInput @fusion__type(schema: ORGANIZATION_API) {
   id: String @fusion__inputField(schema: ORGANIZATION_API)
   industrySubCategoryIds: [String!]! @fusion__inputField(schema: ORGANIZATION_API)
   invoiceDueInDays: Int! @fusion__inputField(schema: ORGANIZATION_API)
-  listingMetadata: ListingMetadataInput @fusion__inputField(schema: ORGANIZATION_API)
   logoUrl: String @fusion__inputField(schema: ORGANIZATION_API)
   marketplaceListingMetadata: ListingMetadataInput @fusion__inputField(schema: ORGANIZATION_API)
   name: String! @fusion__inputField(schema: ORGANIZATION_API)
@@ -4717,7 +4713,6 @@ input UpdateOrganizationInput @fusion__type(schema: ORGANIZATION_API) {
   contactPhone: String @fusion__inputField(schema: ORGANIZATION_API)
   customDomain: String @fusion__inputField(schema: ORGANIZATION_API)
   customerFacingTermsAndConditionsUrl: String @fusion__inputField(schema: ORGANIZATION_API)
-  description: String @fusion__inputField(schema: ORGANIZATION_API)
   featureImages: [CdnImageFileInput!] @fusion__inputField(schema: ORGANIZATION_API)
   fieldsToUpdate: [OrganizationPatchField!]! @fusion__inputField(schema: ORGANIZATION_API)
   id: String @fusion__inputField(schema: ORGANIZATION_API)
@@ -4728,8 +4723,6 @@ input UpdateOrganizationInput @fusion__type(schema: ORGANIZATION_API) {
   name: String @fusion__inputField(schema: ORGANIZATION_API)
   physicalAddress: OrganizationPhysicalAddressPatchInput @fusion__inputField(schema: ORGANIZATION_API)
   refundNotificationEmails: [String!] @fusion__inputField(schema: ORGANIZATION_API)
-  subTitle: String @fusion__inputField(schema: ORGANIZATION_API)
-  title: String @fusion__inputField(schema: ORGANIZATION_API)
   website: String @fusion__inputField(schema: ORGANIZATION_API)
 }
 
@@ -5244,9 +5237,6 @@ enum OrganizationOrderField @fusion__type(schema: ORGANIZATION_API) {
 
 enum OrganizationPatchField @fusion__type(schema: ORGANIZATION_API) {
   NAME @fusion__enumValue(schema: ORGANIZATION_API)
-  DESCRIPTION @fusion__enumValue(schema: ORGANIZATION_API)
-  TITLE @fusion__enumValue(schema: ORGANIZATION_API)
-  SUB_TITLE @fusion__enumValue(schema: ORGANIZATION_API)
   CUSTOM_DOMAIN @fusion__enumValue(schema: ORGANIZATION_API)
   WEBSITE @fusion__enumValue(schema: ORGANIZATION_API)
   LOGO_URL @fusion__enumValue(schema: ORGANIZATION_API)

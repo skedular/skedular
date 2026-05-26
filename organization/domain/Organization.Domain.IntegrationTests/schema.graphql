@@ -304,7 +304,6 @@ type MyOrganizationDetails {
   contactPhone: String
   isMyOnboardingDone: Boolean!
   featureImages: [CdnImageFile!]!
-  listingMetadata: ListingMetadata!
 }
 
 type OrganizationActiveOfferingDetails {
@@ -450,7 +449,6 @@ type OrganizationDetails @key(fields: "id") @shareable {
   taxDetails: OrganizationTaxDetails
   xeroConnection: OrganizationXeroConnection
   featureImages: [CdnImageFile!]!
-  listingMetadata: ListingMetadata!
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
   stripeAuthorizeExistingConnectAccountUrl: String!
   hasAttachedPaymentMethod: Boolean!
@@ -609,7 +607,6 @@ type OrganizationPublicDetails {
   locationSpaceTypes: [OrganizationTagDetails!]!
   amenities: [OrganizationTagDetails!]!
   featureImages: [CdnImageFile!]!
-  listingMetadata: ListingMetadata!
   marketplaceListingMetadata: ListingMetadata!
 }
 
@@ -800,7 +797,6 @@ input AddOrganizationInput {
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
   featureImages: [CdnImageFileInput!]
-  listingMetadata: ListingMetadataInput
   marketplaceListingMetadata: ListingMetadataInput
 }
 
@@ -1114,9 +1110,6 @@ input UpdateOrganizationInput {
   customDomain: String
   fieldsToUpdate: [OrganizationPatchField!]!
   name: String
-  description: String
-  title: String
-  subTitle: String
   website: String
   logoUrl: String
   customerFacingTermsAndConditionsUrl: String
@@ -1272,9 +1265,6 @@ enum OrganizationOrderField {
 
 enum OrganizationPatchField {
   NAME
-  DESCRIPTION
-  TITLE
-  SUB_TITLE
   CUSTOM_DOMAIN
   WEBSITE
   LOGO_URL

@@ -587,7 +587,6 @@ public class OrganizationService(
                     throw new UnauthorizedAccessException();
                 }
 
-                organization.ListingMetadata = ListingMetadata.Empty;
                 organization.MarketplaceListingMetadata = ListingMetadata.Empty;
                 organization.Website = null;
                 organization.ContactEmail = null;

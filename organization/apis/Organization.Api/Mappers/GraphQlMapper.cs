@@ -196,7 +196,6 @@ public class GraphQlMapper : IGraphQlMapper
             ModifiedAt = src.ModifiedAt,
             CustomDomain = src.CustomDomain,
             Name = src.Name,
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
             Website = src.Website,
             CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
@@ -270,7 +269,6 @@ public class GraphQlMapper : IGraphQlMapper
             Id = src.Id,
             CustomDomain = src.CustomDomain,
             Name = src.Name,
-            ListingMetadata = src.ListingMetadata,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata,
             Website = src.Website,
             CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
@@ -296,7 +294,6 @@ public class GraphQlMapper : IGraphQlMapper
         dest.Id = src.Id;
         dest.CustomDomain = src.CustomDomain;
         dest.Name = src.Name;
-        dest.ListingMetadata = src.ListingMetadata;
         dest.MarketplaceListingMetadata = src.MarketplaceListingMetadata;
         dest.Website = src.Website;
         dest.CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl;
@@ -395,7 +392,6 @@ public class GraphQlMapper : IGraphQlMapper
             Id = src.Id,
             CustomDomain = src.CustomDomain,
             Name = src.Name,
-            ListingMetadata = src.ListingMetadata,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata,
             Website = src.Website,
             CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
@@ -446,7 +442,6 @@ public class GraphQlMapper : IGraphQlMapper
                 Id = src.Id,
                 CustomDomain = src.CustomDomain,
                 Name = src.Name,
-                ListingMetadata = src.ListingMetadata,
                 MarketplaceListingMetadata = src.MarketplaceListingMetadata,
                 Website = src.Website,
                 CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
@@ -494,7 +489,6 @@ public class GraphQlMapper : IGraphQlMapper
             Id = src.Id.ToSafeString(),
             CustomDomain = src.CustomDomain.ToSafeString(),
             Name = src.Name,
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
             Website = src.Website,
             LogoUrl = src.LogoUrl,
@@ -517,9 +511,6 @@ public class GraphQlMapper : IGraphQlMapper
             src.CustomDomain.ToSafeString(),
             src.FieldsToUpdate.ToHashSet(),
             src.Name,
-            src.Description,
-            src.Title,
-            src.SubTitle,
             src.Website,
             src.LogoUrl,
             src.CustomerFacingTermsAndConditionsUrl,
@@ -1646,7 +1637,6 @@ public class GraphQlMapper : IGraphQlMapper
             Id = src.Id,
             CustomDomain = src.CustomDomain,
             Name = src.Name,
-            ListingMetadata = src.ListingMetadata,
             Website = src.Website,
             CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             LogoUrl = src.LogoUrl,

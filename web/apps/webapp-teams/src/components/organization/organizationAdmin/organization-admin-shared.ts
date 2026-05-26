@@ -1,12 +1,8 @@
 import { array, object, string } from 'yup';
-import { listingMetadataSchemaShape } from '@/components/listingMetadata';
 
 export type OrganizationDetails = {
   customDomain: string | null;
   name: string;
-  about: string | null;
-  title: string | null;
-  subTitle: string | null;
   website: string | null;
   customerFacingTermsAndConditionsUrl: string | null;
   industrySubCategoryIds: string[];
@@ -52,7 +48,6 @@ export const splitNotificationEmails = (value: string | null | undefined) =>
 export const organizationSchema = object({
   customDomain: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
-  ...listingMetadataSchemaShape,
   website: string().url('Website must be a valid Url').nullable(),
   customerFacingTermsAndConditionsUrl: string().url('Terms and Conditions must be a valid Url').nullable(),
   industrySubCategoryIds: array().nullable(),

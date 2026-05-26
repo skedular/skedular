@@ -12,71 +12,29 @@ public class ApplyToShould
     [AutoFakeItEasyData]
     public void Update_Only_Selected_Name(OrganizationPatchMapper sut)
     {
-        var organization = new Shared.Database.Entities.Organization
-        {
-            Name = "Old name",
-            Type = OrganizationTypeConstants.Private,
-            ListingMetadata = new ListingMetadata("Old description", "Title", "Sub title", ["Wifi"])
-        };
+        var organization = new Shared.Database.Entities.Organization { Name = "Old name", Type = OrganizationTypeConstants.Private };
         var request = new OrganizationPatchRequest(
             "org-1",
             null,
             new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
-            "New name",
-            "Ignored description");
+            "New name");
 
         var changed = sut.ApplyTo(request, organization, []);
 
         changed.ShouldBeTrue();
         organization.Name.ShouldBe("New name");
-        organization.ListingMetadata.ShouldNotBeNull();
-        organization.ListingMetadata.About.ShouldBe("Old description");
-    }
-
-    [Theory]
-    [AutoFakeItEasyData]
-    public void Update_Only_Selected_Description_And_Preserve_Other_Listing_Metadata(OrganizationPatchMapper sut)
-    {
-        var organization = new Shared.Database.Entities.Organization
-        {
-            Name = "Existing name",
-            Type = OrganizationTypeConstants.Private,
-            ListingMetadata = new ListingMetadata("Old description", "Title", "Sub title", ["Wifi"])
-        };
-        var request = new OrganizationPatchRequest(
-            "org-1",
-            null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.Description },
-            "Ignored name",
-            "New description");
-
-        var changed = sut.ApplyTo(request, organization, []);
-
-        changed.ShouldBeTrue();
-        organization.Name.ShouldBe("Existing name");
-        organization.ListingMetadata.ShouldNotBeNull();
-        organization.ListingMetadata.About.ShouldBe("New description");
-        organization.ListingMetadata.Title.ShouldBe("Title");
-        organization.ListingMetadata.SubTitle.ShouldBe("Sub title");
-        organization.ListingMetadata.IncludedFeatures.ShouldBe(["Wifi"]);
     }
 
     [Theory]
     [AutoFakeItEasyData]
     public void Return_False_When_Selected_Values_Are_Unchanged(OrganizationPatchMapper sut)
     {
-        var organization = new Shared.Database.Entities.Organization
-        {
-            Name = "Existing name",
-            Type = OrganizationTypeConstants.Private,
-            ListingMetadata = new ListingMetadata("Existing description", "Title", "Sub title", [])
-        };
+        var organization = new Shared.Database.Entities.Organization { Name = "Existing name", Type = OrganizationTypeConstants.Private };
         var request = new OrganizationPatchRequest(
             "org-1",
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.Name, OrganizationPatchField.Description },
-            organization.Name,
-            organization.ListingMetadata.About);
+            new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
+            organization.Name);
 
         var changed = sut.ApplyTo(request, organization, []);
 
@@ -94,7 +52,6 @@ public class ApplyToShould
             CustomDomain = "old-domain",
             Name = "Old name",
             Type = OrganizationTypeConstants.Private,
-            ListingMetadata = new ListingMetadata("Old description", "Old title", "Old sub title", ["Old"]),
             MarketplaceListingMetadata =
                 new ListingMetadata("Old marketplace", "Old marketplace title", "Old marketplace sub title", ["Old marketplace feature"]),
             Website = "https://old.example.com",
@@ -123,9 +80,6 @@ public class ApplyToShould
             "New-Domain",
             Enum.GetValues<OrganizationPatchField>().ToHashSet(),
             "New name",
-            "New description",
-            "New title",
-            "New sub title",
             "https://new.example.com",
             "https://new.example.com/logo.png",
             "https://new.example.com/terms",
@@ -144,11 +98,6 @@ public class ApplyToShould
         changed.ShouldBeTrue();
         organization.CustomDomain.ShouldBe("new-domain");
         organization.Name.ShouldBe("New name");
-        organization.ListingMetadata.ShouldNotBeNull();
-        organization.ListingMetadata.About.ShouldBe("New description");
-        organization.ListingMetadata.Title.ShouldBe("New title");
-        organization.ListingMetadata.SubTitle.ShouldBe("New sub title");
-        organization.ListingMetadata.IncludedFeatures.ShouldBe(["Old"]);
         organization.MarketplaceListingMetadata.ShouldBe(nextMarketplaceListingMetadata);
         organization.Website.ShouldBe("https://new.example.com");
         organization.LogoUrl.ShouldBe("https://new.example.com/logo.png");
@@ -185,7 +134,6 @@ public class ApplyToShould
             null,
             new HashSet<OrganizationPatchField> { OrganizationPatchField.PhysicalAddress },
             organization.Name,
-            null,
             PhysicalAddress: new Shared.Models.OrganizationPhysicalAddress
             {
                 AddressLine1 = "New address line", City = "New city", Zipcode = "2222", Country = "New country"

@@ -36,7 +36,6 @@ public class EventMapper : IEventMapper
             DeletedAt = src.DeletedAt?.ToTimestamp(),
             CustomDomain = src.CustomDomain.ToSafeString(),
             Name = src.Name.ToSafeString(),
-            ListingMetadata = MapTo(src.ListingMetadata),
             MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
             Website = src.Website.ToSafeString(),
             CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl.ToSafeString(),

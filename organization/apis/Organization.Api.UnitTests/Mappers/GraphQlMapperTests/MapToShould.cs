@@ -22,12 +22,12 @@ public class MapToShould
             CustomDomain = customDomain,
             FieldsToUpdate =
             [
-                OrganizationPatchField.Description,
+                OrganizationPatchField.Website,
                 OrganizationPatchField.ContactPhone,
                 OrganizationPatchField.BillingCycle
             ],
             Name = ignoredName,
-            Description = string.Empty,
+            Website = string.Empty,
             ContactPhone = null,
             BillingCycle = OrganizationBillingCycle.Monthly
         };
@@ -38,7 +38,7 @@ public class MapToShould
         result.CustomDomain.ShouldBe(input.CustomDomain);
         result.FieldsToUpdate.ShouldBe(input.FieldsToUpdate.ToHashSet());
         result.Name.ShouldBe(input.Name);
-        result.Description.ShouldBe(string.Empty);
+        result.Website.ShouldBe(string.Empty);
         result.ContactPhone.ShouldBeNull();
         result.BillingCycle.ShouldBe(input.BillingCycle);
     }

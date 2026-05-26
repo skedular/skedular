@@ -121,7 +121,6 @@ public class EventMapper : IEventMapper
             ModifiedAt = src.ModifiedAt,
             CustomDomain = src.CustomDomain,
             Name = src.Name,
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
             Website = src.Website,
             CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,

@@ -181,12 +181,13 @@ public class UpdateOrganizationShould
         string offeringId,
         string originalName,
         string updatedName,
-        string description,
+        string websiteUpdateSeed,
         string websiteSeed,
         TimeProvider timeProvider,
         CancellationToken cancellationToken)
     {
         var website = $"https://{websiteSeed}.example";
+        var updatedWebsite = $"https://{websiteUpdateSeed}.example";
         await SeedOwnedOrganizationAsync(
             repositoryFactory,
             organizationId,
@@ -208,23 +209,21 @@ public class UpdateOrganizationShould
                 updatedName,
                 null,
                 cancellationToken);
-            var descriptionResultTask = updateOrganizationMutation.ExecuteAsync(
+            var websiteResultTask = updateOrganizationMutation.ExecuteAsync(
                 organizationId,
-                [OrganizationPatchField.Description],
+                [OrganizationPatchField.Website],
                 null,
-                description,
+                updatedWebsite,
                 cancellationToken);
 
-            var results = await Task.WhenAll(nameResultTask, descriptionResultTask);
+            var results = await Task.WhenAll(nameResultTask, websiteResultTask);
 
             results[0].Errors.Select(error => error.Message).ShouldBeEmpty();
             results[1].Errors.Select(error => error.Message).ShouldBeEmpty();
 
             var organization = await GetPersistedOrganizationAsync(repositoryFactory, organizationId, cancellationToken);
             organization.Name.ShouldBe(updatedName);
-            organization.ListingMetadata.ShouldNotBeNull();
-            organization.ListingMetadata.About.ShouldBe(description);
-            organization.Website.ShouldBe(website);
+            organization.Website.ShouldBe(updatedWebsite);
         }
         finally
         {

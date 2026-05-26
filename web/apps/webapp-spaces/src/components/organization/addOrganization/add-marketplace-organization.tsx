@@ -90,7 +90,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           customDomain
           name
           logoUrl
-          listingMetadata {
+          marketplaceListingMetadata {
             about
             title
             subTitle
@@ -140,7 +140,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           customDomain,
           name,
           logoUrl,
-          listingMetadata: {
+          marketplaceListingMetadata: {
             about: about ?? '',
             title: '',
             subTitle: '',
@@ -189,7 +189,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
             customDomain,
             name,
             logoUrl,
-            listingMetadata: {
+            marketplaceListingMetadata: {
               about: about ?? '',
               title: '',
               subTitle: '',

@@ -7,7 +7,6 @@ public class Organization : ReplicatedModelBaseWithDeleted
 {
     public string? CustomDomain { get; set; }
     public string? Name { get; set; }
-    public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
     public ListingMetadata MarketplaceListingMetadata { get; set; } = ListingMetadata.Empty;
     public string? Website { get; set; }
     public bool AgreedToTermsOfUse { get; set; }

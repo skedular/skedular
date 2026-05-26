@@ -4,10 +4,9 @@ import type { guestStoreFront_rootQuery } from '@/queries/__generated__/guestSto
 import type { guestStoreFrontProducts_query$key } from '@/queries/__generated__/guestStoreFrontProducts_query.graphql';
 import type { guestStoreFrontSelectedLocationProductsQuery } from '@/queries/__generated__/guestStoreFrontSelectedLocationProductsQuery.graphql';
 import Container from '@mui/material/Container';
-import { alpha } from '@mui/material/styles';
 import Box from '@mui/system/Box';
 import { convertCalendarDayToStartOfDay, endOfWeek } from '@skedular/shared';
-import { BodyIconTypography, LargeHeadingIconTypography, MediumHeadingIconTypography, SubtitleIconTypography } from '@skedular/ui';
+import { BodyIconTypography, MediumHeadingIconTypography } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import dayjs from 'dayjs';
 import { memo, useEffect, useMemo, useState } from 'react';
@@ -35,11 +34,6 @@ const RootQuery = graphql`
   ) {
     organizationPublic(customDomain: $organizationCustomDomain) {
       name
-      listingMetadata {
-        title
-        subTitle
-        includedFeatures
-      }
       marketplaceListingMetadata {
         about
         title
@@ -215,27 +209,6 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
               sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
             />
           )}
-          <Box
-            sx={{
-              position: 'absolute',
-              inset: 0,
-              background: (theme) => `linear-gradient(180deg, ${alpha(theme.palette.common.black, 0.15)} 0%, ${alpha(theme.palette.common.black, 0.7)} 100%)`,
-              display: 'flex',
-              alignItems: 'flex-end',
-            }}
-          >
-            <Box sx={{ p: { xs: 3, md: 5 }, maxWidth: 850 }}>
-              {rootData.organizationPublic.listingMetadata.title && (
-                <LargeHeadingIconTypography label={rootData.organizationPublic.listingMetadata.title} sx={{ color: (theme) => theme.palette.common.white, mb: 1 }} />
-              )}
-              {rootData.organizationPublic.listingMetadata.subTitle && (
-                <SubtitleIconTypography
-                  label={`${rootData.organizationPublic.listingMetadata.subTitle}`}
-                  sx={{ color: (theme) => alpha(theme.palette.common.white, 0.92), mb: 3 }}
-                />
-              )}
-            </Box>
-          </Box>
         </Box>
       </Container>
 
