@@ -101,6 +101,13 @@ type LocationDetails = {
 };
 
 type PhysicalAddressDetails = {
+  osmType: string | null | undefined;
+  osmId: string | null | undefined;
+  placeId: string | null | undefined;
+  longitude: number | null | undefined;
+  latitude: number | null | undefined;
+  formattedAddress: string | null | undefined;
+  country: string;
   addressLine1: string;
   addressLine2: string | null;
   suburb: string | null;
@@ -890,13 +897,28 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     setPhysicalAddressCountryCode(address.countryCode ?? '');
   };
 
-  function handlePhysicalAddressUpdateClick({ addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: PhysicalAddressDetails) {
+  function handlePhysicalAddressUpdateClick({
+    osmType,
+    osmId,
+    placeId,
+    longitude,
+    latitude,
+    formattedAddress,
+    country: lookupCountry,
+    addressLine1,
+    addressLine2,
+    suburb,
+    city,
+    province,
+    zipcode,
+    countryCode,
+  }: PhysicalAddressDetails) {
     if (!physicalAddressSchema.isValidSync({ addressLine1, addressLine2, suburb, city, province, zipcode, countryCode })) {
       return;
     }
 
     const countryData = getCountryData(countryCode as TCountryCode);
-    let country = physicalAddressCountry;
+    let country = lookupCountry;
     if (countryData) {
       country = countryData.name;
     }
@@ -910,12 +932,12 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
             clientMutationId: uuid(),
             id: physicalAddress.id,
             fieldsToUpdate: ['ADDRESS'],
-            osmType: physicalAddressOsmType,
-            osmId: physicalAddressOsmId,
-            placeId: physicalAddressPlaceId,
-            longitude: physicalAddressLongitude,
-            latitude: physicalAddressLatitude,
-            formattedAddress: physicalAddressFormattedAddress,
+            osmType,
+            osmId,
+            placeId,
+            longitude,
+            latitude,
+            formattedAddress,
             addressLine1,
             addressLine2,
             suburb,
@@ -952,12 +974,12 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
               id: location.id,
               physicalAddress: {
                 id: physicalAddress.id,
-                osmType: physicalAddressOsmType,
-                osmId: physicalAddressOsmId,
-                placeId: physicalAddressPlaceId,
-                longitude: physicalAddressLongitude,
-                latitude: physicalAddressLatitude,
-                formattedAddress: physicalAddressFormattedAddress,
+                osmType,
+                osmId,
+                placeId,
+                longitude,
+                latitude,
+                formattedAddress,
                 addressLine1,
                 addressLine2,
                 suburb,
@@ -982,12 +1004,12 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
           clientMutationId: uuid(),
           locationId: location.id,
           id: newAddressId,
-          osmType: physicalAddressOsmType,
-          osmId: physicalAddressOsmId,
-          placeId: physicalAddressPlaceId,
-          longitude: physicalAddressLongitude,
-          latitude: physicalAddressLatitude,
-          formattedAddress: physicalAddressFormattedAddress,
+          osmType,
+          osmId,
+          placeId,
+          longitude,
+          latitude,
+          formattedAddress,
           addressLine1,
           addressLine2,
           suburb,
@@ -1024,12 +1046,12 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
             id: location.id,
             physicalAddress: {
               id: newAddressId,
-              osmType: physicalAddressOsmType,
-              osmId: physicalAddressOsmId,
-              placeId: physicalAddressPlaceId,
-              longitude: physicalAddressLongitude,
-              latitude: physicalAddressLatitude,
-              formattedAddress: physicalAddressFormattedAddress,
+              osmType,
+              osmId,
+              placeId,
+              longitude,
+              latitude,
+              formattedAddress,
               addressLine1,
               addressLine2,
               suburb,
@@ -1448,6 +1470,13 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     <Form<PhysicalAddressDetails>
       onSubmit={() => undefined}
       initialValues={{
+        osmType: physicalAddressOsmType,
+        osmId: physicalAddressOsmId,
+        placeId: physicalAddressPlaceId,
+        longitude: physicalAddressLongitude,
+        latitude: physicalAddressLatitude,
+        formattedAddress: physicalAddressFormattedAddress,
+        country: physicalAddressCountry,
         addressLine1: physicalAddressAddressLine1,
         addressLine2: physicalAddressAddressLine2,
         suburb: physicalAddressSuburb,
@@ -1466,15 +1495,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         debounceSetPhysicalAddressZipcode(values!.zipcode);
         debounceSetPhysicalAddressCountryCode(values!.countryCode);
         const physicalAddressValues = values as PhysicalAddressDetails;
-        const nextPhysicalAddressKey = JSON.stringify({
-          values: physicalAddressValues,
-          osmType: physicalAddressOsmType,
-          osmId: physicalAddressOsmId,
-          placeId: physicalAddressPlaceId,
-          longitude: physicalAddressLongitude,
-          latitude: physicalAddressLatitude,
-          formattedAddress: physicalAddressFormattedAddress,
-        });
+        const nextPhysicalAddressKey = JSON.stringify(physicalAddressValues);
         if (submittedPhysicalAddressKey.current === null) {
           submittedPhysicalAddressKey.current = nextPhysicalAddressKey;
         } else if (nextPhysicalAddressKey !== submittedPhysicalAddressKey.current) {
@@ -1505,6 +1526,13 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
                     onSelect={(address) => {
                       handlePhysicalAddressSelect(address);
                       form.batch(() => {
+                        form.change('osmType', address.osmType);
+                        form.change('osmId', address.osmId);
+                        form.change('placeId', address.placeId);
+                        form.change('longitude', address.longitude);
+                        form.change('latitude', address.latitude);
+                        form.change('formattedAddress', address.formattedAddress);
+                        form.change('country', address.country ?? '');
                         form.change('addressLine1', address.addressLine1 ?? '');
                         form.change('addressLine2', address.addressLine2 ?? '');
                         form.change('suburb', address.suburb ?? '');

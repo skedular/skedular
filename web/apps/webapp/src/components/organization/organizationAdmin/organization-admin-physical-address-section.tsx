@@ -1,4 +1,4 @@
-import { Address, PhysicalAddress } from '@/components/address';
+import { PhysicalAddress } from '@/components/address';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { PhysicalAddressDetails, physicalAddressSchema } from '@/components/organization/organizationAdmin/organization-admin-shared';
@@ -93,17 +93,15 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
     maxWidth: 760,
   };
 
-  const physicalAddressLookupDetails = useRef({
-    osmType: organization?.physicalAddress?.osmType,
-    osmId: organization?.physicalAddress?.osmId,
-    placeId: organization?.physicalAddress?.placeId,
-    longitude: organization?.physicalAddress?.longitude,
-    latitude: organization?.physicalAddress?.latitude,
-    formattedAddress: organization?.physicalAddress?.formattedAddress,
-    country: organization?.physicalAddress?.country ?? '',
-  });
   const initialPhysicalAddressValues = useMemo<PhysicalAddressDetails>(
     () => ({
+      osmType: organization?.physicalAddress?.osmType,
+      osmId: organization?.physicalAddress?.osmId,
+      placeId: organization?.physicalAddress?.placeId,
+      longitude: organization?.physicalAddress?.longitude,
+      latitude: organization?.physicalAddress?.latitude,
+      formattedAddress: organization?.physicalAddress?.formattedAddress,
+      country: organization?.physicalAddress?.country ?? '',
       addressLine1: organization?.physicalAddress?.addressLine1 ?? '',
       addressLine2: organization?.physicalAddress?.addressLine2 ?? null,
       suburb: organization?.physicalAddress?.suburb ?? null,
@@ -116,27 +114,29 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
   );
   const submittedPhysicalAddressKey = useRef<string | null>(null);
 
-  const handlePhysicalAddressSelect = (address: Address) => {
-    physicalAddressLookupDetails.current = {
-      osmType: address.osmType,
-      osmId: address.osmId,
-      placeId: address.placeId,
-      longitude: address.longitude,
-      latitude: address.latitude,
-      formattedAddress: address.formattedAddress,
-      country: address.country ?? '',
-    };
-  };
-
   const commitPhysicalAddressPatch = useCallback(
-    ({ addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: PhysicalAddressDetails) => {
+    ({
+      osmType,
+      osmId,
+      placeId,
+      longitude,
+      latitude,
+      formattedAddress,
+      country: lookupCountry,
+      addressLine1,
+      addressLine2,
+      suburb,
+      city,
+      province,
+      zipcode,
+      countryCode,
+    }: PhysicalAddressDetails) => {
       if (!organization || !physicalAddressSchema.isValidSync({ addressLine1, addressLine2, suburb, city, province, zipcode, countryCode })) {
         return;
       }
 
       const countryData = getCountryData(countryCode as TCountryCode);
-      const lookupDetails = physicalAddressLookupDetails.current;
-      let country = lookupDetails.country;
+      let country = lookupCountry;
       if (countryData) {
         country = countryData.name;
       }
@@ -149,12 +149,12 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
             customDomain: organizationCustomDomain,
             fieldsToUpdate: ['PHYSICAL_ADDRESS'],
             physicalAddress: {
-              osmType: lookupDetails.osmType,
-              osmId: lookupDetails.osmId,
-              placeId: lookupDetails.placeId,
-              longitude: lookupDetails.longitude,
-              latitude: lookupDetails.latitude,
-              formattedAddress: lookupDetails.formattedAddress,
+              osmType,
+              osmId,
+              placeId,
+              longitude,
+              latitude,
+              formattedAddress,
               addressLine1,
               addressLine2,
               suburb,
@@ -183,12 +183,12 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
               id: organization.id,
               physicalAddress: {
                 id: physicalAddressId,
-                osmType: lookupDetails.osmType,
-                osmId: lookupDetails.osmId,
-                placeId: lookupDetails.placeId,
-                longitude: lookupDetails.longitude,
-                latitude: lookupDetails.latitude,
-                formattedAddress: lookupDetails.formattedAddress,
+                osmType,
+                osmId,
+                placeId,
+                longitude,
+                latitude,
+                formattedAddress,
                 addressLine1,
                 addressLine2,
                 suburb,
@@ -218,16 +218,7 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
       validate={validatePhysicalAddress}
       render={({ handleSubmit, values, form }) => {
         const formValues = values as PhysicalAddressDetails;
-        const lookupDetails = physicalAddressLookupDetails.current;
-        const nextPhysicalAddressKey = JSON.stringify({
-          values: formValues,
-          osmType: lookupDetails.osmType,
-          osmId: lookupDetails.osmId,
-          placeId: lookupDetails.placeId,
-          longitude: lookupDetails.longitude,
-          latitude: lookupDetails.latitude,
-          formattedAddress: lookupDetails.formattedAddress,
-        });
+        const nextPhysicalAddressKey = JSON.stringify(formValues);
 
         if (submittedPhysicalAddressKey.current === null) {
           submittedPhysicalAddressKey.current = nextPhysicalAddressKey;
@@ -257,8 +248,14 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
                     countryName="countryCode"
                     countryRequired={requiredPhysicalAddressFields.countryCode}
                     onSelect={(address) => {
-                      handlePhysicalAddressSelect(address);
                       form.batch(() => {
+                        form.change('osmType', address.osmType);
+                        form.change('osmId', address.osmId);
+                        form.change('placeId', address.placeId);
+                        form.change('longitude', address.longitude);
+                        form.change('latitude', address.latitude);
+                        form.change('formattedAddress', address.formattedAddress);
+                        form.change('country', address.country ?? '');
                         form.change('addressLine1', address.addressLine1 ?? '');
                         form.change('addressLine2', address.addressLine2 ?? '');
                         form.change('suburb', address.suburb ?? '');

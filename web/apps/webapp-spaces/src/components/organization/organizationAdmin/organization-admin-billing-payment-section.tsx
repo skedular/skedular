@@ -130,6 +130,13 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
     () => ({
       companyName: organization?.billingDetails?.companyName ?? null,
       email: organization?.billingDetails?.email ?? '',
+      osmType: billingOsmType,
+      osmId: billingOsmId,
+      placeId: billingPlaceId,
+      longitude: billingLongitude,
+      latitude: billingLatitude,
+      formattedAddress: billingFormattedAddress,
+      country: billingCountry,
       addressLine1: organization?.billingDetails?.addressLine1 ?? '',
       addressLine2: organization?.billingDetails?.addressLine2 ?? null,
       suburb: organization?.billingDetails?.suburb ?? null,
@@ -138,7 +145,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
       zipcode: organization?.billingDetails?.zipcode ?? '',
       countryCode: organization?.billingDetails?.countryCode ?? '',
     }),
-    [organization],
+    [billingCountry, billingFormattedAddress, billingLatitude, billingLongitude, billingOsmId, billingOsmType, billingPlaceId, organization],
   );
   const draftBillingValues = useRef(initialBillingValues);
   const submittedBillingAddressKey = useRef<string | null>(null);
@@ -154,7 +161,27 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
   };
 
   const commitBillingDetailsPatch = useCallback(
-    (fieldsToUpdate: BillingDetailsPatchField[], { companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: BillingDetails) => {
+    (
+      fieldsToUpdate: BillingDetailsPatchField[],
+      {
+        companyName,
+        email,
+        osmType,
+        osmId,
+        placeId,
+        longitude,
+        latitude,
+        formattedAddress,
+        country: lookupCountry,
+        addressLine1,
+        addressLine2,
+        suburb,
+        city,
+        province,
+        zipcode,
+        countryCode,
+      }: BillingDetails,
+    ) => {
       if (
         !organization ||
         fieldsToUpdate.length === 0 ||
@@ -164,7 +191,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
       }
 
       const countryData = getCountryData(countryCode as TCountryCode);
-      let country = billingCountry;
+      let country = lookupCountry;
       if (countryData) {
         country = countryData.name;
       }
@@ -178,12 +205,12 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
             fieldsToUpdate,
             companyName,
             email,
-            osmType: billingOsmType,
-            osmId: billingOsmId,
-            placeId: billingPlaceId,
-            longitude: billingLongitude,
-            latitude: billingLatitude,
-            formattedAddress: billingFormattedAddress,
+            osmType,
+            osmId,
+            placeId,
+            longitude,
+            latitude,
+            formattedAddress,
             addressLine1,
             addressLine2,
             suburb,
@@ -213,12 +240,12 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
                 id: billingDetailsId,
                 companyName,
                 email,
-                osmType: billingOsmType,
-                osmId: billingOsmId,
-                placeId: billingPlaceId,
-                longitude: billingLongitude,
-                latitude: billingLatitude,
-                formattedAddress: billingFormattedAddress,
+                osmType,
+                osmId,
+                placeId,
+                longitude,
+                latitude,
+                formattedAddress,
                 addressLine1,
                 addressLine2,
                 suburb,
@@ -233,19 +260,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
         },
       });
     },
-    [
-      billingCountry,
-      billingFormattedAddress,
-      billingLatitude,
-      billingLongitude,
-      billingOsmId,
-      billingOsmType,
-      billingPlaceId,
-      commitUpdateOrganizationBillingDetailsPatch,
-      organization,
-      organizationCustomDomain,
-      themedToast,
-    ],
+    [commitUpdateOrganizationBillingDetailsPatch, organization, organizationCustomDomain, themedToast],
   );
   const debouncedCommitBillingDetailsPatch = useDebounceCallback(commitBillingDetailsPatch, inlinePatchDebounceTimeout);
 
@@ -309,6 +324,13 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
           const formValues = values as BillingDetails;
           const nextBillingAddressKey = JSON.stringify({
             values: {
+              osmType: formValues.osmType,
+              osmId: formValues.osmId,
+              placeId: formValues.placeId,
+              longitude: formValues.longitude,
+              latitude: formValues.latitude,
+              formattedAddress: formValues.formattedAddress,
+              country: formValues.country,
               addressLine1: formValues.addressLine1,
               addressLine2: formValues.addressLine2,
               suburb: formValues.suburb,
@@ -317,12 +339,6 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
               zipcode: formValues.zipcode,
               countryCode: formValues.countryCode,
             },
-            osmType: billingOsmType,
-            osmId: billingOsmId,
-            placeId: billingPlaceId,
-            longitude: billingLongitude,
-            latitude: billingLatitude,
-            formattedAddress: billingFormattedAddress,
           });
 
           const changedFields: BillingDetailsPatchField[] = [];
@@ -375,6 +391,13 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
                         onSelect={(address) => {
                           handleBillingAddressSelect(address);
                           form.batch(() => {
+                            form.change('osmType', address.osmType);
+                            form.change('osmId', address.osmId);
+                            form.change('placeId', address.placeId);
+                            form.change('longitude', address.longitude);
+                            form.change('latitude', address.latitude);
+                            form.change('formattedAddress', address.formattedAddress);
+                            form.change('country', address.country ?? '');
                             form.change('addressLine1', address.addressLine1 ?? '');
                             form.change('addressLine2', address.addressLine2 ?? '');
                             form.change('suburb', address.suburb ?? '');

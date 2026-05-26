@@ -1,4 +1,4 @@
-import { Address, PhysicalAddress } from '@/components/address';
+import { PhysicalAddress } from '@/components/address';
 import { DeleteIcon, NewIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -118,20 +118,18 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
     maxWidth: 760,
   };
 
-  const billingLookupDetails = useRef({
-    osmType: organization?.billingDetails?.osmType,
-    osmId: organization?.billingDetails?.osmId,
-    placeId: organization?.billingDetails?.placeId,
-    longitude: organization?.billingDetails?.longitude,
-    latitude: organization?.billingDetails?.latitude,
-    formattedAddress: organization?.billingDetails?.formattedAddress,
-    country: organization?.billingDetails?.country ?? '',
-  });
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
   const initialBillingValues = useMemo<BillingDetails>(
     () => ({
       companyName: organization?.billingDetails?.companyName ?? null,
       email: organization?.billingDetails?.email ?? '',
+      osmType: organization?.billingDetails?.osmType,
+      osmId: organization?.billingDetails?.osmId,
+      placeId: organization?.billingDetails?.placeId,
+      longitude: organization?.billingDetails?.longitude,
+      latitude: organization?.billingDetails?.latitude,
+      formattedAddress: organization?.billingDetails?.formattedAddress,
+      country: organization?.billingDetails?.country ?? '',
       addressLine1: organization?.billingDetails?.addressLine1 ?? '',
       addressLine2: organization?.billingDetails?.addressLine2 ?? null,
       suburb: organization?.billingDetails?.suburb ?? null,
@@ -145,20 +143,28 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
   const draftBillingValues = useRef(initialBillingValues);
   const submittedBillingAddressKey = useRef<string | null>(null);
 
-  const handleBillingAddressSelect = (address: Address) => {
-    billingLookupDetails.current = {
-      osmType: address.osmType,
-      osmId: address.osmId,
-      placeId: address.placeId,
-      longitude: address.longitude,
-      latitude: address.latitude,
-      formattedAddress: address.formattedAddress,
-      country: address.country ?? '',
-    };
-  };
-
   const commitBillingDetailsPatch = useCallback(
-    (fieldsToUpdate: BillingDetailsPatchField[], { companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: BillingDetails) => {
+    (
+      fieldsToUpdate: BillingDetailsPatchField[],
+      {
+        companyName,
+        email,
+        osmType,
+        osmId,
+        placeId,
+        longitude,
+        latitude,
+        formattedAddress,
+        country: lookupCountry,
+        addressLine1,
+        addressLine2,
+        suburb,
+        city,
+        province,
+        zipcode,
+        countryCode,
+      }: BillingDetails,
+    ) => {
       if (
         !organization ||
         fieldsToUpdate.length === 0 ||
@@ -168,8 +174,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
       }
 
       const countryData = getCountryData(countryCode as TCountryCode);
-      const lookupDetails = billingLookupDetails.current;
-      let country = lookupDetails.country;
+      let country = lookupCountry;
       if (countryData) {
         country = countryData.name;
       }
@@ -183,12 +188,12 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
             fieldsToUpdate,
             companyName,
             email,
-            osmType: lookupDetails.osmType,
-            osmId: lookupDetails.osmId,
-            placeId: lookupDetails.placeId,
-            longitude: lookupDetails.longitude,
-            latitude: lookupDetails.latitude,
-            formattedAddress: lookupDetails.formattedAddress,
+            osmType,
+            osmId,
+            placeId,
+            longitude,
+            latitude,
+            formattedAddress,
             addressLine1,
             addressLine2,
             suburb,
@@ -218,12 +223,12 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
                 id: billingDetailsId,
                 companyName,
                 email,
-                osmType: lookupDetails.osmType,
-                osmId: lookupDetails.osmId,
-                placeId: lookupDetails.placeId,
-                longitude: lookupDetails.longitude,
-                latitude: lookupDetails.latitude,
-                formattedAddress: lookupDetails.formattedAddress,
+                osmType,
+                osmId,
+                placeId,
+                longitude,
+                latitude,
+                formattedAddress,
                 addressLine1,
                 addressLine2,
                 suburb,
@@ -300,9 +305,15 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
         validate={validateOrganizationBilling}
         render={({ handleSubmit, values, form }) => {
           const formValues = values as BillingDetails;
-          const lookupDetails = billingLookupDetails.current;
           const nextBillingAddressKey = JSON.stringify({
             values: {
+              osmType: formValues.osmType,
+              osmId: formValues.osmId,
+              placeId: formValues.placeId,
+              longitude: formValues.longitude,
+              latitude: formValues.latitude,
+              formattedAddress: formValues.formattedAddress,
+              country: formValues.country,
               addressLine1: formValues.addressLine1,
               addressLine2: formValues.addressLine2,
               suburb: formValues.suburb,
@@ -311,12 +322,6 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
               zipcode: formValues.zipcode,
               countryCode: formValues.countryCode,
             },
-            osmType: lookupDetails.osmType,
-            osmId: lookupDetails.osmId,
-            placeId: lookupDetails.placeId,
-            longitude: lookupDetails.longitude,
-            latitude: lookupDetails.latitude,
-            formattedAddress: lookupDetails.formattedAddress,
           });
 
           const changedFields: BillingDetailsPatchField[] = [];
@@ -367,8 +372,14 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
                         countryName="countryCode"
                         countryRequired={requiredBillingFields.countryCode}
                         onSelect={(address) => {
-                          handleBillingAddressSelect(address);
                           form.batch(() => {
+                            form.change('osmType', address.osmType);
+                            form.change('osmId', address.osmId);
+                            form.change('placeId', address.placeId);
+                            form.change('longitude', address.longitude);
+                            form.change('latitude', address.latitude);
+                            form.change('formattedAddress', address.formattedAddress);
+                            form.change('country', address.country ?? '');
                             form.change('addressLine1', address.addressLine1 ?? '');
                             form.change('addressLine2', address.addressLine2 ?? '');
                             form.change('suburb', address.suburb ?? '');

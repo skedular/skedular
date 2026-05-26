@@ -15,6 +15,13 @@ describe('location autosave', () => {
     expect(source).not.toContain('onSubmit={handlePhysicalAddressUpdateClick}');
   });
 
+  it('includes lookup coordinates in physical address autosave changes', () => {
+    expect(source).toContain("form.change('longitude', address.longitude)");
+    expect(source).toContain("form.change('latitude', address.latitude)");
+    expect(source).toContain('longitude,');
+    expect(source).toContain('latitude,');
+  });
+
   it('autosaves restricted information and resource setup edit groups', () => {
     expect(source).toContain('debouncedRestrictedInformationUpdate');
     expect(resourceSource).toContain('debouncedResourceDetailsUpdate');

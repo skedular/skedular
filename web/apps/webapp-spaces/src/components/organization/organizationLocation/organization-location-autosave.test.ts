@@ -18,6 +18,13 @@ describe('location autosave', () => {
     expect(resourceSource).not.toContain('onSubmit={handleResourceDetailUpdateClick}');
   });
 
+  it('includes lookup coordinates in physical address autosave changes', () => {
+    expect(source).toContain("form.change('longitude', address.longitude)");
+    expect(source).toContain("form.change('latitude', address.latitude)");
+    expect(source).toContain('longitude,');
+    expect(source).toContain('latitude,');
+  });
+
   it('autosaves floor plan setup and layout changes', () => {
     expect(floorPlanSource).toContain('debouncedFloorPlanDetailUpdate');
     expect(floorPlanSource).not.toContain('onSubmit={handleFloorPlanDetailUpdateClick}');

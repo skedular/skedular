@@ -12,6 +12,13 @@ export type OrganizationDetails = {
 };
 
 export type PhysicalAddressDetails = {
+  osmType: string | null | undefined;
+  osmId: string | null | undefined;
+  placeId: string | null | undefined;
+  longitude: number | null | undefined;
+  latitude: number | null | undefined;
+  formattedAddress: string | null | undefined;
+  country: string;
   addressLine1: string;
   addressLine2: string | null;
   suburb: string | null;
@@ -24,6 +31,13 @@ export type PhysicalAddressDetails = {
 export type BillingDetails = {
   companyName: string | null;
   email: string;
+  osmType: string | null | undefined;
+  osmId: string | null | undefined;
+  placeId: string | null | undefined;
+  longitude: number | null | undefined;
+  latitude: number | null | undefined;
+  formattedAddress: string | null | undefined;
+  country: string;
   addressLine1: string;
   addressLine2: string | null;
   suburb: string | null;
