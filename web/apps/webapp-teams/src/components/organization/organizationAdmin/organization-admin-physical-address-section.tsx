@@ -1,13 +1,12 @@
 import { Address, PhysicalAddress } from '@/components/address';
-import { FormStackColumn, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { physicalAddressSchema, PhysicalAddressDetails } from '@/components/organization/organizationAdmin/organization-admin-shared';
-import { getRelayErrorMessage } from '@skedular/shared';
+import { PhysicalAddressDetails, physicalAddressSchema } from '@/components/organization/organizationAdmin/organization-admin-shared';
 import type { organizationAdminPhysicalAddressSectionQuery } from '@/queries/__generated__/organizationAdminPhysicalAddressSectionQuery.graphql';
 import type { organizationAdminPhysicalAddressSection_updateOrganizationMutation } from '@/queries/__generated__/organizationAdminPhysicalAddressSection_updateOrganizationMutation.graphql';
 import Box from '@mui/material/Box';
-import { SettingsSectionCard } from '@skedular/ui';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import { FormStackColumn, SettingsSectionCard, StackColumn } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate } from 'mui-rff';
@@ -17,7 +16,6 @@ import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
-import { PaletteModeContext } from '@skedular/shared';
 
 type Props = {
   organizationCustomDomain: string;
@@ -29,15 +27,6 @@ type InnerProps = {
 };
 
 const inlinePatchDebounceTimeout = 1000;
-
-const arePhysicalAddressValuesEqual = (left: PhysicalAddressDetails, right: PhysicalAddressDetails) =>
-  left.addressLine1 === right.addressLine1 &&
-  left.addressLine2 === right.addressLine2 &&
-  left.suburb === right.suburb &&
-  left.city === right.city &&
-  left.province === right.province &&
-  left.zipcode === right.zipcode &&
-  left.countryCode === right.countryCode;
 
 const RootQuery = graphql`
   query organizationAdminPhysicalAddressSectionQuery($organizationCustomDomain: String!) {
@@ -123,7 +112,7 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
     }),
     [organization],
   );
-  const draftPhysicalAddressValues = useRef(initialPhysicalAddressValues);
+  const submittedPhysicalAddressKey = useRef<string | null>(null);
 
   const handlePhysicalAddressSelect = (address: Address) => {
     setPhysicalAddressOsmType(address.osmType);
@@ -236,9 +225,20 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
       validate={validatePhysicalAddress}
       render={({ handleSubmit, values, form }) => {
         const formValues = values as PhysicalAddressDetails;
+        const nextPhysicalAddressKey = JSON.stringify({
+          values: formValues,
+          osmType: physicalAddressOsmType,
+          osmId: physicalAddressOsmId,
+          placeId: physicalAddressPlaceId,
+          longitude: physicalAddressLongitude,
+          latitude: physicalAddressLatitude,
+          formattedAddress: physicalAddressFormattedAddress,
+        });
 
-        if (!arePhysicalAddressValuesEqual(draftPhysicalAddressValues.current, formValues)) {
-          draftPhysicalAddressValues.current = formValues;
+        if (submittedPhysicalAddressKey.current === null) {
+          submittedPhysicalAddressKey.current = nextPhysicalAddressKey;
+        } else if (nextPhysicalAddressKey !== submittedPhysicalAddressKey.current) {
+          submittedPhysicalAddressKey.current = nextPhysicalAddressKey;
           debouncedCommitPhysicalAddressPatch(formValues);
         }
 

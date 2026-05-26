@@ -35,15 +35,6 @@ type BillingDetailsPatchField = 'COMPANY_NAME' | 'EMAIL' | 'BILLING_ADDRESS';
 
 const inlinePatchDebounceTimeout = 1000;
 
-const areBillingAddressValuesEqual = (left: BillingDetails, right: BillingDetails) =>
-  left.addressLine1 === right.addressLine1 &&
-  left.addressLine2 === right.addressLine2 &&
-  left.suburb === right.suburb &&
-  left.city === right.city &&
-  left.province === right.province &&
-  left.zipcode === right.zipcode &&
-  left.countryCode === right.countryCode;
-
 const RootQuery = graphql`
   query organizationAdminBillingPaymentSectionQuery($organizationCustomDomain: String!) {
     organization(customDomain: $organizationCustomDomain) {
@@ -127,13 +118,15 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
     maxWidth: 760,
   };
 
-  const [billingOsmType, setBillingOsmType] = useState(organization?.billingDetails?.osmType);
-  const [billingOsmId, setBillingOsmId] = useState(organization?.billingDetails?.osmId);
-  const [billingPlaceId, setBillingPlaceId] = useState(organization?.billingDetails?.placeId);
-  const [billingLongitude, setBillingLongitude] = useState(organization?.billingDetails?.longitude);
-  const [billingLatitude, setBillingLatitude] = useState(organization?.billingDetails?.latitude);
-  const [billingFormattedAddress, setBillingFormattedAddress] = useState(organization?.billingDetails?.formattedAddress);
-  const [billingCountry, setBillingCountry] = useState<string>(organization?.billingDetails?.country ?? '');
+  const billingLookupDetails = useRef({
+    osmType: organization?.billingDetails?.osmType,
+    osmId: organization?.billingDetails?.osmId,
+    placeId: organization?.billingDetails?.placeId,
+    longitude: organization?.billingDetails?.longitude,
+    latitude: organization?.billingDetails?.latitude,
+    formattedAddress: organization?.billingDetails?.formattedAddress,
+    country: organization?.billingDetails?.country ?? '',
+  });
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
   const initialBillingValues = useMemo<BillingDetails>(
     () => ({
@@ -150,15 +143,18 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
     [organization],
   );
   const draftBillingValues = useRef(initialBillingValues);
+  const submittedBillingAddressKey = useRef<string | null>(null);
 
   const handleBillingAddressSelect = (address: Address) => {
-    setBillingOsmType(address.osmType);
-    setBillingOsmId(address.osmId);
-    setBillingPlaceId(address.placeId);
-    setBillingLongitude(address.longitude);
-    setBillingLatitude(address.latitude);
-    setBillingFormattedAddress(address.formattedAddress);
-    setBillingCountry(address.country ?? '');
+    billingLookupDetails.current = {
+      osmType: address.osmType,
+      osmId: address.osmId,
+      placeId: address.placeId,
+      longitude: address.longitude,
+      latitude: address.latitude,
+      formattedAddress: address.formattedAddress,
+      country: address.country ?? '',
+    };
   };
 
   const commitBillingDetailsPatch = useCallback(
@@ -172,7 +168,8 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
       }
 
       const countryData = getCountryData(countryCode as TCountryCode);
-      let country = billingCountry;
+      const lookupDetails = billingLookupDetails.current;
+      let country = lookupDetails.country;
       if (countryData) {
         country = countryData.name;
       }
@@ -186,12 +183,12 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
             fieldsToUpdate,
             companyName,
             email,
-            osmType: billingOsmType,
-            osmId: billingOsmId,
-            placeId: billingPlaceId,
-            longitude: billingLongitude,
-            latitude: billingLatitude,
-            formattedAddress: billingFormattedAddress,
+            osmType: lookupDetails.osmType,
+            osmId: lookupDetails.osmId,
+            placeId: lookupDetails.placeId,
+            longitude: lookupDetails.longitude,
+            latitude: lookupDetails.latitude,
+            formattedAddress: lookupDetails.formattedAddress,
             addressLine1,
             addressLine2,
             suburb,
@@ -221,12 +218,12 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
                 id: billingDetailsId,
                 companyName,
                 email,
-                osmType: billingOsmType,
-                osmId: billingOsmId,
-                placeId: billingPlaceId,
-                longitude: billingLongitude,
-                latitude: billingLatitude,
-                formattedAddress: billingFormattedAddress,
+                osmType: lookupDetails.osmType,
+                osmId: lookupDetails.osmId,
+                placeId: lookupDetails.placeId,
+                longitude: lookupDetails.longitude,
+                latitude: lookupDetails.latitude,
+                formattedAddress: lookupDetails.formattedAddress,
                 addressLine1,
                 addressLine2,
                 suburb,
@@ -241,19 +238,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
         },
       });
     },
-    [
-      billingCountry,
-      billingFormattedAddress,
-      billingLatitude,
-      billingLongitude,
-      billingOsmId,
-      billingOsmType,
-      billingPlaceId,
-      commitUpdateOrganizationBillingDetailsPatch,
-      organization,
-      organizationCustomDomain,
-      themedToast,
-    ],
+    [commitUpdateOrganizationBillingDetailsPatch, organization, organizationCustomDomain, themedToast],
   );
   const debouncedCommitBillingDetailsPatch = useDebounceCallback(commitBillingDetailsPatch, inlinePatchDebounceTimeout);
 
@@ -315,6 +300,25 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
         validate={validateOrganizationBilling}
         render={({ handleSubmit, values, form }) => {
           const formValues = values as BillingDetails;
+          const lookupDetails = billingLookupDetails.current;
+          const nextBillingAddressKey = JSON.stringify({
+            values: {
+              addressLine1: formValues.addressLine1,
+              addressLine2: formValues.addressLine2,
+              suburb: formValues.suburb,
+              city: formValues.city,
+              province: formValues.province,
+              zipcode: formValues.zipcode,
+              countryCode: formValues.countryCode,
+            },
+            osmType: lookupDetails.osmType,
+            osmId: lookupDetails.osmId,
+            placeId: lookupDetails.placeId,
+            longitude: lookupDetails.longitude,
+            latitude: lookupDetails.latitude,
+            formattedAddress: lookupDetails.formattedAddress,
+          });
+
           const changedFields: BillingDetailsPatchField[] = [];
           if (draftBillingValues.current.companyName !== formValues.companyName) {
             changedFields.push('COMPANY_NAME');
@@ -322,11 +326,14 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
           if (draftBillingValues.current.email !== formValues.email) {
             changedFields.push('EMAIL');
           }
-          if (!areBillingAddressValuesEqual(draftBillingValues.current, formValues)) {
+          if (submittedBillingAddressKey.current === null) {
+            submittedBillingAddressKey.current = nextBillingAddressKey;
+          } else if (nextBillingAddressKey !== submittedBillingAddressKey.current) {
             changedFields.push('BILLING_ADDRESS');
           }
           if (changedFields.length > 0) {
             draftBillingValues.current = formValues;
+            submittedBillingAddressKey.current = nextBillingAddressKey;
             debouncedCommitBillingDetailsPatch(changedFields, formValues);
           }
 

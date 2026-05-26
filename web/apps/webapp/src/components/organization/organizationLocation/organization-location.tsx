@@ -688,12 +688,15 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       : [],
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
-  const [physicalAddressOsmType, setPhysicalAddressOsmType] = useState(rootData.location?.physicalAddress?.osmType);
-  const [physicalAddressOsmId, setPhysicalAddressOsmId] = useState(rootData.location?.physicalAddress?.osmId);
-  const [physicalAddressPlaceId, setPhysicalAddressPlaceId] = useState(rootData.location?.physicalAddress?.placeId);
-  const [physicalAddressLongitude, setPhysicalAddressLongitude] = useState(rootData.location?.physicalAddress?.longitude);
-  const [physicalAddressLatitude, setPhysicalAddressLatitude] = useState(rootData.location?.physicalAddress?.latitude);
-  const [physicalAddressFormattedAddress, setPhysicalAddressFormattedAddress] = useState(rootData.location?.physicalAddress?.formattedAddress);
+  const physicalAddressLookupDetails = useRef({
+    osmType: rootData.location?.physicalAddress?.osmType,
+    osmId: rootData.location?.physicalAddress?.osmId,
+    placeId: rootData.location?.physicalAddress?.placeId,
+    longitude: rootData.location?.physicalAddress?.longitude,
+    latitude: rootData.location?.physicalAddress?.latitude,
+    formattedAddress: rootData.location?.physicalAddress?.formattedAddress,
+    country: rootData.location?.physicalAddress?.country ?? '',
+  });
   const [physicalAddressAddressLine1, setPhysicalAddressAddressLine1] = useState<string>(rootData.location?.physicalAddress?.addressLine1 ?? '');
   const debounceSetPhysicalAddressAddressLine1 = useDebounceCallback(setPhysicalAddressAddressLine1, keyboardTextFieldDebounceTimeout);
   const [physicalAddressAddressLine2, setPhysicalAddressAddressLine2] = useState(rootData.location?.physicalAddress?.addressLine2);
@@ -706,7 +709,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   const debounceSetPhysicalAddressProvince = useDebounceCallback(setPhysicalAddressProvince, keyboardTextFieldDebounceTimeout);
   const [physicalAddressZipcode, setPhysicalAddressZipcode] = useState<string>(rootData.location?.physicalAddress?.zipcode ?? '');
   const debounceSetPhysicalAddressZipcode = useDebounceCallback(setPhysicalAddressZipcode, keyboardTextFieldDebounceTimeout);
-  const [physicalAddressCountry, setPhysicalAddressCountry] = useState<string>(rootData.location?.physicalAddress?.country ?? '');
   const [physicalAddressCountryCode, setPhysicalAddressCountryCode] = useState<string>(rootData.location?.physicalAddress?.countryCode ?? '');
   const debounceSetPhysicalAddressCountryCode = useDebounceCallback(setPhysicalAddressCountryCode, keyboardTextFieldDebounceTimeout);
   const previousLocationValues = useRef<LocationDetails | null>(null);
@@ -874,19 +876,21 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   }
 
   const handlePhysicalAddressSelect = (address: Address) => {
-    setPhysicalAddressOsmType(address.osmType);
-    setPhysicalAddressOsmId(address.osmId);
-    setPhysicalAddressPlaceId(address.placeId);
-    setPhysicalAddressLongitude(address.longitude);
-    setPhysicalAddressLatitude(address.latitude);
-    setPhysicalAddressFormattedAddress(address.formattedAddress);
+    physicalAddressLookupDetails.current = {
+      osmType: address.osmType,
+      osmId: address.osmId,
+      placeId: address.placeId,
+      longitude: address.longitude,
+      latitude: address.latitude,
+      formattedAddress: address.formattedAddress,
+      country: address.country ?? '',
+    };
     setPhysicalAddressAddressLine1(address.addressLine1 ?? '');
     setPhysicalAddressAddressLine2(address.addressLine2 ?? '');
     setPhysicalAddressSuburb(address.suburb ?? '');
     setPhysicalAddressCity(address.city ?? '');
     setPhysicalAddressProvince(address.province ?? '');
     setPhysicalAddressZipcode(address.zipcode ?? '');
-    setPhysicalAddressCountry(address.country ?? '');
     setPhysicalAddressCountryCode(address.countryCode ?? '');
   };
 
@@ -896,7 +900,8 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     }
 
     const countryData = getCountryData(countryCode as TCountryCode);
-    let country = physicalAddressCountry;
+    const lookupDetails = physicalAddressLookupDetails.current;
+    let country = lookupDetails.country;
     if (countryData) {
       country = countryData.name;
     }
@@ -910,12 +915,12 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
             clientMutationId: uuid(),
             id: physicalAddress.id,
             fieldsToUpdate: ['ADDRESS'],
-            osmType: physicalAddressOsmType,
-            osmId: physicalAddressOsmId,
-            placeId: physicalAddressPlaceId,
-            longitude: physicalAddressLongitude,
-            latitude: physicalAddressLatitude,
-            formattedAddress: physicalAddressFormattedAddress,
+            osmType: lookupDetails.osmType,
+            osmId: lookupDetails.osmId,
+            placeId: lookupDetails.placeId,
+            longitude: lookupDetails.longitude,
+            latitude: lookupDetails.latitude,
+            formattedAddress: lookupDetails.formattedAddress,
             addressLine1,
             addressLine2,
             suburb,
@@ -952,12 +957,12 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
               id: location.id,
               physicalAddress: {
                 id: physicalAddress.id,
-                osmType: physicalAddressOsmType,
-                osmId: physicalAddressOsmId,
-                placeId: physicalAddressPlaceId,
-                longitude: physicalAddressLongitude,
-                latitude: physicalAddressLatitude,
-                formattedAddress: physicalAddressFormattedAddress,
+                osmType: lookupDetails.osmType,
+                osmId: lookupDetails.osmId,
+                placeId: lookupDetails.placeId,
+                longitude: lookupDetails.longitude,
+                latitude: lookupDetails.latitude,
+                formattedAddress: lookupDetails.formattedAddress,
                 addressLine1,
                 addressLine2,
                 suburb,
@@ -982,12 +987,12 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
           clientMutationId: uuid(),
           locationId: location.id,
           id: newAddressId,
-          osmType: physicalAddressOsmType,
-          osmId: physicalAddressOsmId,
-          placeId: physicalAddressPlaceId,
-          longitude: physicalAddressLongitude,
-          latitude: physicalAddressLatitude,
-          formattedAddress: physicalAddressFormattedAddress,
+          osmType: lookupDetails.osmType,
+          osmId: lookupDetails.osmId,
+          placeId: lookupDetails.placeId,
+          longitude: lookupDetails.longitude,
+          latitude: lookupDetails.latitude,
+          formattedAddress: lookupDetails.formattedAddress,
           addressLine1,
           addressLine2,
           suburb,
@@ -1024,12 +1029,12 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
             id: location.id,
             physicalAddress: {
               id: newAddressId,
-              osmType: physicalAddressOsmType,
-              osmId: physicalAddressOsmId,
-              placeId: physicalAddressPlaceId,
-              longitude: physicalAddressLongitude,
-              latitude: physicalAddressLatitude,
-              formattedAddress: physicalAddressFormattedAddress,
+              osmType: lookupDetails.osmType,
+              osmId: lookupDetails.osmId,
+              placeId: lookupDetails.placeId,
+              longitude: lookupDetails.longitude,
+              latitude: lookupDetails.latitude,
+              formattedAddress: lookupDetails.formattedAddress,
               addressLine1,
               addressLine2,
               suburb,
@@ -1466,14 +1471,15 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         debounceSetPhysicalAddressZipcode(values!.zipcode);
         debounceSetPhysicalAddressCountryCode(values!.countryCode);
         const physicalAddressValues = values as PhysicalAddressDetails;
+        const lookupDetails = physicalAddressLookupDetails.current;
         const nextPhysicalAddressKey = JSON.stringify({
           values: physicalAddressValues,
-          osmType: physicalAddressOsmType,
-          osmId: physicalAddressOsmId,
-          placeId: physicalAddressPlaceId,
-          longitude: physicalAddressLongitude,
-          latitude: physicalAddressLatitude,
-          formattedAddress: physicalAddressFormattedAddress,
+          osmType: lookupDetails.osmType,
+          osmId: lookupDetails.osmId,
+          placeId: lookupDetails.placeId,
+          longitude: lookupDetails.longitude,
+          latitude: lookupDetails.latitude,
+          formattedAddress: lookupDetails.formattedAddress,
         });
         if (submittedPhysicalAddressKey.current === null) {
           submittedPhysicalAddressKey.current = nextPhysicalAddressKey;

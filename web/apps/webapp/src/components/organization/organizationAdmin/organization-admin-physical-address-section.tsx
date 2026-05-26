@@ -1,23 +1,21 @@
 import { Address, PhysicalAddress } from '@/components/address';
-import { FormStackColumn, StackColumn } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { physicalAddressSchema, PhysicalAddressDetails } from '@/components/organization/organizationAdmin/organization-admin-shared';
-import { getRelayErrorMessage } from '@skedular/shared';
+import { PhysicalAddressDetails, physicalAddressSchema } from '@/components/organization/organizationAdmin/organization-admin-shared';
 import type { organizationAdminPhysicalAddressSectionQuery } from '@/queries/__generated__/organizationAdminPhysicalAddressSectionQuery.graphql';
 import type { organizationAdminPhysicalAddressSection_updateOrganizationMutation } from '@/queries/__generated__/organizationAdminPhysicalAddressSection_updateOrganizationMutation.graphql';
 import Box from '@mui/material/Box';
-import { SettingsSectionCard } from '@skedular/ui';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import { FormStackColumn, SettingsSectionCard, StackColumn } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate } from 'mui-rff';
-import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
-import { PaletteModeContext } from '@skedular/shared';
 
 type Props = {
   organizationCustomDomain: string;
@@ -29,15 +27,6 @@ type InnerProps = {
 };
 
 const inlinePatchDebounceTimeout = 1000;
-
-const arePhysicalAddressValuesEqual = (left: PhysicalAddressDetails, right: PhysicalAddressDetails) =>
-  left.addressLine1 === right.addressLine1 &&
-  left.addressLine2 === right.addressLine2 &&
-  left.suburb === right.suburb &&
-  left.city === right.city &&
-  left.province === right.province &&
-  left.zipcode === right.zipcode &&
-  left.countryCode === right.countryCode;
 
 const RootQuery = graphql`
   query organizationAdminPhysicalAddressSectionQuery($organizationCustomDomain: String!) {
@@ -104,13 +93,15 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
     maxWidth: 760,
   };
 
-  const [physicalAddressOsmType, setPhysicalAddressOsmType] = useState(organization?.physicalAddress?.osmType);
-  const [physicalAddressOsmId, setPhysicalAddressOsmId] = useState(organization?.physicalAddress?.osmId);
-  const [physicalAddressPlaceId, setPhysicalAddressPlaceId] = useState(organization?.physicalAddress?.placeId);
-  const [physicalAddressLongitude, setPhysicalAddressLongitude] = useState(organization?.physicalAddress?.longitude);
-  const [physicalAddressLatitude, setPhysicalAddressLatitude] = useState(organization?.physicalAddress?.latitude);
-  const [physicalAddressFormattedAddress, setPhysicalAddressFormattedAddress] = useState(organization?.physicalAddress?.formattedAddress);
-  const [physicalAddressCountry, setPhysicalAddressCountry] = useState<string>(organization?.physicalAddress?.country ?? '');
+  const physicalAddressLookupDetails = useRef({
+    osmType: organization?.physicalAddress?.osmType,
+    osmId: organization?.physicalAddress?.osmId,
+    placeId: organization?.physicalAddress?.placeId,
+    longitude: organization?.physicalAddress?.longitude,
+    latitude: organization?.physicalAddress?.latitude,
+    formattedAddress: organization?.physicalAddress?.formattedAddress,
+    country: organization?.physicalAddress?.country ?? '',
+  });
   const initialPhysicalAddressValues = useMemo<PhysicalAddressDetails>(
     () => ({
       addressLine1: organization?.physicalAddress?.addressLine1 ?? '',
@@ -123,16 +114,18 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
     }),
     [organization],
   );
-  const draftPhysicalAddressValues = useRef(initialPhysicalAddressValues);
+  const submittedPhysicalAddressKey = useRef<string | null>(null);
 
   const handlePhysicalAddressSelect = (address: Address) => {
-    setPhysicalAddressOsmType(address.osmType);
-    setPhysicalAddressOsmId(address.osmId);
-    setPhysicalAddressPlaceId(address.placeId);
-    setPhysicalAddressLongitude(address.longitude);
-    setPhysicalAddressLatitude(address.latitude);
-    setPhysicalAddressFormattedAddress(address.formattedAddress);
-    setPhysicalAddressCountry(address.country ?? '');
+    physicalAddressLookupDetails.current = {
+      osmType: address.osmType,
+      osmId: address.osmId,
+      placeId: address.placeId,
+      longitude: address.longitude,
+      latitude: address.latitude,
+      formattedAddress: address.formattedAddress,
+      country: address.country ?? '',
+    };
   };
 
   const commitPhysicalAddressPatch = useCallback(
@@ -142,7 +135,8 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
       }
 
       const countryData = getCountryData(countryCode as TCountryCode);
-      let country = physicalAddressCountry;
+      const lookupDetails = physicalAddressLookupDetails.current;
+      let country = lookupDetails.country;
       if (countryData) {
         country = countryData.name;
       }
@@ -155,12 +149,12 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
             customDomain: organizationCustomDomain,
             fieldsToUpdate: ['PHYSICAL_ADDRESS'],
             physicalAddress: {
-              osmType: physicalAddressOsmType,
-              osmId: physicalAddressOsmId,
-              placeId: physicalAddressPlaceId,
-              longitude: physicalAddressLongitude,
-              latitude: physicalAddressLatitude,
-              formattedAddress: physicalAddressFormattedAddress,
+              osmType: lookupDetails.osmType,
+              osmId: lookupDetails.osmId,
+              placeId: lookupDetails.placeId,
+              longitude: lookupDetails.longitude,
+              latitude: lookupDetails.latitude,
+              formattedAddress: lookupDetails.formattedAddress,
               addressLine1,
               addressLine2,
               suburb,
@@ -189,12 +183,12 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
               id: organization.id,
               physicalAddress: {
                 id: physicalAddressId,
-                osmType: physicalAddressOsmType,
-                osmId: physicalAddressOsmId,
-                placeId: physicalAddressPlaceId,
-                longitude: physicalAddressLongitude,
-                latitude: physicalAddressLatitude,
-                formattedAddress: physicalAddressFormattedAddress,
+                osmType: lookupDetails.osmType,
+                osmId: lookupDetails.osmId,
+                placeId: lookupDetails.placeId,
+                longitude: lookupDetails.longitude,
+                latitude: lookupDetails.latitude,
+                formattedAddress: lookupDetails.formattedAddress,
                 addressLine1,
                 addressLine2,
                 suburb,
@@ -209,19 +203,7 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
         },
       });
     },
-    [
-      commitUpdateOrganizationPatch,
-      organization,
-      organizationCustomDomain,
-      physicalAddressCountry,
-      physicalAddressFormattedAddress,
-      physicalAddressLatitude,
-      physicalAddressLongitude,
-      physicalAddressOsmId,
-      physicalAddressOsmType,
-      physicalAddressPlaceId,
-      themedToast,
-    ],
+    [commitUpdateOrganizationPatch, organization, organizationCustomDomain, themedToast],
   );
   const debouncedCommitPhysicalAddressPatch = useDebounceCallback(commitPhysicalAddressPatch, inlinePatchDebounceTimeout);
 
@@ -236,9 +218,21 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
       validate={validatePhysicalAddress}
       render={({ handleSubmit, values, form }) => {
         const formValues = values as PhysicalAddressDetails;
+        const lookupDetails = physicalAddressLookupDetails.current;
+        const nextPhysicalAddressKey = JSON.stringify({
+          values: formValues,
+          osmType: lookupDetails.osmType,
+          osmId: lookupDetails.osmId,
+          placeId: lookupDetails.placeId,
+          longitude: lookupDetails.longitude,
+          latitude: lookupDetails.latitude,
+          formattedAddress: lookupDetails.formattedAddress,
+        });
 
-        if (!arePhysicalAddressValuesEqual(draftPhysicalAddressValues.current, formValues)) {
-          draftPhysicalAddressValues.current = formValues;
+        if (submittedPhysicalAddressKey.current === null) {
+          submittedPhysicalAddressKey.current = nextPhysicalAddressKey;
+        } else if (nextPhysicalAddressKey !== submittedPhysicalAddressKey.current) {
+          submittedPhysicalAddressKey.current = nextPhysicalAddressKey;
           debouncedCommitPhysicalAddressPatch(formValues);
         }
 
