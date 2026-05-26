@@ -1,4 +1,4 @@
-import { fetchPlacePredictionsFromGoogle } from '@/libs/address/google-places-server';
+import { fetchPlacePredictionsFromGoogle } from '@skedular/shared/src/google-places/google-places-server';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';

@@ -41,6 +41,7 @@ type PlaceDetailsResponse = {
 
 const PLACES_AUTOCOMPLETE_URL = 'https://places.googleapis.com/v1/places:autocomplete';
 const PLACES_BASE_URL = 'https://places.googleapis.com/v1';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://skedular.app';
 
 const getApiKey = () => {
   const apiKey = process.env.GOOGLE_MAPS_API_KEY;
@@ -63,6 +64,7 @@ export const fetchPlacePredictionsFromGoogle = async (input: string, languageCod
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': apiKey,
       'X-Goog-FieldMask': 'suggestions.placePrediction.placeId,suggestions.placePrediction.text,suggestions.placePrediction.types',
+      Referer: APP_URL,
     },
     body: JSON.stringify({
       input,
@@ -113,6 +115,7 @@ export const fetchPlaceDetailsFromGoogle = async (placeId: string, languageCode:
     headers: {
       'X-Goog-Api-Key': apiKey,
       'X-Goog-FieldMask': 'id,formattedAddress,location,addressComponents,displayName',
+      Referer: APP_URL,
     },
   });
 
