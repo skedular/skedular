@@ -6,7 +6,7 @@ namespace Enterprise.Shared.GraphQL;
 public class ConfiguredGraphqlWarmupTask(string schemaName, IReadOnlyList<string> warmupQueries, ILogger<ConfiguredGraphqlWarmupTask> logger)
     : IRequestExecutorWarmupTask
 {
-    public bool ApplyOnlyOnStartup => true;
+    public bool ApplyOnlyOnStartup => false;
 
     public async Task WarmupAsync(IRequestExecutor executor, CancellationToken cancellationToken)
     {
