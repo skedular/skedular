@@ -8,6 +8,19 @@ const HTTP_RETRY_ATTEMPTS = 10;
 const HTTP_RETRY_DELAY_MS = 1000;
 const GRAPHQL_ERROR_RETRY_ATTEMPTS = 10;
 
+/**
+ * HTTP status codes that represent transient infrastructure or rate-limiting
+ * conditions where retrying the request is safe and expected for a GraphQL API.
+ *
+ * 408 – Request Timeout (server timed out waiting for the client/upstream)
+ * 429 – Too Many Requests (rate-limited; back off and retry)
+ * 500 – Internal Server Error (may be a transient server-side fault)
+ * 502 – Bad Gateway (proxy/gateway received an invalid upstream response)
+ * 503 – Service Unavailable (server temporarily overloaded or in maintenance)
+ * 504 – Gateway Timeout (proxy/gateway did not receive a timely upstream response)
+ */
+const RETRYABLE_HTTP_STATUSES = new Set([408, 429, 500, 502, 503, 504]);
+
 const sleep = async (milliseconds: number) => {
   await new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
@@ -36,16 +49,23 @@ export function createNetwork(endpoint: string, token?: string | null | undefine
     let graphqlErrorAttempts = 0;
 
     for (let attempt = 1; attempt <= HTTP_RETRY_ATTEMPTS; attempt += 1) {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: buildHeaders(),
-        body: JSON.stringify({
-          query: params.text,
-          variables,
-        }),
-      });
+      let response: Response;
+      try {
+        response = await fetch(endpoint, {
+          method: 'POST',
+          headers: buildHeaders(),
+          body: JSON.stringify({
+            query: params.text,
+            variables,
+          }),
+        });
+      } catch {
+        // Network-level failure (connection reset, DNS error, etc.) — retry.
+        await sleep(HTTP_RETRY_DELAY_MS);
+        continue;
+      }
 
-      if (response.status === 504 || response.status === 502) {
+      if (RETRYABLE_HTTP_STATUSES.has(response.status)) {
         await sleep(HTTP_RETRY_DELAY_MS);
         continue;
       }
