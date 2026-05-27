@@ -17,7 +17,7 @@
     "@skedular/ui": "workspace:*",
     "@next/third-parties": "^16.2.6",
     "cookies-next": "^6.1.1",
-    "dayjs": "^1.11.20",
+    "dayjs": "^1.11.21",
     "graphql-sse": "^2.6.0",
     "logrocket": "^12.1.1",
     "logrocket-react": "^7.0.0",

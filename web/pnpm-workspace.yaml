@@ -10,17 +10,15 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
 minimumReleaseAgeExclude:
-  - '@types/react@19.2.15'
-  - react-svg-credit-card-payment-icons@6.0.3
-  - vitest@4.1.7
-  - '@mui/x-charts@9.3.0'
-  - '@mui/x-data-grid-premium@9.3.0'
-  - '@mui/x-data-grid-pro@9.3.0'
-  - '@mui/x-data-grid@9.3.0'
-  - '@mui/x-date-pickers-pro@9.3.0'
-  - '@mui/x-date-pickers@9.3.0'
-  - '@mui/x-tree-view-pro@9.3.0'
-  - react-error-boundary@6.1.2
+  - '@stripe/stripe-js@9.7.0'
+  - '@turbo/darwin-64@2.9.15'
+  - '@turbo/darwin-arm64@2.9.15'
+  - '@turbo/linux-64@2.9.15'
+  - '@turbo/linux-arm64@2.9.15'
+  - '@turbo/windows-64@2.9.15'
+  - '@turbo/windows-arm64@2.9.15'
+  - eslint-plugin-turbo@2.9.15
+  - turbo@2.9.15
 overrides:
   '@types/node': 25.9.0
   '@mui/x-data-grid': 9.3.0
