@@ -350,6 +350,8 @@ services:
     image: ghcr.io/unityhubio/allprocessors:latest
     restart: unless-stopped
     depends_on:
+      staging-jobs-01:
+        condition: service_healthy
       redis:
         condition: service_healthy
       staging-infra-provision:
@@ -464,6 +466,8 @@ services:
     image: ghcr.io/unityhubio/alljobs:latest
     restart: unless-stopped
     depends_on:
+      staging-apis-01:
+        condition: service_healthy
       redis:
         condition: service_healthy
       staging-infra-provision:
@@ -788,6 +792,8 @@ services:
     image: ghcr.io/unityhubio/allprocessors:latest
     restart: unless-stopped
     depends_on:
+      prod-jobs-01:
+        condition: service_healthy
       redis:
         condition: service_healthy
       prod-infra-provision:
@@ -902,6 +908,8 @@ services:
     image: ghcr.io/unityhubio/alljobs:latest
     restart: unless-stopped
     depends_on:
+      prod-apis-01:
+        condition: service_healthy
       redis:
         condition: service_healthy
       prod-infra-provision:
