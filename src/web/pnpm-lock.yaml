@@ -131,8 +131,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(next@16.2.6(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       '@workos-inc/authkit-nextjs':
-        specifier: ^4.1.0
-        version: 4.1.0(next@16.2.6(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3)
+        specifier: ^4.1.1
+        version: 4.1.1(next@16.2.6(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3)
       babel-plugin-react-compiler:
         specifier: ^1.0.0
         version: 1.0.0
@@ -203,8 +203,8 @@ importers:
         specifier: ^4.1.3
         version: 4.1.3(@react-leaflet/core@3.0.0(leaflet@1.9.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(leaflet@1.9.4)(react-dom@19.2.6(react@19.2.6))(react-leaflet@5.0.0(leaflet@1.9.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       react-relay:
-        specifier: ^21.0.0
-        version: 21.0.0(react@19.2.6)
+        specifier: ^21.0.1
+        version: 21.0.1(react@19.2.6)
       react-svg-credit-card-payment-icons:
         specifier: 6.0.3
         version: 6.0.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -212,8 +212,8 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       relay-runtime:
-        specifier: ^21.0.0
-        version: 21.0.0
+        specifier: ^21.0.1
+        version: 21.0.1
       usehooks-ts:
         specifier: ^3.1.1
         version: 3.1.1(react@19.2.6)
@@ -276,11 +276,11 @@ importers:
         specifier: ^3.8.3
         version: 3.8.3
       relay-compiler:
-        specifier: ^21.0.0
-        version: 21.0.0
+        specifier: ^21.0.1
+        version: 21.0.1
       relay-compiler-language-typescript:
         specifier: ^15.0.1
-        version: 15.0.1(@types/react-relay@18.2.1)(@types/relay-runtime@20.1.1)(relay-compiler@21.0.0)(relay-runtime@21.0.0)(typescript@6.0.3)
+        version: 15.0.1(@types/react-relay@18.2.1)(@types/relay-runtime@20.1.1)(relay-compiler@21.0.1)(relay-runtime@21.0.1)(typescript@6.0.3)
       relay-config:
         specifier: ^12.0.1
         version: 12.0.1
@@ -427,8 +427,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(next@16.2.6(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       '@workos-inc/authkit-nextjs':
-        specifier: ^4.1.0
-        version: 4.1.0(next@16.2.6(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3)
+        specifier: ^4.1.1
+        version: 4.1.1(next@16.2.6(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3)
       babel-plugin-react-compiler:
         specifier: ^1.0.0
         version: 1.0.0
@@ -499,8 +499,8 @@ importers:
         specifier: ^4.1.3
         version: 4.1.3(@react-leaflet/core@3.0.0(leaflet@1.9.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(leaflet@1.9.4)(react-dom@19.2.6(react@19.2.6))(react-leaflet@5.0.0(leaflet@1.9.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       react-relay:
-        specifier: ^21.0.0
-        version: 21.0.0(react@19.2.6)
+        specifier: ^21.0.1
+        version: 21.0.1(react@19.2.6)
       react-svg-credit-card-payment-icons:
         specifier: 6.0.3
         version: 6.0.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -508,8 +508,8 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       relay-runtime:
-        specifier: ^21.0.0
-        version: 21.0.0
+        specifier: ^21.0.1
+        version: 21.0.1
       usehooks-ts:
         specifier: ^3.1.1
         version: 3.1.1(react@19.2.6)
@@ -572,11 +572,11 @@ importers:
         specifier: ^3.8.3
         version: 3.8.3
       relay-compiler:
-        specifier: ^21.0.0
-        version: 21.0.0
+        specifier: ^21.0.1
+        version: 21.0.1
       relay-compiler-language-typescript:
         specifier: ^15.0.1
-        version: 15.0.1(@types/react-relay@18.2.1)(@types/relay-runtime@20.1.1)(relay-compiler@21.0.0)(relay-runtime@21.0.0)(typescript@6.0.3)
+        version: 15.0.1(@types/react-relay@18.2.1)(@types/relay-runtime@20.1.1)(relay-compiler@21.0.1)(relay-runtime@21.0.1)(typescript@6.0.3)
       relay-config:
         specifier: ^12.0.1
         version: 12.0.1
@@ -723,8 +723,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(next@16.2.6(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       '@workos-inc/authkit-nextjs':
-        specifier: ^4.1.0
-        version: 4.1.0(next@16.2.6(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3)
+        specifier: ^4.1.1
+        version: 4.1.1(next@16.2.6(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3)
       babel-plugin-react-compiler:
         specifier: ^1.0.0
         version: 1.0.0
@@ -795,8 +795,8 @@ importers:
         specifier: ^4.1.3
         version: 4.1.3(@react-leaflet/core@3.0.0(leaflet@1.9.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(leaflet@1.9.4)(react-dom@19.2.6(react@19.2.6))(react-leaflet@5.0.0(leaflet@1.9.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       react-relay:
-        specifier: ^21.0.0
-        version: 21.0.0(react@19.2.6)
+        specifier: ^21.0.1
+        version: 21.0.1(react@19.2.6)
       react-svg-credit-card-payment-icons:
         specifier: 6.0.3
         version: 6.0.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -804,8 +804,8 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       relay-runtime:
-        specifier: ^21.0.0
-        version: 21.0.0
+        specifier: ^21.0.1
+        version: 21.0.1
       usehooks-ts:
         specifier: ^3.1.1
         version: 3.1.1(react@19.2.6)
@@ -868,11 +868,11 @@ importers:
         specifier: ^3.8.3
         version: 3.8.3
       relay-compiler:
-        specifier: ^21.0.0
-        version: 21.0.0
+        specifier: ^21.0.1
+        version: 21.0.1
       relay-compiler-language-typescript:
         specifier: ^15.0.1
-        version: 15.0.1(@types/react-relay@18.2.1)(@types/relay-runtime@20.1.1)(relay-compiler@21.0.0)(relay-runtime@21.0.0)(typescript@6.0.3)
+        version: 15.0.1(@types/react-relay@18.2.1)(@types/relay-runtime@20.1.1)(relay-compiler@21.0.1)(relay-runtime@21.0.1)(typescript@6.0.3)
       relay-config:
         specifier: ^12.0.1
         version: 12.0.1
@@ -983,14 +983,14 @@ importers:
         specifier: ^11.0.10
         version: 11.0.10(react@19.2.6)
       react-relay:
-        specifier: ^21.0.0
-        version: 21.0.0(react@19.2.6)
+        specifier: ^21.0.1
+        version: 21.0.1(react@19.2.6)
       react-toastify:
         specifier: ^11.1.0
         version: 11.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       relay-runtime:
-        specifier: ^21.0.0
-        version: 21.0.0
+        specifier: ^21.0.1
+        version: 21.0.1
       usehooks-ts:
         specifier: ^3.1.1
         version: 3.1.1(react@19.2.6)
@@ -3066,8 +3066,8 @@ packages:
   '@vitest/utils@4.1.7':
     resolution: {integrity: sha512-T532WBu791cBxJlCl6SO+J14l81DQx6uQHm1bQbmCDY7nqlEIgkza/UFnSBNaUtSf41unldDFjdOBYEQC4b5Hw==}
 
-  '@workos-inc/authkit-nextjs@4.1.0':
-    resolution: {integrity: sha512-cQ+2s+Bllgx7lFKrqKNQeeYkICkcTDzBfy7X+N377NYYJ8uyrLsAlBL3jre3I693ADZ92gHieqLMitd9F7Rviw==}
+  '@workos-inc/authkit-nextjs@4.1.1':
+    resolution: {integrity: sha512-j7kf3xw2inF8UdhrOOQMoIkCPJaf7CppmJtagDqpeLO9uLoVpnickJCOkrCpY16hIWcJPGdmXTOeaEPIYtu5XQ==}
     engines: {node: '>=22.11.0'}
     peerDependencies:
       next: ^13.5.9 || ^14.2.26 || ^15.2.3 || ^16
@@ -5652,8 +5652,8 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  react-relay@21.0.0:
-    resolution: {integrity: sha512-lGnL9lmDVIHX/mF4qFGC9DXIm26RqMDNI1lBoxrAYXtk7i1Llo1NB3aC0Rf7fRVq6MY3ycBC8eKdYTOmeLloaA==}
+  react-relay@21.0.1:
+    resolution: {integrity: sha512-08BBmpdolP8vslClnszG+g4vkcbVHvaoR0BDHyhicwpCfbtnVGe73/MfPja/xj30eLWSP5WPYNqZupTdEPZvtw==}
     peerDependencies:
       react: ^16.9.0 || ^17 || ^18 || ^19
 
@@ -5776,15 +5776,15 @@ packages:
       relay-runtime: '>=12.0.0'
       typescript: '>=4.5.0'
 
-  relay-compiler@21.0.0:
-    resolution: {integrity: sha512-ni8U67uybKAE1Aeh+tHw7Dmoeuvgm+UmEohJH8bAcoCnMkFX5Nj/6kGR/KyxcOSxdcXIkApAzurbXX+lUda6Wg==}
+  relay-compiler@21.0.1:
+    resolution: {integrity: sha512-Wqlg3MtHyBlAYByVo24Wy9H3n2bAw991gPmzdo3XfNv+TzhI8zuGogtiae+7NORI7zhghgZaHC7Sp8S8ZPRYEA==}
     hasBin: true
 
   relay-config@12.0.1:
     resolution: {integrity: sha512-vq7GLLsGPpb/tZr9kmfbfe5sLO1cGa67jpCp4Xtk+N98fMInCu9YIH8R/FxxUhKVPnpLQf3ecmz+s+/MjzcnTQ==}
 
-  relay-runtime@21.0.0:
-    resolution: {integrity: sha512-CEKncRm8BOPT3IlymyfTVzQ8jNDgw0KrCAwel0QMG1R+ESpeMVTrWJzTGCjrzzT5MT2AEWZdCkClZ0JtXSKmUw==}
+  relay-runtime@21.0.1:
+    resolution: {integrity: sha512-OS+We56sp6gkGVEcce9VCNOeg/sMbxT9unEoerQPgNAICHowSWrXNc6LJxF2OqjypxYF7kaLDSPPiaPii2Pw1g==}
 
   remark-frontmatter@5.0.0:
     resolution: {integrity: sha512-XTFYvNASMe5iPN0719nPrdItC9aU0ssC4v14mH1BCi1u0n1gAocqcujWUrByftZTbLhRtiKRyjYTSIOcr69UVQ==}
@@ -8675,7 +8675,7 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
 
-  '@workos-inc/authkit-nextjs@4.1.0(next@16.2.6(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3)':
+  '@workos-inc/authkit-nextjs@4.1.1(next@16.2.6(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3)':
     dependencies:
       '@sindresorhus/fnv1a': 3.1.0
       '@workos-inc/node': 9.3.1
@@ -11964,14 +11964,14 @@ snapshots:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
 
-  react-relay@21.0.0(react@19.2.6):
+  react-relay@21.0.1(react@19.2.6):
     dependencies:
       '@babel/runtime': 7.29.7
       fbjs: 3.0.5
       invariant: 2.2.4
       nullthrows: 1.1.1
       react: 19.2.6
-      relay-runtime: 21.0.0
+      relay-runtime: 21.0.1
     transitivePeerDependencies:
       - encoding
 
@@ -12146,22 +12146,22 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  relay-compiler-language-typescript@15.0.1(@types/react-relay@18.2.1)(@types/relay-runtime@20.1.1)(relay-compiler@21.0.0)(relay-runtime@21.0.0)(typescript@6.0.3):
+  relay-compiler-language-typescript@15.0.1(@types/react-relay@18.2.1)(@types/relay-runtime@20.1.1)(relay-compiler@21.0.1)(relay-runtime@21.0.1)(typescript@6.0.3):
     dependencies:
       '@types/react-relay': 18.2.1
       '@types/relay-runtime': 20.1.1
       invariant: 2.2.4
-      relay-compiler: 21.0.0
-      relay-runtime: 21.0.0
+      relay-compiler: 21.0.1
+      relay-runtime: 21.0.1
       typescript: 6.0.3
 
-  relay-compiler@21.0.0: {}
+  relay-compiler@21.0.1: {}
 
   relay-config@12.0.1:
     dependencies:
       cosmiconfig: 5.2.1
 
-  relay-runtime@21.0.0:
+  relay-runtime@21.0.1:
     dependencies:
       '@babel/runtime': 7.29.7
       fbjs: 3.0.5

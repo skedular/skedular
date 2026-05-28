@@ -9,5 +9,4 @@ cd "$(dirname "${0}")/.."
 
 docker compose -p "skedular" \
     -f docker-compose.yml \
-    --env-file .env \
     $command

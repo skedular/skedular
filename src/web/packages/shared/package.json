@@ -36,8 +36,8 @@
     "next": "^16.2.6",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "react-relay": "^21.0.0",
-    "relay-runtime": "^21.0.0"
+    "react-relay": "^21.0.1",
+    "relay-runtime": "^21.0.1"
   },
   "peerDependenciesMeta": {
     "babel-plugin-react-compiler": {

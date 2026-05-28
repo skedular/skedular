@@ -6,7 +6,7 @@ set -x
 original_dir=$(pwd)
 trap 'cd "$original_dir"' EXIT
 
-repo_root=$(cd "$(dirname "${0}")/.." && pwd)
+repo_root=$(cd "$(dirname "${0}")/../src" && pwd)
 web_root="$repo_root/web"
 
 update_workspace() {
