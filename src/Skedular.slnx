@@ -456,8 +456,8 @@
         <File Path="../.config/dotnet-tools.json"/>
         <File Path="../.dockerignore"/>
         <File Path="../.editorconfig"/>
-        <File Path="../.env"/>
-        <File Path="../.env.template"/>
+        <File Path=".env"/>
+        <File Path=".env.template"/>
         <File Path="../.gitattributes"/>
         <File Path="../.gitignore"/>
         <File Path="../AGENTS.md"/>
