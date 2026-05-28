@@ -7,7 +7,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/all-in-one/AllInOne/AllInOne.csproj"
+        "${workspaceFolder}/src/all-in-one/AllInOne/AllInOne.csproj"
       ]
     }
   ]

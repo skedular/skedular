@@ -9,7 +9,7 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/shared.yml"
-      - "shared/**"
+      - "src/shared/**"
   pull_request:
     branches:
       - "main"
@@ -17,7 +17,7 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/shared.yml"
-      - "shared/**"
+      - "src/shared/**"
 
 jobs:
   build:
@@ -65,7 +65,7 @@ jobs:
           TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          workingDirectory: ./shared/infrastructure/workspaces/staging
+          workingDirectory: ./src/shared/infrastructure/workspaces/staging
           componentName: "shared"
           environment: staging
 
@@ -98,7 +98,7 @@ jobs:
           TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          workingDirectory: ./shared/infrastructure/workspaces/production
+          workingDirectory: ./src/shared/infrastructure/workspaces/production
           componentName: "shared"
           environment: production
 
@@ -147,7 +147,7 @@ jobs:
           TF_VAR_gcp_web_credentials_client_id: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_ID }}
           TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
         with:
-          workingDirectory: ./shared/infrastructure/workspaces/staging
+          workingDirectory: ./src/shared/infrastructure/workspaces/staging
 
   production:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -194,4 +194,4 @@ jobs:
           TF_VAR_gcp_web_credentials_client_id: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_ID }}
           TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
         with:
-          workingDirectory: ./shared/infrastructure/workspaces/production
+          workingDirectory: ./src/shared/infrastructure/workspaces/production

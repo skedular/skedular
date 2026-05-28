@@ -11,7 +11,7 @@ fi
 workspaces=(staging common_resources production)
 
 for app in "${apps[@]}"; do
-  base="$root/web/apps/$app/infrastructure/workspaces"
+  base="$root/src/web/apps/$app/infrastructure/workspaces"
   if [[ ! -d "$base" ]]; then
     echo "MISSING_WORKSPACE_ROOT: $base"
     exit 1

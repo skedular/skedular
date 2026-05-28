@@ -11,11 +11,11 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/webapp.yml"
-      - "web/pnpm-lock.yaml"
-      - "web/apps/webapp/**"
-      - "web/packages/**"
-      - "web/infrastructure/**"
-      - "shared/infrastructure/**"
+      - "src/web/pnpm-lock.yaml"
+      - "src/web/apps/webapp/**"
+      - "src/web/packages/**"
+      - "src/web/infrastructure/**"
+      - "src/shared/infrastructure/**"
   pull_request:
     branches:
       - "main"
@@ -23,11 +23,11 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/webapp.yml"
-      - "web/pnpm-lock.yaml"
-      - "web/apps/webapp/**"
-      - "web/packages/**"
-      - "web/infrastructure/**"
-      - "shared/infrastructure/**"
+      - "src/web/pnpm-lock.yaml"
+      - "src/web/apps/webapp/**"
+      - "src/web/packages/**"
+      - "src/web/infrastructure/**"
+      - "src/shared/infrastructure/**"
 
 jobs:
   build:
@@ -63,7 +63,7 @@ jobs:
       - name: Build, Test and validate
         uses: "./.github/actions/build-test-push"
         with:
-          dockerFilePath: ./web/apps/webapp/Dockerfile
+          dockerFilePath: ./src/web/apps/webapp/Dockerfile
           dockerBuildContextPath: .
           dockerRegistry: ghcr.io
           dockerRegistryUsername: ${{ github.actor }}
@@ -89,7 +89,7 @@ jobs:
           TF_VAR_workos_api_key: ${{ secrets.STAGING_WEBAPP_WORKOS_API_KEY }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          workingDirectory: ./web/apps/webapp/infrastructure/workspaces/staging
+          workingDirectory: ./src/web/apps/webapp/infrastructure/workspaces/staging
           componentName: "webapp"
           environment: staging
 
@@ -111,7 +111,7 @@ jobs:
           TF_VAR_workos_api_key: ${{ secrets.PRODUCTION_WEBAPP_WORKOS_API_KEY }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          workingDirectory: ./web/apps/webapp/infrastructure/workspaces/production
+          workingDirectory: ./src/web/apps/webapp/infrastructure/workspaces/production
           componentName: "webapp"
           environment: production
 
@@ -149,7 +149,7 @@ jobs:
           TF_VAR_google_map_api_key: ${{ secrets.STAGING_GOOGLE_MAP_API_KEY }}
           TF_VAR_workos_api_key: ${{ secrets.STAGING_WEBAPP_WORKOS_API_KEY }}
         with:
-          workingDirectory: ./web/apps/webapp/infrastructure/workspaces/staging
+          workingDirectory: ./src/web/apps/webapp/infrastructure/workspaces/staging
 
   production:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -185,4 +185,4 @@ jobs:
           TF_VAR_google_map_api_key: ${{ secrets.PRODUCTION_GOOGLE_MAP_API_KEY }}
           TF_VAR_workos_api_key: ${{ secrets.PRODUCTION_WEBAPP_WORKOS_API_KEY }}
         with:
-          workingDirectory: ./web/apps/webapp/infrastructure/workspaces/production
+          workingDirectory: ./src/web/apps/webapp/infrastructure/workspaces/production

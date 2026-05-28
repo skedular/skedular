@@ -11,18 +11,18 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/workarounds.yml"
-      - "shared/**"
-      - "all-in-one/**"
-      - "core/**"
-      - "booking/**"
-      - "customer/**"
-      - "gateway/**"
-      - "location/**"
-      - "msteams/**"
-      - "organization/**"
-      - "slack/**"
-      - "team/**"
-      - "marketplace/**"
+      - "src/shared/**"
+      - "src/all-in-one/**"
+      - "src/core/**"
+      - "src/booking/**"
+      - "src/customer/**"
+      - "src/gateway/**"
+      - "src/location/**"
+      - "src/msteams/**"
+      - "src/organization/**"
+      - "src/slack/**"
+      - "src/team/**"
+      - "src/marketplace/**"
   pull_request:
     branches:
       - "main"
@@ -30,18 +30,18 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/workarounds.yml"
-      - "shared/**"
-      - "all-in-one/**"
-      - "core/**"
-      - "booking/**"
-      - "customer/**"
-      - "gateway/**"
-      - "location/**"
-      - "msteams/**"
-      - "organization/**"
-      - "slack/**"
-      - "team/**"
-      - "marketplace/**"
+      - "src/shared/**"
+      - "src/all-in-one/**"
+      - "src/core/**"
+      - "src/booking/**"
+      - "src/customer/**"
+      - "src/gateway/**"
+      - "src/location/**"
+      - "src/msteams/**"
+      - "src/organization/**"
+      - "src/slack/**"
+      - "src/team/**"
+      - "src/marketplace/**"
 
 jobs:
   build-apis:
@@ -77,7 +77,7 @@ jobs:
       - name: Build, Test and Push Image - All APIs
         uses: "./.github/actions/build-test-push"
         with:
-          dockerFilePath: ./all-in-one/AllApis/Dockerfile
+          dockerFilePath: ./src/all-in-one/AllApis/Dockerfile
           dockerBuildContextPath: .
           dockerRegistry: ghcr.io
           dockerRegistryUsername: ${{ github.actor }}
@@ -119,7 +119,7 @@ jobs:
       - name: Build, Test and Push Image - All Processors
         uses: "./.github/actions/build-test-push"
         with:
-          dockerFilePath: ./all-in-one/AllProcessors/Dockerfile
+          dockerFilePath: ./src/all-in-one/AllProcessors/Dockerfile
           dockerBuildContextPath: .
           dockerRegistry: ghcr.io
           dockerRegistryUsername: ${{ github.actor }}
@@ -161,7 +161,7 @@ jobs:
       - name: Build, Test and Push Image - All Jobs
         uses: "./.github/actions/build-test-push"
         with:
-          dockerFilePath: ./all-in-one/AllJobs/Dockerfile
+          dockerFilePath: ./src/all-in-one/AllJobs/Dockerfile
           dockerBuildContextPath: .
           dockerRegistry: ghcr.io
           dockerRegistryUsername: ${{ github.actor }}
@@ -203,7 +203,7 @@ jobs:
       - name: Build, Test and Push Image - All Infra
         uses: "./.github/actions/build-test-push"
         with:
-          dockerFilePath: ./all-in-one/AllInfra/Dockerfile
+          dockerFilePath: ./src/all-in-one/AllInfra/Dockerfile
           dockerBuildContextPath: .
           dockerRegistry: ghcr.io
           dockerRegistryUsername: ${{ github.actor }}

@@ -11,8 +11,8 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/booking-shared.yml"
-      - "shared/**"
-      - "booking/shared/**"
+      - "src/shared/**"
+      - "src/booking/shared/**"
   pull_request:
     branches:
       - "main"
@@ -20,8 +20,8 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/booking-shared.yml"
-      - "shared/**"
-      - "booking/shared/**"
+      - "src/shared/**"
+      - "src/booking/shared/**"
 
 jobs:
   build:
@@ -52,7 +52,7 @@ jobs:
           TF_VAR_stripe_api_key: ${{ secrets.STAGING_STRIPE_API_KEY }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          workingDirectory: ./booking/shared/infrastructure/workspaces/staging
+          workingDirectory: ./src/booking/shared/infrastructure/workspaces/staging
           componentName: "booking-shared"
           environment: staging
 
@@ -68,7 +68,7 @@ jobs:
           TF_VAR_stripe_api_key: ${{ secrets.PRODUCTION_STRIPE_API_KEY }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          workingDirectory: ./booking/shared/infrastructure/workspaces/production
+          workingDirectory: ./src/booking/shared/infrastructure/workspaces/production
           componentName: "booking-shared"
           environment: production
 
@@ -100,7 +100,7 @@ jobs:
         env:
           TF_VAR_stripe_api_key: ${{ secrets.STAGING_STRIPE_API_KEY }}
         with:
-          workingDirectory: ./booking/shared/infrastructure/workspaces/staging
+          workingDirectory: ./src/booking/shared/infrastructure/workspaces/staging
 
   production:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -130,4 +130,4 @@ jobs:
         env:
           TF_VAR_stripe_api_key: ${{ secrets.PRODUCTION_STRIPE_API_KEY }}
         with:
-          workingDirectory: ./booking/shared/infrastructure/workspaces/production
+          workingDirectory: ./src/booking/shared/infrastructure/workspaces/production

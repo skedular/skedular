@@ -9,8 +9,8 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/all-in-one/AllInOne/bin/Debug/net9.0/AllInOne.dll",
-      "cwd": "${workspaceFolder}/all-in-one/AllInOne/bin/Debug/net9.0",
+      "program": "${workspaceFolder}/src/all-in-one/AllInOne/bin/Debug/net9.0/AllInOne.dll",
+      "cwd": "${workspaceFolder}/src/all-in-one/AllInOne/bin/Debug/net9.0",
       "args": [],
       "console": "integratedTerminal",
       "stopAtEntry": false,
@@ -20,8 +20,8 @@
       "name": "All Infra",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/all-in-one/AllInfra/bin/Debug/net9.0/AllInfra.dll",
-      "cwd": "${workspaceFolder}/all-in-one/AllInfra/bin/Debug/net9.0",
+      "program": "${workspaceFolder}/src/all-in-one/AllInfra/bin/Debug/net9.0/AllInfra.dll",
+      "cwd": "${workspaceFolder}/src/all-in-one/AllInfra/bin/Debug/net9.0",
       "args": [],
       "console": "integratedTerminal",
       "stopAtEntry": false,
@@ -31,8 +31,8 @@
       "name": "All Apis",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/all-in-one/AllApis/bin/Debug/net9.0/AllApis.dll",
-      "cwd": "${workspaceFolder}/all-in-one/AllApis/bin/Debug/net9.0",
+      "program": "${workspaceFolder}/src/all-in-one/AllApis/bin/Debug/net9.0/AllApis.dll",
+      "cwd": "${workspaceFolder}/src/all-in-one/AllApis/bin/Debug/net9.0",
       "args": [],
       "console": "integratedTerminal",
       "stopAtEntry": false,
@@ -42,8 +42,8 @@
       "name": "All Processors",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/all-in-one/AllProcessors/bin/Debug/net9.0/AllProcessors.dll",
-      "cwd": "${workspaceFolder}/all-in-one/AllProcessors/bin/Debug/net9.0",
+      "program": "${workspaceFolder}/src/all-in-one/AllProcessors/bin/Debug/net9.0/AllProcessors.dll",
+      "cwd": "${workspaceFolder}/src/all-in-one/AllProcessors/bin/Debug/net9.0",
       "args": [],
       "console": "integratedTerminal",
       "stopAtEntry": false,
@@ -53,8 +53,8 @@
       "name": "All Jobs",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/all-in-one/AllJobs/bin/Debug/net9.0/AllJobs.dll",
-      "cwd": "${workspaceFolder}/all-in-one/AllJobs/bin/Debug/net9.0",
+      "program": "${workspaceFolder}/src/all-in-one/AllJobs/bin/Debug/net9.0/AllJobs.dll",
+      "cwd": "${workspaceFolder}/src/all-in-one/AllJobs/bin/Debug/net9.0",
       "args": [],
       "console": "integratedTerminal",
       "stopAtEntry": false,
@@ -65,15 +65,15 @@
       "type": "node-terminal",
       "request": "launch",
       "command": "pnpm dev",
-      "cwd": "${workspaceFolder}/web/apps/webapp",
-      "envFile": "${workspaceFolder}/web/apps/webapp/.env"
+      "cwd": "${workspaceFolder}/src/web/apps/webapp",
+      "envFile": "${workspaceFolder}/src/web/apps/webapp/.env"
     },
     {
       "name": "Webapp - debug client-side",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:15000",
-      "cwd": "${workspaceFolder}/web/apps/webapp",
+      "cwd": "${workspaceFolder}/src/web/apps/webapp",
       "port": 9876,
       "env": {
         "NEXTAUTH_SECRET": "XXXX",
@@ -90,8 +90,8 @@
         "uriFormat": "%s",
         "action": "debugWithChrome"
       },
-      "cwd": "${workspaceFolder}/web/apps/webapp",
-      "envFile": "${workspaceFolder}/web/apps/webapp/.env"
+      "cwd": "${workspaceFolder}/src/web/apps/webapp",
+      "envFile": "${workspaceFolder}/src/web/apps/webapp/.env"
     }
   ]
 }

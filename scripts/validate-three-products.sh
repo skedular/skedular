@@ -11,7 +11,7 @@ fi
 required=(infrastructure src public)
 
 for app in "${apps[@]}"; do
-  app_path="$root/web/apps/$app"
+  app_path="$root/src/web/apps/$app"
   if [[ ! -d "$app_path" ]]; then
     echo "MISSING_APP: $app_path"
     exit 1

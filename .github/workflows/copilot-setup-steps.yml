@@ -46,7 +46,7 @@ jobs:
         run: dotnet tool restore
 
       - name: Restore .NET solution dependencies
-        run: dotnet restore Skedular.slnx
+        run: dotnet restore src/Skedular.slnx
 
       # ── Node.js / pnpm ────────────────────────────────────────────────────
       # The web monorepo (web/) uses pnpm 10 and Node 22 managed via corepack.
@@ -64,12 +64,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.local/share/pnpm/store
-          key: pnpm-${{ runner.os }}-${{ hashFiles('web/pnpm-lock.yaml') }}
+          key: pnpm-${{ runner.os }}-${{ hashFiles('src/web/pnpm-lock.yaml') }}
           restore-keys: |
             pnpm-${{ runner.os }}-
 
       - name: Install web dependencies
-        working-directory: web
+        working-directory: src/web
         run: pnpm install --frozen-lockfile
 
       # ── Terraform ─────────────────────────────────────────────────────────

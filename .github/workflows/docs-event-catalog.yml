@@ -12,7 +12,7 @@ on:
       - ".github/workflows/lint.yml"
       - ".github/workflows/docs-event-catalog.yml"
       - "docs/event-catalog/**"
-      - "shared/infrastructure/**"
+      - "src/shared/infrastructure/**"
   pull_request:
     branches:
       - "main"
@@ -21,7 +21,7 @@ on:
       - ".github/workflows/lint.yml"
       - ".github/workflows/docs-event-catalog.yml"
       - "docs/event-catalog/**"
-      - "shared/infrastructure/**"
+      - "src/shared/infrastructure/**"
 
 jobs:
   build:

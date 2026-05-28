@@ -18,15 +18,15 @@ all: dep generate ## Runs dep generate
 .PHONY: dep
 dep: ## Install dependencies
 	@cd $(CURRENT_DIRECTORY)
-	@dotnet restore Skedular.slnx
+	@dotnet restore src/Skedular.slnx
 
 .PHONY: generate
 generate: ## Generate code
 	@./api-definitions/generate.sh
 	@./scripts/generate-graphql.sh
-	@./web/apps/webapp/scripts/generate.sh
-	@./web/apps/webapp-spaces/scripts/generate.sh
-	@./web/apps/webapp-teams/scripts/generate.sh
+	@./src/web/apps/webapp/scripts/generate.sh
+	@./src/web/apps/webapp-spaces/scripts/generate.sh
+	@./src/web/apps/webapp-teams/scripts/generate.sh
 
 .PHONY: lint
 lint: ## run golanci-lint locally

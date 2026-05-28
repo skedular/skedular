@@ -61,11 +61,11 @@ Skedular Mono Repository
 
    ```bash
    # Run all migrations at once
-   dotnet run --project all-in-one/AllInfra
+   dotnet run --project src/all-in-one/AllInfra
 
    # Or run individual service migrations if needed
-   # dotnet run --project location/shared/Location.Infrastructure
-   # dotnet run --project organization/shared/Organization.Infrastructure
+   # dotnet run --project src/location/shared/Location.Infrastructure
+   # dotnet run --project src/organization/shared/Organization.Infrastructure
    # ... etc
    ```
 
@@ -73,16 +73,16 @@ Skedular Mono Repository
 
    ```bash
    # Option 1: Run all APIs and Gateway at once (recommended)
-   dotnet run --project all-in-one/AllApis
+   dotnet run --project src/all-in-one/AllApis
 
    # Option 2: Run everything (APIs, Processors, Jobs, and Gateway)
    # Note: This also runs migrations first
-   dotnet run --project all-in-one/AllInOne
+   dotnet run --project src/all-in-one/AllInOne
 
    # Option 3: Run services individually (for debugging specific services)
-   # dotnet run --project gateway/apis/Gateway
-   # dotnet run --project organization/apis/Organization.Api
-   # dotnet run --project location/apis/Location.Api
+   # dotnet run --project src/gateway/apis/Gateway
+   # dotnet run --project src/organization/apis/Organization.Api
+   # dotnet run --project src/location/apis/Location.Api
    # ... etc
    ```
 

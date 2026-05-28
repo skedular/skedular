@@ -11,8 +11,8 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/team-shared.yml"
-      - "shared/**"
-      - "team/shared/**"
+      - "src/shared/**"
+      - "src/team/shared/**"
   pull_request:
     branches:
       - "main"
@@ -20,8 +20,8 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/team-shared.yml"
-      - "shared/**"
-      - "team/shared/**"
+      - "src/shared/**"
+      - "src/team/shared/**"
 
 jobs:
   build:
@@ -50,7 +50,7 @@ jobs:
         uses: "./.github/actions/lint-validate-infrastructure"
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          workingDirectory: ./team/shared/infrastructure/workspaces/staging
+          workingDirectory: ./src/team/shared/infrastructure/workspaces/staging
           componentName: "team-shared"
           environment: staging
 
@@ -64,7 +64,7 @@ jobs:
         uses: "./.github/actions/lint-validate-infrastructure"
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          workingDirectory: ./team/shared/infrastructure/workspaces/production
+          workingDirectory: ./src/team/shared/infrastructure/workspaces/production
           componentName: "team-shared"
           environment: production
 
@@ -94,7 +94,7 @@ jobs:
       - name: Deploy Infrastructure
         uses: "./.github/actions/deploy-infrastructure"
         with:
-          workingDirectory: ./team/shared/infrastructure/workspaces/staging
+          workingDirectory: ./src/team/shared/infrastructure/workspaces/staging
 
   production:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -122,4 +122,4 @@ jobs:
       - name: Deploy Infrastructure
         uses: "./.github/actions/deploy-infrastructure"
         with:
-          workingDirectory: ./team/shared/infrastructure/workspaces/production
+          workingDirectory: ./src/team/shared/infrastructure/workspaces/production

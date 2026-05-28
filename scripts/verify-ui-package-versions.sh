@@ -14,7 +14,7 @@ pkg="@skedular/ui"
 expected=""
 
 for app in "${apps[@]}"; do
-  file="$root/web/apps/$app/package.json"
+  file="$root/src/web/apps/$app/package.json"
   if [[ ! -f "$file" ]]; then
     echo "MISSING: $file"
     exit 1

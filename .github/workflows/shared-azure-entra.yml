@@ -9,7 +9,7 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/shared-azure-entra.yml"
-      - "shared/**"
+      - "src/shared/**"
   pull_request:
     branches:
       - "main"
@@ -17,7 +17,7 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/shared-azure-entra.yml"
-      - "shared/**"
+      - "src/shared/**"
 
 jobs:
   build:
@@ -53,7 +53,7 @@ jobs:
         uses: "./.github/actions/lint-validate-infrastructure"
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          workingDirectory: ./shared/infrastructure-azure-entra/workspaces/staging
+          workingDirectory: ./src/shared/infrastructure-azure-entra/workspaces/staging
           componentName: "shared"
           environment: staging
 
@@ -74,7 +74,7 @@ jobs:
         uses: "./.github/actions/lint-validate-infrastructure"
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          workingDirectory: ./shared/infrastructure-azure-entra/workspaces/production
+          workingDirectory: ./src/shared/infrastructure-azure-entra/workspaces/production
           componentName: "shared"
           environment: production
 
@@ -111,7 +111,7 @@ jobs:
       - name: Deploy Infrastructure
         uses: "./.github/actions/deploy-infrastructure"
         with:
-          workingDirectory: ./shared/infrastructure-azure-entra/workspaces/staging
+          workingDirectory: ./src/shared/infrastructure-azure-entra/workspaces/staging
 
   production:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -146,4 +146,4 @@ jobs:
       - name: Deploy Infrastructure
         uses: "./.github/actions/deploy-infrastructure"
         with:
-          workingDirectory: ./shared/infrastructure-azure-entra/workspaces/production
+          workingDirectory: ./src/shared/infrastructure-azure-entra/workspaces/production

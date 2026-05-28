@@ -11,8 +11,8 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/customer-shared.yml"
-      - "shared/**"
-      - "customer/shared/**"
+      - "src/shared/**"
+      - "src/customer/shared/**"
   pull_request:
     branches:
       - "main"
@@ -20,8 +20,8 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/customer-shared.yml"
-      - "shared/**"
-      - "customer/shared/**"
+      - "src/shared/**"
+      - "src/customer/shared/**"
 
 jobs:
   build:
@@ -50,7 +50,7 @@ jobs:
         uses: "./.github/actions/lint-validate-infrastructure"
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          workingDirectory: ./customer/shared/infrastructure/workspaces/staging
+          workingDirectory: ./src/customer/shared/infrastructure/workspaces/staging
           componentName: "customer-shared"
           environment: staging
 
@@ -64,7 +64,7 @@ jobs:
         uses: "./.github/actions/lint-validate-infrastructure"
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          workingDirectory: ./customer/shared/infrastructure/workspaces/production
+          workingDirectory: ./src/customer/shared/infrastructure/workspaces/production
           componentName: "customer-shared"
           environment: production
 
@@ -94,7 +94,7 @@ jobs:
       - name: Deploy Infrastructure
         uses: "./.github/actions/deploy-infrastructure"
         with:
-          workingDirectory: ./customer/shared/infrastructure/workspaces/staging
+          workingDirectory: ./src/customer/shared/infrastructure/workspaces/staging
 
   production:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -122,4 +122,4 @@ jobs:
       - name: Deploy Infrastructure
         uses: "./.github/actions/deploy-infrastructure"
         with:
-          workingDirectory: ./customer/shared/infrastructure/workspaces/production
+          workingDirectory: ./src/customer/shared/infrastructure/workspaces/production
