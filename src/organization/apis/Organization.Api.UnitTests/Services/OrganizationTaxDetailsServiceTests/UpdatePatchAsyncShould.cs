@@ -9,6 +9,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services.Cache;
 using TaxDetailsEntity = Organization.Shared.Database.Entities.OrganizationTaxDetails;
 using TaxDetailsModel = Organization.Shared.Models.OrganizationTaxDetails;
 
@@ -28,6 +29,7 @@ public class UpdatePatchAsyncShould
         [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         [Frozen] IGraphQlMapper graphQlMapper,
         [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen] ICachedOrganizationService cachedOrganizationService,
         [Frozen] IRandomHelper randomHelper,
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IUnitOfWork unitOfWork,
@@ -85,6 +87,8 @@ public class UpdatePatchAsyncShould
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken))
+            .MustHaveHappenedOnceExactly();
     }
 
     [Theory]
@@ -98,6 +102,7 @@ public class UpdatePatchAsyncShould
         [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         [Frozen] IGraphQlMapper graphQlMapper,
         [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen] ICachedOrganizationService cachedOrganizationService,
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
@@ -147,5 +152,7 @@ public class UpdatePatchAsyncShould
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken))
+            .MustHaveHappenedOnceExactly();
     }
 }

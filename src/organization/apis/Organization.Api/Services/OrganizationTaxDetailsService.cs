@@ -7,17 +7,14 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services.Cache;
 
 namespace Organization.Api.Services;
 
 public interface IOrganizationTaxDetailsService
 {
     Task<Shared.Models.Organization> UpdatePatchAsync(OrganizationTaxDetailsPatchRequest request, CancellationToken cancellationToken);
-
-    Task<Shared.Models.Organization> RemoveAsync(
-        string? organizationId,
-        string? organizationCustomDomain,
-        CancellationToken cancellationToken);
+    Task<Shared.Models.Organization> RemoveAsync(string? organizationId, string? organizationCustomDomain, CancellationToken cancellationToken);
 }
 
 public class OrganizationTaxDetailsService(
@@ -28,7 +25,8 @@ public class OrganizationTaxDetailsService(
     IGraphQlMapper graphQlMapper,
     IDbTransactionBuilder transactionBuilder,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
-    IRandomHelper randomHelper) : IOrganizationTaxDetailsService
+    IRandomHelper randomHelper,
+    ICachedOrganizationService cachedOrganizationService) : IOrganizationTaxDetailsService
 {
     public async Task<Shared.Models.Organization> UpdatePatchAsync(OrganizationTaxDetailsPatchRequest request, CancellationToken cancellationToken)
     {
@@ -47,7 +45,7 @@ public class OrganizationTaxDetailsService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var changed = false;
+        bool changed;
         if (organization.OrganizationTaxDetails is null)
         {
             if (string.IsNullOrWhiteSpace(request.TaxId) || request.TaxRatePercentage is null)
@@ -84,6 +82,7 @@ public class OrganizationTaxDetailsService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+        await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
 
         return mappedOrganization;
     }
@@ -122,6 +121,7 @@ public class OrganizationTaxDetailsService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+        await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
 
         return mappedOrganization;
     }
@@ -152,24 +152,14 @@ public class OrganizationTaxDetailsService(
         }
     }
 
-    private static bool ApplyPatch(
-        OrganizationTaxDetailsPatchRequest request,
-        OrganizationTaxDetails taxDetails)
-    {
-        var changed = false;
-        foreach (var field in request.FieldsToUpdate)
+    private static bool ApplyPatch(OrganizationTaxDetailsPatchRequest request, OrganizationTaxDetails taxDetails) =>
+        request.FieldsToUpdate.Aggregate(false, (current, field) => field switch
         {
-            changed = field switch
-            {
-                OrganizationTaxDetailsPatchField.TaxId => ApplyTaxIdPatch(request.TaxId!, taxDetails) || changed,
-                OrganizationTaxDetailsPatchField.TaxRatePercentage => ApplyTaxRatePercentagePatch(request.TaxRatePercentage!.Value, taxDetails) ||
-                                                                      changed,
-                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation tax details patch field is not supported.")
-            };
-        }
-
-        return changed;
-    }
+            OrganizationTaxDetailsPatchField.TaxId => ApplyTaxIdPatch(request.TaxId!, taxDetails) || current,
+            OrganizationTaxDetailsPatchField.TaxRatePercentage =>
+                ApplyTaxRatePercentagePatch(request.TaxRatePercentage!.Value, taxDetails) || current,
+            _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation tax details patch field is not supported.")
+        });
 
     private static bool ApplyTaxIdPatch(string taxId, OrganizationTaxDetails taxDetails)
     {
