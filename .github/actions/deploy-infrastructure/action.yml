@@ -27,4 +27,4 @@ runs:
       shell: bash
       working-directory: ${{ inputs.workingDirectory }}
       run: |
-        TF_VAR_random_seed=$(uuidgen) terraform apply -auto-approve -input=false
+        TF_VAR_random_seed=$(uuidgen) terraform apply -auto-approve -input=false -lock-timeout=10m

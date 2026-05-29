@@ -49,7 +49,7 @@ runs:
       working-directory: ${{ inputs.workingDirectory }}
       continue-on-error: true
       run: |
-        TF_VAR_random_seed=$(uuidgen) terraform plan -no-color -input=false
+        TF_VAR_random_seed=$(uuidgen) terraform plan -no-color -input=false -lock-timeout=10m
 
     - name: Update Pull Request
       uses: actions/github-script@v7

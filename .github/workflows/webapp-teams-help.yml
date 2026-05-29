@@ -1,5 +1,9 @@
 name: "webapp-teams-help"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 on:
   workflow_dispatch:
   push:
@@ -11,7 +15,9 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/webapp-teams-help.yml"
+      - "src/web/package.json"
       - "src/web/pnpm-lock.yaml"
+      - "src/web/pnpm-workspace.yaml"
       - "src/web/apps/webapp-teams-help/**"
       - "src/web/packages/**"
       - "src/web/infrastructure/**"
@@ -23,7 +29,9 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/webapp-teams-help.yml"
+      - "src/web/package.json"
       - "src/web/pnpm-lock.yaml"
+      - "src/web/pnpm-workspace.yaml"
       - "src/web/apps/webapp-teams-help/**"
       - "src/web/packages/**"
       - "src/web/infrastructure/**"
