@@ -1,29 +1,19 @@
-import {
-  ColorPicker,
-  EditorActionBar,
-  FormFieldLabel,
-  FormStackColumn,
-  PageHeaderPanel,
-  SettingsSectionCard,
-  SmallIconTypography,
-  StackColumn,
-  StickyReviewRail,
-} from '@skedular/ui';
 import { Loading } from '@/components/loading';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { PaletteModeContext } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { editOrganizationProductTagDialog_rootQuery } from '@/queries/__generated__/editOrganizationProductTagDialog_rootQuery.graphql';
 import type { editOrganizationProductTagDialog_updateProductTagMutation } from '@/queries/__generated__/editOrganizationProductTagDialog_updateProductTagMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import { ColorPicker, FormFieldLabel, FormStackColumn, PageHeaderPanel, SettingsSectionCard, SmallIconTypography, StackColumn, StickyReviewRail } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
@@ -52,12 +42,33 @@ type ProductTagDetails = {
 
 type TagPatchField = 'NAME' | 'DESCRIPTION' | 'COLOR';
 
+type ProductTagPatchDetails = ProductTagDetails & {
+  color: string | null | undefined;
+};
+
+const inlinePatchDebounceTimeout = 1000;
+
+const getChangedTagFields = (left: ProductTagPatchDetails, right: ProductTagPatchDetails): TagPatchField[] => {
+  const fieldsToUpdate: TagPatchField[] = [];
+  if (left.name !== right.name) {
+    fieldsToUpdate.push('NAME');
+  }
+  if (left.description !== right.description) {
+    fieldsToUpdate.push('DESCRIPTION');
+  }
+  if (left.color !== right.color) {
+    fieldsToUpdate.push('COLOR');
+  }
+
+  return fieldsToUpdate;
+};
+
 const productTagSchema = object({
   name: string().required('Product tag name is required'),
   description: string().nullable(),
 });
 
-const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId, onSaved, onCancel }: Props) => {
+const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId, onCancel }: Props) => {
   const rootData = usePreloadedQuery<editOrganizationProductTagDialog_rootQuery>(RootQuery, queryReference);
   const [commitUpdateProductTagPatch] = useMutation<editOrganizationProductTagDialog_updateProductTagMutation>(graphql`
     mutation editOrganizationProductTagDialog_updateProductTagMutation($input: UpdateOrganizationTagInput!) @raw_response_type {
@@ -77,76 +88,66 @@ const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId,
   const validate = makeValidate(productTagSchema);
   const requiredFields = makeRequired(productTagSchema);
   const [selectedColor, setSelectedColor] = useState(rootData.productTag?.color);
+  const initialProductTagValues = useMemo<ProductTagPatchDetails>(
+    () => ({
+      name: rootData.productTag?.name ?? '',
+      description: rootData.productTag?.description,
+      color: rootData.productTag?.color,
+    }),
+    [rootData.productTag],
+  );
+  const draftProductTagValues = useRef(initialProductTagValues);
+  const submittedProductTagValues = useRef(initialProductTagValues);
 
-  const handleAddClick = ({ name, description }: ProductTagDetails) => {
-    if (!rootData.productTag) {
-      return;
-    }
+  const commitProductTagPatch = useCallback(
+    (fieldsToUpdate: TagPatchField[], values: ProductTagPatchDetails) => {
+      const productTag = rootData.productTag;
+      if (!productTag || fieldsToUpdate.length === 0 || !productTagSchema.isValidSync({ name: values.name, description: values.description })) {
+        return;
+      }
 
-    const oldName = rootData.productTag.name;
-    const fieldsToUpdate: TagPatchField[] = [];
-    if (rootData.productTag.name !== name) {
-      fieldsToUpdate.push('NAME');
-    }
-    if (rootData.productTag.description !== description) {
-      fieldsToUpdate.push('DESCRIPTION');
-    }
-    if (rootData.productTag.color !== selectedColor) {
-      fieldsToUpdate.push('COLOR');
-    }
-    if (fieldsToUpdate.length === 0) {
-      onSaved();
-      return;
-    }
+      const previousValues = submittedProductTagValues.current;
+      if (getChangedTagFields(previousValues, values).length === 0) {
+        return;
+      }
+      submittedProductTagValues.current = values;
 
-    const toastId = themedToast(<NotificationContent content={`Updating product tag '${oldName}'...`} />, infoNotificationOptions);
-
-    commitUpdateProductTagPatch({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: productTagId,
-          fieldsToUpdate,
-          name,
-          description,
-          color: selectedColor,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update product tag '${oldName}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Product tag ${name} updated.`} />,
-        });
-
-        onSaved();
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update product tag '${oldName}'. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        updateProductTag: {
-          organizationTag: {
+      commitUpdateProductTagPatch({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
             id: productTagId,
-            name,
-            description,
-            color: selectedColor,
+            fieldsToUpdate,
+            name: values.name,
+            description: values.description,
+            color: values.color,
           },
         },
-      },
-    });
-  };
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            submittedProductTagValues.current = previousValues;
+            themedToast(<NotificationContent content={`Failed to update product tag '${productTag.name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
+          }
+        },
+        onError: (error) => {
+          submittedProductTagValues.current = previousValues;
+          themedToast(<NotificationContent content={`Failed to update product tag '${productTag.name}'. Error: ${error.message}.`} />, errorNotificationOptions);
+        },
+        optimisticResponse: {
+          updateProductTag: {
+            organizationTag: {
+              id: productTagId,
+              name: values.name,
+              description: values.description,
+              color: values.color,
+            },
+          },
+        },
+      });
+    },
+    [commitUpdateProductTagPatch, productTagId, rootData.productTag, themedToast],
+  );
+  const debouncedCommitProductTagPatch = useDebounceCallback(commitProductTagPatch, inlinePatchDebounceTimeout);
 
   if (!rootData.productTag) {
     return null;
@@ -156,42 +157,51 @@ const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId,
     <Box sx={{ px: { xs: 2, md: 3 }, py: 3 }}>
       <Box sx={{ maxWidth: 1320, mx: 'auto', display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', xl: 'minmax(0, 2fr) 320px' }, gap: 2 }}>
         <StackColumn spacing={2.5} sx={{ minWidth: 0 }}>
-          <PageHeaderPanel title="Edit product tag" description="Update the product tag name, description, and colour used across marketplace products and resources." />
+          <PageHeaderPanel
+            title="Edit product tag"
+            description="Update the product tag name, description, and colour used across marketplace products and resources."
+            actions={
+              <Button type="button" variant="text" onClick={onCancel} sx={{ textTransform: 'none' }}>
+                Cancel
+              </Button>
+            }
+          />
 
           <Form
-            onSubmit={handleAddClick}
+            onSubmit={() => undefined}
             initialValues={{ name: rootData.productTag.name, description: rootData.productTag.description }}
             validate={validate}
-            render={({ handleSubmit }) => (
-              <FormStackColumn onSubmit={handleSubmit}>
-                <SettingsSectionCard title="Product tag details" description="Keep the product tag label clear for operators applying it across marketplace setup.">
-                  <StackColumn spacing={2}>
-                    <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredFields.name} helperText="Use a short, recognisable product tag name." />
+            render={({ handleSubmit, values }) => {
+              const productTagValues = values as ProductTagDetails;
+              const nextProductTagValues = { ...productTagValues, color: selectedColor };
+              const changedFields = getChangedTagFields(draftProductTagValues.current, nextProductTagValues);
+              if (changedFields.length > 0) {
+                draftProductTagValues.current = nextProductTagValues;
+                debouncedCommitProductTagPatch(changedFields, nextProductTagValues);
+              }
+
+              return (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <SettingsSectionCard title="Product tag details" description="Keep the product tag label clear for operators applying it across marketplace setup.">
+                    <StackColumn spacing={2}>
+                      <FormFieldLabel label="Name">
+                        <TextField name="name" required={requiredFields.name} helperText="Use a short, recognisable product tag name." />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Description">
+                        <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                      </FormFieldLabel>
+                    </StackColumn>
+                  </SettingsSectionCard>
+
+                  <SettingsSectionCard title="Appearance" description="Choose a colour so this product tag is easy to recognise in lists and filters.">
+                    <FormFieldLabel label="Colour">
+                      <ColorPicker onChange={setSelectedColor} defaultColor={rootData.productTag?.color} />
                     </FormFieldLabel>
-
-                    <FormFieldLabel label="Description">
-                      <TextField name="description" required={requiredFields.description} multiline rows={3} />
-                    </FormFieldLabel>
-                  </StackColumn>
-                </SettingsSectionCard>
-
-                <SettingsSectionCard title="Appearance" description="Choose a colour so this product tag is easy to recognise in lists and filters.">
-                  <FormFieldLabel label="Colour">
-                    <ColorPicker onChange={setSelectedColor} defaultColor={rootData.productTag?.color} />
-                  </FormFieldLabel>
-                </SettingsSectionCard>
-
-                <EditorActionBar
-                  secondaryActions={
-                    <Button type="button" variant="text" onClick={onCancel} sx={{ textTransform: 'none' }}>
-                      Cancel
-                    </Button>
-                  }
-                  primaryAction="Save product tag"
-                />
-              </FormStackColumn>
-            )}
+                  </SettingsSectionCard>
+                </FormStackColumn>
+              );
+            }}
           />
         </StackColumn>
 
