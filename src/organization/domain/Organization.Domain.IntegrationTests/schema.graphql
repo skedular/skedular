@@ -686,6 +686,7 @@ type OrganizationTagTypeDetails {
 }
 
 type OrganizationTaxDetails {
+  isRegistered: Boolean!
   taxId: String!
   taxRatePercentage: Decimal!
   id: ID!
@@ -1164,6 +1165,7 @@ input UpdateOrganizationTaxDetailsInput {
   organizationId: String
   organizationCustomDomain: String
   fieldsToUpdate: [OrganizationTaxDetailsPatchField!]!
+  isRegistered: Boolean
   taxId: String
   taxRatePercentage: Decimal
 }
@@ -1477,6 +1479,7 @@ enum OrganizationTagType {
 }
 
 enum OrganizationTaxDetailsPatchField {
+  IS_REGISTERED
   TAX_ID
   TAX_RATE_PERCENTAGE
 }

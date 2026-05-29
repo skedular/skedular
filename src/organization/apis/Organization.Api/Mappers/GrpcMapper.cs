@@ -470,7 +470,13 @@ public class GrpcMapper : IGrpcMapper
     private static TaxDetails? MapToGrpcResponse(OrganizationTaxDetails? src) =>
         src is null
             ? null
-            : new TaxDetails { Id = src.Id, TaxId = src.TaxId.ToSafeString(), TaxRatePercentage = Convert.ToDouble(src.TaxRatePercentage) };
+            : new TaxDetails
+            {
+                Id = src.Id,
+                IsRegistered = src.IsRegistered,
+                TaxId = src.TaxId.ToSafeString(),
+                TaxRatePercentage = Convert.ToDouble(src.TaxRatePercentage)
+            };
 
     private static PhysicalAddress? MapToGrpcResponse(OrganizationPhysicalAddress? src) =>
         src is null

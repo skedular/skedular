@@ -1,4 +1,4 @@
-import { array, object, string } from 'yup';
+import { array, boolean, object, string } from 'yup';
 
 export type OrganizationDetails = {
   customDomain: string | null;
@@ -54,6 +54,7 @@ export type SsoSettingsDetails = {
 };
 
 export type TaxDetails = {
+  isRegistered: boolean;
   taxId: string;
   taxRatePercentage: string;
 };
@@ -112,11 +113,34 @@ export const ssoSettingsSchema = object({
 });
 
 export const taxDetailsSchema = object({
-  taxId: string().required('Tax ID / VAT / GST Number'),
+  isRegistered: boolean().required(),
+  taxId: string().test('tax-id-required-when-registered', 'Tax ID / VAT / GST Number is required.', function (value) {
+    if (!this.parent.isRegistered) {
+      return true;
+    }
+
+    return (value ?? '').trim().length > 0;
+  }),
   taxRatePercentage: string()
-    .matches(/^\d+(\.\d{1,2})?$/, 'Tax rate must be a valid decimal number.')
-    .required('Tax rate is required.')
+    .test('tax-rate-required-when-registered', 'Tax rate is required.', function (value) {
+      if (!this.parent.isRegistered) {
+        return true;
+      }
+
+      return (value ?? '').trim().length > 0;
+    })
+    .test('tax-rate-format', 'Tax rate must be a valid decimal number.', function (value) {
+      if ((value ?? '').trim().length === 0) {
+        return true;
+      }
+
+      return /^\d+(\.\d{1,2})?$/.test(value!);
+    })
     .test('is-greater-than-zero', 'Tax rate must be greater than zero.', function (value) {
+      if ((value ?? '').trim().length === 0) {
+        return true;
+      }
+
       const taxRatePercentage = Number(value);
       if (isNaN(taxRatePercentage)) {
         return true;

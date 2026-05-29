@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f6e0b85920a202e82ea7ce540ae85c2f>>
+ * @generated SignedSource<<cbaaa9c9ba12f0ed53d8faaa3035e050>>
  * @lightSyntaxTransform
  */
 
@@ -16,6 +16,7 @@ export type organizationAdminTaxDetailsSectionQuery$data = {
     readonly id: string;
     readonly name: string;
     readonly taxDetails: {
+      readonly isRegistered: boolean;
       readonly taxId: string;
       readonly taxRatePercentage: any;
     } | null | undefined;
@@ -59,10 +60,17 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "taxId",
+  "name": "isRegistered",
   "storageKey": null
 },
 v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "taxId",
+  "storageKey": null
+},
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -95,7 +103,8 @@ return {
             "plural": false,
             "selections": [
               (v4/*:: as any*/),
-              (v5/*:: as any*/)
+              (v5/*:: as any*/),
+              (v6/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -132,6 +141,7 @@ return {
             "selections": [
               (v4/*:: as any*/),
               (v5/*:: as any*/),
+              (v6/*:: as any*/),
               (v2/*:: as any*/)
             ],
             "storageKey": null
@@ -142,16 +152,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2ce8b35fc90dfe1ab9443c160e87de8d",
+    "cacheID": "ec21de646bcb9da50bcd20085fbb4d98",
     "id": null,
     "metadata": {},
     "name": "organizationAdminTaxDetailsSectionQuery",
     "operationKind": "query",
-    "text": "query organizationAdminTaxDetailsSectionQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n  }\n}\n"
+    "text": "query organizationAdminTaxDetailsSectionQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    taxDetails {\n      isRegistered\n      taxId\n      taxRatePercentage\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "88740e028c75787e669d593eeaec3534";
+(node as any).hash = "63e718a01ef62a1ca201650a9db2af14";
 
 export default node;

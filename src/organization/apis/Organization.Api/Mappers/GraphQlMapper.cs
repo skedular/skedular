@@ -967,6 +967,7 @@ public class GraphQlMapper : IGraphQlMapper
             src.OrganizationId.ToSafeString(),
             src.OrganizationCustomDomain.ToSafeString(),
             src.FieldsToUpdate.ToHashSet(),
+            src.IsRegistered,
             src.TaxId,
             src.TaxRatePercentage);
 
@@ -981,6 +982,7 @@ public class GraphQlMapper : IGraphQlMapper
         Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;
+        dest.IsRegistered = src.IsRegistered;
         dest.TaxId = src.TaxId;
         dest.TaxRatePercentage = src.TaxRatePercentage;
         dest.Organization = organization;
@@ -1491,6 +1493,7 @@ public class GraphQlMapper : IGraphQlMapper
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
+                IsRegistered = src.IsRegistered,
                 TaxId = src.TaxId,
                 TaxRatePercentage = src.TaxRatePercentage
             };
@@ -1553,7 +1556,10 @@ public class GraphQlMapper : IGraphQlMapper
     private static GraphQL.TaxDetails.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>
         src is null
             ? null
-            : new GraphQL.TaxDetails.OrganizationTaxDetails { Id = src.Id, TaxId = src.TaxId, TaxRatePercentage = src.TaxRatePercentage };
+            : new GraphQL.TaxDetails.OrganizationTaxDetails
+            {
+                Id = src.Id, IsRegistered = src.IsRegistered, TaxId = src.TaxId, TaxRatePercentage = src.TaxRatePercentage
+            };
 
     private static OrganizationXeroConnection? MapTo(Shared.Database.Entities.OrganizationXeroConnection? src) =>
         src is null

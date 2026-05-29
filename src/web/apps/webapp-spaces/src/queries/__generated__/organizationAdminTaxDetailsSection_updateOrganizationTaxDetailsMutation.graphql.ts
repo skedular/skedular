@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6cda2dbb95e2aba73684feffc4a74943>>
+ * @generated SignedSource<<dfc78bfb82feda8cf64f25c16b741fa7>>
  * @lightSyntaxTransform
  */
 
@@ -8,10 +8,11 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type OrganizationTaxDetailsPatchField = "TAX_ID" | "TAX_RATE_PERCENTAGE" | "%future added value";
+export type OrganizationTaxDetailsPatchField = "IS_REGISTERED" | "TAX_ID" | "TAX_RATE_PERCENTAGE" | "%future added value";
 export type UpdateOrganizationTaxDetailsInput = {
   clientMutationId?: string | null | undefined;
   fieldsToUpdate: ReadonlyArray<OrganizationTaxDetailsPatchField>;
+  isRegistered?: boolean | null | undefined;
   organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
   taxId?: string | null | undefined;
@@ -25,6 +26,7 @@ export type organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutat
     readonly organization: {
       readonly id: string;
       readonly taxDetails: {
+        readonly isRegistered: boolean;
         readonly taxId: string;
         readonly taxRatePercentage: any;
       } | null | undefined;
@@ -37,6 +39,7 @@ export type organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutat
       readonly id: string;
       readonly taxDetails: {
         readonly id: string;
+        readonly isRegistered: boolean;
         readonly taxId: string;
         readonly taxRatePercentage: any;
       } | null | undefined;
@@ -75,10 +78,17 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "taxId",
+  "name": "isRegistered",
   "storageKey": null
 },
 v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "taxId",
+  "storageKey": null
+},
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -118,7 +128,8 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*:: as any*/),
-                  (v4/*:: as any*/)
+                  (v4/*:: as any*/),
+                  (v5/*:: as any*/)
                 ],
                 "storageKey": null
               }
@@ -165,6 +176,7 @@ return {
                 "selections": [
                   (v3/*:: as any*/),
                   (v4/*:: as any*/),
+                  (v5/*:: as any*/),
                   (v2/*:: as any*/)
                 ],
                 "storageKey": null
@@ -178,16 +190,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "88114606545b20b34ca81cc49921db62",
+    "cacheID": "54f4740ef10258dd0b0ebdf5ee5afc3b",
     "id": null,
     "metadata": {},
     "name": "organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation(\n  $input: UpdateOrganizationTaxDetailsInput!\n) {\n  updateOrganizationTaxDetails(input: $input) {\n    organization {\n      id\n      taxDetails {\n        taxId\n        taxRatePercentage\n        id\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdminTaxDetailsSection_updateOrganizationTaxDetailsMutation(\n  $input: UpdateOrganizationTaxDetailsInput!\n) {\n  updateOrganizationTaxDetails(input: $input) {\n    organization {\n      id\n      taxDetails {\n        isRegistered\n        taxId\n        taxRatePercentage\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1ba115004f237dfff079038cf7ec5060";
+(node as any).hash = "994753b793d1b3ae14ab924613bcdebe";
 
 export default node;

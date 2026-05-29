@@ -48,14 +48,14 @@ public class OrganizationTaxDetailsService(
         bool changed;
         if (organization.OrganizationTaxDetails is null)
         {
-            if (string.IsNullOrWhiteSpace(request.TaxId) || request.TaxRatePercentage is null)
-            {
-                throw new ArgumentException("Tax ID and tax rate are required when creating organisation tax details.", nameof(request));
-            }
+            ValidateEffectiveRegistrationState(request, null);
 
             var taxDetails = new Shared.Models.OrganizationTaxDetails
             {
-                Id = randomHelper.Generate(), TaxId = request.TaxId, TaxRatePercentage = request.TaxRatePercentage.Value
+                Id = randomHelper.Generate(),
+                IsRegistered = request.IsRegistered ?? false,
+                TaxId = request.TaxId ?? string.Empty,
+                TaxRatePercentage = request.TaxRatePercentage ?? 0
             };
             organization.OrganizationTaxDetails =
                 repositoryFactory.OrganizationTaxDetailsRepository.Add(graphQlMapper.MapToEntity(taxDetails, organization));
@@ -63,6 +63,7 @@ public class OrganizationTaxDetailsService(
         }
         else
         {
+            ValidateEffectiveRegistrationState(request, organization.OrganizationTaxDetails);
             changed = ApplyPatch(request, organization.OrganizationTaxDetails);
             if (changed)
             {
@@ -141,25 +142,57 @@ public class OrganizationTaxDetailsService(
             }
         }
 
-        if (request.FieldsToUpdate.Contains(OrganizationTaxDetailsPatchField.TaxId) && string.IsNullOrWhiteSpace(request.TaxId))
+        if (request.FieldsToUpdate.Contains(OrganizationTaxDetailsPatchField.IsRegistered) && request.IsRegistered is null)
         {
-            throw new ArgumentException("Organisation tax ID is required.", nameof(request));
+            throw new ArgumentException("Organisation tax registration state is required.", nameof(request));
+        }
+    }
+
+    private static void ValidateEffectiveRegistrationState(
+        OrganizationTaxDetailsPatchRequest request,
+        OrganizationTaxDetails? currentTaxDetails)
+    {
+        var isRegistered = request.FieldsToUpdate.Contains(OrganizationTaxDetailsPatchField.IsRegistered)
+            ? request.IsRegistered!.Value
+            : currentTaxDetails?.IsRegistered ?? false;
+        if (!isRegistered)
+        {
+            return;
         }
 
-        if (request.FieldsToUpdate.Contains(OrganizationTaxDetailsPatchField.TaxRatePercentage) && request.TaxRatePercentage is null)
+        var taxId = request.FieldsToUpdate.Contains(OrganizationTaxDetailsPatchField.TaxId)
+            ? request.TaxId
+            : currentTaxDetails?.TaxId;
+        var taxRatePercentage = request.FieldsToUpdate.Contains(OrganizationTaxDetailsPatchField.TaxRatePercentage)
+            ? request.TaxRatePercentage
+            : currentTaxDetails?.TaxRatePercentage;
+
+        if (string.IsNullOrWhiteSpace(taxId) || taxRatePercentage is null or <= 0)
         {
-            throw new ArgumentException("Organisation tax rate is required.", nameof(request));
+            throw new ArgumentException("Tax ID and tax rate are required when organisation tax details are registered.", nameof(request));
         }
     }
 
     private static bool ApplyPatch(OrganizationTaxDetailsPatchRequest request, OrganizationTaxDetails taxDetails) =>
         request.FieldsToUpdate.Aggregate(false, (current, field) => field switch
         {
-            OrganizationTaxDetailsPatchField.TaxId => ApplyTaxIdPatch(request.TaxId!, taxDetails) || current,
+            OrganizationTaxDetailsPatchField.IsRegistered => ApplyIsRegisteredPatch(request.IsRegistered!.Value, taxDetails) || current,
+            OrganizationTaxDetailsPatchField.TaxId => ApplyTaxIdPatch(request.TaxId ?? string.Empty, taxDetails) || current,
             OrganizationTaxDetailsPatchField.TaxRatePercentage =>
-                ApplyTaxRatePercentagePatch(request.TaxRatePercentage!.Value, taxDetails) || current,
+                ApplyTaxRatePercentagePatch(request.TaxRatePercentage ?? 0, taxDetails) || current,
             _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation tax details patch field is not supported.")
         });
+
+    private static bool ApplyIsRegisteredPatch(bool isRegistered, OrganizationTaxDetails taxDetails)
+    {
+        if (taxDetails.IsRegistered == isRegistered)
+        {
+            return false;
+        }
+
+        taxDetails.IsRegistered = isRegistered;
+        return true;
+    }
 
     private static bool ApplyTaxIdPatch(string taxId, OrganizationTaxDetails taxDetails)
     {

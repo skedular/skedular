@@ -303,6 +303,7 @@ message TaxDetails {
   string id                = 1;
   string taxId             = 2;
   double taxRatePercentage = 3;
+  bool   isRegistered      = 4;
 }
 
 message PhysicalAddress {

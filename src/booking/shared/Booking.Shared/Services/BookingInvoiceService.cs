@@ -250,7 +250,7 @@ public class BookingInvoiceService(
                     }
 
                     var taxDetails = organization.TaxDetails;
-                    if (taxDetails is not null)
+                    if (IsRegisteredForTax(taxDetails))
                     {
                         column.Item().Text(string.Empty);
                         column.Item().Text("GST Number").SemiBold().FontSize(13);
@@ -338,6 +338,9 @@ public class BookingInvoiceService(
         protected abstract decimal GetTaxAmount();
         protected abstract decimal GetTaxRatePercentage();
         protected abstract decimal GetTotalAmount();
+
+        protected static bool IsRegisteredForTax(TaxDetails? taxDetails) =>
+            taxDetails is { IsRegistered: true };
     }
 
     private class BookingInvoiceDocument(
@@ -505,7 +508,7 @@ public class BookingInvoiceService(
             }
 
             var totalPrice = billingDefinition.InvoiceAmount.RoundedDecimal();
-            if (Organization.TaxDetails is null)
+            if (!IsRegisteredForTax(Organization.TaxDetails))
             {
                 return (totalPrice, 0.00m, 0.00m, totalPrice);
             }

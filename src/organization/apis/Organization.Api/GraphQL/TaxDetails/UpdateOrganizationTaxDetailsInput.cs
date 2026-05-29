@@ -14,6 +14,7 @@ public class UpdateOrganizationTaxDetailsInput
 
     [GraphQLName("fieldsToUpdate")] public IEnumerable<OrganizationTaxDetailsPatchField> FieldsToUpdate { get; set; } = [];
 
+    [GraphQLName("isRegistered")] public bool? IsRegistered { get; set; }
     [GraphQLName("taxId")] public string? TaxId { get; set; }
     [GraphQLName("taxRatePercentage")] public decimal? TaxRatePercentage { get; set; }
 }

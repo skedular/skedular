@@ -7,10 +7,19 @@ import OrganizationAdminTaxDetailsSection from './organization-admin-tax-details
 const patchCommit = vi.fn();
 const removeCommit = vi.fn();
 
-const organization = {
+let organization: {
+  id: string;
+  name: string;
+  taxDetails: {
+    isRegistered: boolean;
+    taxId: string;
+    taxRatePercentage: string;
+  } | null;
+} = {
   id: 'org-1',
   name: 'Acme',
   taxDetails: {
+    isRegistered: false,
     taxId: 'NZ123',
     taxRatePercentage: '15',
   },
@@ -54,8 +63,32 @@ vi.mock('mui-rff', async () => {
 
   return {
     makeRequired: () => ({}),
-    makeValidate: () => () => ({}),
-    TextField: ({ name }: { name: string }) => <Field name={name}>{({ input }) => <input aria-label={labels[name] ?? name} {...input} />}</Field>,
+    makeValidate: () => (values: { isRegistered?: boolean; taxId?: string; taxRatePercentage?: string }) => ({
+      ...(values.isRegistered && !values.taxId ? { taxId: 'Tax ID / VAT / GST Number is required.' } : {}),
+      ...(values.isRegistered && !values.taxRatePercentage ? { taxRatePercentage: 'Tax rate is required.' } : {}),
+    }),
+    showErrorOnChange: ({ meta }: { meta: { error?: string; touched?: boolean; modified?: boolean } }) => Boolean(meta.error && (meta.touched || meta.modified)),
+    TextField: ({
+      name,
+      showError,
+      error,
+      helperText,
+    }: {
+      name: string;
+      showError?: (props: { meta: { error?: string; touched?: boolean; modified?: boolean } }) => boolean;
+      error?: boolean;
+      helperText?: string;
+    }) => (
+      <Field name={name}>
+        {({ input, meta }) => (
+          <>
+            <input aria-label={labels[name] ?? name} {...input} />
+            {error && helperText && <span>{helperText}</span>}
+            {!error && showError?.({ meta }) && meta.error && <span>{meta.error}</span>}
+          </>
+        )}
+      </Field>
+    ),
   };
 });
 
@@ -76,35 +109,142 @@ vi.mock('react-relay', () => ({
 describe('OrganizationAdminTaxDetailsSection', () => {
   beforeEach(() => {
     vi.useFakeTimers();
+    organization = {
+      id: 'org-1',
+      name: 'Acme',
+      taxDetails: {
+        isRegistered: false,
+        taxId: 'NZ123',
+        taxRatePercentage: '15',
+      },
+    };
     patchCommit.mockReset();
     removeCommit.mockReset();
   });
 
-  it('recreates existing tax details when the autosave switch is re-enabled', async () => {
+  it('autosaves the tax registration state when tax details are valid', async () => {
     render(<OrganizationAdminTaxDetailsSection organizationCustomDomain="acme" />);
 
     await act(async () => {
       fireEvent.click(screen.getByRole('switch', { name: 'Is this business registered for tax (GST/VAT)?' }));
-    });
-    await act(async () => {
-      fireEvent.click(screen.getByRole('switch', { name: 'Is this business registered for tax (GST/VAT)?' }));
+      vi.advanceTimersByTime(1000);
     });
 
-    expect(removeCommit).toHaveBeenCalledTimes(1);
     expect(patchCommit).toHaveBeenCalledTimes(1);
     expect(patchCommit.mock.calls[0][0].variables.input).toMatchObject({
       organizationCustomDomain: 'acme',
-      fieldsToUpdate: ['TAX_ID', 'TAX_RATE_PERCENTAGE'],
+      fieldsToUpdate: ['IS_REGISTERED'],
+      isRegistered: true,
       taxId: 'NZ123',
       taxRatePercentage: 15,
     });
   });
 
-  it('shows the tax fields without a manual update button', () => {
+  it('keeps tax registration off and shows validation when required details are missing', async () => {
+    organization = {
+      id: 'org-1',
+      name: 'Acme',
+      taxDetails: null,
+    };
+
     render(<OrganizationAdminTaxDetailsSection organizationCustomDomain="acme" />);
 
+    await act(async () => {
+      fireEvent.click(screen.getByRole('switch', { name: 'Is this business registered for tax (GST/VAT)?' }));
+      vi.advanceTimersByTime(1000);
+    });
+
+    expect(screen.getByRole('switch', { name: 'Is this business registered for tax (GST/VAT)?' })).not.toBeChecked();
+    expect(screen.getByText('Tax ID / VAT / GST Number is required.')).toBeInTheDocument();
+    expect(screen.getByText('Tax rate is required.')).toBeInTheDocument();
+    expect(patchCommit).not.toHaveBeenCalled();
+  });
+
+  it('autosaves partial tax details when the organization is not registered for tax', async () => {
+    organization = {
+      id: 'org-1',
+      name: 'Acme',
+      taxDetails: null,
+    };
+
+    render(<OrganizationAdminTaxDetailsSection organizationCustomDomain="acme" />);
+
+    await act(async () => {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Tax ID / VAT / GST Number' }), { target: { value: 'NZ456' } });
+      vi.advanceTimersByTime(1000);
+    });
+
+    expect(screen.queryByText('Tax rate is required.')).not.toBeInTheDocument();
+    expect(patchCommit).toHaveBeenCalledTimes(1);
+    expect(patchCommit.mock.calls[0][0].variables.input).toMatchObject({
+      organizationCustomDomain: 'acme',
+      fieldsToUpdate: ['TAX_ID'],
+      isRegistered: false,
+      taxId: 'NZ456',
+      taxRatePercentage: null,
+    });
+  });
+
+  it('autosaves an empty tax rate when the organization is not registered for tax', async () => {
+    render(<OrganizationAdminTaxDetailsSection organizationCustomDomain="acme" />);
+
+    await act(async () => {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Tax Rate (%)' }), { target: { value: '' } });
+      vi.advanceTimersByTime(1000);
+    });
+
+    expect(screen.queryByText('Tax rate is required.')).not.toBeInTheDocument();
+    expect(patchCommit).toHaveBeenCalledTimes(1);
+    expect(patchCommit.mock.calls[0][0].variables.input).toMatchObject({
+      organizationCustomDomain: 'acme',
+      fieldsToUpdate: ['TAX_RATE_PERCENTAGE'],
+      isRegistered: false,
+      taxId: 'NZ123',
+      taxRatePercentage: null,
+    });
+    expect(patchCommit.mock.calls[0][0].optimisticResponse.updateOrganizationTaxDetails.organization.taxDetails.taxRatePercentage).toBe('');
+  });
+
+  it('displays a zero tax rate as empty', () => {
+    organization = {
+      id: 'org-1',
+      name: 'Acme',
+      taxDetails: {
+        isRegistered: false,
+        taxId: 'NZ123',
+        taxRatePercentage: '0',
+      },
+    };
+
+    render(<OrganizationAdminTaxDetailsSection organizationCustomDomain="acme" />);
+
+    expect(screen.getByRole('textbox', { name: 'Tax Rate (%)' })).toHaveValue('');
+  });
+
+  it('autosaves tax detail fields without a manual update button', async () => {
+    render(<OrganizationAdminTaxDetailsSection organizationCustomDomain="acme" />);
+
+    await act(async () => {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Tax ID / VAT / GST Number' }), { target: { value: 'NZ456' } });
+      vi.advanceTimersByTime(1000);
+    });
+
+    expect(patchCommit).toHaveBeenCalledTimes(1);
+    expect(patchCommit.mock.calls[0][0].variables.input).toMatchObject({
+      organizationCustomDomain: 'acme',
+      fieldsToUpdate: ['TAX_ID'],
+      isRegistered: false,
+      taxId: 'NZ456',
+      taxRatePercentage: 15,
+    });
+    expect(screen.queryByRole('button', { name: 'Update' })).not.toBeInTheDocument();
+  });
+
+  it('shows all tax fields', () => {
+    render(<OrganizationAdminTaxDetailsSection organizationCustomDomain="acme" />);
+
+    expect(screen.getByRole('switch', { name: 'Is this business registered for tax (GST/VAT)?' })).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Tax ID / VAT / GST Number' })).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Tax Rate (%)' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Update' })).not.toBeInTheDocument();
   });
 });

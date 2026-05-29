@@ -2724,6 +2724,7 @@ type OrganizationTagTypeDetails @fusion__type(schema: ORGANIZATION_API) {
 
 type OrganizationTaxDetails @fusion__type(schema: ORGANIZATION_API) {
   id: ID! @fusion__field(schema: ORGANIZATION_API)
+  isRegistered: Boolean! @fusion__field(schema: ORGANIZATION_API)
   taxId: String! @fusion__field(schema: ORGANIZATION_API)
   taxRatePercentage: Decimal! @fusion__field(schema: ORGANIZATION_API)
 }
@@ -4765,6 +4766,7 @@ input UpdateOrganizationTagInput @fusion__type(schema: ORGANIZATION_API) {
 input UpdateOrganizationTaxDetailsInput @fusion__type(schema: ORGANIZATION_API) {
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
   fieldsToUpdate: [OrganizationTaxDetailsPatchField!]! @fusion__inputField(schema: ORGANIZATION_API)
+  isRegistered: Boolean @fusion__inputField(schema: ORGANIZATION_API)
   organizationCustomDomain: String @fusion__inputField(schema: ORGANIZATION_API)
   organizationId: String @fusion__inputField(schema: ORGANIZATION_API)
   taxId: String @fusion__inputField(schema: ORGANIZATION_API)
@@ -6302,6 +6304,7 @@ enum OrganizationTagType
 }
 
 enum OrganizationTaxDetailsPatchField @fusion__type(schema: ORGANIZATION_API) {
+  IS_REGISTERED @fusion__enumValue(schema: ORGANIZATION_API)
   TAX_ID @fusion__enumValue(schema: ORGANIZATION_API)
   TAX_RATE_PERCENTAGE @fusion__enumValue(schema: ORGANIZATION_API)
 }

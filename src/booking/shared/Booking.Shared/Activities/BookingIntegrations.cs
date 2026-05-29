@@ -78,7 +78,7 @@ public class BookingIntegrations(
 
         marketplaceBooking.Currency = marketplaceBooking.ProductVersion.Currency;
 
-        if (organization.TaxDetails is null)
+        if (!IsRegisteredForTax(organization.TaxDetails))
         {
             marketplaceBooking.TotalAmountExcludeTax = totalPrice;
             marketplaceBooking.TaxAmount = 0.00m;
@@ -157,7 +157,7 @@ public class BookingIntegrations(
             }
         }
 
-        if (organization.TaxDetails is null)
+        if (!IsRegisteredForTax(organization.TaxDetails))
         {
             marketplaceBooking.TotalAmountExcludeTax = totalPrice;
             marketplaceBooking.TaxAmount = 0.00m;
@@ -232,4 +232,7 @@ public class BookingIntegrations(
 
         await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
     }
+
+    private static bool IsRegisteredForTax(TaxDetails? taxDetails) =>
+        taxDetails is { IsRegistered: true };
 }

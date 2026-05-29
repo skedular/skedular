@@ -9,6 +9,7 @@ namespace Organization.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class OrganizationTaxDetails : EntityBase
 {
+    public bool IsRegistered { get; set; } = true;
     public string TaxId { get; set; }
     public decimal TaxRatePercentage { get; set; }
 
@@ -24,6 +25,7 @@ public class OrganizationTaxDetailsConfiguration : IEntityTypeConfiguration<Orga
     {
         builder.ConfigureEntityBase();
 
+        builder.Property(item => item.IsRegistered).HasDefaultValue(true);
         builder.Property(item => item.TaxId).HasMaxLength(Constants.MaxTaxDetailsTaxIdLength);
         builder.Property(item => item.TaxRatePercentage).HasColumnType("DECIMAL(5,2)");
 
@@ -31,5 +33,7 @@ public class OrganizationTaxDetailsConfiguration : IEntityTypeConfiguration<Orga
             .HasOne(item => item.Organization)
             .WithOne(item => item.OrganizationTaxDetails)
             .HasForeignKey<OrganizationTaxDetails>(item => item.OrganizationId);
+
+        builder.HasIndex(item => item.IsRegistered);
     }
 }
