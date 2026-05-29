@@ -1,5 +1,4 @@
 import { NewBankAccountButton } from '@/components/bankAccount/addBankAccount';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { BillingIcon, DeleteIcon } from '@/components/icons';
 import { getOrganizationAdminEditProductTagBaseLink, getOrganizationBankAccountBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
@@ -16,9 +15,6 @@ import OrganizationMarketplaceStripeConnectAccountManagementList from '@/compone
 import { ProductTag } from '@/components/productTag';
 import { Search } from '@/components/search';
 import { ExistingStripeConnectAccountButton, NewStripeConnectAccountButton } from '@/components/stripeConnectAccount/addStripeConnectAccount';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteProductTagsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductTagsMutation.graphql';
@@ -34,20 +30,34 @@ import type { organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMu
 import type { organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation.graphql';
 import type {
   OrganizationBillingCycle,
-  OrganizationPatchField,
   organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation,
+  OrganizationPatchField,
 } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation.graphql';
 import type { organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation.graphql';
 import type {
-  OrganizationXeroConnectionPatchField,
   organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation,
   OrganizationXeroBillingMode,
+  OrganizationXeroConnectionPatchField,
 } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import { PageHeaderPanel } from '@skedular/ui';
+import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  defaultButtonStyle,
+  defaultPadding,
+  FormFieldLabel,
+  FormStackColumn,
+  GridContainer,
+  PageHeaderPanel,
+  PushToRight,
+  SectionIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -1022,8 +1032,6 @@ const OrganizationMarketplaceSetup = ({
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating Xero settings for ${organization.name}...`} />, infoNotificationOptions);
-
     commitUpdateOrganizationXeroConnectionPatch({
       variables: {
         input: {
@@ -1043,26 +1051,16 @@ const OrganizationMarketplaceSetup = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update Xero settings. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to update Xero settings. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Xero settings updated for ${organization.name}.`} />,
-        });
         clearTransientXeroQueryParams();
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update Xero settings. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to update Xero settings. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -1306,8 +1304,6 @@ const OrganizationMarketplaceSetup = ({
         return;
       }
 
-      const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' marketplace listing...`} />, infoNotificationOptions);
-
       commitUpdateOrganizationPatchMarketplaceListingMetadata({
         variables: {
           input: {
@@ -1324,24 +1320,19 @@ const OrganizationMarketplaceSetup = ({
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to update organization '${organization?.name}' marketplace listing. Error: ${getRelayErrorMessage(errors)}.`} />,
-            });
+            themedToast(
+              <NotificationContent content={`Failed to update organization '${organization?.name}' marketplace listing. Error: ${getRelayErrorMessage(errors)}.`} />,
+              errorNotificationOptions,
+            );
 
             return;
           }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`Organization ${organization?.name} marketplace listing updated.`} />,
-          });
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' marketplace listing. Error: ${error.message}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to update organization '${organization?.name}' marketplace listing. Error: ${error.message}.`} />,
+            errorNotificationOptions,
+          );
         },
         optimisticResponse: {
           updateOrganization: {
@@ -1387,8 +1378,6 @@ const OrganizationMarketplaceSetup = ({
         return;
       }
 
-      const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing settings...`} />, infoNotificationOptions);
-
       commitUpdateOrganizationPatchBillingSettings({
         variables: {
           input: {
@@ -1401,24 +1390,19 @@ const OrganizationMarketplaceSetup = ({
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing settings. Error: ${getRelayErrorMessage(errors)}.`} />,
-            });
+            themedToast(
+              <NotificationContent content={`Failed to update organization '${organization?.name}' billing settings. Error: ${getRelayErrorMessage(errors)}.`} />,
+              errorNotificationOptions,
+            );
 
             return;
           }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`Organization ${organization?.name} billing settings updated.`} />,
-          });
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing settings. Error: ${error.message}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to update organization '${organization?.name}' billing settings. Error: ${error.message}.`} />,
+            errorNotificationOptions,
+          );
         },
         optimisticResponse: {
           updateOrganization: {

@@ -1,4 +1,3 @@
-import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { getOrganizationBookingsBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -7,9 +6,6 @@ import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/
 import OrganizationUserManagementList from '@/components/organization/organizationUsers/organization-user-management-list';
 import { RelayError, toRootError } from '@/components/relayError';
 import { Search } from '@/components/search';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { defaultPadding } from '@skedular/ui';
-import { getCustomerFullName, getRelayErrorMessage } from '@skedular/shared';
 import type { organizationUsers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationMemberRoleMutation.graphql';
 import type { organizationUsers_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationUsersStatusMutation.graphql';
 import type { OrganizationMemberRole, organizationUsers_organizationMembers_query$key } from '@/queries/__generated__/organizationUsers_organizationMembers_query.graphql';
@@ -19,7 +15,8 @@ import type { organizationUsers_rootQuery } from '@/queries/__generated__/organi
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { PageHeaderPanel, SettingsSectionCard } from '@skedular/ui';
+import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { BodyIconTypography, defaultPadding, PageHeaderPanel, SettingsSectionCard, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -495,8 +492,6 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
 
     const role = roleStr as unknown as OrganizationMemberRole;
     const roleName = organizationMemberRoleNameByType.get(role) ?? role;
-    const toastId = themedToast(<NotificationContent content={`Updating role...`} />, infoNotificationOptions);
-
     commitChangeOrganizationMemberRole({
       variables: {
         input: {
@@ -507,24 +502,13 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't change this user's role to ${roleName}. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't change this user's role to ${roleName}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`This user's role has been updated to ${roleName}.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't change this user's role to ${roleName}. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't change this user's role to ${roleName}. ${error.message}`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         changeOrganizationMemberRole: {

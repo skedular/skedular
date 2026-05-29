@@ -1,7 +1,7 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
-import { errorNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
 import type { mySettings_rootQuery } from '@/queries/__generated__/mySettings_rootQuery.graphql';
@@ -185,8 +185,6 @@ const MySettings = ({ queryReference }: Props) => {
             themedToast(<NotificationContent content={`We couldn't update your profile details. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
             return;
           }
-
-          themedToast(<NotificationContent content="Profile details saved." />, successNotificationOptions);
         },
         onError: (error) => {
           submittedProfileValues.current = previousValues;

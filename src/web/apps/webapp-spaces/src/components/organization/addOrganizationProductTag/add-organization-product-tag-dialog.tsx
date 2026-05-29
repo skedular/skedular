@@ -1,3 +1,8 @@
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
+import type { addOrganizationProductTagDialog_addProductTagMutation } from '@/queries/__generated__/addOrganizationProductTagDialog_addProductTagMutation.graphql';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
 import {
   ColorPicker,
   EditorActionBar,
@@ -9,12 +14,6 @@ import {
   StackColumn,
   StickyReviewRail,
 } from '@skedular/ui';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
-import type { addOrganizationProductTagDialog_addProductTagMutation } from '@/queries/__generated__/addOrganizationProductTagDialog_addProductTagMutation.graphql';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -66,7 +65,6 @@ const AddOrganizationProductTagPageComponent = ({ organizationCustomDomain, conn
 
   const handleAddClick = ({ name, description }: ProductTagDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding product tag '${name}'...`} />, infoNotificationOptions);
 
     commitAddProductTag({
       variables: {
@@ -82,26 +80,15 @@ const AddOrganizationProductTagPageComponent = ({ organizationCustomDomain, conn
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't add the product tag '${name}'. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't add the product tag '${name}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`The product tag '${name}' has been added.`} />,
-        });
-
         onAddClicked();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't add the product tag '${name}'. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't add the product tag '${name}'. ${error.message}`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addProductTag: {

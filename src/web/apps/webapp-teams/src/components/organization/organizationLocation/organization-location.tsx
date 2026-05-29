@@ -925,7 +925,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
 
     const physicalAddress = location.physicalAddress;
     if (physicalAddress) {
-      const toastId = themedToast(<NotificationContent content={`Updating location '${location.name}' physical address...`} />, infoNotificationOptions);
       commitUpdateLocationPhysicalAddress({
         variables: {
           input: {
@@ -950,23 +949,15 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to update location '${location.name}' physical address. Error: ${getRelayErrorMessage(errors)}.`} />,
-            });
+            themedToast(
+              <NotificationContent content={`Failed to update location '${location.name}' physical address. Error: ${getRelayErrorMessage(errors)}.`} />,
+              errorNotificationOptions,
+            );
             return;
           }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`Location '${location.name}' physical address updated.`} />,
-          });
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update location '${location.name}' physical address. Error: ${error.message}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to update location '${location.name}' physical address. Error: ${error.message}.`} />, errorNotificationOptions);
         },
         optimisticResponse: {
           updateLocationPhysicalAddress: {
@@ -997,7 +988,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     }
 
     const newAddressId = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding location '${location.name}' physical address...`} />, infoNotificationOptions);
     commitAddLocationPhysicalAddress({
       variables: {
         input: {
@@ -1022,23 +1012,15 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add location '${location.name}' physical address. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to add location '${location.name}' physical address. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${location.name}' physical address added.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add location '${location.name}' physical address. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to add location '${location.name}' physical address. Error: ${error.message}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addLocationPhysicalAddress: {
@@ -1068,7 +1050,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   }
 
   const handleLocationOpeningHoursUpdateClick = (weekOpeningHours: WeekOpeningHoursDetails) => {
-    const toastId = themedToast(<NotificationContent content={`Updating location '${location.name}' opening hours...`} />, infoNotificationOptions);
     commitUpdateLocationOpeningHours({
       variables: {
         input: {
@@ -1080,23 +1061,15 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update location '${location.name}' opening hours. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to update location '${location.name}' opening hours. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location ${location.name} opening hours updated.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update location '${location.name}' opening hours. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to update location '${location.name}' opening hours. Error: ${error.message}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         updateLocationOpeningHours: {
@@ -1112,7 +1085,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   };
 
   const handleAddRestrictedInformationClick = ({ title, category, content, active, sortOrder }: RestrictedInformationDetails) => {
-    const toastId = themedToast(<NotificationContent content={`Adding restricted information for '${location.name}'...`} />, infoNotificationOptions);
     commitAddLocationRestrictedInformation({
       variables: {
         input: {
@@ -1127,24 +1099,13 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add restricted information. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to add restricted information. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content="Restricted information added." />,
-        });
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add restricted information. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to add restricted information. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -1158,7 +1119,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content="Updating restricted information..." />, infoNotificationOptions);
     commitUpdateLocationRestrictedInformation({
       variables: {
         input: {
@@ -1174,24 +1134,13 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update restricted information. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to update restricted information. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content="Restricted information updated." />,
-        });
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update restricted information. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to update restricted information. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   }

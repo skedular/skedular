@@ -1,4 +1,4 @@
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
 import ResourceEditSectionNav, { ResourceEditSection } from '@/components/resource/editResource/resource-edit-section-nav';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
@@ -526,8 +526,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating hours for '${resource.name}'...`} />, infoNotificationOptions);
-
     commitUpdateLocationResourceAvailableHours({
       variables: {
         input: {
@@ -540,24 +538,13 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update the hours for '${resource?.name}'. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't update the hours for '${resource?.name}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Hours for '${resource.name}' have been updated.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update the hours for '${resource?.name}'. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't update the hours for '${resource?.name}'. ${error.message}`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         updateLocationResourceAvailableHours: {
@@ -592,8 +579,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating hours for '${resource.name}'...`} />, infoNotificationOptions);
-
     commitUpdateLocationResourceAvailableHours({
       variables: {
         input: {
@@ -606,24 +591,13 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update the hours for '${resource?.name}'. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't update the hours for '${resource?.name}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Hours for '${resource.name}' have been updated.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update the hours for '${resource?.name}'. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't update the hours for '${resource?.name}'. ${error.message}`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         updateLocationResourceAvailableHours: {

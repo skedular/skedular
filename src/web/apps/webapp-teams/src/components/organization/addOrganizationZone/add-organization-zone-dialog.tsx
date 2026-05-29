@@ -1,3 +1,8 @@
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
+import type { addOrganizationZoneDialog_addZoneMutation } from '@/queries/__generated__/addOrganizationZoneDialog_addZoneMutation.graphql';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
 import {
   ColorPicker,
   EditorActionBar,
@@ -9,12 +14,6 @@ import {
   StackColumn,
   StickyReviewRail,
 } from '@skedular/ui';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
-import type { addOrganizationZoneDialog_addZoneMutation } from '@/queries/__generated__/addOrganizationZoneDialog_addZoneMutation.graphql';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -66,7 +65,6 @@ const AddOrganizationZonePageComponent = ({ organizationCustomDomain, connection
 
   const handleAddClick = ({ name, description }: ZoneDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding zone '${name}'...`} />, infoNotificationOptions);
 
     commitAddZone({
       variables: {
@@ -82,26 +80,15 @@ const AddOrganizationZonePageComponent = ({ organizationCustomDomain, connection
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add zone '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to add zone '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Zone ${name} added.`} />,
-        });
-
         onAddClicked();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add zone '${name}'. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to add zone '${name}'. Error: ${error.message}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addZone: {

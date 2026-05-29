@@ -719,8 +719,6 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
 
     const role = roleStr as unknown as TeamMemberRole;
     const roleName = teamMemberRoleNameByType.get(role) ?? role;
-    const toastId = themedToast(<NotificationContent content={`Updating role...`} />, infoNotificationOptions);
-
     commitChangeTeamMemberRole({
       variables: {
         input: {
@@ -731,24 +729,13 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't change this team member's role to ${roleName}. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't change this team member's role to ${roleName}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`This team member's role has been updated to ${roleName}.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't change this team member's role to ${roleName}. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't change this team member's role to ${roleName}. ${error.message}`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         changeTeamMemberRole: {

@@ -200,7 +200,6 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
 
   const handleUpgradeOfferingClick = (code: string) => {
     const name = organization.name;
-    const toastId = themedToast(<NotificationContent content={`Updating the active plan for organization '${name}'...`} />, infoNotificationOptions);
 
     commitUpdateOrganizationOfferingPatch({
       variables: {
@@ -213,25 +212,15 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update the active plan for organization '${name}'. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't update the active plan for organization '${name}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           onReloadRequired();
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`The active plan for organization '${name}' has been updated.`} />,
-        });
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update the active plan for organization '${name}'. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't update the active plan for organization '${name}'. ${error.message}`} />, errorNotificationOptions);
         onReloadRequired();
       },
     });

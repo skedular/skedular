@@ -13,7 +13,8 @@ describe('my settings autosave', () => {
   it('shows saved-state and failed-state feedback for profile detail edits', () => {
     const source = readFileSync(resolve(process.cwd(), 'src/components/mySettings/my-settings.tsx'), 'utf8');
 
-    expect(source).toContain('successNotificationOptions');
+    expect(source).not.toContain('successNotificationOptions');
     expect(source).toContain('errorNotificationOptions');
+    expect(source).not.toContain('Profile details saved.');
   });
 });

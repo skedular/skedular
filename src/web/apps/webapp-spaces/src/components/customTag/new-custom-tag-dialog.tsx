@@ -1,11 +1,10 @@
-import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@skedular/ui';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { newCustomTagDialog_addCustomTagMutation } from '@/queries/__generated__/newCustomTagDialog_addCustomTagMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -58,7 +57,6 @@ const NewCustomTagDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCance
 
   const handleAddClick = ({ name, description }: CustomTagDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding tag '${name}'...`} />, infoNotificationOptions);
 
     commitAddCustomTag({
       variables: {
@@ -74,26 +72,15 @@ const NewCustomTagDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCance
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add tag '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to add tag '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Tag ${name} added.`} />,
-        });
-
         onAddClicked();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add tag '${name}'. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to add tag '${name}'. Error: ${error.message}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addCustomTag: {
