@@ -1,8 +1,8 @@
-import { NoOrganizationLandingContent, NoOrganizationLandingPageRootQuery } from '@/components/noOrganizationLanding';
-import type { noOrganizationLandingPage_rootQuery } from '@/queries/__generated__/noOrganizationLandingPage_rootQuery.graphql';
-import { NoOrganizationRootShell } from '@/components/rootShell';
-import { RelayError, toRootError } from '@/components/relayError';
 import { getSignInLink } from '@/components/links';
+import { NoOrganizationLandingContent, NoOrganizationLandingPageRootQuery } from '@/components/noOrganizationLanding';
+import { RelayError, toRootError } from '@/components/relayError';
+import { NoOrganizationRootShell } from '@/components/rootShell';
+import type { noOrganizationLandingPage_rootQuery } from '@/queries/__generated__/noOrganizationLandingPage_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -32,7 +32,7 @@ const RootPage = () => {
   }, [loadQuery, loading, user]);
 
   return (
-    <NoOrganizationRootShell hideSideNav={!user} hideOrganizationSelector>
+    <NoOrganizationRootShell hideSideNav hideOrganizationSelector>
       {loading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', p: { xs: 2, md: 4 } }}>
           <CircularProgress />

@@ -158,6 +158,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo, hideOrganizationSelecto
           }}
         >
           {showLogo && <Image src={logoUrl} width={logoWidth} height={logoHeight} alt="Skedular" />}
+          {showLogo && hideOrganizationSelector && <Divider orientation="vertical" flexItem sx={{ ml: 2, mr: 2 }} />}
 
           {!hideOrganizationSelector && (
             <>
