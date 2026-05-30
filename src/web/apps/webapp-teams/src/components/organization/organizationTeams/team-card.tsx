@@ -1,3 +1,4 @@
+import { PaletteModeContext, getRelayErrorMessage, useIntegratedPlatform } from '@skedular/shared';
 import { CustomerAvatar } from '@/components/avatars';
 import { DefaultDialogTitle, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
 import { EllipseMenuIcon, TeamIcon } from '@/components/icons';
@@ -5,9 +6,9 @@ import { getOrganizationBookingsBaseLink, getOrganizationTeamSetupBaseLink } fro
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+
 import { coal } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { teamCard_deleteTeamMutation } from '@/queries/__generated__/teamCard_deleteTeamMutation.graphql';
 import type { teamCard_TeamDetails$key } from '@/queries/__generated__/teamCard_TeamDetails.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -28,6 +29,7 @@ import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
+import Image from 'next/image';
 
 type Props = {
   teamDetailsRelay: teamCard_TeamDetails$key;
@@ -94,7 +96,7 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -110,8 +112,8 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
 
   moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewTeamBookings]);
 
-  const editLink = getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization!.customDomain!, teamDetails.id);
-  const bookingsLink = getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization!.customDomain!, { teamId: teamDetails.id });
+  const editLink = getOrganizationTeamSetupBaseLink(integratedPlatform, teamDetails.organization!.customDomain!, teamDetails.id);
+  const bookingsLink = getOrganizationBookingsBaseLink(integratedPlatform, teamDetails.organization!.customDomain!, { teamId: teamDetails.id });
   const memberCount = teammates.length;
   const primaryFeatureImage = teamDetails.featureImages[0]?.thumbnail?.url;
   const sectionSx: SxProps<Theme> = {
@@ -201,14 +203,14 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   overflow: 'hidden',
+                  position: 'relative',
                   flexShrink: 0,
                   bgcolor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.04)' : theme.palette.action.hover),
                 }}
               >
                 {primaryFeatureImage ? (
                   <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={primaryFeatureImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <Image width={56} height={56} unoptimized alt="" src={primaryFeatureImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </>
                 ) : (
                   <TeamIcon excludeTooltip />

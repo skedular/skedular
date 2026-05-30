@@ -1,9 +1,9 @@
+import { PaletteModeContext, getRelayErrorMessage, useIntegratedPlatform } from '@skedular/shared';
 import { DeleteIcon } from '@/components/icons';
 import { getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { useIntegratedPlatrform, PaletteModeContext } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { organizationAdminManageOrganizationSectionQuery } from '@/queries/__generated__/organizationAdminManageOrganizationSectionQuery.graphql';
 import type { organizationAdminManageOrganizationSection_deleteOrganizationMutation } from '@/queries/__generated__/organizationAdminManageOrganizationSection_deleteOrganizationMutation.graphql';
 import Button from '@mui/material/Button';
@@ -47,7 +47,7 @@ const OrganizationAdminManageOrganizationSectionContent = ({ queryReference }: I
   const organization = rootData.organization;
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
 
   if (!organization) {
@@ -71,7 +71,7 @@ const OrganizationAdminManageOrganizationSectionContent = ({ queryReference }: I
           return;
         }
 
-        router.push(getRootLink(integratedPlatrform));
+        router.push(getRootLink(integratedPlatform));
       },
       onError: (error) => {
         themedToast(<NotificationContent content={`Failed to remove the organization '${name}'. Error: ${error.message}.`} />, errorNotificationOptions);

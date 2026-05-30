@@ -1,3 +1,4 @@
+import { RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform } from '@skedular/shared';
 import { ArrowLeftIcon, PaymentStatusIcon, QuantityIcon } from '@/components/icons';
 import { getMarketplaceSubscriptionDetailsLink } from '@/components/links';
 import { Loading } from '@/components/loading';
@@ -9,7 +10,7 @@ import {
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import useKnownParams from '@/hooks/use-known-params';
 import type { guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { guestStoreFrontSubscriptions_rootQuery } from '@/queries/__generated__/guestStoreFrontSubscriptions_rootQuery.graphql';
@@ -26,7 +27,7 @@ import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/system/Box';
-import { getRelayErrorMessage, useIntegratedPlatrform } from '@skedular/shared';
+
 import {
   BodyIconTypography,
   CaptionIconTypography,
@@ -118,7 +119,7 @@ const RootQuery = graphql`
 const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<guestStoreFrontSubscriptions_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
   const [commitDeleteMarketplaceBookingSubscription, isDeleteMarketplaceBookingSubscriptionInFlight] =
@@ -262,7 +263,7 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
               }}
             >
               {subscriptions.map((subscription) => {
-                const subscriptionLink = getMarketplaceSubscriptionDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, subscription.id);
+                const subscriptionLink = getMarketplaceSubscriptionDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, subscription.id);
                 const latestRecurringBooking = [...subscription.recurringBookings].sort(
                   (left, right) => new Date(right.startDate).getTime() - new Date(left.startDate).getTime(),
                 )[0];

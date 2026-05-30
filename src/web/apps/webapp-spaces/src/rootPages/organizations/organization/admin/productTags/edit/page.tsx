@@ -1,8 +1,8 @@
+import { useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import { getOrganizationMarketplaceSetupProductTagsBaseLink } from '@/components/links';
 import { EditOrganizationProductTagPage } from '@/components/organization/editOrganizationProductTag';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
-import { useIntegratedPlatrform } from '@skedular/shared';
+
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { memo } from 'react';
 
@@ -10,7 +10,7 @@ const getParamValue = (value: string | string[] | undefined): string => (Array.i
 
 const RootPage = () => {
   const { organizationCustomDomain } = useKnownParams();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const searchParams = useSearchParams();
   const productTagId = getParamValue(useParams().productTagId);
@@ -22,7 +22,7 @@ const RootPage = () => {
     throw new Error('productTagId is required');
   }
 
-  const returnUrl = searchParams.get('redirectUrl') ?? getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationCustomDomain);
+  const returnUrl = searchParams.get('redirectUrl') ?? getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatform, organizationCustomDomain);
 
   return (
     <RootShell>

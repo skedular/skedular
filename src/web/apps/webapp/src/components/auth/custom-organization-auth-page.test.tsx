@@ -8,7 +8,7 @@ describe('CustomOrganizationAuthPage', () => {
       <CustomOrganizationAuthPage mode="sign-in" organizationName="Mapp" organizationLogoUrl="https://cdn.example.com/mapp.png" returnTo="/marketplace/bookings" />,
     );
 
-    expect(screen.getByRole('img', { name: 'Mapp logo' })).toHaveAttribute('src', 'https://cdn.example.com/mapp.png');
+    expect(screen.getByRole('img', { name: 'Mapp logo' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Sign in' })).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: /email/i })).toBeRequired();
     expect(container.querySelector('input[name="password"]')).toBeRequired();

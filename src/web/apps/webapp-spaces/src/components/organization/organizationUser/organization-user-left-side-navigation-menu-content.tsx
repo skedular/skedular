@@ -1,7 +1,7 @@
 import { BodyIconTypography } from '@skedular/ui';
 import { BillingAndPaymentIcon, EditIcon, ProfileIcon } from '@/components/icons';
 import { getOrganizationUserBillingAndPaymentBaseLink, getOrganizationUserManageBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import {
   getSelectedListItemBorderRadius,
   sandstone,
@@ -40,7 +40,7 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organiza
     rootDataRelay,
   );
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
@@ -75,9 +75,9 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organiza
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const porofileLink = getOrganizationUserProfileBaseLink(integratedPlatrform, organizationCustomDomain, customerId);
-  const billingAndPaymentLink = getOrganizationUserBillingAndPaymentBaseLink(integratedPlatrform, organizationCustomDomain, customerId);
-  const manageUserLink = getOrganizationUserManageBaseLink(integratedPlatrform, organizationCustomDomain, customerId);
+  const porofileLink = getOrganizationUserProfileBaseLink(integratedPlatform, organizationCustomDomain, customerId);
+  const billingAndPaymentLink = getOrganizationUserBillingAndPaymentBaseLink(integratedPlatform, organizationCustomDomain, customerId);
+  const manageUserLink = getOrganizationUserManageBaseLink(integratedPlatform, organizationCustomDomain, customerId);
 
   return (
     <List

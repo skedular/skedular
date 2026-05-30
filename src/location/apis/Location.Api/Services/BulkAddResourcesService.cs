@@ -30,6 +30,7 @@ public class BulkAddResourcesService(
     IOrganizationOfferingService organizationOfferingService,
     IEntityMapper entityMapper,
     ILocationOutboxPublisher locationOutboxPublisher,
+    ICachedLocationService cachedLocationService,
     ITemporalOutboxService temporalOutboxService,
     ILogger<BulkAddResourcesService> logger) : IBulkAddResourcesService
 {
@@ -252,6 +253,8 @@ public class BulkAddResourcesService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedLocationService.RemoveByIdAsync(existingLocation.Id, cancellationToken);
 
         var created = createdByRow.Values.Sum(x => x.Count);
         var rejected = results.Count;

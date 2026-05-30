@@ -26,7 +26,7 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
   defaultPadding,
@@ -49,6 +49,7 @@ import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
+import Image from 'next/image';
 
 type Props = {
   rootDataRelay: organizationTeam_query$key;
@@ -282,7 +283,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const [, startTransition] = useTransition();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
@@ -703,7 +704,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           return;
         }
 
-        router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationCustomDomain));
+        router.push(getOrganizationTeamsBaseLink(integratedPlatform, organizationCustomDomain));
       },
       onError: (error) => {
         themedToast(<NotificationContent content={`We couldn't remove team '${team.name}'. ${error.message}`} />, errorNotificationOptions);
@@ -860,8 +861,14 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                                 backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
                               }}
                             >
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              <Image
+                                width={800}
+                                height={600}
+                                unoptimized
+                                alt=""
+                                src={image.original?.url ?? image.thumbnail?.url ?? ''}
+                                style={{ width: '100%', height: 'auto' }}
+                              />
                               <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
                                 <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
                                   <DeleteIcon fontSize="small" />

@@ -18,7 +18,7 @@ import TextField from '@mui/material/TextField';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { formatPriceForDisplay, getRelayErrorMessage, toShortDate, useIntegratedPlatrform } from '@skedular/shared';
+import { formatPriceForDisplay, getRelayErrorMessage, toShortDate, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -166,7 +166,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const initialPricingOptionId = searchParams.get('pricingOptionId');
   const selectedResourceIds = useMemo(() => {
@@ -340,7 +340,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
   const paymentLabel = isInArrearsBilling
     ? 'Invoice sent on billing cycle'
     : (availablePaymentMethods.find((item) => item.type === effectivePaymentMethod)?.name ?? 'Select payment method');
-  const productLink = rootData.product ? getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, rootData.product.id, selectedResourceIds) : '';
+  const productLink = rootData.product ? getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, rootData.product.id, selectedResourceIds) : '';
   const handleSignInClick = () => {
     const returnTo = `${window.location.pathname}${window.location.search}`;
     router.push(`${getSignInLink()}?returnTo=${encodeURIComponent(returnTo)}`);
@@ -478,7 +478,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
           productVersionId: product.latestProductVersionId,
           pricingId: selectedPricingOption.id,
           checkoutReturnUrl: new URL(
-            getMarketplaceProductBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, id),
+            getMarketplaceProductBookingDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id, id),
             window.location.origin,
           ).toString(),
         },
@@ -495,7 +495,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
           return;
         }
 
-        router.push(getMarketplaceProductBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, booking.id));
+        router.push(getMarketplaceProductBookingDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id, booking.id));
       },
       onError: (error) => {
         toast(<NotificationContent content={`We couldn't complete this booking. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);

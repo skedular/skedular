@@ -1,10 +1,11 @@
+import { PaletteModeContext, getRelayErrorMessage, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@skedular/ui';
 import { AreaIcon, CloseIcon, FavouriteIcon, LocationIcon, NotFavouriteIcon, PersonIcon, ShareIcon } from '@/components/icons';
 import { getMarketplaceLocationLink, getSignInLink } from '@/components/links';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+
 import { emerald } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { marketplaceLocationCard_addCustomerFavouriteLocationMutation } from '@/queries/__generated__/marketplaceLocationCard_addCustomerFavouriteLocationMutation.graphql';
 import type { marketplaceLocationCard_LocationDetails$key } from '@/queries/__generated__/marketplaceLocationCard_LocationDetails.graphql';
 import type { marketplaceLocationCard_query$key } from '@/queries/__generated__/marketplaceLocationCard_query.graphql';
@@ -180,15 +181,15 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const { user, loading } = useAuth();
   const isFavoured = useMemo(() => rootData.me?.favouriteLocations.some((item) => item.id === locationDetails.id), [locationDetails.id, rootData.me?.favouriteLocations]);
   const shareUrl = useMemo(
-    () => `${typeof window !== 'undefined' ? window.location.origin : ''}${getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}`,
-    [integratedPlatrform, locationDetails.id],
+    () => `${typeof window !== 'undefined' ? window.location.origin : ''}${getMarketplaceLocationLink(integratedPlatform, locationDetails.id)}`,
+    [integratedPlatform, locationDetails.id],
   );
   const imageUrl = useMemo(() => locationDetails.featureImages.find((item) => !!item.thumbnail?.url)?.thumbnail?.url ?? null, [locationDetails.featureImages]);
   const addressLabel = useMemo(
@@ -337,7 +338,7 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
             : null),
         }}
         component={NextLink}
-        href={getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}
+        href={getMarketplaceLocationLink(integratedPlatform, locationDetails.id)}
       >
         <Box sx={mediaSx}>
           {imageUrl ? (

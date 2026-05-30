@@ -20,6 +20,16 @@ const eslintConfig = defineConfig([
     "**/src/clients/openapi/nominatim/**",
     "**/src/clients/openapi/skedular/**",
   ]),
+  // Floor plan canvases require pixel-exact overlay positioning. next/image injects
+  // responsive CSS (max-width: 100%; height: auto) that breaks coordinate alignment.
+  // Plain <img style={{ width: '100%', height: '100%' }}> inside an aspect-ratio
+  // container is the only safe approach here.
+  {
+    files: ['src/components/floorPlan/**/*.tsx'],
+    rules: {
+      '@next/next/no-img-element': 'off',
+    },
+  },
 ]);
 
 export default eslintConfig;

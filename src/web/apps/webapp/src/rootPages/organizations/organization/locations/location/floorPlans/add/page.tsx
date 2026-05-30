@@ -1,6 +1,6 @@
 import { AddFloorPlan } from '@/components/floorPlan/addFloorPlan';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationLocationFloorPlansAdd_rootQuery } from '@/queries/__generated__/pageOrganizationLocationFloorPlansAdd_rootQuery.graphql';
 import { useRouter } from 'next/navigation';

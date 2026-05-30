@@ -1,6 +1,6 @@
 import { Loading } from '@/components/loading';
 import { MarketplaceLocations } from '@/components/location/marketplaceLocations';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import { NoOrganizationRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
 import type { pageHome_rootQuery } from '@/queries/__generated__/pageHome_rootQuery.graphql';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';

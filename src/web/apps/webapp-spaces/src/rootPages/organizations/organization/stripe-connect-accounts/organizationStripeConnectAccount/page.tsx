@@ -1,8 +1,9 @@
+import { RelayError, toRootError, useKnownParams } from '@skedular/shared';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { RootShell } from '@/components/rootShell';
 import { EditStripeConnectAccount } from '@/components/stripeConnectAccount/editStripeConnectAccount';
-import { useKnownParams } from '@skedular/shared';
+
 import type { pageOrganizationStripeConnectAccount_rootQuery } from '@/queries/__generated__/pageOrganizationStripeConnectAccount_rootQuery.graphql';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';

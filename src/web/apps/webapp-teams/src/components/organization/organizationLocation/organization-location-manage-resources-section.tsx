@@ -14,7 +14,7 @@ import type { organizationLocationManageResourcesSection_deleteResourcesMutation
 import type { organizationLocationManageResourcesSection_removeCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_removeCustomerPreferredResourceMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import { defaultPadding, LeadIconTypography, PushToRight, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useMemo, useState } from 'react';
@@ -116,7 +116,7 @@ const ResourcesSectionQuery = graphql`
 `;
 
 const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, locationId }: Props) => {
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -407,7 +407,7 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
     switch (id) {
       case MoreActionsMenuOptionType.EditResource:
         if (resourceDetails) {
-          router.push(getOrganizationLocationResourceBaseLink(integratedPlatrform, organizationCustomDomain, locationId, resourceDetails.id));
+          router.push(getOrganizationLocationResourceBaseLink(integratedPlatform, organizationCustomDomain, locationId, resourceDetails.id));
         }
         break;
       case MoreActionsMenuOptionType.DeactivateResource:
@@ -443,7 +443,7 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
   };
 
   const handleOpenResource = (resourceId: string) => {
-    router.push(getOrganizationLocationResourceBaseLink(integratedPlatrform, organizationCustomDomain, locationId, resourceId));
+    router.push(getOrganizationLocationResourceBaseLink(integratedPlatform, organizationCustomDomain, locationId, resourceId));
   };
 
   return (
@@ -456,14 +456,14 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
             <StackRow sx={{ gap: 1 }}>
               <Button
                 variant="text"
-                onClick={() => router.push(getOrganizationLocationAddResourceBaseLink(integratedPlatrform, organizationCustomDomain, locationId))}
+                onClick={() => router.push(getOrganizationLocationAddResourceBaseLink(integratedPlatform, organizationCustomDomain, locationId))}
                 sx={{ textTransform: 'none' }}
               >
                 <LeadIconTypography label="Add Resource" endElement={<NewIcon fontSize="large" />} />
               </Button>
               <Button
                 variant="text"
-                onClick={() => router.push(getOrganizationLocationBulkAddResourcesBaseLink(integratedPlatrform, organizationCustomDomain, locationId))}
+                onClick={() => router.push(getOrganizationLocationBulkAddResourcesBaseLink(integratedPlatform, organizationCustomDomain, locationId))}
                 sx={{ textTransform: 'none' }}
               >
                 <LeadIconTypography label="Bulk Add Resources" endElement={<NewIcon fontSize="large" />} />

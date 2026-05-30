@@ -1,7 +1,8 @@
+import { PaletteModeContext, RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform } from '@skedular/shared';
 import { Loading } from '@/components/loading';
 import { getOrganizationLocationManageResourcesBaseLink } from '@/components/links';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import BulkAddResourceRowForm from '@/components/resource/bulkAddResources/bulk-add-resources-row';
 import { DialogTransition } from '@/components/transitions';
 import type { bulkAddResourcesDialog_bulkAddResourcesMutation } from '@/queries/__generated__/bulkAddResourcesDialog_bulkAddResourcesMutation.graphql';
@@ -11,7 +12,7 @@ import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+
 import {
   BodyIconTypography,
   DefaultDialogTitle,
@@ -453,10 +454,10 @@ type PageProps = {
 
 const BulkAddResourcesPageComponent = ({ organizationCustomDomain, locationId }: PageProps) => {
   const router = useRouter();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
 
   const handleDone = () => {
-    router.push(getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationCustomDomain, locationId));
+    router.push(getOrganizationLocationManageResourcesBaseLink(integratedPlatform, organizationCustomDomain, locationId));
   };
 
   return <BulkAddResourcesDialog locationId={locationId} organizationCustomDomain={organizationCustomDomain} isDialogOpen={true} onCancel={handleDone} presentation="page" />;

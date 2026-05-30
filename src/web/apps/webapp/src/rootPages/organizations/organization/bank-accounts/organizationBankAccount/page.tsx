@@ -1,6 +1,6 @@
 import { EditBankAccount } from '@/components/bankAccount/editBanktAccount';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationBankAccount_rootQuery } from '@/queries/__generated__/pageOrganizationBankAccount_rootQuery.graphql';
 import { memo, useEffect, useState, useTransition } from 'react';

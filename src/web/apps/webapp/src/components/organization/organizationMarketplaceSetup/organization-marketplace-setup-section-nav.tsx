@@ -6,7 +6,7 @@ import {
   getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
   getOrganizationMarketplaceSetupXeroBaseLink,
 } from '@/components/links';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -40,17 +40,17 @@ const sectionLabels: Record<OrganizationMarketplaceSetupSection, string> = {
 };
 
 const OrganizationMarketplaceSetupSectionNav = ({ activeSection, organizationCustomDomain, stickyTop = 0 }: Props) => {
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const theme = useTheme();
   const isCompactNav = useMediaQuery(theme.breakpoints.down('md'), { noSsr: true });
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const sectionLinks: Record<OrganizationMarketplaceSetupSection, string> = {
-    'marketplace-listing': getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatrform, organizationCustomDomain),
-    'billing-cycle': getOrganizationMarketplaceSetupBillingCycleBaseLink(integratedPlatrform, organizationCustomDomain),
-    'xero-setup': getOrganizationMarketplaceSetupXeroBaseLink(integratedPlatrform, organizationCustomDomain),
-    'stripe-connect-accounts-setup': getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatrform, organizationCustomDomain),
-    'bank-accounts-setup': getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatrform, organizationCustomDomain),
-    'product-tags-setup': getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationCustomDomain),
+    'marketplace-listing': getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatform, organizationCustomDomain),
+    'billing-cycle': getOrganizationMarketplaceSetupBillingCycleBaseLink(integratedPlatform, organizationCustomDomain),
+    'xero-setup': getOrganizationMarketplaceSetupXeroBaseLink(integratedPlatform, organizationCustomDomain),
+    'stripe-connect-accounts-setup': getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatform, organizationCustomDomain),
+    'bank-accounts-setup': getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatform, organizationCustomDomain),
+    'product-tags-setup': getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatform, organizationCustomDomain),
   };
 
   const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {

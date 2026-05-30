@@ -1,3 +1,14 @@
+import {
+  PaletteModeContext,
+  getCustomerFullName,
+  getRelayErrorMessage,
+  isMidnight,
+  keyboardSearchDebounceTimeout,
+  startOfDay,
+  toOpeningHoursFromTime,
+  toShortDate,
+  useIntegratedPlatform,
+} from '@skedular/shared';
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceBookingCategory } from '@/components/booking';
 import { BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
@@ -6,8 +17,7 @@ import { CalendarIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink } from '@/components/links';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { getCustomerFullName, getRelayErrorMessage, isMidnight, keyboardSearchDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@skedular/shared';
+
 import type {
   BookingCategory as AddPrivateBookingCategory,
   addPrivateBookingPage_addPrivateBookingMutation,
@@ -208,7 +218,7 @@ type PageProps = {
 const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defaultDate, defaultLocationId, defaultResourceIds, redirectUrl }: PageProps) => {
   const rootData = usePreloadedQuery<addPrivateBookingPage_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [, startTransition] = useTransition();
@@ -465,7 +475,7 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
       return;
     }
 
-    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain));
+    router.push(getOrganizationBookingsBaseLink(integratedPlatform, organizationCustomDomain));
   };
 
   const handleSubmit = ({ date, allDay: allDayValue, member, notes: notesValue, team, resources: selectedResourceIds, category: categoryValue }: BookingDetails) => {

@@ -1,9 +1,9 @@
+import { PaletteModeContext, RelayError, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import OrganizationAvatar from '@/components/avatars/organization-avatar';
 import { LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { getOrganizationBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
-import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+
 import { coal, emerald } from '@skedular/ui';
 import type { pageOrganizationSsoSignin_rootQuery } from '@/queries/__generated__/pageOrganizationSsoSignin_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -59,7 +59,7 @@ const MemoRootPage = memo(RootPage);
 
 const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationSsoSignin_rootQuery>(RootQuery);
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
   const searchParams = useSearchParams();
@@ -74,13 +74,13 @@ const RootPageWithRelay = () => {
     loadQuery(
       {
         organizationCustomDomain,
-        redirectUrl: redirectUrl ?? getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain),
+        redirectUrl: redirectUrl ?? getOrganizationBaseLink(integratedPlatform, organizationCustomDomain),
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationCustomDomain, redirectUrl, integratedPlatrform]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain, redirectUrl, integratedPlatform]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

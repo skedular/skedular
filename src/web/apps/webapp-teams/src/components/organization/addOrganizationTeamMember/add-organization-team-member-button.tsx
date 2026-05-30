@@ -1,7 +1,7 @@
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { NewIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import type { addOrganizationTeamMemberButton_rootQuery } from '@/queries/__generated__/addOrganizationTeamMemberButton_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import { memo, useEffect, useState } from 'react';

@@ -1,3 +1,4 @@
+import { RelayError, getCustomerFullName, getRelayErrorMessage, isStoredFullDayRange, toRootError, toStoredBookingTimeRange, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
   CaptionIconTypography,
@@ -13,9 +14,7 @@ import { ArrowLeftIcon } from '@/components/icons';
 import { getMarketplaceLocationLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { RelayError, toRootError } from '@/components/relayError';
-import { useIntegratedPlatrform } from '@skedular/shared';
-import { getCustomerFullName, getRelayErrorMessage, isStoredFullDayRange, toStoredBookingTimeRange } from '@skedular/shared';
+
 import type { marketplaceProductBookingDetails_rootQuery } from '@/queries/__generated__/marketplaceProductBookingDetails_rootQuery.graphql';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -225,7 +224,7 @@ const DeleteMarketplaceBookingMutation = graphql`
 const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: PreloadedQuery<marketplaceProductBookingDetails_rootQuery, Record<string, unknown>> }) => {
   const rootData = usePreloadedQuery<marketplaceProductBookingDetails_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const booking = rootData.booking;
   const marketplaceBooking = booking?.marketplaceBooking;
   const [hasCancelledLocally, setHasCancelledLocally] = useState(false);
@@ -409,7 +408,7 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                             <Link
                               key={location.uniqueId}
                               component={NextLink}
-                              href={getMarketplaceLocationLink(integratedPlatrform, location.uniqueId)}
+                              href={getMarketplaceLocationLink(integratedPlatform, location.uniqueId)}
                               underline="none"
                               color="inherit"
                               sx={{

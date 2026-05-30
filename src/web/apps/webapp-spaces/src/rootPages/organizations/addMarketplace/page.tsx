@@ -1,13 +1,14 @@
+import { PaletteModeContext, RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform } from '@skedular/shared';
 import { getOrganizationBaseLink, getOrganizationLocationAddMarketplaceLink, getOrganizationLocationsBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { AddMarketplaceOrganization } from '@/components/organization/addOrganization';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { NoOrganizationRootShell } from '@/components/rootShell';
 import type { pageAddMarketplaceOrganization_claimLocationOwnershipMutation } from '@/queries/__generated__/pageAddMarketplaceOrganization_claimLocationOwnershipMutation.graphql';
 import type { pageAddMarketplaceOrganization_completeOnboardingMutation } from '@/queries/__generated__/pageAddMarketplaceOrganization_completeOnboardingMutation.graphql';
 import type { pageAddMarketplaceOrganization_rootQuery } from '@/queries/__generated__/pageAddMarketplaceOrganization_rootQuery.graphql';
-import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -52,7 +53,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -77,7 +78,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
             );
           }
 
-          router.push(getOrganizationLocationsBaseLink(integratedPlatrform, customDomain));
+          router.push(getOrganizationLocationsBaseLink(integratedPlatform, customDomain));
           onReloadRequired();
         },
         onError: (error) => {
@@ -85,8 +86,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
 
           if (rootData.me.isOnboardingDone) {
             router.push(
-              getOrganizationLocationAddMarketplaceLink(integratedPlatrform, customDomain, {
-                redirectUrl: getOrganizationBaseLink(integratedPlatrform, customDomain),
+              getOrganizationLocationAddMarketplaceLink(integratedPlatform, customDomain, {
+                redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
               }),
             );
             onReloadRequired();
@@ -105,8 +106,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
               }
 
               router.push(
-                getOrganizationLocationAddMarketplaceLink(integratedPlatrform, customDomain, {
-                  redirectUrl: getOrganizationBaseLink(integratedPlatrform, customDomain),
+                getOrganizationLocationAddMarketplaceLink(integratedPlatform, customDomain, {
+                  redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
                 }),
               );
               onReloadRequired();
@@ -115,8 +116,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
               themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${error.message}`} />, errorNotificationOptions);
 
               router.push(
-                getOrganizationLocationAddMarketplaceLink(integratedPlatrform, customDomain, {
-                  redirectUrl: getOrganizationBaseLink(integratedPlatrform, customDomain),
+                getOrganizationLocationAddMarketplaceLink(integratedPlatform, customDomain, {
+                  redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
                 }),
               );
               onReloadRequired();
@@ -136,8 +137,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
     } else {
       if (rootData.me.isOnboardingDone) {
         router.push(
-          getOrganizationLocationAddMarketplaceLink(integratedPlatrform, customDomain, {
-            redirectUrl: getOrganizationBaseLink(integratedPlatrform, customDomain),
+          getOrganizationLocationAddMarketplaceLink(integratedPlatform, customDomain, {
+            redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
           }),
         );
         onReloadRequired();
@@ -157,8 +158,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
           }
 
           router.push(
-            getOrganizationLocationAddMarketplaceLink(integratedPlatrform, customDomain, {
-              redirectUrl: getOrganizationBaseLink(integratedPlatrform, customDomain),
+            getOrganizationLocationAddMarketplaceLink(integratedPlatform, customDomain, {
+              redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
             }),
           );
           onReloadRequired();
@@ -167,8 +168,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
           themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${error.message}`} />, errorNotificationOptions);
 
           router.push(
-            getOrganizationLocationAddMarketplaceLink(integratedPlatrform, customDomain, {
-              redirectUrl: getOrganizationBaseLink(integratedPlatrform, customDomain),
+            getOrganizationLocationAddMarketplaceLink(integratedPlatform, customDomain, {
+              redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
             }),
           );
           onReloadRequired();

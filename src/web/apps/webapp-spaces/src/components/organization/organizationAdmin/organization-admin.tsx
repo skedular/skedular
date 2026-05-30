@@ -23,7 +23,7 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel, StackColumn, StackRow } from '@skedular/ui';
 import NextLink from 'next/link';
 import { memo, useMemo } from 'react';
@@ -120,28 +120,28 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
     rootDataRelay,
   );
   const searchParams = useSearchParams();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const section = searchParams.get('section');
   const activeSection = useMemo(() => getActiveSection(section), [section]);
 
   const organization = rootData.organization;
-  const adminBaseLink = getOrganizationAdminBaseLink(integratedPlatrform, organizationCustomDomain);
+  const adminBaseLink = getOrganizationAdminBaseLink(integratedPlatform, organizationCustomDomain);
   const sectionLinks: Record<OrganizationAdminSection, string> = {
-    setup: getOrganizationAdminSetupBaseLink(integratedPlatrform, organizationCustomDomain),
-    'physical-address-setup': getOrganizationAdminPhysicalAddressBaseLink(integratedPlatrform, organizationCustomDomain),
-    'tax-details-setup': getOrganizationAdminTaxDetailsBaseLink(integratedPlatrform, organizationCustomDomain),
-    'marketplace-listing': getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatrform, organizationCustomDomain),
-    'product-tags-setup': getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationCustomDomain),
-    'zones-setup': getOrganizationAdminZonesBaseLink(integratedPlatrform, organizationCustomDomain),
-    'tags-setup': getOrganizationAdminCustomTagsBaseLink(integratedPlatrform, organizationCustomDomain),
-    'billing-cycle': getOrganizationMarketplaceSetupBillingCycleBaseLink(integratedPlatrform, organizationCustomDomain),
-    'xero-setup': getOrganizationMarketplaceSetupXeroBaseLink(integratedPlatrform, organizationCustomDomain),
-    'stripe-connect-accounts-setup': getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatrform, organizationCustomDomain),
-    'bank-accounts-setup': getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatrform, organizationCustomDomain),
-    'billing-payment-setup': getOrganizationAdminBillingAndPaymentBaseLink(integratedPlatrform, organizationCustomDomain),
-    'sso-setup': getOrganizationAdminSsoSettingsBaseLink(integratedPlatrform, organizationCustomDomain),
-    subscriptions: getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, organizationCustomDomain),
-    'manage-organization': getOrganizationAdminManageOrganizationBaseLink(integratedPlatrform, organizationCustomDomain),
+    setup: getOrganizationAdminSetupBaseLink(integratedPlatform, organizationCustomDomain),
+    'physical-address-setup': getOrganizationAdminPhysicalAddressBaseLink(integratedPlatform, organizationCustomDomain),
+    'tax-details-setup': getOrganizationAdminTaxDetailsBaseLink(integratedPlatform, organizationCustomDomain),
+    'marketplace-listing': getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatform, organizationCustomDomain),
+    'product-tags-setup': getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatform, organizationCustomDomain),
+    'zones-setup': getOrganizationAdminZonesBaseLink(integratedPlatform, organizationCustomDomain),
+    'tags-setup': getOrganizationAdminCustomTagsBaseLink(integratedPlatform, organizationCustomDomain),
+    'billing-cycle': getOrganizationMarketplaceSetupBillingCycleBaseLink(integratedPlatform, organizationCustomDomain),
+    'xero-setup': getOrganizationMarketplaceSetupXeroBaseLink(integratedPlatform, organizationCustomDomain),
+    'stripe-connect-accounts-setup': getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatform, organizationCustomDomain),
+    'bank-accounts-setup': getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatform, organizationCustomDomain),
+    'billing-payment-setup': getOrganizationAdminBillingAndPaymentBaseLink(integratedPlatform, organizationCustomDomain),
+    'sso-setup': getOrganizationAdminSsoSettingsBaseLink(integratedPlatform, organizationCustomDomain),
+    subscriptions: getOrganizationAdminSubscriptionsBaseLink(integratedPlatform, organizationCustomDomain),
+    'manage-organization': getOrganizationAdminManageOrganizationBaseLink(integratedPlatform, organizationCustomDomain),
   };
   const adminCards = [
     {

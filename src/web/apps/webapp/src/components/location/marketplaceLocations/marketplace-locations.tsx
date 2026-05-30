@@ -23,8 +23,7 @@ let MapContainer: typeof import('react-leaflet').MapContainer;
 let Marker: typeof import('react-leaflet').Marker;
 let TileLayer: typeof import('react-leaflet').TileLayer;
 let Popup: typeof import('react-leaflet').Popup;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let MarkerClusterGroup: any;
+let MarkerClusterGroup: typeof import('react-leaflet-cluster').default;
 
 const getToolbarHeight = (theme: Theme) => {
   const minHeight = theme.mixins?.toolbar?.minHeight;

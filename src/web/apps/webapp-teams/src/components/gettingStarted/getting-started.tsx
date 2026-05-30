@@ -1,11 +1,12 @@
+import { PaletteModeContext, getRelayErrorMessage, useIntegratedPlatform } from '@skedular/shared';
 import { LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { CancelIcon, InviteMemberIcon, LocationIcon, ResourceIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationAddResourceBaseLink, getOrganizationLocationAddPrivateLink, getOrganizationTeamAddLink, getOrganizationUsersBaseLink } from '@/components/links';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { InvitePeopleToJoinOrganizationDialog } from '@/components/organization/invitePeopleToJoinOrganization';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+
 import { defaultPadding, emerald } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { gettingStarted_completeOrganizationMemberOnboardingMutation } from '@/queries/__generated__/gettingStarted_completeOrganizationMemberOnboardingMutation.graphql';
 import type { gettingStarted_query$key } from '@/queries/__generated__/gettingStarted_query.graphql';
 import Box from '@mui/material/Box';
@@ -45,7 +46,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -58,7 +59,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
   const handleInvitePeopleToJoinOrganizationClicked = () => {
     setIsInvitePeopleToJoinOrganizationDialogOpen(false);
 
-    router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationCustomDomain));
+    router.push(getOrganizationUsersBaseLink(integratedPlatform, organizationCustomDomain));
   };
 
   const handleInvitePeopleToJoinOrganizationCancelClicked = () => {
@@ -125,7 +126,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
         >
           <StackColumn spacing={1} sx={{ minWidth: 0 }}>
             <SmallIconTypography label="Let's start by setting up the organization's first location." />
-            <Link component={NextLink} href={getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationCustomDomain)} sx={{ display: 'block' }}>
+            <Link component={NextLink} href={getOrganizationLocationAddPrivateLink(integratedPlatform, organizationCustomDomain)} sx={{ display: 'block' }}>
               <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                 <LeadIconTypography
                   label="Create Location"
@@ -139,7 +140,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
 
           <StackColumn spacing={1} sx={{ minWidth: 0 }}>
             <SmallIconTypography label="Create teams that regularly work or meet together." />
-            <Link component={NextLink} href={getOrganizationTeamAddLink(integratedPlatrform, organizationCustomDomain)} sx={{ display: 'block' }}>
+            <Link component={NextLink} href={getOrganizationTeamAddLink(integratedPlatform, organizationCustomDomain)} sx={{ display: 'block' }}>
               <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                 <LeadIconTypography
                   label="Create Team"
@@ -153,7 +154,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
 
           <StackColumn spacing={1} sx={{ minWidth: 0 }}>
             <SmallIconTypography label="Add resources for your locations and teams." />
-            <Link component={NextLink} href={getOrganizationAddResourceBaseLink(integratedPlatrform, organizationCustomDomain)} sx={{ display: 'block' }}>
+            <Link component={NextLink} href={getOrganizationAddResourceBaseLink(integratedPlatform, organizationCustomDomain)} sx={{ display: 'block' }}>
               <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                 <LeadIconTypography
                   label="Add Resources"

@@ -102,7 +102,7 @@ const UnauthenticatedLeftSideNavigationMenuContent = ({ collapsed, enableCollaps
             sx={{ width: collapsed ? undefined : maxWidth - 30, justifyContent: 'center', marginLeft: 0, paddingBottom: { xs: 1, sm: 1, md: 5 } }}
             onClick={handleExpandClicked}
           >
-            <Image src={logoUrl} width={width} height={height} alt="Skedular" />
+            <Image src={logoUrl} width={width} height={height} unoptimized alt="Skedular" />
           </ListItem>
 
           <ListItem disablePadding>

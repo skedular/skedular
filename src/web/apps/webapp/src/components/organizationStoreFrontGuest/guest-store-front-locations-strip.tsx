@@ -1,6 +1,6 @@
 import { BodyIconTypography, CaptionIconTypography, MediumHeadingIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceLocationFloorPlansLink, getMarketplaceLocationLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import type { guestStoreFrontLocationsStrip_query$data, guestStoreFrontLocationsStrip_query$key } from '@/queries/__generated__/guestStoreFrontLocationsStrip_query.graphql';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -115,7 +115,7 @@ const getOpenState = (timezone: string | null | undefined, dayOpeningHours: DayO
 
 const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Props) => {
   const router = useRouter();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const rootData = useFragment<guestStoreFrontLocationsStrip_query$key>(
     graphql`
       fragment guestStoreFrontLocationsStrip_query on Query {
@@ -244,7 +244,7 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
                     size="medium"
                     onClick={(event) => {
                       event.stopPropagation();
-                      router.push(getMarketplaceLocationFloorPlansLink(integratedPlatrform, location.id));
+                      router.push(getMarketplaceLocationFloorPlansLink(integratedPlatform, location.id));
                     }}
                     sx={{
                       textTransform: 'none',
@@ -263,7 +263,7 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
                   size="medium"
                   onClick={(event) => {
                     event.stopPropagation();
-                    router.push(getMarketplaceLocationLink(integratedPlatrform, location.id));
+                    router.push(getMarketplaceLocationLink(integratedPlatform, location.id));
                   }}
                   sx={{
                     textTransform: 'none',

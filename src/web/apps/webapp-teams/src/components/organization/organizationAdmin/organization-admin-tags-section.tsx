@@ -1,3 +1,4 @@
+import { PaletteModeContext, getRelayErrorMessage, useIntegratedPlatform } from '@skedular/shared';
 import { PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { CustomTag } from '@/components/customTag';
 import { DeleteIcon } from '@/components/icons';
@@ -8,9 +9,9 @@ import { getOrganizationAdminEditCustomTagBaseLink } from '@/components/links';
 import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
 import { Search } from '@/components/search';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+
 import { defaultGridActionPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { organizationAdminTagsSectionQuery } from '@/queries/__generated__/organizationAdminTagsSectionQuery.graphql';
 import type { organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdminTagsSection_addCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdminTagsSection_deleteCustomTagsMutation } from '@/queries/__generated__/organizationAdminTagsSection_deleteCustomTagsMutation.graphql';
@@ -60,7 +61,7 @@ const RootQuery = graphql`
 
 const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearchTextChange, queryReference }: InnerProps) => {
   const rootData = usePreloadedQuery<organizationAdminTagsSectionQuery>(RootQuery, queryReference);
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -261,7 +262,7 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearc
         if (selectedCustomTagId) {
           const currentQuery = searchParams.toString();
           const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
-          router.push(getOrganizationAdminEditCustomTagBaseLink(integratedPlatrform, organizationCustomDomain, selectedCustomTagId, { redirectUrl }));
+          router.push(getOrganizationAdminEditCustomTagBaseLink(integratedPlatform, organizationCustomDomain, selectedCustomTagId, { redirectUrl }));
         }
         break;
       case MoreActionsMenuOptionType.DeleteCustomTag:

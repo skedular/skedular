@@ -1,3 +1,4 @@
+import { RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform } from '@skedular/shared';
 import { getOrganizationSubscriptionBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
@@ -19,7 +20,7 @@ import SubscriptionCancellationSection from '@/components/marketplaceProductSubs
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { MultipleChoicesMarketplaceBookingPaymentStatuses, MultipleChoicesMarketplaceBookingSubscriptionStatuses } from '@/components/organization';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { RootShell } from '@/components/rootShell';
 import useKnownParams from '@/hooks/use-known-params';
 import type { pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation.graphql';
@@ -45,7 +46,7 @@ import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { getRelayErrorMessage, useIntegratedPlatrform } from '@skedular/shared';
+
 import {
   BodyIconTypography,
   CollectionToolbar,
@@ -249,7 +250,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
   const prevFiltersRef = useRef({ statuses: initialFormValues.statuses, paymentStatuses: initialFormValues.paymentStatuses });
   const rootData = usePreloadedQuery<pageOrganizationSubscriptions_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
   const [viewMode, setViewMode] = useState<SubscriptionViewMode>('list');
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<HTMLElement | null>(null);
@@ -370,9 +371,9 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
 
   const handleOpenSubscriptionClick = useCallback(
     (subscriptionId: string) => {
-      router.push(getOrganizationSubscriptionBaseLink(integratedPlatrform, organizationCustomDomain, subscriptionId));
+      router.push(getOrganizationSubscriptionBaseLink(integratedPlatform, organizationCustomDomain, subscriptionId));
     },
-    [integratedPlatrform, organizationCustomDomain, router],
+    [integratedPlatform, organizationCustomDomain, router],
   );
 
   const handleOpenMoreActionsClick = useCallback((subscriptionId: string, event: React.MouseEvent<HTMLElement>) => {

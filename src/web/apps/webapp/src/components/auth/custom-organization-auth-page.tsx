@@ -11,6 +11,7 @@ import TextField from '@mui/material/TextField';
 import type { SxProps } from '@mui/material/styles';
 import { alpha, type Theme } from '@mui/material/styles';
 import { BodyIconTypography, LargeHeadingIconTypography, SmallIconTypography } from '@skedular/ui';
+import Image from 'next/image';
 import NextLink from 'next/link';
 import { memo } from 'react';
 
@@ -117,12 +118,19 @@ const CustomOrganizationAuthPage = ({ mode, organizationName, organizationLogoUr
                 display: 'grid',
                 placeItems: 'center',
                 overflow: 'hidden',
+                position: 'relative',
                 p: 1.25,
               }}
             >
               {organizationLogoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={organizationLogoUrl} alt={`${organizationName ?? 'Organization'} logo`} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                <Image
+                  width={88}
+                  height={88}
+                  unoptimized
+                  alt={`${organizationName ?? 'Organization'} logo`}
+                  src={organizationLogoUrl}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                />
               ) : (
                 <SmallIconTypography label={(organizationName ?? 'Skedular').slice(0, 2).toUpperCase()} />
               )}

@@ -1,3 +1,4 @@
+import { PaletteModeContext, RelayError, getRelayErrorMessage, toRootError } from '@skedular/shared';
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoinceTimezone } from '@/components/forms';
@@ -6,11 +7,11 @@ import { Loading } from '@/components/loading';
 import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { OrganizationMemberSelector } from '@/components/organization';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { PaletteModeContext } from '@skedular/shared';
+
 import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { addTeam_addTeamMutation } from '@/queries/__generated__/addTeam_addTeamMutation.graphql';
 import type { addTeam_rootQuery } from '@/queries/__generated__/addTeam_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -26,6 +27,7 @@ import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
+import Image from 'next/image';
 
 type Props = {
   queryReference: PreloadedQuery<addTeam_rootQuery, Record<string, unknown>>;
@@ -222,8 +224,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationCustomDomain, o
                               backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
                             }}
                           >
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <Image width={800} height={600} unoptimized alt="" src={image.original?.url ?? image.thumbnail?.url ?? ''} style={{ width: '100%', height: 'auto' }} />
                             <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
                               <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
                                 <DeleteIcon fontSize="small" />

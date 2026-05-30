@@ -43,7 +43,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
   defaultButtonStyle,
@@ -487,7 +487,7 @@ const OrganizationMarketplaceSetup = ({
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -725,7 +725,7 @@ const OrganizationMarketplaceSetup = ({
         if (selectedProductTagId) {
           const currentQuery = searchParams.toString();
           const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
-          router.push(getOrganizationAdminEditProductTagBaseLink(integratedPlatrform, organizationCustomDomain, selectedProductTagId, { redirectUrl }));
+          router.push(getOrganizationAdminEditProductTagBaseLink(integratedPlatform, organizationCustomDomain, selectedProductTagId, { redirectUrl }));
         }
         break;
 
@@ -808,7 +808,7 @@ const OrganizationMarketplaceSetup = ({
 
         router.push(
           getOrganizationStripeConnectAccountBaseLink(
-            integratedPlatrform,
+            integratedPlatform,
             organizationStripeConnectAccountDetails.organization!.customDomain!,
             organizationStripeConnectAccountDetails.id,
           ),
@@ -1046,7 +1046,7 @@ const OrganizationMarketplaceSetup = ({
           return;
         }
 
-        router.push(getOrganizationBankAccountBaseLink(integratedPlatrform, organizationBankAccountDetails.organization!.customDomain!, organizationBankAccountDetails.id));
+        router.push(getOrganizationBankAccountBaseLink(integratedPlatform, organizationBankAccountDetails.organization!.customDomain!, organizationBankAccountDetails.id));
         break;
 
       case MoreActionsMenuOptionType.SetOrganizationBankAccountAsDefault:
@@ -1572,7 +1572,7 @@ const OrganizationMarketplaceSetup = ({
                   return;
                 }
 
-                router.push(getOrganizationStripeConnectAccountBaseLink(integratedPlatrform, account.organization!.customDomain!, account.id));
+                router.push(getOrganizationStripeConnectAccountBaseLink(integratedPlatform, account.organization!.customDomain!, account.id));
               }}
               onOpenMoreActions={(accountId, target) => {
                 setSelectedOrganizationStripeConnectAccountId(accountId);
@@ -1615,7 +1615,7 @@ const OrganizationMarketplaceSetup = ({
                   return;
                 }
 
-                router.push(getOrganizationBankAccountBaseLink(integratedPlatrform, account.organization!.customDomain!, account.id));
+                router.push(getOrganizationBankAccountBaseLink(integratedPlatform, account.organization!.customDomain!, account.id));
               }}
               onOpenMoreActions={(accountId, target) => {
                 setSelectedOrganizationBankAccountId(accountId);

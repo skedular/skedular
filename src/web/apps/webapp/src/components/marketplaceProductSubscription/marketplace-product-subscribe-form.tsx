@@ -1,10 +1,10 @@
+import { formatPriceForDisplay, getRelayErrorMessage, startOfDay, toShortDate, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceProductLink, getMarketplaceSubscriptionDetailsLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel } from '@/components/marketplaceProduct';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { useIntegratedPlatrform } from '@skedular/shared';
-import { formatPriceForDisplay, getRelayErrorMessage, startOfDay, toShortDate } from '@skedular/shared';
+
 import type { marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation.graphql';
 import type { marketplaceProductSubscribeForm_query$key, PaymentMethod } from '@/queries/__generated__/marketplaceProductSubscribeForm_query.graphql';
 import Alert from '@mui/material/Alert';
@@ -159,7 +159,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const initialPricingOptionId = searchParams.get('pricingOptionId');
   const selectedResourceIds = useMemo(() => {
@@ -247,7 +247,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
       return;
     }
     const id = uuid();
-    const subscriptionDetailsLink = getMarketplaceSubscriptionDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, id);
+    const subscriptionDetailsLink = getMarketplaceSubscriptionDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, id);
 
     commitAddSubscription({
       variables: {
@@ -280,7 +280,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
         const subscriptionId = subscription?.id ?? '';
 
         if (subscriptionId) {
-          router.push(getMarketplaceSubscriptionDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, subscriptionId));
+          router.push(getMarketplaceSubscriptionDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, subscriptionId));
         }
       },
       onError: (error) => {
@@ -309,7 +309,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
     );
   }
 
-  const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, rootData.product.id, selectedResourceIds);
+  const productLink = getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, rootData.product.id, selectedResourceIds);
 
   return (
     <Box

@@ -1,16 +1,17 @@
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoiceCountry } from '@/components/forms';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { PaletteModeContext } from '@skedular/shared';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
+
 import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { addBankAccount_addBankAccountMutation } from '@/queries/__generated__/addBankAccount_addBankAccountMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useState } from 'react';
-import { Form } from 'react-final-form';
+import { Form, FormSpy } from 'react-final-form';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
@@ -128,15 +129,19 @@ const AddBankAccount = ({ onReloadRequired, organizationCustomDomain, onAdded, o
               country,
             }}
             validate={validateBankAccountDetails}
-            render={({ handleSubmit, values }) => {
-              setName(values!.name);
-              setBankName(values!.bankName);
-              setAccountHolderName(values!.accountHolderName);
-              setAccountNumber(values!.accountNumber);
-              setCountry(values!.country);
-
-              return (
+            render={({ handleSubmit }) => (
                 <FormStackColumn onSubmit={handleSubmit}>
+                  <FormSpy
+                    subscription={{ values: true }}
+                    onChange={({ values }) => {
+                      if (!values) return;
+                      setName(values.name);
+                      setBankName(values.bankName);
+                      setAccountHolderName(values.accountHolderName);
+                      setAccountNumber(values.accountNumber);
+                      setCountry(values.country);
+                    }}
+                  />
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <SectionIconTypography label="Bank Account Setup" />
                     <BodyIconTypography label="Edit your Bank account name and details" />
@@ -173,8 +178,7 @@ const AddBankAccount = ({ onReloadRequired, organizationCustomDomain, onAdded, o
                     </StackRow>
                   </StackColumn>
                 </FormStackColumn>
-              );
-            }}
+            )}
           />
         </AppBarWithStackColumn>
       </Box>

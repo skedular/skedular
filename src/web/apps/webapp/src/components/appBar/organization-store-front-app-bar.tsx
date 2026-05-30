@@ -16,7 +16,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
-import { getCustomerFullName, SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getCustomerFullName, SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
@@ -49,7 +49,7 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { signOut } = useAuth();
   const selectedThemeMode = useContext(SelectedPaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
@@ -112,7 +112,7 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
     familyName: rootData.me?.familyName,
   });
 
-  const settingsLink = getSettingsLink(integratedPlatrform);
+  const settingsLink = getSettingsLink(integratedPlatform);
   const selectedThemeIcon =
     selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;
 

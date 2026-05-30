@@ -1,13 +1,14 @@
+import { PaletteModeContext, RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform } from '@skedular/shared';
 import { getOrganizationAddMarketplaceLink, getOrganizationAddPrivateLink, getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { NoOrganizationRootShell } from '@/components/rootShell';
 import type { UserType } from '@/components/setupFlow';
 import { SetupFlow } from '@/components/setupFlow';
 import type { pageWelcome_completeOnboardingMutation } from '@/queries/__generated__/pageWelcome_completeOnboardingMutation.graphql';
 import type { pageWelcome_rootQuery } from '@/queries/__generated__/pageWelcome_rootQuery.graphql';
-import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -43,7 +44,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -51,17 +52,17 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   const handleUserTypeClick = (userType: UserType) => {
     switch (userType) {
       case 'private':
-        router.push(getOrganizationAddPrivateLink(integratedPlatrform));
+        router.push(getOrganizationAddPrivateLink(integratedPlatform));
         break;
 
       case 'marketplace':
-        router.push(getOrganizationAddMarketplaceLink(integratedPlatrform));
+        router.push(getOrganizationAddMarketplaceLink(integratedPlatform));
         break;
 
       case 'individual-user':
         {
           if (rootData.me.isOnboardingDone) {
-            router.push(getRootLink(integratedPlatrform));
+            router.push(getRootLink(integratedPlatform));
             onReloadRequired();
 
             return;
@@ -78,13 +79,13 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
                 themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
               }
 
-              router.push(getRootLink(integratedPlatrform));
+              router.push(getRootLink(integratedPlatform));
               onReloadRequired();
             },
             onError: (error) => {
               themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${error.message}`} />, errorNotificationOptions);
 
-              router.push(getRootLink(integratedPlatrform));
+              router.push(getRootLink(integratedPlatform));
               onReloadRequired();
             },
             optimisticResponse: {

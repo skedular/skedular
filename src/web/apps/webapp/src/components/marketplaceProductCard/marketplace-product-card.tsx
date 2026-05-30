@@ -1,7 +1,7 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceProductBookingLink, getMarketplaceProductLink, getMarketplaceProductSubscribeLink } from '@/components/links';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -37,7 +37,7 @@ type Props = {
 };
 
 const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain, pricingRows, productId, subTitle, title }: Props) => {
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain } = useKnownParams();
   const router = useRouter();
   const [selectedPricingId, setSelectedPricingId] = useState(pricingRows[0]?.id ?? '');
@@ -136,8 +136,8 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain,
 
               router.push(
                 isSubscriptionCadence(selectedPricing.cadence)
-                  ? getMarketplaceProductSubscribeLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, productId, selectedPricing.id)
-                  : getMarketplaceProductBookingLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, productId, selectedPricing.id),
+                  ? getMarketplaceProductSubscribeLink(integratedPlatform, isCustomDomain, organizationCustomDomain, productId, selectedPricing.id)
+                  : getMarketplaceProductBookingLink(integratedPlatform, isCustomDomain, organizationCustomDomain, productId, selectedPricing.id),
               );
             }}
             disabled={!selectedPricing}
@@ -148,7 +148,7 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain,
           <Button
             fullWidth
             variant="outlined"
-            onClick={() => router.push(getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, productId))}
+            onClick={() => router.push(getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, productId))}
             sx={{ textTransform: 'none' }}
           >
             Details

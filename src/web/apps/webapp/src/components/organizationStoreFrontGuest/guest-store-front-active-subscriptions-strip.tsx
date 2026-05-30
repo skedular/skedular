@@ -2,7 +2,7 @@ import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIco
 import { PaymentStatusIcon, QuantityIcon } from '@/components/icons';
 import { getMarketplaceSubscriptionDetailsLink, getMarketplaceSubscriptionsLink } from '@/components/links';
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import type { guestStoreFrontActiveSubscriptionsStrip_query$key } from '@/queries/__generated__/guestStoreFrontActiveSubscriptionsStrip_query.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Button from '@mui/material/Button';
@@ -65,7 +65,7 @@ const GuestStoreFrontActiveSubscriptionsStrip = ({ rootDataRelay }: Props) => {
     `,
     rootDataRelay,
   );
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const subscriptions = useMemo(
     () => rootData.marketplaceBookingSubscriptions?.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item) ?? [],
@@ -109,7 +109,7 @@ const GuestStoreFrontActiveSubscriptionsStrip = ({ rootDataRelay }: Props) => {
 
           <Button
             component={NextLink}
-            href={getMarketplaceSubscriptionsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain)}
+            href={getMarketplaceSubscriptionsLink(integratedPlatform, isCustomDomain, organizationCustomDomain)}
             variant="text"
             endIcon={<ChevronRightIcon fontSize="small" />}
             sx={{ textTransform: 'none', whiteSpace: 'nowrap', px: 0, minWidth: 'auto', alignSelf: 'flex-start' }}
@@ -126,7 +126,7 @@ const GuestStoreFrontActiveSubscriptionsStrip = ({ rootDataRelay }: Props) => {
             }}
           >
             {subscriptions.map((subscription) => {
-              const subscriptionLink = getMarketplaceSubscriptionDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, subscription.id);
+              const subscriptionLink = getMarketplaceSubscriptionDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, subscription.id);
               const latestRecurringBooking = [...subscription.recurringBookings].sort((left, right) => new Date(right.startDate).getTime() - new Date(left.startDate).getTime())[0];
               const productTitle = subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription';
               const paymentStatusType = subscription.marketplaceBooking.paymentStatus.type;

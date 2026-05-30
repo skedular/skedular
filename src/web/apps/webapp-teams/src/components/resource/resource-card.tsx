@@ -10,7 +10,7 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import NextLink from 'next/link';
@@ -67,7 +67,7 @@ const ResourceCard = ({ rootDataRelay, resourceDetailsRelay, onReloadRequired, o
     resourceDetailsRelay,
   );
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const paletteMode = useContext(PaletteModeContext);
 
   return (
@@ -75,7 +75,7 @@ const ResourceCard = ({ rootDataRelay, resourceDetailsRelay, onReloadRequired, o
       <CardHeader
         title={
           <StackRow>
-            <Link component={NextLink} href={getOrganizationLocationResourceBaseLink(integratedPlatrform, organizationCustomDomain, locationId, resourceDetails.id)}>
+            <Link component={NextLink} href={getOrganizationLocationResourceBaseLink(integratedPlatform, organizationCustomDomain, locationId, resourceDetails.id)}>
               <LeadIconTypography
                 startElement={
                   resourceDetails.resourceType.type === rootData.deskResourceType ? (

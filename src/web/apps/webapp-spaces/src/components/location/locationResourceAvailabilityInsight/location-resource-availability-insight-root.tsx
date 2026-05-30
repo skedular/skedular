@@ -1,8 +1,9 @@
+import { RelayError, startOfDay, toRootError } from '@skedular/shared';
 import { AnalyticsInsightCard } from '@/components/analytics';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import type { locationResourceAvailabilityInsightRoot_rootQuery } from '@/queries/__generated__/locationResourceAvailabilityInsightRoot_rootQuery.graphql';
 import Skeleton from '@mui/material/Skeleton';
-import { startOfDay } from '@skedular/shared';
+
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { type PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';

@@ -1,3 +1,4 @@
+import { getRelayErrorMessage, useIntegratedPlatform } from '@skedular/shared';
 import { NewBookingButton } from '@/components/booking/addBooking';
 import {
   BodyIconTypography,
@@ -15,8 +16,7 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
-import { useIntegratedPlatrform } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { locationCard_addCustomerPreferredLocationMutation } from '@/queries/__generated__/locationCard_addCustomerPreferredLocationMutation.graphql';
 import type { locationCard_deleteLocationMutation } from '@/queries/__generated__/locationCard_deleteLocationMutation.graphql';
 import type { locationCard_LocationDetails$key } from '@/queries/__generated__/locationCard_LocationDetails.graphql';
@@ -41,6 +41,7 @@ import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
+import Image from 'next/image';
 
 type Props = {
   rootDataRelay: locationCard_query$key;
@@ -147,7 +148,7 @@ const LocationCard = ({
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const themedToast = toast;
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
@@ -167,7 +168,7 @@ const LocationCard = ({
 
   moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings]);
 
-  const editLink = getOrganizationLocationBaseLink(integratedPlatrform, locationDetails.organization!.customDomain!, locationDetails.id);
+  const editLink = getOrganizationLocationBaseLink(integratedPlatform, locationDetails.organization!.customDomain!, locationDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -186,7 +187,7 @@ const LocationCard = ({
         break;
 
       case MoreActionsMenuOptionType.ViewLocationBookings:
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization!.customDomain!, { locationId: locationDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatform, locationDetails.organization!.customDomain!, { locationId: locationDetails.id }));
         break;
 
       case MoreActionsMenuOptionType.SetAsPreferredLocation:
@@ -208,7 +209,7 @@ const LocationCard = ({
   };
 
   const handleViewFloorPlanClick = () => {
-    router.push(getOrganizationLocationFloorPlansLink(integratedPlatrform, organizationCustomDomain, locationDetails.id));
+    router.push(getOrganizationLocationFloorPlansLink(integratedPlatform, organizationCustomDomain, locationDetails.id));
   };
 
   const handleConfirmRemovingLocationClick = () => {
@@ -338,14 +339,14 @@ const LocationCard = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   overflow: 'hidden',
+                  position: 'relative',
                   flexShrink: 0,
                   bgcolor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.04)' : theme.palette.action.hover),
                 }}
               >
                 {primaryFeatureImage ? (
                   <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={primaryFeatureImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <Image width={56} height={56} unoptimized alt="" src={primaryFeatureImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </>
                 ) : (
                   <LocationIcon excludeTooltip />

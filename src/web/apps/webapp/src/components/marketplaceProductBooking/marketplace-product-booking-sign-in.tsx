@@ -1,5 +1,5 @@
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import MarketplaceProductSubscribeAuthGate from '@/components/marketplaceProductSubscription/marketplace-product-subscribe-auth-gate';
 import type { marketplaceProductBookingSignIn_rootQuery } from '@/queries/__generated__/marketplaceProductBookingSignIn_rootQuery.graphql';
 import { memo, useEffect } from 'react';

@@ -1,5 +1,5 @@
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import type { marketplaceProductSubscribeSignIn_rootQuery } from '@/queries/__generated__/marketplaceProductSubscribeSignIn_rootQuery.graphql';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';

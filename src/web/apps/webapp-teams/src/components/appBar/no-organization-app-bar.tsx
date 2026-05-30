@@ -17,7 +17,7 @@ import type { SelectChangeEvent } from '@mui/material/Select';
 import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
-import { getCustomerFullName, localNow, PaletteModeContext, SelectedPaletteModeContext, toLongDateTime, UpdatePaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getCustomerFullName, localNow, PaletteModeContext, SelectedPaletteModeContext, toLongDateTime, UpdatePaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import Image from 'next/image';
@@ -62,7 +62,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo, hideOrganizationSelecto
     rootDataRelay,
   );
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { signOut } = useAuth();
   const router = useRouter();
   const [currentTime, setCurrentTime] = useState(localNow());
@@ -80,9 +80,9 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo, hideOrganizationSelecto
     const id = event.target.value as string;
 
     if (id === createOrganizationId) {
-      router.push(getOrganizationAddPrivateLink(integratedPlatrform));
+      router.push(getOrganizationAddPrivateLink(integratedPlatform));
     } else {
-      router.push(getOrganizationBaseLink(integratedPlatrform, id));
+      router.push(getOrganizationBaseLink(integratedPlatform, id));
     }
   };
 
@@ -136,8 +136,8 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo, hideOrganizationSelecto
     familyName: rootData.me?.familyName,
   });
 
-  const settingsLink = getSettingsLink(integratedPlatrform);
-  const notificationsLink = getNotificationsLink(integratedPlatrform);
+  const settingsLink = getSettingsLink(integratedPlatform);
+  const notificationsLink = getNotificationsLink(integratedPlatform);
   const pendingInvitationsCount = rootData.pendingOrganizationInvitationsCount + rootData.pendingTeamInvitationsCount;
   const selectedThemeIcon =
     selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;
@@ -157,7 +157,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo, hideOrganizationSelecto
             borderColor: (theme) => theme.palette.divider,
           }}
         >
-          {showLogo && <Image src={logoUrl} width={logoWidth} height={logoHeight} alt="Skedular" />}
+          {showLogo && <Image src={logoUrl} width={logoWidth} height={logoHeight} unoptimized alt="Skedular" />}
           {showLogo && hideOrganizationSelector && <Divider orientation="vertical" flexItem sx={{ ml: 2, mr: 2 }} />}
 
           {!hideOrganizationSelector && (

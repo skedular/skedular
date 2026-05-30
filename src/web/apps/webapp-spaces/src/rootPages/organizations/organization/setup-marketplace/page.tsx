@@ -1,6 +1,6 @@
 import { getOrganizationMarketplaceSetupMarketplaceListingBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
-import { useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useEffect } from 'react';
 
@@ -10,7 +10,7 @@ const RootPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { organizationCustomDomain } = useKnownParams();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
 
   if (!organizationCustomDomain) {
     throw new Error('organizationCustomDomain is required');
@@ -19,10 +19,10 @@ const RootPage = () => {
   useEffect(() => {
     const requestedSection = searchParams.get('section');
     const section = requestedSection && legacySections.has(requestedSection) ? requestedSection : 'marketplace-listing';
-    const target = `${getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatrform, organizationCustomDomain).split('?')[0]}?section=${section}`;
+    const target = `${getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatform, organizationCustomDomain).split('?')[0]}?section=${section}`;
 
     router.replace(target);
-  }, [integratedPlatrform, organizationCustomDomain, router, searchParams]);
+  }, [integratedPlatform, organizationCustomDomain, router, searchParams]);
 
   return <Loading />;
 };

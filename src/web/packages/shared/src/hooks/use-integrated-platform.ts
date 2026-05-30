@@ -12,11 +12,4 @@ const useIntegratedPlatform = () => {
   };
 };
 
-/** @deprecated Use `useIntegratedPlatform` instead. */
-const useIntegratedPlatrform = () => {
-  const { integratedPlatform } = useIntegratedPlatform();
-  return { integratedPlatrform: integratedPlatform };
-};
-
-export { useIntegratedPlatrform };
 export default useIntegratedPlatform;

@@ -2,7 +2,7 @@
 
 import CustomOrganizationAuthPage from '@/components/auth/custom-organization-auth-page';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import type { pageAuthSignInQuery } from '@/queries/__generated__/pageAuthSignInQuery.graphql';
 import { getOrganizationCustomDomainFromHost } from '../host-utils';
 import { useSearchParams } from 'next/navigation';

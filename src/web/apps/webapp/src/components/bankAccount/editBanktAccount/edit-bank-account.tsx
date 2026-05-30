@@ -1,9 +1,10 @@
+import { PaletteModeContext, getRelayErrorMessage } from '@skedular/shared';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, GridContainer, SectionIconTypography, StackColumn } from '@skedular/ui';
 import { SingleChoiceCountry } from '@/components/forms';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { PaletteModeContext } from '@skedular/shared';
+
 import { defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { editBankAccount_query$key } from '@/queries/__generated__/editBankAccount_query.graphql';
 import type { editBankAccount_updateOrganizationBankAccountMutation } from '@/queries/__generated__/editBankAccount_updateOrganizationBankAccountMutation.graphql';
 import Box from '@mui/material/Box';

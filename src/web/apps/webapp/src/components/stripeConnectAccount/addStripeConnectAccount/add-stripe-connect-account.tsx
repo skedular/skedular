@@ -1,15 +1,16 @@
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { PaletteModeContext } from '@skedular/shared';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
+
 import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { addStripeConnectAccount_addStripeConnectAccountMutation } from '@/queries/__generated__/addStripeConnectAccount_addStripeConnectAccountMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useState } from 'react';
-import { Form } from 'react-final-form';
+import { Form, FormSpy } from 'react-final-form';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
@@ -100,11 +101,9 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationCustomDomain, o
               name,
             }}
             validate={validateStripeConnectAccountDetails}
-            render={({ handleSubmit, values }) => {
-              setName(values!.name);
-
-              return (
+            render={({ handleSubmit }) => (
                 <FormStackColumn onSubmit={handleSubmit}>
+                  <FormSpy subscription={{ values: true }} onChange={({ values }) => { if (values) setName(values.name); }} />
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <SectionIconTypography label="Stripe Connect Account Setup" />
                     <BodyIconTypography label="Edit your Stripe Connect account name and details" />
@@ -125,8 +124,7 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationCustomDomain, o
                     </StackRow>
                   </StackColumn>
                 </FormStackColumn>
-              );
-            }}
+            )}
           />
         </AppBarWithStackColumn>
       </Box>

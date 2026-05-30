@@ -1,3 +1,4 @@
+import { PaletteModeContext, getRelayErrorMessage, useIntegratedPlatform } from '@skedular/shared';
 import { PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
@@ -8,9 +9,9 @@ import { AddOrganizationZoneButton } from '@/components/organization/addOrganiza
 import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
 import { Search } from '@/components/search';
 import { Zone } from '@/components/zone';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+
 import { defaultGridActionPadding } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { organizationAdminZonesSectionQuery } from '@/queries/__generated__/organizationAdminZonesSectionQuery.graphql';
 import type { organizationAdminZonesSection_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdminZonesSection_addCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdminZonesSection_deleteZonesMutation } from '@/queries/__generated__/organizationAdminZonesSection_deleteZonesMutation.graphql';
@@ -60,7 +61,7 @@ const RootQuery = graphql`
 
 const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSearchTextChange, queryReference }: InnerProps) => {
   const rootData = usePreloadedQuery<organizationAdminZonesSectionQuery>(RootQuery, queryReference);
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -263,7 +264,7 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
         if (selectedZoneId) {
           const currentQuery = searchParams.toString();
           const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
-          router.push(getOrganizationAdminEditZoneBaseLink(integratedPlatrform, organizationCustomDomain, selectedZoneId, { redirectUrl }));
+          router.push(getOrganizationAdminEditZoneBaseLink(integratedPlatform, organizationCustomDomain, selectedZoneId, { redirectUrl }));
         }
         break;
       case MoreActionsMenuOptionType.DeleteZone:

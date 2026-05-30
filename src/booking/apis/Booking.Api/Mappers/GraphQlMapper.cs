@@ -420,8 +420,9 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
 
     private static LocationDetails? MapTo(Shared.Models.Location? src) => src is null ? null : new LocationDetails { Id = src.Id, Name = src.Name };
 
-    private static ResourceDetails MapToResourceDetails(Resource src) =>
-        new()
+    private static ResourceDetails MapToResourceDetails(Resource src)
+    {
+        var result =  new ResourceDetails
         {
             Id = src.Id,
             Name = src.Name,
@@ -432,9 +433,17 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden,
             CustomTags = src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Custom).Select(MapTo).ToList(),
             Zones = src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Zone).Select(MapTo).ToList(),
-            ProductTags = src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Product).Select(MapTo).ToList(),
-            ResourceType = MapTo(src.OrganizationTags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)))
+            ProductTags = src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Product).Select(MapTo).ToList()
         };
+
+        var organizationTag = src.OrganizationTags.FirstOrDefault(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type));
+        if (organizationTag is not null)
+        {
+            result.ResourceType = MapTo(organizationTag);
+        }
+
+        return result;
+    }
 
     private static OrganizationTagDetails MapTo(OrganizationTag src) => new() { Id = src.Id, Name = src.Name, Type = src.Type, Color = src.Color };
 
@@ -485,23 +494,6 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                     src.Currency is null ? null : new CurrencyDetails { Type = src.Currency.Value, Name = src.Currency.Value.ToCurrencyName() },
                 CurrencyToDisplay = src.Currency is null ? "N/A" : src.Currency.Value.ToCurrencyName()
             };
-
-    private static BookingCategory MapTo(global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory src) =>
-        src switch
-        {
-            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromHome => BookingCategory.WorkingFromHome,
-            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromOffice => BookingCategory.WorkingFromOffice,
-            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WorkingFromCoworkingSpace => BookingCategory
-                .WorkingFromCoworkingSpace,
-            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.SickLeave => BookingCategory.SickLeave,
-            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.AnnualLeave => BookingCategory.AnnualLeave,
-            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.WellbeingLeave => BookingCategory.WellbeingLeave,
-            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.ClientOffice => BookingCategory.ClientOffice,
-            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.Vacation => BookingCategory.Vacation,
-            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.TravelingForWork => BookingCategory.TravelingForWork,
-            global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.NonWorkingDay => BookingCategory.NonWorkingDay,
-            _ => throw new ArgumentOutOfRangeException()
-        };
 
     private IEnumerable<RecurringBookingDetails> MapTo(IEnumerable<RecurringBooking> src) => src.Select(MapTo)!;
 }

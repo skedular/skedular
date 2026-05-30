@@ -1,8 +1,8 @@
+import { useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import { getOrganizationAdminZonesBaseLink } from '@/components/links';
 import { EditOrganizationZonePage } from '@/components/organization/editOrganizationZone';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
-import { useIntegratedPlatrform } from '@skedular/shared';
+
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { memo } from 'react';
 
@@ -10,7 +10,7 @@ const getParamValue = (value: string | string[] | undefined): string => (Array.i
 
 const RootPage = () => {
   const { organizationCustomDomain } = useKnownParams();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const searchParams = useSearchParams();
   const zoneId = getParamValue(useParams().zoneId);
@@ -22,7 +22,7 @@ const RootPage = () => {
     throw new Error('zoneId is required');
   }
 
-  const returnUrl = searchParams.get('redirectUrl') ?? getOrganizationAdminZonesBaseLink(integratedPlatrform, organizationCustomDomain);
+  const returnUrl = searchParams.get('redirectUrl') ?? getOrganizationAdminZonesBaseLink(integratedPlatform, organizationCustomDomain);
 
   return (
     <RootShell>

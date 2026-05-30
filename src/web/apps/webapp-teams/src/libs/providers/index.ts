@@ -1,1 +1,1 @@
-export { default as useIntegratedPlatrform } from './integrated-platform-hook';
+export { default as useIntegratedPlatform } from './integrated-platform-hook';

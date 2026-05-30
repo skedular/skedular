@@ -1,7 +1,7 @@
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { NewIcon } from '@/components/icons';
 import { getOrganizationStripeConnectAccountAddLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import Button from '@mui/material/Button';
 import { memo } from 'react';
 
@@ -15,11 +15,11 @@ type Props = {
 };
 
 const NewStripeConnectAccountButton = ({ organizationCustomDomain, fullWidth, label, hideIcon, variant, size }: Props) => {
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
 
   return (
     <Button
-      href={getOrganizationStripeConnectAccountAddLink(integratedPlatrform, organizationCustomDomain)}
+      href={getOrganizationStripeConnectAccountAddLink(integratedPlatform, organizationCustomDomain)}
       variant={variant ?? 'text'}
       fullWidth={fullWidth}
       sx={{ textTransform: 'none' }}

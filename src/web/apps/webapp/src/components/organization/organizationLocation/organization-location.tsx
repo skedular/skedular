@@ -44,7 +44,7 @@ import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext, stringCollectionToString, stringToMultiLines, useIntegratedPlatrform } from '@skedular/shared';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext, stringCollectionToString, stringToMultiLines, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
   defaultButtonStyle,
@@ -71,6 +71,7 @@ import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
+import Image from 'next/image';
 
 type Props = {
   rootDataRelay: organizationLocation_query$key;
@@ -613,7 +614,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const searchParams = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
@@ -1181,7 +1182,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
           return;
         }
 
-        router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain));
+        router.push(getOrganizationLocationsBaseLink(integratedPlatform, organizationCustomDomain));
       },
       onError: (error) => {
         themedToast(<NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${error.message}.`} />, errorNotificationOptions);
@@ -1290,8 +1291,14 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
                                 backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
                               }}
                             >
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              <Image
+                                width={800}
+                                height={600}
+                                unoptimized
+                                alt=""
+                                src={image.original?.url ?? image.thumbnail?.url ?? ''}
+                                style={{ width: '100%', height: 'auto' }}
+                              />
                               <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
                                 <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
                                   <DeleteIcon fontSize="small" />
@@ -1620,15 +1627,15 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     </Box>
   );
 
-  const locationBaseLink = getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain).replace('/locations', `/locations/${locationId}`);
+  const locationBaseLink = getOrganizationLocationsBaseLink(integratedPlatform, organizationCustomDomain).replace('/locations', `/locations/${locationId}`);
   const sectionLinks: Record<OrganizationLocationSection, string> = {
-    setup: getOrganizationLocationSetupBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'physical-address-setup': getOrganizationLocationPhysicalAddressSetupBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'opening-hours': getOrganizationLocationOpeningHoursBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'floor-plans': getOrganizationLocationFloorPlansBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'manage-resources': getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'restricted-information': getOrganizationLocationRestrictedInformationBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'manage-location': getOrganizationLocationManageLocationBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
+    setup: getOrganizationLocationSetupBaseLink(integratedPlatform, organizationCustomDomain, locationId),
+    'physical-address-setup': getOrganizationLocationPhysicalAddressSetupBaseLink(integratedPlatform, organizationCustomDomain, locationId),
+    'opening-hours': getOrganizationLocationOpeningHoursBaseLink(integratedPlatform, organizationCustomDomain, locationId),
+    'floor-plans': getOrganizationLocationFloorPlansBaseLink(integratedPlatform, organizationCustomDomain, locationId),
+    'manage-resources': getOrganizationLocationManageResourcesBaseLink(integratedPlatform, organizationCustomDomain, locationId),
+    'restricted-information': getOrganizationLocationRestrictedInformationBaseLink(integratedPlatform, organizationCustomDomain, locationId),
+    'manage-location': getOrganizationLocationManageLocationBaseLink(integratedPlatform, organizationCustomDomain, locationId),
   };
   const locationCards = [
     {

@@ -1,8 +1,8 @@
+import { formatPriceForDisplay, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { ArrowRightIcon, CheckIcon, ClosedAllDayIcon } from '@/components/icons';
 import { getMarketplaceProductLink, getSignInLink, getSignUpLink } from '@/components/links';
-import { formatPriceForDisplay } from '@skedular/shared';
-import { useIntegratedPlatrform } from '@skedular/shared';
+
 import type { marketplaceProductSubscribeAuthGate_query$key } from '@/queries/__generated__/marketplaceProductSubscribeAuthGate_query.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -86,7 +86,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const pricingOptionId = searchParams.get('pricingOptionId');
   const selectedResourceIds = useMemo(() => {
@@ -146,7 +146,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
             <Button
               variant="contained"
               sx={{ mt: 3, textTransform: 'none' }}
-              onClick={() => router.push(getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, selectedResourceIds))}
+              onClick={() => router.push(getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id, selectedResourceIds))}
             >
               Back to product
             </Button>
@@ -162,7 +162,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
     return null;
   }
 
-  const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, selectedResourceIds);
+  const productLink = getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id, selectedResourceIds);
   const priceLabel = formatPriceForDisplay(currencyLabel, selectedPricingOption.price, selectedPricingOption.purchaseCadence);
   const pricingTitle = selectedPricingOption.listingMetadata.title ?? selectedPricingOption.listingMetadata.subTitle ?? cadenceLabel;
 

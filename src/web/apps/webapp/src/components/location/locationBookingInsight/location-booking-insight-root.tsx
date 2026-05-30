@@ -1,6 +1,6 @@
+import { RelayError, startOfDay, toRootError } from '@skedular/shared';
 import { AnalyticsInsightCard } from '@/components/analytics';
-import { RelayError, toRootError } from '@/components/relayError';
-import { startOfDay } from '@skedular/shared';
+
 import type { locationBookingInsightRoot_rootQuery } from '@/queries/__generated__/locationBookingInsightRoot_rootQuery.graphql';
 import Skeleton from '@mui/material/Skeleton';
 import { memo, useEffect, useState, useTransition } from 'react';

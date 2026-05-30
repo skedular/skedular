@@ -45,13 +45,13 @@ scripts/
 ## Package Boundaries
 
 - **`@skedular/ui`**: Design system — typography wrappers, layout primitives (StackColumn, StackRow), commons components, theme. Must NEVER import from `@skedular/shared`.
-- **`@skedular/shared`**: Shared runtime — providers (Relay, Theme, PaletteMode, etc.), hooks (useKnownParams, useIntegratedPlatrform), utils (date, name, relay, constants), cookie-consent, mui helpers, image uploaders. MAY import from `@skedular/ui`.
+- **`@skedular/shared`**: Shared runtime — providers (Relay, Theme, PaletteMode, etc.), hooks (useKnownParams, useIntegratedPlatform), utils (date, name, relay, constants), cookie-consent, mui helpers, image uploaders. MAY import from `@skedular/ui`.
 - **webapp**: Product-specific app. Imports from both packages. `@/libs/providers/` now only contains `integrated-platform-hook.tsx` (MS Teams integration, deferred for revisit).
 
 ## MS Teams Integration
 
 - `integrated-platform-hook.tsx` stays in `webapp/src/libs/providers/` for future revisit.
-- `useIntegratedPlatrform` is available from both `@skedular/shared` and the local `@/libs/providers` path.
+- `useIntegratedPlatform` is available from both `@skedular/shared` and the local `@/libs/providers` path.
 - The `InMsTeamsProvider` + `InMsTeamsContext` live in `@skedular/shared`.
 
 ## Redesign Program

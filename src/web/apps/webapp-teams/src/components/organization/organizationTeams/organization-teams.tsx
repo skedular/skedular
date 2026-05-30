@@ -1,6 +1,6 @@
 import { Loading } from '@/components/loading';
 import { LocationSelector } from '@/components/location/locationSelector';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import { NewTeamButton } from '@/components/team/addTeam';
 import type { organizationTeams_rootQuery } from '@/queries/__generated__/organizationTeams_rootQuery.graphql';
 import type { organizationTeams_teams_query$key } from '@/queries/__generated__/organizationTeams_teams_query.graphql';

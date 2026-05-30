@@ -1,8 +1,9 @@
+import { PaletteModeContext, RelayError, getCustomerFullName, getRelayErrorMessage, toRootError } from '@skedular/shared';
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
 import type { mySettings_rootQuery } from '@/queries/__generated__/mySettings_rootQuery.graphql';
 import type {
@@ -12,7 +13,7 @@ import type {
 } from '@/queries/__generated__/mySettings_updateCustomerDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+
 import {
   CaptionIconTypography,
   defaultPadding,

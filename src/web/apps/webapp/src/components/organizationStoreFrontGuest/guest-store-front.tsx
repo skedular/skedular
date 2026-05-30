@@ -1,11 +1,12 @@
+import { RelayError, convertCalendarDayToStartOfDay, endOfWeek, toRootError } from '@skedular/shared';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import type { guestStoreFront_rootQuery } from '@/queries/__generated__/guestStoreFront_rootQuery.graphql';
 import type { guestStoreFrontProducts_query$key } from '@/queries/__generated__/guestStoreFrontProducts_query.graphql';
 import type { guestStoreFrontSelectedLocationProductsQuery } from '@/queries/__generated__/guestStoreFrontSelectedLocationProductsQuery.graphql';
 import Container from '@mui/material/Container';
 import Box from '@mui/system/Box';
-import { convertCalendarDayToStartOfDay, endOfWeek } from '@skedular/shared';
+
 import { BodyIconTypography, MediumHeadingIconTypography } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import dayjs from 'dayjs';

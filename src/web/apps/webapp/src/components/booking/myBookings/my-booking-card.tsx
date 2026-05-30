@@ -22,7 +22,7 @@ import Link from '@mui/material/Link';
 import Tooltip from '@mui/material/Tooltip';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
-import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, PaletteModeContext, toShortDate, useIntegratedPlatrform } from '@skedular/shared';
+import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, PaletteModeContext, toShortDate, useIntegratedPlatform } from '@skedular/shared';
 import { CaptionIconTypography, coal, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
@@ -188,7 +188,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -258,11 +258,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
-        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id));
+        router.push(getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.id));
         break;
 
       case MoreActionsMenuOptionType.EditRecurringBooking:
-        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id, { editMode: 'recurring' }));
+        router.push(getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.id, { editMode: 'recurring' }));
         break;
 
       case MoreActionsMenuOptionType.DeleteBooking:
@@ -468,7 +468,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
                 <Tooltip title={locationName}>
                   <Link
                     component={NextLink}
-                    href={getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id)}
+                    href={getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.id)}
                     underline="none"
                     color="inherit"
                     sx={{ display: 'block', minWidth: 0, maxWidth: '100%' }}

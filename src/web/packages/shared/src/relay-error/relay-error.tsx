@@ -1,7 +1,8 @@
 'use client';
 
-import { BodyIconTypography, MediumHeadingIconTypography, SmallHeadingIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
-import { ErrorIcon, HomeIcon, RefreshIcon } from '@/components/icons';
+import ErrorOutlineIcon from '@mui/icons-material/Error';
+import HomeOutlinedIcon from '@mui/icons-material/Home';
+import RefreshOutlinedIcon from '@mui/icons-material/Refresh';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -10,6 +11,7 @@ import Chip from '@mui/material/Chip';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
+import { BodyIconTypography, MediumHeadingIconTypography, SmallHeadingIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { memo, useMemo, useState } from 'react';
 import type { FallbackProps } from 'react-error-boundary';
 
@@ -99,17 +101,17 @@ const RelayError = ({ error }: Props) => {
         <CardContent sx={{ padding: { xs: 3, sm: 5 } }}>
           <StackColumn spacing={3}>
             <StackColumn spacing={2} sx={{ alignItems: 'flex-start' }}>
-              <Chip icon={<ErrorIcon color="error" />} label="Error" color="error" variant="outlined" sx={{ borderRadius: 2 }} />
+              <Chip icon={<ErrorOutlineIcon color="error" />} label="Error" color="error" variant="outlined" sx={{ borderRadius: 2 }} />
               <MediumHeadingIconTypography label="Something went wrong" />
               <BodyIconTypography label={DEFAULT_ERROR_MESSAGE} sx={{ maxWidth: 560 }} />
               <SmallIconTypography label={DEFAULT_HELPER_MESSAGE} sx={{ maxWidth: 560 }} />
             </StackColumn>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
-              <Button variant="contained" startIcon={<RefreshIcon />} onClick={handleRefreshClicked}>
+              <Button variant="contained" startIcon={<RefreshOutlinedIcon />} onClick={handleRefreshClicked}>
                 Try Again
               </Button>
-              <Button variant="outlined" startIcon={<HomeIcon />} onClick={handleGoHomeClicked}>
+              <Button variant="outlined" startIcon={<HomeOutlinedIcon />} onClick={handleGoHomeClicked}>
                 Go Home
               </Button>
               <Button variant="text" onClick={handleGoBackClicked}>

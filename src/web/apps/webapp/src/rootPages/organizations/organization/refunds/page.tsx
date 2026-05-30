@@ -1,6 +1,6 @@
 import { Loading } from '@/components/loading';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationRefunds_rootQuery } from '@/queries/__generated__/pageOrganizationRefunds_rootQuery.graphql';
 import Alert from '@mui/material/Alert';

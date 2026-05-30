@@ -1,5 +1,5 @@
 import { getOrganizationAnalyticsBaseLink, getOrganizationLocationsAnalyticsLocationsBaseLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -23,13 +23,13 @@ const sectionLabels: Record<OrganizationAnalyticsSection, string> = {
 };
 
 const OrganizationAnalyticsSectionNav = ({ activeSection, organizationCustomDomain, stickyTop = 0 }: Props) => {
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const theme = useTheme();
   const isCompactNav = useMediaQuery(theme.breakpoints.down('md'), { noSsr: true });
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const sectionLinks: Record<OrganizationAnalyticsSection, string> = {
-    organization: getOrganizationAnalyticsBaseLink(integratedPlatrform, organizationCustomDomain),
-    locations: getOrganizationLocationsAnalyticsLocationsBaseLink(integratedPlatrform, organizationCustomDomain),
+    organization: getOrganizationAnalyticsBaseLink(integratedPlatform, organizationCustomDomain),
+    locations: getOrganizationLocationsAnalyticsLocationsBaseLink(integratedPlatform, organizationCustomDomain),
   };
 
   const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {

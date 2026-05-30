@@ -1,8 +1,9 @@
+import { RelayError, toRootError, useKnownParams } from '@skedular/shared';
 import { EditBankAccount } from '@/components/bankAccount/editBanktAccount';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
+
 import type { pageOrganizationBankAccount_rootQuery } from '@/queries/__generated__/pageOrganizationBankAccount_rootQuery.graphql';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';

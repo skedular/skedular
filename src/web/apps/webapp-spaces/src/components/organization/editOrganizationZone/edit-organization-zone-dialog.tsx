@@ -1,11 +1,12 @@
+import { PaletteModeContext, RelayError, getRelayErrorMessage, toRootError } from '@skedular/shared';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import type { editOrganizationZoneDialog_rootQuery } from '@/queries/__generated__/editOrganizationZoneDialog_rootQuery.graphql';
 import type { editOrganizationZoneDialog_updateZoneMutation } from '@/queries/__generated__/editOrganizationZoneDialog_updateZoneMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+
 import { ColorPicker, FormFieldLabel, FormStackColumn, PageHeaderPanel, SettingsSectionCard, SmallIconTypography, StackColumn, StickyReviewRail } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';

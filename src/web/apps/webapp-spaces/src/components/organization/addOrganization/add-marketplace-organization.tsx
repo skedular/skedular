@@ -37,6 +37,7 @@ import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 import { boolean, object, string } from 'yup';
+import Image from 'next/image';
 
 type Props = {
   rootDataRelay: addMarketplaceOrganization_query$key;
@@ -288,11 +289,11 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
                             display: 'grid',
                             placeItems: 'center',
                             overflow: 'hidden',
+                            position: 'relative',
                             p: 1,
                           }}
                         >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={logoUrl} alt="Organization logo" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                          <Image width={128} height={128} unoptimized alt="Organization logo" src={logoUrl} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                         </Box>
                       ) : null}
 
@@ -328,8 +329,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
                               backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
                             }}
                           >
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <Image width={800} height={600} unoptimized alt="" src={image.original?.url ?? image.thumbnail?.url ?? ''} style={{ width: '100%', height: 'auto' }} />
                             <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
                               <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
                                 <DeleteIcon fontSize="small" />

@@ -1,9 +1,9 @@
+import { formatPriceForDisplay, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceLocationLink, getMarketplaceProductBookingLink, getMarketplaceProductSubscribeLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel, MarketplaceCancellationPolicyDetails } from '@/components/marketplaceProduct';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
-import { useIntegratedPlatrform } from '@skedular/shared';
-import { formatPriceForDisplay } from '@skedular/shared';
+
 import type { marketplaceProductDetailBookingCard_product$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_product.graphql';
 import type { marketplaceProductDetailBookingCard_query$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_query.graphql';
 import Button from '@mui/material/Button';
@@ -104,7 +104,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
   );
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const selectedResourceIds = useMemo(() => {
     const resourceIds = searchParams.get('resourceIds');
     if (resourceIds) {
@@ -209,8 +209,8 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
 
                     router.push(
                       isSubscriptionCadence(pricingPlan.cadence)
-                        ? getMarketplaceProductSubscribeLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, pricingPlan.id, selectedResourceIds)
-                        : getMarketplaceProductBookingLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, pricingPlan.id, selectedResourceIds),
+                        ? getMarketplaceProductSubscribeLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id, pricingPlan.id, selectedResourceIds)
+                        : getMarketplaceProductBookingLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id, pricingPlan.id, selectedResourceIds),
                     );
                   }}
                   sx={{ mt: 1.2, textTransform: 'none' }}
@@ -244,7 +244,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
                   <Link
                     key={location.id}
                     component={NextLink}
-                    href={getMarketplaceLocationLink(integratedPlatrform, location.id)}
+                    href={getMarketplaceLocationLink(integratedPlatform, location.id)}
                     underline="none"
                     color="inherit"
                     sx={{ display: 'inline-flex' }}

@@ -1,5 +1,5 @@
 import { getOrganizationLocationResourceOpeningHoursBaseLink, getOrganizationLocationResourceSetupBaseLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -25,13 +25,13 @@ const sectionLabels: Record<ResourceEditSection, string> = {
 };
 
 const ResourceEditSectionNav = ({ activeSection, organizationCustomDomain, locationId, resourceId, stickyTop = 0 }: Props) => {
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const theme = useTheme();
   const isCompactNav = useMediaQuery(theme.breakpoints.down('md'), { noSsr: true });
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const sectionLinks: Record<ResourceEditSection, string> = {
-    setup: getOrganizationLocationResourceSetupBaseLink(integratedPlatrform, organizationCustomDomain, locationId, resourceId),
-    'opening-hours': getOrganizationLocationResourceOpeningHoursBaseLink(integratedPlatrform, organizationCustomDomain, locationId, resourceId),
+    setup: getOrganizationLocationResourceSetupBaseLink(integratedPlatform, organizationCustomDomain, locationId, resourceId),
+    'opening-hours': getOrganizationLocationResourceOpeningHoursBaseLink(integratedPlatform, organizationCustomDomain, locationId, resourceId),
   };
 
   const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {

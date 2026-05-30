@@ -16,9 +16,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import { FormFieldLabel, FormStackColumn, HelperText, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -176,7 +177,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
 
   const organization = rootData.organization;
   const router = useRouter();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateOrganizationDetails = makeValidate(organizationSchema);
@@ -359,7 +360,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
 
           const updatedCustomDomain = response.updateOrganization.organization.customDomain;
           if (fieldsToUpdate.includes('CUSTOM_DOMAIN') && updatedCustomDomain && updatedCustomDomain !== organization.customDomain) {
-            router.replace(getOrganizationAdminSetupBaseLink(integratedPlatrform, updatedCustomDomain));
+            router.replace(getOrganizationAdminSetupBaseLink(integratedPlatform, updatedCustomDomain));
           }
         },
         onError: (error) => {
@@ -390,7 +391,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
         },
       });
     },
-    [commitUpdateOrganizationPatch, integratedPlatrform, organization, rootData.organizationIndustryMainCategoriesReferences, router, themedToast],
+    [commitUpdateOrganizationPatch, integratedPlatform, organization, rootData.organizationIndustryMainCategoriesReferences, router, themedToast],
   );
   const debouncedCommitOrganizationPatch = useDebounceCallback(commitOrganizationPatch, inlinePatchDebounceTimeout);
 
@@ -514,11 +515,18 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                               display: 'grid',
                               placeItems: 'center',
                               overflow: 'hidden',
+                              position: 'relative',
                               p: 1,
                             }}
                           >
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={organizationLogoUrl} alt={`${organization.name} logo`} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                            <Image
+                              width={128}
+                              height={128}
+                              unoptimized
+                              alt={`${organization.name} logo`}
+                              src={organizationLogoUrl}
+                              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                            />
                           </Box>
                         ) : null}
 
@@ -554,8 +562,14 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
                                 backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
                               }}
                             >
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              <Image
+                                width={800}
+                                height={600}
+                                unoptimized
+                                alt=""
+                                src={image.original?.url ?? image.thumbnail?.url ?? ''}
+                                style={{ width: '100%', height: 'auto' }}
+                              />
                               <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
                                 <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
                                   <DeleteIcon fontSize="small" />

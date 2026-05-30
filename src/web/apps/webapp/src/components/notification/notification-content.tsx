@@ -1,9 +1,2 @@
-import { SmallIconTypography } from '@skedular/ui';
-
-type Props = {
-  content?: string;
-};
-
-const Notification = ({ content }: Props) => <SmallIconTypography label={content} />;
-
-export default Notification;
+// Backward-compat re-export — implementation moved to @skedular/shared
+export { NotificationContent as default, errorNotificationOptions } from '@skedular/shared';

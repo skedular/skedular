@@ -1,3 +1,4 @@
+import { PaletteModeContext, dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, toShortDate, useIntegratedPlatform } from '@skedular/shared';
 import { CustomerAvatar } from '@/components/avatars';
 import RecurringBookingDeleteConfirmationDialog from '@/components/booking/recurring-booking-delete-confirmation-dialog';
 import { CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
@@ -9,9 +10,9 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { Resources } from '@/components/resource';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+
 import { coal } from '@skedular/ui';
-import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, toShortDate } from '@skedular/shared';
+
 import type { bookingCard_addPrivateBookingMutation } from '@/queries/__generated__/bookingCard_addPrivateBookingMutation.graphql';
 import type { bookingCard_BookingDetails$key } from '@/queries/__generated__/bookingCard_BookingDetails.graphql';
 import type { bookingCard_confirmBookingPaymentMutation } from '@/queries/__generated__/bookingCard_confirmBookingPaymentMutation.graphql';
@@ -346,7 +347,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -435,11 +436,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
-        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id));
+        router.push(getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.id));
         break;
 
       case MoreActionsMenuOptionType.EditRecurringBooking:
-        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id, { editMode: 'recurring' }));
+        router.push(getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.id, { editMode: 'recurring' }));
         break;
 
       case MoreActionsMenuOptionType.DeleteBooking:
@@ -825,7 +826,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
                 <Tooltip title={locationName}>
                   <Link
                     component={NextLink}
-                    href={getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id)}
+                    href={getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.id)}
                     underline="none"
                     color="inherit"
                     sx={{ display: 'block', minWidth: 0, maxWidth: '100%' }}

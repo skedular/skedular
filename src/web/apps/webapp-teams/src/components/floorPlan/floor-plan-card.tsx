@@ -1,20 +1,15 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackRow } from '@skedular/ui';
 import { EllipseMenuIcon, LocationIcon } from '@/components/icons';
 import { getOrganizationLocationFloorPlanAdminEditLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { coal, sandstone } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
 import type { floorPlanCard_FloorPlanDetails$key } from '@/queries/__generated__/floorPlanCard_FloorPlanDetails.graphql';
 import type { floorPlanCard_deleteFloorPlanMutation } from '@/queries/__generated__/floorPlanCard_deleteFloorPlanMutation.graphql';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
-import Box from '@mui/system/Box';
+import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
+import { LeadIconTypography, StackRow } from '@skedular/ui';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
@@ -48,7 +43,7 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationCusto
     floorPlanDetailsRelay,
   );
 
-  const [commitDeleteBooking] = useMutation<floorPlanCard_deleteFloorPlanMutation>(graphql`
+  const [commitDeleteFloorPlan] = useMutation<floorPlanCard_deleteFloorPlanMutation>(graphql`
     mutation floorPlanCard_deleteFloorPlanMutation($connectionIds: [ID!]!, $input: DeleteFloorPlanInput!) {
       deleteFloorPlan(input: $input) {
         floorPlan {
@@ -58,7 +53,7 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationCusto
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -80,72 +75,59 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationCusto
     switch (id) {
       case MoreActionsMenuOptionType.EditFloorPlan:
         if (floorPlanDetails) {
-          router.push(getOrganizationLocationFloorPlanAdminEditLink(integratedPlatrform, organizationCustomDomain, locationId, floorPlanDetails.id));
+          router.push(getOrganizationLocationFloorPlanAdminEditLink(integratedPlatform, organizationCustomDomain, locationId, floorPlanDetails.id));
         }
-
         break;
 
       case MoreActionsMenuOptionType.DeleteFloorPlan:
-        handleRemoveBookingClick();
+        commitDeleteFloorPlan({
+          variables: {
+            connectionIds,
+            input: { clientMutationId: uuid(), id: floorPlanDetails.id },
+          },
+          onCompleted: (_, errors) => {
+            if (errors && errors.length > 0) {
+              themedToast(
+                <NotificationContent content={`Failed to remove floor plan ${floorPlanDetails.name}. Error: ${getRelayErrorMessage(errors)}.`} />,
+                errorNotificationOptions,
+              );
+            }
+          },
+          onError: (error) => {
+            themedToast(<NotificationContent content={`Failed to remove floor plan ${floorPlanDetails.name}. Error: ${error.message}.`} />, errorNotificationOptions);
+          },
+        });
         break;
     }
   };
 
-  const handleRemoveBookingClick = () => {
-    commitDeleteBooking({
-      variables: {
-        connectionIds,
-        input: {
-          clientMutationId: uuid(),
-          id: floorPlanDetails.id,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          themedToast(<NotificationContent content={`Failed to remove floor plan ${floorPlanDetails.name}. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
-
-          return;
-        }
-      },
-      onError: (error) => {
-        themedToast(<NotificationContent content={`Failed to remove floor plan ${floorPlanDetails.name}. Error: ${error.message}.`} />, errorNotificationOptions);
-      },
-    });
-  };
+  const editLink = getOrganizationLocationFloorPlanAdminEditLink(integratedPlatform, organizationCustomDomain, locationId, floorPlanDetails.id);
 
   return (
     <>
-      <Card sx={{ width: { xs: '100%', sm: 380 } }}>
-        {floorPlanDetails.image && floorPlanDetails.image.thumbnail && (
-          <CardMedia component="img" image={floorPlanDetails.image.thumbnail.url} sx={{ objectFit: 'fill', height: floorPlanDetails.image.thumbnail.height }} />
-        )}
-        <CardHeader
-          title={
-            <StackRow>
-              <Link component={NextLink} href={getOrganizationLocationFloorPlanAdminEditLink(integratedPlatrform, organizationCustomDomain, locationId, floorPlanDetails.id)}>
-                <LeadIconTypography label={floorPlanDetails.name} startElement={<LocationIcon excludeTooltip />} sx={{ flexWrap: undefined }} invertDefaultColor />
-              </Link>
-            </StackRow>
-          }
-          action={
-            <>
-              {moreActionsOption.length > 0 && (
-                <Box color={paletteMode === 'dark' ? coal : sandstone} sx={{ paddingTop: 0.5 }}>
-                  <IconButton onClick={handleMoreActionsMenuClick} color="inherit">
-                    <EllipseMenuIcon />
-                  </IconButton>
-                </Box>
-              )}
-            </>
-          }
-        />
-        <CardContent>
-          <StackRow>
-            <BodyIconTypography label="Resource Count:" />
-            <SmallIconTypography label={`${floorPlanDetails.resourceCount}`} />
-          </StackRow>
-        </CardContent>
-      </Card>
+      <Box
+        sx={{
+          border: 1,
+          borderColor: 'divider',
+          borderRadius: 2.5,
+          px: 1,
+          py: 0.75,
+          backgroundColor: 'background.paper',
+          boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 2px 10px rgba(15, 23, 42, 0.04)' : theme.shadows[1]),
+        }}
+      >
+        <StackRow sx={{ alignItems: 'center', gap: 1, flexWrap: 'nowrap', minWidth: 0 }}>
+          <Link component={NextLink} href={editLink} underline="none" sx={{ minWidth: 0, flex: '1 1 auto', overflow: 'hidden' }}>
+            <LeadIconTypography label={floorPlanDetails.name} startElement={<LocationIcon excludeTooltip />} sx={{ flexWrap: undefined }} invertDefaultColor />
+          </Link>
+
+          <Chip size="small" label={`${floorPlanDetails.resourceCount} resource${floorPlanDetails.resourceCount === 1 ? '' : 's'}`} variant="outlined" sx={{ flexShrink: 0 }} />
+
+          <IconButton size="small" onClick={handleMoreActionsMenuClick} aria-label={`More actions for ${floorPlanDetails.name}`}>
+            <EllipseMenuIcon />
+          </IconButton>
+        </StackRow>
+      </Box>
 
       <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
     </>

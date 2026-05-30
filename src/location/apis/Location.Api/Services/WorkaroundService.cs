@@ -17,7 +17,9 @@ public interface IWorkaroundService
     Task RegenerateAllDailyAnalyticsAsync(CancellationToken cancellationToken);
     Task RegenerateDailyAnalyticsAsync(string locationId, CancellationToken cancellationToken);
 
-    Task RegenerateResourceAvailabilitySnapshotsAsync(string locationId, RegenerateResourceAvailabilitySnapshotsInput input,
+    Task RegenerateResourceAvailabilitySnapshotsAsync(
+        string locationId,
+        RegenerateResourceAvailabilitySnapshotsInput input,
         CancellationToken cancellationToken);
 }
 
@@ -29,7 +31,7 @@ public class WorkaroundService(
 {
     public async Task RepublishLocationAsync(string locationId, CancellationToken cancellationToken)
     {
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
+        var location = await repositoryFactory.LocationRepository.GetByIdUntrackedAsync(locationId, cancellationToken);
         if (location is null)
         {
             return;
@@ -48,8 +50,7 @@ public class WorkaroundService(
     {
         var locations = await repositoryFactory.LocationRepository.GetAllUntrackedAsync(false, cancellationToken);
 
-        foreach (var location in locations.Where(item =>
-                     item.Organization?.CustomDomain != Constants.SkedularPublicLocationsCustomDomainName))
+        foreach (var location in locations.Where(item => item.Organization?.CustomDomain != Constants.SkedularPublicLocationsCustomDomainName))
         {
             await temporalService.StartWorkflowGenerateLocationDailyAnalyticsAsync(
                 new GenerateLocationDailyAnalyticsInput(location.Id, null, null),
@@ -65,7 +66,7 @@ public class WorkaroundService(
             return;
         }
 
-        if (location.Organization?.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName)
+        if (location.Organization.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName)
         {
             return;
         }
@@ -75,7 +76,9 @@ public class WorkaroundService(
             cancellationToken);
     }
 
-    public async Task RegenerateResourceAvailabilitySnapshotsAsync(string locationId, RegenerateResourceAvailabilitySnapshotsInput input,
+    public async Task RegenerateResourceAvailabilitySnapshotsAsync(
+        string locationId, 
+        RegenerateResourceAvailabilitySnapshotsInput input,
         CancellationToken cancellationToken)
     {
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
@@ -84,7 +87,7 @@ public class WorkaroundService(
             return;
         }
 
-        if (location.Organization?.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName)
+        if (location.Organization.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName)
         {
             return;
         }

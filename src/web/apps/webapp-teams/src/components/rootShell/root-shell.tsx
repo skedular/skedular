@@ -1,15 +1,16 @@
+import { InMsTeamsContext, RelayError, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import { AppBar } from '@/components/appBar';
 import { InfoIcon, SignOutIcon } from '@/components/icons';
 import { getInstallMsTeamsLink, getOrganizationSsoSignInBaseLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import { InMsTeamsContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+
 import { BodyIconTypography, CaptionIconTypography, PushToRight, SmallHeadingIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { usePathname, useRouter } from 'next/navigation';
@@ -56,14 +57,14 @@ const maxRetryAttemptsToReload = 20;
 
 const RootShell = ({ queryReference, children, onReloadRequired, organizationCustomDomain }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const inMsTeams = useContext(InMsTeamsContext);
   const router = useRouter();
   const pathName = usePathname();
   const { signOut } = useAuth();
   const [reloadCount, setReloadCount] = useState(0);
-  const rootLink = getRootLink(integratedPlatrform);
-  const welcomeLink = getWelcomeLink(integratedPlatrform);
+  const rootLink = getRootLink(integratedPlatform);
+  const welcomeLink = getWelcomeLink(integratedPlatform);
   const installMsTeamsLink = getInstallMsTeamsLink();
   const areCustomerRecordsSync = !!rootData?.customerReadinessSynced;
 
@@ -148,7 +149,7 @@ const RootShell = ({ queryReference, children, onReloadRequired, organizationCus
                     <PushToRight />
                     <Button
                       variant="contained"
-                      href={getOrganizationSsoSignInBaseLink(integratedPlatrform, organizationCustomDomain)}
+                      href={getOrganizationSsoSignInBaseLink(integratedPlatform, organizationCustomDomain)}
                       sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}
                     >
                       Single sign-on

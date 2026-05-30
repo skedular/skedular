@@ -1,8 +1,8 @@
+import { toStoredBookingTimeRange, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon } from '@/components/icons';
 import { getMarketplaceBookingDetailsLink, getMarketplaceBookingsLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@skedular/shared';
-import { toStoredBookingTimeRange } from '@skedular/shared';
+
 import type { guestStoreFrontUpcomingBookingsStrip_query$key } from '@/queries/__generated__/guestStoreFrontUpcomingBookingsStrip_query.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Button from '@mui/material/Button';
@@ -72,7 +72,7 @@ const GuestStoreFrontUpcomingBookingsStrip = ({ rootDataRelay }: Props) => {
     `,
     rootDataRelay,
   );
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const upcomingBookings = useMemo(
     () => rootData.bookings?.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item) ?? [],
@@ -116,7 +116,7 @@ const GuestStoreFrontUpcomingBookingsStrip = ({ rootDataRelay }: Props) => {
 
           <Button
             component={NextLink}
-            href={getMarketplaceBookingsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain)}
+            href={getMarketplaceBookingsLink(integratedPlatform, isCustomDomain, organizationCustomDomain)}
             variant="text"
             endIcon={<ChevronRightIcon fontSize="small" />}
             sx={{ textTransform: 'none', whiteSpace: 'nowrap', px: 0, minWidth: 'auto', alignSelf: 'flex-start' }}
@@ -133,7 +133,7 @@ const GuestStoreFrontUpcomingBookingsStrip = ({ rootDataRelay }: Props) => {
             }}
           >
             {upcomingBookings.map((booking) => {
-              const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, booking.id);
+              const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, booking.id);
               const resourcesLabel = booking.bookingResources.map((item) => item.resource.name).join(', ') || 'Assigned later';
               const locationLabel = booking.involvedLocations[0]?.name ?? 'Location to be confirmed';
               const paymentStatusType = booking.marketplaceBooking?.paymentStatus.type;

@@ -15,7 +15,7 @@ import type {
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import {
   CaptionIconTypography,
   defaultButtonStyle,
@@ -236,7 +236,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -426,7 +426,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
           return;
         }
 
-        router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationCustomDomain));
+        router.push(getOrganizationUsersBaseLink(integratedPlatform, organizationCustomDomain));
       },
       onError: (error) => {
         themedToast(<NotificationContent content={`We couldn't remove this user. ${error.message}`} />, errorNotificationOptions);

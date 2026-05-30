@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, LeadIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
@@ -70,12 +70,12 @@ const AddOrganizationButton = ({ href }: { href: string }) => (
 const NoOrganizationLandingContent = ({ queryRef }: Props) => {
   const rootData = usePreloadedQuery<noOrganizationLandingPage_rootQuery>(NoOrganizationLandingPageRootQuery, queryRef);
   const queryData = useFragment<noOrganizationLandingContent_query$key>(QueryFragment, rootData);
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const organizations = queryData.myOrganizations;
   const organizationCount = organizations.length;
   const landingState = getLandingState(organizationCount);
-  const createOrganizationLink = getOrganizationSetupLink(integratedPlatrform);
+  const createOrganizationLink = getOrganizationSetupLink(integratedPlatform);
 
   useEffect(() => {
     console.info('org_landing_state', {
@@ -110,7 +110,7 @@ const NoOrganizationLandingContent = ({ queryRef }: Props) => {
               <AddOrganizationButton href={createOrganizationLink} />
             </StackRow>
             {organizations.map((organization) => {
-              const organizationLink = getOrganizationBaseLink(integratedPlatrform, organization.customDomain ?? organization.uniqueId);
+              const organizationLink = getOrganizationBaseLink(integratedPlatform, organization.customDomain ?? organization.uniqueId);
 
               return (
                 <Card variant="outlined" key={organization.uniqueId}>

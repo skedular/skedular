@@ -1,9 +1,8 @@
 import { FloorPlanCard } from '@/components/floorPlan';
 import { NewFloorplanButton } from '@/components/floorPlan/addFloorPlan';
-import { SettingsSectionCard } from '@skedular/ui';
-import { defaultPadding } from '@skedular/ui';
 import type { organizationLocationFloorPlansSectionQuery } from '@/queries/__generated__/organizationLocationFloorPlansSectionQuery.graphql';
 import Box from '@mui/material/Box';
+import { defaultPadding, LeadIconTypography, SettingsSectionCard, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { memo, useMemo } from 'react';
 import { graphql, useLazyLoadQuery } from 'react-relay';
 
@@ -54,25 +53,24 @@ const OrganizationLocationFloorPlansSection = ({ organizationCustomDomain, locat
         description="Create and maintain the floor plans that describe how this location is laid out."
         actions={<NewFloorplanButton organizationCustomDomain={organizationCustomDomain} locationId={locationId} />}
       >
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(auto-fit, minmax(280px, 360px))' },
-            gap: 2,
-            justifyContent: 'start',
-          }}
-        >
-          {floorPlans.map((floorPlan) => (
-            <Box key={floorPlan.id}>
+        {floorPlans.length === 0 ? (
+          <Box sx={{ border: 1, borderStyle: 'dashed', borderColor: 'divider', borderRadius: 3, p: 3, backgroundColor: 'background.paper' }}>
+            <LeadIconTypography label="No floor plans found" />
+            <SmallIconTypography label="Add a floor plan to describe how this location is laid out." />
+          </Box>
+        ) : (
+          <StackColumn spacing={1}>
+            {floorPlans.map((floorPlan) => (
               <FloorPlanCard
+                key={floorPlan.id}
                 floorPlanDetailsRelay={floorPlan}
                 connectionIds={floorPlansConnectionIds}
                 organizationCustomDomain={organizationCustomDomain}
                 locationId={locationId}
               />
-            </Box>
-          ))}
-        </Box>
+            ))}
+          </StackColumn>
+        )}
       </SettingsSectionCard>
     </Box>
   );

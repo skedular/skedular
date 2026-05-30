@@ -1,3 +1,4 @@
+import { PaletteModeContext, getRelayErrorMessage } from '@skedular/shared';
 import {
   BodyIconTypography,
   CaptionIconTypography,
@@ -11,9 +12,9 @@ import {
 } from '@skedular/ui';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { CompleteOnboardStripeConnectAccountButton } from '@/components/stripeConnectAccount';
-import { PaletteModeContext } from '@skedular/shared';
+
 import { defaultPadding, PageHeaderPanel } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { editStripeConnectAccount_query$key } from '@/queries/__generated__/editStripeConnectAccount_query.graphql';
 import type { editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation } from '@/queries/__generated__/editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation.graphql';
 import Box from '@mui/material/Box';

@@ -1,5 +1,6 @@
 'use client';
 
+import { RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import { getOrganizationSubscriptionsBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import {
@@ -11,7 +12,7 @@ import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/m
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationSubscriptionDetail_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_confirmRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptionDetail_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_deleteMarketplaceBookingSubscriptionMutation.graphql';
@@ -29,7 +30,7 @@ import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
-import { getRelayErrorMessage, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+
 import { BodyIconTypography, DefaultDialogTitle, defaultPadding, PageHeaderPanel, StackColumn, StackRow, SubtitleIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
@@ -172,7 +173,7 @@ const toStoredDate = (date?: string | null) => (date ? dayjs.utc(date).format('D
 
 const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationSubscriptionDetail_rootQuery>(RootQuery, queryReference);
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
   const [commitDeleteMarketplaceBookingSubscription, isDeleteMarketplaceBookingSubscriptionInFlight] =
     useMutation<pageOrganizationSubscriptionDetail_deleteMarketplaceBookingSubscriptionMutation>(graphql`
@@ -555,7 +556,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                   />
 
                   <Box sx={{ mt: 2 }}>
-                    <Link component={NextLink} href={getOrganizationSubscriptionsBaseLink(integratedPlatrform, organizationCustomDomain)} underline="hover">
+                    <Link component={NextLink} href={getOrganizationSubscriptionsBaseLink(integratedPlatform, organizationCustomDomain)} underline="hover">
                       Back to all subscriptions
                     </Link>
                   </Box>

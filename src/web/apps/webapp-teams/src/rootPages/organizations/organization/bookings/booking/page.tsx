@@ -1,10 +1,11 @@
+import { RelayError, startOfDay, toRootError, useKnownParams } from '@skedular/shared';
 import { EditPrivateBooking } from '@/components/booking/editPrivateBooking';
 import { EditPrivateRecurringBooking } from '@/components/booking/editPrivateRecurringBooking';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationBooking_rootQuery } from '@/queries/__generated__/pageOrganizationBooking_rootQuery.graphql';
-import { startOfDay, useKnownParams } from '@skedular/shared';
+
 import { useSearchParams } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';

@@ -1,8 +1,8 @@
+import { useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import { getOrganizationAdminCustomTagsBaseLink } from '@/components/links';
 import { EditOrganizationCustomTagPage } from '@/components/organization/editOrganizationCustomTag';
 import { RootShell } from '@/components/rootShell';
-import { useKnownParams } from '@skedular/shared';
-import { useIntegratedPlatrform } from '@skedular/shared';
+
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { memo } from 'react';
 
@@ -10,7 +10,7 @@ const getParamValue = (value: string | string[] | undefined): string => (Array.i
 
 const RootPage = () => {
   const { organizationCustomDomain } = useKnownParams();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const searchParams = useSearchParams();
   const customTagId = getParamValue(useParams().customTagId);
@@ -22,7 +22,7 @@ const RootPage = () => {
     throw new Error('customTagId is required');
   }
 
-  const returnUrl = searchParams.get('redirectUrl') ?? getOrganizationAdminCustomTagsBaseLink(integratedPlatrform, organizationCustomDomain);
+  const returnUrl = searchParams.get('redirectUrl') ?? getOrganizationAdminCustomTagsBaseLink(integratedPlatform, organizationCustomDomain);
 
   return (
     <RootShell>

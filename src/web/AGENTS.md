@@ -31,7 +31,7 @@ web/
 ## Package Boundaries
 
 - **`@skedular/ui`** (`web/packages/ui/`): Design system. Contains typography wrappers, layout primitives (StackColumn, StackRow), commons components, theme creation and primitives. Must NEVER import from `@skedular/shared` to avoid circular dependencies.
-- **`@skedular/shared`** (`web/packages/shared/`): Shared runtime. Contains providers (Relay, Theme, PaletteMode, InMsTeams, etc.), hooks (useKnownParams, useIntegratedPlatrform), utils (date, name, relay, constants), cookie-consent, MUI helpers, and image uploaders. MAY import from `@skedular/ui`.
+- **`@skedular/shared`** (`web/packages/shared/`): Shared runtime. Contains providers (Relay, Theme, PaletteMode, InMsTeams, etc.), hooks (useKnownParams, useIntegratedPlatform), utils (date, name, relay, constants), cookie-consent, MUI helpers, and image uploaders. MAY import from `@skedular/ui`.
 
 ## Code Generation
 

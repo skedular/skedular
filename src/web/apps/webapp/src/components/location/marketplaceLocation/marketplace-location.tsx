@@ -7,6 +7,7 @@ import {
   DeskIcon,
   LocationIcon,
   OpeningHoursIcon,
+  OtherResourceIcon,
   ParkingIcon,
   PersonIcon,
   RoomIcon,
@@ -32,7 +33,7 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { formatPriceForDisplay, useIntegratedPlatrform } from '@skedular/shared';
+import { formatPriceForDisplay, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
   CaptionIconTypography,
@@ -88,6 +89,8 @@ const sectionCardSx = {
   boxShadow: 'none',
 };
 
+const customerFloorPlanMarkerXOffsetPx = 3;
+
 const formatOpeningHours = ({ closed, from, openAllDay, until }: OpeningHoursDay) => {
   if (closed) {
     return 'Closed';
@@ -121,20 +124,20 @@ const formatOpeningHours = ({ closed, from, openAllDay, until }: OpeningHoursDay
 
 const getFirstPopulatedValue = (values: readonly string[] | null | undefined) => values?.find((value) => value.trim().length > 0) ?? null;
 
-const getResourceTypeIcon = (resourceType: string | null | undefined, deskResourceType: string, roomResourceType: string, parkingResourceType: string) => {
+const getResourceTypeIcon = (resourceType: string | null | undefined, deskResourceType: string, roomResourceType: string, parkingResourceType: string, color?: string | null) => {
   if (resourceType === deskResourceType) {
-    return DeskIcon;
+    return <DeskIcon sx={{ color }} />;
   }
 
   if (resourceType === roomResourceType) {
-    return RoomIcon;
+    return <RoomIcon sx={{ color }} />;
   }
 
   if (resourceType === parkingResourceType) {
-    return ParkingIcon;
+    return <ParkingIcon sx={{ color }} />;
   }
 
-  return DeskIcon;
+  return <OtherResourceIcon sx={{ color }} />;
 };
 
 const InfoRow = ({ icon, label, children }: { icon: ReactNode; label: string; children: ReactNode }) => (
@@ -343,7 +346,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   const pathname = usePathname();
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
   const [selectedHeroImageUrl, setSelectedHeroImageUrl] = useState<string>('');
@@ -463,9 +466,8 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
       return selectedResourceId;
     }
 
-    const firstPlacedResourceId = selectedFloorPlan?.resourcePositions.find((position) => floorPlanResources.some((resource) => resource.id === position.resource.id))?.resource.id;
-    return firstPlacedResourceId ?? floorPlanResources[0]?.id ?? '';
-  }, [floorPlanResources, selectedFloorPlan?.resourcePositions, selectedResourceId]);
+    return '';
+  }, [floorPlanResources, selectedResourceId]);
   const selectedResource = useMemo(() => floorPlanResources.find((item) => item.id === effectiveSelectedResourceId) ?? null, [effectiveSelectedResourceId, floorPlanResources]);
   const floorPlanProducts = useMemo<FloorPlanProduct[]>(() => {
     if (!locationDetails) {
@@ -549,18 +551,19 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     );
   }, [floorPlans, isFloorPlanPage, locationDetails?.id, refetch, selectedFloorPlanId]);
 
-  if (!dynamicLoadReady || !locationDetails || !openingHours) {
-    return null;
-  }
-
-  const effectiveOrganizationCustomDomain = organizationCustomDomain || locationDetails.organization?.customDomain || '';
-  const locationLink = getMarketplaceLocationLink(integratedPlatrform, locationDetails.id);
-  const floorPlansLink = getMarketplaceLocationFloorPlansLink(integratedPlatrform, locationDetails.id);
   const selectedFloorPlanImage = selectedFloorPlan?.image?.original;
   const selectedFloorPlanName = selectedFloorPlan?.name ?? '';
   const selectedFloorPlanResourcePositions = selectedFloorPlan?.resourcePositions ?? [];
   const selectedFloorPlanImageWidth = selectedFloorPlanImage?.width ?? 1;
   const selectedFloorPlanImageHeight = selectedFloorPlanImage?.height ?? 1;
+
+  if (!dynamicLoadReady || !locationDetails || !openingHours) {
+    return null;
+  }
+
+  const effectiveOrganizationCustomDomain = organizationCustomDomain || locationDetails.organization?.customDomain || '';
+  const locationLink = getMarketplaceLocationLink(integratedPlatform, locationDetails.id);
+  const floorPlansLink = getMarketplaceLocationFloorPlansLink(integratedPlatform, locationDetails.id);
 
   if (isFloorPlanPage) {
     return (
@@ -628,20 +631,11 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                       position: 'relative',
                       width: '100%',
                       aspectRatio: `${selectedFloorPlanImageWidth} / ${selectedFloorPlanImageHeight}`,
-                      borderRadius: 4,
-                      overflow: 'hidden',
-                      border: 1,
-                      borderColor: 'divider',
-                      bgcolor: 'background.paper',
                       mb: 3,
                     }}
                   >
-                    <Box
-                      component="img"
-                      src={selectedFloorPlanImage.url}
-                      alt={selectedFloorPlanName}
-                      sx={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
-                    />
+                    {/* eslint-disable-next-line @next/next/no-img-element -- Floor-plan coordinates must match the editor's plain image sizing. */}
+                    <img src={selectedFloorPlanImage.url} alt={selectedFloorPlanName} style={{ display: 'block', width: '100%', height: '100%' }} />
                     {selectedFloorPlanResourcePositions
                       .filter((position) => floorPlanResources.some((resource) => resource.id === position.resource.id))
                       .map((position) => {
@@ -650,40 +644,51 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                           return null;
                         }
 
-                        const ResourceIcon = getResourceTypeIcon(resource.resourceType.type, rootData.deskResourceType, rootData.roomResourceType, rootData.parkingResourceType);
                         const isSelected = resource.id === effectiveSelectedResourceId;
+                        const resourceIcon = getResourceTypeIcon(
+                          resource.resourceType.type,
+                          rootData.deskResourceType,
+                          rootData.roomResourceType,
+                          rootData.parkingResourceType,
+                          isSelected ? 'common.white' : 'common.black',
+                        );
 
                         return (
                           <Box
                             key={resource.id}
-                            component="button"
-                            type="button"
+                            role="button"
+                            tabIndex={0}
                             onClick={() => setSelectedResourceId(resource.id)}
+                            onKeyDown={(event) => {
+                              if (event.key === 'Enter' || event.key === ' ') {
+                                event.preventDefault();
+                                setSelectedResourceId(resource.id);
+                              }
+                            }}
                             title={resource.name}
                             sx={{
                               position: 'absolute',
-                              left: `${(position.x / selectedFloorPlanImageWidth) * 100}%`,
+                              left: `calc(${(position.x / selectedFloorPlanImageWidth) * 100}% + ${customerFloorPlanMarkerXOffsetPx}px)`,
                               top: `${(position.y / selectedFloorPlanImageHeight) * 100}%`,
-                              transform: 'translate(-50%, -50%)',
-                              width: 42,
-                              height: 42,
-                              borderRadius: '50%',
-                              border: 0,
-                              cursor: 'pointer',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              color: isSelected ? 'common.white' : 'text.primary',
-                              bgcolor: isSelected ? 'primary.main' : 'background.paper',
-                              boxShadow: isSelected ? 5 : 2,
+                              width: 40,
+                              height: 40,
+                              borderRadius: '50%',
+                              border: 2,
+                              borderColor: isSelected ? 'primary.dark' : 'common.white',
+                              backgroundColor: isSelected ? 'primary.main' : 'warning.main',
+                              boxShadow: isSelected ? 4 : 3,
+                              cursor: 'pointer',
                               outline: 'none',
                               transition: 'transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease',
                               '&:hover': {
-                                transform: 'translate(-50%, -50%) scale(1.05)',
+                                transform: 'scale(1.05)',
                               },
                             }}
                           >
-                            <ResourceIcon fontSize="small" />
+                            {resourceIcon}
                           </Box>
                         );
                       })}
@@ -762,21 +767,16 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                                           router.push(
                                             isSubscriptionCadence(pricingRow.cadence)
                                               ? getMarketplaceProductSubscribeLink(
-                                                  integratedPlatrform,
+                                                  integratedPlatform,
                                                   isCustomDomain,
                                                   effectiveOrganizationCustomDomain,
                                                   product.id,
                                                   pricingRow.id,
                                                   [selectedResource.id],
                                                 )
-                                              : getMarketplaceProductBookingLink(
-                                                  integratedPlatrform,
-                                                  isCustomDomain,
-                                                  effectiveOrganizationCustomDomain,
-                                                  product.id,
-                                                  pricingRow.id,
-                                                  [selectedResource.id],
-                                                ),
+                                              : getMarketplaceProductBookingLink(integratedPlatform, isCustomDomain, effectiveOrganizationCustomDomain, product.id, pricingRow.id, [
+                                                  selectedResource.id,
+                                                ]),
                                           )
                                         }
                                         sx={{ textTransform: 'none' }}
@@ -787,7 +787,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                                         variant="outlined"
                                         onClick={() =>
                                           router.push(
-                                            getMarketplaceProductLink(integratedPlatrform, isCustomDomain, effectiveOrganizationCustomDomain, product.id, [selectedResource.id]),
+                                            getMarketplaceProductLink(integratedPlatform, isCustomDomain, effectiveOrganizationCustomDomain, product.id, [selectedResource.id]),
                                           )
                                         }
                                         sx={{ textTransform: 'none' }}

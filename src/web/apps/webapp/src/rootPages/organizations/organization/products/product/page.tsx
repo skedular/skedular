@@ -1,6 +1,6 @@
 import { Loading } from '@/components/loading';
 import { EditProduct } from '@/components/product/editProduct';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationProduct_rootQuery } from '@/queries/__generated__/pageOrganizationProduct_rootQuery.graphql';
 import { memo, useEffect, useState, useTransition } from 'react';

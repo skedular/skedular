@@ -38,6 +38,7 @@ import {
 } from '@skedular/ui';
 import { Switches, TextField } from 'mui-rff';
 import { memo, useMemo, useState } from 'react';
+import Image from 'next/image';
 
 type Props = {
   mode: 'add' | 'edit';
@@ -452,8 +453,7 @@ const ProductEditorForm = ({
                     minHeight: 140,
                   }}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <Image width={800} height={600} unoptimized alt="" src={image.original?.url ?? image.thumbnail?.url ?? ''} style={{ width: '100%', height: 'auto' }} />
                   <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
                     <IconButton size="small" aria-label="Remove feature image" onClick={() => onRemoveFeatureImage(image)}>
                       <DeleteIcon fontSize="small" />

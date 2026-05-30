@@ -1,10 +1,11 @@
+import { PaletteModeContext, RelayError, getCustomerFullName, getRelayErrorMessage, toRootError, useIntegratedPlatform } from '@skedular/shared';
 import { getOrganizationBookingsBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import OrganizationUserManagementList from '@/components/organization/organizationUsers/organization-user-management-list';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { Search } from '@/components/search';
 import type { organizationUsers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationMemberRoleMutation.graphql';
 import type { organizationUsers_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationUsersStatusMutation.graphql';
@@ -15,7 +16,7 @@ import type { organizationUsers_rootQuery } from '@/queries/__generated__/organi
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+
 import { BodyIconTypography, defaultPadding, PageHeaderPanel, SettingsSectionCard, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
@@ -153,7 +154,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -303,7 +304,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
           return;
         }
 
-        router.push(getOrganizationUserProfileBaseLink(integratedPlatrform, organizationCustomDomain, memberDetails.customer.id));
+        router.push(getOrganizationUserProfileBaseLink(integratedPlatform, organizationCustomDomain, memberDetails.customer.id));
         break;
 
       case MoreActionsMenuOptionType.ViewUserBookings:
@@ -311,7 +312,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
           return;
         }
 
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain, { customerId: memberDetails.customer.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatform, organizationCustomDomain, { customerId: memberDetails.customer.id }));
         break;
 
       case MoreActionsMenuOptionType.DeactivateOrganizationUser:
@@ -526,7 +527,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
                       return;
                     }
 
-                    router.push(getOrganizationUserProfileBaseLink(integratedPlatrform, organizationCustomDomain, member.customer.id));
+                    router.push(getOrganizationUserProfileBaseLink(integratedPlatform, organizationCustomDomain, member.customer.id));
                   }}
                   onOpenChangeRole={handleChangeRoleClick}
                   onOpenMoreActions={(memberId, target) => {

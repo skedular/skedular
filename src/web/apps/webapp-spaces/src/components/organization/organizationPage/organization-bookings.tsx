@@ -1,3 +1,4 @@
+import { RelayError, endOfWeek, startOfDay, startOfWeek, toRootError } from '@skedular/shared';
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { Bookings } from '@/components/booking/bookings';
 import { GettingStarted } from '@/components/gettingStarted';
@@ -6,8 +7,7 @@ import { WeekRangePicker } from '@/components/datePickers';
 import { Loading } from '@/components/loading';
 import { LocationSelector } from '@/components/location/locationSelector';
 import { OrganizationUserSelector } from '@/components/organization/organizationUserSelector';
-import { RelayError, toRootError } from '@/components/relayError';
-import { endOfWeek, startOfDay, startOfWeek } from '@skedular/shared';
+
 import type { organizationBookings_rootQuery } from '@/queries/__generated__/organizationBookings_rootQuery.graphql';
 import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';

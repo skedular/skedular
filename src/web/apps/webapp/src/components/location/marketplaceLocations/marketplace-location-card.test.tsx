@@ -47,7 +47,7 @@ vi.mock(import('@skedular/shared'), async (importOriginal) => {
 
   return {
     ...actual,
-    useIntegratedPlatrform: () => ({ integratedPlatrform: 'web' }),
+    useIntegratedPlatform: () => ({ integratedPlatform: 'web' }),
   };
 });
 

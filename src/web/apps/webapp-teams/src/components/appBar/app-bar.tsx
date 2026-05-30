@@ -32,7 +32,7 @@ import {
   SelectedPaletteModeContext,
   toLongDateTime,
   UpdatePaletteModeContext,
-  useIntegratedPlatrform,
+  useIntegratedPlatform,
   useKnownParams,
 } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
@@ -77,7 +77,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { signOut } = useAuth();
   const router = useRouter();
   const { organizationCustomDomain } = useKnownParams();
@@ -105,11 +105,11 @@ const AppBar = ({ rootDataRelay }: Props) => {
     const id = event.target.value as string;
 
     if (id === createOrganizationId) {
-      router.push(getOrganizationSetupLink(integratedPlatrform));
+      router.push(getOrganizationSetupLink(integratedPlatform));
     } else {
       setSelectedOrganizationId(id);
 
-      router.push(getOrganizationBaseLink(integratedPlatrform, id));
+      router.push(getOrganizationBaseLink(integratedPlatform, id));
     }
   };
 
@@ -140,7 +140,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
     setClaimLocationOwnershipDialogOpen(false);
 
     if (organizationCustomDomain) {
-      router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain));
+      router.push(getOrganizationLocationsBaseLink(integratedPlatform, organizationCustomDomain));
     }
   };
 
@@ -180,8 +180,8 @@ const AppBar = ({ rootDataRelay }: Props) => {
     familyName: rootData.me?.familyName,
   });
 
-  const settingsLink = getSettingsLink(integratedPlatrform);
-  const notificationsLink = getNotificationsLink(integratedPlatrform);
+  const settingsLink = getSettingsLink(integratedPlatform);
+  const notificationsLink = getNotificationsLink(integratedPlatform);
   const pendingInvitationsCount = rootData.pendingOrganizationInvitationsCount + rootData.pendingTeamInvitationsCount;
   const selectedThemeIcon =
     selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;

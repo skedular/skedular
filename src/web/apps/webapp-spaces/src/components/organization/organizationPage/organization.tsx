@@ -1,7 +1,7 @@
 import { StackColumn } from '@skedular/ui';
 import { GettingStarted } from '@/components/gettingStarted';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
 import Box from '@mui/system/Box';
 import { memo, useEffect, useState, useTransition } from 'react';

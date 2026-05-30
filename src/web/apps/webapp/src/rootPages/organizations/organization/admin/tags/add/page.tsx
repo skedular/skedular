@@ -2,13 +2,13 @@ import { getOrganizationAdminCustomTagsBaseLink } from '@/components/links';
 import { AddOrganizationCustomTagPage } from '@/components/organization/addOrganizationCustomTag';
 import { RootShell } from '@/components/rootShell';
 import useKnownParams from '@/hooks/use-known-params';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo } from 'react';
 
 const RootPage = () => {
   const { organizationCustomDomain } = useKnownParams();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -16,7 +16,7 @@ const RootPage = () => {
     throw new Error('organizationCustomDomain is required');
   }
 
-  const returnUrl = searchParams.get('redirectUrl') ?? getOrganizationAdminCustomTagsBaseLink(integratedPlatrform, organizationCustomDomain);
+  const returnUrl = searchParams.get('redirectUrl') ?? getOrganizationAdminCustomTagsBaseLink(integratedPlatform, organizationCustomDomain);
 
   return (
     <RootShell>

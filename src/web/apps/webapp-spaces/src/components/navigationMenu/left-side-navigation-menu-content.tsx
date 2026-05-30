@@ -30,7 +30,7 @@ import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@skedular/shared';
+import { PaletteModeContext, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import {
   BodyIconTypography,
   coal,
@@ -79,7 +79,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
     rootDataRelay,
   );
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
   const { organizationCustomDomain } = useKnownParams();
@@ -140,14 +140,14 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
     return null;
   }
 
-  const organizationBaseLink = getOrganizationBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationLocationsBaseLink = getOrganizationLocationsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationAvailabilityDashboardBaseLink = getOrganizationAvailabilityDashboardBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationProductsBaseLink = getOrganizationProductsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationSubscriptionsBaseLink = getOrganizationSubscriptionsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
-  const organizationAdminBaseLink = getOrganizationAdminBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationBaseLink = getOrganizationBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationLocationsBaseLink = getOrganizationLocationsBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationAvailabilityDashboardBaseLink = getOrganizationAvailabilityDashboardBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationProductsBaseLink = getOrganizationProductsBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationSubscriptionsBaseLink = getOrganizationSubscriptionsBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationAdminBaseLink = getOrganizationAdminBaseLink(integratedPlatform, rootData.organization.customDomain!);
 
   return (
     <>
@@ -174,7 +174,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             sx={{ width: collapsed ? undefined : maxWidth - 30, justifyContent: 'center', marginLeft: 0, paddingBottom: { xs: 1, sm: 1, md: 5 } }}
             onClick={handleExpandClicked}
           >
-            <Image src={logoUrl} width={width} height={height} alt="Skedular" />
+            <Image src={logoUrl} width={width} height={height} unoptimized alt="Skedular" />
           </ListItem>
 
           <ListItem disablePadding>
@@ -380,7 +380,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
               {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
                 <Button
-                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, rootData.organization.customDomain!)}
+                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatform, rootData.organization.customDomain!)}
                   variant="contained"
                   color="secondary"
                   sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}

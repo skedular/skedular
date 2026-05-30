@@ -14,13 +14,15 @@
     "format": "prettier --write --single-quote true --trailing-comma all --print-width 180 ./src && pnpm lint-fix"
   },
   "dependencies": {
-    "@skedular/ui": "workspace:*",
+    "@mui/icons-material": "^9.0.1",
     "@next/third-parties": "^16.2.6",
+    "@skedular/ui": "workspace:*",
     "cookies-next": "^6.1.1",
     "dayjs": "^1.11.21",
     "graphql-sse": "^2.6.0",
     "logrocket": "^12.1.1",
     "logrocket-react": "^7.0.0",
+    "react-error-boundary": "^6.1.2",
     "react-image-crop": "^11.0.10",
     "react-toastify": "^11.1.0",
     "usehooks-ts": "^3.1.1",

@@ -1,7 +1,7 @@
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { NewIcon } from '@/components/icons';
 import { getOrganizationBookingAddLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import { coal } from '@skedular/ui';
 import Button from '@mui/material/Button';
 import type { SxProps, Theme } from '@mui/system';
@@ -44,7 +44,7 @@ const NewBookingButton = ({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
 
   const handleButtonClicked = () => {
     onOpenRequested?.();
@@ -53,7 +53,7 @@ const NewBookingButton = ({
     const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
 
     router.push(
-      getOrganizationBookingAddLink(integratedPlatrform, organizationCustomDomain, {
+      getOrganizationBookingAddLink(integratedPlatform, organizationCustomDomain, {
         locationId: defaultLocationId,
         date: defaultDate?.toISOString(),
         resourceIds: defaultResourceIds,

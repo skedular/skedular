@@ -1,8 +1,9 @@
+import { PaletteModeContext, RelayError, getRelayErrorMessage, keyboardTextFieldDebounceTimeout, toRootError } from '@skedular/shared';
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import type { addPrivateLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addPrivateLocation_addLocationMutation.graphql';
 import ApartmentIcon from '@mui/icons-material/Apartment';
@@ -15,7 +16,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext } from '@skedular/shared';
+
 import {
   BodyIconTypography,
   defaultButtonStyle,
@@ -38,6 +39,7 @@ import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
+import Image from 'next/image';
 
 type Props = {
   onReloadRequired: () => void;
@@ -302,8 +304,7 @@ const AddPrivateLocation = ({ onReloadRequired, organizationCustomDomain, onAdde
                               backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
                             }}
                           >
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <Image width={800} height={600} unoptimized alt="" src={image.original?.url ?? image.thumbnail?.url ?? ''} style={{ width: '100%', height: 'auto' }} />
                             <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
                               <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
                                 <DeleteIcon fontSize="small" />

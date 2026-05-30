@@ -1,7 +1,7 @@
 import { BodyIconTypography, StackRow } from '@skedular/ui';
 import { ArrowLeftIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import type { marketplaceProductSubscribe_rootQuery } from '@/queries/__generated__/marketplaceProductSubscribe_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';

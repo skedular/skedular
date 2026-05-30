@@ -50,7 +50,8 @@ public static class LocationExtensions
             .Include(query => query.Resources.Where(resource => includeDeletedResources || !resource.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.FloorPlans.Where(fp => !fp.DeletedAt.HasValue))
-            .ThenInclude(query => query.ResourcePositions)
+            .ThenInclude(query =>
+                query.ResourcePositions.Where(resourcePartition => includeDeletedResources || !resourcePartition.Resource.DeletedAt.HasValue))
             .ThenInclude(query => query.Resource)
             .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.RestrictedInformation)

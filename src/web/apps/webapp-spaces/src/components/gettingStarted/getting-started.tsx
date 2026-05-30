@@ -1,11 +1,12 @@
+import { PaletteModeContext, getRelayErrorMessage, useIntegratedPlatform } from '@skedular/shared';
 import { LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { CancelIcon, InviteMemberIcon, LocationIcon, ResourceIcon } from '@/components/icons';
 import { getOrganizationAddResourceBaseLink, getOrganizationLocationAddPrivateLink, getOrganizationUsersBaseLink } from '@/components/links';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { InvitePeopleToJoinOrganizationDialog } from '@/components/organization/invitePeopleToJoinOrganization';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+
 import { defaultPadding, emerald } from '@skedular/ui';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { gettingStarted_completeOrganizationMemberOnboardingMutation } from '@/queries/__generated__/gettingStarted_completeOrganizationMemberOnboardingMutation.graphql';
 import type { gettingStarted_query$key } from '@/queries/__generated__/gettingStarted_query.graphql';
 import Box from '@mui/material/Box';
@@ -45,7 +46,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
     }
   `);
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -58,7 +59,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
   const handleInvitePeopleToJoinOrganizationClicked = () => {
     setIsInvitePeopleToJoinOrganizationDialogOpen(false);
 
-    router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationCustomDomain));
+    router.push(getOrganizationUsersBaseLink(integratedPlatform, organizationCustomDomain));
   };
 
   const handleInvitePeopleToJoinOrganizationCancelClicked = () => {
@@ -127,7 +128,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
             <Box sx={{ minHeight: { sm: 48, xl: 40 } }}>
               <SmallIconTypography label="Let's start by setting up the organization's first location." />
             </Box>
-            <Link component={NextLink} href={getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationCustomDomain)} sx={{ display: 'block' }}>
+            <Link component={NextLink} href={getOrganizationLocationAddPrivateLink(integratedPlatform, organizationCustomDomain)} sx={{ display: 'block' }}>
               <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                 <LeadIconTypography
                   label="Create Location"
@@ -143,7 +144,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
             <Box sx={{ minHeight: { sm: 48, xl: 40 } }}>
               <SmallIconTypography label="Add resources for your locations." />
             </Box>
-            <Link component={NextLink} href={getOrganizationAddResourceBaseLink(integratedPlatrform, organizationCustomDomain)} sx={{ display: 'block' }}>
+            <Link component={NextLink} href={getOrganizationAddResourceBaseLink(integratedPlatform, organizationCustomDomain)} sx={{ display: 'block' }}>
               <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                 <LeadIconTypography
                   label="Add Resources"

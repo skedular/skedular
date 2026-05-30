@@ -1,15 +1,16 @@
+import { InMsTeamsContext, RelayError, toRootError, useIntegratedPlatform } from '@skedular/shared';
 import { NoOrganizationAppBar } from '@/components/appBar';
 import { SignOutIcon } from '@/components/icons';
 import { getInstallMsTeamsLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { NoOrganizationLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import type { noOrganizationRootShell_rootQuery } from '@/queries/__generated__/noOrganizationRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import { InMsTeamsContext, useIntegratedPlatrform } from '@skedular/shared';
+
 import { SmallHeadingIconTypography } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { usePathname, useRouter } from 'next/navigation';
@@ -45,14 +46,14 @@ const maxRetryAttemptsToReload = 20;
 
 const NoOrganizationRootShell = ({ queryReference, children, onReloadRequired, hideSideNav }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<noOrganizationRootShell_rootQuery>(RootQuery, queryReference);
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const inMsTeams = useContext(InMsTeamsContext);
   const router = useRouter();
   const pathName = usePathname();
   const { signOut } = useAuth();
   const [reloadCount, setReloadCount] = useState(0);
-  const rootLink = getRootLink(integratedPlatrform);
-  const welcomeLink = getWelcomeLink(integratedPlatrform);
+  const rootLink = getRootLink(integratedPlatform);
+  const welcomeLink = getWelcomeLink(integratedPlatform);
   const installMsTeamsLink = getInstallMsTeamsLink();
   const areCustomerRecordsSync = !!rootData?.customerReadinessSynced;
 

@@ -17,7 +17,7 @@ import type { SelectChangeEvent } from '@mui/material/Select';
 import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
-import { getCustomerFullName, localNow, PaletteModeContext, SelectedPaletteModeContext, toLongDateTime, UpdatePaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { getCustomerFullName, localNow, PaletteModeContext, SelectedPaletteModeContext, toLongDateTime, UpdatePaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import Image from 'next/image';
@@ -61,7 +61,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
     rootDataRelay,
   );
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { signOut } = useAuth();
   const router = useRouter();
   const [currentTime, setCurrentTime] = useState(localNow());
@@ -79,9 +79,9 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
     const id = event.target.value as string;
 
     if (id === createOrganizationId) {
-      router.push(getOrganizationSetupLink(integratedPlatrform));
+      router.push(getOrganizationSetupLink(integratedPlatform));
     } else {
-      router.push(getOrganizationBaseLink(integratedPlatrform, id));
+      router.push(getOrganizationBaseLink(integratedPlatform, id));
     }
   };
 
@@ -135,8 +135,8 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
     familyName: rootData.me?.familyName,
   });
 
-  const settingsLink = getSettingsLink(integratedPlatrform);
-  const notificationsLink = getNotificationsLink(integratedPlatrform);
+  const settingsLink = getSettingsLink(integratedPlatform);
+  const notificationsLink = getNotificationsLink(integratedPlatform);
   const pendingInvitationsCount = rootData.pendingOrganizationInvitationsCount + rootData.pendingTeamInvitationsCount;
   const selectedThemeIcon =
     selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;
@@ -158,7 +158,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
         >
           {showLogo && (
             <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-              <Image src={logoUrl} width={logoWidth} height={logoHeight} alt="Skedular" />
+              <Image src={logoUrl} width={logoWidth} height={logoHeight} unoptimized alt="Skedular" />
             </Box>
           )}
 

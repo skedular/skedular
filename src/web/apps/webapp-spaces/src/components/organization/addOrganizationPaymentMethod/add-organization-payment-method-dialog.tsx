@@ -1,9 +1,9 @@
+import { PaletteModeContext, getRelayErrorMessage } from '@skedular/shared';
 import { DefaultDialogTitle } from '@skedular/ui';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { OrganizationPaymentMethodSetupForm } from '@/components/organization';
 import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation } from '@/queries/__generated__/addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation.graphql';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';

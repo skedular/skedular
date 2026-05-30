@@ -1,9 +1,10 @@
+import { RelayError, endOfDay, startOfDay, toRootError } from '@skedular/shared';
 import { FloorPlans } from '@/components/floorPlan/floorPlans';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { RootShell } from '@/components/rootShell';
 import type { pageFloorPlans_rootQuery } from '@/queries/__generated__/pageFloorPlans_rootQuery.graphql';
-import { endOfDay, startOfDay } from '@skedular/shared';
+
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';

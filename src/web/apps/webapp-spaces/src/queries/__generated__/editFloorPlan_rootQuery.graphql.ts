@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6f3f7e8fc72e923f4836c406c54bc8ee>>
+ * @generated SignedSource<<ec88f839aec9832d0f355d666768e6c2>>
  * @lightSyntaxTransform
  */
 
@@ -15,20 +15,17 @@ export type ResourceOrderInput = {
   direction: OrderDirection;
   field: ResourceOrderField;
 };
-export type pageOrganizationLocationFloorPlanAdmin_rootQuery$variables = {
+export type editFloorPlan_rootQuery$variables = {
   floorPlanId: string;
   locationId: string;
   resourcesSortingValues?: ReadonlyArray<ResourceOrderInput> | null | undefined;
 };
-export type pageOrganizationLocationFloorPlanAdmin_rootQuery$data = {
-  readonly floorPlan: {
-    readonly name: string;
-  } | null | undefined;
+export type editFloorPlan_rootQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"editFloorPlan_query" | "editFloorPlan_resources_query">;
 };
-export type pageOrganizationLocationFloorPlanAdmin_rootQuery = {
-  response: pageOrganizationLocationFloorPlanAdmin_rootQuery$data;
-  variables: pageOrganizationLocationFloorPlanAdmin_rootQuery$variables;
+export type editFloorPlan_rootQuery = {
+  response: editFloorPlan_rootQuery$data;
+  variables: editFloorPlan_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -47,13 +44,13 @@ v2 = {
   "kind": "LocalArgument",
   "name": "resourcesSortingValues"
 },
-v3 = [
-  {
-    "kind": "Variable",
-    "name": "id",
-    "variableName": "floorPlanId"
-  }
-],
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
 v4 = {
   "alias": null,
   "args": null,
@@ -61,14 +58,7 @@ v4 = {
   "name": "name",
   "storageKey": null
 },
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v6 = [
+v5 = [
   {
     "alias": null,
     "args": null,
@@ -91,7 +81,7 @@ v6 = [
     "storageKey": null
   }
 ],
-v7 = [
+v6 = [
   {
     "kind": "Variable",
     "name": "orderBy",
@@ -109,17 +99,17 @@ v7 = [
     "name": "where"
   }
 ],
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v9 = [
-  (v5/*:: as any*/),
+v8 = [
+  (v3/*:: as any*/),
   (v4/*:: as any*/),
-  (v8/*:: as any*/)
+  (v7/*:: as any*/)
 ];
 return {
   "fragment": {
@@ -130,20 +120,8 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "pageOrganizationLocationFloorPlanAdmin_rootQuery",
+    "name": "editFloorPlan_rootQuery",
     "selections": [
-      {
-        "alias": null,
-        "args": (v3/*:: as any*/),
-        "concreteType": "FloorPlanDetails",
-        "kind": "LinkedField",
-        "name": "floorPlan",
-        "plural": false,
-        "selections": [
-          (v4/*:: as any*/)
-        ],
-        "storageKey": null
-      },
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -166,18 +144,24 @@ return {
       (v2/*:: as any*/)
     ],
     "kind": "Operation",
-    "name": "pageOrganizationLocationFloorPlanAdmin_rootQuery",
+    "name": "editFloorPlan_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v3/*:: as any*/),
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "id",
+            "variableName": "floorPlanId"
+          }
+        ],
         "concreteType": "FloorPlanDetails",
         "kind": "LinkedField",
         "name": "floorPlan",
         "plural": false,
         "selections": [
+          (v3/*:: as any*/),
           (v4/*:: as any*/),
-          (v5/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -193,7 +177,7 @@ return {
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v6/*:: as any*/),
+                "selections": (v5/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -203,7 +187,7 @@ return {
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v6/*:: as any*/),
+                "selections": (v5/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -239,11 +223,11 @@ return {
                 "name": "resource",
                 "plural": false,
                 "selections": [
-                  (v5/*:: as any*/)
+                  (v3/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v5/*:: as any*/)
+              (v3/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -287,7 +271,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v7/*:: as any*/),
+            "args": (v6/*:: as any*/),
             "concreteType": "ConnectionOfResourceEdge",
             "kind": "LinkedField",
             "name": "resources",
@@ -309,7 +293,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v5/*:: as any*/),
+                      (v3/*:: as any*/),
                       (v4/*:: as any*/),
                       {
                         "alias": null,
@@ -318,7 +302,7 @@ return {
                         "name": "inactive",
                         "storageKey": null
                       },
-                      (v8/*:: as any*/),
+                      (v7/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -333,7 +317,7 @@ return {
                         "kind": "LinkedField",
                         "name": "customTags",
                         "plural": true,
-                        "selections": (v9/*:: as any*/),
+                        "selections": (v8/*:: as any*/),
                         "storageKey": null
                       },
                       {
@@ -343,7 +327,17 @@ return {
                         "kind": "LinkedField",
                         "name": "zones",
                         "plural": true,
-                        "selections": (v9/*:: as any*/),
+                        "selections": (v8/*:: as any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "OrganizationTagDetails",
+                        "kind": "LinkedField",
+                        "name": "productTags",
+                        "plural": true,
+                        "selections": (v8/*:: as any*/),
                         "storageKey": null
                       },
                       {
@@ -354,9 +348,9 @@ return {
                         "name": "resourceType",
                         "plural": false,
                         "selections": [
-                          (v5/*:: as any*/),
+                          (v3/*:: as any*/),
                           (v4/*:: as any*/),
-                          (v8/*:: as any*/),
+                          (v7/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -417,7 +411,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v7/*:: as any*/),
+            "args": (v6/*:: as any*/),
             "filters": [
               "where",
               "orderBy"
@@ -427,23 +421,23 @@ return {
             "kind": "LinkedHandle",
             "name": "resources"
           },
-          (v5/*:: as any*/)
+          (v3/*:: as any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "22e14d3306c449f40ee673a590d7c08c",
+    "cacheID": "e435a5316c0f0140c693498691c08f17",
     "id": null,
     "metadata": {},
-    "name": "pageOrganizationLocationFloorPlanAdmin_rootQuery",
+    "name": "editFloorPlan_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocationFloorPlanAdmin_rootQuery(\n  $locationId: String!\n  $floorPlanId: String!\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  floorPlan(id: $floorPlanId) {\n    name\n    id\n  }\n  ...editFloorPlan_query\n  ...editFloorPlan_resources_query\n}\n\nfragment editFloorPlan_query on Query {\n  floorPlan(id: $floorPlanId) {\n    id\n    name\n    image {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    resourcePositions {\n      x\n      y\n      resource {\n        id\n      }\n      id\n    }\n  }\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n}\n\nfragment editFloorPlan_resources_query on Query {\n  location(id: $locationId) {\n    resources(where: {floorPlanId: $floorPlanId}, orderBy: $resourcesSortingValues) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          color\n          capacity\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n            type\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query editFloorPlan_rootQuery(\n  $locationId: String!\n  $floorPlanId: String!\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  ...editFloorPlan_query\n  ...editFloorPlan_resources_query\n}\n\nfragment editFloorPlan_query on Query {\n  floorPlan(id: $floorPlanId) {\n    id\n    name\n    image {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    resourcePositions {\n      x\n      y\n      resource {\n        id\n      }\n      id\n    }\n  }\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n}\n\nfragment editFloorPlan_resources_query on Query {\n  location(id: $locationId) {\n    resources(where: {floorPlanId: $floorPlanId}, orderBy: $resourcesSortingValues) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          color\n          capacity\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n          productTags {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n            type\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a145655dde0c9aee53c2f3cd2d4ebd9e";
+(node as any).hash = "9186060d9980e360c46aa802e9d60e42";
 
 export default node;

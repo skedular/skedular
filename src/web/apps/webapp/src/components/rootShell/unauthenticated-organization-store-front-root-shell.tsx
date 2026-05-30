@@ -2,7 +2,7 @@ import { UnauthenticatedOrganizationStoreFrontAppBar } from '@/components/appBar
 import { Loading } from '@/components/loading';
 import { UnathenticatedObservability } from '@/components/observability';
 import StoreFrontBrowserMetadata from '@/components/organizationStoreFrontGuest/store-front-browser-metadata';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import type { unauthenticatedOrganizationStoreFrontRootShell_rootQuery } from '@/queries/__generated__/unauthenticatedOrganizationStoreFrontRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';

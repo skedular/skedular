@@ -1,3 +1,4 @@
+import { PaletteModeContext, RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
   ColorPicker,
@@ -17,10 +18,9 @@ import { Loading } from '@/components/loading';
 import { getOrganizationLocationManageResourcesBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { MultipleChoicesCustomTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
+
 import type { addResourceDialog_addResourceMutation } from '@/queries/__generated__/addResourceDialog_addResourceMutation.graphql';
 import type { addResourceDialog_rootQuery } from '@/queries/__generated__/addResourceDialog_rootQuery.graphql';
 import Dialog from '@mui/material/Dialog';
@@ -479,17 +479,17 @@ type PageProps = {
 
 const AddResourcePageComponent = ({ organizationCustomDomain, locationId }: PageProps) => {
   const router = useRouter();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
 
   const handleDone = (createdLocationId: string) => {
-    router.push(getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationCustomDomain, createdLocationId));
+    router.push(getOrganizationLocationManageResourcesBaseLink(integratedPlatform, organizationCustomDomain, createdLocationId));
   };
 
   const handleCancel = () => {
     router.push(
       locationId
-        ? getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationCustomDomain, locationId)
-        : getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain),
+        ? getOrganizationLocationManageResourcesBaseLink(integratedPlatform, organizationCustomDomain, locationId)
+        : getOrganizationLocationsBaseLink(integratedPlatform, organizationCustomDomain),
     );
   };
 

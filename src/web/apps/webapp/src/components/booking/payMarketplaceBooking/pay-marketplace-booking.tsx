@@ -24,7 +24,7 @@ import {
   toOpeningHoursFromTime,
   toShortDate,
   toShortTime,
-  useIntegratedPlatrform,
+  useIntegratedPlatform,
 } from '@skedular/shared';
 import { AppBarWithStackColumn, BodyIconTypography, defaultButtonStyle, defaultPadding, FormFieldLabel, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import dayjs, { Dayjs } from 'dayjs';
@@ -243,7 +243,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
     }
   };
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const router = useRouter();
@@ -265,7 +265,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
   }, [rootData.booking]);
 
   const handleCloseClick = () => {
-    router.push(getOrganizationProductsBaseLink(integratedPlatrform, organizationCustomDomain));
+    router.push(getOrganizationProductsBaseLink(integratedPlatform, organizationCustomDomain));
   };
 
   const handleCancelBookingClick = () => {
@@ -295,7 +295,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
           return;
         }
 
-        router.push(getOrganizationProductsBaseLink(integratedPlatrform, organizationCustomDomain));
+        router.push(getOrganizationProductsBaseLink(integratedPlatform, organizationCustomDomain));
       },
       onError: (error) => {
         themedToast(<NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />, errorNotificationOptions);

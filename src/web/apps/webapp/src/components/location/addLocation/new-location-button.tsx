@@ -1,7 +1,7 @@
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
 import { NewIcon } from '@/components/icons';
 import { getOrganizationLocationAddMarketplaceLink, getOrganizationLocationAddPrivateLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import type { newLocationButton_query$key } from '@/queries/__generated__/newLocationButton_query.graphql';
 import Button from '@mui/material/Button';
 import { memo } from 'react';
@@ -31,7 +31,7 @@ const NewLocationButton = ({ rootDataRelay, organizationCustomDomain, fullWidth,
     rootDataRelay,
   );
 
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
 
   if (!rootData.organization) {
     return null;
@@ -41,8 +41,8 @@ const NewLocationButton = ({ rootDataRelay, organizationCustomDomain, fullWidth,
     <Button
       href={
         rootData.organization.type.type === 'PRIVATE'
-          ? getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationCustomDomain)
-          : getOrganizationLocationAddMarketplaceLink(integratedPlatrform, organizationCustomDomain)
+          ? getOrganizationLocationAddPrivateLink(integratedPlatform, organizationCustomDomain)
+          : getOrganizationLocationAddMarketplaceLink(integratedPlatform, organizationCustomDomain)
       }
       variant={variant ?? 'text'}
       fullWidth={fullWidth}

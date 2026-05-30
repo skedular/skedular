@@ -1,5 +1,5 @@
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import { EditResource } from '@/components/resource/editResource';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationLocationResource_rootQuery } from '@/queries/__generated__/pageOrganizationLocationResource_rootQuery.graphql';

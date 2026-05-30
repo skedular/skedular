@@ -1,10 +1,7 @@
 import { BookingCard } from '@/components/booking/bookings';
-import { GridContainer, StackColumn } from '@skedular/ui';
 import { DayPicker } from '@/components/datePickers';
 import { FloorPlanSelector } from '@/components/floorPlan/floorPlanSelector';
 import { ResourceCard } from '@/components/resource';
-import { defaultPadding, emerald, flame, maxScreenWidth } from '@skedular/ui';
-import { endOfDay, startOfDay } from '@skedular/shared';
 import type { floorPlans_bookings_query$key } from '@/queries/__generated__/floorPlans_bookings_query.graphql';
 import type { floorPlans_bookings_refetchableFragment } from '@/queries/__generated__/floorPlans_bookings_refetchableFragment.graphql';
 import type { floorPlans_floorPlan_query$key } from '@/queries/__generated__/floorPlans_floorPlan_query.graphql';
@@ -12,8 +9,9 @@ import type { floorPlans_floorPlan_refetchableFragment } from '@/queries/__gener
 import type { floorPlans_query$key } from '@/queries/__generated__/floorPlans_query.graphql';
 import Popover from '@mui/material/Popover';
 import Box from '@mui/system/Box';
+import { endOfDay, startOfDay } from '@skedular/shared';
+import { defaultPadding, emerald, flame, GridContainer, maxScreenWidth, StackColumn } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
-import Image from 'next/image';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 // import { CustomTagSelector } from '@/components/organization/customTagSelector';
@@ -207,6 +205,9 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
     });
   };
 
+  const floorPlanImageWidth = rootDataFloorPlan.floorPlan?.image?.original?.width ?? 1;
+  const floorPlanImageHeight = rootDataFloorPlan.floorPlan?.image?.original?.height ?? 1;
+
   return (
     <>
       <StackColumn sx={{ maxWidth: maxScreenWidth }}>
@@ -220,17 +221,11 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
               <Box
                 sx={{
                   position: 'relative',
-                  display: 'inline-block',
-                  width: rootDataFloorPlan.floorPlan.image.original.width,
-                  height: rootDataFloorPlan.floorPlan.image.original.height,
+                  width: '100%',
+                  aspectRatio: `${rootDataFloorPlan.floorPlan.image.original.width} / ${rootDataFloorPlan.floorPlan.image.original.height}`,
                 }}
               >
-                <Image
-                  src={rootDataFloorPlan.floorPlan.image.original.url}
-                  height={rootDataFloorPlan.floorPlan.image.original.height}
-                  width={rootDataFloorPlan.floorPlan.image.original.width}
-                  alt=""
-                />
+                <img src={rootDataFloorPlan.floorPlan.image.original.url} alt="" style={{ display: 'block', width: '100%', height: '100%' }} />
 
                 {[...resourcePositions.entries()].map(([id, position]) => {
                   const resource = resources.find((item) => item.id === id);
@@ -244,8 +239,8 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
                       key={resource.id}
                       sx={{
                         position: 'absolute',
-                        left: position.x,
-                        top: position.y,
+                        left: `${(position.x / floorPlanImageWidth) * 100}%`,
+                        top: `${(position.y / floorPlanImageHeight) * 100}%`,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',

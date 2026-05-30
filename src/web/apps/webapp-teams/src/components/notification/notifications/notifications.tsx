@@ -1,6 +1,7 @@
+import { PaletteModeContext, RelayError, getCustomerFullName, getRelayErrorMessage, toRootError } from '@skedular/shared';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import type { notifications_acceptInvitationToJoinOrganizationMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinOrganizationMutation.graphql';
 import type { notifications_acceptInvitationToJoinTeamMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinTeamMutation.graphql';
 import type { notifications_rejectInvitationToJoinOrganizationMutation } from '@/queries/__generated__/notifications_rejectInvitationToJoinOrganizationMutation.graphql';
@@ -10,7 +11,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
-import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+
 import { defaultButtonStyle, defaultPadding, LeadIconTypography, PageHeaderPanel, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';

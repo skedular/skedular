@@ -1,5 +1,5 @@
 import { getOrganizationBookingsBaseLink, getOrganizationTeamManageTeamBaseLink, getOrganizationTeamMembersBaseLink, getOrganizationTeamSetupBaseLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -25,15 +25,15 @@ const sectionLabels: Record<OrganizationTeamSection, string> = {
 };
 
 const OrganizationTeamSectionNav = ({ activeSection, organizationCustomDomain, teamId, stickyTop = 0 }: Props) => {
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const theme = useTheme();
   const isCompactNav = useMediaQuery(theme.breakpoints.down('md'), { noSsr: true });
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const bookingsLink = getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain, { teamId });
+  const bookingsLink = getOrganizationBookingsBaseLink(integratedPlatform, organizationCustomDomain, { teamId });
   const sectionLinks: Record<OrganizationTeamSection, string> = {
-    setup: getOrganizationTeamSetupBaseLink(integratedPlatrform, organizationCustomDomain, teamId),
-    members: getOrganizationTeamMembersBaseLink(integratedPlatrform, organizationCustomDomain, teamId),
-    'manage-team': getOrganizationTeamManageTeamBaseLink(integratedPlatrform, organizationCustomDomain, teamId),
+    setup: getOrganizationTeamSetupBaseLink(integratedPlatform, organizationCustomDomain, teamId),
+    members: getOrganizationTeamMembersBaseLink(integratedPlatform, organizationCustomDomain, teamId),
+    'manage-team': getOrganizationTeamManageTeamBaseLink(integratedPlatform, organizationCustomDomain, teamId),
   };
 
   const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {

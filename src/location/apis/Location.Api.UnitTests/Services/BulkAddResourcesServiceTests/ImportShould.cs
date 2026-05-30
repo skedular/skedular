@@ -368,6 +368,71 @@ public class ImportShould
         succeeded.CreatedResources.ShouldNotBeEmpty();
     }
 
+    // ─── Cache invalidation ──────────────────────────────────────────────────
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Invalidate_Location_Cache_After_Successful_Import(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen] ILocationRepository locationRepository,
+        [Frozen] IResourceRepository resourceRepository,
+        [Frozen] IOrganizationTagRepository organizationTagRepository,
+        [Frozen] IEntityMapper entityMapper,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] ICachedLocationService cachedLocationService,
+        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen] IOrganizationOfferingService organizationOfferingService,
+        BulkAddResourcesService sut,
+        CancellationToken cancellationToken)
+    {
+        SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
+            organizationTagRepository, entityMapper, randomHelper,
+            cachedCustomerService, organizationAuthorizationService, organizationOfferingService,
+            cancellationToken, [], "Desk");
+
+        var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 1, [], [], []) };
+        var input = new BulkAddResources("location-1", rows);
+
+        await sut.ImportAsync(input, cancellationToken);
+
+        A.CallTo(() => cachedLocationService.RemoveByIdAsync("location-1", cancellationToken))
+            .MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Not_Invalidate_Location_Cache_When_All_Rows_Are_Invalid(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen] ILocationRepository locationRepository,
+        [Frozen] IResourceRepository resourceRepository,
+        [Frozen] IOrganizationTagRepository organizationTagRepository,
+        [Frozen] IEntityMapper entityMapper,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] ICachedLocationService cachedLocationService,
+        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen] IOrganizationOfferingService organizationOfferingService,
+        BulkAddResourcesService sut,
+        CancellationToken cancellationToken)
+    {
+        SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
+            organizationTagRepository, entityMapper, randomHelper,
+            cachedCustomerService, organizationAuthorizationService, organizationOfferingService,
+            cancellationToken, [], "Desk");
+
+        // All rows have quantity < 1 — nothing will be written
+        var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 0, [], [], []) };
+        var input = new BulkAddResources("location-1", rows);
+
+        await sut.ImportAsync(input, cancellationToken);
+
+        A.CallTo(() => cachedLocationService.RemoveByIdAsync(A<string>._, cancellationToken))
+            .MustNotHaveHappened();
+    }
+
     // ─── Logging ─────────────────────────────────────────────────────────────
 
     [Theory]

@@ -1,10 +1,9 @@
+import { RelayError, convertCalendarDayToStartOfDay, toRootError, toStoredBookingTimeRange, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { ArrowLeftIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon } from '@/components/icons';
 import { getMarketplaceBookingDetailsLink } from '@/components/links';
 import { Loading } from '@/components/loading';
-import { RelayError, toRootError } from '@/components/relayError';
-import { useIntegratedPlatrform } from '@skedular/shared';
-import { convertCalendarDayToStartOfDay, toStoredBookingTimeRange } from '@skedular/shared';
+
 import type { guestStoreFrontBookings_rootQuery } from '@/queries/__generated__/guestStoreFrontBookings_rootQuery.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Button from '@mui/material/Button';
@@ -102,7 +101,7 @@ const RootQuery = graphql`
 const GuestStoreFrontBookings = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<guestStoreFrontBookings_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const upcomingBookings = useMemo(
     () => rootData.upcomingBookings.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item),
@@ -160,7 +159,7 @@ const GuestStoreFrontBookings = ({ queryReference }: Props) => {
 
         <BookingsSection
           bookings={upcomingBookings}
-          integratedPlatrform={integratedPlatrform}
+          integratedPlatform={integratedPlatform}
           isCustomDomain={isCustomDomain}
           label="Coming up"
           organizationCustomDomain={organizationCustomDomain}
@@ -169,7 +168,7 @@ const GuestStoreFrontBookings = ({ queryReference }: Props) => {
 
         <BookingsSection
           bookings={recentBookings}
-          integratedPlatrform={integratedPlatrform}
+          integratedPlatform={integratedPlatform}
           isCustomDomain={isCustomDomain}
           label="Already happened"
           organizationCustomDomain={organizationCustomDomain}
@@ -182,14 +181,14 @@ const GuestStoreFrontBookings = ({ queryReference }: Props) => {
 
 const BookingsSection = ({
   bookings,
-  integratedPlatrform,
+  integratedPlatform,
   isCustomDomain,
   label,
   organizationCustomDomain,
   title,
 }: {
   bookings: ReadonlyArray<NonNullable<guestStoreFrontBookings_rootQuery['response']['upcomingBookings']['edges'][number]['node']>>;
-  integratedPlatrform: string | undefined;
+  integratedPlatform: string | undefined;
   isCustomDomain: boolean;
   label: string;
   organizationCustomDomain: string;
@@ -209,7 +208,7 @@ const BookingsSection = ({
         }}
       >
         {bookings.map((booking) => {
-          const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, booking.id);
+          const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, booking.id);
           const locationLabel = booking.involvedLocations[0]?.name ?? 'Location to be confirmed';
           const resourcesLabel = booking.bookingResources.map((item) => item.resource.name).join(', ') || 'Assigned later';
           const paymentStatusType = booking.marketplaceBooking?.paymentStatus.type;

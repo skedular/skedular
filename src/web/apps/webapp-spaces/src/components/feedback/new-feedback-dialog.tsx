@@ -1,8 +1,8 @@
+import { InMsTeamsContext, PaletteModeContext, getCustomerShortName, getRelayErrorMessage } from '@skedular/shared';
 import { BodyIconTypography, DefaultDialogTitle, FormStackColumn, TwoButtonsDialogActions } from '@skedular/ui';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
-import { InMsTeamsContext, PaletteModeContext } from '@skedular/shared';
-import { getCustomerShortName, getRelayErrorMessage } from '@skedular/shared';
+
 import type { newFeedbackDialog_query$key } from '@/queries/__generated__/newFeedbackDialog_query.graphql';
 import type { newFeedbackDialog_submitCustomerFeedbackMutation } from '@/queries/__generated__/newFeedbackDialog_submitCustomerFeedbackMutation.graphql';
 import Dialog from '@mui/material/Dialog';

@@ -1,15 +1,16 @@
+import { RelayError, startOfDay, toRootError } from '@skedular/shared';
 import { Loading } from '@/components/loading';
 import { NewLocationButton } from '@/components/location/addLocation';
 import { CustomTagSelector } from '@/components/organization/customTagSelector';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import type { organizationLocations_locations_availableOrganizationResources_query$key } from '@/queries/__generated__/organizationLocations_locations_availableOrganizationResources_query.graphql';
 import type { organizationLocations_locations_availableOrganizationResources_refetchableFragment } from '@/queries/__generated__/organizationLocations_locations_availableOrganizationResources_refetchableFragment.graphql';
 import type { organizationLocations_rootQuery } from '@/queries/__generated__/organizationLocations_rootQuery.graphql';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/system/Box';
-import { startOfDay } from '@skedular/shared';
+
 import { BodyIconTypography, GridContainer, StackColumn, StackRow } from '@skedular/ui';
 import { memo, startTransition, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';

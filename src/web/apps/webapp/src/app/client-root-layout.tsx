@@ -1,18 +1,19 @@
 'use client';
 
-import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
-import { MuiXLicense } from '@skedular/shared';
 import {
+  AuthenticatedRelayProvider,
   DatePickerLocalizationProvider,
   GoogleAnalyticsProvider,
-  AuthenticatedRelayProvider,
   InMsTeamsContext,
   InMsTeamsProvider,
   LogRocketProvider,
+  MuiXLicense,
   PaletteModeContext,
   PaletteModeProvider,
   ThemeProvider,
 } from '@skedular/shared';
+import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
+
 import { TeamsUserCredential } from '@microsoft/teamsfx';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';

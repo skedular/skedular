@@ -1,3 +1,12 @@
+import {
+  RelayError,
+  convertCalendarDayToStartOfDay,
+  getCustomerFullName,
+  getRelayErrorMessage,
+  toRootError,
+  toStoredBookingTimeRange,
+  useIntegratedPlatform,
+} from '@skedular/shared';
 import { ArrowLeftIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon } from '@/components/icons';
 import { getMarketplaceBookingDetailsLink, getMarketplaceProductLink } from '@/components/links';
 import { Loading } from '@/components/loading';
@@ -9,7 +18,7 @@ import {
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import useKnownParams from '@/hooks/use-known-params';
 import type { marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { marketplaceProductSubscriptionDetails_relatedBookingsQuery } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_relatedBookingsQuery.graphql';
@@ -26,7 +35,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
-import { convertCalendarDayToStartOfDay, getCustomerFullName, getRelayErrorMessage, toStoredBookingTimeRange, useIntegratedPlatrform } from '@skedular/shared';
+
 import {
   BodyIconTypography,
   CaptionIconTypography,
@@ -400,7 +409,7 @@ const MarketplaceProductSubscriptionDetails = ({
       }
     `);
   const router = useRouter();
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const [relatedBookingsFirst, setRelatedBookingsFirst] = useState(8);
   const subscription = rootData.marketplaceBookingSubscription;
@@ -659,7 +668,7 @@ const MarketplaceProductSubscriptionDetails = ({
                       value={
                         <Link
                           component={NextLink}
-                          href={getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, productVersion.id)}
+                          href={getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, productVersion.id)}
                           underline="none"
                           color="inherit"
                           sx={{
@@ -761,7 +770,7 @@ const MarketplaceProductSubscriptionDetails = ({
                         }}
                       >
                         {relatedBookings.map((booking) => {
-                          const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, booking.id);
+                          const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, booking.id);
                           const locationLabel = booking.involvedLocations[0]?.name ?? 'Location to be confirmed';
                           const resourcesLabel = booking.bookingResources.map((item) => item.resource.name).join(', ') || 'Assigned later';
                           const isConfirmed = booking.marketplaceBooking?.paymentStatus.type === 'CONFIRMED';

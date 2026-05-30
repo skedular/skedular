@@ -6,7 +6,7 @@ import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
+import { PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@skedular/ui';
 import Image from 'next/image';
 import NextLink from 'next/link';
@@ -22,7 +22,7 @@ type Props = {
 };
 
 const NoOrganizationLeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggleCollapse, hideIcons }: Props) => {
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
   const maxWidth = collapsed ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
@@ -74,9 +74,9 @@ const NoOrganizationLeftSideNavigationMenuContent = ({ collapsed, enableCollapse
     }
   };
 
-  const homeLink = getRootLink(integratedPlatrform);
-  const notificationsLink = getNotificationsLink(integratedPlatrform);
-  const settingsBaseLink = getSettingsLink(integratedPlatrform);
+  const homeLink = getRootLink(integratedPlatform);
+  const notificationsLink = getNotificationsLink(integratedPlatform);
+  const settingsBaseLink = getSettingsLink(integratedPlatform);
 
   return (
     <>
@@ -103,7 +103,7 @@ const NoOrganizationLeftSideNavigationMenuContent = ({ collapsed, enableCollapse
             sx={{ width: collapsed ? undefined : maxWidth - 30, justifyContent: 'center', marginLeft: 0, paddingBottom: { xs: 1, sm: 1, md: 5 } }}
             onClick={handleExpandClicked}
           >
-            <Image src={logoUrl} width={width} height={height} alt="Skedular" />
+            <Image src={logoUrl} width={width} height={height} unoptimized alt="Skedular" />
           </ListItem>
 
           <ListItem disablePadding>

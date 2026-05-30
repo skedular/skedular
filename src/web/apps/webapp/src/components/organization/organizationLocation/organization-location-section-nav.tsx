@@ -8,7 +8,7 @@ import {
   getOrganizationLocationRestrictedInformationBaseLink,
   getOrganizationLocationSetupBaseLink,
 } from '@/components/links';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -38,19 +38,19 @@ const sectionLabels: Record<OrganizationLocationSection, string> = {
 };
 
 const OrganizationLocationSectionNav = ({ activeSection, organizationCustomDomain, locationId, stickyTop = 0 }: Props) => {
-  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { integratedPlatform } = useIntegratedPlatform();
   const theme = useTheme();
   const isCompactNav = useMediaQuery(theme.breakpoints.down('md'), { noSsr: true });
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const bookingsLink = getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain, { locationId });
+  const bookingsLink = getOrganizationBookingsBaseLink(integratedPlatform, organizationCustomDomain, { locationId });
   const sectionLinks: Record<OrganizationLocationSection, string> = {
-    setup: getOrganizationLocationSetupBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'physical-address-setup': getOrganizationLocationPhysicalAddressSetupBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'opening-hours': getOrganizationLocationOpeningHoursBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'floor-plans': getOrganizationLocationFloorPlansBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'manage-resources': getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'restricted-information': getOrganizationLocationRestrictedInformationBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
-    'manage-location': getOrganizationLocationManageLocationBaseLink(integratedPlatrform, organizationCustomDomain, locationId),
+    setup: getOrganizationLocationSetupBaseLink(integratedPlatform, organizationCustomDomain, locationId),
+    'physical-address-setup': getOrganizationLocationPhysicalAddressSetupBaseLink(integratedPlatform, organizationCustomDomain, locationId),
+    'opening-hours': getOrganizationLocationOpeningHoursBaseLink(integratedPlatform, organizationCustomDomain, locationId),
+    'floor-plans': getOrganizationLocationFloorPlansBaseLink(integratedPlatform, organizationCustomDomain, locationId),
+    'manage-resources': getOrganizationLocationManageResourcesBaseLink(integratedPlatform, organizationCustomDomain, locationId),
+    'restricted-information': getOrganizationLocationRestrictedInformationBaseLink(integratedPlatform, organizationCustomDomain, locationId),
+    'manage-location': getOrganizationLocationManageLocationBaseLink(integratedPlatform, organizationCustomDomain, locationId),
   };
 
   const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {

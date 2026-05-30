@@ -4,7 +4,7 @@ import { getSignOutReturnToLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { Observability } from '@/components/observability';
 import StoreFrontBrowserMetadata from '@/components/organizationStoreFrontGuest/store-front-browser-metadata';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import useKnownParams from '@/hooks/use-known-params';
 import type { organizationStoreFrontRootShell_rootQuery } from '@/queries/__generated__/organizationStoreFrontRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';

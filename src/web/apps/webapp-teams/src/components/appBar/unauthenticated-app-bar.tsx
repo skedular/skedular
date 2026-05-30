@@ -62,7 +62,7 @@ const UnauthenticatedAppBar = () => {
           borderColor: (theme) => theme.palette.divider,
         }}
       >
-        <Image src={logoUrl} width={width} height={height} alt="Skedular" />
+        <Image src={logoUrl} width={width} height={height} unoptimized alt="Skedular" />
 
         <PushToRight />
         <IconButton

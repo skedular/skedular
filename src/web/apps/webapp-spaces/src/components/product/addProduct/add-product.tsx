@@ -1,13 +1,14 @@
+import { PaletteModeContext, RelayError, getRelayErrorMessage, toRootError, useKnownParams } from '@skedular/shared';
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import ProductEditorForm from '@/components/product/product-editor-form';
-import { RelayError, toRootError } from '@/components/relayError';
+
 import type { addProduct_addProductMutation, Currency, PaymentMethod, ProductPricingCadence, ProductType } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
 import Box from '@mui/material/Box';
-import { getRelayErrorMessage, PaletteModeContext, useKnownParams } from '@skedular/shared';
+
 import { makeRequired, makeValidate } from 'mui-rff';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';

@@ -1,6 +1,6 @@
 import { Loading } from '@/components/loading';
 import { OrganizationTeam } from '@/components/organization/organizationTeam';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationTeam_rootQuery } from '@/queries/__generated__/pageOrganizationTeam_rootQuery.graphql';
 import { memo, useEffect, useState, useTransition } from 'react';

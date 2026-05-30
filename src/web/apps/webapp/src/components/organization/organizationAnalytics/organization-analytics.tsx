@@ -8,7 +8,7 @@ import type { organizationAnalytics_query$key } from '@/queries/__generated__/or
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import { useIntegratedPlatrform } from '@skedular/shared';
+import { useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
   defaultPadding,
@@ -62,7 +62,7 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationCu
     rootDataRelay,
   );
 
-  useIntegratedPlatrform();
+  useIntegratedPlatform();
   const searchParams = useSearchParams();
   const activeSection = getActiveSection(searchParams.get('section'));
   const [locationIds, setLocationIds] = useState<string[]>([]);

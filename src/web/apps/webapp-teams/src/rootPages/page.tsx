@@ -1,6 +1,6 @@
 import { getSignInLink } from '@/components/links';
 import { NoOrganizationLandingContent, NoOrganizationLandingPageRootQuery } from '@/components/noOrganizationLanding';
-import { RelayError, toRootError } from '@/components/relayError';
+import { RelayError, toRootError } from '@skedular/shared';
 import { NoOrganizationRootShell } from '@/components/rootShell';
 import type { noOrganizationLandingPage_rootQuery } from '@/queries/__generated__/noOrganizationLandingPage_rootQuery.graphql';
 import Box from '@mui/material/Box';
