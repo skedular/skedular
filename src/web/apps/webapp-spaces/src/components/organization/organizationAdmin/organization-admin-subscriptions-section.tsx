@@ -1,6 +1,6 @@
 import { DeleteIcon, ErrorIcon, NewIcon, TickIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import type { organizationAdminSubscriptionsSectionQuery } from '@/queries/__generated__/organizationAdminSubscriptionsSectionQuery.graphql';
 import type { organizationAdminSubscriptionsSection_cancelOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdminSubscriptionsSection_cancelOrganizationOfferingMutation.graphql';
@@ -127,8 +127,6 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
   };
 
   const handleRemovePaymentMethodClick = (id: string) => {
-    const toastId = themedToast(<NotificationContent content="Removing payment method..." />, infoNotificationOptions);
-
     commitRemoveOrganizationPaymentMethod({
       variables: {
         input: {
@@ -138,32 +136,21 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove that payment method. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove that payment method. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content="The payment method has been removed." />,
-        });
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove that payment method. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove that payment method. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
 
   const handleCancelActiveOfferingClick = () => {
     const name = organization.name;
-    const toastId = themedToast(<NotificationContent content={`Cancelling the active plan for organization '${name}'...`} />, infoNotificationOptions);
 
     commitCancelOrganizationOffering({
       variables: {
@@ -174,25 +161,15 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't cancel the active plan for organization '${name}'. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't cancel the active plan for organization '${name}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           onReloadRequired();
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`The active plan for organization '${name}' has been cancelled.`} />,
-        });
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't cancel the active plan for organization '${name}'. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't cancel the active plan for organization '${name}'. ${error.message}`} />, errorNotificationOptions);
         onReloadRequired();
       },
     });
