@@ -6,7 +6,7 @@ import { CalendarIcon, EllipseMenuIcon, JoinIcon, NotesIcon, PaymentStatusIcon, 
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { Resources } from '@/components/resource';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
@@ -499,35 +499,18 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
 
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
-    const toastId = themedToast(<NotificationContent content={`Removing booking ${bookingDetailsInfo}...`} />, infoNotificationOptions);
-
     if (bookingDetails.channel.channel === 'PRIVATE') {
       commitDeletePrivateBooking({
         variables: { connectionIds, input: { clientMutationId: uuid(), id: bookingDetails.id } },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />,
-            });
+            themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
             return;
           }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Booking ${bookingDetailsInfo} has been removed.${canDeleteRecurringOccurrence ? ' The rest of the recurring series will stay active.' : ''}`}
-              />
-            ),
-          });
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
         },
       });
     } else {
@@ -535,28 +518,13 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         variables: { connectionIds, input: { clientMutationId: uuid(), id: bookingDetails.id } },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />,
-            });
+            themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
             return;
           }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Booking ${bookingDetailsInfo} has been removed.${canDeleteRecurringOccurrence ? ' The rest of the recurring series will stay active.' : ''}`}
-              />
-            ),
-          });
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
         },
       });
     }
@@ -575,19 +543,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`${isMarketplaceRecurringBooking ? 'Cancelling' : 'Removing'} ${recurringSeriesLabel.toLowerCase()}...`} />,
-      infoNotificationOptions,
-    );
-
     if (isMarketplaceRecurringBooking) {
       const subscriptionId = recurringMarketplaceSubscriptionIds[recurringBooking.id];
 
       if (!subscriptionId) {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content="We couldn't find the recurring series for this booking." />,
-        });
+        themedToast(<NotificationContent content="We couldn't find the recurring series for this booking." />, errorNotificationOptions);
 
         return;
       }
@@ -602,25 +562,15 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(errors)}`} />,
-            });
+            themedToast(<NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
             return;
           }
 
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`${recurringSeriesLabel} has been cancelled. This applies to the full recurring series, not just this booking.`} />,
-          });
           router.refresh();
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(error)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
         },
       });
 
@@ -636,32 +586,21 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove this recurring series. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove this recurring series. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`${recurringSeriesLabel} has been removed. This applies to the full series, not just this booking.`} />,
-        });
         router.refresh();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove this recurring series. ${getRelayErrorMessage(error)}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove this recurring series. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
       },
     });
   };
 
   const handleJoinClick = () => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Joining booking on '${shortDateFormatFrom}'...`} />, infoNotificationOptions);
 
     commitAddPrivateBooking({
       variables: {
@@ -680,43 +619,13 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       },
       onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
-
-        const booking = response.addPrivateBooking?.booking;
-        let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
-
-        if (booking.involvedLocations.length > 0) {
-          message += ` from the "${booking.involvedLocations[0]!.name}"`;
-        }
-
-        if (booking.bookingResources.length > 0) {
-          message += ` at resource "${booking.bookingResources.map(({ resource }) => resource.name).join(', ')}"`;
-
-          const zones = booking.bookingResources.flatMap(({ resource }) => resource.zones);
-          if (zones.length > 0) {
-            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.id, zone), new Map()).values());
-            message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
-          }
-        }
-
-        message += ` on ${toShortDate(booking.from)}.`;
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={message} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addPrivateBooking: {
@@ -756,29 +665,22 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     }
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
-    const toastId = themedToast(<NotificationContent content={`Confirming payment for booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
-
     commitConfirmBookingPayment({
       variables: { input: { clientMutationId: uuid(), id: bookingDetails.id } },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment confirmed.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to confirm payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to confirm payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
+          errorNotificationOptions,
+        );
       },
       optimisticResponse: {
         confirmBookingPayment: {
@@ -804,29 +706,22 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     }
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
-    const toastId = themedToast(<NotificationContent content={`Rejecting payment for booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
-
     commitRejectBookingPayment({
       variables: { input: { clientMutationId: uuid(), id: bookingDetails.id } },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment rejected.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to reject payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to reject payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
+          errorNotificationOptions,
+        );
       },
       optimisticResponse: {
         rejectBookingPayment: {
@@ -852,29 +747,22 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     }
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
-    const toastId = themedToast(<NotificationContent content={`Making payment for booking '${bookingDetailsInfo}' not required...`} />, infoNotificationOptions);
-
     commitMakeBookingPaymentNotRequired({
       variables: { input: { clientMutationId: uuid(), id: bookingDetails.id } },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment made not required.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to make payment for booking '${shortDateFormatFrom}' not required. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to make payment for booking '${shortDateFormatFrom}' not required. Error: ${getRelayErrorMessage(error)}.`} />,
+          errorNotificationOptions,
+        );
       },
       optimisticResponse: {
         makeBookingPaymentNotRequired: {

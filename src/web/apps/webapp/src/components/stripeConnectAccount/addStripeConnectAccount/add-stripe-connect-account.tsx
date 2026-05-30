@@ -1,5 +1,5 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { PaletteModeContext } from '@skedular/shared';
 import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
 import { getRelayErrorMessage } from '@skedular/shared';
@@ -55,7 +55,6 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationCustomDomain, o
 
   const handleStripeConnectAccountAddClick = ({ name }: StripeConnectAccountDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding Stripe Connect account '${name}'...`} />, infoNotificationOptions);
 
     commitAddStripeConnectAccount({
       variables: {
@@ -69,27 +68,16 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationCustomDomain, o
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new Stripe Connect account '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to add new Stripe Connect account '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Stripe Connect account ${name} added.`} />,
-        });
 
         onAdded(id);
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add new Stripe Connect account '${name}'. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to add new Stripe Connect account '${name}'. Error: ${error.message}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addOrganizationStripeConnectAccount: {

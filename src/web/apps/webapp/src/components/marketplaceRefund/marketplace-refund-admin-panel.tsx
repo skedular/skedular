@@ -1,7 +1,4 @@
-import { DefaultDialogTitle, StackRow, TwoButtonsDialogActions } from '@skedular/ui';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import type { marketplaceRefundAdminPanel_completeMarketplaceRefundMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_completeMarketplaceRefundMutation.graphql';
 import type { marketplaceRefundAdminPanel_failMarketplaceRefundMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_failMarketplaceRefundMutation.graphql';
 import type { marketplaceRefundAdminPanel_markMarketplaceRefundManualCompletedMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_markMarketplaceRefundManualCompletedMutation.graphql';
@@ -14,6 +11,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import TextField from '@mui/material/TextField';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import { DefaultDialogTitle, StackRow, TwoButtonsDialogActions } from '@skedular/ui';
 import { useContext, useState } from 'react';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -63,7 +62,7 @@ type Props = {
 
 const toRefundStatusType = (value?: string | null | undefined) => value?.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase() ?? '';
 
-const MarketplaceRefundAdminPanel = ({ entityLabel, refund }: Props) => {
+const MarketplaceRefundAdminPanel = ({ refund }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [refundApprovalDialogOpen, setRefundApprovalDialogOpen] = useState(false);
@@ -196,9 +195,8 @@ const MarketplaceRefundAdminPanel = ({ entityLabel, refund }: Props) => {
     parsedRefundApprovalAmount !== undefined &&
     (!Number.isFinite(parsedRefundApprovalAmount) || parsedRefundApprovalAmount <= 0 || (refund.refundAmount != null && parsedRefundApprovalAmount > Number(refund.refundAmount)));
 
-  const runRefundAction = (actionLabel: string, runMutation: (toastId: string | number) => void) => {
-    const toastId = themedToast(<NotificationContent content={`${actionLabel} for ${entityLabel}...`} />, infoNotificationOptions);
-    runMutation(toastId);
+  const runRefundAction = (runMutation: () => void) => {
+    runMutation();
   };
 
   const handleQueueRefundClick = () => {
@@ -234,7 +232,7 @@ const MarketplaceRefundAdminPanel = ({ entityLabel, refund }: Props) => {
       return;
     }
 
-    runRefundAction('Queueing refund', (toastId) => {
+    runRefundAction(() => {
       commitMarkMarketplaceRefundPendingAccounting({
         variables: {
           input: {
@@ -246,31 +244,21 @@ const MarketplaceRefundAdminPanel = ({ entityLabel, refund }: Props) => {
         },
         onCompleted: (_, errors) => {
           if (errors?.length) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't queue this refund. ${getRelayErrorMessage(errors)}`} />,
-            });
+            themedToast(<NotificationContent content={`We couldn't queue this refund. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
             return;
           }
 
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content="This refund has been queued for accounting." />,
-          });
           setRefundApprovalDialogOpen(false);
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't queue this refund. ${getRelayErrorMessage(error)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't queue this refund. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
         },
       });
     });
   };
 
   const handleProcessRefundInXeroClick = () => {
-    runRefundAction('Sending refund to Xero', (toastId) => {
+    runRefundAction(() => {
       commitProcessMarketplaceRefundInXero({
         variables: {
           input: {
@@ -280,30 +268,19 @@ const MarketplaceRefundAdminPanel = ({ entityLabel, refund }: Props) => {
         },
         onCompleted: (_, errors) => {
           if (errors?.length) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't send this refund to Xero. ${getRelayErrorMessage(errors)}`} />,
-            });
+            themedToast(<NotificationContent content={`We couldn't send this refund to Xero. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
             return;
           }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content="This refund has been sent to Xero." />,
-          });
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't send this refund to Xero. ${getRelayErrorMessage(error)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't send this refund to Xero. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
         },
       });
     });
   };
 
   const handleCompleteRefundClick = () => {
-    runRefundAction('Completing refund', (toastId) => {
+    runRefundAction(() => {
       commitCompleteMarketplaceRefund({
         variables: {
           input: {
@@ -314,31 +291,21 @@ const MarketplaceRefundAdminPanel = ({ entityLabel, refund }: Props) => {
         },
         onCompleted: (_, errors) => {
           if (errors?.length) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't complete this refund. ${getRelayErrorMessage(errors)}`} />,
-            });
+            themedToast(<NotificationContent content={`We couldn't complete this refund. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
             return;
           }
 
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content="This refund has been marked as completed." />,
-          });
           setRefundResolutionDialogMode(null);
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't complete this refund. ${getRelayErrorMessage(error)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't complete this refund. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
         },
       });
     });
   };
 
   const handleFailRefundClick = () => {
-    runRefundAction('Marking refund as failed', (toastId) => {
+    runRefundAction(() => {
       commitFailMarketplaceRefund({
         variables: {
           input: {
@@ -349,31 +316,21 @@ const MarketplaceRefundAdminPanel = ({ entityLabel, refund }: Props) => {
         },
         onCompleted: (_, errors) => {
           if (errors?.length) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't update this refund. ${getRelayErrorMessage(errors)}`} />,
-            });
+            themedToast(<NotificationContent content={`We couldn't update this refund. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
             return;
           }
 
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content="This refund has been marked as failed." />,
-          });
           setRefundResolutionDialogMode(null);
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update this refund. ${getRelayErrorMessage(error)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't update this refund. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
         },
       });
     });
   };
 
   const handleMarkManualRequiredClick = () => {
-    runRefundAction('Moving refund to manual follow-up', (toastId) => {
+    runRefundAction(() => {
       commitMarkMarketplaceRefundManualRequired({
         variables: {
           input: {
@@ -384,31 +341,21 @@ const MarketplaceRefundAdminPanel = ({ entityLabel, refund }: Props) => {
         },
         onCompleted: (_, errors) => {
           if (errors?.length) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't move this refund to manual follow-up. ${getRelayErrorMessage(errors)}`} />,
-            });
+            themedToast(<NotificationContent content={`We couldn't move this refund to manual follow-up. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
             return;
           }
 
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content="This refund has been moved to manual follow-up." />,
-          });
           setManualResolutionDialogMode(null);
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't move this refund to manual follow-up. ${getRelayErrorMessage(error)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't move this refund to manual follow-up. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
         },
       });
     });
   };
 
   const handleMarkManualCompletedClick = () => {
-    runRefundAction('Completing refund manually', (toastId) => {
+    runRefundAction(() => {
       commitMarkMarketplaceRefundManualCompleted({
         variables: {
           input: {
@@ -419,24 +366,14 @@ const MarketplaceRefundAdminPanel = ({ entityLabel, refund }: Props) => {
         },
         onCompleted: (_, errors) => {
           if (errors?.length) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't complete this refund manually. ${getRelayErrorMessage(errors)}`} />,
-            });
+            themedToast(<NotificationContent content={`We couldn't complete this refund manually. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
             return;
           }
 
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content="This refund has been marked as completed manually." />,
-          });
           setManualResolutionDialogMode(null);
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't complete this refund manually. ${getRelayErrorMessage(error)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't complete this refund manually. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
         },
       });
     });

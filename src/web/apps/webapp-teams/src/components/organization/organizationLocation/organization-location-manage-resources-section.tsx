@@ -1,7 +1,7 @@
 import { NewIcon } from '@/components/icons';
 import { getOrganizationLocationAddResourceBaseLink, getOrganizationLocationBulkAddResourcesBaseLink, getOrganizationLocationResourceBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { CustomTagSelector } from '@/components/organization/customTagSelector';
 import OrganizationLocationResourceManagementList from '@/components/organization/organizationLocation/organization-location-resource-management-list';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
@@ -271,9 +271,7 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
     setResourceZoneIds(id ? [id] : []);
   };
 
-  const handleDeactivateResourcesClick = (ids: string[], successMessage: string, pendingMessage: string) => {
-    const toastId = themedToast(<NotificationContent content={pendingMessage} />, infoNotificationOptions);
-
+  const handleDeactivateResourcesClick = (ids: string[]) => {
     commitDeactivateResources({
       variables: {
         input: {
@@ -283,32 +281,20 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't deactivate those resources. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't deactivate those resources. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={successMessage} />,
-        });
         setSelectedResourceIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't deactivate those resources. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't deactivate those resources. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
 
-  const handleActivateResourcesClick = (ids: string[], successMessage: string, pendingMessage: string) => {
-    const toastId = themedToast(<NotificationContent content={pendingMessage} />, infoNotificationOptions);
-
+  const handleActivateResourcesClick = (ids: string[]) => {
     commitActivateResources({
       variables: {
         input: {
@@ -318,32 +304,20 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't activate those resources. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't activate those resources. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={successMessage} />,
-        });
         setSelectedResourceIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't activate those resources. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't activate those resources. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
 
-  const handleDeleteResourcesClick = (ids: string[], successMessage: string, pendingMessage: string) => {
-    const toastId = themedToast(<NotificationContent content={pendingMessage} />, infoNotificationOptions);
-
+  const handleDeleteResourcesClick = (ids: string[]) => {
     commitDeleteResources({
       variables: {
         connectionIds: resourcesConnectionIds,
@@ -354,25 +328,15 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove those resources. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove those resources. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={successMessage} />,
-        });
         setSelectedResourceIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove those resources. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove those resources. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -382,8 +346,6 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
     if (!selectedResource) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content={`Setting resource '${selectedResource.name}' as your preferred resource...`} />, infoNotificationOptions);
     commitAddCustomerPreferredResource({
       variables: {
         input: {
@@ -393,25 +355,18 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't make '${selectedResource.name}' your preferred resource. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(
+            <NotificationContent content={`We couldn't make '${selectedResource.name}' your preferred resource. ${getRelayErrorMessage(errors)}`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`'${selectedResource.name}' is now your preferred resource.`} />,
-        });
         setPreferredResources((current) => current.concat(selectedResource.id));
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't make '${selectedResource.name}' your preferred resource. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't make '${selectedResource.name}' your preferred resource. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -421,8 +376,6 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
     if (!selectedResource) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content={`Removing resource '${selectedResource.name}' as your preferred resource...`} />, infoNotificationOptions);
     commitRemoveCustomerPreferredResource({
       variables: {
         input: {
@@ -432,25 +385,18 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove '${selectedResource.name}' from your preferred resources. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(
+            <NotificationContent content={`We couldn't remove '${selectedResource.name}' from your preferred resources. ${getRelayErrorMessage(errors)}`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`'${selectedResource.name}' is no longer one of your preferred resources.`} />,
-        });
         setPreferredResources((current) => current.filter((item) => item !== selectedResource.id));
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove '${selectedResource.name}' from your preferred resources. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove '${selectedResource.name}' from your preferred resources. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -466,7 +412,7 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
         break;
       case MoreActionsMenuOptionType.DeactivateResource:
         if (resourceDetails) {
-          handleDeactivateResourcesClick([resourceDetails.id], 'Resource deactivated.', 'Deactivating resource...');
+          handleDeactivateResourcesClick([resourceDetails.id]);
         }
         break;
       case MoreActionsMenuOptionType.SetAsPreferredResource:
@@ -481,12 +427,12 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
         break;
       case MoreActionsMenuOptionType.ActivateResource:
         if (resourceDetails) {
-          handleActivateResourcesClick([resourceDetails.id], 'Resource activated.', 'Activating resource...');
+          handleActivateResourcesClick([resourceDetails.id]);
         }
         break;
       case MoreActionsMenuOptionType.DeleteResource:
         if (resourceDetails) {
-          handleDeleteResourcesClick([resourceDetails.id], 'Resource removed.', 'Removing resource...');
+          handleDeleteResourcesClick([resourceDetails.id]);
         }
         break;
     }
@@ -551,9 +497,9 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
                 setSelectedResourceId(resourceId);
                 setResourceMoreActionsAnchorEl(target);
               }}
-              onDeactivateSelected={(ids) => handleDeactivateResourcesClick(ids, 'Resources deactivated.', 'Deactivating resources...')}
-              onActivateSelected={(ids) => handleActivateResourcesClick(ids, 'Resources activated.', 'Activating resources...')}
-              onDeleteSelected={(ids) => handleDeleteResourcesClick(ids, 'Resources removed.', 'Removing resources...')}
+              onDeactivateSelected={(ids) => handleDeactivateResourcesClick(ids)}
+              onActivateSelected={(ids) => handleActivateResourcesClick(ids)}
+              onDeleteSelected={(ids) => handleDeleteResourcesClick(ids)}
             />
           </StackColumn>
         </SettingsSectionCard>

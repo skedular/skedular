@@ -2,7 +2,7 @@ import { PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedul
 import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { getOrganizationAdminEditZoneBaseLink } from '@/components/links';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
 import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
@@ -141,8 +141,6 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
   };
 
   const handleRemoveZonesClick = () => {
-    const toastId = themedToast(<NotificationContent content="Removing zones ..." />, infoNotificationOptions);
-
     commitDeleteZones({
       variables: {
         connectionIds: zonesConnectionIds,
@@ -153,25 +151,15 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove zones. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove zones. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content="Zones removed." />,
-        });
         setSelectedZoneIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove zones. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove zones. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -180,8 +168,6 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
     if (!selectedZoneId) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content="Removing zone ..." />, infoNotificationOptions);
 
     commitDeleteZones({
       variables: {
@@ -193,24 +179,14 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove zone. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove zone. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content="Zone removed." />,
-        });
         setSelectedZoneId(null);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove zone. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove zone. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -221,8 +197,6 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Setting zone '${organizationTagDetails.name}' as your preferred zone...`} />, infoNotificationOptions);
-
     commitAddCustomerPreferredOrganizationTag({
       variables: {
         input: {
@@ -232,24 +206,19 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Zone '${organizationTagDetails.name}' has been set as the preferred zone.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`} />,
+          errorNotificationOptions,
+        );
       },
     });
   };
@@ -260,8 +229,6 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Removing zone '${organizationTagDetails.name}' as your preferred zone...`} />, infoNotificationOptions);
-
     commitRemoveCustomerPreferredOrganizationTag({
       variables: {
         input: {
@@ -271,24 +238,19 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Zone '${organizationTagDetails.name}' has been removed as your preferred zone.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`} />,
+          errorNotificationOptions,
+        );
       },
     });
   };

@@ -1,7 +1,7 @@
 import { getMarketplaceProductBookingDetailsLink, getMarketplaceProductLink, getSignInLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel } from '@/components/marketplaceProduct';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import type {
   BookingCategory,
   marketplaceProductBookingForm_addMarketplaceBookingMutation,
@@ -456,8 +456,6 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
       toast.error(<NotificationContent content="Accept the space terms and conditions before continuing." />);
       return;
     }
-
-    const toastId = toast(<NotificationContent content={`Making your booking for ${toShortDate(dateRangeValidation.from.toISOString())}...`} />, infoNotificationOptions);
     const id = uuid();
 
     commitAddBooking({
@@ -487,34 +485,20 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
       },
       onCompleted: (response, errors) => {
         if (errors?.length) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't complete this booking. ${getRelayErrorMessage(errors)}`} />,
-          });
+          toast(<NotificationContent content={`We couldn't complete this booking. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           return;
         }
 
         const booking = response.addMarketplaceBooking?.booking;
         if (!booking?.id) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content="The booking was created, but we couldn't open its details page." />,
-          });
+          toast(<NotificationContent content="The booking was created, but we couldn't open its details page." />, errorNotificationOptions);
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking confirmed for ${toShortDate(booking?.from)}.`} />,
-        });
 
         router.push(getMarketplaceProductBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, booking.id));
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't complete this booking. ${getRelayErrorMessage(error)}`} />,
-        });
+        toast(<NotificationContent content={`We couldn't complete this booking. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
       },
     });
   };

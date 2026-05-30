@@ -4,7 +4,7 @@ import { CustomTags } from '@/components/customTag';
 import { CalendarIcon, EllipseMenuIcon, NotesIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import Resources from '@/components/resource/resources';
 import { Zones } from '@/components/zone';
 import type { myBookingCard_BookingDetails$key } from '@/queries/__generated__/myBookingCard_BookingDetails.graphql';
@@ -265,8 +265,6 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
 
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
-    const toastId = themedToast(<NotificationContent content={`Removing booking ${bookingDetailsInfo}...`} />, infoNotificationOptions);
-
     if (bookingDetails.channel.channel === 'PRIVATE') {
       commitDeletePrivateBooking({
         variables: {
@@ -278,28 +276,13 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />,
-            });
+            themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
             return;
           }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Booking ${bookingDetailsInfo} has been removed.${canDeleteRecurringOccurrence ? ' The rest of the recurring series will stay active.' : ''}`}
-              />
-            ),
-          });
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
         },
       });
     }
@@ -318,8 +301,6 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Removing ${recurringSeriesLabel.toLowerCase()}...`} />, infoNotificationOptions);
-
     commitDeletePrivateRecurringBooking({
       variables: {
         input: {
@@ -329,25 +310,15 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove this recurring series. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove this recurring series. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`${recurringSeriesLabel} has been removed. This applies to the full series, not just this booking.`} />,
-        });
         router.refresh();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove this recurring series. ${getRelayErrorMessage(error)}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove this recurring series. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
       },
     });
   };

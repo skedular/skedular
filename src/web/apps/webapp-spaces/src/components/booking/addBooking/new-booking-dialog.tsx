@@ -1,6 +1,6 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { CustomTags } from '@/components/customTag';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
 import type { BookingCategory, newBookingDialog_addPrivateBookingMutation } from '@/queries/__generated__/newBookingDialog_addPrivateBookingMutation.graphql';
@@ -396,7 +396,6 @@ const NewBookingDialog = ({
     const until = dateRange.until.toISOString();
     const fromToPrint = toShortDate(dateRange.from);
     const customerId = member ?? rootData.me?.id;
-    const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
 
     commitAddPrivateBooking({
       variables: {
@@ -416,46 +415,15 @@ const NewBookingDialog = ({
       },
       onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        const booking = response.addPrivateBooking?.booking;
-        let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
-
-        if (booking.involvedLocations.length > 0) {
-          message += ` from the "${booking.involvedLocations[0]!.name}"`;
-        }
-
-        if (booking.bookingResources.length > 0) {
-          message += ` at resource "${booking.bookingResources.map(({ resource }) => resource.name).join(', ')}"`;
-
-          const zones = booking.bookingResources.flatMap(({ resource }) => resource.zones);
-          if (zones.length > 0) {
-            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.id, zone), new Map()).values());
-
-            message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
-          }
-        }
-
-        message += ` on ${toShortDate(booking.from)}.`;
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={message} />,
-        });
-
         onAddClicked();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${getRelayErrorMessage(error)}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addPrivateBooking: {

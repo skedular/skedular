@@ -1,7 +1,7 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import ProductEditorForm from '@/components/product/product-editor-form';
 import { RelayError, toRootError } from '@/components/relayError';
 import type { addProduct_addProductMutation, Currency, PaymentMethod, ProductPricingCadence, ProductType } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
@@ -407,7 +407,6 @@ const AddProduct = (props: Props) => {
   const handleProductAddClick = ({ title, subTitle, includedFeatures, type, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
     const id = uuid();
     const productTitle = title?.trim() || 'product';
-    const toastId = themedToast(<NotificationContent content={`Adding ${productTitle}...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
       original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
       thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
@@ -463,27 +462,16 @@ const AddProduct = (props: Props) => {
       } as never,
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't add ${productTitle}. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't add ${productTitle}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`${productTitle} has been added.`} />,
-        });
 
         onAdded(id);
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't add ${productTitle}. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't add ${productTitle}. ${error.message}`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addProduct: {

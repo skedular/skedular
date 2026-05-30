@@ -12,7 +12,7 @@ import {
 import { ArrowLeftIcon } from '@/components/icons';
 import { getMarketplaceLocationLink } from '@/components/links';
 import { Loading } from '@/components/loading';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { useIntegratedPlatrform } from '@skedular/shared';
 import { getCustomerFullName, getRelayErrorMessage, isStoredFullDayRange, toStoredBookingTimeRange } from '@skedular/shared';
@@ -257,8 +257,6 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
       bookingDetailsInfo += ` at ${booking.involvedLocations[0]!.name}`;
     }
 
-    const toastId = toast(<NotificationContent content={`Cancelling ${bookingDetailsInfo}...`} />, infoNotificationOptions);
-
     commitDeleteMarketplaceBooking({
       variables: {
         input: {
@@ -268,33 +266,21 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to cancel ${bookingDetailsInfo}. ${toMarketplaceBookingCancellationErrorMessage(getRelayErrorMessage(errors))}`} />,
-          });
+          toast(
+            <NotificationContent content={`Failed to cancel ${bookingDetailsInfo}. ${toMarketplaceBookingCancellationErrorMessage(getRelayErrorMessage(errors))}`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: (
-            <NotificationContent
-              content={
-                hasConfirmedPayment
-                  ? `${bookingDetailsInfo} cancelled. Any eligible refund will be reviewed separately.`
-                  : `${bookingDetailsInfo} cancelled. No refund is expected because payment was not confirmed.`
-              }
-            />
-          ),
-        });
         setHasCancelledLocally(true);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to cancel ${bookingDetailsInfo}. ${toMarketplaceBookingCancellationErrorMessage(getRelayErrorMessage(error))}`} />,
-        });
+        toast(
+          <NotificationContent content={`Failed to cancel ${bookingDetailsInfo}. ${toMarketplaceBookingCancellationErrorMessage(getRelayErrorMessage(error))}`} />,
+          errorNotificationOptions,
+        );
       },
     });
 

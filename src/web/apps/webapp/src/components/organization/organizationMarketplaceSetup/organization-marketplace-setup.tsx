@@ -3,7 +3,7 @@ import { BillingIcon, DeleteIcon } from '@/components/icons';
 import { getOrganizationAdminEditProductTagBaseLink, getOrganizationBankAccountBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { SingleChoiceOrganizationBillingCycle, SingleChoiceOrganizationXeroBillingMode } from '@/components/organization';
 import { AddOrganizationProductTagButton } from '@/components/organization/addOrganizationProductTag';
 import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
@@ -736,8 +736,6 @@ const OrganizationMarketplaceSetup = ({
   };
 
   const handleRemoveProductTagsClick = () => {
-    const toastId = themedToast(<NotificationContent content="Removing product tags ..." />, infoNotificationOptions);
-
     commitDeleteProductTags({
       variables: {
         connectionIds: productTagsConnectionIds,
@@ -748,25 +746,15 @@ const OrganizationMarketplaceSetup = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove product tags. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove product tags. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Product tags removed.`} />,
-        });
         setSelectedProductTagIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove product tags. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove product tags. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -775,8 +763,6 @@ const OrganizationMarketplaceSetup = ({
     if (!selectedProductTagId) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content="Removing product tag ..." />, infoNotificationOptions);
 
     commitDeleteProductTags({
       variables: {
@@ -788,26 +774,15 @@ const OrganizationMarketplaceSetup = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove product tag. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove product tag. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Product tag removed.`} />,
-        });
-
         setSelectedProductTagId(null);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove product tag. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove product tag. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -855,11 +830,6 @@ const OrganizationMarketplaceSetup = ({
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Setting stripe connect account ${organizationStripeConnectAccountDetails.name} as default...`} />,
-      infoNotificationOptions,
-    );
-
     commitSetOrganizationStripeConnectAccountAsDefault({
       variables: {
         input: {
@@ -869,30 +839,23 @@ const OrganizationMarketplaceSetup = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to set stripe connect account ${organizationStripeConnectAccountDetails.name} as default. Error: ${getRelayErrorMessage(errors)}`}
-              />
-            ),
-          });
+          themedToast(
+            <NotificationContent
+              content={`Failed to set stripe connect account ${organizationStripeConnectAccountDetails.name} as default. Error: ${getRelayErrorMessage(errors)}`}
+            />,
+            errorNotificationOptions,
+          );
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Stripe connect account ${organizationStripeConnectAccountDetails.name} is set as default.`} />,
-        });
-
         handleRefetchOrganizationStripeConnectAccounts(organizationStripeConnectAccountNameSearchText);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to set stripe connect account ${organizationStripeConnectAccountDetails.name} as default. Error: ${error.message}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to set stripe connect account ${organizationStripeConnectAccountDetails.name} as default. Error: ${error.message}.`} />,
+          errorNotificationOptions,
+        );
       },
       optimisticResponse: {
         setOrganizationStripeConnectAccountAsDefault: {
@@ -906,8 +869,6 @@ const OrganizationMarketplaceSetup = ({
   };
 
   const handleRemoveOrganizationStripeConnectAccountsClick = () => {
-    const toastId = themedToast(<NotificationContent content="Removing Stripe Connect accounts ..." />, infoNotificationOptions);
-
     commitDeleteOrganizationStripeConnectAccounts({
       variables: {
         connectionIds: organizationStripeConnectAccountsConnectionIds,
@@ -918,25 +879,15 @@ const OrganizationMarketplaceSetup = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove Stripe Connect accounts. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove Stripe Connect accounts. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Stripe Connect accounts removed.`} />,
-        });
         setSelectedOrganizationStripeConnectAccountIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove Stripe Connect accounts. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove Stripe Connect accounts. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -945,8 +896,6 @@ const OrganizationMarketplaceSetup = ({
     if (!selectedOrganizationStripeConnectAccountId) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content="Removing Stripe Connect account ..." />, infoNotificationOptions);
 
     commitDeleteOrganizationStripeConnectAccounts({
       variables: {
@@ -958,26 +907,15 @@ const OrganizationMarketplaceSetup = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove Stripe Connect account. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove Stripe Connect account. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Stripe Connect account removed.`} />,
-        });
-
         setSelectedOrganizationStripeConnectAccountId(null);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove Stripe Connect account. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove Stripe Connect account. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -1071,8 +1009,6 @@ const OrganizationMarketplaceSetup = ({
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Disconnecting Xero from ${organization.name}...`} />, infoNotificationOptions);
-
     commitDisconnectOrganizationXeroConnection({
       variables: {
         input: {
@@ -1083,26 +1019,16 @@ const OrganizationMarketplaceSetup = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to disconnect Xero. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to disconnect Xero. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Xero disconnected from ${organization.name}.`} />,
-        });
         clearTransientXeroQueryParams();
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to disconnect Xero. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to disconnect Xero. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -1138,8 +1064,6 @@ const OrganizationMarketplaceSetup = ({
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Setting bank account ${organizationBankAccountDetails.name} as default...`} />, infoNotificationOptions);
-
     commitSetOrganizationBankAccountAsDefault({
       variables: {
         input: {
@@ -1149,26 +1073,21 @@ const OrganizationMarketplaceSetup = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set bank account ${organizationBankAccountDetails.name} as default. Error: ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to set bank account ${organizationBankAccountDetails.name} as default. Error: ${getRelayErrorMessage(errors)}`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Bank account ${organizationBankAccountDetails.name} is set as default.`} />,
-        });
-
         handleRefetchOrganizationBankAccounts(organizationBankAccountNameSearchText);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to set bank account ${organizationBankAccountDetails.name} as default. Error: ${error.message}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to set bank account ${organizationBankAccountDetails.name} as default. Error: ${error.message}.`} />,
+          errorNotificationOptions,
+        );
       },
       optimisticResponse: {
         setOrganizationBankAccountAsDefault: {
@@ -1182,8 +1101,6 @@ const OrganizationMarketplaceSetup = ({
   };
 
   const handleRemoveOrganizationBankAccountsClick = () => {
-    const toastId = themedToast(<NotificationContent content="Removing Bank accounts ..." />, infoNotificationOptions);
-
     commitDeleteOrganizationBankAccounts({
       variables: {
         connectionIds: organizationBankAccountsConnectionIds,
@@ -1194,25 +1111,15 @@ const OrganizationMarketplaceSetup = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove Bank accounts. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove Bank accounts. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Bank accounts removed.`} />,
-        });
         setSelectedOrganizationBankAccountIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove Bank accounts. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove Bank accounts. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -1221,8 +1128,6 @@ const OrganizationMarketplaceSetup = ({
     if (!selectedOrganizationBankAccountId) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content="Removing Bank accounts ..." />, infoNotificationOptions);
 
     commitDeleteOrganizationBankAccounts({
       variables: {
@@ -1234,26 +1139,15 @@ const OrganizationMarketplaceSetup = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove Bank accounts. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove Bank accounts. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Bank accounts removed.`} />,
-        });
-
         setSelectedOrganizationBankAccountId(null);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove Bank accounts. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove Bank accounts. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };

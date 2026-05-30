@@ -1,6 +1,6 @@
 import { Loading } from '@/components/loading';
 import { getOrganizationLocationManageResourcesBaseLink } from '@/components/links';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import BulkAddResourceRowForm from '@/components/resource/bulkAddResources/bulk-add-resources-row';
 import { DialogTransition } from '@/components/transitions';
@@ -154,8 +154,6 @@ const BulkAddResourcesDialogInner = ({ queryReference, locationId, organizationC
   };
 
   const handleSubmit = (values: FormValues) => {
-    const toastId = themedToast(<NotificationContent content="Adding resources..." />, infoNotificationOptions);
-
     // Store submitted values for potential retry
     setSubmittedValues(values);
 
@@ -176,10 +174,7 @@ const BulkAddResourcesDialogInner = ({ queryReference, locationId, organizationC
       },
       onCompleted: (data, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Add failed. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`Add failed. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           return;
         }
 
@@ -188,15 +183,8 @@ const BulkAddResourcesDialogInner = ({ queryReference, locationId, organizationC
         const failedCount = rowResults.filter((r) => r.failureReason).length;
 
         if (failedCount === 0) {
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`${createdCount} resource${createdCount === 1 ? '' : 's'} added successfully.`} />,
-          });
         } else {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`${createdCount} imported, ${failedCount} failed. See details below.`} />,
-          });
+          themedToast(<NotificationContent content={`${createdCount} imported, ${failedCount} failed. See details below.`} />, errorNotificationOptions);
         }
 
         setResults(rowResults as RowResult[]);
@@ -206,10 +194,7 @@ const BulkAddResourcesDialogInner = ({ queryReference, locationId, organizationC
         }
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Add failed. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`Add failed. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };

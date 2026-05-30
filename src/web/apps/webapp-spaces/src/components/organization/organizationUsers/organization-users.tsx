@@ -1,7 +1,7 @@
 import { getOrganizationBookingsBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import OrganizationUserManagementList from '@/components/organization/organizationUsers/organization-user-management-list';
 import { RelayError, toRootError } from '@/components/relayError';
@@ -223,8 +223,6 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
   };
 
   const handleDeactivateUsersClick = () => {
-    const toastId = themedToast(<NotificationContent content={'Deactivating users...'} />, infoNotificationOptions);
-
     commitChangeOrganizationMembersStatus({
       variables: {
         input: {
@@ -235,32 +233,20 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't deactivate those users. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't deactivate those users. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'Those users have been deactivated.'} />,
-        });
         setSelectedMemberIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't deactivate those users. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't deactivate those users. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
 
   const handleActivateUsersClick = () => {
-    const toastId = themedToast(<NotificationContent content={'Activating users...'} />, infoNotificationOptions);
-
     commitChangeOrganizationMembersStatus({
       variables: {
         input: {
@@ -271,32 +257,20 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't activate those users. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't activate those users. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'Those users have been activated.'} />,
-        });
         setSelectedMemberIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't activate those users. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't activate those users. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
 
   const handleRemoveUsersClick = () => {
-    const toastId = themedToast(<NotificationContent content={'Removing users...'} />, infoNotificationOptions);
-
     commitRemoveOrganizationMembers({
       variables: {
         connectionIds,
@@ -307,25 +281,15 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove those users. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove those users. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'Those users have been removed.'} />,
-        });
         setSelectedMemberIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove those users. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove those users. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -369,8 +333,6 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={'Deactivating user...'} />, infoNotificationOptions);
-
     commitChangeOrganizationMembersStatus({
       variables: {
         input: {
@@ -381,25 +343,15 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't deactivate this user. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't deactivate this user. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'This user has been deactivated.'} />,
-        });
         setSelectedMemberIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't deactivate this user. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't deactivate this user. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -408,8 +360,6 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
     if (!memberDetails) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content={'Activating user...'} />, infoNotificationOptions);
 
     commitChangeOrganizationMembersStatus({
       variables: {
@@ -421,25 +371,15 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't activate this user. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't activate this user. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'This user has been activated.'} />,
-        });
         setSelectedMemberIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't activate this user. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't activate this user. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -448,8 +388,6 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
     if (!memberDetails) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content={'Removing user...'} />, infoNotificationOptions);
 
     commitRemoveOrganizationMembers({
       variables: {
@@ -461,25 +399,15 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove this user. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove this user. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'This user has been removed.'} />,
-        });
         setSelectedMemberIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove this user. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove this user. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };

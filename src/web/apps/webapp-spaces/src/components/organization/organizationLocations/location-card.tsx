@@ -12,7 +12,7 @@ import {
 import { EllipseMenuIcon, FloorPlanIcon, LocationIcon, ResourceIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationBaseLink, getOrganizationLocationFloorPlansLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
 import { useIntegratedPlatrform } from '@skedular/shared';
@@ -212,8 +212,6 @@ const LocationCard = ({
   };
 
   const handleConfirmRemovingLocationClick = () => {
-    const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}'...`} />, infoNotificationOptions);
-
     commitDeleteLocation({
       variables: {
         connectionIds: connectionIds,
@@ -224,31 +222,18 @@ const LocationCard = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' has been successfully removed.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
 
   const handleSetAsPreferredLocationClicked = () => {
-    const toastId = themedToast(<NotificationContent content={`Setting location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
-
     commitAddCustomerPreferredLocation({
       variables: {
         input: {
@@ -258,31 +243,24 @@ const LocationCard = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' has been set as the preferred location.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />,
+          errorNotificationOptions,
+        );
       },
     });
   };
 
   const handleRemoveAsPreferredLocationClicked = () => {
-    const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
-
     commitRemoveCustomerPreferredLocation({
       variables: {
         input: {
@@ -292,24 +270,19 @@ const LocationCard = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' has been removed as your preferred location.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />,
+          errorNotificationOptions,
+        );
       },
     });
   };

@@ -60,17 +60,11 @@ const ImageFileUploader = ({ onUpload, helperText }: Props) => {
     try {
       await onUpload(file);
 
-      toast.update(toastId, {
-        type: 'success',
-        render: 'Image uploaded successfully.',
-      });
+      toast.update(toastId, { type: 'success', render: 'Image uploaded successfully.' });
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
-      toast.update(toastId, {
-        type: 'error',
-        render: `Failed to upload image. Error: ${errorMessage}.`,
-      });
+      toast.update(toastId, { type: 'error', render: `Failed to upload image. Error: ${errorMessage}.` });
     }
   };
 

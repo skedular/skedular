@@ -1,7 +1,7 @@
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@skedular/ui';
 import { AreaIcon, CloseIcon, FavouriteIcon, LocationIcon, NotFavouriteIcon, PersonIcon, ShareIcon } from '@/components/icons';
 import { getMarketplaceLocationLink, getSignInLink } from '@/components/links';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { emerald } from '@skedular/ui';
 import { getRelayErrorMessage } from '@skedular/shared';
@@ -254,8 +254,6 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Setting location '${locationDetails.name}' as your favourite location...`} />, infoNotificationOptions);
-
     commitAddCustomerFavouriteLocation({
       variables: {
         input: {
@@ -265,24 +263,19 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your favourite location. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to set location '${locationDetails.name}' as your favourite location. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' has been set as the favourite location.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your favourite location. Error: ${error.message}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to set location '${locationDetails.name}' as your favourite location. Error: ${error.message}.`} />,
+          errorNotificationOptions,
+        );
       },
     });
   };
@@ -296,8 +289,6 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}' as your favourite location...`} />, infoNotificationOptions);
-
     commitRemoveCustomerFavouriteLocation({
       variables: {
         input: {
@@ -307,24 +298,19 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your favourite location. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your favourite location. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' has been removed as your favourite location.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your favourite location. Error: ${error.message}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your favourite location. Error: ${error.message}.`} />,
+          errorNotificationOptions,
+        );
       },
     });
   };

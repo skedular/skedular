@@ -2,7 +2,7 @@ import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackRow }
 import { EllipseMenuIcon, LocationIcon } from '@/components/icons';
 import { getOrganizationLocationFloorPlanAdminEditLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { coal, sandstone } from '@skedular/ui';
 import { getRelayErrorMessage } from '@skedular/shared';
@@ -92,8 +92,6 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationCusto
   };
 
   const handleRemoveBookingClick = () => {
-    const toastId = themedToast(<NotificationContent content={`Removing floor plan '${floorPlanDetails.name}'...`} />, infoNotificationOptions);
-
     commitDeleteBooking({
       variables: {
         connectionIds,
@@ -104,24 +102,13 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationCusto
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove floor plan ${floorPlanDetails.name}. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove floor plan ${floorPlanDetails.name}. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Floor plan ${floorPlanDetails.name} removed.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove floor plan ${floorPlanDetails.name}. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove floor plan ${floorPlanDetails.name}. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };

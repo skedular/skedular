@@ -1,14 +1,3 @@
-import {
-  BodyIconTypography,
-  CaptionIconTypography,
-  DefaultDialogTitle,
-  LeadIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-  SubtitleIconTypography,
-  TwoButtonsDialogActions,
-} from '@skedular/ui';
 import { ArrowLeftIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon } from '@/components/icons';
 import { getMarketplaceBookingDetailsLink, getMarketplaceProductLink } from '@/components/links';
 import { Loading } from '@/components/loading';
@@ -19,10 +8,9 @@ import {
 } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-cancellation-mode';
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useIntegratedPlatrform } from '@skedular/shared';
-import { convertCalendarDayToStartOfDay, getCustomerFullName, getRelayErrorMessage, toStoredBookingTimeRange } from '@skedular/shared';
+import useKnownParams from '@/hooks/use-known-params';
 import type { marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { marketplaceProductSubscriptionDetails_relatedBookingsQuery } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_relatedBookingsQuery.graphql';
 import type { marketplaceProductSubscriptionDetails_rootQuery } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_rootQuery.graphql';
@@ -38,6 +26,18 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
+import { convertCalendarDayToStartOfDay, getCustomerFullName, getRelayErrorMessage, toStoredBookingTimeRange, useIntegratedPlatrform } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  CaptionIconTypography,
+  DefaultDialogTitle,
+  LeadIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  SubtitleIconTypography,
+  TwoButtonsDialogActions,
+} from '@skedular/ui';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -49,7 +49,6 @@ import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingDetailsHero from '../marketplaceProductBooking/marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from '../marketplaceProductBooking/marketplace-product-booking-payment-panel';
 import MarketplaceRefundStatusCard from '../marketplaceProductBooking/marketplace-refund-status-card';
-import useKnownParams from '@/hooks/use-known-params';
 
 type PendingCancellationConfirmation = {
   type: SupportedMarketplaceBookingSubscriptionCancellationMode;
@@ -461,15 +460,10 @@ const MarketplaceProductSubscriptionDetails = ({
 
     return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
   }, [cancellationModes, subscription?.autoRenew]);
-  const handleDeleteMarketplaceBookingSubscriptionClick = (cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode, cancellationModeName: string) => {
+  const handleDeleteMarketplaceBookingSubscriptionClick = (cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode) => {
     if (!subscription) {
       return;
     }
-
-    const toastId = toast(
-      <NotificationContent content={`${cancellationModeType === 'AT_PERIOD_END' ? 'Scheduling' : 'Applying'} '${cancellationModeName.toLowerCase()}' for ${productTitle}...`} />,
-      infoNotificationOptions,
-    );
 
     commitDeleteMarketplaceBookingSubscription({
       variables: {
@@ -481,36 +475,15 @@ const MarketplaceProductSubscriptionDetails = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(errors)}`} />,
-          });
+          toast(<NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: (
-            <NotificationContent
-              content={
-                cancellationModeType === 'AT_PERIOD_END'
-                  ? `${productTitle} will end at the end of the current period. The current period stays active, so no refund is expected from this change alone.`
-                  : hasConfirmedCurrentCyclePayment
-                    ? `${productTitle} cancelled. Any eligible refund for the current period will be reviewed separately.`
-                    : `${productTitle} cancelled. No refund is expected because payment for the current period was not confirmed.`
-              }
-            />
-          ),
-        });
-
         router.refresh();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(error)}`} />,
-        });
+        toast(<NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
       },
     });
   };
@@ -533,7 +506,7 @@ const MarketplaceProductSubscriptionDetails = ({
       return;
     }
 
-    handleDeleteMarketplaceBookingSubscriptionClick(pendingCancellationConfirmation.type, pendingCancellationConfirmation.name);
+    handleDeleteMarketplaceBookingSubscriptionClick(pendingCancellationConfirmation.type);
     setPendingCancellationConfirmation(null);
   };
 
@@ -663,9 +636,7 @@ const MarketplaceProductSubscriptionDetails = ({
                       atPeriodEndCancellationMode={atPeriodEndCancellationMode}
                       onImmediateCancellationClick={handleRequestImmediateCancellationClick}
                       onAtPeriodEndCancellationClick={() =>
-                        atPeriodEndCancellationMode
-                          ? handleDeleteMarketplaceBookingSubscriptionClick(atPeriodEndCancellationMode.type, atPeriodEndCancellationMode.name)
-                          : undefined
+                        atPeriodEndCancellationMode ? handleDeleteMarketplaceBookingSubscriptionClick(atPeriodEndCancellationMode.type) : undefined
                       }
                     />
                     <Divider />

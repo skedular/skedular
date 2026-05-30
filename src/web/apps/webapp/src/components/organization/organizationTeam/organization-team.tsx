@@ -4,7 +4,7 @@ import { DeleteIcon } from '@/components/icons';
 import { getOrganizationTeamsBaseLink } from '@/components/links';
 import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
 import OrganizationTeamMemberManagementList from '@/components/organization/organizationTeam/organization-team-member-management-list';
 import OrganizationTeamSectionNav, { OrganizationTeamSection } from '@/components/organization/organizationTeam/organization-team-section-nav';
@@ -456,8 +456,6 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   const debouncedTeamDetailUpdate = useDebounceCallback(handleTeamDetailUpdateClick, teamAutosaveDebounceTimeout);
 
   const handleDeactivateMembersClick = () => {
-    const toastId = themedToast(<NotificationContent content={'Deactivating members...'} />, infoNotificationOptions);
-
     commitChangeTeamMembersStatus({
       variables: {
         input: {
@@ -468,32 +466,20 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't deactivate those team members. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't deactivate those team members. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'Those team members have been deactivated.'} />,
-        });
         setSelectedMemberIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't deactivate those team members. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't deactivate those team members. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
 
   const handleActivateMembersClick = () => {
-    const toastId = themedToast(<NotificationContent content={'Activating members...'} />, infoNotificationOptions);
-
     commitChangeTeamMembersStatus({
       variables: {
         input: {
@@ -504,32 +490,20 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't activate those team members. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't activate those team members. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'Those team members have been activated.'} />,
-        });
         setSelectedMemberIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't activate those team members. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't activate those team members. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
 
   const handleRemoveMembersClick = () => {
-    const toastId = themedToast(<NotificationContent content={'Removing members...'} />, infoNotificationOptions);
-
     commitRemoveTeamMembers({
       variables: {
         connectionIds,
@@ -540,23 +514,14 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove those team members. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove those team members. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           return;
         }
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'Those team members have been removed.'} />,
-        });
+
         setSelectedMemberIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove those team members. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove those team members. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -598,8 +563,6 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={'Deactivating member...'} />, infoNotificationOptions);
-
     commitChangeTeamMembersStatus({
       variables: {
         input: {
@@ -610,25 +573,15 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't deactivate this team member. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't deactivate this team member. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'This team member has been deactivated.'} />,
-        });
         setSelectedMemberIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't deactivate this team member. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't deactivate this team member. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -637,8 +590,6 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     if (!memberDetails) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content={'Activating member...'} />, infoNotificationOptions);
 
     commitChangeTeamMembersStatus({
       variables: {
@@ -650,25 +601,15 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't activate this team member. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't activate this team member. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'This team member has been activated.'} />,
-        });
         setSelectedMemberIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't activate this team member. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't activate this team member. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -677,8 +618,6 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     if (!memberDetails) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content={'Removing member...'} />, infoNotificationOptions);
 
     commitRemoveTeamMembers({
       variables: {
@@ -690,23 +629,14 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove this team member. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove this team member. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           return;
         }
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'This team member has been removed.'} />,
-        });
+
         setSelectedMemberIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove this team member. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove this team member. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -759,8 +689,6 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Removing team '${team.name}'...`} />, infoNotificationOptions);
-
     commitDeleteTeam({
       variables: {
         input: {
@@ -770,26 +698,15 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove team '${team.name}'. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove team '${team.name}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Team '${team.name}' has been removed.`} />,
-        });
-
         router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationCustomDomain));
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove team '${team.name}'. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove team '${team.name}'. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };

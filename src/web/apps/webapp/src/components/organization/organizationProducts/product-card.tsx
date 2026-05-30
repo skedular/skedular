@@ -2,7 +2,7 @@ import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColum
 import { EllipseMenuIcon, ProductIcon } from '@/components/icons';
 import { getOrganizationProductBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { emerald, flame } from '@skedular/ui';
 import { getRelayErrorMessage } from '@skedular/shared';
@@ -170,8 +170,6 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Removing product ${productDetails.listingMetadata.title}...`} />, infoNotificationOptions);
-
     commitDeleteProduct({
       variables: {
         connectionIds,
@@ -182,24 +180,16 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove product ${productDetails.listingMetadata.title}. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to remove product ${productDetails.listingMetadata.title}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Product ${productDetails.listingMetadata.title} removed.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove product ${productDetails.listingMetadata.title}. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove product ${productDetails.listingMetadata.title}. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -208,8 +198,6 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
     if (!productDetails) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content={`Deactivating product ${productDetails.listingMetadata.title}...`} />, infoNotificationOptions);
 
     commitDeactivateProducts({
       variables: {
@@ -220,24 +208,16 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate product ${productDetails.listingMetadata.title}. Error: ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to deactivate product ${productDetails.listingMetadata.title}. Error: ${getRelayErrorMessage(errors)}`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Product ${productDetails.listingMetadata.title} deactivated.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to deactivate product ${productDetails.listingMetadata.title}. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to deactivate product ${productDetails.listingMetadata.title}. Error: ${error.message}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         deactivateProducts: {
@@ -257,8 +237,6 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Activating product ${productDetails.listingMetadata.title}...`} />, infoNotificationOptions);
-
     commitActivateProducts({
       variables: {
         input: {
@@ -268,24 +246,16 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate product ${productDetails.listingMetadata.title}. Error: ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to activate product ${productDetails.listingMetadata.title}. Error: ${getRelayErrorMessage(errors)}`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Product ${productDetails.listingMetadata.title} activated.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to activate product ${productDetails.listingMetadata.title}. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to activate product ${productDetails.listingMetadata.title}. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };

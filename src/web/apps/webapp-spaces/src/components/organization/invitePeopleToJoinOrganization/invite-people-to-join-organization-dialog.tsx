@@ -1,4 +1,4 @@
-import { NotificationContent, errorNotificationOptions, infoNotificationOptions, successNotificationOptions } from '@/components/notification';
+import { NotificationContent, errorNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import type { invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation } from '@/queries/__generated__/invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation.graphql';
 import Dialog from '@mui/material/Dialog';
@@ -61,8 +61,6 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Inviting people to join organization...`} />, infoNotificationOptions);
-
     commitInviteCustomersToJoinOrganization({
       variables: {
         input: {
@@ -76,26 +74,15 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to invite people to join organization. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to invite people to join organization. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation sent to people to join organization.`} />,
-        });
-
         onInviteClicked();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to invite people to join organization. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to invite people to join organization. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };

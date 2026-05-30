@@ -3,7 +3,7 @@ import LocationAvatar from '@/components/avatars/location-avatar';
 import TeamAvatar from '@/components/avatars/team-avatar';
 import InvoiceDownloadLinks from '@/components/booking/invoice-download-links';
 import { getOrganizationProductsBaseLink } from '@/components/links';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import type { payMarketplaceBooking_booking_query$key } from '@/queries/__generated__/payMarketplaceBooking_booking_query.graphql';
 import type { payMarketplaceBooking_booking_Subscription } from '@/queries/__generated__/payMarketplaceBooking_booking_Subscription.graphql';
 import type { payMarketplaceBooking_confirmBookingPaymentMutation } from '@/queries/__generated__/payMarketplaceBooking_confirmBookingPaymentMutation.graphql';
@@ -281,8 +281,6 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
 
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
-    const toastId = themedToast(<NotificationContent content={`Cancelling booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
-
     commitDeleteMarketplaceBooking({
       variables: {
         input: {
@@ -292,26 +290,15 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} cancelled.`} />,
-        });
-
         router.push(getOrganizationProductsBaseLink(integratedPlatrform, organizationCustomDomain));
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -329,8 +316,6 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
 
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
-    const toastId = themedToast(<NotificationContent content={`Confirming payment for booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
-
     commitConfirmBookingPayment({
       variables: {
         input: {
@@ -340,24 +325,19 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment confirmed.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to confirm payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to confirm payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
+          errorNotificationOptions,
+        );
       },
       optimisticResponse: {
         confirmBookingPayment: {
@@ -389,8 +369,6 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
 
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
-    const toastId = themedToast(<NotificationContent content={`Rejecting payment for booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
-
     commitRejectBookingPayment({
       variables: {
         input: {
@@ -400,24 +378,19 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment rejected.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to reject payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to reject payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
+          errorNotificationOptions,
+        );
       },
       optimisticResponse: {
         rejectBookingPayment: {
@@ -449,8 +422,6 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
 
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
 
-    const toastId = themedToast(<NotificationContent content={`Making payment for booking '${bookingDetailsInfo}' not required...`} />, infoNotificationOptions);
-
     commitMakeBookingPaymentNotRequired({
       variables: {
         input: {
@@ -460,24 +431,19 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(
+            <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment made not required.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to make payment for booking '${shortDateFormatFrom}' not required. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
+        themedToast(
+          <NotificationContent content={`Failed to make payment for booking '${shortDateFormatFrom}' not required. Error: ${getRelayErrorMessage(error)}.`} />,
+          errorNotificationOptions,
+        );
       },
       optimisticResponse: {
         makeBookingPaymentNotRequired: {

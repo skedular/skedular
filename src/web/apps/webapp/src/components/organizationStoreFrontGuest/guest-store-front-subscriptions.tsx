@@ -1,14 +1,3 @@
-import {
-  BodyIconTypography,
-  CaptionIconTypography,
-  DefaultDialogTitle,
-  LeadIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-  SubtitleIconTypography,
-  TwoButtonsDialogActions,
-} from '@skedular/ui';
 import { ArrowLeftIcon, PaymentStatusIcon, QuantityIcon } from '@/components/icons';
 import { getMarketplaceSubscriptionDetailsLink } from '@/components/links';
 import { Loading } from '@/components/loading';
@@ -19,10 +8,9 @@ import {
 } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-cancellation-mode';
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useIntegratedPlatrform } from '@skedular/shared';
-import { getRelayErrorMessage } from '@skedular/shared';
+import useKnownParams from '@/hooks/use-known-params';
 import type { guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { guestStoreFrontSubscriptions_rootQuery } from '@/queries/__generated__/guestStoreFrontSubscriptions_rootQuery.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -38,6 +26,18 @@ import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/system/Box';
+import { getRelayErrorMessage, useIntegratedPlatrform } from '@skedular/shared';
+import {
+  BodyIconTypography,
+  CaptionIconTypography,
+  DefaultDialogTitle,
+  LeadIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  SubtitleIconTypography,
+  TwoButtonsDialogActions,
+} from '@skedular/ui';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -46,7 +46,6 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<guestStoreFrontSubscriptions_rootQuery, Record<string, unknown>>;
@@ -156,13 +155,7 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
     subscriptionId: string,
     productTitle: string,
     cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode,
-    cancellationModeName: string,
   ) => {
-    const toastId = toast(
-      <NotificationContent content={`${cancellationModeType === 'AT_PERIOD_END' ? 'Scheduling' : 'Applying'} '${cancellationModeName.toLowerCase()}' for ${productTitle}...`} />,
-      infoNotificationOptions,
-    );
-
     commitDeleteMarketplaceBookingSubscription({
       variables: {
         input: {
@@ -173,34 +166,15 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(errors)}`} />,
-          });
+          toast(<NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: (
-            <NotificationContent
-              content={
-                cancellationModeType === 'AT_PERIOD_END'
-                  ? `${productTitle} will end at the end of the current period. Future billing stops, but issued invoices stay on record.`
-                  : `${productTitle} cancelled. Future billing stops, but issued invoices stay on record.`
-              }
-            />
-          ),
-        });
-
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(error)}`} />,
-        });
+        toast(<NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
       },
     });
   };
@@ -227,7 +201,6 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
       pendingCancellationConfirmation.subscriptionId,
       pendingCancellationConfirmation.productTitle,
       pendingCancellationConfirmation.mode.type,
-      pendingCancellationConfirmation.mode.name,
     );
     setPendingCancellationConfirmation(null);
   };
@@ -382,7 +355,6 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
                                     subscription.id,
                                     subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription',
                                     atPeriodEndCancellationMode.type,
-                                    atPeriodEndCancellationMode.name,
                                   )
                                 : undefined
                             }

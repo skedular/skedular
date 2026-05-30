@@ -2,7 +2,7 @@ import { CustomerAvatar } from '@/components/avatars';
 import { CustomTags } from '@/components/customTag';
 import { CalendarIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink } from '@/components/links';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { Zones } from '@/components/zone';
 import type {
   BookingCategory as AddPrivateBookingCategory,
@@ -462,11 +462,6 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
       setRecurrenceError('');
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`${recurrenceMode === 'recurring' ? 'Creating recurring booking' : 'Making booking'} on '${toShortDate(computedDateRange.from)}'...`} />,
-      infoNotificationOptions,
-    );
-
     if (recurrenceMode === 'single') {
       commitAddPrivateBooking({
         variables: {
@@ -483,27 +478,16 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
             resourceIds: selectedResourceIds ?? [],
           },
         },
-        onCompleted: (response, errors) => {
+        onCompleted: (_, errors) => {
           if (errors?.length) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to make booking. Error: ${getRelayErrorMessage(errors)}.`} />,
-            });
+            themedToast(<NotificationContent content={`Failed to make booking. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
             return;
           }
 
-          const booking = response.addPrivateBooking.booking;
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`Booking created for ${getCustomerFullName(booking.involvedCustomers[0])} on ${toShortDate(booking.from)}.`} />,
-          });
           goBack();
         },
         onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to make booking. Error: ${getRelayErrorMessage(error)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to make booking. Error: ${getRelayErrorMessage(error)}.`} />, errorNotificationOptions);
         },
       });
 
@@ -534,26 +518,16 @@ const AddPrivateBookingPage = ({ queryReference, organizationCustomDomain, defau
           skippedDates: [],
         },
       },
-      onCompleted: (response, errors) => {
+      onCompleted: (_, errors) => {
         if (errors?.length) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to create recurring booking. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to create recurring booking. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Recurring booking created starting ${toShortDate(response.addPrivateRecurringBooking.recurringBooking.startDate)}.`} />,
-        });
         goBack();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to create recurring booking. Error: ${getRelayErrorMessage(error)}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to create recurring booking. Error: ${getRelayErrorMessage(error)}.`} />, errorNotificationOptions);
       },
     });
   };

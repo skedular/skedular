@@ -1,7 +1,7 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { DeleteIcon } from '@/components/icons';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { OrganizationTermsOfUse } from '@/components/organization';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import type { addMarketplaceOrganization_addOrganizationMutation } from '@/queries/__generated__/addMarketplaceOrganization_addOrganizationMutation.graphql';
@@ -126,7 +126,6 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
 
   const handleOrganizationAddClick = ({ customDomain, name, about, website, customerFacingTermsAndConditionsUrl }: OrganizationDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
       original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
       thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
@@ -160,27 +159,16 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
       },
       onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to add new organization '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${name} added.`} />,
-        });
 
         onAdded(response.addOrganization.organization.id, response.addOrganization.organization.customDomain!);
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to add new organization '${name}'. Error: ${error.message}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addOrganization: {

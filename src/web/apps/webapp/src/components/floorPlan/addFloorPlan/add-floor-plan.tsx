@@ -2,7 +2,7 @@ import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetc
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeskIcon, OtherResourceIcon, ParkingIcon, RoomIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@skedular/shared';
@@ -151,7 +151,6 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
 
   const handleFloorPlanAddClick = ({ name }: FloorPlanDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
 
     if (
       !image ||
@@ -163,10 +162,7 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
       !image.thumbnail.height ||
       !image.thumbnail.width
     ) {
-      toast.update(toastId, {
-        ...errorNotificationOptions,
-        render: <NotificationContent content={`Floor plan image is required.`} />,
-      });
+      themedToast(<NotificationContent content={`Floor plan image is required.`} />, errorNotificationOptions);
 
       return;
     }
@@ -193,27 +189,16 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to add new location '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location ${name} added.`} />,
-        });
 
         onAdded(id);
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to add new location '${name}'. Error: ${error.message}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addFloorPlan: {

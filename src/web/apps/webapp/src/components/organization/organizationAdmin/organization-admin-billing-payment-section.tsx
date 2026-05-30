@@ -1,7 +1,7 @@
 import { PhysicalAddress } from '@/components/address';
 import { DeleteIcon, NewIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { BillingDetails, billingSchema } from '@/components/organization/organizationAdmin/organization-admin-shared';
 import type { organizationAdminBillingPaymentSectionQuery } from '@/queries/__generated__/organizationAdminBillingPaymentSectionQuery.graphql';
@@ -263,8 +263,6 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
   };
 
   const handleRemovePaymentMethodClick = (id: string) => {
-    const toastId = themedToast(<NotificationContent content="Removing payment method..." />, infoNotificationOptions);
-
     commitRemoveOrganizationPaymentMethod({
       variables: {
         input: {
@@ -274,25 +272,15 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove that payment method. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove that payment method. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content="The payment method has been removed." />,
-        });
         onRefetchRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove that payment method. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove that payment method. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };

@@ -1,6 +1,6 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@skedular/shared';
 import { getCustomerFullName, getRelayErrorMessage, keyboardSearchDebounceTimeout } from '@skedular/shared';
@@ -142,8 +142,6 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
   };
 
   const handleAddClick = ({ member }: MemberDetails) => {
-    const toastId = themedToast(<NotificationContent content={'Adding team member...'} />, infoNotificationOptions);
-
     commitAddTeamMember({
       variables: {
         connectionIds,
@@ -155,26 +153,15 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add team member. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to add team member. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={'Team member added.'} />,
-        });
-
         onAddClicked();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add team member. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to add team member. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };

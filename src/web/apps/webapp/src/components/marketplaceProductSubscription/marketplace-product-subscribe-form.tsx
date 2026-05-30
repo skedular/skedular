@@ -2,7 +2,7 @@ import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackCol
 import { getMarketplaceProductLink, getMarketplaceSubscriptionDetailsLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel } from '@/components/marketplaceProduct';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { useIntegratedPlatrform } from '@skedular/shared';
 import { formatPriceForDisplay, getRelayErrorMessage, startOfDay, toShortDate } from '@skedular/shared';
 import type { marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation.graphql';
@@ -246,8 +246,6 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
       toast.error(<NotificationContent content="Accept the space terms and conditions before continuing." />);
       return;
     }
-
-    const toastId = toast(<NotificationContent content={`Starting your ${cadenceLabel.toLowerCase()} plan...`} />, infoNotificationOptions);
     const id = uuid();
     const subscriptionDetailsLink = getMarketplaceSubscriptionDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, id);
 
@@ -274,30 +272,19 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
       },
       onCompleted: (response, errors) => {
         if (errors?.length) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't start this plan. ${getRelayErrorMessage(errors)}`} />,
-          });
+          toast(<NotificationContent content={`We couldn't start this plan. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           return;
         }
 
         const subscription = response.addMarketplaceBookingSubscription?.marketplaceBookingSubscription;
         const subscriptionId = subscription?.id ?? '';
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Your plan begins ${toShortDate(startedAt.toISOString())}.`} />,
-        });
-
         if (subscriptionId) {
           router.push(getMarketplaceSubscriptionDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, subscriptionId));
         }
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't start this plan. ${error.message}`} />,
-        });
+        toast(<NotificationContent content={`We couldn't start this plan. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };

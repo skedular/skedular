@@ -10,7 +10,7 @@ import {
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationSubscriptionDetail_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_confirmRecurringBookingPaymentMutation.graphql';
@@ -254,8 +254,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     productTitle: string,
     cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode,
   ) => {
-    const toastId = toast(<NotificationContent content={`${cancellationModeType === 'AT_PERIOD_END' ? 'Updating' : 'Cancelling'} ${productTitle}...`} />, infoNotificationOptions);
-
     commitDeleteMarketplaceBookingSubscription({
       variables: {
         input: {
@@ -266,33 +264,14 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update ${productTitle}. ${getRelayErrorMessage(errors)}`} />,
-          });
+          toast(<NotificationContent content={`We couldn't update ${productTitle}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: (
-            <NotificationContent
-              content={
-                cancellationModeType === 'AT_PERIOD_END'
-                  ? `${productTitle} will end at the close of the current billing period. No new charges will be created after that.`
-                  : `${productTitle} has been cancelled. No new charges will be created, and past invoices will stay on record.`
-              }
-            />
-          ),
-        });
 
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update ${productTitle}. ${error.message}`} />,
-        });
+        toast(<NotificationContent content={`We couldn't update ${productTitle}. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -310,8 +289,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
   };
 
   const handleConfirmRecurringBookingPaymentClick = (recurringBookingId: string, cycleLabel: string) => {
-    const toastId = toast(<NotificationContent content={`Confirming payment for ${cycleLabel}...`} />, infoNotificationOptions);
-
     commitConfirmRecurringBookingPayment({
       variables: {
         input: {
@@ -321,32 +298,19 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't confirm payment for ${cycleLabel}. ${getRelayErrorMessage(errors)}`} />,
-          });
+          toast(<NotificationContent content={`We couldn't confirm payment for ${cycleLabel}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Payment has been confirmed for ${cycleLabel}.`} />,
-        });
 
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't confirm payment for ${cycleLabel}. ${error.message}`} />,
-        });
+        toast(<NotificationContent content={`We couldn't confirm payment for ${cycleLabel}. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
 
   const handleRejectRecurringBookingPaymentClick = (recurringBookingId: string, cycleLabel: string) => {
-    const toastId = toast(<NotificationContent content={`Rejecting payment for ${cycleLabel}...`} />, infoNotificationOptions);
-
     commitRejectRecurringBookingPayment({
       variables: {
         input: {
@@ -356,32 +320,19 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't reject payment for ${cycleLabel}. ${getRelayErrorMessage(errors)}`} />,
-          });
+          toast(<NotificationContent content={`We couldn't reject payment for ${cycleLabel}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Payment has been rejected for ${cycleLabel}.`} />,
-        });
 
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't reject payment for ${cycleLabel}. ${error.message}`} />,
-        });
+        toast(<NotificationContent content={`We couldn't reject payment for ${cycleLabel}. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
 
   const handleMakeRecurringBookingPaymentNotRequiredClick = (recurringBookingId: string, cycleLabel: string) => {
-    const toastId = toast(<NotificationContent content={`Updating payment settings for ${cycleLabel}...`} />, infoNotificationOptions);
-
     commitMakeRecurringBookingPaymentNotRequired({
       variables: {
         input: {
@@ -391,25 +342,14 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't update payment settings for ${cycleLabel}. ${getRelayErrorMessage(errors)}`} />,
-          });
+          toast(<NotificationContent content={`We couldn't update payment settings for ${cycleLabel}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Payment is no longer required for ${cycleLabel}.`} />,
-        });
 
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't update payment settings for ${cycleLabel}. ${error.message}`} />,
-        });
+        toast(<NotificationContent content={`We couldn't update payment settings for ${cycleLabel}. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };

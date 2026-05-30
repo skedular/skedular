@@ -1,6 +1,6 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { SingleChoiceCountry } from '@/components/forms';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { PaletteModeContext } from '@skedular/shared';
 import { defaultButtonStyle, defaultPadding } from '@skedular/ui';
 import { getRelayErrorMessage } from '@skedular/shared';
@@ -72,7 +72,6 @@ const AddBankAccount = ({ onReloadRequired, organizationCustomDomain, onAdded, o
 
   const handleBankAccountAddClick = ({ name, bankName, accountHolderName, accountNumber, country }: BankAccountDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding Bank account '${name}'...`} />, infoNotificationOptions);
 
     commitAddBankAccount({
       variables: {
@@ -89,27 +88,16 @@ const AddBankAccount = ({ onReloadRequired, organizationCustomDomain, onAdded, o
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new Bank account '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to add new Bank account '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Bank account ${name} added.`} />,
-        });
 
         onAdded(id);
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add new Bank account '${name}'. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to add new Bank account '${name}'. Error: ${error.message}.`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addOrganizationBankAccount: {

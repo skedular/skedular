@@ -15,7 +15,7 @@ import {
 } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { getOrganizationLocationManageResourcesBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
 import { RelayError, toRootError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
@@ -157,7 +157,6 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
 
   const handleAddClick = ({ location: locationId, resourceTypeId, name, customTagIds, zoneIds, productTagIds, capacity: capacityStr }: ResourceDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding ${name}...`} />, infoNotificationOptions);
     const capacity = parseInt(capacityStr.toString(), 10);
 
     commitAddResource({
@@ -180,26 +179,15 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't add ${name}. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't add ${name}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`${name} has been added.`} />,
-        });
-
         onAddClicked(locationId);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't add ${name}. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't add ${name}. ${error.message}`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addResource: {

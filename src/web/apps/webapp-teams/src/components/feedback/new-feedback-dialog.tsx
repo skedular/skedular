@@ -1,5 +1,5 @@
 import { BodyIconTypography, DefaultDialogTitle, FormStackColumn, TwoButtonsDialogActions } from '@skedular/ui';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { InMsTeamsContext, PaletteModeContext } from '@skedular/shared';
 import { getCustomerShortName, getRelayErrorMessage } from '@skedular/shared';
@@ -61,7 +61,6 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
 
   const handleSubmitFeedbackClick = ({ feedback: feedbackContent }: FeedbackDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Submitting feedback...`} />, infoNotificationOptions);
 
     commitSubmitCustomerFeedback({
       variables: {
@@ -74,26 +73,15 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't send your feedback. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't send your feedback. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content="Your feedback has been sent." />,
-        });
-
         onSendClicked();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't send your feedback. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't send your feedback. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };

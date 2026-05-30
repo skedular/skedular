@@ -3,7 +3,7 @@ import { CustomTag } from '@/components/customTag';
 import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { getOrganizationAdminEditCustomTagBaseLink } from '@/components/links';
 import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
@@ -144,8 +144,6 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearc
   };
 
   const handleRemoveCustomTagsClick = () => {
-    const toastId = themedToast(<NotificationContent content="Removing tags ..." />, infoNotificationOptions);
-
     commitDeleteCustomTags({
       variables: {
         connectionIds: customTagsConnectionIds,
@@ -156,25 +154,15 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearc
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove those tags. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove those tags. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content="Those tags have been removed." />,
-        });
         setSelectedCustomTagIds([]);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove those tags. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove those tags. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -183,8 +171,6 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearc
     if (!selectedCustomTagId) {
       return;
     }
-
-    const toastId = themedToast(<NotificationContent content="Removing tag ..." />, infoNotificationOptions);
 
     commitDeleteCustomTags({
       variables: {
@@ -196,26 +182,15 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearc
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove that tag. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove that tag. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content="That tag has been removed." />,
-        });
-
         setSelectedCustomTagId(null);
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove that tag. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove that tag. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -226,8 +201,6 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearc
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Setting tag '${organizationTagDetails.name}' as your preferred tag...`} />, infoNotificationOptions);
-
     commitAddCustomerPreferredOrganizationTag({
       variables: {
         input: {
@@ -237,24 +210,16 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearc
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't make '${organizationTagDetails.name}' your preferred tag. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(
+            <NotificationContent content={`We couldn't make '${organizationTagDetails.name}' your preferred tag. ${getRelayErrorMessage(errors)}`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`'${organizationTagDetails.name}' is now your preferred tag.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't make '${organizationTagDetails.name}' your preferred tag. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't make '${organizationTagDetails.name}' your preferred tag. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
@@ -265,8 +230,6 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearc
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Removing tag '${organizationTagDetails.name}' as your preferred tag...`} />, infoNotificationOptions);
-
     commitRemoveCustomerPreferredOrganizationTag({
       variables: {
         input: {
@@ -276,24 +239,16 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearc
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove '${organizationTagDetails.name}' from your preferred tags. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(
+            <NotificationContent content={`We couldn't remove '${organizationTagDetails.name}' from your preferred tags. ${getRelayErrorMessage(errors)}`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`'${organizationTagDetails.name}' is no longer one of your preferred tags.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove '${organizationTagDetails.name}' from your preferred tags. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove '${organizationTagDetails.name}' from your preferred tags. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };

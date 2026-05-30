@@ -1,5 +1,5 @@
 import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@skedular/ui';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@skedular/shared';
 import { getRelayErrorMessage } from '@skedular/shared';
@@ -70,7 +70,6 @@ const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClic
 
   const handleAddClick = ({ uniqueClaimCode }: LocationClaimOwnershipDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Claiming this location with claim code '${uniqueClaimCode}'...`} />, infoNotificationOptions);
 
     commitClaimLocationOwnership({
       variables: {
@@ -84,26 +83,18 @@ const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClic
       },
       onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't claim this location with claim code '${uniqueClaimCode}'. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(
+            <NotificationContent content={`We couldn't claim this location with claim code '${uniqueClaimCode}'. ${getRelayErrorMessage(errors)}`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`You now manage location '${response.claimLocationOwnership.location.name}'.`} />,
-        });
-
         onClaimClicked();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't claim this location with claim code '${uniqueClaimCode}'. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't claim this location with claim code '${uniqueClaimCode}'. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };

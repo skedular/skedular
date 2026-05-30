@@ -1,7 +1,7 @@
 import { DeleteIcon } from '@/components/icons';
 import { getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { useIntegratedPlatrform, PaletteModeContext } from '@skedular/shared';
 import { getRelayErrorMessage } from '@skedular/shared';
 import type { organizationAdminManageOrganizationSectionQuery } from '@/queries/__generated__/organizationAdminManageOrganizationSectionQuery.graphql';
@@ -56,7 +56,6 @@ const OrganizationAdminManageOrganizationSectionContent = ({ queryReference }: I
 
   const handleRemoveOrganizationClicked = () => {
     const name = organization.name;
-    const toastId = themedToast(<NotificationContent content={`Removing organization '${name}'...`} />, infoNotificationOptions);
 
     commitDeleteOrganization({
       variables: {
@@ -67,26 +66,15 @@ const OrganizationAdminManageOrganizationSectionContent = ({ queryReference }: I
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the organization '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove the organization '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Organization '${name}' removed.`} />,
-        });
-
         router.push(getRootLink(integratedPlatrform));
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the organization '${name}'. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove the organization '${name}'. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };

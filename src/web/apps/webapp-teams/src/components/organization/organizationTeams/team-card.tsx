@@ -3,7 +3,7 @@ import { DefaultDialogTitle, LeadIconTypography, SmallIconTypography, StackColum
 import { EllipseMenuIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationTeamSetupBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext, useIntegratedPlatrform } from '@skedular/shared';
 import { coal } from '@skedular/ui';
@@ -153,8 +153,6 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
   };
 
   const handleConfirmRemovingTeamClick = () => {
-    const toastId = themedToast(<NotificationContent content={`Removing team '${teamDetails.name}'...`} />, infoNotificationOptions);
-
     commitDeleteTeam({
       variables: {
         connectionIds: connectionIds,
@@ -165,24 +163,13 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't remove team '${teamDetails.name}'. ${getRelayErrorMessage(errors)}`} />,
-          });
+          themedToast(<NotificationContent content={`We couldn't remove team '${teamDetails.name}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Team '${teamDetails.name}' has been removed.`} />,
-        });
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't remove team '${teamDetails.name}'. ${error.message}`} />,
-        });
+        themedToast(<NotificationContent content={`We couldn't remove team '${teamDetails.name}'. ${error.message}`} />, errorNotificationOptions);
       },
     });
   };
