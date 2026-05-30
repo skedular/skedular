@@ -3,19 +3,19 @@ import { Address, PhysicalAddress } from '@/components/address';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
 import {
-  getOrganizationLocationFloorPlansBaseLink,
-  getOrganizationLocationManageLocationBaseLink,
-  getOrganizationLocationManageResourcesBaseLink,
-  getOrganizationLocationOpeningHoursBaseLink,
-  getOrganizationLocationPhysicalAddressSetupBaseLink,
-  getOrganizationLocationRestrictedInformationBaseLink,
-  getOrganizationLocationsBaseLink,
-  getOrganizationLocationSetupBaseLink,
+    getOrganizationLocationFloorPlansBaseLink,
+    getOrganizationLocationManageLocationBaseLink,
+    getOrganizationLocationManageResourcesBaseLink,
+    getOrganizationLocationOpeningHoursBaseLink,
+    getOrganizationLocationPhysicalAddressSetupBaseLink,
+    getOrganizationLocationRestrictedInformationBaseLink,
+    getOrganizationLocationsBaseLink,
+    getOrganizationLocationSetupBaseLink,
 } from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationRestrictedInformationCategory } from '@/components/location';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { MultipleChoicesAmenities } from '@/components/organization';
 import OrganizationLocationFloorPlansSection from '@/components/organization/organizationLocation/organization-location-floor-plans-section';
 import OrganizationLocationManageResourcesSection from '@/components/organization/organizationLocation/organization-location-manage-resources-section';
@@ -24,8 +24,8 @@ import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpen
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import type { organizationLocation_addLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_addLocationPhysicalAddressMutation.graphql';
 import type {
-  LocationRestrictedInformationCategory,
-  organizationLocation_addLocationRestrictedInformationMutation,
+    LocationRestrictedInformationCategory,
+    organizationLocation_addLocationRestrictedInformationMutation,
 } from '@/queries/__generated__/organizationLocation_addLocationRestrictedInformationMutation.graphql';
 import type { organizationLocation_deleteLocationMutation } from '@/queries/__generated__/organizationLocation_deleteLocationMutation.graphql';
 import type { organizationLocation_deleteLocationRestrictedInformationMutation } from '@/queries/__generated__/organizationLocation_deleteLocationRestrictedInformationMutation.graphql';
@@ -34,8 +34,8 @@ import type { LocationPatchField, LocationType, organizationLocation_updateLocat
 import type { organizationLocation_updateLocationOpeningHoursMutation } from '@/queries/__generated__/organizationLocation_updateLocationOpeningHoursMutation.graphql';
 import type { organizationLocation_updateLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_updateLocationPhysicalAddressMutation.graphql';
 import type {
-  LocationRestrictedInformationPatchField,
-  organizationLocation_updateLocationRestrictedInformationMutation,
+    LocationRestrictedInformationPatchField,
+    organizationLocation_updateLocationRestrictedInformationMutation,
 } from '@/queries/__generated__/organizationLocation_updateLocationRestrictedInformationMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -46,18 +46,18 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext, stringCollectionToString, stringToMultiLines, useIntegratedPlatrform } from '@skedular/shared';
 import {
-  BodyIconTypography,
-  defaultButtonStyle,
-  defaultPadding,
-  EditorActionBar,
-  FormFieldLabel,
-  FormStackColumn,
-  LeadIconTypography,
-  PageHeaderPanel,
-  SettingsSectionCard,
-  StackColumn,
-  StackRow,
-  StickyReviewRail,
+    BodyIconTypography,
+    defaultButtonStyle,
+    defaultPadding,
+    EditorActionBar,
+    FormFieldLabel,
+    FormStackColumn,
+    LeadIconTypography,
+    PageHeaderPanel,
+    SettingsSectionCard,
+    StackColumn,
+    StackRow,
+    StickyReviewRail,
 } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
@@ -1146,7 +1146,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   }
 
   const handleDeleteRestrictedInformationClick = (item: RestrictedInformationItem) => {
-    const toastId = themedToast(<NotificationContent content={`Removing '${item.title}'...`} />, infoNotificationOptions);
     commitDeleteLocationRestrictedInformation({
       variables: {
         input: {
@@ -1156,30 +1155,19 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove restricted information. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove restricted information. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content="Restricted information removed." />,
-        });
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove restricted information. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove restricted information. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
 
   const handleRemoveLocationClicked = () => {
-    const toastId = themedToast(<NotificationContent content={`Removing location '${location.name}'...`} />, infoNotificationOptions);
     commitDeleteLocation({
       variables: {
         input: {
@@ -1189,24 +1177,14 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${location.name}' removed.`} />,
-        });
         router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain));
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };

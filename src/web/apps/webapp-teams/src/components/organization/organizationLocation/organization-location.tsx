@@ -15,7 +15,7 @@ import {
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationRestrictedInformationCategory } from '@/components/location';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { MultipleChoicesAmenities } from '@/components/organization';
 import OrganizationLocationFloorPlansSection from '@/components/organization/organizationLocation/organization-location-floor-plans-section';
 import OrganizationLocationManageResourcesSection from '@/components/organization/organizationLocation/organization-location-manage-resources-section';
@@ -1146,7 +1146,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   }
 
   const handleDeleteRestrictedInformationClick = (item: RestrictedInformationItem) => {
-    const toastId = themedToast(<NotificationContent content={`Removing '${item.title}'...`} />, infoNotificationOptions);
     commitDeleteLocationRestrictedInformation({
       variables: {
         input: {
@@ -1156,30 +1155,19 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove restricted information. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove restricted information. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content="Restricted information removed." />,
-        });
         onReloadRequired();
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove restricted information. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove restricted information. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
 
   const handleRemoveLocationClicked = () => {
-    const toastId = themedToast(<NotificationContent content={`Removing location '${location.name}'...`} />, infoNotificationOptions);
     commitDeleteLocation({
       variables: {
         input: {
@@ -1189,24 +1177,14 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
+          themedToast(<NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${location.name}' removed.`} />,
-        });
         router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain));
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${error.message}.`} />,
-        });
+        themedToast(<NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
