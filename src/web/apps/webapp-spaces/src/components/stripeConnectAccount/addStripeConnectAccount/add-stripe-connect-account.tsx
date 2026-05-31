@@ -102,28 +102,33 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationCustomDomain, o
             }}
             validate={validateStripeConnectAccountDetails}
             render={({ handleSubmit }) => (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <FormSpy subscription={{ values: true }} onChange={({ values }) => { if (values) setName(values.name); }} />
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <SectionIconTypography label="Stripe Connect Account Setup" />
-                    <BodyIconTypography label="Edit your Stripe Connect account name and details" />
-                    <Divider />
-                  </StackColumn>
+              <FormStackColumn onSubmit={handleSubmit}>
+                <FormSpy
+                  subscription={{ values: true }}
+                  onChange={({ values }) => {
+                    if (values) setName(values.name);
+                  }}
+                />
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Stripe Connect Account Setup" />
+                  <BodyIconTypography label="Edit your Stripe Connect account name and details" />
+                  <Divider />
+                </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Nickname">
-                      <TextField name="name" required={requiredFields.name} />
-                    </FormFieldLabel>
-                  </StackColumn>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Nickname">
+                    <TextField name="name" required={requiredFields.name} />
+                  </FormFieldLabel>
+                </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        <BodyIconTypography label="Add" invertDefaultColor={paletteMode === 'dark'} />
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackRow>
+                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                      <BodyIconTypography label="Add" invertDefaultColor={paletteMode === 'dark'} />
+                    </Button>
+                  </StackRow>
+                </StackColumn>
+              </FormStackColumn>
             )}
           />
         </AppBarWithStackColumn>

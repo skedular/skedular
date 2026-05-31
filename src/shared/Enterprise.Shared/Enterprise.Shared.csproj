@@ -35,8 +35,8 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.8"/>
 
         <!-- AWS -->
-        <PackageReference Include="AWSSDK.S3" Version="4.0.23.4"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.31"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.23.5"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.32"/>
 
         <!-- gRPC / Protobuf -->
         <PackageReference Include="Google.Protobuf" Version="3.35.0"/>
@@ -138,7 +138,7 @@
 
         <!-- API Documentation -->
         <PackageReference Include="NSwag.AspNetCore" Version="14.7.1"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.0"/>
 
         <!-- Utilities -->
         <PackageReference Include="CountryData" Version="6.19.0"/>

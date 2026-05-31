@@ -130,54 +130,54 @@ const AddBankAccount = ({ onReloadRequired, organizationCustomDomain, onAdded, o
             }}
             validate={validateBankAccountDetails}
             render={({ handleSubmit }) => (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <FormSpy
-                    subscription={{ values: true }}
-                    onChange={({ values }) => {
-                      if (!values) return;
-                      setName(values.name);
-                      setBankName(values.bankName);
-                      setAccountHolderName(values.accountHolderName);
-                      setAccountNumber(values.accountNumber);
-                      setCountry(values.country);
-                    }}
-                  />
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <SectionIconTypography label="Bank Account Setup" />
-                    <BodyIconTypography label="Edit your Bank account name and details" />
-                    <Divider />
-                  </StackColumn>
+              <FormStackColumn onSubmit={handleSubmit}>
+                <FormSpy
+                  subscription={{ values: true }}
+                  onChange={({ values }) => {
+                    if (!values) return;
+                    setName(values.name);
+                    setBankName(values.bankName);
+                    setAccountHolderName(values.accountHolderName);
+                    setAccountNumber(values.accountNumber);
+                    setCountry(values.country);
+                  }}
+                />
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Bank Account Setup" />
+                  <BodyIconTypography label="Edit your Bank account name and details" />
+                  <Divider />
+                </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredFields.name} />
-                    </FormFieldLabel>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Name">
+                    <TextField name="name" required={requiredFields.name} />
+                  </FormFieldLabel>
 
-                    <FormFieldLabel label="Bank Name">
-                      <TextField name="bankName" required={requiredFields.bankName} />
-                    </FormFieldLabel>
+                  <FormFieldLabel label="Bank Name">
+                    <TextField name="bankName" required={requiredFields.bankName} />
+                  </FormFieldLabel>
 
-                    <FormFieldLabel label="Account Holder Name">
-                      <TextField name="accountHolderName" required={requiredFields.accountHolderName} />
-                    </FormFieldLabel>
+                  <FormFieldLabel label="Account Holder Name">
+                    <TextField name="accountHolderName" required={requiredFields.accountHolderName} />
+                  </FormFieldLabel>
 
-                    <FormFieldLabel label="Account Number">
-                      <TextField name="accountNumber" required={requiredFields.accountNumber} />
-                    </FormFieldLabel>
+                  <FormFieldLabel label="Account Number">
+                    <TextField name="accountNumber" required={requiredFields.accountNumber} />
+                  </FormFieldLabel>
 
-                    <FormFieldLabel label="Country">
-                      <SingleChoiceCountry name="country" required={requiredFields.country} />
-                    </FormFieldLabel>
-                  </StackColumn>
+                  <FormFieldLabel label="Country">
+                    <SingleChoiceCountry name="country" required={requiredFields.country} />
+                  </FormFieldLabel>
+                </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        <BodyIconTypography label="Add" invertDefaultColor={paletteMode === 'dark'} />
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackRow>
+                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                      <BodyIconTypography label="Add" invertDefaultColor={paletteMode === 'dark'} />
+                    </Button>
+                  </StackRow>
+                </StackColumn>
+              </FormStackColumn>
             )}
           />
         </AppBarWithStackColumn>

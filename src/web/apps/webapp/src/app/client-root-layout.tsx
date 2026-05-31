@@ -19,7 +19,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { AuthKitProvider, useAccessToken, useAuth } from '@workos-inc/authkit-nextjs/components';
+import { AuthKitProvider, useAuth } from '@workos-inc/authkit-nextjs/components';
 import Script from 'next/script';
 import type { PropsWithChildren } from 'react';
 import { memo, useContext, useEffect, useState } from 'react';
@@ -31,11 +31,10 @@ type AppAuthenticatedRelayProviderProps = PropsWithChildren<{
 }>;
 
 const AppAuthenticatedRelayProvider = ({ children, teamsToken }: AppAuthenticatedRelayProviderProps) => {
-  const { user, loading: authLoading } = useAuth();
-  const { accessToken, loading: accessTokenLoading } = useAccessToken();
+  const { loading: authLoading } = useAuth();
 
   return (
-    <AuthenticatedRelayProvider accessToken={accessToken} accessTokenLoading={accessTokenLoading} authLoading={authLoading} teamsToken={teamsToken} userSignedIn={!!user}>
+    <AuthenticatedRelayProvider authLoading={authLoading} teamsToken={teamsToken}>
       {children}
     </AuthenticatedRelayProvider>
   );

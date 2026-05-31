@@ -6,21 +6,18 @@ import { InMsTeamsContext } from './in-msteams-provider';
 import RelayProvider from './relay-provider';
 
 type Props = PropsWithChildren<{
-  accessToken?: string;
-  accessTokenLoading?: boolean;
   authLoading?: boolean;
   teamsToken?: string | null;
-  userSignedIn?: boolean;
 }>;
 
-const AuthenticatedRelayProvider = ({ accessToken, accessTokenLoading = false, authLoading = false, children, teamsToken, userSignedIn = false }: Props) => {
+const AuthenticatedRelayProvider = ({ authLoading = false, children, teamsToken }: Props) => {
   const inMsTeams = useContext(InMsTeamsContext);
 
-  if (!inMsTeams && (authLoading || (userSignedIn && accessTokenLoading))) {
+  if (!inMsTeams && authLoading) {
     return null;
   }
 
-  return <RelayProvider token={inMsTeams ? teamsToken : accessToken}>{children}</RelayProvider>;
+  return <RelayProvider token={inMsTeams ? teamsToken : undefined}>{children}</RelayProvider>;
 };
 
 export default AuthenticatedRelayProvider;
