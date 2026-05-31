@@ -40,7 +40,7 @@ export const viewport: Viewport = {
 
 const RootLayout = ({ children }: PropsWithChildren) => (
   <html lang="en" dir="ltr" suppressHydrationWarning className={`${inter.variable} ${barlow.variable}`} data-product-app={appDefinition.id}>
-    <body>
+    <body suppressHydrationWarning>
       <ClientRootLayout>{children}</ClientRootLayout>
     </body>
   </html>
