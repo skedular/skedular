@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<372d44f9a183b852a9c911e9b30fa403>>
+ * @generated SignedSource<<e09b4b13b215f533a7c2afbe495cf028>>
  * @lightSyntaxTransform
  */
 
@@ -18,6 +18,9 @@ export type marketplaceProductDetailOverview_product$data = {
   }>;
   readonly featureImages: ReadonlyArray<{
     readonly original: {
+      readonly url: string;
+    } | null | undefined;
+    readonly thumbnail: {
       readonly url: string;
     } | null | undefined;
   }>;
@@ -44,7 +47,16 @@ var v0 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-};
+},
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+];
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -117,15 +129,17 @@ return {
           "kind": "LinkedField",
           "name": "original",
           "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "url",
-              "storageKey": null
-            }
-          ],
+          "selections": (v1/*:: as any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CdnFile",
+          "kind": "LinkedField",
+          "name": "thumbnail",
+          "plural": false,
+          "selections": (v1/*:: as any*/),
           "storageKey": null
         }
       ],
@@ -163,6 +177,6 @@ return {
 };
 })();
 
-(node as any).hash = "73ae2d8abd1f11c862e054180ff6998f";
+(node as any).hash = "715df0c75ba55b013f1a17f35b69b3ff";
 
 export default node;

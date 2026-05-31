@@ -4,6 +4,7 @@ import { Loading } from '@/components/loading';
 import type { guestStoreFront_rootQuery } from '@/queries/__generated__/guestStoreFront_rootQuery.graphql';
 import type { guestStoreFrontProducts_query$key } from '@/queries/__generated__/guestStoreFrontProducts_query.graphql';
 import type { guestStoreFrontSelectedLocationProductsQuery } from '@/queries/__generated__/guestStoreFrontSelectedLocationProductsQuery.graphql';
+import ButtonBase from '@mui/material/ButtonBase';
 import Container from '@mui/material/Container';
 import Box from '@mui/system/Box';
 
@@ -144,9 +145,16 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
   );
 
   const [selectedLocationId, setSelectedLocationId] = useState('');
+  const [selectedOrganizationImageIndex, setSelectedOrganizationImageIndex] = useState(0);
   const [selectedLocationProductsQueryReference, loadSelectedLocationProductsQuery, disposeSelectedLocationProductsQuery] =
     useQueryLoader<guestStoreFrontSelectedLocationProductsQuery>(SelectedLocationProductsQuery);
   const defaultProducts = useMemo(() => productsData.products.edges.map((edge) => edge.node), [productsData.products.edges]);
+  const organizationImages = useMemo(
+    () => rootData.organizationPublic?.featureImages.map((image) => image.original).filter((image): image is NonNullable<typeof image> => Boolean(image?.url)) ?? [],
+    [rootData.organizationPublic?.featureImages],
+  );
+  const safeSelectedOrganizationImageIndex = selectedOrganizationImageIndex < organizationImages.length ? selectedOrganizationImageIndex : 0;
+  const selectedOrganizationImage = organizationImages[safeSelectedOrganizationImageIndex] ?? null;
 
   useEffect(() => {
     if (!selectedLocationId) {
@@ -194,21 +202,91 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
       <Container maxWidth="xl" sx={{ mt: { xs: 3, md: 5 }, mb: 7 }}>
         <Box
           sx={{
-            position: 'relative',
-            height: { xs: 340, md: 520 },
-            borderRadius: 3,
-            overflow: 'hidden',
-            border: 1,
-            borderColor: (theme) => theme.palette.divider,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 0.75,
+            minWidth: 0,
+            maxWidth: '100%',
           }}
         >
-          {rootData.organizationPublic.featureImages.length > 0 && rootData.organizationPublic.featureImages[0].original && (
+          <Box
+            sx={{
+              position: 'relative',
+              width: '100%',
+              boxSizing: 'border-box',
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'flex-start',
+              borderRadius: 3,
+              overflow: 'hidden',
+            }}
+          >
+            {selectedOrganizationImage && (
+              <Box
+                component="img"
+                src={selectedOrganizationImage.url}
+                alt={rootData.organizationPublic.name}
+                sx={{
+                  display: 'block',
+                  width: { xs: '100%', md: 'auto' },
+                  boxSizing: 'border-box',
+                  height: 'auto',
+                  maxWidth: '100%',
+                  maxHeight: { md: 520 },
+                  objectFit: 'contain',
+                  borderRadius: 3,
+                }}
+              />
+            )}
+          </Box>
+
+          {organizationImages.length > 1 && (
             <Box
-              component="img"
-              src={rootData.organizationPublic.featureImages[0].original.url}
-              alt={rootData.organizationPublic.name}
-              sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-            />
+              sx={{
+                display: 'flex',
+                gap: 1,
+                width: '100%',
+                maxWidth: '100%',
+                overflowX: 'auto',
+                pb: 0.5,
+                scrollbarWidth: 'thin',
+              }}
+            >
+              {organizationImages.map((image, index) => {
+                const isSelected = index === safeSelectedOrganizationImageIndex;
+
+                return (
+                  <ButtonBase
+                    key={`${image.url}-${index}`}
+                    onClick={() => setSelectedOrganizationImageIndex(index)}
+                    aria-label={`Show ${rootData.organizationPublic?.name ?? 'organisation'} image ${index + 1}`}
+                    sx={{
+                      width: { xs: 72, md: 96 },
+                      height: { xs: 54, md: 72 },
+                      flex: '0 0 auto',
+                      borderRadius: 1.5,
+                      overflow: 'hidden',
+                      border: 2,
+                      borderColor: (theme) => (isSelected ? theme.palette.primary.main : theme.palette.divider),
+                      bgcolor: (theme) => theme.palette.background.default,
+                      opacity: isSelected ? 1 : 0.78,
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={image.url}
+                      alt=""
+                      sx={{
+                        display: 'block',
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                      }}
+                    />
+                  </ButtonBase>
+                );
+              })}
+            </Box>
           )}
         </Box>
       </Container>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<abeda815950dd97d8a67205a43eeb385>>
+ * @generated SignedSource<<14b8ffd2702545698ae42838abade0f7>>
  * @lightSyntaxTransform
  */
 
@@ -68,6 +68,9 @@ export type marketplaceLocation_query$data = {
         readonly height: number | null | undefined;
         readonly url: string;
         readonly width: number | null | undefined;
+      } | null | undefined;
+      readonly thumbnail: {
+        readonly url: string;
       } | null | undefined;
     }>;
     readonly id: string;
@@ -246,34 +249,32 @@ v5 = {
   "name": "url",
   "storageKey": null
 },
-v6 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "CdnFile",
-    "kind": "LinkedField",
-    "name": "original",
-    "plural": false,
-    "selections": [
-      (v5/*:: as any*/),
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "height",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "width",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-],
+v6 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "CdnFile",
+  "kind": "LinkedField",
+  "name": "original",
+  "plural": false,
+  "selections": [
+    (v5/*:: as any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "height",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "width",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
 v7 = [
   (v4/*:: as any*/)
 ],
@@ -312,6 +313,9 @@ v11 = {
   "storageKey": null
 },
 v12 = [
+  (v5/*:: as any*/)
+],
+v13 = [
   {
     "alias": null,
     "args": null,
@@ -335,7 +339,7 @@ v12 = [
     "storageKey": null
   }
 ],
-v13 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -454,7 +458,9 @@ return {
                   "kind": "LinkedField",
                   "name": "image",
                   "plural": false,
-                  "selections": (v6/*:: as any*/),
+                  "selections": [
+                    (v6/*:: as any*/)
+                  ],
                   "storageKey": null
                 },
                 {
@@ -688,7 +694,19 @@ return {
           "kind": "LinkedField",
           "name": "featureImages",
           "plural": true,
-          "selections": (v6/*:: as any*/),
+          "selections": [
+            (v6/*:: as any*/),
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "CdnFile",
+              "kind": "LinkedField",
+              "name": "thumbnail",
+              "plural": false,
+              "selections": (v12/*:: as any*/),
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         },
         {
@@ -746,7 +764,7 @@ return {
                   "kind": "LinkedField",
                   "name": "monday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v13/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -756,7 +774,7 @@ return {
                   "kind": "LinkedField",
                   "name": "tuesday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v13/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -766,7 +784,7 @@ return {
                   "kind": "LinkedField",
                   "name": "wednesday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v13/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -776,7 +794,7 @@ return {
                   "kind": "LinkedField",
                   "name": "thursday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v13/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -786,7 +804,7 @@ return {
                   "kind": "LinkedField",
                   "name": "friday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v13/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -796,7 +814,7 @@ return {
                   "kind": "LinkedField",
                   "name": "saturday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v13/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -806,7 +824,7 @@ return {
                   "kind": "LinkedField",
                   "name": "sunday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v13/*:: as any*/),
                   "storageKey": null
                 }
               ],
@@ -862,9 +880,7 @@ return {
                   "kind": "LinkedField",
                   "name": "original",
                   "plural": false,
-                  "selections": [
-                    (v5/*:: as any*/)
-                  ],
+                  "selections": (v12/*:: as any*/),
                   "storageKey": null
                 }
               ],
@@ -996,7 +1012,7 @@ return {
                           "name": "inactive",
                           "storageKey": null
                         },
-                        (v13/*:: as any*/),
+                        (v14/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -1007,7 +1023,7 @@ return {
                           "selections": [
                             (v4/*:: as any*/),
                             (v1/*:: as any*/),
-                            (v13/*:: as any*/)
+                            (v14/*:: as any*/)
                           ],
                           "storageKey": null
                         },
@@ -1021,7 +1037,7 @@ return {
                           "selections": [
                             (v4/*:: as any*/),
                             (v1/*:: as any*/),
-                            (v13/*:: as any*/),
+                            (v14/*:: as any*/),
                             (v0/*:: as any*/)
                           ],
                           "storageKey": null
@@ -1046,6 +1062,6 @@ return {
 };
 })();
 
-(node as any).hash = "732cafcca436ebec05625072f67c37e6";
+(node as any).hash = "ee7409b10e12d1c3c19f9c1287d24d21";
 
 export default node;

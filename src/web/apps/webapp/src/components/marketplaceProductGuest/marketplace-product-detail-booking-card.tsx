@@ -158,8 +158,8 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
   }
 
   return (
-    <Box sx={{ position: { md: 'sticky' }, top: { md: 90 } }}>
-      <Card sx={{ borderRadius: 3, border: 1, borderColor: (theme) => theme.palette.divider }}>
+    <Box sx={{ position: { md: 'sticky' }, top: { md: 90 }, minWidth: 0, maxWidth: '100%' }}>
+      <Card sx={{ borderRadius: 3, border: 1, borderColor: (theme) => theme.palette.divider, minWidth: 0, maxWidth: '100%' }}>
         <CardContent sx={{ p: { xs: 2.5, md: 3 }, '&:last-child': { pb: { xs: 2.5, md: 3 } } }}>
           <CaptionIconTypography label="Product" sx={{ letterSpacing: '0.04em', textTransform: 'uppercase', opacity: 0.7 }} />
           <LeadIconTypography label={product.listingMetadata.title} sx={{ mt: 0.4, mb: 0.6 }} />
@@ -187,13 +187,13 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
                   py: 1.2,
                 }}
               >
-                <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'nowrap' }}>
+                <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: { xs: 'wrap', sm: 'nowrap' }, gap: 1 }}>
                   <Box sx={{ minWidth: 0, pr: 1 }}>
                     <CaptionIconTypography label={pricingPlan.cadenceLabel} fontWeight={600} />
                     <SubtitleIconTypography label={pricingPlan.title} sx={{ lineHeight: 1.25 }} />
                     {pricingPlan.subTitle && <CaptionIconTypography label={pricingPlan.subTitle} sx={{ mt: 0.5, opacity: 0.78 }} />}
                   </Box>
-                  <Box sx={{ textAlign: 'right', flexShrink: 0 }}>
+                  <Box sx={{ textAlign: 'right', flexShrink: 0, ml: 'auto' }}>
                     <SubtitleIconTypography label={pricingPlan.amountLabel} fontWeight={600} sx={{ lineHeight: 1.2 }} />
                     <CaptionIconTypography label={pricingPlan.note} sx={{ opacity: 0.7 }} />
                   </Box>

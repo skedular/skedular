@@ -42,6 +42,9 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
           original {
             url
           }
+          thumbnail {
+            url
+          }
         }
         amenities {
           id
@@ -52,7 +55,19 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
     `,
     rootData.product,
   );
-  const imageUrls = useMemo(() => (product ? product.featureImages.map((item) => item.original?.url).filter((item): item is string => !!item) : []), [product]);
+  const productImages = useMemo(
+    () =>
+      product
+        ? product.featureImages
+            .map((image) => ({
+              originalUrl: image.original?.url ?? '',
+              thumbnailUrl: image.thumbnail?.url ?? image.original?.url ?? '',
+            }))
+            .filter((image) => image.originalUrl)
+        : [],
+    [product],
+  );
+  const imageUrls = useMemo(() => productImages.map((image) => image.originalUrl), [productImages]);
   const includedFeatures = useMemo(() => product?.listingMetadata.includedFeatures?.filter(Boolean) ?? [], [product?.listingMetadata.includedFeatures]);
   const [selectedImageUrl, setSelectedImageUrl] = useState(imageUrls[0] ?? '');
   const effectiveSelectedImageUrl = useMemo(
@@ -70,57 +85,82 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
       : 'This booking reserves the matching resources required for the selected time.';
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0, maxWidth: '100%' }}>
       <Box
         sx={{
-          borderRadius: 3,
-          overflow: 'hidden',
-          border: 1,
-          borderColor: (theme) => theme.palette.divider,
-          bgcolor: (theme) => theme.palette.background.paper,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 0.75,
+          minWidth: 0,
+          maxWidth: '100%',
         }}
       >
-        {effectiveSelectedImageUrl ? (
-          <Box
-            component="img"
-            src={effectiveSelectedImageUrl}
-            alt={product.listingMetadata.title ?? ''}
-            sx={{ width: '100%', height: { xs: 260, md: 460 }, objectFit: 'cover', display: 'block' }}
-          />
-        ) : (
-          <Box sx={{ width: '100%', height: { xs: 260, md: 460 } }} />
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            width: '100%',
+            boxSizing: 'border-box',
+            overflow: 'hidden',
+          }}
+        >
+          {effectiveSelectedImageUrl ? (
+            <Box
+              component="img"
+              src={effectiveSelectedImageUrl}
+              alt={product.listingMetadata.title ?? ''}
+              sx={{
+                display: 'block',
+                width: { xs: '100%', md: 'auto' },
+                boxSizing: 'border-box',
+                height: 'auto',
+                maxWidth: '100%',
+                maxHeight: { md: 460 },
+                borderRadius: 3,
+                objectFit: 'contain',
+              }}
+            />
+          ) : (
+            <Box sx={{ width: '100%', height: { xs: 260, md: 460 } }} />
+          )}
+        </Box>
+
+        {imageUrls.length > 0 && (
+          <Box sx={{ display: 'flex', gap: 1, width: '100%', maxWidth: '100%', overflowX: 'auto', pb: 0.5, scrollbarWidth: 'thin' }}>
+            {productImages.map((image, index) => (
+              <Box
+                key={`${image.originalUrl}-${index}`}
+                component="button"
+                type="button"
+                onClick={() => setSelectedImageUrl(image.originalUrl)}
+                sx={{
+                  width: { xs: 72, md: 96 },
+                  height: { xs: 54, md: 72 },
+                  flex: '0 0 auto',
+                  border: 2,
+                  p: 0,
+                  lineHeight: 0,
+                  borderRadius: 1.5,
+                  overflow: 'hidden',
+                  cursor: 'pointer',
+                  outline: 'none',
+                  borderColor: (theme) => (effectiveSelectedImageUrl === image.originalUrl ? theme.palette.primary.main : theme.palette.divider),
+                  bgcolor: (theme) => theme.palette.background.default,
+                  opacity: effectiveSelectedImageUrl === image.originalUrl ? 1 : 0.78,
+                }}
+              >
+                <Box
+                  component="img"
+                  src={image.thumbnailUrl}
+                  alt={product.listingMetadata.title ?? ''}
+                  sx={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+                />
+              </Box>
+            ))}
+          </Box>
         )}
       </Box>
-
-      {imageUrls.length > 0 && (
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 1.5 }}>
-          {imageUrls.slice(0, 3).map((imageUrl) => (
-            <Box
-              key={imageUrl}
-              component="button"
-              type="button"
-              onClick={() => setSelectedImageUrl(imageUrl)}
-              sx={{
-                border: 0,
-                p: 0,
-                lineHeight: 0,
-                borderRadius: 2,
-                overflow: 'hidden',
-                cursor: 'pointer',
-                outline: 'none',
-                boxShadow: effectiveSelectedImageUrl === imageUrl ? (theme) => `0 0 0 2px ${theme.palette.primary.main}` : 'none',
-              }}
-            >
-              <Box
-                component="img"
-                src={imageUrl}
-                alt={product.listingMetadata.title ?? ''}
-                sx={{ width: '100%', height: { xs: 90, md: 120 }, objectFit: 'cover', display: 'block' }}
-              />
-            </Box>
-          ))}
-        </Box>
-      )}
 
       <Card variant="outlined" sx={{ borderRadius: 3 }}>
         <CardContent sx={{ p: { xs: 2.5, md: 3.5 }, '&:last-child': { pb: { xs: 2.5, md: 3.5 } } }}>

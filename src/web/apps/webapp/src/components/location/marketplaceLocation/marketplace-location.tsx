@@ -230,6 +230,9 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
               height
               width
             }
+            thumbnail {
+              url
+            }
           }
           physicalAddress {
             longitude
@@ -396,8 +399,13 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   const extraMetadata = locationDetails?.extraMetadata;
   const heroImages = useMemo(
     () => [
-      ...(locationDetails?.featureImages?.filter((item) => !!item.original?.url).map((item) => item.original!) ?? []),
-      ...(extraMetadata?.relatedImageLinks?.filter(Boolean).map((url) => ({ url, height: 1200, width: 1800 })) ?? []),
+      ...(locationDetails?.featureImages
+        ?.filter((item) => !!item.original?.url)
+        .map((item) => ({
+          url: item.original!.url,
+          thumbnailUrl: item.thumbnail?.url ?? item.original!.url,
+        })) ?? []),
+      ...(extraMetadata?.relatedImageLinks?.filter(Boolean).map((url) => ({ url, thumbnailUrl: url })) ?? []),
     ],
     [extraMetadata?.relatedImageLinks, locationDetails?.featureImages],
   );
@@ -829,28 +837,40 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
           </Box>
         </Button>
 
-        <Paper sx={{ ...sectionCardSx, overflow: 'hidden', mb: 4 }}>
-          {heroImage ? (
-            <Box
-              component="img"
-              src={heroImage}
-              alt={locationDetails.listingMetadata.title ?? locationDetails.name}
-              sx={{ width: '100%', height: { xs: 260, md: 420 }, objectFit: 'cover' }}
-            />
-          ) : (
-            <Box sx={{ width: '100%', height: { xs: 260, md: 420 }, bgcolor: 'action.hover' }} />
-          )}
-          <Box sx={{ p: { xs: 3, md: 5 } }}>
+        <Box sx={{ mb: 2, minWidth: 0, maxWidth: '100%' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, minWidth: 0, maxWidth: '100%' }}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', width: '100%', boxSizing: 'border-box', maxWidth: '100%', overflow: 'hidden' }}>
+              {heroImage ? (
+                <Box
+                  component="img"
+                  src={heroImage}
+                  alt={locationDetails.listingMetadata.title ?? locationDetails.name}
+                  sx={{
+                    display: 'block',
+                    width: { xs: '100%', md: 'auto' },
+                    boxSizing: 'border-box',
+                    height: 'auto',
+                    maxWidth: '100%',
+                    maxHeight: { md: 420 },
+                    borderRadius: 3,
+                    objectFit: 'contain',
+                  }}
+                />
+              ) : (
+                <Box sx={{ width: '100%', height: { xs: 260, md: 420 }, bgcolor: 'action.hover' }} />
+              )}
+            </Box>
+
             {heroImages.length > 1 ? (
               <Box
                 sx={{
-                  display: 'grid',
-                  gridTemplateColumns: {
-                    xs: `repeat(${Math.min(heroImages.length, 2)}, minmax(0, 1fr))`,
-                    sm: `repeat(${Math.min(heroImages.length, 4)}, minmax(0, 1fr))`,
-                  },
-                  gap: 1.5,
-                  mb: 3.5,
+                  display: 'flex',
+                  gap: 1,
+                  width: '100%',
+                  maxWidth: '100%',
+                  overflowX: 'auto',
+                  pb: 0.5,
+                  scrollbarWidth: 'thin',
                 }}
               >
                 {heroImages.map((image, index) => {
@@ -863,19 +883,20 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                       type="button"
                       onClick={() => setSelectedHeroImageUrl(image.url)}
                       sx={{
+                        width: { xs: 72, md: 96 },
+                        height: { xs: 54, md: 72 },
+                        flex: '0 0 auto',
                         p: 0,
-                        border: 0,
-                        bgcolor: 'transparent',
+                        lineHeight: 0,
+                        border: 2,
+                        borderColor: isSelected ? theme.palette.primary.main : theme.palette.divider,
+                        bgcolor: 'background.default',
                         cursor: 'pointer',
                         textAlign: 'left',
-                        borderRadius: 3,
+                        borderRadius: 1.5,
                         overflow: 'hidden',
                         outline: 'none',
-                        boxShadow: isSelected ? `0 0 0 2px ${theme.palette.text.primary}` : `0 0 0 1px ${theme.palette.divider}`,
-                        transition: 'box-shadow 120ms ease, transform 120ms ease',
-                        '&:hover': {
-                          transform: 'translateY(-1px)',
-                        },
+                        opacity: isSelected ? 1 : 0.78,
                         '&:focus-visible': {
                           boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
                         },
@@ -883,16 +904,20 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                     >
                       <Box
                         component="img"
-                        src={image.url}
+                        src={image.thumbnailUrl}
                         alt={`${locationDetails.name} image ${index + 1}`}
-                        sx={{ width: '100%', height: { xs: 88, sm: 110 }, objectFit: 'cover', display: 'block' }}
+                        sx={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
                       />
                     </Box>
                   );
                 })}
               </Box>
             ) : null}
+          </Box>
+        </Box>
 
+        <Paper sx={{ ...sectionCardSx, mb: 4 }}>
+          <Box sx={{ p: { xs: 3, md: 5 } }}>
             <CaptionIconTypography
               label={locationDetails.name}
               sx={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', mb: 1.25 }}

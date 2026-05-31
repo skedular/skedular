@@ -45,6 +45,7 @@ const MarketplaceProductDetail = ({ queryReference }: Props) => {
             gap: { xs: 3, lg: 4.5 },
             gridTemplateColumns: { xs: '1fr', lg: 'minmax(0, 1.45fr) minmax(360px, 0.95fr)' },
             alignItems: 'start',
+            minWidth: 0,
           }}
         >
           <MarketplaceProductDetailOverview rootDataRelay={rootData} />

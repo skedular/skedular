@@ -98,9 +98,9 @@ const OrganizationStoreFrontRootShell = ({ queryReference, children, onReloadReq
     <>
       {browserMetadata}
       <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
-      <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: (theme) => theme.palette.background.default }}>
+      <Box sx={{ display: 'flex', width: '100%', maxWidth: '100vw', minHeight: '100vh', overflowX: 'clip', bgcolor: (theme) => theme.palette.background.default }}>
         <CssBaseline enableColorScheme />
-        <Box component="main" sx={{ flexGrow: 1, minWidth: 0 }}>
+        <Box component="main" sx={{ flexGrow: 1, width: '100%', minWidth: 0, maxWidth: '100%', overflowX: 'clip' }}>
           <OrganizationStoreFrontAppBar rootDataRelay={rootData} />
           {children}
         </Box>
