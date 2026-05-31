@@ -26,8 +26,7 @@ on:
 jobs:
   build:
     name: "Build"
-    runs-on:
-      - ubuntu-latest
+    runs-on: self-hosted
     if: github.event.pull_request.draft == false
     env:
       DOCKER_BUILDKIT: 1
@@ -69,8 +68,7 @@ jobs:
   staging:
     if: ${{ github.ref == 'refs/heads/main' }}
     name: "Deploy to staging"
-    runs-on:
-      - ubuntu-latest
+    runs-on: self-hosted
     env:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
@@ -97,8 +95,7 @@ jobs:
   production:
     if: ${{ github.ref == 'refs/heads/main' }}
     name: "Deploy to production"
-    runs-on:
-      - ubuntu-latest
+    runs-on: self-hosted
     env:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1

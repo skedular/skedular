@@ -46,8 +46,7 @@ on:
 jobs:
   build-apis:
     name: "Build APIs"
-    runs-on:
-      - ubuntu-latest
+    runs-on: self-hosted
     if: github.event.pull_request.draft == false
     env:
       DOCKER_BUILDKIT: 1
@@ -88,8 +87,7 @@ jobs:
 
   build-processors:
     name: "Build Processors"
-    runs-on:
-      - ubuntu-latest
+    runs-on: self-hosted
     if: github.event.pull_request.draft == false
     env:
       DOCKER_BUILDKIT: 1
@@ -130,8 +128,7 @@ jobs:
 
   build-jobs:
     name: "Build Jobs"
-    runs-on:
-      - ubuntu-latest
+    runs-on: self-hosted
     if: github.event.pull_request.draft == false
     env:
       DOCKER_BUILDKIT: 1
@@ -172,8 +169,7 @@ jobs:
 
   build-infra:
     name: "Build Infra"
-    runs-on:
-      - ubuntu-latest
+    runs-on: self-hosted
     if: github.event.pull_request.draft == false
     env:
       DOCKER_BUILDKIT: 1
