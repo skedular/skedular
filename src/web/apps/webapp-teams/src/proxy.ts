@@ -5,16 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const getSessionCookieName = () => process.env.WORKOS_COOKIE_NAME || 'wos-session';
 
 const isUnauthenticatedPath = (pathname: string) => {
-  if (
-    pathname === '/' ||
-    pathname === '/callback' ||
-    pathname === '/signin' ||
-    pathname === '/signup' ||
-    pathname === '/install-slack' ||
-    pathname === '/slack-success-install' ||
-    pathname.startsWith('/auth/') ||
-    pathname.startsWith('/msteams')
-  ) {
+  if (pathname === '/callback' || pathname === '/signin' || pathname === '/signup' || pathname.startsWith('/auth/')) {
     return true;
   }
 
