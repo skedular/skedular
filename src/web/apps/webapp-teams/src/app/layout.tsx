@@ -1,6 +1,6 @@
+import { getProductAppDefinition } from '@skedular/shared';
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
-import { getProductAppDefinition } from '@skedular/shared';
 import type { PropsWithChildren } from 'react';
 import ClientRootLayout from './client-root-layout';
 import './fonts.css';

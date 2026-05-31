@@ -1,16 +1,16 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceProductBookingLink, getMarketplaceProductLink, getMarketplaceProductSubscribeLink } from '@/components/links';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
-import { useIntegratedPlatform } from '@skedular/shared';
+import useKnownParams from '@/hooks/use-known-params';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Radio from '@mui/material/Radio';
 import Box from '@mui/system/Box';
+import { useIntegratedPlatform } from '@skedular/shared';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useMemo, useState } from 'react';
-import useKnownParams from '@/hooks/use-known-params';
 
 type PricingRow = {
   amountLabel: string;
@@ -60,19 +60,25 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain,
           <LeadIconTypography label={title} />
         </StackRow>
 
-        <BodyIconTypography label={subTitle} />
+        <BodyIconTypography
+          label={subTitle}
+          sx={{
+            overflow: 'hidden',
+            display: '-webkit-box',
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: 'vertical',
+          }}
+        />
 
-        {amenities.length > 0 && (
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {amenities.slice(0, 4).map((amenity) => (
-              <CaptionIconTypography
-                key={amenity.id}
-                label={amenity.name}
-                sx={{ px: 1.25, py: 0.5, borderRadius: 1.25, bgcolor: (theme) => theme.palette.action.hover, fontSize: '0.8rem' }}
-              />
-            ))}
-          </Box>
-        )}
+        <Box sx={{ minHeight: 36, display: 'flex', flexWrap: 'wrap', gap: 1, alignContent: 'flex-start' }}>
+          {amenities.slice(0, 4).map((amenity) => (
+            <CaptionIconTypography
+              key={amenity.id}
+              label={amenity.name}
+              sx={{ px: 1.25, py: 0.5, borderRadius: 1.25, bgcolor: (theme) => theme.palette.action.hover, fontSize: '0.8rem' }}
+            />
+          ))}
+        </Box>
 
         <Box sx={{ mt: 1, borderTop: 1, borderColor: (theme) => theme.palette.divider, pt: 1.5, flex: 1 }}>
           <CaptionIconTypography label="Choose your plan" sx={{ opacity: 0.7, mb: 1, textTransform: 'uppercase', letterSpacing: '0.04em' }} />
