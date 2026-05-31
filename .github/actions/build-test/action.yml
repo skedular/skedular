@@ -22,8 +22,8 @@ runs:
     - name: Set required environment variable
       shell: bash
       run: |
-        echo "unittest_container_tag=$(uuidgen)" >> $GITHUB_ENV
-        echo "unittest_extract_container_name=$(uuidgen)" >> $GITHUB_ENV
+        echo "unittest_container_tag=$(uuidgen | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        echo "unittest_extract_container_name=$(uuidgen | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
     - name: Build and run Unit Tests
       shell: bash

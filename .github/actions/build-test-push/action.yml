@@ -49,8 +49,8 @@ runs:
     - name: Set required environment variable
       shell: bash
       run: |
-        echo "unittest_container_tag=$(uuidgen)" >> $GITHUB_ENV
-        echo "unittest_extract_container_name=$(uuidgen)" >> $GITHUB_ENV
+        echo "unittest_container_tag=$(uuidgen | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        echo "unittest_extract_container_name=$(uuidgen | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
         if [ -z "${{ inputs.dockerRegistry }}" ]
         then
           echo "image_name=${{ inputs.dockerNamespace }}/${{ inputs.dockerRepository }}" >> $GITHUB_ENV
@@ -126,7 +126,7 @@ runs:
       shell: bash
       run: |
         mkdir -p ./artifact
-        final_extract_container_name=$(uuidgen)
+        final_extract_container_name=$(uuidgen | tr '[:upper:]' '[:lower:]')
         docker create --name $final_extract_container_name ${{ env.image_name }}:${{ github.sha }}
         docker cp $final_extract_container_name:/unityhub/. "./artifact/"
 
