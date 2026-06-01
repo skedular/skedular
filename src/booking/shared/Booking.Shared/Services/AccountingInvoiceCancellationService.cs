@@ -5,6 +5,7 @@ using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Grpc;
+using Enterprise.Shared.Random;
 using Google.Protobuf.WellKnownTypes;
 using Xero.NetStandard.OAuth2.Api;
 using Xero.NetStandard.OAuth2.Model.Accounting;
@@ -29,6 +30,7 @@ public class AccountingInvoiceCancellationService(
     IRepositoryFactory repositoryFactory,
     IXeroSdkClientFactory xeroSdkClientFactory,
     IXeroTokenEncryptionService xeroTokenEncryptionService,
+    IRandomHelper randomHelper,
     TimeProvider timeProvider) : IAccountingInvoiceCancellationService
 {
     public async Task CancelBookingAsync(BookingEntity booking, CancellationToken cancellationToken)
@@ -101,6 +103,7 @@ public class AccountingInvoiceCancellationService(
                 repositoryFactory.AccountingInvoiceExportLinkRepository.Add(
                     new AccountingInvoiceExportLink
                     {
+                        Id = randomHelper.Generate(),
                         Provider = AccountingProviderConstants.Skedular,
                         LocalEntityType = localEntityType,
                         LocalEntityId = localEntityId,

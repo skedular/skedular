@@ -6,6 +6,7 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Random;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
@@ -127,6 +128,7 @@ public class CancelRecurringBookingShould
         [Frozen] OrganizationConfiguration organizationConfiguration,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] IRandomHelper randomHelper,
         [Frozen] TimeProvider timeProvider,
         [Frozen] CallInvoker callInvoker,
         string recurringBookingId,
@@ -139,6 +141,7 @@ public class CancelRecurringBookingShould
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
+            randomHelper,
             timeProvider);
         var recurringBooking = new RecurringBookingEntity
         {
@@ -303,6 +306,7 @@ public class CancelRecurringBookingShould
         [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] IRandomHelper randomHelper,
         [Frozen] OrganizationConfiguration organizationConfiguration,
         [Frozen] TimeProvider timeProvider,
         [Frozen] CallInvoker callInvoker,
@@ -318,6 +322,7 @@ public class CancelRecurringBookingShould
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
+            randomHelper,
             timeProvider);
         var recurringBooking = new RecurringBookingEntity
         {
@@ -387,6 +392,7 @@ public class CancelRecurringBookingShould
         [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] IRandomHelper randomHelper,
         [Frozen] OrganizationConfiguration organizationConfiguration,
         [Frozen] TimeProvider timeProvider,
         [Frozen] CallInvoker callInvoker,
@@ -402,6 +408,7 @@ public class CancelRecurringBookingShould
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
+            randomHelper,
             timeProvider);
         var recurringBooking = new RecurringBookingEntity
         {
@@ -547,6 +554,7 @@ public class CancelRecurringBookingShould
         IRepositoryFactory repositoryFactory,
         IXeroSdkClientFactory xeroSdkClientFactory,
         IXeroTokenEncryptionService xeroTokenEncryptionService,
+        IRandomHelper randomHelper,
         TimeProvider timeProvider)
         : AccountingInvoiceCancellationService(
             organizationConfiguration,
@@ -554,6 +562,7 @@ public class CancelRecurringBookingShould
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
+            randomHelper,
             timeProvider)
     {
         public int CancelLiveRepeatingInvoiceCalls { get; private set; }

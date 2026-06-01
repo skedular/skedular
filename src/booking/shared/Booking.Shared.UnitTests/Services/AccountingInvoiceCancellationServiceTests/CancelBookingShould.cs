@@ -5,6 +5,7 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Accounting;
+using Enterprise.Shared.Random;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
@@ -70,10 +71,12 @@ public class CancelBookingShould
     public async Task Create_Local_Cancelled_Link_When_Internal_Invoice_Exists_Without_External_Provider_Link(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IRandomHelper randomHelper,
         AccountingInvoiceCancellationService sut,
         string bookingId,
         string marketplaceBookingId,
         string organizationId,
+        string accountingInvoiceExportLinkId,
         string invoiceNumber,
         string invoiceUrl,
         CancellationToken cancellationToken)
@@ -106,10 +109,12 @@ public class CancelBookingShould
                 marketplaceBookingId,
                 cancellationToken))
             .Returns(Task.FromResult<AccountingInvoiceExportLink?>(null));
+        A.CallTo(() => randomHelper.Generate()).Returns(accountingInvoiceExportLinkId);
 
         await sut.CancelBookingAsync(booking, cancellationToken);
 
         A.CallTo(() => accountingInvoiceLinkRepository.Add(A<AccountingInvoiceExportLink>.That.Matches(link =>
+                link.Id == accountingInvoiceExportLinkId &&
                 link.Provider == AccountingProviderConstants.Skedular &&
                 link.LocalEntityType == AccountingEntityTypeConstants.MarketplaceBooking &&
                 link.LocalEntityId == marketplaceBookingId &&
@@ -129,6 +134,7 @@ public class CancelBookingShould
         [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] IRandomHelper randomHelper,
         [Frozen] OrganizationConfiguration organizationConfiguration,
         [Frozen] TimeProvider timeProvider,
         [Frozen] CallInvoker callInvoker,
@@ -145,6 +151,7 @@ public class CancelBookingShould
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
+            randomHelper,
             timeProvider);
         var booking = new BookingEntity
         {
@@ -216,6 +223,7 @@ public class CancelBookingShould
         [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] IRandomHelper randomHelper,
         [Frozen] OrganizationConfiguration organizationConfiguration,
         [Frozen] TimeProvider timeProvider,
         [Frozen] CallInvoker callInvoker,
@@ -232,6 +240,7 @@ public class CancelBookingShould
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
+            randomHelper,
             timeProvider);
         var booking = new BookingEntity
         {
@@ -367,6 +376,7 @@ public class CancelBookingShould
         IRepositoryFactory repositoryFactory,
         IXeroSdkClientFactory xeroSdkClientFactory,
         IXeroTokenEncryptionService xeroTokenEncryptionService,
+        IRandomHelper randomHelper,
         TimeProvider timeProvider)
         : AccountingInvoiceCancellationService(
             organizationConfiguration,
@@ -374,6 +384,7 @@ public class CancelBookingShould
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
+            randomHelper,
             timeProvider)
     {
         public int CancelLiveStandardInvoiceCalls { get; private set; }
