@@ -76,7 +76,7 @@ const MarketplaceProductBookingWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<marketplaceProductBooking_rootQuery>(RootQuery);
   const { productId } = useKnownParams();
   const [selectedDate, setSelectedDate] = useState<Dayjs>(startOfDay());
-  const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([toOpeningHoursFromTime('08:00'), toOpeningHoursFromTime('17:00')]);
+  const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([toOpeningHoursFromTime('09:00'), toOpeningHoursFromTime('10:00')]);
 
   if (!productId) {
     throw new Error('productId is required');

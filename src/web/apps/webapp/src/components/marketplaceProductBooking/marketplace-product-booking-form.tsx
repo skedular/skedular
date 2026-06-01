@@ -18,11 +18,11 @@ import TextField from '@mui/material/TextField';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { formatPriceForDisplay, getRelayErrorMessage, toShortDate, useIntegratedPlatform } from '@skedular/shared';
+import { formatPriceForDisplay, getRelayErrorMessage, toOpeningHoursFromTime, toShortDate, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
@@ -35,6 +35,37 @@ type Props = {
   rootDataRelay: marketplaceProductBookingForm_query$key;
   selectedDate: Dayjs;
   timeRange: DateRange<Dayjs>;
+};
+
+type PricingDurationBounds = {
+  minDurationMinutes?: number | null;
+  maxDurationMinutes?: number | null;
+};
+
+const defaultBookingStartTime = '09:00';
+const defaultBookingDurationInMinutes = 60;
+
+const roundDurationUpToStep = (durationInMinutes: number, stepInMinutes: number) => Math.ceil(durationInMinutes / stepInMinutes) * stepInMinutes;
+
+const roundDurationDownToStep = (durationInMinutes: number, stepInMinutes: number) => Math.floor(durationInMinutes / stepInMinutes) * stepInMinutes;
+
+const getDefaultBookingDurationInMinutes = (pricingOption: PricingDurationBounds, slotSizeInMinutes: number) => {
+  const safeSlotSize = slotSizeInMinutes > 0 ? slotSizeInMinutes : 1;
+  const minimumDuration = pricingOption.minDurationMinutes ?? safeSlotSize;
+  const maximumDuration = pricingOption.maxDurationMinutes;
+  let duration = Math.max(defaultBookingDurationInMinutes, minimumDuration);
+
+  duration = roundDurationUpToStep(duration, safeSlotSize);
+
+  if (maximumDuration != null && duration > maximumDuration) {
+    duration = Math.max(safeSlotSize, roundDurationDownToStep(maximumDuration, safeSlotSize));
+  }
+
+  if (duration < minimumDuration) {
+    duration = minimumDuration;
+  }
+
+  return duration;
 };
 
 const bookingCategory = 'WORKING_FROM_COWORKING_SPACE' as BookingCategory;
@@ -188,11 +219,11 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
   const [quantity, setQuantity] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | ''>('');
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>(() => [...(rootData.me?.emails ?? [])]);
-  const [notes, setNotes] = useState('');
   const [availableResourcesCount, setAvailableResourcesCount] = useState<number | null>(null);
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
   const [availabilityErrorMessage, setAvailabilityErrorMessage] = useState('');
   const [hasAcceptedTermsAndConditions, setHasAcceptedTermsAndConditions] = useState(false);
+  const lastDefaultedPricingId = useRef('');
 
   const effectiveSelectedPricingId = useMemo(() => {
     if (bookingPricingOptions.some((item) => item.id === selectedPricingId)) {
@@ -212,6 +243,22 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
   );
   const isEventProduct = rootData.product?.type.type === 'EVENT';
   const isInArrearsBilling = selectedPricingOption?.billingMode === 'IN_ARREARS';
+
+  useEffect(() => {
+    if (!selectedPricingOption || lastDefaultedPricingId.current === selectedPricingOption.id) {
+      return;
+    }
+
+    lastDefaultedPricingId.current = selectedPricingOption.id;
+    const defaultFrom = toOpeningHoursFromTime(defaultBookingStartTime);
+    if (!defaultFrom) {
+      return;
+    }
+
+    const defaultUntil = defaultFrom.add(getDefaultBookingDurationInMinutes(selectedPricingOption, rootData.bookingSlotSizeInMinutes), 'minutes');
+
+    onTimeRangeChange([defaultFrom, defaultUntil]);
+  }, [onTimeRangeChange, rootData.bookingSlotSizeInMinutes, selectedPricingOption]);
 
   const acceptedPaymentMethods = useMemo(() => selectedPricingOption?.acceptedPaymentMethods ?? [], [selectedPricingOption]);
   const availablePaymentMethods = useMemo(
@@ -466,7 +513,6 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
           customerIds: [rootData.me.id],
           from: dateRangeValidation.from.toISOString(),
           until: dateRangeValidation.until.toISOString(),
-          notes,
           organizationCustomDomains: [organizationCustomDomain],
           organizationIds: [],
           teamIds: [],
@@ -627,8 +673,6 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
               }
               helperText="Separate multiple email addresses with commas."
             />
-
-            <TextField label="Notes" multiline minRows={3} value={notes} onChange={(event) => setNotes(event.target.value)} helperText="Optional notes for the workspace team." />
 
             <CustomerTermsAndConditionsPanel
               accepted={hasAcceptedTermsAndConditions}
