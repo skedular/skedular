@@ -48,8 +48,8 @@ describe('WebApp root page foundation', () => {
     render(<RootPage />);
 
     expect(screen.getByText('Public discovery root')).toBeInTheDocument();
-    expect(screen.getByText('Public discovery root').parentElement).toHaveAttribute('data-product-app', 'webapp');
-    expect(screen.getByText('Public discovery root').parentElement).toHaveAttribute('data-review-scope', 'public-discovery');
+    expect(screen.getByText('Public discovery root').closest('[data-product-app]')).toHaveAttribute('data-product-app', 'webapp');
+    expect(screen.getByText('Public discovery root').closest('[data-review-scope]')).toHaveAttribute('data-review-scope', 'public-discovery');
   });
 
   it('keeps custom domains on the customer-facing co-working storefront until private subdomain detection is wired', () => {
@@ -59,6 +59,6 @@ describe('WebApp root page foundation', () => {
 
     expect(screen.getByText('Customer-facing subdomain')).toBeInTheDocument();
     expect(screen.getByText('Customer-facing subdomain').parentElement).toHaveAttribute('data-customer-facing-entry', 'co-working-subdomain');
-    expect(screen.getByText('Customer-facing subdomain').parentElement?.parentElement).toHaveAttribute('data-review-scope', 'co-working-subdomain');
+    expect(screen.getByText('Customer-facing subdomain').closest('[data-review-scope]')).toHaveAttribute('data-review-scope', 'co-working-subdomain');
   });
 });

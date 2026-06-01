@@ -6,14 +6,24 @@ import OrganisationEmptyState from '../organisation-empty-state';
 describe('AppShellLayout', () => {
   it('renders the shared shell and review checkpoint', () => {
     render(
-      <AppShellLayout appName="WebApp Spaces" title="Spaces foundation" description="Operator workflows move here." reviewNote="Ready for review.">
-        <OrganisationEmptyState title="No co-working organisations available" description="Create or join one first." actionLabel="Create co-working organisation" />
+      <AppShellLayout appName="Skedular Spaces" title="Spaces foundation" description="Operator workflows move here." reviewNote="Ready for review.">
+        <OrganisationEmptyState title="No co-working organizations available" description="Create or join one first." actionLabel="Create co-working organization" />
       </AppShellLayout>,
     );
 
-    expect(screen.getByText('WebApp Spaces')).toBeInTheDocument();
+    expect(screen.getByText('Skedular Spaces')).toBeInTheDocument();
     expect(screen.getByText('Spaces foundation')).toBeInTheDocument();
     expect(screen.getByText('Review checkpoint')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Create co-working organisation' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Create co-working organization' })).toBeInTheDocument();
+  });
+
+  it('does not reserve header space for product switching', () => {
+    render(
+      <AppShellLayout appName="Skedular" title="Skedular foundation" description="Customer workflows.">
+        <div>Content</div>
+      </AppShellLayout>,
+    );
+
+    expect(screen.queryByRole('button', { name: 'Switch app' })).not.toBeInTheDocument();
   });
 });

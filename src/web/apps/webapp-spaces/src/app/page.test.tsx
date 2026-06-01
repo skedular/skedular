@@ -15,8 +15,8 @@ describe('WebApp root page foundation', () => {
     render(<RootPage />);
 
     expect(screen.getByText('Spaces root')).toBeInTheDocument();
-    expect(screen.getByText('Spaces root').parentElement).toHaveAttribute('data-product-app', 'webapp-spaces');
-    expect(screen.getByText('Spaces root').parentElement).toHaveAttribute('data-review-scope', 'spaces-entry');
+    expect(screen.getByText('Spaces root').closest('[data-product-app]')).toHaveAttribute('data-product-app', 'webapp-spaces');
+    expect(screen.getByText('Spaces root').closest('[data-review-scope]')).toHaveAttribute('data-review-scope', 'spaces-entry');
   });
 
   it('does not switch the Spaces root into a customer-facing storefront', () => {

@@ -1,4 +1,4 @@
-export const productAppIds = ['webapp', 'webapp-spaces', 'webapp-teams'] as const;
+export const productAppIds = ['webapp', 'webapp-teams', 'webapp-spaces'] as const;
 
 export type ProductAppId = (typeof productAppIds)[number];
 
@@ -22,25 +22,25 @@ export type ProductAppDefinition = {
 export const productAppDefinitions = {
   webapp: {
     id: 'webapp',
-    name: 'WebApp',
-    shortName: 'WebApp',
-    purpose: 'Customer-facing public discovery and customer organisation entry points.',
+    name: 'Skedular',
+    shortName: 'Skedular',
+    purpose: 'Customer-facing public discovery and customer organization entry points.',
     allowedOrganisationTypes: [],
     customerEntryTypes,
   },
   'webapp-spaces': {
     id: 'webapp-spaces',
-    name: 'WebApp Spaces',
+    name: 'Skedular Spaces',
     shortName: 'Spaces',
-    purpose: 'Marketplace and co-working organisation operator workflows.',
+    purpose: 'Marketplace and co-working organization operator workflows.',
     allowedOrganisationTypes: ['marketplace'],
     customerEntryTypes: [],
   },
   'webapp-teams': {
     id: 'webapp-teams',
-    name: 'WebApp Teams',
+    name: 'Skedular Teams',
     shortName: 'Teams',
-    purpose: 'Private organisation and team workflows.',
+    purpose: 'Private organization and team workflows.',
     allowedOrganisationTypes: ['private'],
     customerEntryTypes: [],
   },

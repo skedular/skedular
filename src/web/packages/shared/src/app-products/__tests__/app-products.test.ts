@@ -9,14 +9,20 @@ import {
 } from '../app-products';
 
 describe('app-products', () => {
-  it('keeps Teams scoped to private organisations without marketplace concepts', () => {
+  it('uses canonical Skedular product names', () => {
+    expect(getProductAppDefinition('webapp').name).toBe('Skedular');
+    expect(getProductAppDefinition('webapp-teams').name).toBe('Skedular Teams');
+    expect(getProductAppDefinition('webapp-spaces').name).toBe('Skedular Spaces');
+  });
+
+  it('keeps Teams scoped to private organizations without marketplace concepts', () => {
     expect(getProductAppDefinition('webapp-teams').allowedOrganisationTypes).toEqual(['private']);
     expect(canSelectOrganisationTypeInApp('webapp-teams', 'private')).toBe(true);
     expect(canSelectOrganisationTypeInApp('webapp-teams', 'marketplace')).toBe(false);
     expect(hasMarketplaceConcepts('webapp-teams')).toBe(false);
   });
 
-  it('keeps Spaces scoped to marketplace organisations without private organisation workflows', () => {
+  it('keeps Spaces scoped to marketplace organizations without private organization workflows', () => {
     expect(getProductAppDefinition('webapp-spaces').allowedOrganisationTypes).toEqual(['marketplace']);
     expect(canSelectOrganisationTypeInApp('webapp-spaces', 'marketplace')).toBe(true);
     expect(canSelectOrganisationTypeInApp('webapp-spaces', 'private')).toBe(false);

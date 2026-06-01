@@ -12,6 +12,9 @@ declare global {
       GOOGLE_MAPS_API_KEY: string;
       NEXT_PUBLIC_API_ENDPOINT: string;
       NEXT_PUBLIC_APPLICATION_REGISTRATION_ID: string;
+      NEXT_PUBLIC_SKEDULAR_APP_URL?: string;
+      NEXT_PUBLIC_SKEDULAR_TEAMS_APP_URL?: string;
+      NEXT_PUBLIC_SKEDULAR_SPACES_APP_URL?: string;
       COGNITO_DOMAIN: string;
       COGNITO_CLIENT_ID: string;
       COGNITO_CLIENT_SECRET: string;

@@ -1,6 +1,27 @@
 <!--
 SYNC IMPACT REPORT
 ==================
+Version change: 1.2.0 → 2.0.0
+
+Modified principles:
+  - IV. Frontend Consistency — switched user-facing/operator-facing copy standard from British
+    spelling and grammar to American spelling and grammar
+
+Added sections: none
+Removed sections: none
+
+Templates reviewed and alignment status:
+  ✅ .specify/templates/plan-template.md — updated IV review gate copy standard to American spelling
+  ✅ .specify/templates/spec-template.md — no direct localization rule; no change required
+  ✅ .specify/templates/tasks-template.md — no direct localization rule; no change required
+  ✅ AGENTS.md — updated repository agent guidance to American spelling
+  ✅ specs/019-app-switcher/* — updated active feature artifacts to American spelling
+
+Deferred TODOs: none
+-->
+<!--
+SYNC IMPACT REPORT
+==================
 Version change: 1.1.0 → 1.2.0
 
 Modified principles:
@@ -51,7 +72,7 @@ Deferred TODOs: none
 GraphQL-related contract surfaces. Generated outputs MUST NOT be hand-edited. When any contract
 changes, the correct generator script MUST be run before any downstream code change is made.
 `make generate` is the preferred umbrella regeneration entry point. GraphQL schema files,
-Relay web artefacts, and OpenAPI TypeScript clients MUST stay in sync with their backend
+Relay web artifacts, and OpenAPI TypeScript clients MUST stay in sync with their backend
 definitions; stale generated files are treated as broken builds.
 
 **Rationale**: Hand-edits to generated outputs are silently overwritten and introduce drift that
@@ -69,7 +90,7 @@ service or event interfaces, never through direct database or internal-class acc
 federation is the primary client-facing integration surface; REST/OpenAPI is secondary; gRPC is
 for internal inter-service communication only. Shared infrastructure and cross-cutting concerns
 MUST live in `shared/` libraries rather than being duplicated per-domain. Workflow ID
-construction MUST be centralised in a domain workflow-ID service, not scattered inline.
+construction MUST be centralized in a domain workflow-ID service, not scattered inline.
 
 **Rationale**: Clear ownership boundaries keep the blast radius of change small, preserve
 independent deployability, and prevent coupling that accumulates into architectural debt.
@@ -84,13 +105,13 @@ boundaries (database, Kafka, Temporal, external HTTP) MUST also include integrat
 System/end-to-end tests are reserved for true cross-domain or real-infrastructure scenarios.
 Integration tests MUST NOT access `DbContext` or Entity Framework directly; all persistence
 assertions MUST go through repository or query-layer methods. Web UI changes MUST use Vitest
-and React Testing Library. Tests MUST be scenario-driven and assert observable behaviour, not
+and React Testing Library. Tests MUST be scenario-driven and assert observable behavior, not
 internal implementation details. Any new or changed critical workflow MUST include tests that
 verify expected logging side effects at the appropriate boundary (for example, warning/error
 paths and key lifecycle transitions).
 
 **Rationale**: Proportionate testing keeps the suite fast and meaningful without under-testing
-behaviour that is genuinely risky. Banning raw EF in integration tests keeps assertions
+behavior that is genuinely risky. Banning raw EF in integration tests keeps assertions
 decoupled from persistence implementation choices.
 
 **Review gate**: PRs that touch persistence, event, or workflow code without accompanying
@@ -99,22 +120,22 @@ revision.
 
 ### IV. Frontend Consistency
 
-Web work MUST follow the Next.js App Router + Relay + generated-artefact model already
+Web work MUST follow the Next.js App Router + Relay + generated-artifact model already
 established in `web/apps/webapp`. Relay fragments MUST be collocated with the component that
-consumes them. Generated Relay artefacts and OpenAPI TypeScript clients MUST NOT be hand-edited.
+consumes them. Generated Relay artifacts and OpenAPI TypeScript clients MUST NOT be hand-edited.
 
-The Skedular web monorepo uses two centralised workspace packages that apply uniformly across
+The Skedular web monorepo uses two centralized workspace packages that apply uniformly across
 all three products (`webapp`, `webapp-teams`, `webapp-spaces`):
 
 - **`@skedular/ui`** (`web/packages/ui`) — the Skedular design system. Owns all visual
-  primitives: typography wrappers, layout building blocks, theme tokens, and colour palette.
+  primitives: typography wrappers, layout building blocks, theme tokens, and color palette.
   A change to `@skedular/ui` propagates to every product automatically. Feature and page
   components in any product MUST import typography wrappers from `@skedular/ui` (for example
   `import { BodyIconTypography } from '@skedular/ui'`) rather than importing MUI `Typography`
   directly. The only permitted exception is inside `web/packages/ui/src/typography/` itself,
   where MUI `Typography` is the low-level primitive being wrapped.
 
-- **`@skedular/shared`** (`web/packages/shared`) — the centralised shared application layer.
+- **`@skedular/shared`** (`web/packages/shared`) — the centralized shared application layer.
   Owns all cross-product runtime modules: React providers, hooks, utilities (date, name, Relay
   error helpers), MUI helpers, cookie consent, and image upload. All three products MUST import
   these modules from `@skedular/shared` rather than maintaining per-product copies.
@@ -125,28 +146,28 @@ components, route trees, per-product configuration (logger name, analytics tag I
 product-specific Relay queries. Auth entry points (sign-in, callback, account settings,
 notifications) remain in `webapp` and are shared entry points for all products.
 
-All user-facing and operator-facing copy MUST use British spelling and grammar; technical
+All user-facing and operator-facing copy MUST use American spelling and grammar; technical
 identifiers (API fields, routes, schema names) are exempt.
 
-**Rationale**: Centralising the design system and shared runtime modules into packages means a
+**Rationale**: Centralizing the design system and shared runtime modules into packages means a
 single change propagates to all products simultaneously, eliminating duplication and drift.
 Clear package boundaries (`@skedular/ui` for visual primitives, `@skedular/shared` for runtime
 infrastructure) make ownership decisions unambiguous and keep product apps focused on
 product-specific work.
 
-**Review gate**: PRs that hand-edit Relay artefacts, import MUI `Typography` directly in
+**Review gate**: PRs that hand-edit Relay artifacts, import MUI `Typography` directly in
 feature or page components (outside `web/packages/ui/src/typography/`), import
 typography wrappers from any path other than `@skedular/ui`, duplicate shared providers or
 utilities inside a product app instead of using `@skedular/shared`, or introduce
-American-English copy in user-facing strings MUST be corrected before merging.
+non-American-English copy in user-facing strings MUST be corrected before merging.
 
 ### V. Change Safety and Pattern Consistency
 
 Changes that affect contracts, schemas, event definitions, GraphQL types, or generated surfaces
 MUST explicitly account for regeneration and downstream impact before implementation begins.
-New work MUST favour consistency with existing patterns over introducing parallel abstractions.
+New work MUST favor consistency with existing patterns over introducing parallel abstractions.
 Any deviation from established patterns — new frameworks, alternative persistence approaches,
-alternative event serialisation — requires explicit justification documented in the relevant
+alternative event serialization — requires explicit justification documented in the relevant
 plan or ADR. Exceptions to any principle in this constitution MUST be rare, explicit, and
 justified; undocumented exceptions are violations. Any feature design that omits operational
 logging for its core flows is treated as a pattern violation unless an explicit exception is
@@ -156,13 +177,13 @@ approved and documented.
 independently reinvents patterns. Explicit justification for exceptions keeps the architecture
 legible and deviations visible to reviewers.
 
-**Review gate**: Plan and task artefacts for any feature that introduces a new shared pattern or
+**Review gate**: Plan and task artifacts for any feature that introduces a new shared pattern or
 deviates from an existing one MUST include a brief justification note before tasks are accepted.
 
 ### VI. Mandatory Feature Logging and Observability
 
 Every feature MUST include structured logging as a first-class deliverable. "Feature complete"
-means business behaviour, tests, and logs are all present. Logging MUST cover:
+means business behavior, tests, and logs are all present. Logging MUST cover:
 
 - start and completion of core feature workflows
 - meaningful state transitions and branch decisions
@@ -174,10 +195,10 @@ existing domain logging conventions in `shared/` and domain-specific libraries. 
 without operationally useful logs are non-compliant.
 
 **Rationale**: Reliable operations and incident response depend on reconstructing feature
-behaviour from logs without source-level debugging in production.
+behavior from logs without source-level debugging in production.
 
 **Review gate**: A feature PR MUST identify where logging was added or updated, and reviewers
-MUST reject changes that add feature behaviour without corresponding structured logs.
+MUST reject changes that add feature behavior without corresponding structured logs.
 
 ## Stack Reference
 
@@ -208,12 +229,12 @@ after self-review.
 - `PATCH` — non-semantic: wording, typo fixes, formatting, clarifications.
 
 **Compliance expectations**: The constitution applies to all feature branches and all
-contributors. Spec, plan, and task artefacts produced by `/speckit.specify`, `/speckit.plan`,
+contributors. Spec, plan, and task artifacts produced by `/speckit.specify`, `/speckit.plan`,
 and `/speckit.tasks` MUST reference the applicable review gates. Implementation PRs are expected
 to have been checked against every applicable gate before review is requested.
 
 **Logging and observability expectations**: For every feature, logging is mandatory rather than
-optional polish. Planning artefacts MUST call out logging scope. Task breakdowns MUST include
+optional polish. Planning artifacts MUST call out logging scope. Task breakdowns MUST include
 explicit logging implementation work. Verification MUST include checks that logs are emitted for
 successful and failure paths of the feature's primary workflows.
 
@@ -222,4 +243,4 @@ explicit, documented exception is agreed and committed alongside the change.
 
 ---
 
-**Version**: 1.2.0 | **Ratified**: 2026-04-14 | **Last Amended**: 2026-04-27
+**Version**: 2.0.0 | **Ratified**: 2026-04-14 | **Last Amended**: 2026-06-01

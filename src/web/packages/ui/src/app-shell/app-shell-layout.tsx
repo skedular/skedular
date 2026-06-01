@@ -56,7 +56,7 @@ const AppShellLayout = ({ appName, title, description, navigationItems = [], rev
             <Chip label={appName} size="small" sx={{ fontWeight: 600 }} />
           </Stack>
           {navigationItems.length > 0 ? (
-            <Stack direction="row" spacing={1.5} useFlexGap sx={{ flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+            <Stack direction="row" spacing={1.5} useFlexGap sx={{ flexWrap: 'wrap', justifyContent: 'flex-end', alignItems: 'center' }}>
               {navigationItems.map((item) => (
                 <Link
                   key={`${item.href}-${item.label}`}

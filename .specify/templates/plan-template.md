@@ -41,11 +41,11 @@ Answer each gate. If a gate fails, resolve the issue before proceeding.
       Confirm unit tests are planned. If persistence/integration boundaries are crossed, confirm integration tests
       are planned and will use repository-layer assertions (no raw `DbContext`).
 - [ ] **IV. Frontend** — Does this feature include web changes?
-      If yes, confirm Relay colocation, no hand-edited generated artefacts, typography wrappers used,
-      and British spelling in user-facing copy.
+      If yes, confirm Relay colocation, no hand-edited generated artifacts, typography wrappers used,
+      and American spelling in user-facing copy.
 - [ ] **V. Pattern Consistency** — Does this feature introduce a new pattern or deviate from an existing one?
       If yes, a brief justification MUST be documented here before tasks are accepted.
-- [ ] **VI. Logging** — Does this feature add or change behaviour?
+- [ ] **VI. Logging** — Does this feature add or change behavior?
       If yes, confirm structured logging scope is explicitly planned for core workflows,
       state transitions, integration boundaries, and failure paths.
 

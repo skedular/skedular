@@ -40,23 +40,23 @@ export const createAppShellModel = ({ appId, title, description, navigationItems
 export const getOrganisationEmptyStateCopy = (appId: ProductAppId): { title: string; description: string; actionLabel: string } => {
   if (appId === 'webapp-teams') {
     return {
-      title: 'No private organisations available',
-      description: 'Create or join a private organisation before using Teams workflows.',
-      actionLabel: 'Create private organisation',
+      title: 'No private organizations available',
+      description: 'Create or join a private organization before using Teams workflows.',
+      actionLabel: 'Create private organization',
     };
   }
 
   if (appId === 'webapp-spaces') {
     return {
-      title: 'No co-working organisations available',
-      description: 'Create or join a marketplace organisation before using Spaces workflows.',
-      actionLabel: 'Create co-working organisation',
+      title: 'No co-working organizations available',
+      description: 'Create or join a marketplace organization before using Spaces workflows.',
+      actionLabel: 'Create co-working organization',
     };
   }
 
   return {
-    title: 'No organisation selected',
-    description: 'Customer-facing discovery remains available without selecting an organisation.',
+    title: 'No organization selected',
+    description: 'Customer-facing discovery remains available without selecting an organization.',
     actionLabel: 'Browse locations',
   };
 };

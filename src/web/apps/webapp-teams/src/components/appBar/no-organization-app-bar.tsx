@@ -1,3 +1,4 @@
+import { createTeamsAppSwitcherModel } from '@/app/app-switcher-config';
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
 import { AddIcon, FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
@@ -18,12 +19,12 @@ import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
 import { getCustomerFullName, localNow, PaletteModeContext, SelectedPaletteModeContext, toLongDateTime, UpdatePaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { AppSwitcher, BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { memo, useContext, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { useInterval } from 'usehooks-ts';
 
@@ -73,6 +74,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo, hideOrganizationSelecto
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const appSwitcher = useMemo(() => createTeamsAppSwitcherModel({ logConfiguration: false }), []);
 
   useInterval(() => setCurrentTime(localNow()), 1000);
 
@@ -340,6 +342,10 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo, hideOrganizationSelecto
                 <CaptionIconTypography label={rootData.me?.email} />
               </StackColumn>
             </MenuItem>
+
+            <Divider />
+
+            <AppSwitcher model={appSwitcher} buttonMode="menu-item" />
 
             <Divider />
 

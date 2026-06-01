@@ -1,3 +1,4 @@
+import { createTeamsAppSwitcherModel } from '@/app/app-switcher-config';
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
 import { AddIcon, ClaimOwnership, FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
@@ -35,11 +36,11 @@ import {
   useIntegratedPlatform,
   useKnownParams,
 } from '@skedular/shared';
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { AppSwitcher, BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { memo, useContext, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { useInterval } from 'usehooks-ts';
 
@@ -90,6 +91,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
   const [claimLocationOwnershipDialogOpen, setClaimLocationOwnershipDialogOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const appSwitcher = useMemo(() => createTeamsAppSwitcherModel({ logConfiguration: false }), []);
 
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(() => {
     if (organizationCustomDomain && rootData.myOrganizations.some((item) => item.customDomain === organizationCustomDomain)) {
@@ -372,6 +374,10 @@ const AppBar = ({ rootDataRelay }: Props) => {
                 <CaptionIconTypography label={rootData.me?.email} />
               </StackColumn>
             </MenuItem>
+
+            <Divider />
+
+            <AppSwitcher model={appSwitcher} buttonMode="menu-item" />
 
             <Divider />
 
