@@ -1,15 +1,14 @@
-import { PaletteModeContext, RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform } from '@skedular/shared';
-import { getOrganizationBaseLink, getOrganizationLocationAddPrivateLink, getOrganizationLocationsBaseLink } from '@/components/links';
+import { getOrganizationBaseLink, getOrganizationLocationAddPrivateLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { AddPrivateOrganization } from '@/components/organization/addOrganization';
+import { getRelayErrorMessage, PaletteModeContext, RelayError, toRootError, useIntegratedPlatform } from '@skedular/shared';
 
 import { NoOrganizationRootShell } from '@/components/rootShell';
-import type { pageAddPrivateOrganization_claimLocationOwnershipMutation } from '@/queries/__generated__/pageAddPrivateOrganization_claimLocationOwnershipMutation.graphql';
 import type { pageAddPrivateOrganization_completeOnboardingMutation } from '@/queries/__generated__/pageAddPrivateOrganization_completeOnboardingMutation.graphql';
 import type { pageAddPrivateOrganization_rootQuery } from '@/queries/__generated__/pageAddPrivateOrganization_rootQuery.graphql';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -45,145 +44,60 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
     }
   `);
 
-  const [commitClaimLocationOwnership] = useMutation<pageAddPrivateOrganization_claimLocationOwnershipMutation>(graphql`
-    mutation pageAddPrivateOrganization_claimLocationOwnershipMutation($input: ClaimLocationOwnershipInput!) {
-      claimLocationOwnership(input: $input) {
-        clientMutationId
-      }
-    }
-  `);
-
   const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const searchParams = useSearchParams();
-  const locationUniqueClaimCode = searchParams.get('locationUniqueClaimCode');
 
-  const handleAdded = (id: string, customDomain: string) => {
-    if (locationUniqueClaimCode) {
-      commitClaimLocationOwnership({
-        variables: {
-          input: {
-            clientMutationId: uuid(),
-            organizationId: id,
-            uniqueClaimCode: locationUniqueClaimCode.toLocaleUpperCase(),
-          },
+  const handleAdded = (_organizationId: string, customDomain: string) => {
+    if (rootData.me.isOnboardingDone) {
+      router.push(
+        getOrganizationLocationAddPrivateLink(integratedPlatform, customDomain, {
+          redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
+        }),
+      );
+      onReloadRequired();
+
+      return;
+    }
+
+    commitCompleteOnboarding({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
         },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            themedToast(
-              <NotificationContent content={`We couldn't claim the location with code ${locationUniqueClaimCode}. ${getRelayErrorMessage(errors)}`} />,
-              errorNotificationOptions,
-            );
-          }
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+        }
 
-          router.push(getOrganizationLocationsBaseLink(integratedPlatform, customDomain));
-          onReloadRequired();
-        },
-        onError: (error) => {
-          themedToast(<NotificationContent content={`We couldn't claim the location with code ${locationUniqueClaimCode}. ${error.message}`} />, errorNotificationOptions);
-
-          if (rootData.me.isOnboardingDone) {
-            router.push(
-              getOrganizationLocationAddPrivateLink(integratedPlatform, customDomain, {
-                redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
-              }),
-            );
-            onReloadRequired();
-
-            return;
-          }
-          commitCompleteOnboarding({
-            variables: {
-              input: {
-                clientMutationId: uuid(),
-              },
-            },
-            onCompleted: (_, errors) => {
-              if (errors && errors.length > 0) {
-                themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
-              }
-
-              router.push(
-                getOrganizationLocationAddPrivateLink(integratedPlatform, customDomain, {
-                  redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
-                }),
-              );
-              onReloadRequired();
-            },
-            onError: (error) => {
-              themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${error.message}`} />, errorNotificationOptions);
-
-              router.push(
-                getOrganizationLocationAddPrivateLink(integratedPlatform, customDomain, {
-                  redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
-                }),
-              );
-              onReloadRequired();
-            },
-            optimisticResponse: {
-              completeOnboarding: {
-                customer: {
-                  id: rootData.me.id,
-                  isOnboardingDone: true,
-                },
-              },
-            },
-          });
-          onReloadRequired();
-        },
-      });
-    } else {
-      if (rootData.me.isOnboardingDone) {
         router.push(
           getOrganizationLocationAddPrivateLink(integratedPlatform, customDomain, {
             redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
           }),
         );
         onReloadRequired();
+      },
+      onError: (error) => {
+        themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${error.message}`} />, errorNotificationOptions);
 
-        return;
-      }
-
-      commitCompleteOnboarding({
-        variables: {
-          input: {
-            clientMutationId: uuid(),
+        router.push(
+          getOrganizationLocationAddPrivateLink(integratedPlatform, customDomain, {
+            redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
+          }),
+        );
+        onReloadRequired();
+      },
+      optimisticResponse: {
+        completeOnboarding: {
+          customer: {
+            id: rootData.me.id,
+            isOnboardingDone: true,
           },
         },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
-          }
-
-          router.push(
-            getOrganizationLocationAddPrivateLink(integratedPlatform, customDomain, {
-              redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
-            }),
-          );
-          onReloadRequired();
-        },
-        onError: (error) => {
-          themedToast(<NotificationContent content={`We couldn't finish setting up your account. ${error.message}`} />, errorNotificationOptions);
-
-          router.push(
-            getOrganizationLocationAddPrivateLink(integratedPlatform, customDomain, {
-              redirectUrl: getOrganizationBaseLink(integratedPlatform, customDomain),
-            }),
-          );
-          onReloadRequired();
-        },
-        optimisticResponse: {
-          completeOnboarding: {
-            customer: {
-              id: rootData.me.id,
-              isOnboardingDone: true,
-            },
-          },
-        },
-      });
-    }
+      },
+    });
   };
 
   const handleCancelled = () => {

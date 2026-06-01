@@ -142,7 +142,9 @@ Current recommendation:
    - reduce persistent left-nav dependence
    - redesign top-level shell for wider content areas
    - unify page headers and page actions
-   - move low-frequency secondary actions such as `Claim Location` into the authenticated profile menu instead of repeating them in page-level toolbar chrome
+
+- move low-frequency secondary actions into the authenticated profile menu instead of repeating them in page-level toolbar chrome
+
 2. Card system
    - define a consistent card anatomy:
      - media

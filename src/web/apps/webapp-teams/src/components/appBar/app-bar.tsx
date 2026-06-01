@@ -1,16 +1,8 @@
 import { createTeamsAppSwitcherModel } from '@/app/app-switcher-config';
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
-import { AddIcon, ClaimOwnership, FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
-import {
-  getNotificationsLink,
-  getOrganizationBaseLink,
-  getOrganizationLocationsBaseLink,
-  getOrganizationSetupLink,
-  getSettingsLink,
-  getSignOutReturnToLink,
-} from '@/components/links';
-import { ClaimLocationOwnershipDialog } from '@/components/location';
+import { AddIcon, FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
+import { getNotificationsLink, getOrganizationBaseLink, getOrganizationSetupLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -89,7 +81,6 @@ const AppBar = ({ rootDataRelay }: Props) => {
   const [themeMenuAnchorEl, setThemeMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
-  const [claimLocationOwnershipDialogOpen, setClaimLocationOwnershipDialogOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const appSwitcher = useMemo(() => createTeamsAppSwitcherModel({ logConfiguration: false }), []);
 
@@ -131,23 +122,6 @@ const AppBar = ({ rootDataRelay }: Props) => {
   const handleSubmitFeedbackClicked = () => {
     setProfileOpenAnchorEl(null);
     setSubmitFeedbackDialogOpen(true);
-  };
-
-  const handleClaimLocationOwnershipClicked = () => {
-    setProfileOpenAnchorEl(null);
-    setClaimLocationOwnershipDialogOpen(true);
-  };
-
-  const handleClaimLocationOwnershipCompleted = () => {
-    setClaimLocationOwnershipDialogOpen(false);
-
-    if (organizationCustomDomain) {
-      router.push(getOrganizationLocationsBaseLink(integratedPlatform, organizationCustomDomain));
-    }
-  };
-
-  const handleClaimLocationOwnershipCancelled = () => {
-    setClaimLocationOwnershipDialogOpen(false);
   };
 
   const handleSubmitFeedbackSendClick = () => {
@@ -389,14 +363,6 @@ const AppBar = ({ rootDataRelay }: Props) => {
               </MenuItem>
             )}
 
-            {organizationCustomDomain && (
-              <MenuItem onClick={handleClaimLocationOwnershipClicked}>
-                <SmallIconTypography startElement={<ClaimOwnership />} label="Claim Location" />
-              </MenuItem>
-            )}
-
-            <Divider />
-
             {/* Notifications & theme — shown in profile menu on mobile only */}
             <Box sx={{ display: { xs: 'block', md: 'none' } }}>
               <MenuItem component={NextLink} href={notificationsLink} onClick={handleProfileMenuCloseClick}>
@@ -461,16 +427,6 @@ const AppBar = ({ rootDataRelay }: Props) => {
         onSendClicked={handleSubmitFeedbackSendClick}
         onCancel={handleSubmitFeedbackCancelClick}
       />
-
-      {organizationCustomDomain && (
-        <ClaimLocationOwnershipDialog
-          connectionIds={[]}
-          isDialogOpen={claimLocationOwnershipDialogOpen}
-          onClaimClicked={handleClaimLocationOwnershipCompleted}
-          onCancel={handleClaimLocationOwnershipCancelled}
-          organizationCustomDomain={organizationCustomDomain}
-        />
-      )}
     </>
   );
 };
