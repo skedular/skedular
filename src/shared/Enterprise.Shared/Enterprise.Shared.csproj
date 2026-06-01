@@ -44,13 +44,13 @@
         <PackageReference Include="Grpc.Net.Client" Version="2.80.0"/>
 
         <!-- GraphQL (HotChocolate) -->
-        <PackageReference Include="HotChocolate" Version="16.0.9"/>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="16.0.9"/>
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="16.0.9"/>
-        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.9"/>
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="16.0.9"/>
-        <PackageReference Include="HotChocolate.Diagnostics" Version="16.0.9"/>
-        <PackageReference Include="HotChocolate.Subscriptions.Redis" Version="16.0.9"/>
+        <PackageReference Include="HotChocolate" Version="16.0.10"/>
+        <PackageReference Include="HotChocolate.AspNetCore" Version="16.0.10"/>
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="16.0.10"/>
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.10"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="16.0.10"/>
+        <PackageReference Include="HotChocolate.Diagnostics" Version="16.0.10"/>
+        <PackageReference Include="HotChocolate.Subscriptions.Redis" Version="16.0.10"/>
 
         <!-- ASP.NET Core -->
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.8"/>
