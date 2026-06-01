@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import GuestStoreFrontLocationsStrip from './guest-store-front-locations-strip';
@@ -87,8 +87,10 @@ describe('GuestStoreFrontLocationsStrip', () => {
     renderComponent();
 
     expect(screen.getByText('Harbour Workspace')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'View floor plan' })).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'View location' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Harbour Workspace/ }));
+
+    expect(screen.queryByRole('button', { name: 'Floor plan' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Details' })).toBeInTheDocument();
   });
 
   it('shows the view floor plan action when a location has at least one floor plan', () => {
@@ -96,6 +98,8 @@ describe('GuestStoreFrontLocationsStrip', () => {
 
     renderComponent();
 
-    expect(screen.getByRole('button', { name: 'View floor plan' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Harbour Workspace/ }));
+
+    expect(screen.getByRole('button', { name: 'Floor plan' })).toBeInTheDocument();
   });
 });

@@ -186,6 +186,7 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
 
   const [selectedLocationId, setSelectedLocationId] = useState('');
   const locations = useMemo(() => rootData.marketplaceLocations.edges.map((item) => item.node), [rootData.marketplaceLocations.edges]);
+  const selectedLocation = useMemo(() => locations.find((location) => location.id === selectedLocationId) ?? null, [locations, selectedLocationId]);
 
   useEffect(() => {
     if (!onLocationChange) {
@@ -199,12 +200,35 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
     return null;
   }
 
-  return (
-    <Box sx={{ mb: { xs: 3, md: 4 } }}>
-      <MediumHeadingIconTypography label="Locations" sx={{ mb: 0.75 }} />
-      <BodyIconTypography label="Pick a location to narrow results, or leave all locations selected." sx={{ opacity: 0.8, mb: 2 }} />
+  const selectedLocationOpenState = selectedLocation
+    ? getOpenState(selectedLocation.timezone, selectedLocation.openingHours.weekOpeningHours[getWeekdayKeyInTimezone(selectedLocation.timezone)])
+    : null;
 
-      <StackRow sx={{ overflowX: 'auto', pb: 1, flexWrap: 'nowrap', alignItems: 'stretch' }}>
+  return (
+    <Box sx={{ mb: { xs: 3, md: 4 }, minWidth: 0 }}>
+      <MediumHeadingIconTypography label="Locations" sx={{ mb: 0.75 }} />
+      <BodyIconTypography label="Filter products by location." sx={{ opacity: 0.8, mb: 1.5 }} />
+
+      <StackRow sx={{ overflowX: 'auto', pb: 0.5, flexWrap: 'nowrap', alignItems: 'center', gap: 1, scrollbarWidth: 'thin' }}>
+        <Box
+          component="button"
+          type="button"
+          onClick={() => setSelectedLocationId('')}
+          sx={{
+            border: 1,
+            borderColor: (theme) => (!selectedLocationId ? theme.palette.primary.main : theme.palette.divider),
+            backgroundColor: (theme) => (!selectedLocationId ? theme.palette.action.selected : theme.palette.background.paper),
+            borderRadius: 999,
+            px: 1.5,
+            py: 0.9,
+            cursor: 'pointer',
+            flex: '0 0 auto',
+            color: 'text.primary',
+          }}
+        >
+          <SubtitleIconTypography label="All locations" />
+        </Box>
+
         {locations.map((location) => {
           const isActive = location.id === selectedLocationId;
           const weekdayKey = getWeekdayKeyInTimezone(location.timezone);
@@ -213,80 +237,74 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
           return (
             <Box
               key={location.id}
+              component="button"
+              type="button"
               onClick={() => setSelectedLocationId((current) => (current === location.id ? '' : location.id))}
               sx={{
                 border: 1,
                 borderColor: (theme) => (isActive ? theme.palette.primary.main : theme.palette.divider),
                 backgroundColor: (theme) => (isActive ? theme.palette.action.selected : theme.palette.background.paper),
-                borderRadius: 2,
-                minWidth: 240,
-                p: 1.5,
+                borderRadius: 999,
+                px: 1.5,
+                py: 0.75,
                 cursor: 'pointer',
+                flex: '0 0 auto',
+                color: 'text.primary',
               }}
             >
-              <StackRow sx={{ mb: 0.5, justifyContent: 'space-between', flexWrap: 'nowrap' }}>
+              <StackRow spacing={1} sx={{ flexWrap: 'nowrap', alignItems: 'center' }}>
                 <SubtitleIconTypography label={location.name} />
                 <Chip
                   size="small"
-                  label={openState.isOpenNow ? 'Open now' : 'Closed'}
+                  label={openState.isOpenNow ? 'Open' : 'Closed'}
                   color={openState.isOpenNow ? 'success' : 'default'}
                   variant={openState.isOpenNow ? 'filled' : 'outlined'}
                 />
               </StackRow>
-              <CaptionIconTypography label={`Address: ${location.physicalAddress?.formattedAddress ?? 'Not available'}`} sx={{ opacity: 0.8 }} />
-              <Box sx={{ mt: 1, pt: 1, borderTop: 1, borderColor: (theme) => theme.palette.divider }}>
-                <CaptionIconTypography label={`Opening Hours: ${openState.label}`} sx={{ opacity: 0.9 }} />
-              </Box>
-              <Box sx={{ mt: 1.5, display: 'grid', gridTemplateColumns: location.floorPlanCount > 0 ? 'repeat(2, minmax(0, 1fr))' : '1fr', gap: 1 }}>
-                {location.floorPlanCount > 0 ? (
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      router.push(getMarketplaceLocationFloorPlansLink(integratedPlatform, location.id));
-                    }}
-                    sx={{
-                      textTransform: 'none',
-                      borderRadius: 2,
-                      backgroundColor: 'success.main',
-                      '&:hover': {
-                        backgroundColor: 'success.dark',
-                      },
-                    }}
-                  >
-                    View floor plan
-                  </Button>
-                ) : null}
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    router.push(getMarketplaceLocationLink(integratedPlatform, location.id));
-                  }}
-                  sx={{
-                    textTransform: 'none',
-                    fontWeight: 700,
-                    borderRadius: 2,
-                    borderWidth: 1.5,
-                    color: 'text.primary',
-                    borderColor: 'text.primary',
-                    backgroundColor: 'background.paper',
-                    '&:hover': {
-                      borderWidth: 1.5,
-                      borderColor: 'text.primary',
-                      backgroundColor: 'action.hover',
-                    },
-                  }}
-                >
-                  View location
-                </Button>
-              </Box>
             </Box>
           );
         })}
       </StackRow>
+
+      {selectedLocation && selectedLocationOpenState ? (
+        <Box
+          sx={{
+            mt: 1.5,
+            p: 1.5,
+            border: 1,
+            borderColor: (theme) => theme.palette.divider,
+            borderRadius: 2,
+            bgcolor: (theme) => theme.palette.background.paper,
+          }}
+        >
+          <StackRow sx={{ justifyContent: 'space-between', gap: 1.5, alignItems: 'center' }}>
+            <Box sx={{ minWidth: 0 }}>
+              <CaptionIconTypography label={selectedLocation.physicalAddress?.formattedAddress ?? 'Address not available'} sx={{ opacity: 0.8 }} />
+              <CaptionIconTypography label={selectedLocationOpenState.label} sx={{ opacity: 0.9, mt: 0.25 }} />
+            </Box>
+            <StackRow spacing={1} sx={{ flexWrap: 'nowrap' }}>
+              {selectedLocation.floorPlanCount > 0 ? (
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={() => router.push(getMarketplaceLocationFloorPlansLink(integratedPlatform, selectedLocation.id))}
+                  sx={{ textTransform: 'none', borderRadius: 2, whiteSpace: 'nowrap' }}
+                >
+                  Floor plan
+                </Button>
+              ) : null}
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => router.push(getMarketplaceLocationLink(integratedPlatform, selectedLocation.id))}
+                sx={{ textTransform: 'none', borderRadius: 2, whiteSpace: 'nowrap' }}
+              >
+                Details
+              </Button>
+            </StackRow>
+          </StackRow>
+        </Box>
+      ) : null}
     </Box>
   );
 };

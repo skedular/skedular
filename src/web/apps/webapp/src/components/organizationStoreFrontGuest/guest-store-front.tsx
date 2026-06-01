@@ -195,11 +195,7 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
         </Box>
       </Container>
 
-      <Container maxWidth="xl" sx={{ mt: { xs: 2, md: 3 } }}>
-        <GuestStoreFrontLocationsStrip rootDataRelay={rootData} onLocationChange={setSelectedLocationId} />
-      </Container>
-
-      <Container maxWidth="xl" sx={{ mt: { xs: 3, md: 5 }, mb: 7 }}>
+      <Container maxWidth="xl" sx={{ mt: { xs: 3, md: 5 }, mb: { xs: 2, md: 3 } }}>
         <Box
           sx={{
             display: 'flex',
@@ -299,6 +295,10 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
           {rootData.organizationPublic.marketplaceListingMetadata.subTitle && (
             <BodyIconTypography label={rootData.organizationPublic.marketplaceListingMetadata.subTitle} sx={{ opacity: 0.85 }} />
           )}
+        </Box>
+
+        <Box sx={{ mb: 4 }}>
+          <GuestStoreFrontLocationsStrip rootDataRelay={rootData} onLocationChange={setSelectedLocationId} />
         </Box>
 
         {selectedLocationId && selectedLocationProductsQueryReference ? (
