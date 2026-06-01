@@ -1,8 +1,9 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
-import { ArrowDownIcon, FeedbackIcon, HamburgerMenuIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
-import { getSettingsLink, getSignOutReturnToLink } from '@/components/links';
+import { ArrowDownIcon, BookingIcon, FeedbackIcon, HamburgerMenuIcon, SettingsIcon, SignOutIcon, SubscriptionsIcon, SystemModeIcon } from '@/components/icons';
+import { getMarketplaceBookingsLink, getMarketplaceSubscriptionsLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
 import { NoOrganizationMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
+import useKnownParams from '@/hooks/use-known-params';
 import type { organizationStoreFrontAppBar_query$key } from '@/queries/__generated__/organizationStoreFrontAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -50,6 +51,7 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
   );
 
   const { integratedPlatform } = useIntegratedPlatform();
+  const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const { signOut } = useAuth();
   const selectedThemeMode = useContext(SelectedPaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
@@ -113,6 +115,8 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
   });
 
   const settingsLink = getSettingsLink(integratedPlatform);
+  const bookingsLink = getMarketplaceBookingsLink(integratedPlatform, isCustomDomain, organizationCustomDomain);
+  const subscriptionsLink = getMarketplaceSubscriptionsLink(integratedPlatform, isCustomDomain, organizationCustomDomain);
   const selectedThemeIcon =
     selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;
 
@@ -294,6 +298,18 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
           <MenuItem>
             <Link component={NextLink} href={settingsLink}>
               <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
+            </Link>
+          </MenuItem>
+
+          <MenuItem>
+            <Link component={NextLink} href={bookingsLink}>
+              <SmallIconTypography startElement={<BookingIcon />} label="Bookings" />
+            </Link>
+          </MenuItem>
+
+          <MenuItem>
+            <Link component={NextLink} href={subscriptionsLink}>
+              <SmallIconTypography startElement={<SubscriptionsIcon />} label="Subscriptions" />
             </Link>
           </MenuItem>
 

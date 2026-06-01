@@ -14,11 +14,10 @@ import dayjs from 'dayjs';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import GuestStoreFrontActiveSubscriptionsStrip from './guest-store-front-active-subscriptions-strip';
+import GuestStoreFrontActivitySummary from './guest-store-front-activity-summary';
 import GuestStoreFrontFooter from './guest-store-front-footer';
 import GuestStoreFrontLocationsStrip from './guest-store-front-locations-strip';
 import GuestStoreFrontProductCard from './guest-store-front-product-card';
-import GuestStoreFrontUpcomingBookingsStrip from './guest-store-front-upcoming-bookings-strip';
 import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
@@ -54,14 +53,14 @@ const RootQuery = graphql`
     ...guestStoreFrontLocationsStrip_query
     ...guestStoreFrontProductCard_query
     ...guestStoreFrontFooter_query
-    ...guestStoreFrontUpcomingBookingsStrip_query
+    ...guestStoreFrontActivitySummary_query
       @arguments(
         bookingsSearchCriteriaFrom: $bookingsSearchCriteriaFrom
         bookingsSearchCriteriaTo: $bookingsSearchCriteriaTo
         includeUpcomingBookings: $includeUpcomingBookings
+        includeActiveSubscriptions: $includeActiveSubscriptions
         organizationCustomDomain: $organizationCustomDomain
       )
-    ...guestStoreFrontActiveSubscriptionsStrip_query @arguments(includeActiveSubscriptions: $includeActiveSubscriptions, organizationCustomDomain: $organizationCustomDomain)
   }
 `;
 
@@ -178,23 +177,6 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
 
   return (
     <Box sx={{ bgcolor: (theme) => theme.palette.background.default, minHeight: '100vh' }}>
-      <Container maxWidth="xl" sx={{ mt: { xs: 3, md: 4 } }}>
-        <Box
-          sx={{
-            display: 'grid',
-            gap: 2,
-            gridTemplateColumns: {
-              xs: '1fr',
-              lg: 'minmax(0, 1fr) minmax(0, 1fr)',
-            },
-            alignItems: 'start',
-          }}
-        >
-          <GuestStoreFrontUpcomingBookingsStrip rootDataRelay={rootData} />
-          <GuestStoreFrontActiveSubscriptionsStrip rootDataRelay={rootData} />
-        </Box>
-      </Container>
-
       <Container maxWidth="xl" sx={{ mt: { xs: 3, md: 5 }, mb: { xs: 2, md: 3 } }}>
         <Box
           sx={{
@@ -295,6 +277,10 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
           {rootData.organizationPublic.marketplaceListingMetadata.subTitle && (
             <BodyIconTypography label={rootData.organizationPublic.marketplaceListingMetadata.subTitle} sx={{ opacity: 0.85 }} />
           )}
+        </Box>
+
+        <Box sx={{ mb: 4 }}>
+          <GuestStoreFrontActivitySummary rootDataRelay={rootData} />
         </Box>
 
         <Box sx={{ mb: 4 }}>
