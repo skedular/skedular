@@ -3,6 +3,7 @@
 import { useLayoutEffect } from 'react';
 
 const defaultIconHref = '/images/skedular-icon-primary.svg';
+const storeFrontIconId = 'store-front-browser-metadata-icon';
 
 type Props = {
   organizationName: string;
@@ -17,13 +18,19 @@ const StoreFrontBrowserMetadata = ({ organizationName, organizationLogoUrl }: Pr
   }, [organizationName]);
 
   useLayoutEffect(() => {
-    // Remove all existing icon links (including any Next.js-injected ones) so
-    // the browser is forced to use ours and cannot fall back to the Skedular icon.
-    document.head.querySelectorAll('link[rel~="icon"]').forEach((el) => el.remove());
-    const link = document.createElement('link');
-    link.rel = 'icon';
-    link.href = organizationLogoUrl ?? defaultIconHref;
-    document.head.appendChild(link);
+    let link = document.getElementById(storeFrontIconId) as HTMLLinkElement | null;
+
+    if (!link) {
+      link = document.createElement('link') as HTMLLinkElement;
+    }
+
+    link.id = storeFrontIconId;
+    link.setAttribute('rel', 'icon');
+    link.setAttribute('href', organizationLogoUrl ?? defaultIconHref);
+
+    if (!link.parentNode) {
+      document.head.appendChild(link);
+    }
   }, [organizationLogoUrl]);
 
   return null;

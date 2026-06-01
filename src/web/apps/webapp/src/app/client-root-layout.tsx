@@ -1,5 +1,9 @@
 'use client';
 
+import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
+import { TeamsUserCredential } from '@microsoft/teamsfx';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import CssBaseline from '@mui/material/CssBaseline';
 import {
   AuthenticatedRelayProvider,
   DatePickerLocalizationProvider,
@@ -12,11 +16,6 @@ import {
   PaletteModeProvider,
   ThemeProvider,
 } from '@skedular/shared';
-import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
-
-import { TeamsUserCredential } from '@microsoft/teamsfx';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import CssBaseline from '@mui/material/CssBaseline';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AuthKitProvider, useAuth } from '@workos-inc/authkit-nextjs/components';
