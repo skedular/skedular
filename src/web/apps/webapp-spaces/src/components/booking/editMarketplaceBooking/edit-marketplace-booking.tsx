@@ -1,101 +1,68 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { SingleChoiceMarketplaceBookingCategory } from '@/components/booking';
 import InvoiceDownloadLinks from '@/components/booking/invoice-download-links';
+import RecurringBookingDeleteConfirmationDialog from '@/components/booking/recurring-booking-delete-confirmation-dialog';
+import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import type { editMarketplaceBooking_booking_query$key } from '@/queries/__generated__/editMarketplaceBooking_booking_query.graphql';
 import type { editMarketplaceBooking_booking_refetchableFragment } from '@/queries/__generated__/editMarketplaceBooking_booking_refetchableFragment.graphql';
-import type { editMarketplaceBooking_organizationMembers_query$key } from '@/queries/__generated__/editMarketplaceBooking_organizationMembers_query.graphql';
-import type { editMarketplaceBooking_organizationMembers_refetchableFragment } from '@/queries/__generated__/editMarketplaceBooking_organizationMembers_refetchableFragment.graphql';
+import type { editMarketplaceBooking_confirmBookingPaymentMutation } from '@/queries/__generated__/editMarketplaceBooking_confirmBookingPaymentMutation.graphql';
+import type { editMarketplaceBooking_deleteMarketplaceBookingMutation } from '@/queries/__generated__/editMarketplaceBooking_deleteMarketplaceBookingMutation.graphql';
+import type { editMarketplaceBooking_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/editMarketplaceBooking_deleteMarketplaceBookingSubscriptionMutation.graphql';
+import type { editMarketplaceBooking_makeBookingPaymentNotRequiredMutation } from '@/queries/__generated__/editMarketplaceBooking_makeBookingPaymentNotRequiredMutation.graphql';
 import type { editMarketplaceBooking_query$key } from '@/queries/__generated__/editMarketplaceBooking_query.graphql';
-import type {
-  BookingCategory,
-  editMarketplaceBooking_updateBookingMutation,
-  MarketplaceBookingPatchField,
-} from '@/queries/__generated__/editMarketplaceBooking_updateBookingMutation.graphql';
+import type { editMarketplaceBooking_rejectBookingPaymentMutation } from '@/queries/__generated__/editMarketplaceBooking_rejectBookingPaymentMutation.graphql';
 import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import {
   getCustomerFullName,
   getOpeningHoursFromDateTime,
   getRelayErrorMessage,
   isMidnight,
-  keyboardSearchDebounceTimeout,
   PaletteModeContext,
   toOpeningHoursFromTime,
   toShortDate,
   toShortTime,
 } from '@skedular/shared';
-import {
-  AppBarWithStackColumn,
-  BodyIconTypography,
-  defaultPadding,
-  FormFieldLabel,
-  FormStackColumn,
-  SectionIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-} from '@skedular/ui';
+import { BodyIconTypography, defaultPadding, PageHeaderPanel, SettingsSectionCard, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
-import { Autocomplete, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter } from 'next/navigation';
-import { memo, useCallback, useContext, useMemo, useRef, useState, useTransition } from 'react';
-import { Form } from 'react-final-form';
+import { memo, useCallback, useContext, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
-import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
-import { object, string } from 'yup';
 
 type Props = {
   rootDataRelay: editMarketplaceBooking_query$key;
   rootDataBookingRelay: editMarketplaceBooking_booking_query$key;
-  rootDataOrganizationMembersRelay: editMarketplaceBooking_organizationMembers_query$key;
   onReloadRequired?: () => void;
 };
 
-type CustomerDetails = {
-  id: string;
-  name: string | null | undefined;
-  givenName: string | null | undefined;
-  middleName: string | null | undefined;
-  familyName: string | null | undefined;
-  photoUrl: string | null | undefined;
-};
+const canShowMarketplacePaymentActions = (paymentStatusType: string | undefined, isPaymentRequired: boolean | undefined) =>
+  !!isPaymentRequired && paymentStatusType !== 'REJECTED' && paymentStatusType !== 'EXPIRED' && paymentStatusType !== 'RECORD_NEVER_CREATED';
 
-type OrganizationMemberDetails = {
-  id: string;
-  customer: CustomerDetails;
-};
-
-type BookingDetails = {
-  member: string;
-  notes: string | null | undefined;
-  category: string;
-};
-
-const bookingSchema = object({
-  member: string().required('User is required'),
-  notes: string().notRequired(),
-  category: string().required('Category is required'),
-});
-const bookingAutosaveDebounceTimeout = 1000;
-
-const getChangedMarketplaceBookingFields = (left: BookingDetails | null, right: BookingDetails): MarketplaceBookingPatchField[] => {
-  if (!left) return [];
-  const changed: MarketplaceBookingPatchField[] = [];
-  if (left.member !== right.member) changed.push('PARTICIPANTS');
-  if (left.notes !== right.notes) changed.push('NOTES');
-  if (left.category !== right.category) changed.push('CATEGORY');
-  return changed;
-};
-
-const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataOrganizationMembersRelay }: Props) => {
+const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired }: Props) => {
   const rootData = useFragment<editMarketplaceBooking_query$key>(
     graphql`
       fragment editMarketplaceBooking_query on Query {
-        ...singleChoiceMarketplaceBookingCategory_query
+        organizationBookingPermissions(organizationCustomDomain: $organizationCustomDomain) {
+          canModifyPaymentMethod
+        }
+        marketplaceBookingSubscriptions(first: 100, where: { organizationCustomDomain: $organizationCustomDomain }) {
+          edges {
+            node {
+              id
+              recurringBookings {
+                id
+              }
+            }
+          }
+        }
+        paymentStatuses {
+          type
+          name
+        }
       }
     `,
     rootDataRelay,
@@ -149,12 +116,46 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataO
             }
           }
           marketplaceBooking {
+            id
             isPaymentRequired
             paymentStatus {
               type
               name
             }
             invoiceUrl
+            refund {
+              id
+              currency {
+                type
+                name
+              }
+              status {
+                type
+                name
+              }
+              requestedAt
+              lastProcessedAt
+              refundAmount
+              refundPercentage
+              currencyToDisplay
+              reason
+              lastError
+              externalRefundNumber
+              requestedByCustomerName
+              canProcessInXero
+              xeroProcessingBlockedReason
+            }
+          }
+          recurringBooking {
+            id
+            startDate
+            endDate
+            frequency {
+              name
+            }
+            marketplaceBooking {
+              id
+            }
           }
           arrearsInvoices {
             invoiceNumber
@@ -168,85 +169,76 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataO
     rootDataBookingRelay,
   );
 
-  const [rootDataOrganizationMembers, refetchOrganizationMembers] = useRefetchableFragment<
-    editMarketplaceBooking_organizationMembers_refetchableFragment,
-    editMarketplaceBooking_organizationMembers_query$key
-  >(
-    graphql`
-      fragment editMarketplaceBooking_organizationMembers_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "editMarketplaceBooking_organizationMembers_refetchableFragment") {
-        organization(customDomain: $organizationCustomDomain) {
-          members(first: $count, after: $cursor, where: { nameContains: $peopleNameSearchText }, orderBy: $organizationMembersSortingValues)
-            @connection(key: "bookingDetailsSelectorQuery_members") {
-            __id
-            totalCount
-            edges {
-              node {
-                id
-                customer {
-                  id
-                  name
-                  givenName
-                  middleName
-                  familyName
-                  photoUrl
-                }
-              }
+  const [commitDeleteMarketplaceBooking] = useMutation<editMarketplaceBooking_deleteMarketplaceBookingMutation>(graphql`
+    mutation editMarketplaceBooking_deleteMarketplaceBookingMutation($input: DeleteMarketplaceBookingInput!) {
+      deleteMarketplaceBooking(input: $input) {
+        booking {
+          id
+        }
+      }
+    }
+  `);
+
+  const [commitDeleteMarketplaceBookingSubscription] = useMutation<editMarketplaceBooking_deleteMarketplaceBookingSubscriptionMutation>(graphql`
+    mutation editMarketplaceBooking_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
+      deleteMarketplaceBookingSubscription(input: $input) {
+        marketplaceBookingSubscription {
+          id
+          cancelAtPeriodEnd
+          nextRenewalAt
+          status {
+            type
+            name
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitConfirmBookingPayment] = useMutation<editMarketplaceBooking_confirmBookingPaymentMutation>(graphql`
+    mutation editMarketplaceBooking_confirmBookingPaymentMutation($input: ConfirmBookingPaymentInput!) @raw_response_type {
+      confirmBookingPayment(input: $input) {
+        booking {
+          id
+          marketplaceBooking {
+            id
+            paymentStatus {
+              type
+              name
             }
           }
         }
       }
-    `,
-    rootDataOrganizationMembersRelay,
-  );
+    }
+  `);
 
-  const [commitUpdateMarketplaceBooking] = useMutation<editMarketplaceBooking_updateBookingMutation>(graphql`
-    mutation editMarketplaceBooking_updateBookingMutation($input: UpdateMarketplaceBookingInput!) @raw_response_type {
-      updateMarketplaceBooking(input: $input) {
+  const [commitRejectBookingPayment] = useMutation<editMarketplaceBooking_rejectBookingPaymentMutation>(graphql`
+    mutation editMarketplaceBooking_rejectBookingPaymentMutation($input: RejectBookingPaymentInput!) @raw_response_type {
+      rejectBookingPayment(input: $input) {
         booking {
           id
-          from
-          until
-          notes
-          category {
-            category
-            name
-          }
-          involvedCustomers {
+          marketplaceBooking {
             id
-            name
-            givenName
-            middleName
-            familyName
-            photoUrl
-          }
-          involvedOrganizations {
-            id
-            name
-          }
-          involvedLocations {
-            name
-          }
-          involvedTeams {
-            id
-            name
-          }
-          bookingResources {
-            resource {
-              id
+            paymentStatus {
+              type
               name
-              color
-              customTags {
-                id
-                name
-                color
-              }
-              zones {
-                id
-                name
-                color
-              }
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitMakeBookingPaymentNotRequired] = useMutation<editMarketplaceBooking_makeBookingPaymentNotRequiredMutation>(graphql`
+    mutation editMarketplaceBooking_makeBookingPaymentNotRequiredMutation($input: MakeBookingPaymentNotRequiredInput!) @raw_response_type {
+      makeBookingPaymentNotRequired(input: $input) {
+        booking {
+          id
+          marketplaceBooking {
+            id
+            paymentStatus {
+              type
+              name
             }
           }
         }
@@ -257,10 +249,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataO
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const [, startTransition] = useTransition();
-  const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
-  const validate = makeValidate(bookingSchema);
-  const requiredFields = makeRequired(bookingSchema);
+  const [pendingRecurringSeriesCancellation, setPendingRecurringSeriesCancellation] = useState(false);
   const allDay = useMemo<boolean>(
     () => isMidnight(rootDataBooking.booking?.from) && isMidnight(rootDataBooking.booking?.until),
     [rootDataBooking.booking?.from, rootDataBooking.booking?.until],
@@ -269,225 +258,408 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataO
     () => [toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootDataBooking.booking?.from)), toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootDataBooking.booking?.until))],
     [rootDataBooking.booking?.from, rootDataBooking.booking?.until],
   );
-  const [customerId, setCustomerId] = useState<string | undefined>(
-    rootDataBooking.booking?.involvedCustomers && rootDataBooking.booking?.involvedCustomers.length > 0 ? rootDataBooking.booking?.involvedCustomers[0].id : undefined,
-  );
-  const customers = useMemo<OrganizationMemberDetails[]>(
-    () => (rootDataOrganizationMembers.organization?.members ? rootDataOrganizationMembers.organization?.members.edges.map(({ node }) => node) : []),
-    [rootDataOrganizationMembers.organization?.members],
-  );
-  const initialBookingValues = useMemo<BookingDetails | null>(
-    () =>
-      rootDataBooking.booking
-        ? {
-            member: customerId ?? '',
-            notes: rootDataBooking.booking.notes,
-            category: rootDataBooking.booking.category.category,
-          }
-        : null,
-    [customerId, rootDataBooking.booking],
-  );
-  const previousBookingValues = useRef<BookingDetails | null>(initialBookingValues);
-
-  const handleRefetchOrganizationMembers = useCallback(
-    (peopleNameSearchText: string) => {
-      startTransition(() => {
-        refetchOrganizationMembers(
-          {
-            peopleNameSearchText,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-          },
-        );
-      });
-    },
-    [startTransition, refetchOrganizationMembers],
-  );
-
-  const handleCloseClick = () => {
-    router.back();
-  };
-
-  const handleBookingDetailUpdateClick = (fieldsToUpdate: MarketplaceBookingPatchField[], { member: memberId, notes, category }: BookingDetails) => {
+  const getBookingDetailsInfo = useCallback(() => {
     const booking = rootDataBooking.booking;
-    if (
-      !booking ||
-      !bookingSchema.isValidSync({ member: memberId, notes, category }) ||
-      (booking.marketplaceBooking?.paymentStatus.type !== 'NO_PAYMENT_REQUIRED' && booking.marketplaceBooking?.paymentStatus.type !== 'CONFIRMED')
-    ) {
+    if (!booking) {
+      return 'this booking';
+    }
+
+    let bookingDetailsInfo = `for ${getCustomerFullName(booking.involvedCustomers[0])}`;
+    if (booking.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${booking.involvedLocations[0]!.name}"`;
+    }
+
+    bookingDetailsInfo += ` on ${toShortDate(booking.from)}`;
+    return bookingDetailsInfo;
+  }, [rootDataBooking.booking]);
+
+  const handleRemoveBookingClick = () => {
+    const booking = rootDataBooking.booking;
+    if (!booking) {
       return;
     }
 
-    const shortDateTimeFormatFrom = toShortDate(booking.from);
-
-    commitUpdateMarketplaceBooking({
+    const bookingDetailsInfo = getBookingDetailsInfo();
+    commitDeleteMarketplaceBooking({
       variables: {
         input: {
           clientMutationId: uuid(),
           id: booking.id,
-          fieldsToUpdate,
-          notes,
-          category: category as BookingCategory,
-          customerIds: [memberId],
-          organizationIds: booking.involvedOrganizations.map(({ id }) => id),
-          teamIds: [],
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          themedToast(<NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+          themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
+
+        router.back();
       },
       onError: (error) => {
-        themedToast(<NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />, errorNotificationOptions);
+        themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
+      },
+    });
+  };
+
+  const handleRemoveRecurringSeriesClick = () => {
+    setPendingRecurringSeriesCancellation(true);
+  };
+
+  const handleCancelRecurringSeriesCancellationClick = () => {
+    setPendingRecurringSeriesCancellation(false);
+  };
+
+  const handleConfirmRecurringSeriesCancellationClick = () => {
+    const recurringBooking = rootDataBooking.booking?.recurringBooking;
+    if (!recurringBooking) {
+      return;
+    }
+
+    const subscription = rootData.marketplaceBookingSubscriptions.edges
+      .map(({ node }) => node)
+      .find((subscription) => subscription.recurringBookings.some((item) => item.id === recurringBooking.id));
+
+    if (!subscription) {
+      themedToast(<NotificationContent content="We couldn't find the recurring series for this booking." />, errorNotificationOptions);
+      setPendingRecurringSeriesCancellation(false);
+
+      return;
+    }
+
+    commitDeleteMarketplaceBookingSubscription({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: subscription.id,
+          cancellationMode: 'IMMEDIATE',
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          themedToast(<NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+
+          return;
+        }
+
+        onReloadRequired?.();
+        router.back();
+      },
+      onError: (error) => {
+        themedToast(<NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
+      },
+    });
+    setPendingRecurringSeriesCancellation(false);
+  };
+
+  const handleConfirmPaymentClick = () => {
+    const booking = rootDataBooking.booking;
+    if (!booking) {
+      return;
+    }
+
+    const bookingDetailsInfo = getBookingDetailsInfo();
+    commitConfirmBookingPayment({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: booking.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          themedToast(
+            <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
+
+          return;
+        }
+
+        onReloadRequired?.();
+      },
+      onError: (error) => {
+        themedToast(
+          <NotificationContent content={`Failed to confirm payment for booking '${toShortDate(booking.from)}'. Error: ${getRelayErrorMessage(error)}.`} />,
+          errorNotificationOptions,
+        );
       },
       optimisticResponse: {
-        updateMarketplaceBooking: {
+        confirmBookingPayment: {
           booking: {
             id: booking.id,
-            from: booking.from,
-            until: booking.until,
-            notes,
-            category: {
-              category: category as BookingCategory,
-              name: '',
-            },
-            involvedCustomers: [
-              {
-                id: '',
-                name: '',
-                givenName: '',
-                middleName: '',
-                familyName: '',
-                photoUrl: '',
+            marketplaceBooking: {
+              id: booking.marketplaceBooking?.id ?? uuid(),
+              paymentStatus: {
+                type: 'CONFIRMED',
+                name: rootData.paymentStatuses.find((status) => status.type === 'CONFIRMED')!.name,
               },
-            ],
-            involvedOrganizations: [],
-            involvedLocations: [],
-            involvedTeams: [],
-            bookingResources: booking.bookingResources,
+            },
           },
         },
       },
     });
   };
-  const debouncedBookingDetailUpdate = useDebounceCallback(handleBookingDetailUpdateClick, bookingAutosaveDebounceTimeout);
 
-  const handleMemberChange = (option: OrganizationMemberDetails | null) => {
-    if (!rootDataBooking.booking) {
+  const handleRejectPaymentClick = () => {
+    const booking = rootDataBooking.booking;
+    if (!booking) {
       return;
     }
 
-    const customerId = option?.customer.id;
-    setCustomerId(customerId);
+    const bookingDetailsInfo = getBookingDetailsInfo();
+    commitRejectBookingPayment({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: booking.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          themedToast(
+            <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
+
+          return;
+        }
+
+        onReloadRequired?.();
+      },
+      onError: (error) => {
+        themedToast(
+          <NotificationContent content={`Failed to reject payment for booking '${toShortDate(booking.from)}'. Error: ${getRelayErrorMessage(error)}.`} />,
+          errorNotificationOptions,
+        );
+      },
+      optimisticResponse: {
+        rejectBookingPayment: {
+          booking: {
+            id: booking.id,
+            marketplaceBooking: {
+              id: booking.marketplaceBooking?.id ?? uuid(),
+              paymentStatus: {
+                type: 'REJECTED',
+                name: rootData.paymentStatuses.find((status) => status.type === 'REJECTED')!.name,
+              },
+            },
+          },
+        },
+      },
+    });
   };
 
-  const handlePeopleNameSearchTextChange = (str: string) => {
-    setPeopleNameSearchText(str);
+  const handleMakePaymentNotRequiredClick = () => {
+    const booking = rootDataBooking.booking;
+    if (!booking) {
+      return;
+    }
 
-    handleRefetchOrganizationMembers(str);
+    const bookingDetailsInfo = getBookingDetailsInfo();
+    commitMakeBookingPaymentNotRequired({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: booking.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          themedToast(
+            <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${getRelayErrorMessage(errors)}.`} />,
+            errorNotificationOptions,
+          );
+
+          return;
+        }
+
+        onReloadRequired?.();
+      },
+      onError: (error) => {
+        themedToast(
+          <NotificationContent content={`Failed to make payment for booking '${toShortDate(booking.from)}' not required. Error: ${getRelayErrorMessage(error)}.`} />,
+          errorNotificationOptions,
+        );
+      },
+      optimisticResponse: {
+        makeBookingPaymentNotRequired: {
+          booking: {
+            id: booking.id,
+            marketplaceBooking: {
+              id: booking.marketplaceBooking?.id ?? uuid(),
+              paymentStatus: {
+                type: 'NO_PAYMENT_REQUIRED',
+                name: rootData.paymentStatuses.find((status) => status.type === 'NO_PAYMENT_REQUIRED')!.name,
+              },
+            },
+          },
+        },
+      },
+    });
   };
-
-  const debounceSearchTextChange = useDebounceCallback(handlePeopleNameSearchTextChange, keyboardSearchDebounceTimeout);
 
   if (!rootDataBooking.booking) {
     return null;
   }
 
   const booking = rootDataBooking.booking;
+  const pageTitle = booking.involvedCustomers.length > 0 ? `Edit Booking - ${getCustomerFullName(booking.involvedCustomers[0])}` : 'Edit Booking';
+  const recurringBooking = booking.recurringBooking;
+  const recurringSeriesLabel = recurringBooking ? `${recurringBooking.frequency.name} recurring booking` : null;
+  const recurringSeriesDateLabel = recurringBooking
+    ? recurringBooking.endDate
+      ? `${toShortDate(recurringBooking.startDate)} - ${toShortDate(recurringBooking.endDate)}`
+      : `Starts ${toShortDate(recurringBooking.startDate)}`
+    : null;
+  const canManagePayment =
+    rootData.organizationBookingPermissions.canModifyPaymentMethod &&
+    canShowMarketplacePaymentActions(booking.marketplaceBooking?.paymentStatus.type, booking.marketplaceBooking?.isPaymentRequired);
+  const canManageRefund = rootData.organizationBookingPermissions.canModifyPaymentMethod && !!booking.marketplaceBooking?.refund;
+  const paymentStatusColor =
+    booking.marketplaceBooking?.paymentStatus.type === 'CONFIRMED' ? 'success' : booking.marketplaceBooking?.paymentStatus.type === 'PENDING' ? 'warning' : 'default';
+  const primaryCustomer = booking.involvedCustomers[0];
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Booking Information">
-          <Form
-            onSubmit={() => undefined}
-            initialValues={initialBookingValues}
-            validate={validate}
-            render={({ handleSubmit, values }) => {
-              const bookingValues = values as BookingDetails;
-              const changedFields = getChangedMarketplaceBookingFields(previousBookingValues.current, bookingValues);
-              if (changedFields.length > 0) {
-                previousBookingValues.current = bookingValues;
-                debouncedBookingDetailUpdate(changedFields, bookingValues);
-              }
+    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pt: { xs: 2, md: 3 }, pb: defaultPadding }}>
+      <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', backgroundColor: 'transparent', gap: 2 }}>
+        <PageHeaderPanel
+          eyebrow="Marketplace Booking"
+          title={pageTitle}
+          description="Update booking details and manage marketplace payment, invoice, cancellation, and refund actions from one place."
+          actions={recurringSeriesLabel ? <Chip label="Recurring" variant="outlined" size="small" /> : undefined}
+        />
 
-              return (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <SectionIconTypography label="Edit Booking" />
-                    <BodyIconTypography label="Edit your booking details" />
-                    <Divider />
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'minmax(0, 1fr) 360px' }, gap: 2, alignItems: 'start' }}>
+          <StackColumn spacing={2} sx={{ minWidth: 0 }}>
+            <SettingsSectionCard title="Customer Details" description="The customer on a marketplace booking is kept read-only from this admin view.">
+              {primaryCustomer ? (
+                <StackRow spacing={1.5} sx={{ alignItems: 'center', flexWrap: 'nowrap', minWidth: 0 }}>
+                  <CustomerAvatar name={primaryCustomer} photo={{ url: primaryCustomer.photoUrl }} size="medium" />
+                  <StackColumn spacing={0.25} sx={{ minWidth: 0 }}>
+                    <SubtitleIconTypography label={getCustomerFullName(primaryCustomer)} sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} />
+                    <SmallIconTypography label="Marketplace customer" sx={{ opacity: 0.72 }} />
                   </StackColumn>
+                </StackRow>
+              ) : (
+                <BodyIconTypography label="No customer is assigned to this booking." />
+              )}
+            </SettingsSectionCard>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Payment Status" stackLabelOnTop>
-                      <SmallIconTypography label={booking.marketplaceBooking?.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Date/Time" stackLabelOnTop>
-                      <StackRow>
-                        <BodyIconTypography label={`${toShortDate(booking.from)}, `} />
-                        {allDay && <BodyIconTypography label="All day" />}
-                        {!allDay && <BodyIconTypography label={`${toShortTime(timeRange[0])} - ${toShortTime(timeRange[1])}`} />}
-                      </StackRow>
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Invoice" stackLabelOnTop>
-                      <InvoiceDownloadLinks invoices={booking.arrearsInvoices ?? []} legacyInvoiceUrl={booking.marketplaceBooking?.invoiceUrl ?? null} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="User">
-                      <Autocomplete
-                        name="member"
-                        multiple={false}
-                        required={requiredFields.member}
-                        options={customers}
-                        getOptionValue={(option) => (option as OrganizationMemberDetails).customer.id}
-                        getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
-                        renderOption={(props, option) => {
-                          const castedOption = (option as OrganizationMemberDetails).customer;
-
-                          return (
-                            <li {...props} key={castedOption.id}>
-                              <BodyIconTypography
-                                label={getCustomerFullName(castedOption)}
-                                startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
-                              />
-                            </li>
-                          );
-                        }}
-                        filterOptions={(options, params) => {
-                          if (params.inputValue !== peopleNameSearchText) {
-                            debounceSearchTextChange(params.inputValue);
-                          }
-
-                          return options;
-                        }}
-                        selectOnFocus
-                        clearOnBlur
-                        handleHomeEndKeys
-                        onChange={(_, option) => handleMemberChange(option as OrganizationMemberDetails)}
-                      />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Notes">
-                      <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Category">
-                      <SingleChoiceMarketplaceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
-                    </FormFieldLabel>
+            <SettingsSectionCard title="Payment Actions" description="Payment and cancellation controls match the marketplace booking card.">
+              <StackColumn spacing={1.25}>
+                {canManagePayment ? (
+                  <StackColumn spacing={1}>
+                    <SubtitleIconTypography label="Payment" />
+                    <StackRow spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                      <Button variant="contained" onClick={handleConfirmPaymentClick}>
+                        Confirm Payment
+                      </Button>
+                      <Button variant="outlined" onClick={handleRejectPaymentClick}>
+                        Reject Payment
+                      </Button>
+                      <Button variant="outlined" onClick={handleMakePaymentNotRequiredClick}>
+                        Make Payment Not Required
+                      </Button>
+                    </StackRow>
                   </StackColumn>
-                </FormStackColumn>
-              );
-            }}
-          />
-        </AppBarWithStackColumn>
-      </Box>
+                ) : (
+                  <BodyIconTypography label="No payment action is currently available for this booking." sx={{ opacity: 0.78 }} />
+                )}
+
+                <StackColumn spacing={1}>
+                  <SubtitleIconTypography label="Cancellation" />
+                  {recurringBooking?.marketplaceBooking ? (
+                    <Button color="error" variant="outlined" onClick={handleRemoveRecurringSeriesClick} sx={{ alignSelf: 'flex-start' }}>
+                      Cancel Series
+                    </Button>
+                  ) : (
+                    <Button color="error" variant="outlined" onClick={handleRemoveBookingClick} sx={{ alignSelf: 'flex-start' }}>
+                      Remove Booking
+                    </Button>
+                  )}
+                </StackColumn>
+              </StackColumn>
+            </SettingsSectionCard>
+          </StackColumn>
+
+          <StackColumn spacing={2} sx={{ minWidth: 0 }}>
+            <SettingsSectionCard title="Booking Summary" description="Current marketplace booking status and billing links.">
+              <StackColumn spacing={1.5}>
+                <StackColumn spacing={0.4}>
+                  <SmallIconTypography label="Date/Time" sx={{ opacity: 0.68, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
+                  <StackRow>
+                    <SubtitleIconTypography label={`${toShortDate(booking.from)}, `} />
+                    {allDay && <SubtitleIconTypography label="All day" />}
+                    {!allDay && <SubtitleIconTypography label={`${toShortTime(timeRange[0])} - ${toShortTime(timeRange[1])}`} />}
+                  </StackRow>
+                </StackColumn>
+
+                {recurringSeriesLabel ? (
+                  <StackColumn spacing={0.4}>
+                    <SmallIconTypography label="Recurring Series" sx={{ opacity: 0.68, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
+                    <SubtitleIconTypography label={recurringSeriesLabel} />
+                    {recurringSeriesDateLabel ? <BodyIconTypography label={recurringSeriesDateLabel} sx={{ opacity: 0.78 }} /> : null}
+                  </StackColumn>
+                ) : null}
+
+                <StackColumn spacing={0.6}>
+                  <SmallIconTypography label="Resources Booked" sx={{ opacity: 0.68, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
+                  {booking.bookingResources.length > 0 ? (
+                    <StackRow spacing={0.75} sx={{ flexWrap: 'wrap' }}>
+                      {booking.bookingResources.map(({ resource }) => (
+                        <Chip
+                          key={resource.id}
+                          label={resource.name}
+                          size="small"
+                          variant="outlined"
+                          sx={{
+                            maxWidth: '100%',
+                            borderColor: resource.color ?? undefined,
+                            '& .MuiChip-label': {
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            },
+                          }}
+                        />
+                      ))}
+                    </StackRow>
+                  ) : (
+                    <BodyIconTypography label="No resources are booked for this marketplace booking." sx={{ opacity: 0.78 }} />
+                  )}
+                </StackColumn>
+
+                <StackColumn spacing={0.4}>
+                  <SmallIconTypography label="Payment Status" sx={{ opacity: 0.68, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
+                  <StackRow>
+                    {booking.marketplaceBooking?.paymentStatus.name ? <Chip label={booking.marketplaceBooking.paymentStatus.name} color={paymentStatusColor} size="small" /> : null}
+                  </StackRow>
+                </StackColumn>
+
+                <StackColumn spacing={0.4}>
+                  <SmallIconTypography label="Invoice" sx={{ opacity: 0.68, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
+                  <InvoiceDownloadLinks invoices={booking.arrearsInvoices ?? []} legacyInvoiceUrl={booking.marketplaceBooking?.invoiceUrl ?? null} />
+                </StackColumn>
+              </StackColumn>
+            </SettingsSectionCard>
+
+            {canManageRefund && booking.marketplaceBooking?.refund ? (
+              <SettingsSectionCard title="Refund" description="Review and progress the marketplace refund for this booking.">
+                <MarketplaceRefundAdminPanel entityLabel={getBookingDetailsInfo()} refund={booking.marketplaceBooking.refund} />
+              </SettingsSectionCard>
+            ) : null}
+          </StackColumn>
+        </Box>
+      </StackColumn>
+
+      <RecurringBookingDeleteConfirmationDialog
+        open={pendingRecurringSeriesCancellation}
+        title="Cancel Recurring Series"
+        description="This booking is part of a marketplace recurring series. If you continue, the full recurring series will be cancelled, not just this booking."
+        confirmLabel="Cancel series"
+        onConfirm={handleConfirmRecurringSeriesCancellationClick}
+        onCancel={handleCancelRecurringSeriesCancellationClick}
+      />
     </Box>
   );
 };

@@ -1,9 +1,9 @@
-import { RelayError, startOfDay, toRootError, useKnownParams } from '@skedular/shared';
 import { EditMarketplaceBooking } from '@/components/booking/editMarketplaceBooking';
 import { EditPrivateBooking } from '@/components/booking/editPrivateBooking';
 import { EditPrivateRecurringBooking } from '@/components/booking/editPrivateRecurringBooking';
 import { PayMarketplaceBooking } from '@/components/booking/payMarketplaceBooking';
 import { Loading } from '@/components/loading';
+import { RelayError, startOfDay, toRootError, useKnownParams } from '@skedular/shared';
 
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationBooking_rootQuery } from '@/queries/__generated__/pageOrganizationBooking_rootQuery.graphql';
@@ -48,7 +48,6 @@ const RootQuery = graphql`
     ...editPrivateRecurringBooking_availableResources_query
     ...editMarketplaceBooking_query
     ...editMarketplaceBooking_booking_query
-    ...editMarketplaceBooking_organizationMembers_query
     ...payMarketplaceBooking_booking_query
   }
 `;
@@ -84,7 +83,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
         <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
       )}
       {rootData.booking.channel.channel === 'MARKETPLACE' && !shouldPay && (
-        <EditMarketplaceBooking rootDataRelay={rootData} rootDataBookingRelay={rootData} rootDataOrganizationMembersRelay={rootData} onReloadRequired={onReloadRequired} />
+        <EditMarketplaceBooking rootDataRelay={rootData} rootDataBookingRelay={rootData} onReloadRequired={onReloadRequired} />
       )}
       {rootData.booking.channel.channel === 'PRIVATE' &&
         (showRecurringPrivateBookingEditor ? (

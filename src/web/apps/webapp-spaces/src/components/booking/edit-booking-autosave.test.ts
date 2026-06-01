@@ -12,11 +12,13 @@ describe('booking edit autosave', () => {
     expect(source).not.toContain('primaryAction="Update Booking"');
   });
 
-  it('autosaves marketplace booking edit groups without the manual update action', () => {
+  it('keeps marketplace booking customer details read-only', () => {
     const source = readEditor('./editMarketplaceBooking/edit-marketplace-booking.tsx');
 
-    expect(source).toContain('debouncedBookingDetailUpdate');
-    expect(source).not.toContain('onSubmit={handleBookingDetailUpdateClick}');
+    expect(source).toContain('Customer Details');
+    expect(source).toContain('read-only');
+    expect(source).not.toContain('debouncedBookingDetailUpdate');
+    expect(source).not.toContain('updateMarketplaceBooking');
     expect(source).not.toContain('type="submit"');
   });
 
