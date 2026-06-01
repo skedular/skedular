@@ -1,12 +1,12 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { SelectedTickIcon } from '@/components/icons';
-import Chip from '@mui/material/Chip';
 import type { marketplaceProductDetailOverview_product$key } from '@/queries/__generated__/marketplaceProductDetailOverview_product.graphql';
 import type { marketplaceProductDetailOverview_query$key } from '@/queries/__generated__/marketplaceProductDetailOverview_query.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/system/Box';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
@@ -126,7 +126,7 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
           )}
         </Box>
 
-        {imageUrls.length > 0 && (
+        {imageUrls.length > 1 && (
           <Box sx={{ display: 'flex', gap: 1, width: '100%', maxWidth: '100%', overflowX: 'auto', pb: 0.5, scrollbarWidth: 'thin' }}>
             {productImages.map((image, index) => (
               <Box
