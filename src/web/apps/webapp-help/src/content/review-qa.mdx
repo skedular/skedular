@@ -1,0 +1,39 @@
+# Customer Review QA
+
+Use this page to review Customer Help before publishing or adding screenshots.
+
+## Product Review
+
+| Question                                          | Pass condition                                                                             |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Does the overview explain Customer app purpose?   | A reader knows Customer is for public discovery, booking, subscriptions, and self-service. |
+| Are marketplace products described correctly?     | Products are customer offers, not operator setup.                                          |
+| Are bookings and subscriptions separated clearly? | One-time and recurring concepts are not mixed.                                             |
+| Are cancellation and refund described carefully?  | Cancellation and refund are related but different.                                         |
+| Are unclear states marked as gaps?                | No guessed exact labels or unsupported promises.                                           |
+
+## Support Review
+
+| Question                                 | Pass condition                                                                                          |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Can support find templates?              | Support handoff page has booking, subscription, refund, and link templates.                             |
+| Can support redirect wrong-app requests? | Customer/Teams/Spaces boundaries are clear.                                                             |
+| Are common problems covered?             | Missing booking, blocked booking, payment issue, cancellation, refund, and wrong help site are covered. |
+| Is sensitive data avoided?               | Pages tell users not to share passwords, full payment details, or tokens.                               |
+
+## Engineering Review
+
+| Question                                        | Pass condition                                                     |
+| ----------------------------------------------- | ------------------------------------------------------------------ |
+| Does help avoid internal implementation detail? | No API, database, token, or internal workflow details are exposed. |
+| Does help avoid changing product behavior?      | Content only explains existing routes and user-facing states.      |
+| Are screenshot placeholders clear?              | Each placeholder uses the required wording and demo-data plan.     |
+| Are content gaps traceable?                     | Gaps match source inventory and content gap register.              |
+
+## Copy Review
+
+| Question                | Pass condition                                                  |
+| ----------------------- | --------------------------------------------------------------- |
+| Is the writing simple?  | Short sections, plain words, direct instructions.               |
+| Is it American English? | No British spelling in customer-facing copy.                    |
+| Is it human?            | Practical examples and checklists replace vague marketing copy. |

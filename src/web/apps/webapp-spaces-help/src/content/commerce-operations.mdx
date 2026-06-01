@@ -1,0 +1,111 @@
+# Commerce Operations
+
+Commerce operations cover the work an operator does after the marketplace organization has places to sell.
+
+## Products
+
+Products are the offers customers can book or subscribe to.
+
+Use products to describe what is being sold, where it applies, and whether it supports one-time booking, recurring subscription, or both.
+
+## Bookings
+
+The bookings page helps operators review marketplace bookings and admin-created bookings.
+
+Open a booking detail page to understand the customer, product, time, status, and next action shown by the app.
+
+## Subscriptions
+
+Subscriptions are recurring marketplace purchases. Operators use subscription pages to review recurring customer access and related status.
+
+## Refunds
+
+Refund work belongs to Spaces from the operator side. Customer Help explains what customers may request. Spaces Help explains how operators review the work at a public-safe level.
+
+Do not treat refund help as accounting instructions. Follow the product UI and your organization's process.
+
+## Customer Records
+
+User and customer pages help operators understand customer context tied to marketplace activity.
+
+## Expected Result
+
+Operators can see what is being sold, who booked or subscribed, and what work needs attention without mixing customer self-service with operator actions.
+
+## Product Setup Checklist
+
+Before publishing or using a product, check:
+
+- product name
+- location and resource connection
+- one-time booking or subscription behavior
+- availability rules
+- price or payment expectations when shown
+- cancellation and refund expectations
+- customer-facing description
+- whether the product is ready for public use
+
+Use customer-friendly names. A customer should be able to understand the offer without knowing your internal setup.
+
+## Booking Review Checklist
+
+When reviewing an operator booking, check:
+
+- customer name or account context shown by the app
+- product
+- location or resource
+- booking time
+- status
+- payment or fulfillment signal when visible
+- next action, if any
+
+If a customer asks for help, open the booking detail page before answering.
+
+## Subscription Review Checklist
+
+When reviewing a subscription, check:
+
+- customer
+- product
+- recurring schedule
+- current status
+- related bookings when shown
+- renewal or cancellation information
+- payment or refund context when visible
+
+Subscriptions can affect future bookings. Check the whole subscription, not only one booking instance.
+
+## Refund Work
+
+Refunds need careful language.
+
+From the operator side, a refund may involve:
+
+- reviewing the customer's request
+- checking the booking or subscription
+- checking the visible payment state
+- applying the organization's policy
+- following the product UI for the next step
+- contacting the customer if more information is needed
+
+Do not use public help as accounting or legal advice. Do not expose internal accounting identifiers, payment secrets, or provider credentials.
+
+## Commerce Problems
+
+| Problem                                              | What to check                                                               |
+| ---------------------------------------------------- | --------------------------------------------------------------------------- |
+| Customer says they booked but operator cannot see it | Check customer account context, booking list, and product/date filters.     |
+| A booking has the wrong product                      | Open the booking detail and compare it with the product setup.              |
+| A subscription did not renew as expected             | Check subscription status, product availability, and visible payment state. |
+| A refund action is missing                           | Check eligibility, status, and whether the workflow needs manual review.    |
+| Product cannot be booked                             | Check location/resource availability, product rules, and payment setup.     |
+
+## Customer Communication
+
+When replying to a customer, keep it simple:
+
+- confirm the booking or subscription you are discussing
+- explain what the visible status means
+- say what the next step is
+- avoid internal implementation details
+- do not share payment secrets or private operator notes

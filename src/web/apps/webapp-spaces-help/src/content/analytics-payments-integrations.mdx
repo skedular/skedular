@@ -1,0 +1,95 @@
+# Analytics, Payments, And Integrations
+
+Spaces includes operational tools for reviewing marketplace performance and keeping payment and collaboration setup connected.
+
+## Analytics
+
+Analytics help operators understand marketplace and co-working activity. Use them to review demand, usage, and trends.
+
+## Availability Dashboard
+
+The availability dashboard helps operators see whether locations and resources have enough capacity for customer demand.
+
+## Bank Accounts
+
+Bank account pages support operator payment setup where available. Treat these pages carefully because payment setup is sensitive.
+
+Do not share account numbers, tokens, or private payment details in screenshots or support messages.
+
+## Stripe Connect Accounts
+
+Stripe Connect account pages support payment connection where available. Use the product UI for the exact setup steps and status messages.
+
+## Slack And Microsoft Teams
+
+Slack and Microsoft Teams pages help operators work from collaboration tools when enabled.
+
+## SSO Sign-In
+
+SSO lets an operator organization use its identity provider for sign-in when configured.
+
+## Expected Result
+
+Operators can review marketplace health and keep payment and integration setup on track without exposing sensitive details.
+
+## Analytics In More Detail
+
+Use analytics to understand marketplace activity over time.
+
+Helpful questions:
+
+- Which locations are used most?
+- Which products are most popular?
+- Are bookings increasing or slowing down?
+- Are subscriptions stable?
+- Are customers using the resources you expected?
+- Do you need to change product setup or availability?
+
+Analytics should guide operator decisions, but review metric definitions before using them for formal reporting.
+
+## Availability In More Detail
+
+Availability helps you understand whether customers can actually book what you are selling.
+
+Check availability before:
+
+- publishing a new product
+- changing product rules
+- changing a location
+- changing resources
+- answering a customer complaint about unavailable times
+
+## Payment Setup Safety
+
+Payment pages are sensitive. Treat them carefully.
+
+Safe:
+
+- checking whether setup appears connected
+- following the product UI
+- using the approved provider flow
+- asking an authorized admin to complete setup
+
+Not safe:
+
+- sharing full bank details in screenshots
+- sending payment secrets in chat or email
+- copying provider tokens
+- asking a customer to complete operator payment setup
+
+## Bank Accounts And Stripe Connect
+
+Bank account pages and Stripe Connect pages may both relate to payment readiness, but they are not the same thing.
+
+Use the visible app labels as the source of truth. If setup is blocked, follow the provider flow or contact the internal owner for payments.
+
+## Integration Problems
+
+| Problem                                      | What to check                                                   |
+| -------------------------------------------- | --------------------------------------------------------------- |
+| Payment setup is incomplete                  | Check whether the right operator/admin account is signed in.    |
+| Stripe Connect did not return to Skedular    | Try the provider flow again or contact the payment setup owner. |
+| Bank account details look wrong              | Stop and verify with the authorized finance owner.              |
+| Slack install fails                          | Check workspace permissions and retry the install flow.         |
+| Microsoft Teams opens the wrong organization | Check signed-in account and organization context.               |
+| Analytics look empty                         | Check date range, organization, and whether bookings exist.     |

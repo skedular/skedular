@@ -1,0 +1,79 @@
+# States And Policies
+
+This section explains the customer-facing states and policy ideas you may see while using Skedular.
+
+The exact words in the app can change by product and operator. Use the app screen as the source of truth.
+
+## Booking State Basics
+
+A booking state tells you what happened to one reservation.
+
+| State idea       | Plain meaning                                                 | What to do                                                 |
+| ---------------- | ------------------------------------------------------------- | ---------------------------------------------------------- |
+| Draft or started | You began the booking but it may not be confirmed yet.        | Finish the steps shown by the app.                         |
+| Pending          | The booking is waiting on payment, approval, or another step. | Read the detail page and complete the next visible action. |
+| Confirmed        | The booking is active.                                        | Keep the detail page for reference.                        |
+| Canceled         | The booking is no longer active.                              | Check whether any refund or follow-up is shown.            |
+| Expired          | The booking was not finished in time.                         | Start again if you still need the space.                   |
+| Failed           | The booking did not complete.                                 | Check payment, availability, or support guidance.          |
+
+## Subscription State Basics
+
+A subscription state tells you what is happening with recurring access.
+
+| State idea      | Plain meaning                                                   | What to do                                                   |
+| --------------- | --------------------------------------------------------------- | ------------------------------------------------------------ |
+| Active          | The subscription is currently running.                          | Check the schedule and related bookings.                     |
+| Pending         | The subscription is waiting on a required step.                 | Finish the visible action or contact support.                |
+| Renewal due     | A new period may be coming up.                                  | Check renewal and payment information when shown.            |
+| Renewal failed  | The next period could not continue.                             | Check payment, availability, or operator guidance.           |
+| Canceling later | The current period may continue, but future renewal is stopped. | Read the date or period boundary carefully.                  |
+| Canceled        | The subscription is no longer active.                           | Check whether access has ended or if any follow-up is shown. |
+
+## Payment State Basics
+
+Payment state affects what can happen next. A booking with unfinished payment may not behave like a confirmed booking.
+
+Common meanings:
+
+- **Not started:** no payment attempt is attached yet.
+- **Waiting:** the payment step is still in progress.
+- **Confirmed:** payment finished and the purchase can move forward.
+- **Rejected or failed:** payment did not complete.
+- **Expired:** the payment window ended.
+- **Refunded or refund pending:** money movement may be in progress or complete.
+
+Do not share payment card details with support. Use the booking or subscription reference instead.
+
+## Cancellation Policy
+
+A cancellation policy explains when a booking or subscription can be stopped.
+
+Before canceling, check:
+
+- whether the action applies to one booking or a subscription
+- whether it is immediate
+- whether it stops a future renewal only
+- whether the current booking remains active
+- whether refund information is shown
+
+## Refund Policy
+
+A refund policy explains whether money may be returned.
+
+Refunds can depend on:
+
+- booking start time
+- cancellation time
+- product rules
+- payment confirmation
+- operator review
+- whether the purchase is one-time or recurring
+
+Skedular may show the action, but the operator's policy controls the outcome.
+
+## What If States Look Different?
+
+If the wording in the app is different from this page, trust the app.
+
+This help page explains the common meaning. The product screen shows the exact state for your booking or subscription.

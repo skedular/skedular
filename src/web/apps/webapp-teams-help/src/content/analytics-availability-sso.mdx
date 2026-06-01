@@ -1,0 +1,72 @@
+# Analytics, Availability, And SSO
+
+Teams includes reporting and sign-in tools for private organizations.
+
+## Availability Dashboard
+
+The availability dashboard helps admins understand whether internal locations and resources have capacity.
+
+Use it to look for pressure points, quiet days, or resources that may need adjustment.
+
+## Analytics
+
+Analytics show workplace usage patterns. They help organization admins plan space, understand demand, and review how people are using private resources.
+
+Metric details should be reviewed with your product owner or support contact if a number affects policy or staffing.
+
+## SSO Sign-In
+
+SSO lets an organization use its identity provider for sign-in when configured.
+
+If your organization uses SSO, follow the organization sign-in path. If sign-in fails, check that you are using the right work account and contact your admin.
+
+## Expected Result
+
+Admins can review workplace usage and sign-in behavior without exposing marketplace customer or payment operations.
+
+## When To Use Availability
+
+Use availability when you need an operational answer.
+
+Examples:
+
+- Are there enough desks on a busy day?
+- Which location is under pressure?
+- Which resource type is hard to book?
+- Do we need to adjust how a space is set up?
+- Are members using the places we expected?
+
+Availability is useful before making changes to locations, resources, or booking rules.
+
+## When To Use Analytics
+
+Use analytics when you need a trend.
+
+Examples:
+
+- Is office usage rising or falling?
+- Which locations are used most often?
+- Are certain teams booking more than others?
+- Are resources sitting unused?
+- Do we need more capacity in one area?
+
+Analytics should guide decisions. It should not be the only source for policy changes if the metric definition has not been reviewed.
+
+## SSO In More Detail
+
+SSO is a sign-in path. It does not replace organization access rules inside Skedular.
+
+A user may successfully sign in with SSO and still need the right organization access. If a user signs in but cannot see the organization, check both identity and organization membership.
+
+## Common Problems
+
+| Problem                                 | What to check                                                                         |
+| --------------------------------------- | ------------------------------------------------------------------------------------- |
+| Analytics look empty                    | Check date range, organization context, and whether there is enough booking activity. |
+| Availability looks wrong                | Check the location, resource setup, and current bookings.                             |
+| SSO sends a user back to sign-in        | Check whether they used the expected work account.                                    |
+| A user can sign in but not access pages | Check organization membership and role.                                               |
+
+## Public-Safe Reporting
+
+When sharing analytics screenshots, hide names, emails, and private organization details unless you are using clean demo data.

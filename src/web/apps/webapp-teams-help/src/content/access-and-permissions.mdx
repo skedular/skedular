@@ -1,0 +1,67 @@
+# Access And Permissions
+
+Teams is private organization software. That means access matters.
+
+If a user cannot see a page, button, booking, location, resource, team, or member, check access before checking anything else.
+
+## Access Basics
+
+Access usually depends on:
+
+- the account the user signed in with
+- whether the user belongs to the organization
+- whether the user accepted an invitation
+- whether SSO is required
+- the user's role or permission level
+- whether the page belongs to Teams, Spaces, or Customer
+
+## Common Access Situations
+
+| Situation                                 | Plain meaning                                           | What to check                                         |
+| ----------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------- |
+| User can sign in but sees no organization | Sign-in worked, but organization access may be missing. | Invite, email address, role, organization membership. |
+| User sees organization but not admin      | They may not be an admin.                               | Role or permission level.                             |
+| User sees bookings but not settings       | Settings may be restricted.                             | Role or permission level.                             |
+| User opens SSO but returns to sign-in     | Identity provider sign-in may not be complete.          | Work account, SSO setup, provider access.             |
+| User opens a marketplace page             | They may be in the wrong app.                           | Use Customer or Spaces depending on the task.         |
+
+## Admin Access
+
+Admin access should be limited to people who understand the organization setup.
+
+Admins may be able to:
+
+- change organization settings
+- manage locations
+- manage resources
+- review bookings
+- manage teams
+- review users
+- connect integrations
+- review analytics
+
+If you are not sure whether someone should be an admin, check the organization's internal policy.
+
+## Member Access
+
+Members usually need enough access to use the organization, but not necessarily to change setup.
+
+Members may be able to:
+
+- view available locations or resources
+- create bookings
+- view their own booking context
+- receive notifications
+- use connected integrations
+
+The exact access depends on the organization setup.
+
+## SSO And Access Are Different
+
+SSO proves identity. Organization access controls what the user can do after sign-in.
+
+A user can pass SSO and still lack organization access.
+
+## Public-Safe Access Guidance
+
+Do not publish exact permission rules in public help until product and security review approve them. Explain the general behavior and ask admins to check the product UI and organization policy.

@@ -308,11 +308,13 @@ This file applies to the whole repository.
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/020-customer-landing-cleanup/plan.md
+at specs/021-help-webapps-docs/plan.md
 
 <!-- SPECKIT END -->
 
 ## Active Technologies
+- TypeScript 6.0.3, React 19.2.6, Next.js 16.2.6 App Router, MDX content + Nextra 4.6.1, `nextra-theme-docs`, React, Next.js, existing help app package scripts (021-help-webapps-docs)
+- N/A - static documentation content in repository files (021-help-webapps-docs)
 
 - TypeScript 6.0.3; React 19.2.6; Next.js 16.2.6 App Router; backend C# .NET 10 only if GraphQL/domain contract changes are needed + Relay 21, `react-relay`, MUI 9, `@skedular/ui`, `@skedular/shared`, WorkOS AuthKit, Leaflet/react-leaflet for map browsing, existing marketplace GraphQL schema and generated Relay artifacts (020-customer-landing-cleanup)
 - No new persistence planned for the first cleanup/design slice; uses existing marketplace booking, subscription, location, organization, and customer data via GraphQL. Any new durable cleanup inventory can start as feature documentation/task artifact unless implementation requires product-owned persistence. (020-customer-landing-cleanup)
