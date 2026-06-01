@@ -1,15 +1,12 @@
 'use client';
 
 import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
-import { TeamsUserCredential } from '@microsoft/teamsfx';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';
 import {
   AuthenticatedRelayProvider,
   DatePickerLocalizationProvider,
   GoogleAnalyticsProvider,
-  InMsTeamsContext,
-  InMsTeamsProvider,
   LogRocketProvider,
   MuiXLicense,
   PaletteModeContext,
@@ -21,7 +18,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AuthKitProvider, useAuth } from '@workos-inc/authkit-nextjs/components';
 import Script from 'next/script';
 import type { PropsWithChildren } from 'react';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useContext } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -41,55 +38,13 @@ const AppAuthenticatedRelayProvider = ({ children, teamsToken }: AppAuthenticate
 
 const InnerRootLayout = ({ children }: PropsWithChildren) => {
   const paletteMode = useContext(PaletteModeContext);
-  const inMsTeams = useContext(InMsTeamsContext);
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!inMsTeams) {
-      return;
-    }
-
-    const appInitialize = async () => {
-      const scope: string[] = [];
-      const credential = new TeamsUserCredential({
-        initiateLoginEndpoint: new URL('auth-start.html', process.env.NEXT_PUBLIC_SITE_URL).href,
-        clientId: process.env.NEXT_PUBLIC_APPLICATION_REGISTRATION_ID!,
-      });
-
-      try {
-        try {
-          const accessTokenResult = await credential.getToken(scope);
-          if (!accessTokenResult) {
-            throw new Error('accessTokenResult is null');
-          }
-
-          setToken(accessTokenResult.token);
-        } catch {
-          await credential.login(scope);
-
-          const accessTokenResult = await credential.getToken(scope);
-          if (!accessTokenResult) {
-            throw new Error('accessTokenResult is null');
-          }
-
-          setToken(accessTokenResult.token);
-        }
-      } catch (err) {
-        alert('Login failed: ' + err);
-
-        return;
-      }
-    };
-
-    appInitialize();
-  }, [inMsTeams]);
 
   return (
     <ThemeProvider mode={paletteMode}>
       <CssBaseline />
       <DatePickerLocalizationProvider>
         <AuthKitProvider>
-          <AppAuthenticatedRelayProvider teamsToken={token}>{children}</AppAuthenticatedRelayProvider>
+          <AppAuthenticatedRelayProvider teamsToken={null}>{children}</AppAuthenticatedRelayProvider>
         </AuthKitProvider>
       </DatePickerLocalizationProvider>
     </ThemeProvider>
@@ -110,9 +65,7 @@ const ClientRootLayout = ({ children }: PropsWithChildren) => (
     )}
     <AppRouterCacheProvider>
       <PaletteModeProvider>
-        <InMsTeamsProvider>
-          <InnerRootLayout>{children}</InnerRootLayout>
-        </InMsTeamsProvider>
+        <InnerRootLayout>{children}</InnerRootLayout>
       </PaletteModeProvider>
     </AppRouterCacheProvider>
     <Analytics />

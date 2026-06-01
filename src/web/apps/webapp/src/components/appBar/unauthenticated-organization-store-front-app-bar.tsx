@@ -1,8 +1,5 @@
-import { BodyIconTypography, LeadIconTypography, PushToRight } from '@skedular/ui';
-import { HamburgerMenuIcon, SystemModeIcon } from '@/components/icons';
+import { SystemModeIcon } from '@/components/icons';
 import { getSignInLink, getSignUpLink } from '@/components/links';
-import { UnauthenticatedMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { SelectedPaletteModeContext, UpdatePaletteModeContext } from '@skedular/shared';
 import type { unauthenticatedOrganizationStoreFrontAppBar_query$key } from '@/queries/__generated__/unauthenticatedOrganizationStoreFrontAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -14,6 +11,8 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
+import { SelectedPaletteModeContext, UpdatePaletteModeContext } from '@skedular/shared';
+import { BodyIconTypography, LeadIconTypography, PushToRight } from '@skedular/ui';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
@@ -35,7 +34,6 @@ const UnauthenticatedOrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) =
 
   const selectedThemeMode = useContext(SelectedPaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
-  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [themeMenuAnchorEl, setThemeMenuAnchorEl] = useState<null | HTMLElement>(null);
 
   const signInLink = getSignInLink();
@@ -56,10 +54,6 @@ const UnauthenticatedOrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) =
 
   const handleOrganizationHomeClick = () => {
     window.location.href = window.location.origin;
-  };
-
-  const toggleMobileDrawerOpen = (newOpen: boolean) => () => {
-    setMobileDrawerOpen(newOpen);
   };
 
   const selectedThemeIcon =
@@ -160,7 +154,7 @@ const UnauthenticatedOrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) =
             </MenuItem>
           </Menu>
 
-          <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 1.5, ml: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 1.5 }, ml: { xs: 1, sm: 2 } }}>
             <Button
               component="a"
               href={signInLink}
@@ -168,7 +162,7 @@ const UnauthenticatedOrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) =
               sx={{
                 textTransform: 'none',
                 borderRadius: '24px',
-                px: 3,
+                px: { xs: 1.5, sm: 3 },
                 py: 1,
                 borderColor: (theme) => theme.palette.divider,
                 color: (theme) => theme.palette.text.primary,
@@ -192,7 +186,8 @@ const UnauthenticatedOrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) =
               sx={{
                 textTransform: 'none',
                 borderRadius: '24px',
-                px: 3,
+                display: { xs: 'none', sm: 'inline-flex' },
+                px: { xs: 1.5, sm: 3 },
                 py: 1,
                 fontWeight: 500,
                 fontSize: '0.9375rem',
@@ -201,23 +196,6 @@ const UnauthenticatedOrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) =
               Sign up
             </Button>
           </Box>
-
-          <IconButton
-            onClick={toggleMobileDrawerOpen(true)}
-            sx={{
-              display: { xs: 'inline-flex', sm: 'none' },
-              ml: 1,
-              border: 1,
-              borderColor: (theme) => theme.palette.divider,
-              borderRadius: 3,
-              width: 40,
-              height: 40,
-            }}
-          >
-            <HamburgerMenuIcon />
-          </IconButton>
-
-          <UnauthenticatedMobileLeftSideNavigationMenu open={mobileDrawerOpen} toggleDrawer={toggleMobileDrawerOpen} />
         </Toolbar>
       </Container>
     </MuiAppBar>

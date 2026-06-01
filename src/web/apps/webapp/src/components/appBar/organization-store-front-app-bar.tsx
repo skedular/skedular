@@ -1,8 +1,7 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
-import { ArrowDownIcon, BookingIcon, FeedbackIcon, HamburgerMenuIcon, SettingsIcon, SignOutIcon, SubscriptionsIcon, SystemModeIcon } from '@/components/icons';
+import { ArrowDownIcon, BookingIcon, FeedbackIcon, SettingsIcon, SignOutIcon, SubscriptionsIcon, SystemModeIcon } from '@/components/icons';
 import { getMarketplaceBookingsLink, getMarketplaceSubscriptionsLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
-import { NoOrganizationMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import useKnownParams from '@/hooks/use-known-params';
 import type { organizationStoreFrontAppBar_query$key } from '@/queries/__generated__/organizationStoreFrontAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -58,7 +57,6 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [themeMenuAnchorEl, setThemeMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
-  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const handleProfileMenuOpenClick = (event: React.MouseEvent<HTMLElement>) => {
     setProfileOpenAnchorEl(event.currentTarget);
@@ -101,10 +99,6 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
 
   const handleOrganizationHomeClick = () => {
     window.location.href = window.location.origin;
-  };
-
-  const toggleMobileDrawerOpen = (newOpen: boolean) => () => {
-    setMobileDrawerOpen(newOpen);
   };
 
   const customerName = getCustomerFullName({
@@ -174,7 +168,7 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
 
             <PushToRight />
 
-            <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 1.5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               <IconButton
                 onClick={handleThemeMenuOpenClick}
                 sx={{
@@ -223,25 +217,10 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
                   }}
                   sx={{ width: 24, height: 24 }}
                 />
-                <BodyIconTypography label={customerName || rootData.me?.email || 'Account'} sx={{ ml: 1, mr: 0.5 }} />
+                <BodyIconTypography label={customerName || rootData.me?.email || 'Account'} sx={{ display: { xs: 'none', md: 'block' }, ml: 1, mr: 0.5 }} />
                 <ArrowDownIcon fontSize="small" />
               </Button>
             </Box>
-
-            <IconButton
-              onClick={toggleMobileDrawerOpen(true)}
-              sx={{
-                display: { xs: 'inline-flex', sm: 'none' },
-                ml: 1,
-                border: 1,
-                borderColor: (theme) => theme.palette.divider,
-                borderRadius: 3,
-                width: 40,
-                height: 40,
-              }}
-            >
-              <HamburgerMenuIcon />
-            </IconButton>
           </Toolbar>
         </Container>
 
@@ -325,8 +304,6 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
             <SmallIconTypography startElement={<SignOutIcon />} label="Sign out" />
           </MenuItem>
         </Menu>
-
-        <NoOrganizationMobileLeftSideNavigationMenu open={mobileDrawerOpen} toggleDrawer={toggleMobileDrawerOpen} />
       </MuiAppBar>
 
       <NewFeedbackDialog

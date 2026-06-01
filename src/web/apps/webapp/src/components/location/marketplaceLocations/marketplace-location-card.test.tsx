@@ -30,6 +30,13 @@ const locationFragmentData = {
   featureImages: [],
 };
 
+const partialLocationFragmentData = {
+  ...locationFragmentData,
+  extraMetadata: null,
+  physicalAddress: null,
+  featureImages: [],
+};
+
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: pushMock }),
 }));
@@ -97,5 +104,28 @@ describe('MarketplaceLocationCard', () => {
     expect(screen.getByText('20 People')).toBeInTheDocument();
     expect(screen.getByText('180 m2')).toBeInTheDocument();
     expect(screen.getByText('location-icon')).toBeInTheDocument();
+  });
+
+  it('uses the aggregate marketplace location link as the purchase entry point', () => {
+    render(<MarketplaceLocationCard rootDataRelay={{} as never} locationDetailsRelay={{} as never} onReloadRequired={vi.fn()} />);
+
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/marketplace/locations/location-1');
+  });
+
+  it('handles partial customer-facing location data without placeholder noise', () => {
+    useFragmentMock.mockImplementation((query: string) => {
+      if (query.includes('fragment marketplaceLocationCard_query')) {
+        return queryFragmentData;
+      }
+
+      return partialLocationFragmentData;
+    });
+
+    render(<MarketplaceLocationCard rootDataRelay={{} as never} locationDetailsRelay={{} as never} onReloadRequired={vi.fn()} />);
+
+    expect(screen.getByText('Harbour Workspace')).toBeInTheDocument();
+    expect(screen.getByText('location-icon')).toBeInTheDocument();
+    expect(screen.queryByText(/assigned later/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/not available/i)).not.toBeInTheDocument();
   });
 });

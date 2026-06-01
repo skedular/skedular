@@ -1,8 +1,5 @@
-import { BodyIconTypography, PushToRight } from '@skedular/ui';
-import { HamburgerMenuIcon, SystemModeIcon } from '@/components/icons';
+import { SystemModeIcon } from '@/components/icons';
 import { getSignInLink, getSignUpLink } from '@/components/links';
-import { UnauthenticatedMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { PaletteModeContext, SelectedPaletteModeContext, UpdatePaletteModeContext } from '@skedular/shared';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import MuiAppBar from '@mui/material/AppBar';
@@ -12,6 +9,8 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
+import { PaletteModeContext, SelectedPaletteModeContext, UpdatePaletteModeContext } from '@skedular/shared';
+import { BodyIconTypography, PushToRight } from '@skedular/ui';
 import Image from 'next/image';
 import { memo, useContext, useState } from 'react';
 
@@ -19,7 +18,6 @@ const UnauthenticatedAppBar = () => {
   const selectedThemeMode = useContext(SelectedPaletteModeContext);
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
-  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [themeMenuAnchorEl, setThemeMenuAnchorEl] = useState<null | HTMLElement>(null);
 
   const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
@@ -47,9 +45,6 @@ const UnauthenticatedAppBar = () => {
     handleThemeMenuCloseClick();
   };
 
-  const toggleMobileDrawerOpen = (newOpen: boolean) => () => {
-    setMobileDrawerOpen(newOpen);
-  };
   const selectedThemeIcon =
     selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;
 
@@ -107,7 +102,7 @@ const UnauthenticatedAppBar = () => {
           </MenuItem>
         </Menu>
 
-        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+        <Box sx={{ display: 'block' }}>
           <IconButton component="a" href={signInLink}>
             <Button component="span" variant="contained" fullWidth sx={{ textTransform: 'none' }}>
               <BodyIconTypography label="Sign In" />
@@ -122,12 +117,6 @@ const UnauthenticatedAppBar = () => {
             </Button>
           </IconButton>
         </Box>
-
-        <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
-          <HamburgerMenuIcon />
-        </IconButton>
-
-        <UnauthenticatedMobileLeftSideNavigationMenu open={mobileDrawerOpen} toggleDrawer={toggleMobileDrawerOpen} />
       </Toolbar>
     </MuiAppBar>
   );

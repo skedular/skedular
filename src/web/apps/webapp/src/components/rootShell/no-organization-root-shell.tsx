@@ -1,10 +1,9 @@
-import { InMsTeamsContext, RelayError, toRootError, useIntegratedPlatform } from '@skedular/shared';
 import { NoOrganizationAppBar } from '@/components/appBar';
 import { SignOutIcon } from '@/components/icons';
-import { getInstallMsTeamsLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
+import { getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
-import { NoOrganizationLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
+import { RelayError, toRootError, useIntegratedPlatform } from '@skedular/shared';
 
 import type { noOrganizationRootShell_rootQuery } from '@/queries/__generated__/noOrganizationRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -15,7 +14,7 @@ import { SmallHeadingIconTypography } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { usePathname, useRouter } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
@@ -23,7 +22,6 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   queryReference: PreloadedQuery<noOrganizationRootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  hideSideNav?: boolean;
 };
 
 const RootQuery = graphql`
@@ -33,10 +31,6 @@ const RootQuery = graphql`
       isOnboardingDone
     }
     customerReadinessSynced
-    isAzureTenantInstalled
-    azureTenantOrganization {
-      id
-    }
     ...noOrganizationAppBar_query
     ...observability_query
   }
@@ -44,17 +38,15 @@ const RootQuery = graphql`
 
 const maxRetryAttemptsToReload = 20;
 
-const NoOrganizationRootShell = ({ queryReference, children, onReloadRequired, hideSideNav }: PropsWithChildren<Props>) => {
+const NoOrganizationRootShell = ({ queryReference, children, onReloadRequired }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<noOrganizationRootShell_rootQuery>(RootQuery, queryReference);
   const { integratedPlatform } = useIntegratedPlatform();
-  const inMsTeams = useContext(InMsTeamsContext);
   const router = useRouter();
   const pathName = usePathname();
   const { signOut } = useAuth();
   const [reloadCount, setReloadCount] = useState(0);
   const rootLink = getRootLink(integratedPlatform);
   const welcomeLink = getWelcomeLink(integratedPlatform);
-  const installMsTeamsLink = getInstallMsTeamsLink();
   const areCustomerRecordsSync = !!rootData?.customerReadinessSynced;
 
   useEffect(() => {
@@ -71,16 +63,6 @@ const NoOrganizationRootShell = ({ queryReference, children, onReloadRequired, h
       clearInterval(intervalId);
     };
   }, [rootData.me, reloadCount, onReloadRequired, areCustomerRecordsSync]);
-
-  useEffect(() => {
-    if (!inMsTeams) {
-      return;
-    }
-
-    if (!rootData.isAzureTenantInstalled || !rootData.azureTenantOrganization) {
-      router.push(installMsTeamsLink);
-    }
-  }, [inMsTeams, rootData.isAzureTenantInstalled, rootData.azureTenantOrganization, installMsTeamsLink, router]);
 
   useEffect(() => {
     if (pathName === rootLink && !rootData.me.isOnboardingDone) {
@@ -112,9 +94,8 @@ const NoOrganizationRootShell = ({ queryReference, children, onReloadRequired, h
       <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
-        {!hideSideNav && <NoOrganizationLeftSideNavigationMenu />}
         <Box sx={{ flexGrow: 1 }}>
-          <NoOrganizationAppBar rootDataRelay={rootData} showLogo={hideSideNav} />
+          <NoOrganizationAppBar rootDataRelay={rootData} showLogo />
           {children}
         </Box>
       </Box>
@@ -124,11 +105,7 @@ const NoOrganizationRootShell = ({ queryReference, children, onReloadRequired, h
 
 const MemoNoOrganizationRootShell = memo(NoOrganizationRootShell);
 
-type RelayProps = {
-  hideSideNav?: boolean;
-};
-
-const NoOrganizationRootShellWithRelay = ({ children, hideSideNav }: PropsWithChildren<RelayProps>) => {
+const NoOrganizationRootShellWithRelay = ({ children }: PropsWithChildren) => {
   const [queryReference, loadQuery] = useQueryLoader<noOrganizationRootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -154,7 +131,7 @@ const NoOrganizationRootShellWithRelay = ({ children, hideSideNav }: PropsWithCh
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoNoOrganizationRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} hideSideNav={hideSideNav}>
+      <MemoNoOrganizationRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired}>
         {children}
       </MemoNoOrganizationRootShell>
     </ErrorBoundary>

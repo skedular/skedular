@@ -11,7 +11,7 @@ describe('resolveCustomerFacingEntryPoint', () => {
     expect(resolveCustomerFacingEntryPoint({ isCustomDomain: true, organizationType: 'marketplace' })).toBe('co-working-subdomain');
   });
 
-  it('resolves private organisation custom domains separately when the type is known', () => {
+  it('resolves private organization custom domains separately when the type is known', () => {
     expect(resolveCustomerFacingEntryPoint({ isCustomDomain: true, organizationType: 'private' })).toBe('private-organisation-subdomain');
   });
 });

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ba88867d5879b5bb73e6566312f71e1c>>
+ * @generated SignedSource<<b8d85c45383acabefaa277c841121028>>
  * @lightSyntaxTransform
  */
 
@@ -19,12 +19,6 @@ export type noOrganizationAppBar_query$data = {
     readonly middleName: string | null | undefined;
     readonly photoUrl: string | null | undefined;
   };
-  readonly myOrganizations: ReadonlyArray<{
-    readonly customDomain: string | null | undefined;
-    readonly logoUrl: string | null | undefined;
-    readonly name: string;
-    readonly uniqueId: string;
-  }>;
   readonly pendingOrganizationInvitationsCount: number;
   readonly pendingTeamInvitationsCount: number;
   readonly " $fragmentSpreads": FragmentRefs<"newFeedbackDialog_query">;
@@ -104,45 +98,6 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "MyOrganizationDetails",
-      "kind": "LinkedField",
-      "name": "myOrganizations",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "uniqueId",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "customDomain",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "logoUrl",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "name",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "kind": "ScalarField",
       "name": "pendingOrganizationInvitationsCount",
       "storageKey": null
@@ -164,6 +119,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "301b152da14ba4685450d18620d91967";
+(node as any).hash = "c16a8935e82965a7e7964e66b6d35343";
 
 export default node;

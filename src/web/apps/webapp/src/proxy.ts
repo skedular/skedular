@@ -13,8 +13,7 @@ const isUnauthenticatedPath = (pathname: string) => {
     pathname === '/install-slack' ||
     pathname === '/slack-success-install' ||
     pathname === '/marketplace' ||
-    pathname.startsWith('/auth/') ||
-    pathname.startsWith('/msteams')
+    pathname.startsWith('/auth/')
   ) {
     return true;
   }

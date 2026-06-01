@@ -1,9 +1,12 @@
-import { RelayError, convertCalendarDayToStartOfDay, toRootError, toStoredBookingTimeRange, useIntegratedPlatform } from '@skedular/shared';
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { ArrowLeftIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon } from '@/components/icons';
 import { getMarketplaceBookingDetailsLink } from '@/components/links';
 import { Loading } from '@/components/loading';
+import { convertCalendarDayToStartOfDay, RelayError, toRootError, toStoredBookingTimeRange, useIntegratedPlatform } from '@skedular/shared';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 
+import useKnownParams from '@/hooks/use-known-params';
+import logger from '@/libs/logging';
+import { logCustomerPurchaseHubLoaded } from '@/libs/logging/aggregate-marketplace-telemetry';
 import type { guestStoreFrontBookings_rootQuery } from '@/queries/__generated__/guestStoreFrontBookings_rootQuery.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Button from '@mui/material/Button';
@@ -20,7 +23,6 @@ import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<guestStoreFrontBookings_rootQuery, Record<string, unknown>>;
@@ -111,6 +113,15 @@ const GuestStoreFrontBookings = ({ queryReference }: Props) => {
     () => rootData.recentBookings.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item),
     [rootData.recentBookings.edges],
   );
+
+  useEffect(() => {
+    logCustomerPurchaseHubLoaded({
+      logger,
+      customerIdHash: 'current-customer',
+      bookingCount: rootData.upcomingBookings.totalCount + rootData.recentBookings.totalCount,
+      subscriptionCount: 0,
+    });
+  }, [rootData.recentBookings.totalCount, rootData.upcomingBookings.totalCount]);
 
   return (
     <Box

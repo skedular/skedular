@@ -183,7 +183,6 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
             }
           }
         }
-        ...organizationUserLeftSideNavigationMenuContent_query
         ...singleChoiceUserPersonalInformationVisibility_query
       }
     `,

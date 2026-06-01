@@ -1,4 +1,3 @@
-import { RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform } from '@skedular/shared';
 import { ArrowLeftIcon, PaymentStatusIcon, QuantityIcon } from '@/components/icons';
 import { getMarketplaceSubscriptionDetailsLink } from '@/components/links';
 import { Loading } from '@/components/loading';
@@ -10,6 +9,7 @@ import {
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
+import { getRelayErrorMessage, RelayError, toRootError, useIntegratedPlatform } from '@skedular/shared';
 
 import useKnownParams from '@/hooks/use-known-params';
 import type { guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
@@ -28,6 +28,8 @@ import Link from '@mui/material/Link';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/system/Box';
 
+import logger from '@/libs/logging';
+import { logCustomerPurchaseHubLoaded } from '@/libs/logging/aggregate-marketplace-telemetry';
 import {
   BodyIconTypography,
   CaptionIconTypography,
@@ -142,6 +144,10 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
     () => rootData.marketplaceBookingSubscriptions.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item),
     [rootData.marketplaceBookingSubscriptions.edges],
   );
+
+  useEffect(() => {
+    logCustomerPurchaseHubLoaded({ logger, customerIdHash: 'current-customer', bookingCount: 0, subscriptionCount: rootData.marketplaceBookingSubscriptions.totalCount });
+  }, [rootData.marketplaceBookingSubscriptions.totalCount, subscriptions.length]);
   const immediateCancellationMode = useMemo((): SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null => {
     const mode = rootData.marketplaceBookingSubscriptionCancellationModes.find((item) => item.type === 'IMMEDIATE');
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<173fe715d80031ab42ea14efe8d68d62>>
+ * @generated SignedSource<<dffd10c541f65cda93aaa308f82f52d2>>
  * @lightSyntaxTransform
  */
 
@@ -11,11 +11,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type noOrganizationRootShell_rootQuery$variables = Record<PropertyKey, never>;
 export type noOrganizationRootShell_rootQuery$data = {
-  readonly azureTenantOrganization: {
-    readonly id: string;
-  } | null | undefined;
   readonly customerReadinessSynced: boolean;
-  readonly isAzureTenantInstalled: boolean;
   readonly me: {
     readonly id: string;
     readonly isOnboardingDone: boolean;
@@ -48,32 +44,6 @@ v2 = {
   "kind": "ScalarField",
   "name": "customerReadinessSynced",
   "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isAzureTenantInstalled",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "OrganizationDetails",
-  "kind": "LinkedField",
-  "name": "azureTenantOrganization",
-  "plural": false,
-  "selections": [
-    (v0/*:: as any*/)
-  ],
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -96,8 +66,6 @@ return {
         "storageKey": null
       },
       (v2/*:: as any*/),
-      (v3/*:: as any*/),
-      (v4/*:: as any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -170,7 +138,13 @@ return {
             "name": "photoUrl",
             "storageKey": null
           },
-          (v5/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -182,41 +156,6 @@ return {
         "storageKey": null
       },
       (v2/*:: as any*/),
-      (v3/*:: as any*/),
-      (v4/*:: as any*/),
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "MyOrganizationDetails",
-        "kind": "LinkedField",
-        "name": "myOrganizations",
-        "plural": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "uniqueId",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "customDomain",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "logoUrl",
-            "storageKey": null
-          },
-          (v5/*:: as any*/)
-        ],
-        "storageKey": null
-      },
       {
         "alias": null,
         "args": null,
@@ -234,16 +173,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3fbac56ebd35796e57bb8282e1a9c606",
+    "cacheID": "1484175e6fc17d73842f998173016220",
     "id": null,
     "metadata": {},
     "name": "noOrganizationRootShell_rootQuery",
     "operationKind": "query",
-    "text": "query noOrganizationRootShell_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  customerReadinessSynced\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  ...noOrganizationAppBar_query\n  ...observability_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment noOrganizationAppBar_query on Query {\n  me {\n    id\n    email\n    emails\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations {\n    uniqueId\n    customDomain\n    logoUrl\n    name\n  }\n  pendingOrganizationInvitationsCount\n  pendingTeamInvitationsCount\n  ...newFeedbackDialog_query\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
+    "text": "query noOrganizationRootShell_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  customerReadinessSynced\n  ...noOrganizationAppBar_query\n  ...observability_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment noOrganizationAppBar_query on Query {\n  me {\n    id\n    email\n    emails\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  pendingOrganizationInvitationsCount\n  pendingTeamInvitationsCount\n  ...newFeedbackDialog_query\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "38e02ef46e8bcfd4491ddf09c3a51528";
+(node as any).hash = "d7bba4fcf3029593bb2fbb06e7c53d94";
 
 export default node;

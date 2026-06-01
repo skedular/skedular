@@ -1,7 +1,7 @@
-import { InMsTeamsContext, PaletteModeContext, getCustomerShortName, getRelayErrorMessage } from '@skedular/shared';
-import { BodyIconTypography, DefaultDialogTitle, FormStackColumn, TwoButtonsDialogActions } from '@skedular/ui';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
+import { getCustomerShortName, getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import { BodyIconTypography, DefaultDialogTitle, FormStackColumn, TwoButtonsDialogActions } from '@skedular/ui';
 
 import type { newFeedbackDialog_query$key } from '@/queries/__generated__/newFeedbackDialog_query.graphql';
 import type { newFeedbackDialog_submitCustomerFeedbackMutation } from '@/queries/__generated__/newFeedbackDialog_submitCustomerFeedbackMutation.graphql';
@@ -57,7 +57,6 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(zoneSchema);
   const requiredFields = makeRequired(zoneSchema);
-  const inMsTeams = useContext(InMsTeamsContext);
 
   const handleSubmitFeedbackClick = ({ feedback: feedbackContent }: FeedbackDetails) => {
     const id = uuid();
@@ -68,7 +67,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
           clientMutationId: uuid(),
           id,
           feedbackContent,
-          channel: inMsTeams ? 'MS_TEAMS' : 'WEB',
+          channel: 'WEB',
         },
       },
       onCompleted: (_, errors) => {

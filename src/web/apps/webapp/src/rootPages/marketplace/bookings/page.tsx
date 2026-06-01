@@ -1,8 +1,8 @@
 'use client';
 
+import { CustomerBookingsHub } from '@/components/booking/myBookings';
 import { getSignInLink } from '@/components/links';
-import { GuestStoreFrontBookings } from '@/components/organizationStoreFrontGuest';
-import { OrganizationStoreFrontRootShell, UnauthenticatedOrganizationStoreFrontRootShell } from '@/components/rootShell';
+import { NoOrganizationRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -17,14 +17,14 @@ const RootPage = () => {
 
   if (user) {
     return (
-      <OrganizationStoreFrontRootShell>
-        <GuestStoreFrontBookings />
-      </OrganizationStoreFrontRootShell>
+      <NoOrganizationRootShell>
+        <CustomerBookingsHub />
+      </NoOrganizationRootShell>
     );
   }
 
   return (
-    <UnauthenticatedOrganizationStoreFrontRootShell>
+    <UnauthenticatedRootShell>
       <Container maxWidth="md" sx={{ py: { xs: 6, md: 8 } }}>
         <Card sx={{ borderRadius: 4, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
           <CardContent sx={{ p: { xs: 3, md: 4 } }}>
@@ -36,7 +36,7 @@ const RootPage = () => {
           </CardContent>
         </Card>
       </Container>
-    </UnauthenticatedOrganizationStoreFrontRootShell>
+    </UnauthenticatedRootShell>
   );
 };
 

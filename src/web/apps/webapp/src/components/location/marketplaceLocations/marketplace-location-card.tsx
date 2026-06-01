@@ -1,8 +1,8 @@
-import { PaletteModeContext, getRelayErrorMessage, useIntegratedPlatform } from '@skedular/shared';
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@skedular/ui';
 import { AreaIcon, CloseIcon, FavouriteIcon, LocationIcon, NotFavouriteIcon, PersonIcon, ShareIcon } from '@/components/icons';
 import { getMarketplaceLocationLink, getSignInLink } from '@/components/links';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
+import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@skedular/ui';
 
 import { emerald } from '@skedular/ui';
 
@@ -33,6 +33,7 @@ type Props = {
   locationDetailsRelay: marketplaceLocationCard_LocationDetails$key;
   onReloadRequired: () => void;
   onClose?: () => void;
+  fullWidthPopup?: boolean;
 };
 
 const cardSx: SxProps<Theme> = {
@@ -111,7 +112,7 @@ const closeOverlayIconButtonSx: SxProps<Theme> = {
   },
 };
 
-const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose }: Props) => {
+const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose, fullWidthPopup }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment marketplaceLocationCard_query on Query {
@@ -330,11 +331,19 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
         sx={{
           ...cardSx,
           ...(isPopupCard
-            ? {
-                width: 320,
-                maxWidth: 'calc(100vw - 32px)',
-                height: 'auto',
-              }
+            ? fullWidthPopup
+              ? {
+                  width: '100%',
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  height: 'auto',
+                  overflowY: 'auto',
+                }
+              : {
+                  width: 320,
+                  maxWidth: 'calc(100vw - 32px)',
+                  height: 'auto',
+                }
             : null),
         }}
         component={NextLink}

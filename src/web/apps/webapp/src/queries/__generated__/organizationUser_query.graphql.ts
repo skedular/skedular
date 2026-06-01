@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<363b6fde1859c1762ab82ab20f6fd5fe>>
+ * @generated SignedSource<<a01d4cef682dcae8ee9d594bd420f952>>
  * @lightSyntaxTransform
  */
 
@@ -86,7 +86,7 @@ export type organizationUser_query$data = {
       readonly totalCount: number;
     };
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationUserLeftSideNavigationMenuContent_query" | "singleChoiceUserPersonalInformationVisibility_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceUserPersonalInformationVisibility_query">;
   readonly " $fragmentType": "organizationUser_query";
 };
 export type organizationUser_query$key = {
@@ -569,11 +569,6 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "organizationUserLeftSideNavigationMenuContent_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "singleChoiceUserPersonalInformationVisibility_query"
     }
   ],
@@ -582,6 +577,6 @@ return {
 };
 })();
 
-(node as any).hash = "9db458c2b5523ecf22501a2033493b03";
+(node as any).hash = "6f3ad9e78f8595d4c9984e1f6155f242";
 
 export default node;

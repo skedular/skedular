@@ -1,36 +1,19 @@
 'use client';
 
-import { postSignOutReturnToKey } from '@/components/links';
-import { getProductAppDefinition } from '@skedular/shared';
-import CoWorkingSubdomain from './customer-facing-subdomain/co-working-subdomain';
-import PrivateOrganizationSubdomain from './customer-facing-subdomain/private-organization-subdomain';
-import { resolveCustomerFacingEntryPoint } from './customer-facing-subdomain/customer-facing-subdomain-resolver';
+import useKnownParams from '@/hooks/use-known-params';
 import OrganizationStoreFrontPage from '@/rootPages/marketplace/page';
 import Page from '@/rootPages/page';
-import { memo, useEffect } from 'react';
-import useKnownParams from '@/hooks/use-known-params';
+import { getProductAppDefinition } from '@skedular/shared';
+import { memo } from 'react';
+import CoWorkingSubdomain from './customer-facing-subdomain/co-working-subdomain';
+import { resolveCustomerFacingEntryPoint } from './customer-facing-subdomain/customer-facing-subdomain-resolver';
+import PrivateOrganizationSubdomain from './customer-facing-subdomain/private-organization-subdomain';
 
 const appDefinition = getProductAppDefinition('webapp');
 
 const RootPage = () => {
   const { isCustomDomain } = useKnownParams();
   const customerFacingEntryPoint = resolveCustomerFacingEntryPoint({ isCustomDomain });
-
-  useEffect(() => {
-    const rawReturnTo = sessionStorage.getItem(postSignOutReturnToKey);
-    if (!rawReturnTo || !rawReturnTo.startsWith('/')) {
-      return;
-    }
-
-    const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-    if (currentPath === rawReturnTo) {
-      sessionStorage.removeItem(postSignOutReturnToKey);
-      return;
-    }
-
-    sessionStorage.removeItem(postSignOutReturnToKey);
-    window.location.replace(rawReturnTo);
-  }, []);
 
   if (customerFacingEntryPoint === 'private-organisation-subdomain') {
     return (

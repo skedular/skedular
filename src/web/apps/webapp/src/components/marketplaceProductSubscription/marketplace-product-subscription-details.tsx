@@ -1,12 +1,3 @@
-import {
-  RelayError,
-  convertCalendarDayToStartOfDay,
-  getCustomerFullName,
-  getRelayErrorMessage,
-  toRootError,
-  toStoredBookingTimeRange,
-  useIntegratedPlatform,
-} from '@skedular/shared';
 import { ArrowLeftIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon } from '@/components/icons';
 import { getMarketplaceBookingDetailsLink, getMarketplaceProductLink } from '@/components/links';
 import { Loading } from '@/components/loading';
@@ -18,6 +9,15 @@ import {
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
+import {
+  convertCalendarDayToStartOfDay,
+  getCustomerFullName,
+  getRelayErrorMessage,
+  RelayError,
+  toRootError,
+  toStoredBookingTimeRange,
+  useIntegratedPlatform,
+} from '@skedular/shared';
 
 import useKnownParams from '@/hooks/use-known-params';
 import type { marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation.graphql';
@@ -36,6 +36,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 
+import logger from '@/libs/logging';
+import { logCustomerSelfServiceActionRejected, logCustomerSelfServiceActionStarted } from '@/libs/logging/aggregate-marketplace-telemetry';
 import {
   BodyIconTypography,
   CaptionIconTypography,
@@ -58,6 +60,7 @@ import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingDetailsHero from '../marketplaceProductBooking/marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from '../marketplaceProductBooking/marketplace-product-booking-payment-panel';
 import MarketplaceRefundStatusCard from '../marketplaceProductBooking/marketplace-refund-status-card';
+import { canRequestMarketplaceSubscriptionCancellation } from '../marketplaceProductBooking/marketplace-self-service-eligibility';
 
 type PendingCancellationConfirmation = {
   type: SupportedMarketplaceBookingSubscriptionCancellationMode;
@@ -474,6 +477,13 @@ const MarketplaceProductSubscriptionDetails = ({
       return;
     }
 
+    logCustomerSelfServiceActionStarted({
+      logger,
+      actionType: `cancel_subscription_${cancellationModeType.toLowerCase()}`,
+      purchaseId: subscription.id,
+      purchaseType: 'subscription',
+    });
+
     commitDeleteMarketplaceBookingSubscription({
       variables: {
         input: {
@@ -484,6 +494,12 @@ const MarketplaceProductSubscriptionDetails = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
+          logCustomerSelfServiceActionRejected({
+            logger,
+            actionType: `cancel_subscription_${cancellationModeType.toLowerCase()}`,
+            purchaseType: 'subscription',
+            reasonCode: getRelayErrorMessage(errors),
+          });
           toast(<NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
@@ -492,6 +508,12 @@ const MarketplaceProductSubscriptionDetails = ({
         router.refresh();
       },
       onError: (error) => {
+        logCustomerSelfServiceActionRejected({
+          logger,
+          actionType: `cancel_subscription_${cancellationModeType.toLowerCase()}`,
+          purchaseType: 'subscription',
+          reasonCode: getRelayErrorMessage(error),
+        });
         toast(<NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
       },
     });
@@ -635,7 +657,10 @@ const MarketplaceProductSubscriptionDetails = ({
                   </StackColumn>
                 ) : null}
 
-                {subscription.status.type === 'ACTIVE' ? (
+                {canRequestMarketplaceSubscriptionCancellation({
+                  isActive: subscription.status.type === 'ACTIVE',
+                  cancellationModeAvailable: Boolean(immediateCancellationMode || atPeriodEndCancellationMode),
+                }) ? (
                   <StackColumn spacing={2}>
                     <SubscriptionCancellationSection
                       cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}

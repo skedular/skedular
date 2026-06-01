@@ -1,7 +1,7 @@
+import useKnownParams from '@/hooks/use-known-params';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import RootPage from './page';
-import useKnownParams from '@/hooks/use-known-params';
 
 vi.mock('@skedular/shared', async () => {
   const actual = await vi.importActual<typeof import('@skedular/shared')>('@skedular/shared');
@@ -41,6 +41,7 @@ const knownParams = {
 describe('WebApp root page foundation', () => {
   beforeEach(() => {
     sessionStorage.clear();
+    window.history.pushState({}, '', '/');
     vi.mocked(useKnownParams).mockReturnValue(knownParams);
   });
 
@@ -48,6 +49,7 @@ describe('WebApp root page foundation', () => {
     render(<RootPage />);
 
     expect(screen.getByText('Public discovery root')).toBeInTheDocument();
+    expect(screen.queryByText(/admin/i)).not.toBeInTheDocument();
     expect(screen.getByText('Public discovery root').closest('[data-product-app]')).toHaveAttribute('data-product-app', 'webapp');
     expect(screen.getByText('Public discovery root').closest('[data-review-scope]')).toHaveAttribute('data-review-scope', 'public-discovery');
   });
@@ -60,5 +62,14 @@ describe('WebApp root page foundation', () => {
     expect(screen.getByText('Customer-facing subdomain')).toBeInTheDocument();
     expect(screen.getByText('Customer-facing subdomain').parentElement).toHaveAttribute('data-customer-facing-entry', 'co-working-subdomain');
     expect(screen.getByText('Customer-facing subdomain').closest('[data-review-scope]')).toHaveAttribute('data-review-scope', 'co-working-subdomain');
+  });
+
+  it('does not redirect the root webapp URL during feature entry resolution', () => {
+    sessionStorage.setItem('postSignOutReturnTo', '/marketplace/bookings');
+    window.history.pushState({}, '', '/current-path');
+
+    render(<RootPage />);
+
+    expect(window.location.pathname).toBe('/current-path');
   });
 });

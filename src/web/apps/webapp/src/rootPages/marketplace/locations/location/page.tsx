@@ -1,14 +1,16 @@
 import { Loading } from '@/components/loading';
 import { MarketplaceLocation } from '@/components/location/marketplaceLocation';
-import { RelayError, toRootError } from '@skedular/shared';
 import { NoOrganizationRootShell, OrganizationStoreFrontRootShell, UnauthenticatedOrganizationStoreFrontRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
+import useKnownParams from '@/hooks/use-known-params';
+import logger from '@/libs/logging';
+import { logAggregateMarketplaceLocationSelected } from '@/libs/logging/aggregate-marketplace-telemetry';
 import type { pageMarketplaceLocation_rootQuery } from '@/queries/__generated__/pageMarketplaceLocation_rootQuery.graphql';
+import { RelayError, toRootError } from '@skedular/shared';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
-import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<pageMarketplaceLocation_rootQuery, Record<string, unknown>>;
@@ -24,7 +26,13 @@ const RootQuery = graphql`
 const RootPage = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<pageMarketplaceLocation_rootQuery>(RootQuery, queryReference);
   const { user } = useAuth();
-  const { isCustomDomain } = useKnownParams();
+  const { isCustomDomain, locationId, organizationCustomDomain } = useKnownParams();
+
+  useEffect(() => {
+    if (!isCustomDomain && locationId) {
+      logAggregateMarketplaceLocationSelected({ logger, locationId, organizationId: organizationCustomDomain || 'aggregate-marketplace' });
+    }
+  }, [isCustomDomain, locationId, organizationCustomDomain]);
 
   if (user) {
     if (isCustomDomain) {

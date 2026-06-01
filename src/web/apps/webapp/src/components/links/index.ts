@@ -29,6 +29,9 @@ export const getMarketplaceLocationLink = (integratedPlatform: string | undefine
 export const getMarketplaceLocationFloorPlansLink = (integratedPlatform: string | undefined, locationId: string) =>
   integratedPlatform ? `/${integratedPlatform}/marketplace/locations/${locationId}/floorPlans` : `/marketplace/locations/${locationId}/floorPlans`;
 
+export const getCustomerMarketplaceBookingsLink = (integratedPlatform: string | undefined) =>
+  integratedPlatform ? `/${integratedPlatform}/marketplace/bookings` : '/marketplace/bookings';
+
 export const getMarketplaceBookingsLink = (integratedPlatform: string | undefined, isCustomDomain: boolean, organizationCustomDomain: string) => {
   const baseLink = isCustomDomain ? 'bookings' : `organizations/${organizationCustomDomain}/bookings`;
 
@@ -111,8 +114,6 @@ export const getMarketplaceSubscriptionDetailsLink = (
   return integratedPlatform ? `/${integratedPlatform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };
 
-export const getInstallMsTeamsLink = () => '/msteams/install-msteams';
-
 export const getOrganizationsBaseLink = (integratedPlatform: string | undefined) => (integratedPlatform ? `${integratedPlatform}/organizations` : '/organizations');
 
 export const getOrganizationSetupLink = (integratedPlatform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatform)}/setup`;
@@ -173,6 +174,37 @@ export const getOrganizationBookingBaseLink = (integratedPlatform: string | unde
   appendQueryParams(`${getOrganizationBaseLink(integratedPlatform, id)}/bookings/${bookingId}`, {
     editMode: options?.editMode,
   });
+
+export const getTeamsOrganizationBookingBaseLink = (organizationCustomDomain: string, bookingId: string, options?: { editMode?: 'occurrence' | 'recurring' }) => {
+  const path = appendQueryParams(`/organizations/${organizationCustomDomain}/bookings/${bookingId}`, {
+    editMode: options?.editMode,
+  });
+  const teamsAppUrl = process.env.NEXT_PUBLIC_SKEDULAR_TEAMS_APP_URL;
+
+  if (!teamsAppUrl?.trim()) {
+    return path;
+  }
+
+  try {
+    return new URL(path, teamsAppUrl).href;
+  } catch {
+    return path;
+  }
+};
+
+export const getSpacesAppLink = () => {
+  const spacesAppUrl = process.env.NEXT_PUBLIC_SKEDULAR_SPACES_APP_URL;
+
+  if (!spacesAppUrl?.trim()) {
+    return '/';
+  }
+
+  try {
+    return new URL('/', spacesAppUrl).href;
+  } catch {
+    return '/';
+  }
+};
 
 export const getOrganizationLocationAddPrivateLink = (integratedPlatform: string | undefined, id: string, options?: { redirectUrl?: string }) => {
   let params = '';

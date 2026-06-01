@@ -1,8 +1,10 @@
 import { Loading } from '@/components/loading';
 import { MarketplaceLocations } from '@/components/location/marketplaceLocations';
-import { RelayError, toRootError } from '@skedular/shared';
 import { NoOrganizationRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
+import logger from '@/libs/logging';
+import { logAggregateMarketplaceDiscoveryStarted } from '@/libs/logging/aggregate-marketplace-telemetry';
 import type { pageHome_rootQuery } from '@/queries/__generated__/pageHome_rootQuery.graphql';
+import { RelayError, toRootError } from '@skedular/shared';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -32,7 +34,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
 
   if (user) {
     return (
-      <NoOrganizationRootShell hideSideNav>
+      <NoOrganizationRootShell>
         <MarketplaceLocations rootDataRelay={rootData} rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
       </NoOrganizationRootShell>
     );
@@ -54,6 +56,7 @@ const RootPageWithRelay = () => {
   const { user, loading } = useAuth();
 
   useEffect(() => {
+    logAggregateMarketplaceDiscoveryStarted({ logger, isSignedIn: !loading && !!user, hasFilters: false });
     loadQuery(
       {
         locationsSortingValues: [

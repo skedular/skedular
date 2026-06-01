@@ -1,29 +1,26 @@
 import { createWebAppSwitcherModel } from '@/app/app-switcher-config';
-import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
+import { CustomerAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
-import { AddIcon, FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
-import { getNotificationsLink, getOrganizationBaseLink, getOrganizationSetupLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
-import { NoOrganizationMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
+import { BookingIcon, FeedbackIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
+import { getCustomerMarketplaceBookingsLink, getNotificationsLink, getSettingsLink, getSignOutReturnToLink, getSpacesAppLink } from '@/components/links';
 import type { noOrganizationAppBar_query$key } from '@/queries/__generated__/noOrganizationAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import MuiAppBar from '@mui/material/AppBar';
 import Badge from '@mui/material/Badge';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import type { SelectChangeEvent } from '@mui/material/Select';
-import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
 import { getCustomerFullName, localNow, PaletteModeContext, SelectedPaletteModeContext, toLongDateTime, UpdatePaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
-import { AppSwitcher, BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { AppSwitcher, BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
 import { memo, useContext, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { useInterval } from 'usehooks-ts';
@@ -32,8 +29,6 @@ type Props = {
   rootDataRelay: noOrganizationAppBar_query$key;
   showLogo?: boolean;
 };
-
-const createOrganizationId = '76eZvntIX6YA5FboBJlRk';
 
 const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
   const rootData = useFragment<noOrganizationAppBar_query$key>(
@@ -48,12 +43,6 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
           familyName
           photoUrl
         }
-        myOrganizations {
-          uniqueId
-          customDomain
-          logoUrl
-          name
-        }
         pendingOrganizationInvitationsCount
         pendingTeamInvitationsCount
         ...newFeedbackDialog_query
@@ -64,7 +53,6 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
 
   const { integratedPlatform } = useIntegratedPlatform();
   const { signOut } = useAuth();
-  const router = useRouter();
   const [currentTime, setCurrentTime] = useState(localNow());
   const selectedThemeMode = useContext(SelectedPaletteModeContext);
   const paletteMode = useContext(PaletteModeContext);
@@ -72,20 +60,9 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
   const [themeMenuAnchorEl, setThemeMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
-  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const appSwitcher = useMemo(() => createWebAppSwitcherModel({ logConfiguration: false }), []);
 
   useInterval(() => setCurrentTime(localNow()), 1000);
-
-  const handleSelectedOrganizationChange = (event: SelectChangeEvent<unknown>) => {
-    const id = event.target.value as string;
-
-    if (id === createOrganizationId) {
-      router.push(getOrganizationSetupLink(integratedPlatform));
-    } else {
-      router.push(getOrganizationBaseLink(integratedPlatform, id));
-    }
-  };
 
   const handleProfileMenuOpenClick = (event: React.MouseEvent<HTMLElement>) => {
     setProfileOpenAnchorEl(event.currentTarget);
@@ -126,10 +103,6 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
     handleThemeMenuCloseClick();
   };
 
-  const toggleMobileDrawerOpen = (newOpen: boolean) => () => {
-    setMobileDrawerOpen(newOpen);
-  };
-
   const customerName = getCustomerFullName({
     name: null,
     givenName: rootData.me?.givenName,
@@ -138,6 +111,8 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
   });
 
   const settingsLink = getSettingsLink(integratedPlatform);
+  const bookingsLink = getCustomerMarketplaceBookingsLink(integratedPlatform);
+  const spacesAppLink = getSpacesAppLink();
   const notificationsLink = getNotificationsLink(integratedPlatform);
   const pendingInvitationsCount = rootData.pendingOrganizationInvitationsCount + rootData.pendingTeamInvitationsCount;
   const selectedThemeIcon =
@@ -163,86 +138,57 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
               <Image src={logoUrl} width={logoWidth} height={logoHeight} unoptimized alt="Skedular" />
             </Box>
           )}
+          {showLogo && <Divider orientation="vertical" flexItem sx={{ mr: 2 }} />}
 
-          <Select
-            onChange={handleSelectedOrganizationChange}
-            displayEmpty
-            sx={{
-              '& fieldset': {
-                border: 0,
-                borderRight: 0,
-                borderRadius: 0,
-              },
-            }}
-            renderValue={(selectedId) => {
-              if (!rootData.myOrganizations) {
-                return (
-                  <>
-                    <BodyIconTypography
-                      label="Please select an organization"
-                      sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
-                    />
-                    <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
-                  </>
-                );
-              }
-
-              const selectedItem = rootData.myOrganizations.find((item) => item.customDomain === selectedId);
-              if (!selectedItem) {
-                return (
-                  <>
-                    <BodyIconTypography
-                      label="Please select an organization"
-                      sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
-                    />
-                    <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
-                  </>
-                );
-              }
-
-              return (
-                <>
-                  <Box sx={{ display: { xs: 'none', sm: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    <LeadIconTypography
-                      label={selectedItem.name}
-                      sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-                      startElement={<OrganizationAvatar name={{ name: selectedItem.name }} photo={{ url: selectedItem.logoUrl }} />}
-                    />
-                  </Box>
-
-                  <Box sx={{ display: { xs: 'block', sm: 'none' }, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    <LeadIconTypography label={selectedItem.name} sx={{ width: 150, overflow: 'hidden', textOverflow: 'ellipsis' }} />
-                  </Box>
-                </>
-              );
-            }}
-          >
-            {rootData.myOrganizations.map((organization) => (
-              <MenuItem key={organization.uniqueId} value={organization.customDomain ?? ''}>
-                <StackRow>
-                  <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
-                  <StackColumn spacing={-0.5}>
-                    <LeadIconTypography label={organization.name} />
-                    <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
-                  </StackColumn>
-                </StackRow>
-              </MenuItem>
-            ))}
-
-            {rootData.myOrganizations.length !== 0 && <Divider />}
-
-            <MenuItem value={createOrganizationId}>
-              <LeadIconTypography label="Create organization" startElement={<AddIcon />} />
-            </MenuItem>
-          </Select>
-
-          {rootData.myOrganizations.length !== 0 && <Divider orientation="vertical" flexItem />}
-          <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, paddingLeft: 2 }} />
+          <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} />
 
           <PushToRight />
 
           <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, paddingRight: 2 }} />
           <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' } }} />
+
+          <Button
+            component={NextLink}
+            href={spacesAppLink}
+            variant="text"
+            sx={{
+              display: { xs: 'none', md: 'inline-flex' },
+              ml: 1,
+              minHeight: 40,
+              px: 1.25,
+              color: (theme) => theme.palette.text.primary,
+              fontWeight: 700,
+              textTransform: 'none',
+              whiteSpace: 'nowrap',
+              borderRadius: 0,
+              '&:hover': {
+                backgroundColor: 'transparent',
+                color: (theme) => theme.palette.text.primary,
+                textDecoration: 'underline',
+              },
+            }}
+          >
+            Become a host
+          </Button>
+
+          <IconButton
+            component={NextLink}
+            href={bookingsLink}
+            sx={{
+              ml: 1,
+              border: 1,
+              borderColor: (theme) => theme.palette.divider,
+              borderRadius: 3,
+              width: 40,
+              height: 40,
+              color: (theme) => theme.palette.text.primary,
+              '&:hover': {
+                backgroundColor: (theme) => theme.palette.action.hover,
+              },
+            }}
+          >
+            <BookingIcon tip="My bookings" />
+          </IconButton>
 
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
             <IconButton
@@ -314,10 +260,6 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
             />
           </IconButton>
 
-          <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
-            <HamburgerMenuIcon />
-          </IconButton>
-
           <Menu
             sx={{ marginTop: 4 }}
             anchorEl={profileOpenAnchorEl}
@@ -346,6 +288,18 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
             <AppSwitcher model={appSwitcher} buttonMode="menu-item" />
 
             <Divider />
+
+            <MenuItem>
+              <Link component={NextLink} href={bookingsLink}>
+                <SmallIconTypography startElement={<BookingIcon />} label="My bookings" />
+              </Link>
+            </MenuItem>
+
+            <MenuItem>
+              <Link component={NextLink} href={spacesAppLink}>
+                <SmallIconTypography startElement={<OrganizationIcon />} label="Become a host" />
+              </Link>
+            </MenuItem>
 
             <MenuItem>
               <Link component={NextLink} href={settingsLink}>
@@ -408,8 +362,6 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
               <SmallIconTypography startElement={<SignOutIcon />} label="Sign out" />
             </MenuItem>
           </Menu>
-
-          <NoOrganizationMobileLeftSideNavigationMenu open={mobileDrawerOpen} toggleDrawer={toggleMobileDrawerOpen} />
         </Toolbar>
       </MuiAppBar>
 

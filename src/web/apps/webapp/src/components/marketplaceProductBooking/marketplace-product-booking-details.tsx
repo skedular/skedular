@@ -1,4 +1,8 @@
-import { RelayError, getCustomerFullName, getRelayErrorMessage, isStoredFullDayRange, toRootError, toStoredBookingTimeRange, useIntegratedPlatform } from '@skedular/shared';
+import { ArrowLeftIcon } from '@/components/icons';
+import { getMarketplaceLocationLink } from '@/components/links';
+import { Loading } from '@/components/loading';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
+import { getCustomerFullName, getRelayErrorMessage, isStoredFullDayRange, RelayError, toRootError, toStoredBookingTimeRange, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
   CaptionIconTypography,
@@ -10,11 +14,10 @@ import {
   SubtitleIconTypography,
   TwoButtonsDialogActions,
 } from '@skedular/ui';
-import { ArrowLeftIcon } from '@/components/icons';
-import { getMarketplaceLocationLink } from '@/components/links';
-import { Loading } from '@/components/loading';
-import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 
+import useKnownParams from '@/hooks/use-known-params';
+import logger from '@/libs/logging';
+import { logCustomerSelfServiceActionRejected, logCustomerSelfServiceActionStarted } from '@/libs/logging/aggregate-marketplace-telemetry';
 import type { marketplaceProductBookingDetails_rootQuery } from '@/queries/__generated__/marketplaceProductBookingDetails_rootQuery.graphql';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -38,7 +41,7 @@ import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingDetailsHero from './marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from './marketplace-product-booking-payment-panel';
 import MarketplaceRefundStatusCard from './marketplace-refund-status-card';
-import useKnownParams from '@/hooks/use-known-params';
+import { canRequestMarketplaceBookingCancellation } from './marketplace-self-service-eligibility';
 
 const RootQuery = graphql`
   query marketplaceProductBookingDetails_rootQuery($bookingId: String!) {
@@ -237,10 +240,11 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
       return false;
     }
 
-    return dayjs.utc(booking.from).isAfter(dayjs.utc());
+    return canRequestMarketplaceBookingCancellation({ bookingStartsAt: booking.from, isCancelled, now: new Date() });
   }, [booking, isCancelled, marketplaceBooking]);
   const productTitle = marketplaceBooking?.productVersion?.listingMetadata.title ?? 'this booking';
   const handleRequestCancellationClick = () => {
+    logCustomerSelfServiceActionStarted({ logger, actionType: 'cancel_booking', purchaseId: booking?.id ?? 'unknown', purchaseType: 'booking' });
     setPendingCancellationConfirmation(true);
   };
   const handleCancelCancellationClick = () => {
@@ -265,6 +269,7 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
+          logCustomerSelfServiceActionRejected({ logger, actionType: 'cancel_booking', purchaseType: 'booking', reasonCode: getRelayErrorMessage(errors) });
           toast(
             <NotificationContent content={`Failed to cancel ${bookingDetailsInfo}. ${toMarketplaceBookingCancellationErrorMessage(getRelayErrorMessage(errors))}`} />,
             errorNotificationOptions,
@@ -276,6 +281,7 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
         setHasCancelledLocally(true);
       },
       onError: (error) => {
+        logCustomerSelfServiceActionRejected({ logger, actionType: 'cancel_booking', purchaseType: 'booking', reasonCode: getRelayErrorMessage(error) });
         toast(
           <NotificationContent content={`Failed to cancel ${bookingDetailsInfo}. ${toMarketplaceBookingCancellationErrorMessage(getRelayErrorMessage(error))}`} />,
           errorNotificationOptions,

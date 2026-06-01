@@ -1,8 +1,10 @@
 # unityhubio Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-05-13
+Auto-generated from all feature plans. Last updated: 2026-06-01
 
 ## Active Technologies
+- TypeScript 6.0.3; React 19.2.6; Next.js 16.2.6 App Router; backend C# .NET 10 only if GraphQL/domain contract changes are needed + Relay 21, `react-relay`, MUI 9, `@skedular/ui`, `@skedular/shared`, WorkOS AuthKit, Leaflet/react-leaflet for map browsing, existing marketplace GraphQL schema and generated Relay artifacts (020-customer-landing-cleanup)
+- No new persistence planned for the first cleanup/design slice; uses existing marketplace booking, subscription, location, organization, and customer data via GraphQL. Any new durable cleanup inventory can start as feature documentation/task artifact unless implementation requires product-owned persistence. (020-customer-landing-cleanup)
 
 - C# .NET 10 (backend); TypeScript 6 / React 19 / Next.js 16 App Router (frontend) (007-resource-availability-dashboard)
 - PostgreSQL via EF Core — no new migration required for the query path; the existing `DailyResourceAvailabilitySnapshot` table (from 006) supports analytics but the dashboard queries live booking data at request time via gRPC (007-resource-availability-dashboard)
@@ -42,11 +44,11 @@ src/
 C# on .NET 10: Follow standard conventions
 
 ## Recent Changes
+- 020-customer-landing-cleanup: Added TypeScript 6.0.3; React 19.2.6; Next.js 16.2.6 App Router; backend C# .NET 10 only if GraphQL/domain contract changes are needed + Relay 21, `react-relay`, MUI 9, `@skedular/ui`, `@skedular/shared`, WorkOS AuthKit, Leaflet/react-leaflet for map browsing, existing marketplace GraphQL schema and generated Relay artifacts
 
 - 008-bulk-resource-import: Added C# .NET 10 (backend); TypeScript 6 / React 19 / Next.js 16 App Router (frontend) + HotChocolate (GraphQL), Entity Framework Core, `Enterprise.Shared.Database` repository pattern, Relay, MUI v9, `mui-rff` Autocomplete
 - 007-resource-availability-dashboard: Added C# .NET 10 (backend); TypeScript 6 / React 19 / Next.js 16 App Router (frontend)
 
-- 006-desk-availability-analytics: Added C# on .NET 10 + Temporal (workflows/activities), HotChocolate (GraphQL), Entity Framework Core, gRPC (booking data via `BookingService.BookingServiceClient`), `Enterprise.Shared.Database` repository pattern, `IRepositoryFactory`, `IWorkflowIdService`
 
 <!-- MANUAL ADDITIONS START -->
 
@@ -61,4 +63,5 @@ C# on .NET 10: Follow standard conventions
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
+at specs/020-customer-landing-cleanup/plan.md
 <!-- SPECKIT END -->
