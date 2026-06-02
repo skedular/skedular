@@ -18,8 +18,8 @@
     "@mui/material": "^9.0.1",
     "@mui/system": "^9.0.1",
     "@mui/x-data-grid": "^9.3.0",
-    "react": "19.2.6",
-    "react-dom": "19.2.6",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
     "react-svg-credit-card-payment-icons": "^6.0.4"
   },
   "devDependencies": {
@@ -29,13 +29,13 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@types/react": "^19.2.15",
+    "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.2.6",
+    "eslint-config-next": "^16.2.7",
     "jsdom": "^29.1.1",
     "prettier": "^3.8.3",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.7"
+    "vitest": "^4.1.8"
   }
 }

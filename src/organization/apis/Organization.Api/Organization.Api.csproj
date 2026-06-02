@@ -20,7 +20,7 @@
 
     <ItemGroup>
         <!-- Build Tools / gRPC (Server) -->
-        <PackageReference Include="Grpc.Tools" Version="2.80.0">
+        <PackageReference Include="Grpc.Tools" Version="2.81.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -29,7 +29,7 @@
 
     <ItemGroup>
         <!-- Analyzers (HotChocolate) -->
-        <PackageReference Include="HotChocolate.Types.Analyzers" Version="16.0.10">
+        <PackageReference Include="HotChocolate.Types.Analyzers" Version="16.0.11">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>

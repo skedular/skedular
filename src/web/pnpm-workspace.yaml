@@ -34,6 +34,7 @@ minimumReleaseAgeExclude:
   - turbo@2.9.16
 overrides:
   '@types/node': 25.9.0
+  '@types/react': 19.2.16
   '@mui/x-data-grid': 9.3.0
   '@mui/x-data-grid-pro': 9.3.0
   '@mui/x-data-grid-premium': 9.3.0
