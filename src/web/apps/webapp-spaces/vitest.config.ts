@@ -20,12 +20,12 @@ export default defineConfig({
         replacement: path.resolve(__dirname, './src'),
       },
       {
-        find: '@skedular/ui',
-        replacement: path.resolve(__dirname, '../../packages/ui/src/index.ts'),
-      },
-      {
         find: /^@skedular\/ui\/(.*)$/,
         replacement: path.resolve(__dirname, '../../packages/ui/src/$1'),
+      },
+      {
+        find: '@skedular/ui',
+        replacement: path.resolve(__dirname, '../../packages/ui/src/index.ts'),
       },
       {
         find: '@skedular/shared',

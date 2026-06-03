@@ -16,10 +16,10 @@ const inter = localFont({
 
 const barlow = localFont({
   src: [
-    { path: './fonts/Barlow-Regular.ttf', weight: '400', style: 'normal' },
-    { path: './fonts/Barlow-Medium.ttf', weight: '500', style: 'normal' },
-    { path: './fonts/Barlow-SemiBold.ttf', weight: '600', style: 'normal' },
-    { path: './fonts/Barlow-Bold.ttf', weight: '700', style: 'normal' },
+    { path: './fonts/Barlow-Regular.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/Barlow-Medium.woff2', weight: '500', style: 'normal' },
+    { path: './fonts/Barlow-SemiBold.woff2', weight: '600', style: 'normal' },
+    { path: './fonts/Barlow-Bold.woff2', weight: '700', style: 'normal' },
   ],
   variable: '--font-barlow',
   display: 'swap',

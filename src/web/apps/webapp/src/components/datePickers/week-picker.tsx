@@ -1,12 +1,14 @@
-import { SmallIconTypography } from '@skedular/ui';
+'use client';
+
 import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, TodayIcon } from '@/components/icons';
-import { endOfWeek, isInSameMonth, isInSameWeek, isInSameYear, startOfWeek } from '@skedular/shared';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickerDay, PickerDayProps } from '@mui/x-date-pickers/PickerDay';
+import { endOfWeek, isInSameMonth, isInSameWeek, isInSameYear, startOfWeek } from '@skedular/shared';
+import { SmallIconTypography } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
 

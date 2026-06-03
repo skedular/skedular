@@ -1,7 +1,9 @@
+import withBundleAnalyzer from "@next/bundle-analyzer";
 import type { NextConfig } from "next";
 import relayConfig from "./relay.config";
 
 const isVercel = process.env.VERCEL === "1";
+const withAnalyzer = withBundleAnalyzer({ enabled: process.env.ANALYZE === "true" });
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["mapp.skedular.app"],
@@ -27,4 +29,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withAnalyzer(nextConfig);

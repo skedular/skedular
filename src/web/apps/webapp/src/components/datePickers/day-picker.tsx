@@ -1,11 +1,13 @@
-import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
+'use client';
+
 import { EmptyCalendarToolbar, SimpleCalendarSlotProps } from '@/components/generics';
 import { CalendarIcon } from '@/components/icons';
 import { DefaultSelect } from '@/components/styled';
-import { startOfDay, toShortDateWithoutWeekDay } from '@skedular/shared';
 import Divider from '@mui/material/Divider';
 import Popover from '@mui/material/Popover';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { startOfDay, toShortDateWithoutWeekDay } from '@skedular/shared';
+import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
 

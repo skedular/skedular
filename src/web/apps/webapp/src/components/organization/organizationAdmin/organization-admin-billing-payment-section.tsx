@@ -10,7 +10,8 @@ import type { organizationAdminBillingPaymentSection_updateOrganizationBillingDe
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
-import { BodyIconTypography, CreditCard, FormFieldLabel, FormStackColumn, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
+import CreditCard from '@skedular/ui/commons/credit-card';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';

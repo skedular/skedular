@@ -1,4 +1,5 @@
-import { BodyIconTypography } from '@skedular/ui';
+'use client';
+
 import { AscDirectionIcon, DescDirectionIcon } from '@/components/icons';
 import SortIcon from '@mui/icons-material/Sort';
 import Divider from '@mui/material/Divider';
@@ -6,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
+import { BodyIconTypography } from '@skedular/ui';
 import { memo, useState } from 'react';
 
 export type Direction = 'Ascending' | 'Descending';

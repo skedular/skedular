@@ -20,7 +20,6 @@ import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
 import {
   BodyIconTypography,
   coal,
-  CreditCard,
   defaultButtonStyle,
   emerald,
   ExtraLargeHeadingIconTypography,
@@ -29,6 +28,7 @@ import {
   StackColumn,
   StackRow,
 } from '@skedular/ui';
+import CreditCard from '@skedular/ui/commons/credit-card';
 import { memo, useContext, useEffect, useState } from 'react';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';

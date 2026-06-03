@@ -1,10 +1,11 @@
+'use client';
+
 import { ClosedOpenAllDayCustomToggle } from '@/components/closedOpenAllDayCustomToggle';
-import { ErrorTypography, FormFieldLabel, StackColumn, StackRow } from '@skedular/ui';
-import { defaultPadding } from '@skedular/ui';
-import { getOpeningHoursFromDateTime, toOpeningHoursFromTime } from '@skedular/shared';
 import type { weekOpeningHours_query$key } from '@/queries/__generated__/weekOpeningHours_query.graphql';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
+import { getOpeningHoursFromDateTime, toOpeningHoursFromTime } from '@skedular/shared';
+import { defaultPadding, ErrorTypography, FormFieldLabel, StackColumn, StackRow } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';

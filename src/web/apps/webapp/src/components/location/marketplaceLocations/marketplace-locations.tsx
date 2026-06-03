@@ -12,7 +12,6 @@ import type { Theme } from '@mui/material/styles';
 import { defaultPadding, GridContainer, StackColumn } from '@skedular/ui';
 import type { LatLngBounds, LatLngTuple } from 'leaflet';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { IPinfoWrapper } from 'node-ipinfo';
 import { memo, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMap, useMapEvents } from 'react-leaflet';
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.css';
@@ -247,15 +246,11 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
           setCenterSet(false);
         });
       } else {
-        const ipinfoWrapper = new IPinfoWrapper('');
-        const ipinfo = await ipinfoWrapper.lookupIp('');
+        const geo = (await fetch('/api/geolocation').then((r) => r.json())) as { lat: string | null; lng: string | null };
 
-        if (ipinfo.loc) {
-          const [latitude, longitude] = ipinfo.loc.split(',');
-          if (latitude && longitude) {
-            setInitialPosition([parseFloat(latitude), parseFloat(longitude)]);
-            setCenterSet(false);
-          }
+        if (geo.lat && geo.lng) {
+          setInitialPosition([parseFloat(geo.lat), parseFloat(geo.lng)]);
+          setCenterSet(false);
         }
       }
 

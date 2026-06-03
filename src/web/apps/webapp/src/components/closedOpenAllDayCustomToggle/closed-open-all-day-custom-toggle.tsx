@@ -1,3 +1,5 @@
+'use client';
+
 import { ClosedAllDayIcon, CustomOpeningHoursIcon, OpenAllDayIcon } from '@/components/icons';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';

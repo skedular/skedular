@@ -1,7 +1,7 @@
 export { default as AppBarWithStackColumn } from './appbar-with-stack-column';
 export { default as CollectionToolbar } from './collection-toolbar';
 export { default as ColorPicker } from './color-picker';
-export { default as CreditCard } from './credit-card';
+// CreditCard removed from barrel — import directly from '@skedular/ui/commons/credit-card' to avoid bundling react-svg-credit-card-payment-icons (521 KB) into every route
 export { default as DefaultDialogTitle } from './default-dialog-title';
 export { default as FormFieldLabel } from './form-field-label';
 export { default as FormStackColumn } from './form-stack-column';
