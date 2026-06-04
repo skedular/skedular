@@ -21,7 +21,7 @@ update_workspace() {
     esac
 
     cd "$workspace_dir"
-    ncu -u
+    ncu -u --dep prod,dev,optional,peer,packageManager
 }
 
 update_workspace "$web_root"
@@ -32,3 +32,7 @@ for workspace_dir in "$web_root"/apps/* "$web_root"/packages/*; do
 
     update_workspace "$workspace_dir"
 done
+
+cd "$web_root"
+pnpm install
+pnpm check:workspace-version-sync

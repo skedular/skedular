@@ -62,20 +62,24 @@ pnpm --dir src/web format
 
 ## Cloudflare Pages
 
-No Astro adapter is required for v1. Configure `PUBLIC_SKEDULAR_SIGNUP_URL` as a public build-time environment variable.
+No Astro adapter is required for v1. The repository provisions separate direct-upload Cloudflare Pages projects and custom domains:
 
-When the project root is `src/web/apps/public-web`:
+| Environment | Pages project           | Custom domain                   | Sign-up URL                           |
+| ----------- | ----------------------- | ------------------------------- | ------------------------------------- |
+| Staging     | `staging-public-web`    | `stagingpublic.getskedular.com` | `https://staging.skedular.app/signup` |
+| Production  | `production-public-web` | `public.getskedular.com`        | `https://skedular.app/signup`         |
 
-```text
-Build command: pnpm build
-Output directory: dist
-```
+Infrastructure lives under `infrastructure/workspaces/staging` and `infrastructure/workspaces/production`. The main CI/CD pipeline applies each workspace, builds the static site with the environment-specific `PUBLIC_SKEDULAR_SIGNUP_URL`, and uploads `dist/` with Wrangler.
 
-When deploying from the repository root:
+The `CLOUDFLARE_API_KEY` GitHub secret is used as an API token. It must grant the target account `Pages Read`, `Pages Write`, and permission to edit DNS records in the `getskedular.com` zone.
 
-```text
-Build command: pnpm --dir src/web/apps/public-web build
-Output directory: src/web/apps/public-web/dist
+For a manual direct upload after the Pages project exists:
+
+```bash
+PUBLIC_SKEDULAR_SIGNUP_URL=https://staging.skedular.app/signup pnpm build
+CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... pnpm exec wrangler pages deploy dist \
+  --project-name=staging-public-web \
+  --branch=main
 ```
 
 After a Cloudflare URL is available, measure the home page on a standard broadband profile and record whether it loads in under two seconds. Do not substitute a local preview result for the deployed measurement.

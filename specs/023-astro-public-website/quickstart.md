@@ -170,3 +170,14 @@ Validated on 2026-06-04:
 - `pnpm --dir src/web format` passed across the web workspace without changing existing app files.
 - No Cloudflare URL is available yet, so the deployed under-two-second performance measurement is recorded as an environment limitation. A local preview result was not substituted.
 - Scope review confirmed no backend contracts, generated artifacts, existing product app routes, or existing app dependencies were modified.
+
+Validated on 2026-06-05 for Cloudflare deployment infrastructure:
+
+- Added direct-upload Cloudflare Pages projects `staging-public-web` and `production-public-web`.
+- Added custom domains `stagingpublic.getskedular.com` and `public.getskedular.com`.
+- `terraform validate -no-color` passed for both public web Terraform workspaces with Cloudflare provider `5.19.1`.
+- `PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up pnpm --dir src/web/apps/public-web build` passed and emitted the structured build summary.
+- `pnpm --dir src/web/apps/public-web exec wrangler --version` reported Wrangler `4.98.0`.
+- Local Terraform apply could not use the existing S3 state backend because AWS credentials were unavailable in the local environment.
+- Local Wrangler deployment authenticated to the Cloudflare account, but the configured token was rejected for Pages project access. Grant the `CLOUDFLARE_API_KEY` token `Pages Read` and `Pages Write` before running the pipeline or a manual upload.
+- Live checks confirmed `stagingpublic.getskedular.com` and `public.getskedular.com` do not resolve yet, so no partial deployment was reported as complete.

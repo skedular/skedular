@@ -9,6 +9,7 @@ allowBuilds:
   globalize: true
   sharp: true
   unrs-resolver: true
+  workerd: true
 minimumReleaseAge: 0
 minimumReleaseAgeExclude:
   - '@stripe/stripe-js@9.7.0'

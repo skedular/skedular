@@ -108,6 +108,10 @@
 - [X] T029 Run the workspace-level build, test, lint, format, and workspace version-sync commands and record any unrelated pre-existing failures in `specs/023-astro-public-website/quickstart.md`
 - [X] T030 Perform the manual first-viewport, JavaScript-disabled, mobile-overflow, semantic-landmark, CTA, contrast, and placeholder-content acceptance review and record the result in `specs/023-astro-public-website/quickstart.md`
 - [X] T031 Verify the final implementation does not modify backend contracts, generated artifacts, existing product app routes, or existing app dependencies, and record the scope check in `specs/023-astro-public-website/quickstart.md`
+- [X] T032 Add staging and production Cloudflare Pages Terraform workspaces with custom domains in `src/web/apps/public-web/infrastructure/`
+- [X] T033 Add `public-web` build, infrastructure validation, and Cloudflare Pages direct-upload deployment to `.github/workflows/skedular-cicd-pipeline.yml`
+- [X] T034 Add Wrangler to the public web package and document Cloudflare token permissions and environment deployment settings in `src/web/apps/public-web/README.md`
+- [X] T035 Validate the new Terraform workspaces, Astro production build, Wrangler installation, and deployment prerequisites, recording any credential limitations in `specs/023-astro-public-website/quickstart.md`
 
 ---
 

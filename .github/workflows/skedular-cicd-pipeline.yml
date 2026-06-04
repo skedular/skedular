@@ -135,6 +135,7 @@ jobs:
                   }
 
                   app_paths = {
+                      "public-web": "src/web/apps/public-web/",
                       "webapp": "src/web/apps/webapp/",
                       "webapp-help": "src/web/apps/webapp-help/",
                       "webapp-teams": "src/web/apps/webapp-teams/",
@@ -240,6 +241,16 @@ jobs:
                   ] if all_in_one_selected and not docs_only else []
 
                   web_apps = {
+                      "public-web": {
+                          "component": "public-web",
+                          "richSecrets": False,
+                          "kind": "public-static-web",
+                          "cloudflareAccountId": "26b0f35cc7cf1dd7be5973e8905fbfe8",
+                          "stagingProjectName": "staging-public-web",
+                          "productionProjectName": "production-public-web",
+                          "stagingSignupUrl": "https://staging.skedular.app/signup",
+                          "productionSignupUrl": "https://skedular.app/signup",
+                      },
                       "webapp": {"dockerfile": "./src/web/apps/webapp/Dockerfile", "repository": "webapp", "component": "webapp", "workos": "WEBAPP_WORKOS_API_KEY", "richSecrets": True},
                       "webapp-help": {"dockerfile": "./src/web/apps/webapp-help/Dockerfile", "repository": "webapphelp", "component": "webapphelp", "workos": "", "richSecrets": False},
                       "webapp-teams": {"dockerfile": "./src/web/apps/webapp-teams/Dockerfile", "repository": "webapp-teams", "component": "webapp-teams", "workos": "WEBAPP_TEAMS_WORKOS_API_KEY", "richSecrets": True},
@@ -249,7 +260,7 @@ jobs:
                   }
                   web_ci_matrix = [
                       dict(
-                          {"name": name, "buildName": f"{name}", "kind": "web-app", "enabled": "true"},
+                          {"name": name, "buildName": f"{name}", "kind": web_apps[name].get("kind", "web-app"), "enabled": "true"},
                           **web_apps[name],
                           stagingWorkingDirectory=f"./src/web/apps/{name}/infrastructure/workspaces/staging",
                           productionWorkingDirectory=f"./src/web/apps/{name}/infrastructure/workspaces/production",
@@ -287,9 +298,10 @@ jobs:
                   infra_targets = []
                   infra_validation_targets = []
 
-                  def add_infra(name, component, directory, provider="aws", secret_profile="none", validate=True):
+                  def add_infra(name, component, directory, provider="aws", secret_profile="none", validate=True, extra_fields=None):
                       enabled = name not in disabled_infra_targets
                       build_name = name.removesuffix("-shared")
+                      extra_fields = extra_fields or {}
                       if validate:
                           infra_validation_targets.append({
                               "name": name,
@@ -301,6 +313,7 @@ jobs:
                               "provider": provider,
                               "secretProfile": secret_profile,
                               "enabled": str(enabled).lower(),
+                              **extra_fields,
                           })
                       for environment in ["staging", "production"]:
                           infra_targets.append({
@@ -311,6 +324,7 @@ jobs:
                               "provider": provider,
                               "secretProfile": secret_profile,
                               "enabled": str(enabled).lower(),
+                              **extra_fields,
                           })
 
                   if raw["shared_backend_changed"] or raw["shared_infrastructure_changed"] or manual_full_run or raw["pipeline_changed"]:
@@ -321,7 +335,7 @@ jobs:
                       add_infra("web-shared", "web", "./src/web/infrastructure", "aws", "none")
                   for name, info in web_apps.items():
                       if name in web_selected_names:
-                          add_infra(name, info["component"], f"./src/web/apps/{name}/infrastructure", "aws", "web-rich" if info["richSecrets"] else "web-basic", validate=False)
+                          add_infra(name, info["component"], f"./src/web/apps/{name}/infrastructure", "aws", "web-rich" if info["richSecrets"] else "web-basic", validate=False, extra_fields=info)
                   if docs_selected and not docs_only:
                       add_infra("docs-event-catalog", "event-catalog", "./docs/event-catalog/infrastructure", "aws", "web-basic", validate=False)
                   for name, selected in domain_infra_changed.items():
@@ -469,7 +483,7 @@ jobs:
                   docker-images: false
                   swap-storage: false
             - name: Build, test and check image
-              if: ${{ matrix.enabled == 'true' && matrix.kind != 'infrastructure' }}
+              if: ${{ matrix.enabled == 'true' && matrix.kind != 'infrastructure' && matrix.kind != 'public-static-web' }}
               uses: ./.github/actions/build-test-push
               with:
                   dockerFilePath: ${{ matrix.dockerfile }}
@@ -481,6 +495,19 @@ jobs:
                   dockerRepository: ${{ matrix.repository }}
                   pushDockerImage: ${{ matrix.kind == 'all-in-one' }}
                   scanForSecurityVulnerabilities: ${{ matrix.kind != 'docs-event-catalog' }}
+            - name: Enable pnpm for public static web
+              if: ${{ matrix.enabled == 'true' && matrix.kind == 'public-static-web' }}
+              run: corepack enable
+            - name: Install public static web dependencies
+              if: ${{ matrix.enabled == 'true' && matrix.kind == 'public-static-web' }}
+              run: pnpm --dir src/web install --frozen-lockfile
+            - name: Build and test public static web
+              if: ${{ matrix.enabled == 'true' && matrix.kind == 'public-static-web' }}
+              env:
+                  PUBLIC_SKEDULAR_SIGNUP_URL: https://app.example.test/sign-up
+              run: |
+                  pnpm --dir src/web public-web#test
+                  pnpm --dir src/web public-web#build
             - name: Configure staging AWS credentials
               if: ${{ matrix.enabled == 'true' && matrix.kind != 'all-in-one' }}
               uses: aws-actions/configure-aws-credentials@v6
@@ -609,6 +636,23 @@ jobs:
                   TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.STAGING_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.STAGING_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.STAGING_WEBAPP_SPACES_WORKOS_API_KEY || '' }}
               with:
                   workingDirectory: ${{ matrix.workingDirectory }}
+            - name: Enable pnpm for public static web
+              if: ${{ matrix.name == 'public-web' }}
+              run: corepack enable
+            - name: Install public static web dependencies
+              if: ${{ matrix.name == 'public-web' }}
+              run: pnpm --dir src/web install --frozen-lockfile
+            - name: Build public static web
+              if: ${{ matrix.name == 'public-web' }}
+              env:
+                  PUBLIC_SKEDULAR_SIGNUP_URL: ${{ matrix.stagingSignupUrl }}
+              run: pnpm --dir src/web public-web#build
+            - name: Deploy public static web to Cloudflare Pages
+              if: ${{ matrix.name == 'public-web' }}
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_KEY }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ matrix.cloudflareAccountId }}
+              run: pnpm --dir src/web/apps/public-web exec wrangler pages deploy dist --project-name=${{ matrix.stagingProjectName }} --branch=main --commit-dirty=true
 
     deploy-production:
         name: Deploy production (${{ matrix.name }})
@@ -663,6 +707,23 @@ jobs:
                   TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.PRODUCTION_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.PRODUCTION_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.PRODUCTION_WEBAPP_SPACES_WORKOS_API_KEY || '' }}
               with:
                   workingDirectory: ${{ matrix.workingDirectory }}
+            - name: Enable pnpm for public static web
+              if: ${{ matrix.name == 'public-web' }}
+              run: corepack enable
+            - name: Install public static web dependencies
+              if: ${{ matrix.name == 'public-web' }}
+              run: pnpm --dir src/web install --frozen-lockfile
+            - name: Build public static web
+              if: ${{ matrix.name == 'public-web' }}
+              env:
+                  PUBLIC_SKEDULAR_SIGNUP_URL: ${{ matrix.productionSignupUrl }}
+              run: pnpm --dir src/web public-web#build
+            - name: Deploy public static web to Cloudflare Pages
+              if: ${{ matrix.name == 'public-web' }}
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_KEY }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ matrix.cloudflareAccountId }}
+              run: pnpm --dir src/web/apps/public-web exec wrangler pages deploy dist --project-name=${{ matrix.productionProjectName }} --branch=main --commit-dirty=true
 
     required:
         name: Skedular CI pipeline status

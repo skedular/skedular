@@ -16,6 +16,7 @@ This file applies to `scripts/`.
 | `start-dependencies.sh`      | Starts all local development infrastructure dependencies.                                     |
 | `start-dependencies-min.sh`  | Starts the minimal set of local infrastructure dependencies needed for lightweight development. |
 | `update-dotnet-tools.sh`     | Updates the locally pinned .NET tools (manifested in `.config/dotnet-tools.json`).            |
+| `update-web-npm-packages.sh` | Updates web workspace dependency and peer-dependency ranges, refreshes the lockfile, and verifies shared version synchronization. |
 
 ## Important Notes
 
