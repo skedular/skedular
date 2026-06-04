@@ -46,6 +46,17 @@ module "shared" {
   environment       = var.environment
 }
 
+module "publicweb" {
+  source = "../modules/public-web"
+
+  providers = {
+    aws = aws
+  }
+
+  organization_name = module.common.organization_name
+  environment       = var.environment
+}
+
 module "webapp" {
   source = "../modules/webapp"
 
