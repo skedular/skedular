@@ -1,4 +1,4 @@
-import { Address, PhysicalAddress } from '@/components/address';
+import { PhysicalAddress } from '@/components/address';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { PhysicalAddressDetails, physicalAddressSchema } from '@/components/organization/organizationAdmin/organization-admin-shared';
@@ -10,7 +10,7 @@ import { FormStackColumn, SettingsSectionCard, StackColumn } from '@skedular/ui'
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate } from 'mui-rff';
-import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -93,22 +93,15 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
     maxWidth: 760,
   };
 
-  const [physicalAddressOsmType, setPhysicalAddressOsmType] = useState(organization?.physicalAddress?.osmType);
-  const [physicalAddressOsmId, setPhysicalAddressOsmId] = useState(organization?.physicalAddress?.osmId);
-  const [physicalAddressPlaceId, setPhysicalAddressPlaceId] = useState(organization?.physicalAddress?.placeId);
-  const [physicalAddressLongitude, setPhysicalAddressLongitude] = useState(organization?.physicalAddress?.longitude);
-  const [physicalAddressLatitude, setPhysicalAddressLatitude] = useState(organization?.physicalAddress?.latitude);
-  const [physicalAddressFormattedAddress, setPhysicalAddressFormattedAddress] = useState(organization?.physicalAddress?.formattedAddress);
-  const [physicalAddressCountry, setPhysicalAddressCountry] = useState<string>(organization?.physicalAddress?.country ?? '');
   const initialPhysicalAddressValues = useMemo<PhysicalAddressDetails>(
     () => ({
-      osmType: physicalAddressOsmType,
-      osmId: physicalAddressOsmId,
-      placeId: physicalAddressPlaceId,
-      longitude: physicalAddressLongitude,
-      latitude: physicalAddressLatitude,
-      formattedAddress: physicalAddressFormattedAddress,
-      country: physicalAddressCountry,
+      osmType: organization?.physicalAddress?.osmType,
+      osmId: organization?.physicalAddress?.osmId,
+      placeId: organization?.physicalAddress?.placeId,
+      longitude: organization?.physicalAddress?.longitude,
+      latitude: organization?.physicalAddress?.latitude,
+      formattedAddress: organization?.physicalAddress?.formattedAddress,
+      country: organization?.physicalAddress?.country ?? '',
       addressLine1: organization?.physicalAddress?.addressLine1 ?? '',
       addressLine2: organization?.physicalAddress?.addressLine2 ?? null,
       suburb: organization?.physicalAddress?.suburb ?? null,
@@ -117,28 +110,9 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
       zipcode: organization?.physicalAddress?.zipcode ?? '',
       countryCode: organization?.physicalAddress?.countryCode ?? '',
     }),
-    [
-      organization,
-      physicalAddressCountry,
-      physicalAddressFormattedAddress,
-      physicalAddressLatitude,
-      physicalAddressLongitude,
-      physicalAddressOsmId,
-      physicalAddressOsmType,
-      physicalAddressPlaceId,
-    ],
+    [organization],
   );
   const submittedPhysicalAddressKey = useRef<string | null>(null);
-
-  const handlePhysicalAddressSelect = (address: Address) => {
-    setPhysicalAddressOsmType(address.osmType);
-    setPhysicalAddressOsmId(address.osmId);
-    setPhysicalAddressPlaceId(address.placeId);
-    setPhysicalAddressLongitude(address.longitude);
-    setPhysicalAddressLatitude(address.latitude);
-    setPhysicalAddressFormattedAddress(address.formattedAddress);
-    setPhysicalAddressCountry(address.country ?? '');
-  };
 
   const commitPhysicalAddressPatch = useCallback(
     ({
@@ -274,7 +248,6 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
                     countryName="countryCode"
                     countryRequired={requiredPhysicalAddressFields.countryCode}
                     onSelect={(address) => {
-                      handlePhysicalAddressSelect(address);
                       form.batch(() => {
                         form.change('osmType', address.osmType);
                         form.change('osmId', address.osmId);
