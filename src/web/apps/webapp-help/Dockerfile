@@ -13,6 +13,7 @@ WORKDIR /src/web
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --recursive --frozen-lockfile
 RUN pnpm webapp-help#lint
+RUN pnpm webapp-help#test
 RUN pnpm webapp-help#build
 
 FROM build AS test

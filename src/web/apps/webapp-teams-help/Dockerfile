@@ -13,6 +13,7 @@ WORKDIR /src/web
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --recursive --frozen-lockfile
 RUN pnpm webapp-teams-help#lint
+RUN pnpm webapp-teams-help#test
 RUN pnpm webapp-teams-help#build
 
 FROM build AS test

@@ -13,6 +13,7 @@ WORKDIR /src/web
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --recursive --frozen-lockfile
 RUN pnpm webapp-spaces-help#lint
+RUN pnpm webapp-spaces-help#test
 RUN pnpm webapp-spaces-help#build
 
 FROM build AS test

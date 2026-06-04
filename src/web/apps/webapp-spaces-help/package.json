@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "cross-env PORT=15005 next start",
     "lint": "eslint",
+    "test": "vitest run --passWithNoTests",
     "lint-fix": "eslint --fix",
     "format": "prettier --write --single-quote true --trailing-comma all --print-width 180 ./src && pnpm lint-fix"
   },
@@ -27,6 +28,7 @@
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.2.7",
     "prettier": "^3.8.3",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
   }
 }

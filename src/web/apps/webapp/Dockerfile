@@ -18,6 +18,7 @@ ENV WORKOS_CLIENT_ID="client_Sz3IQjepeSWaI4cMS4ms4sMuU"
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --recursive --frozen-lockfile
 RUN pnpm webapp#lint
+RUN pnpm webapp#test
 RUN pnpm webapp#build
 
 FROM build AS test
