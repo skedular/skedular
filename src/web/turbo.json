@@ -186,6 +186,26 @@
     },
     "webapp-spaces-help#format": {
       "dependsOn": ["^format"]
+    },
+    "public-web#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "public-web#start": {
+      "dependsOn": ["^start"]
+    },
+    "public-web#test": {
+      "dependsOn": ["^test"],
+      "outputs": []
+    },
+    "public-web#lint": {
+      "dependsOn": ["^lint"]
+    },
+    "public-web#lint-fix": {
+      "dependsOn": ["^lint-fix"]
+    },
+    "public-web#format": {
+      "dependsOn": ["^format"]
     }
   },
   "remoteCache": {

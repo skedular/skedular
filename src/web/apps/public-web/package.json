@@ -1,0 +1,33 @@
+{
+  "name": "public-web",
+  "version": "0.1.0",
+  "description": "Skedular public website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --port 15006",
+    "build": "astro check && astro build && node ./scripts/report-build.mjs",
+    "preview": "astro preview --port 15006",
+    "start": "pnpm preview",
+    "check": "astro check",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "prettier --check .",
+    "lint-fix": "prettier --write .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "astro": "^6.4.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@testing-library/dom": "^10.4.1",
+    "@types/node": "^25.9.1",
+    "axe-core": "^4.12.0",
+    "jsdom": "^29.1.1",
+    "prettier": "^3.8.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
+  }
+}

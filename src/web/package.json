@@ -60,7 +60,14 @@
     "webapp-spaces-help#start": "turbo run webapp-spaces-help#start",
     "webapp-spaces-help#lint": "turbo run webapp-spaces-help#lint",
     "webapp-spaces-help#lint-fix": "turbo run webapp-spaces-help#lint-fix",
-    "webapp-spaces-help#format": "turbo run webapp-spaces-help#format"
+    "webapp-spaces-help#format": "turbo run webapp-spaces-help#format",
+    "public-web#dev": "turbo run public-web#dev",
+    "public-web#build": "turbo run public-web#build",
+    "public-web#start": "turbo run public-web#start",
+    "public-web#test": "turbo run public-web#test",
+    "public-web#lint": "turbo run public-web#lint",
+    "public-web#lint-fix": "turbo run public-web#lint-fix",
+    "public-web#format": "turbo run public-web#format"
   },
   "devDependencies": {
     "@types/relay-runtime": "^20.1.1",

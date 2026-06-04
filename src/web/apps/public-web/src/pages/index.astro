@@ -1,0 +1,144 @@
+---
+import "../styles/global.css";
+
+const signupUrl = import.meta.env.PUBLIC_SKEDULAR_SIGNUP_URL?.trim();
+
+if (!signupUrl) {
+  throw new Error("PUBLIC_SKEDULAR_SIGNUP_URL is required");
+}
+
+const highlights = [
+  {
+    title: "Book the right space",
+    description: "Make desks and rooms easy to find, reserve, and use across the working week.",
+  },
+  {
+    title: "Keep teams coordinated",
+    description: "Give hybrid teams a clearer view of who is working where and when.",
+  },
+  {
+    title: "Understand workspace usage",
+    description: "Support better workspace decisions with a more complete picture of demand.",
+  },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="description"
+      content="Skedular brings desks, rooms, hybrid teams, and workspace usage together in one clear workspace experience."
+    />
+    <title>Skedular | Workspace management for hybrid teams</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand-link" href="/" aria-label="Skedular home">
+          <img src="/images/skedular-logo-primary.svg" alt="Skedular" width="156" height="33" />
+        </a>
+        <a class="button button-small" href={signupUrl}>Get Started</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-layout">
+          <div class="hero-copy">
+            <h1>Make every workspace work better</h1>
+            <p class="hero-summary">Bring desks, rooms, and hybrid teams together in one clear workspace experience.</p>
+            <a class="button" href={signupUrl}>Get Started</a>
+            <p class="hero-note">For businesses, co-working spaces, and teams building a more flexible way to work.</p>
+          </div>
+
+          <div class="workspace-visual" aria-label="Illustration of a coordinated hybrid workspace">
+            <div class="visual-toolbar">
+              <div>
+                <span class="visual-label">Workspace overview</span>
+                <strong>Tuesday, June 9</strong>
+              </div>
+              <span class="availability-dot">Spaces available</span>
+            </div>
+            <div class="visual-grid">
+              <div class="floor-plan">
+                <div class="room room-large">
+                  <span>Project room</span>
+                  <strong>8 seats</strong>
+                </div>
+                <div class="room">
+                  <span>Focus room</span>
+                  <strong>Available</strong>
+                </div>
+                <div class="desk-cluster">
+                  <span class="desk occupied"></span>
+                  <span class="desk"></span>
+                  <span class="desk"></span>
+                  <span class="desk occupied"></span>
+                  <span class="desk"></span>
+                  <span class="desk"></span>
+                </div>
+              </div>
+              <div class="team-panel">
+                <span class="visual-label">Team today</span>
+                <div class="team-row"><span class="avatar avatar-one">AL</span><span><strong>Alex</strong><small>Office</small></span></div>
+                <div class="team-row"><span class="avatar avatar-two">JM</span><span><strong>Jordan</strong><small>Remote</small></span></div>
+                <div class="team-row"><span class="avatar avatar-three">SK</span><span><strong>Sam</strong><small>Office</small></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="container">
+          <div class="section-heading">
+            <h2>Workspace coordination, without the friction</h2>
+            <p>Help people find the spaces and colleagues they need while keeping workspace decisions grounded in real usage.</p>
+          </div>
+          <div class="feature-list">
+            {highlights.map((highlight, index) => (
+              <article class="feature-item">
+                <span class="feature-number">0{index + 1}</span>
+                <h3>{highlight.title}</h3>
+                <p>{highlight.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="integrations">
+        <div class="container integrations-layout">
+          <div>
+            <h2>Built for the way modern teams work</h2>
+            <p>Keep workspace coordination close to the conversations teams already have, with support for Slack and Microsoft Teams.</p>
+          </div>
+          <div class="integration-marks" aria-label="Supported integrations">
+            <span>Slack</span>
+            <span>Microsoft Teams</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <div class="container final-cta-inner">
+          <div>
+            <h2>Give your workspace a clearer rhythm</h2>
+            <p>Make it easier for people and places to work well together.</p>
+          </div>
+          <a class="button button-inverse" href={signupUrl}>Get Started</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <img src="/images/skedular-logo-primary.svg" alt="Skedular" width="132" height="28" />
+        <p>© {new Date().getFullYear()} Skedular. Workspace management for modern teams.</p>
+      </div>
+    </footer>
+  </body>
+</html>
