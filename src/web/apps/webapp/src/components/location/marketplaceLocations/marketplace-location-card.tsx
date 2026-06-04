@@ -38,7 +38,7 @@ type Props = {
 
 const cardSx: SxProps<Theme> = {
   width: '100%',
-  height: '100%',
+  height: 'auto',
   textDecoration: 'none',
   color: 'text.primary',
   textAlign: 'left',

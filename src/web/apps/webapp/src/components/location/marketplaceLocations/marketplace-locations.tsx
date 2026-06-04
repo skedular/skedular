@@ -49,7 +49,7 @@ type Props = {
   onReloadRequired: () => void;
 };
 
-const pageSize = 9;
+const pageSize = 24;
 
 const areBoundsEqual = (currentBounds: LatLngBounds | null, nextBounds: LatLngBounds) => {
   if (!currentBounds) {
@@ -434,13 +434,27 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
       ) : (
         <GridContainer spacing={2}>
           <Grid size={{ xs: 12, md: 7 }}>
-            <GridContainer sx={{ alignItems: 'stretch' }} spacing={1}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                  xs: 'minmax(0, 1fr)',
+                  sm: 'repeat(2, minmax(0, 1fr))',
+                  lg: 'repeat(3, minmax(0, 1fr))',
+                  xl: 'repeat(4, minmax(0, 1fr))',
+                },
+                gap: 1,
+                '@media (min-width: 2560px)': {
+                  gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
+                },
+              }}
+            >
               {paginatedLocations.map((item) => (
-                <Grid key={item.id} size={{ xs: 12, sm: 6, lg: 4 }}>
+                <Box key={item.id} sx={{ minWidth: 0 }}>
                   <MarketplaceLocationCard rootDataRelay={rootData} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
-                </Grid>
+                </Box>
               ))}
-            </GridContainer>
+            </Box>
             {pageCount > 1 && (
               <StackColumn sx={{ mt: 2, gap: 1, alignItems: 'center' }}>
                 <Pagination count={pageCount} page={pageIndex + 1} onChange={(_, page) => setPageIndex(page - 1)} color="primary" siblingCount={1} boundaryCount={1} />
