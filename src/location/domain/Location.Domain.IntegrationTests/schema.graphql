@@ -159,7 +159,7 @@ type DesksOccupancyPercentage {
   percentage: Float!
 }
 
-type FloorPlanDetails {
+type FloorPlanDetails @key(fields: "id") {
   name: String!
   image: CdnImageFile!
   resourcePositions: [ResourcePositionDetails!]!
@@ -197,7 +197,7 @@ type LocationDailyBookingsTotal {
   total: Int!
 }
 
-type LocationDetails {
+type LocationDetails @key(fields: "id") {
   organization: OrganizationDetails!
   products: [ProductDetails!]!
   analytics(from: DateTime!, until: DateTime!): LocationAnalytics!
@@ -1110,7 +1110,7 @@ The @key directive is used to designate an entity's unique key,
 which identifies how to uniquely reference an instance of
 an entity across different source schemas.
 """
-directive @key("The field selection set syntax." fields: FieldSelectionSet!) on
+directive @key("The field selection set syntax." fields: FieldSelectionSet!) repeatable on
   | OBJECT
   | INTERFACE
 

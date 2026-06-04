@@ -24,14 +24,14 @@
       "rollForward": false
     },
     "chillicream.nitro.commandline": {
-      "version": "16.0.11",
+      "version": "16.1.1",
       "commands": [
         "nitro"
       ],
       "rollForward": false
     },
     "strawberryshake.tools": {
-      "version": "16.0.11",
+      "version": "16.1.1",
       "commands": [
         "dotnet-graphql"
       ],

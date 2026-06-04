@@ -325,7 +325,7 @@ type OrganizationAnalytics {
   dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
 }
 
-type OrganizationBankAccountDetails {
+type OrganizationBankAccountDetails @key(fields: "id") {
   isDefault: Boolean!
   name: String!
   bankName: String!
@@ -618,7 +618,7 @@ type OrganizationSsoSettingsDetails {
   id: ID!
 }
 
-type OrganizationStripeConnectAccountDetails {
+type OrganizationStripeConnectAccountDetails @key(fields: "id") {
   isDefault: Boolean!
   name: String!
   chargesEnabled: Boolean!
@@ -1555,7 +1555,7 @@ The @key directive is used to designate an entity's unique key,
 which identifies how to uniquely reference an instance of
 an entity across different source schemas.
 """
-directive @key("The field selection set syntax." fields: FieldSelectionSet!) on
+directive @key("The field selection set syntax." fields: FieldSelectionSet!) repeatable on
   | OBJECT
   | INTERFACE
 

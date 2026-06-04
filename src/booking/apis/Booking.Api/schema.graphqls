@@ -168,7 +168,7 @@ type BookingCheckoutSessionDetails {
   checkoutUrl: String!
 }
 
-type BookingDetails {
+type BookingDetails @key(fields: "id") {
   involvedCustomers: [CustomerDetails!]!
   createdByCustomer: CustomerDetails
   lastModifiedByCustomer: CustomerDetails
@@ -304,7 +304,7 @@ type MarketplaceBookingSubscriptionCancellationModeDetails {
   name: String!
 }
 
-type MarketplaceBookingSubscriptionDetails {
+type MarketplaceBookingSubscriptionDetails @key(fields: "id") {
   involvedCustomers: [CustomerDetails!]!
   createdByCustomer: CustomerDetails
   lastModifiedByCustomer: CustomerDetails
@@ -491,7 +491,7 @@ type ProductVersionDetails @key(fields: "id") {
   id: ID!
 }
 
-type RecurringBookingDetails {
+type RecurringBookingDetails @key(fields: "id") {
   involvedCustomers: [CustomerDetails!]!
   createdByCustomer: CustomerDetails
   lastModifiedByCustomer: CustomerDetails
@@ -1327,7 +1327,7 @@ The @key directive is used to designate an entity's unique key,
 which identifies how to uniquely reference an instance of
 an entity across different source schemas.
 """
-directive @key("The field selection set syntax." fields: FieldSelectionSet!) on
+directive @key("The field selection set syntax." fields: FieldSelectionSet!) repeatable on
   | OBJECT
   | INTERFACE
 
