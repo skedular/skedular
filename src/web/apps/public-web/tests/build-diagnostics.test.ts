@@ -35,8 +35,7 @@ describe("public website build diagnostics", () => {
   });
 
   it("fails clearly when the required CTA URL is missing", async () => {
-    const environment = { ...process.env };
-    delete environment.PUBLIC_SKEDULAR_SIGNUP_URL;
+    const environment = { ...process.env, PUBLIC_SKEDULAR_SIGNUP_URL: "" };
 
     const result = await runBuild(environment);
 
