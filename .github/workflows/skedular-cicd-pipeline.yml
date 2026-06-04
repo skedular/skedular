@@ -242,9 +242,10 @@ jobs:
 
                   web_apps = {
                       "public-web": {
+                          "dockerfile": "./src/web/apps/public-web/Dockerfile",
+                          "repository": "public-web",
                           "component": "public-web",
                           "richSecrets": False,
-                          "kind": "public-static-web",
                           "cloudflareAccountId": "26b0f35cc7cf1dd7be5973e8905fbfe8",
                           "stagingProjectName": "staging-public-web",
                           "productionProjectName": "production-public-web",
@@ -483,7 +484,7 @@ jobs:
                   docker-images: false
                   swap-storage: false
             - name: Build, test and check image
-              if: ${{ matrix.enabled == 'true' && matrix.kind != 'infrastructure' && matrix.kind != 'public-static-web' }}
+              if: ${{ matrix.enabled == 'true' && matrix.kind != 'infrastructure' }}
               uses: ./.github/actions/build-test-push
               with:
                   dockerFilePath: ${{ matrix.dockerfile }}
@@ -495,19 +496,6 @@ jobs:
                   dockerRepository: ${{ matrix.repository }}
                   pushDockerImage: ${{ matrix.kind == 'all-in-one' }}
                   scanForSecurityVulnerabilities: ${{ matrix.kind != 'docs-event-catalog' }}
-            - name: Enable pnpm for public static web
-              if: ${{ matrix.enabled == 'true' && matrix.kind == 'public-static-web' }}
-              run: corepack enable
-            - name: Install public static web dependencies
-              if: ${{ matrix.enabled == 'true' && matrix.kind == 'public-static-web' }}
-              run: pnpm --dir src/web install --frozen-lockfile
-            - name: Build and test public static web
-              if: ${{ matrix.enabled == 'true' && matrix.kind == 'public-static-web' }}
-              env:
-                  PUBLIC_SKEDULAR_SIGNUP_URL: https://app.example.test/sign-up
-              run: |
-                  pnpm --dir src/web public-web#test
-                  pnpm --dir src/web public-web#build
             - name: Configure staging AWS credentials
               if: ${{ matrix.enabled == 'true' && matrix.kind != 'all-in-one' }}
               uses: aws-actions/configure-aws-credentials@v6
