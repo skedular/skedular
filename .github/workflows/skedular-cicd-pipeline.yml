@@ -1,0 +1,703 @@
+name: Skedular CI/CD Pipeline
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+on:
+    workflow_dispatch:
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - main
+
+permissions:
+    contents: read
+    packages: write
+    id-token: write
+    issues: write
+    pull-requests: write
+
+env:
+    DOCKER_BUILDKIT: 1
+    COMPOSE_DOCKER_CLI_BUILD: 1
+    BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event_name == 'push' && github.event.before || '' }}
+
+jobs:
+    detect:
+        name: Detect changed paths
+        runs-on: ubuntu-latest
+        outputs:
+            docs_only_changed: ${{ steps.detect.outputs.docs_only_changed }}
+            pipeline_changed: ${{ steps.detect.outputs.pipeline_changed }}
+            shared_backend_changed: ${{ steps.detect.outputs.shared_backend_changed }}
+            api_definitions_changed: ${{ steps.detect.outputs.api_definitions_changed }}
+            all_in_one_changed: ${{ steps.detect.outputs.all_in_one_changed }}
+            backend_domain_changed: ${{ steps.detect.outputs.backend_domain_changed }}
+            web_workspace_changed: ${{ steps.detect.outputs.web_workspace_changed }}
+            web_infrastructure_changed: ${{ steps.detect.outputs.web_infrastructure_changed }}
+            docs_event_catalog_changed: ${{ steps.detect.outputs.docs_event_catalog_changed }}
+            ci_any_selected: ${{ steps.detect.outputs.ci_any_selected }}
+            staging_cd_selected: ${{ steps.detect.outputs.staging_cd_selected }}
+            production_cd_selected: ${{ steps.detect.outputs.production_cd_selected }}
+            builds_ci_matrix: ${{ steps.detect.outputs.builds_ci_matrix }}
+            staging_cd_matrix: ${{ steps.detect.outputs.staging_cd_matrix }}
+            production_cd_matrix: ${{ steps.detect.outputs.production_cd_matrix }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - name: Resolve changed files
+              shell: bash
+              run: |
+                  set -euo pipefail
+                  echo "::notice title=ci-detect-start::event=${GITHUB_EVENT_NAME} ref=${GITHUB_REF} run_id=${GITHUB_RUN_ID}"
+
+                  if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+                    printf '%s\n' "__MANUAL_FULL_RUN__" > changed-files.txt
+                    echo "BASE_SHA=" >> "$GITHUB_ENV"
+                    exit 0
+                  fi
+
+                  base_sha="${BASE_SHA:-}"
+                  empty_tree_sha="4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+                  all_zero_sha="0000000000000000000000000000000000000000"
+
+                  if [[ -z "${base_sha}" || "${base_sha}" == "${all_zero_sha}" ]]; then
+                    base_sha="${empty_tree_sha}"
+                    echo "::warning title=ci-detect-base::missing or first-push base SHA; using empty tree"
+                  elif ! git cat-file -e "${base_sha}^{commit}" 2>/dev/null; then
+                    echo "::warning title=ci-detect-base::base SHA ${base_sha} is not available locally; attempting fetch"
+                    if ! git fetch --no-tags origin "${base_sha}" || ! git cat-file -e "${base_sha}^{commit}" 2>/dev/null; then
+                      base_sha="${empty_tree_sha}"
+                      echo "::warning title=ci-detect-base::base SHA is unavailable; using empty tree for a full build"
+                    fi
+                  fi
+
+                  echo "BASE_SHA=${base_sha}" >> "$GITHUB_ENV"
+                  git diff --name-only "${base_sha}" HEAD > changed-files.txt
+                  echo "::notice title=ci-detect-diff::base=${base_sha} head=${GITHUB_SHA} files=$(wc -l < changed-files.txt)"
+
+            - name: Detect trigger groups and matrices
+              id: detect
+              shell: python
+              run: |
+                  import json
+                  import os
+                  import pathlib
+
+                  event_name = os.environ.get("GITHUB_EVENT_NAME", "")
+                  github_ref = os.environ.get("GITHUB_REF", "")
+                  base_sha = os.environ.get("BASE_SHA", "")
+                  head_sha = os.environ.get("GITHUB_SHA", "")
+                  run_id = os.environ.get("GITHUB_RUN_ID", "")
+
+                  changed_path = pathlib.Path("changed-files.txt")
+                  changed_files = [line.strip() for line in changed_path.read_text().splitlines() if line.strip()] if changed_path.exists() else []
+                  manual_full_run = event_name == "workflow_dispatch" or "__MANUAL_FULL_RUN__" in changed_files
+                  effective_files = [] if manual_full_run else changed_files
+
+                  def starts(path, prefixes):
+                      return any(path == prefix.rstrip("/") or path.startswith(prefix) for prefix in prefixes)
+
+                  def is_docs_file(path):
+                      if path == "__MANUAL_FULL_RUN__":
+                          return False
+                      if path.startswith("docs/event-catalog/"):
+                          return False
+                      return (
+                          path.startswith("specs/")
+                          or path.startswith(".specify/")
+                          or path.startswith("docs/")
+                          or path.startswith(".agents/")
+                          or path.startswith(".github/prompts/")
+                          or path.endswith(".md")
+                          or path in {"AGENTS.md", "CLAUDE.md", ".github/copilot-instructions.md"}
+                      )
+
+                  docs_only = bool(effective_files) and all(is_docs_file(path) for path in effective_files)
+
+                  raw = {
+                      "pipeline_changed": False,
+                      "shared_backend_changed": False,
+                      "api_definitions_changed": False,
+                      "all_in_one_changed": False,
+                      "backend_domain_changed": False,
+                      "shared_infrastructure_changed": False,
+                      "shared_azure_entra_changed": False,
+                      "web_workspace_changed": False,
+                      "web_infrastructure_changed": False,
+                      "docs_event_catalog_changed": False,
+                  }
+
+                  app_paths = {
+                      "webapp": "src/web/apps/webapp/",
+                      "webapp-help": "src/web/apps/webapp-help/",
+                      "webapp-teams": "src/web/apps/webapp-teams/",
+                      "webapp-teams-help": "src/web/apps/webapp-teams-help/",
+                      "webapp-spaces": "src/web/apps/webapp-spaces/",
+                      "webapp-spaces-help": "src/web/apps/webapp-spaces-help/",
+                  }
+                  domain_paths = [
+                      "src/booking/",
+                      "src/core/",
+                      "src/customer/",
+                      "src/gateway/",
+                      "src/location/",
+                      "src/marketplace/",
+                      "src/msteams/",
+                      "src/organization/",
+                      "src/slack/",
+                      "src/system/",
+                      "src/team/",
+                  ]
+                  domain_infra_paths = {
+                      "booking-shared": "src/booking/shared/",
+                      "customer-shared": "src/customer/shared/",
+                      "location-shared": "src/location/shared/",
+                      "msteams-shared": "src/msteams/shared/",
+                      "organization-shared": "src/organization/shared/",
+                      "slack-shared": "src/slack/shared/",
+                      "team-shared": "src/team/shared/",
+                  }
+
+                  app_changed = {name: False for name in app_paths}
+                  domain_infra_changed = {name: False for name in domain_infra_paths}
+
+                  for path in effective_files:
+                      if starts(path, [".github/workflows/", ".github/actions/", ".github/prompts/"]):
+                          raw["pipeline_changed"] = True
+                      if starts(path, ["src/shared/"]):
+                          raw["shared_backend_changed"] = True
+                      if starts(path, ["src/shared/infrastructure/"]):
+                          raw["shared_infrastructure_changed"] = True
+                      if starts(path, ["src/shared/infrastructure-azure-entra/"]):
+                          raw["shared_azure_entra_changed"] = True
+                      if starts(path, ["api-definitions/"]) or path in {"api-definitions/generate.sh", "scripts/generate-graphql.sh"}:
+                          raw["api_definitions_changed"] = True
+                      if starts(path, ["src/all-in-one/"]):
+                          raw["all_in_one_changed"] = True
+                      if starts(path, domain_paths):
+                          raw["backend_domain_changed"] = True
+                      if path in {"src/web/package.json", "src/web/pnpm-lock.yaml", "src/web/pnpm-workspace.yaml"} or starts(path, ["src/web/packages/"]):
+                          raw["web_workspace_changed"] = True
+                      if starts(path, ["src/web/infrastructure/"]):
+                          raw["web_infrastructure_changed"] = True
+                      if starts(path, ["docs/event-catalog/"]):
+                          raw["docs_event_catalog_changed"] = True
+                      for name, prefix in app_paths.items():
+                          if starts(path, [prefix]):
+                              app_changed[name] = True
+                      for name, prefix in domain_infra_paths.items():
+                          if starts(path, [prefix]):
+                              domain_infra_changed[name] = True
+
+                  if manual_full_run:
+                      for key in raw:
+                          raw[key] = True
+                      for key in app_changed:
+                          app_changed[key] = True
+                      for key in domain_infra_changed:
+                          domain_infra_changed[key] = True
+
+                  if raw["pipeline_changed"]:
+                      for key in raw:
+                          raw[key] = True
+                      for key in app_changed:
+                          app_changed[key] = True
+                      for key in domain_infra_changed:
+                          domain_infra_changed[key] = True
+
+                  if raw["web_workspace_changed"] or raw["web_infrastructure_changed"] or raw["shared_infrastructure_changed"]:
+                      for key in app_changed:
+                          app_changed[key] = True
+
+                  if raw["shared_backend_changed"]:
+                      for key in domain_infra_changed:
+                          domain_infra_changed[key] = True
+
+                  if docs_only:
+                      for key in raw:
+                          raw[key] = False
+                      for key in app_changed:
+                          app_changed[key] = False
+                      for key in domain_infra_changed:
+                          domain_infra_changed[key] = False
+
+                  all_in_one_selected = manual_full_run or raw["pipeline_changed"] or raw["all_in_one_changed"] or raw["backend_domain_changed"] or raw["shared_backend_changed"] or raw["api_definitions_changed"]
+                  web_selected_names = [name for name, selected in app_changed.items() if selected]
+                  docs_selected = raw["docs_event_catalog_changed"] or (raw["shared_infrastructure_changed"] and not docs_only)
+
+                  all_in_one_images = [
+                      {"name": "allapis", "buildName": "allapis", "kind": "all-in-one", "dockerfile": "./src/all-in-one/AllApis/Dockerfile", "repository": "allapis", "enabled": "true"},
+                      {"name": "allprocessors", "buildName": "allprocessors", "kind": "all-in-one", "dockerfile": "./src/all-in-one/AllProcessors/Dockerfile", "repository": "allprocessors", "enabled": "true"},
+                      {"name": "alljobs", "buildName": "alljobs", "kind": "all-in-one", "dockerfile": "./src/all-in-one/AllJobs/Dockerfile", "repository": "alljobs", "enabled": "true"},
+                      {"name": "allinfra", "buildName": "allinfra", "kind": "all-in-one", "dockerfile": "./src/all-in-one/AllInfra/Dockerfile", "repository": "allinfra", "enabled": "true"},
+                  ] if all_in_one_selected and not docs_only else []
+
+                  web_apps = {
+                      "webapp": {"dockerfile": "./src/web/apps/webapp/Dockerfile", "repository": "webapp", "component": "webapp", "workos": "WEBAPP_WORKOS_API_KEY", "richSecrets": True},
+                      "webapp-help": {"dockerfile": "./src/web/apps/webapp-help/Dockerfile", "repository": "webapphelp", "component": "webapphelp", "workos": "", "richSecrets": False},
+                      "webapp-teams": {"dockerfile": "./src/web/apps/webapp-teams/Dockerfile", "repository": "webapp-teams", "component": "webapp-teams", "workos": "WEBAPP_TEAMS_WORKOS_API_KEY", "richSecrets": True},
+                      "webapp-teams-help": {"dockerfile": "./src/web/apps/webapp-teams-help/Dockerfile", "repository": "webapp-teams-help", "component": "webapp-teams-help", "workos": "", "richSecrets": False},
+                      "webapp-spaces": {"dockerfile": "./src/web/apps/webapp-spaces/Dockerfile", "repository": "webapp-spaces", "component": "webapp-spaces", "workos": "WEBAPP_SPACES_WORKOS_API_KEY", "richSecrets": True},
+                      "webapp-spaces-help": {"dockerfile": "./src/web/apps/webapp-spaces-help/Dockerfile", "repository": "webapp-spaces-help", "component": "webapp-spaces-help", "workos": "", "richSecrets": False},
+                  }
+                  web_ci_matrix = [
+                      dict(
+                          {"name": name, "buildName": f"{name}", "kind": "web-app", "enabled": "true"},
+                          **web_apps[name],
+                          stagingWorkingDirectory=f"./src/web/apps/{name}/infrastructure/workspaces/staging",
+                          productionWorkingDirectory=f"./src/web/apps/{name}/infrastructure/workspaces/production",
+                          provider="aws",
+                          secretProfile="web-rich" if web_apps[name]["richSecrets"] else "web-basic",
+                      )
+                      for name in web_selected_names
+                  ]
+
+                  docs_ci_matrix = [{
+                      "name": "docs-event-catalog",
+                      "buildName": "docs event catalog",
+                      "kind": "docs-event-catalog",
+                      "dockerfile": "./docs/event-catalog/Dockerfile",
+                      "repository": "docs-event-catalog",
+                      "component": "event-catalog",
+                      "stagingWorkingDirectory": "./docs/event-catalog/infrastructure/workspaces/staging",
+                      "productionWorkingDirectory": "./docs/event-catalog/infrastructure/workspaces/production",
+                      "provider": "aws",
+                      "secretProfile": "web-basic",
+                      "enabled": "true",
+                  }] if docs_selected and not docs_only else []
+
+                  azure_entra_enabled = False
+                  disabled_infra_targets = {
+                      "booking-shared",
+                      "customer-shared",
+                      "location-shared",
+                      "msteams-shared",
+                      "organization-shared",
+                      "slack-shared",
+                      "team-shared",
+                      "web-shared",
+                  }
+                  infra_targets = []
+                  infra_validation_targets = []
+
+                  def add_infra(name, component, directory, provider="aws", secret_profile="none", validate=True):
+                      enabled = name not in disabled_infra_targets
+                      build_name = name.removesuffix("-shared")
+                      if validate:
+                          infra_validation_targets.append({
+                              "name": name,
+                              "buildName": f"{build_name}",
+                              "kind": "infrastructure",
+                              "component": component,
+                              "stagingWorkingDirectory": f"{directory}/workspaces/staging",
+                              "productionWorkingDirectory": f"{directory}/workspaces/production",
+                              "provider": provider,
+                              "secretProfile": secret_profile,
+                              "enabled": str(enabled).lower(),
+                          })
+                      for environment in ["staging", "production"]:
+                          infra_targets.append({
+                              "name": name,
+                              "component": component,
+                              "environment": environment,
+                              "workingDirectory": f"{directory}/workspaces/{environment}",
+                              "provider": provider,
+                              "secretProfile": secret_profile,
+                              "enabled": str(enabled).lower(),
+                          })
+
+                  if raw["shared_backend_changed"] or raw["shared_infrastructure_changed"] or manual_full_run or raw["pipeline_changed"]:
+                      add_infra("shared", "shared", "./src/shared/infrastructure", "aws-azure", "shared")
+                  if azure_entra_enabled and (raw["shared_backend_changed"] or raw["shared_azure_entra_changed"] or manual_full_run or raw["pipeline_changed"]):
+                      add_infra("shared-azure-entra", "shared", "./src/shared/infrastructure-azure-entra", "aws-azure-entra", "none")
+                  if raw["web_workspace_changed"] or raw["web_infrastructure_changed"] or raw["shared_infrastructure_changed"] or manual_full_run or raw["pipeline_changed"]:
+                      add_infra("web-shared", "web", "./src/web/infrastructure", "aws", "none")
+                  for name, info in web_apps.items():
+                      if name in web_selected_names:
+                          add_infra(name, info["component"], f"./src/web/apps/{name}/infrastructure", "aws", "web-rich" if info["richSecrets"] else "web-basic", validate=False)
+                  if docs_selected and not docs_only:
+                      add_infra("docs-event-catalog", "event-catalog", "./docs/event-catalog/infrastructure", "aws", "web-basic", validate=False)
+                  for name, selected in domain_infra_changed.items():
+                      if selected:
+                          add_infra(name, name, f"./src/{name.removesuffix('-shared')}/shared/infrastructure", "aws", "stripe" if name == "organization-shared" else "none")
+
+                  if docs_only:
+                      infra_targets = []
+                      infra_validation_targets = []
+
+                  cd_target_names = set(web_apps.keys()) | {"docs-event-catalog"}
+                  staging_cd = [target for target in infra_targets if target["environment"] == "staging" and target["name"] in cd_target_names]
+                  production_cd = [target for target in infra_targets if target["environment"] == "production" and target["name"] in cd_target_names]
+                  builds_ci_matrix = all_in_one_images + web_ci_matrix + docs_ci_matrix + infra_validation_targets
+
+                  def matrix(items):
+                      return json.dumps({"include": items}, separators=(",", ":"))
+
+                  outputs = {
+                      **{key: str(value).lower() for key, value in raw.items()},
+                      "docs_only_changed": str(docs_only).lower(),
+                      "ci_any_selected": str(bool(builds_ci_matrix)).lower(),
+                      "staging_cd_selected": str(bool(staging_cd)).lower(),
+                      "production_cd_selected": str(bool(production_cd)).lower(),
+                      "builds_ci_matrix": matrix(builds_ci_matrix),
+                      "staging_cd_matrix": matrix(staging_cd),
+                      "production_cd_matrix": matrix(production_cd),
+                  }
+
+                  with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output_file:
+                      for key, value in outputs.items():
+                          output_file.write(f"{key}={value}\n")
+
+                  trigger_table = "\n".join(f"| {key} | {str(value).lower()} |" for key, value in raw.items())
+                  changed_file_lines = "\n".join(f"- `{path}`" for path in effective_files[:200]) or "- No diff-based changed files (manual full run or empty diff)."
+                  ci_selected = [item["name"] for item in all_in_one_images] + [item["name"] for item in web_ci_matrix] + [item["name"] for item in docs_ci_matrix] + [f"infra:{item['name']}:staging+production" for item in infra_validation_targets]
+                  cd_selected = [f"{item['name']}:{item['environment']}" for item in staging_cd + production_cd]
+                  summary_lines = [
+                      "# Skedular CI/CD Detection Summary",
+                      "",
+                      "| Field | Value |",
+                      "| --- | --- |",
+                      f"| Event | `{event_name}` |",
+                      f"| Ref | `{github_ref}` |",
+                      f"| Run ID | `{run_id}` |",
+                      f"| Base SHA | `{base_sha or 'manual'}` |",
+                      f"| Head SHA | `{head_sha}` |",
+                      f"| Changed file count | `{len(effective_files)}` |",
+                      f"| Docs only | `{str(docs_only).lower()}` |",
+                      f"| Manual full run | `{str(manual_full_run).lower()}` |",
+                      "",
+                      "## Changed Files",
+                      "",
+                      changed_file_lines,
+                      "",
+                      "## Trigger Groups",
+                      "",
+                      "| Group | Active |",
+                      "| --- | --- |",
+                      trigger_table,
+                      "",
+                      "## Selected CI Segments",
+                      "",
+                      chr(10).join(f"- `{item}`" for item in ci_selected) if ci_selected else "- None selected.",
+                      "",
+                      "## Selected CD Segments",
+                      "",
+                      chr(10).join(f"- `{item}`" for item in cd_selected) if cd_selected else "- None selected.",
+                      "",
+                      "## Policy Notes",
+                      "",
+                      "- Pull request events validate only and never deploy.",
+                      "- Pushes to `main` may run selected staging CD after matching CI succeeds.",
+                      "- Production CD follows the `production` GitHub environment gate after staging succeeds.",
+                      "- Manual runs force the full CI validation path; CD jobs remain blocked unless the event is a `main` push.",
+                      "- Secrets, token values, Terraform state, and provider payloads are not printed in this summary.",
+                  ]
+                  summary = "\n".join(summary_lines) + "\n"
+                  with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary_file:
+                      summary_file.write(summary)
+
+                  print(f"::notice title=ci-detect-complete::ci_selected={len(ci_selected)} cd_selected={len(cd_selected)} docs_only={str(docs_only).lower()}")
+
+    check-pipeline:
+        name: Check pipeline definition
+        runs-on: ubuntu-latest
+        needs: [detect]
+        if: ${{ needs.detect.outputs.pipeline_changed == 'true' || github.event_name == 'workflow_dispatch' }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+            - name: Download actionlint v1.7.4
+              run: |
+                  mkdir -p /tmp/actionlint
+                  cd /tmp/actionlint
+                  wget -q https://github.com/rhysd/actionlint/releases/download/v1.7.4/actionlint_1.7.4_linux_amd64.tar.gz
+                  tar -xzf actionlint_1.7.4_linux_amd64.tar.gz
+                  chmod +x actionlint
+                  echo "/tmp/actionlint" >> "$GITHUB_PATH"
+            - name: Check workflow YAML
+              run: actionlint .github/workflows/skedular-cicd-pipeline.yml
+
+    lint:
+        name: Repository lint
+        runs-on: ubuntu-latest
+        needs: [detect]
+        if: ${{ false }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v4
+            - name: Run lint
+              run: make lint
+
+    builds:
+        name: Builds (${{ matrix.buildName }})
+        runs-on: ubuntu-latest
+        needs: [detect, check-pipeline, lint]
+        if: ${{ always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false) && needs.detect.result == 'success' && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && needs.detect.outputs.ci_any_selected == 'true' }}
+        permissions: write-all
+        strategy:
+            fail-fast: false
+            matrix: ${{ fromJSON(needs.detect.outputs.builds_ci_matrix) }}
+        steps:
+            - name: Report temporarily disabled target
+              if: ${{ matrix.enabled != 'true' }}
+              run: echo "::notice title=infrastructure-disabled::${{ matrix.name }} is temporarily disabled"
+            - name: Checkout code with full history
+              if: ${{ matrix.enabled == 'true' }}
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+            - name: Free disk space
+              if: ${{ matrix.enabled == 'true' && matrix.kind != 'infrastructure' }}
+              uses: jlumbroso/free-disk-space@v1.3.1
+              with:
+                  tool-cache: false
+                  android: true
+                  dotnet: false
+                  haskell: true
+                  large-packages: false
+                  docker-images: false
+                  swap-storage: false
+            - name: Build, test and check image
+              if: ${{ matrix.enabled == 'true' && matrix.kind != 'infrastructure' }}
+              uses: ./.github/actions/build-test-push
+              with:
+                  dockerFilePath: ${{ matrix.dockerfile }}
+                  dockerBuildContextPath: .
+                  dockerRegistry: ghcr.io
+                  dockerRegistryUsername: ${{ github.actor }}
+                  dockerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+                  dockerNamespace: unityhubio
+                  dockerRepository: ${{ matrix.repository }}
+                  pushDockerImage: ${{ matrix.kind == 'all-in-one' }}
+                  scanForSecurityVulnerabilities: ${{ matrix.kind != 'docs-event-catalog' }}
+            - name: Configure staging AWS credentials
+              if: ${{ matrix.enabled == 'true' && matrix.kind != 'all-in-one' }}
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                  role-to-assume: ${{ vars.STAGING_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
+                  aws-region: ${{ vars.AWS_REGION }}
+            - name: Configure staging Azure credentials
+              if: ${{ matrix.enabled == 'true' && matrix.kind != 'all-in-one' && matrix.provider == 'aws-azure' }}
+              uses: azure/login@v3
+              with:
+                  tenant-id: ${{ vars.AZURE_TENANT_ID }}
+                  client-id: ${{ vars.STAGING_AZURE_CLIENT_ID }}
+                  subscription-id: ${{ vars.STAGING_AZURE_SUBSCRIPTION_ID }}
+            - name: Configure staging Azure Entra credentials
+              if: ${{ matrix.enabled == 'true' && matrix.kind != 'all-in-one' && matrix.provider == 'aws-azure-entra' }}
+              uses: azure/login@v3
+              with:
+                  tenant-id: ${{ vars.AZURE_TENANT_ID }}
+                  client-id: ${{ vars.STAGING_AZURE_CLIENT_ID }}
+                  allow-no-subscriptions: true
+            - name: Check staging infrastructure
+              if: ${{ matrix.enabled == 'true' && matrix.kind != 'all-in-one' }}
+              uses: ./.github/actions/lint-validate-infrastructure
+              env:
+                  TF_VAR_cloudflare_api_key: ${{ secrets.CLOUDFLARE_API_KEY }}
+                  TF_VAR_vercel_api_token: ${{ secrets.VERCEL_API_TOKEN }}
+                  TF_VAR_stripe_api_key: ${{ secrets.STAGING_STRIPE_API_KEY }}
+                  TF_VAR_gcp_web_credentials_client_id: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_ID }}
+                  TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
+                  TF_VAR_slack_client_secret: ${{ secrets.STAGING_SLACK_CLIENT_SECRET }}
+                  TF_VAR_google_map_api_key: ${{ secrets.STAGING_GOOGLE_MAP_API_KEY }}
+                  TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.STAGING_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.STAGING_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.STAGING_WEBAPP_SPACES_WORKOS_API_KEY || '' }}
+              with:
+                  githubToken: ${{ secrets.GITHUB_TOKEN }}
+                  workingDirectory: ${{ matrix.stagingWorkingDirectory }}
+                  componentName: ${{ matrix.component }}
+                  environment: staging
+            - name: Configure production AWS credentials
+              if: ${{ matrix.enabled == 'true' && matrix.kind != 'all-in-one' }}
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                  role-to-assume: ${{ vars.PRODUCTION_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
+                  aws-region: ${{ vars.AWS_REGION }}
+            - name: Configure production Azure credentials
+              if: ${{ matrix.enabled == 'true' && matrix.kind != 'all-in-one' && matrix.provider == 'aws-azure' }}
+              uses: azure/login@v3
+              with:
+                  tenant-id: ${{ vars.AZURE_TENANT_ID }}
+                  client-id: ${{ vars.PRODUCTION_AZURE_CLIENT_ID }}
+                  subscription-id: ${{ vars.PRODUCTION_AZURE_SUBSCRIPTION_ID }}
+            - name: Configure production Azure Entra credentials
+              if: ${{ matrix.enabled == 'true' && matrix.kind != 'all-in-one' && matrix.provider == 'aws-azure-entra' }}
+              uses: azure/login@v3
+              with:
+                  tenant-id: ${{ vars.AZURE_TENANT_ID }}
+                  client-id: ${{ vars.PRODUCTION_AZURE_CLIENT_ID }}
+                  allow-no-subscriptions: true
+            - name: Check production infrastructure
+              if: ${{ matrix.enabled == 'true' && matrix.kind != 'all-in-one' }}
+              uses: ./.github/actions/lint-validate-infrastructure
+              env:
+                  TF_VAR_cloudflare_api_key: ${{ secrets.CLOUDFLARE_API_KEY }}
+                  TF_VAR_vercel_api_token: ${{ secrets.VERCEL_API_TOKEN }}
+                  TF_VAR_stripe_api_key: ${{ secrets.PRODUCTION_STRIPE_API_KEY }}
+                  TF_VAR_gcp_web_credentials_client_id: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_ID }}
+                  TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
+                  TF_VAR_slack_client_secret: ${{ secrets.PRODUCTION_SLACK_CLIENT_SECRET }}
+                  TF_VAR_google_map_api_key: ${{ secrets.PRODUCTION_GOOGLE_MAP_API_KEY }}
+                  TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.PRODUCTION_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.PRODUCTION_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.PRODUCTION_WEBAPP_SPACES_WORKOS_API_KEY || '' }}
+              with:
+                  githubToken: ${{ secrets.GITHUB_TOKEN }}
+                  workingDirectory: ${{ matrix.productionWorkingDirectory }}
+                  componentName: ${{ matrix.component }}
+                  environment: production
+
+    deploy-staging:
+        name: Deploy staging (${{ matrix.name }})
+        runs-on: ubuntu-latest
+        needs:
+            - detect
+            - check-pipeline
+            - lint
+            - builds
+            - required
+        if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.detect.result == 'success' && needs.required.result == 'success' && needs.detect.outputs.staging_cd_selected == 'true' && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+        concurrency:
+            group: skedular-deploy-${{ matrix.name }}-staging
+            cancel-in-progress: false
+        permissions: write-all
+        environment: staging
+        strategy:
+            fail-fast: false
+            matrix: ${{ fromJSON(needs.detect.outputs.staging_cd_matrix) }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                  role-to-assume: ${{ vars.STAGING_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
+                  aws-region: ${{ vars.AWS_REGION }}
+            - name: Configure Azure credentials
+              if: ${{ matrix.provider == 'aws-azure' }}
+              uses: azure/login@v3
+              with:
+                  tenant-id: ${{ vars.AZURE_TENANT_ID }}
+                  client-id: ${{ vars.STAGING_AZURE_CLIENT_ID }}
+                  subscription-id: ${{ vars.STAGING_AZURE_SUBSCRIPTION_ID }}
+            - name: Configure Azure Entra credentials
+              if: ${{ matrix.provider == 'aws-azure-entra' }}
+              uses: azure/login@v3
+              with:
+                  tenant-id: ${{ vars.AZURE_TENANT_ID }}
+                  client-id: ${{ vars.STAGING_AZURE_CLIENT_ID }}
+                  allow-no-subscriptions: true
+            - name: Deploy infrastructure
+              uses: ./.github/actions/deploy-infrastructure
+              env:
+                  TF_VAR_cloudflare_api_key: ${{ secrets.CLOUDFLARE_API_KEY }}
+                  TF_VAR_vercel_api_token: ${{ secrets.VERCEL_API_TOKEN }}
+                  TF_VAR_stripe_api_key: ${{ secrets.STAGING_STRIPE_API_KEY }}
+                  TF_VAR_gcp_web_credentials_client_id: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_ID }}
+                  TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
+                  TF_VAR_slack_client_secret: ${{ secrets.STAGING_SLACK_CLIENT_SECRET }}
+                  TF_VAR_google_map_api_key: ${{ secrets.STAGING_GOOGLE_MAP_API_KEY }}
+                  TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.STAGING_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.STAGING_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.STAGING_WEBAPP_SPACES_WORKOS_API_KEY || '' }}
+              with:
+                  workingDirectory: ${{ matrix.workingDirectory }}
+
+    deploy-production:
+        name: Deploy production (${{ matrix.name }})
+        runs-on: ubuntu-latest
+        needs:
+            - detect
+            - check-pipeline
+            - lint
+            - builds
+            - deploy-staging
+        if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.detect.result == 'success' && needs.detect.outputs.production_cd_selected == 'true' && needs.deploy-staging.result == 'success' && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+        concurrency:
+            group: skedular-deploy-${{ matrix.name }}-production
+            cancel-in-progress: false
+        permissions: write-all
+        environment: production
+        strategy:
+            fail-fast: false
+            matrix: ${{ fromJSON(needs.detect.outputs.production_cd_matrix) }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                  role-to-assume: ${{ vars.PRODUCTION_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
+                  aws-region: ${{ vars.AWS_REGION }}
+            - name: Configure Azure credentials
+              if: ${{ matrix.provider == 'aws-azure' }}
+              uses: azure/login@v3
+              with:
+                  tenant-id: ${{ vars.AZURE_TENANT_ID }}
+                  client-id: ${{ vars.PRODUCTION_AZURE_CLIENT_ID }}
+                  subscription-id: ${{ vars.PRODUCTION_AZURE_SUBSCRIPTION_ID }}
+            - name: Configure Azure Entra credentials
+              if: ${{ matrix.provider == 'aws-azure-entra' }}
+              uses: azure/login@v3
+              with:
+                  tenant-id: ${{ vars.AZURE_TENANT_ID }}
+                  client-id: ${{ vars.PRODUCTION_AZURE_CLIENT_ID }}
+                  allow-no-subscriptions: true
+            - name: Deploy infrastructure
+              uses: ./.github/actions/deploy-infrastructure
+              env:
+                  TF_VAR_cloudflare_api_key: ${{ secrets.CLOUDFLARE_API_KEY }}
+                  TF_VAR_vercel_api_token: ${{ secrets.VERCEL_API_TOKEN }}
+                  TF_VAR_stripe_api_key: ${{ secrets.PRODUCTION_STRIPE_API_KEY }}
+                  TF_VAR_gcp_web_credentials_client_id: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_ID }}
+                  TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
+                  TF_VAR_slack_client_secret: ${{ secrets.PRODUCTION_SLACK_CLIENT_SECRET }}
+                  TF_VAR_google_map_api_key: ${{ secrets.PRODUCTION_GOOGLE_MAP_API_KEY }}
+                  TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.PRODUCTION_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.PRODUCTION_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.PRODUCTION_WEBAPP_SPACES_WORKOS_API_KEY || '' }}
+              with:
+                  workingDirectory: ${{ matrix.workingDirectory }}
+
+    required:
+        name: Skedular CI pipeline status
+        runs-on: ubuntu-latest
+        if: always()
+        needs:
+            - detect
+            - check-pipeline
+            - lint
+            - builds
+        steps:
+            - name: Report upstream job results
+              run: |
+                  echo "Job results:"
+                  echo "  detect: ${{ needs.detect.result }}"
+                  echo "  check-pipeline: ${{ needs.check-pipeline.result }}"
+                  echo "  lint: ${{ needs.lint.result }}"
+                  echo "  builds: ${{ needs.builds.result }}"
+            - name: Write umbrella summary
+              run: |
+                  {
+                                        echo "# Skedular CI Pipeline Status"
+                    echo
+                    echo "| Job | Result |"
+                    echo "| --- | --- |"
+                    echo "| detect | ${{ needs.detect.result }} |"
+                    echo "| check-pipeline | ${{ needs.check-pipeline.result }} |"
+                    echo "| lint | ${{ needs.lint.result }} |"
+                    echo "| builds | ${{ needs.builds.result }} |"
+                  } >> "$GITHUB_STEP_SUMMARY"
+            - name: Determine umbrella status
+              if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+              run: |
+                  echo "::error title=ci-required-failed::At least one selected upstream job failed or was cancelled"
+                  exit 1
+            - name: Umbrella check passed
+              if: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+              run: echo "::notice title=ci-required-complete::All selected jobs succeeded or skipped"

@@ -5,7 +5,7 @@ module "common" {
 }
 
 module "shared_common" {
-  source = "../../../../../shared/infrastructure/workspaces/common"
+  source = "../../../../../src/shared/infrastructure/workspaces/common"
 
   environment = var.environment
 }

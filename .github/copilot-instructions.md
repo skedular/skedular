@@ -4,6 +4,9 @@ Auto-generated from all feature plans. Last updated: 2026-06-04
 
 ## Active Technologies
 
+- GitHub Actions YAML on `ubuntu-latest`; Bash shell in existing Skedular composite actions; Terraform HCL for infrastructure workspaces; Dockerfile-based app builds + GitHub Actions, `actions/checkout@v6`, Docker BuildKit, `docker/metadata-action`, `docker/login-action`, `docker/build-push-action`, `hashicorp/setup-terraform@v4`, `actions/github-script`, existing `.github/actions/build-test-push`, `.github/actions/lint-validate-infrastructure`, `.github/actions/deploy-infrastructure` (024-merge-ci-cd-pipelines)
+- N/A for application data; workflow-local changed-file lists, coverage outputs, Docker image tags, and Terraform state backends already configured by current workspaces (024-merge-ci-cd-pipelines)
+
 - TypeScript 6.0.3, Astro static site, Node.js 22 via `src/web` workspace + Astro, TypeScript, pnpm 11.5.1 workspace, Turborepo 2.9.x; app-local formatting/lint tooling consistent with current web apps (023-astro-public-website)
 - N/A - static website source files only (023-astro-public-website)
 
@@ -49,11 +52,11 @@ C# on .NET 10: Follow standard conventions
 
 ## Recent Changes
 
+- 024-merge-ci-cd-pipelines: Added GitHub Actions YAML on `ubuntu-latest`; Bash shell in existing Skedular composite actions; Terraform HCL for infrastructure workspaces; Dockerfile-based app builds + GitHub Actions, `actions/checkout@v6`, Docker BuildKit, `docker/metadata-action`, `docker/login-action`, `docker/build-push-action`, `hashicorp/setup-terraform@v4`, `actions/github-script`, existing `.github/actions/build-test-push`, `.github/actions/lint-validate-infrastructure`, `.github/actions/deploy-infrastructure`
+
 - 023-astro-public-website: Added TypeScript 6.0.3, Astro static site, Node.js 22 via `src/web` workspace + Astro, TypeScript, pnpm 11.5.1 workspace, Turborepo 2.9.x; app-local formatting/lint tooling consistent with current web apps
 
 - 020-customer-landing-cleanup: Added TypeScript 6.0.3; React 19.2.6; Next.js 16.2.6 App Router; backend C# .NET 10 only if GraphQL/domain contract changes are needed + Relay 21, `react-relay`, MUI 9, `@skedular/ui`, `@skedular/shared`, WorkOS AuthKit, Leaflet/react-leaflet for map browsing, existing marketplace GraphQL schema and generated Relay artifacts
-
-- 008-bulk-resource-import: Added C# .NET 10 (backend); TypeScript 6 / React 19 / Next.js 16 App Router (frontend) + HotChocolate (GraphQL), Entity Framework Core, `Enterprise.Shared.Database` repository pattern, Relay, MUI v9, `mui-rff` Autocomplete
 
 <!-- MANUAL ADDITIONS START -->
 
@@ -69,6 +72,6 @@ C# on .NET 10: Follow standard conventions
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/023-astro-public-website/plan.md
+at specs/024-merge-ci-cd-pipelines/plan.md
 
 <!-- SPECKIT END -->
