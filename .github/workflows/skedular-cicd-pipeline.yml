@@ -249,8 +249,6 @@ jobs:
                           "cloudflareAccountId": "26b0f35cc7cf1dd7be5973e8905fbfe8",
                           "stagingProjectName": "staging-public-web",
                           "productionProjectName": "production-public-web",
-                          "stagingSignupUrl": "https://staging.skedular.app/signup",
-                          "productionSignupUrl": "https://skedular.app/signup",
                       },
                       "webapp": {"dockerfile": "./src/web/apps/webapp/Dockerfile", "repository": "webapp", "component": "webapp", "workos": "WEBAPP_WORKOS_API_KEY", "richSecrets": True},
                       "webapp-help": {"dockerfile": "./src/web/apps/webapp-help/Dockerfile", "repository": "webapphelp", "component": "webapphelp", "workos": "", "richSecrets": False},
@@ -626,14 +624,19 @@ jobs:
                   workingDirectory: ${{ matrix.workingDirectory }}
             - name: Enable pnpm for public static web
               if: ${{ matrix.name == 'public-web' }}
-              run: corepack enable
+              run: |
+                  corepack enable
+                  corepack prepare pnpm@11.5.1 --activate
             - name: Install public static web dependencies
               if: ${{ matrix.name == 'public-web' }}
               run: pnpm --dir src/web install --frozen-lockfile
             - name: Build public static web
               if: ${{ matrix.name == 'public-web' }}
               env:
-                  PUBLIC_SKEDULAR_SIGNUP_URL: ${{ matrix.stagingSignupUrl }}
+                  PUBLIC_SKEDULAR_APP_URL: https://staging.skedular.app
+                  PUBLIC_SKEDULAR_SIGNUP_URL: https://staging.skedular.app
+                  PUBLIC_SKEDULAR_DEMO_URL: https://staging.skedular.app
+                  PUBLIC_SKEDULAR_BECOME_HOST_URL: https://staging.skedular.app
               run: pnpm --dir src/web public-web#build
             - name: Deploy public static web to Cloudflare Pages
               if: ${{ matrix.name == 'public-web' }}
@@ -697,14 +700,19 @@ jobs:
                   workingDirectory: ${{ matrix.workingDirectory }}
             - name: Enable pnpm for public static web
               if: ${{ matrix.name == 'public-web' }}
-              run: corepack enable
+              run: |
+                  corepack enable
+                  corepack prepare pnpm@11.5.1 --activate
             - name: Install public static web dependencies
               if: ${{ matrix.name == 'public-web' }}
               run: pnpm --dir src/web install --frozen-lockfile
             - name: Build public static web
               if: ${{ matrix.name == 'public-web' }}
               env:
-                  PUBLIC_SKEDULAR_SIGNUP_URL: ${{ matrix.productionSignupUrl }}
+                  PUBLIC_SKEDULAR_APP_URL: https://skedular.app
+                  PUBLIC_SKEDULAR_SIGNUP_URL: https://skedular.app
+                  PUBLIC_SKEDULAR_DEMO_URL: https://skedular.app
+                  PUBLIC_SKEDULAR_BECOME_HOST_URL: https://skedular.app
               run: pnpm --dir src/web public-web#build
             - name: Deploy public static web to Cloudflare Pages
               if: ${{ matrix.name == 'public-web' }}

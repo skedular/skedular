@@ -1,0 +1,40 @@
+---
+import type { Cta } from "../data/content-types";
+import { getPublicDestinationUrl } from "../data/public-destination-urls";
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  body?: string;
+  cta?: Cta;
+  variant?: "default" | "quiet" | "accent";
+}
+
+const { eyebrow, title, body, cta, variant = "default" } = Astro.props;
+
+function resolveCtaHref(item: Cta): string {
+  if (item.destinationType === "public-url") {
+    return getPublicDestinationUrl(item.destinationRef as Parameters<typeof getPublicDestinationUrl>[0]);
+  }
+
+  return item.destinationRef;
+}
+---
+
+<section class:list={["page-section", `page-section-${variant}`]}>
+  <div class="container section-inner">
+    {(eyebrow || title || body) && (
+      <div class="section-heading">
+        {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+        {title && <h2>{title}</h2>}
+        {body && <p>{body}</p>}
+      </div>
+    )}
+    <slot />
+    {cta && (
+      <a class="button" href={resolveCtaHref(cta)} data-cta-id={cta.id}>
+        {cta.label}
+      </a>
+    )}
+  </div>
+</section>

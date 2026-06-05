@@ -1,7 +1,6 @@
 import { spawn } from "node:child_process";
 import { describe, expect, it } from "vitest";
-
-const signupUrl = "https://app.example.test/sign-up?source=public-web";
+import { publicUrlEnvironment, publicUrlFixtures } from "./public-url-fixtures";
 
 function runBuild(environment: NodeJS.ProcessEnv) {
   return new Promise<{ code: number | null; stdout: string; stderr: string }>((resolve) => {
@@ -24,22 +23,31 @@ function runBuild(environment: NodeJS.ProcessEnv) {
 }
 
 describe("public website build diagnostics", () => {
-  it("emits structured page count and output size metadata without exposing the CTA URL", async () => {
-    const result = await runBuild({ ...process.env, PUBLIC_SKEDULAR_SIGNUP_URL: signupUrl });
+  it("requires all public destination URLs and hides full URL values", async () => {
+    const result = await runBuild({ ...process.env, ...publicUrlEnvironment });
 
-    expect(result.code).toBe(0);
+    expect(result.code, `${result.stdout}\n${result.stderr}`).toBe(0);
     expect(result.stdout).toContain('"event":"public-web.build.complete"');
-    expect(result.stdout).toMatch(/"pageCount":\d+/);
+    const pageCount = Number(result.stdout.match(/"pageCount":(\d+)/)?.[1] ?? 0);
+    expect(pageCount).toBeGreaterThanOrEqual(18);
     expect(result.stdout).toMatch(/"outputBytes":\d+/);
-    expect(`${result.stdout}${result.stderr}`).not.toContain(signupUrl);
+
+    const output = `${result.stdout}${result.stderr}`;
+    expect(output).not.toContain(publicUrlFixtures.appUrl);
+    expect(output).not.toContain(publicUrlFixtures.signupUrl);
+    expect(output).not.toContain(publicUrlFixtures.demoUrl);
+    expect(output).not.toContain(publicUrlFixtures.becomeHostUrl);
   });
 
-  it("fails clearly when the required CTA URL is missing", async () => {
-    const environment = { ...process.env, PUBLIC_SKEDULAR_SIGNUP_URL: "" };
+  it.each(["PUBLIC_SKEDULAR_APP_URL", "PUBLIC_SKEDULAR_SIGNUP_URL", "PUBLIC_SKEDULAR_DEMO_URL", "PUBLIC_SKEDULAR_BECOME_HOST_URL"] as const)(
+    "fails clearly when %s is missing",
+    async (name) => {
+      const environment = { ...process.env, ...publicUrlEnvironment, [name]: "" };
 
-    const result = await runBuild(environment);
+      const result = await runBuild(environment);
 
-    expect(result.code).not.toBe(0);
-    expect(`${result.stdout}${result.stderr}`).toContain("PUBLIC_SKEDULAR_SIGNUP_URL is required");
-  });
+      expect(result.code).not.toBe(0);
+      expect(`${result.stdout}${result.stderr}`).toContain(`${name} is required`);
+    },
+  );
 });

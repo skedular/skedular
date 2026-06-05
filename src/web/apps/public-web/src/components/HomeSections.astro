@@ -1,0 +1,103 @@
+---
+import { homePage } from "../data/home-page";
+---
+
+<div class="product-switcher" aria-label="Skedular product paths">
+  {homePage.productPaths.map((path) => (
+    <a class:list={["product-path", `product-path-${path.accent}`]} href={path.href}>
+      <span class="product-label">{path.label}</span>
+      <h3>{path.title}</h3>
+      <p>{path.body}</p>
+      <ul class="product-features">
+        {path.features.map((feature) => <li>{feature}</li>)}
+      </ul>
+      <strong>Learn more</strong>
+    </a>
+  ))}
+</div>
+
+<div class="showcase-stack" aria-label="Skedular product details">
+  {
+    homePage.productShowcases.map((showcase, index) => (
+      <article class:list={["showcase-panel", index % 2 === 1 && "showcase-panel-reverse"]}>
+        <div class="showcase-copy">
+          <p class="eyebrow">{showcase.kicker}</p>
+          <h3>{showcase.title}</h3>
+          <p>{showcase.body}</p>
+          <a class="text-link" href={showcase.href}>
+            {showcase.ctaLabel}
+          </a>
+        </div>
+        <div class:list={["showcase-visual", `showcase-visual-${showcase.accent}`]} aria-label={`${showcase.visualTitle} preview`}>
+          <div class="showcase-window">
+            <div class="showcase-window-header">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <strong>{showcase.visualTitle}</strong>
+            <div class="showcase-bars">
+              {showcase.visualStats.map((stat) => (
+                <div>
+                  <span>{stat}</span>
+                  <i></i>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </article>
+    ))
+  }
+</div>
+
+<section class="feature-board" aria-labelledby="platform-features-title">
+  <div class="section-heading">
+    <p class="eyebrow">Platform features</p>
+    <h2 id="platform-features-title">The pieces flexible workplaces expect</h2>
+  </div>
+  <div class="feature-board-grid">
+    {
+      homePage.platformFeatures.map((feature) => (
+        <article class="feature-board-card">
+          <h3>{feature.title}</h3>
+          <p>{feature.body}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<section class="testimonial-band" aria-label="Skedular launch notes">
+  {
+    homePage.testimonials.map((testimonial) => (
+      <figure>
+        <blockquote>{testimonial.quote}</blockquote>
+        <figcaption>
+          <strong>{testimonial.name}</strong>
+          <span>{testimonial.role}</span>
+        </figcaption>
+      </figure>
+    ))
+  }
+</section>
+
+<section class="integration-band" aria-labelledby="integration-title">
+  <div>
+    <p class="eyebrow">Integrations</p>
+    <h2 id="integration-title">Works near the tools your teams already use</h2>
+  </div>
+  <div class="integration-grid">
+    {homePage.integrations.map((integration) => <span>{integration}</span>)}
+  </div>
+</section>
+
+<section class="final-cta-panel">
+  <p class="eyebrow">Ready when you are</p>
+  <h2>See how Skedular can support your workspace strategy</h2>
+  <p>Explore the product paths, then move demo, login, and booking actions into the right Skedular destination.</p>
+  <div class="button-row">
+    <a class="button" href="/pricing">View pricing</a>
+    <a class="button button-inverse" href="/blog">Read blog</a>
+  </div>
+</section>

@@ -1,0 +1,31 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import ProductPageSections from "../components/ProductPageSections.astro";
+import CtaLink from "../components/CtaLink.astro";
+import { getCta } from "../data/ctas";
+import { teamsPage } from "../data/teams-page";
+---
+
+<SiteLayout
+  title="Skedular Teams | Private workplace management"
+  description="Desk booking, room booking, parking, attendance, floor plans, analytics, Slack, Microsoft Teams, and enterprise identity for private workplaces."
+  canonicalPath="/teams"
+  structuredDataType="Product"
+>
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="eyebrow">{teamsPage.eyebrow}</p>
+      <h1>{teamsPage.title}</h1>
+      <p>{teamsPage.summary}</p>
+      <div class="button-row">
+        <CtaLink cta={getCta("book-demo")} />
+        <a class="text-link" href="/pricing/teams">View Teams pricing</a>
+      </div>
+    </div>
+  </section>
+  <section class="page-section">
+    <div class="container section-inner">
+      <ProductPageSections page={teamsPage} />
+    </div>
+  </section>
+</SiteLayout>

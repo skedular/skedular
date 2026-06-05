@@ -1,0 +1,18 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import LegalSections from "../components/LegalSections.astro";
+import { findLegalPage } from "../data/legal-pages";
+
+const page = findLegalPage("privacy-policy");
+---
+
+<SiteLayout title={page.title} description={page.description} canonicalPath={page.path}>
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="eyebrow">Legal</p>
+      <h1>Privacy Policy</h1>
+      <p>{page.heroSummary}</p>
+    </div>
+  </section>
+  <LegalSections page={page} />
+</SiteLayout>

@@ -1,0 +1,24 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import ResourceSections from "../../components/ResourceSections.astro";
+import { supportArticles } from "../../data/current-public-content";
+---
+
+<SiteLayout
+  title="Skedular Support | Public website and product help"
+  description="Support resources for getting started with Skedular, public website booking actions, and product next steps."
+  canonicalPath="/support"
+>
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="eyebrow">Support</p>
+      <h1>Support that explains the next step clearly</h1>
+      <p>Find concise support content for public visitors, business buyers, workspace operators, and people continuing into the Skedular app.</p>
+    </div>
+  </section>
+  <section class="page-section">
+    <div class="container section-inner">
+      <ResourceSections articles={supportArticles} />
+    </div>
+  </section>
+</SiteLayout>

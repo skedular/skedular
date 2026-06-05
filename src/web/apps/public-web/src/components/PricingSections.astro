@@ -1,0 +1,79 @@
+---
+import { getCta } from "../data/ctas";
+import { pricingPage } from "../data/pricing";
+import CtaLink from "./CtaLink.astro";
+
+interface Props {
+  productId?: string;
+}
+
+const { productId } = Astro.props;
+const productPricingModels = pricingPage.models.filter((model) => model.id === "teams" || model.id === "spaces");
+const hostPricingModel = pricingPage.models.find((model) => model.id === "hosts");
+const selectedModel = productPricingModels.find((model) => model.id === productId);
+---
+
+{
+  selectedModel ? (
+    <div class="pricing-focused-layout">
+      <nav class="pricing-switcher" aria-label="Pricing product switcher">
+        {productPricingModels.map((model) => (
+          <a class:list={[model.id === selectedModel.id && "pricing-switcher-active"]} href={`/pricing/${model.id}`}>
+            {model.name}
+          </a>
+        ))}
+      </nav>
+
+      <article class:list={["pricing-product-card", "pricing-product-card-focused", `pricing-product-card-${selectedModel.id}`]}>
+        <div class="pricing-card-header">
+          <p class="eyebrow">{selectedModel.basis}</p>
+          <h2>{selectedModel.name}</h2>
+          <p>{selectedModel.audience}</p>
+        </div>
+
+        <div class="tier-list tier-list-focused">
+          {selectedModel.tiers.map((tier) => (
+            <div class="tier">
+              <strong>{tier.name}</strong>
+              <span>{tier.price}</span>
+              <p>{tier.summary}</p>
+            </div>
+          ))}
+        </div>
+
+        {selectedModel.id === "spaces" && hostPricingModel && (
+          <div class="pricing-marketplace-note">
+            <strong>{hostPricingModel.name}</strong>
+            <span>{hostPricingModel.basis}</span>
+            <p>
+              {hostPricingModel.tiers[0]?.price}. {hostPricingModel.tiers[0]?.summary}
+            </p>
+          </div>
+        )}
+
+        <CtaLink cta={getCta(selectedModel.ctaId as Parameters<typeof getCta>[0])} />
+      </article>
+    </div>
+  ) : (
+    <div class="pricing-selector-grid">
+      {productPricingModels.map((model) => (
+        <a class:list={["pricing-selector-card", `pricing-selector-card-${model.id}`]} href={`/pricing/${model.id}`}>
+          <span>{model.basis}</span>
+          <strong>{model.name}</strong>
+          <p>{model.audience}</p>
+          <em>View {model.name} pricing</em>
+        </a>
+      ))}
+    </div>
+  )
+}
+
+<div class="pricing-review-note">
+  <div>
+    <p class="eyebrow">Pricing review</p>
+    <h2>Final pricing should be approved before launch</h2>
+  </div>
+  <p>
+    Pricing is separated by product so buyers only see the model that matches their job. The business approval status is <strong>{pricingPage.reviewStatus}</strong>.
+  </p>
+</div>

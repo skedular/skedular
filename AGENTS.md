@@ -308,7 +308,7 @@ This file applies to the whole repository.
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/021-help-webapps-docs/plan.md
+at specs/025-public-website-content/plan.md
 
 <!-- SPECKIT END -->
 

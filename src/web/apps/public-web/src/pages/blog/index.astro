@@ -1,0 +1,24 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import ResourceSections from "../../components/ResourceSections.astro";
+import { resourceArticles } from "../../data/current-public-content";
+---
+
+<SiteLayout
+  title="Skedular Blog | Workspace planning, booking, payments, and operations"
+  description="Read Skedular blog posts about hybrid work, workspace planning, payments, invoicing, Slack, Microsoft Teams, and product decisions."
+  canonicalPath="/blog"
+>
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="eyebrow">Blog</p>
+      <h1>Workspace ideas, product notes, and practical guidance</h1>
+      <p>Read blog posts about hybrid work, office planning, workspace productivity, payments, invoicing, marketplace features, Slack, and Microsoft Teams.</p>
+    </div>
+  </section>
+  <section class="page-section">
+    <div class="container section-inner">
+      <ResourceSections articles={resourceArticles} />
+    </div>
+  </section>
+</SiteLayout>

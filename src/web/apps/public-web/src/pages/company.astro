@@ -1,0 +1,79 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { companyPage } from "../data/company-page";
+---
+
+<SiteLayout title={companyPage.title} description={companyPage.description} canonicalPath={companyPage.path} structuredDataType="Organization">
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="eyebrow">{companyPage.hero.eyebrow}</p>
+      <h1>{companyPage.hero.title}</h1>
+      <p>{companyPage.hero.summary}</p>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="container company-layout">
+      <div class="company-story">
+        <p class="eyebrow">Our story</p>
+        <h2>The Skedular journey so far</h2>
+        <p>
+          Skedular started with a simple product question: how can modern teams keep the flexibility people value while making shared workspace easier to plan, book, and operate?
+        </p>
+        <p>
+          The answer has grown from an early workplace scheduling product into a broader platform for private team workspaces and workspace operators.
+        </p>
+        <a class="button" href={`mailto:${companyPage.contactEmail}`}>Contact Skedular</a>
+      </div>
+      <div class="company-facts">
+        {
+          companyPage.facts.map((fact) => (
+            <article class="fact-card">
+              <span>{fact.label}</span>
+              <strong>{fact.value}</strong>
+              <p>{fact.detail}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section page-section-quiet">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow">Timeline</p>
+        <h2>From UnityHub to Skedular</h2>
+      </div>
+      <div class="company-timeline">
+        {
+          companyPage.timeline.map((item) => (
+            <article class="timeline-item">
+              <span>{item.year}</span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="container section-inner">
+      <div class="section-heading">
+        <p class="eyebrow">How we build</p>
+        <h2>Friendly software for real workspace work</h2>
+      </div>
+      <div class="card-grid">
+        {
+          companyPage.principles.map((principle) => (
+            <article class="content-card">
+              <h3>{principle}</h3>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</SiteLayout>

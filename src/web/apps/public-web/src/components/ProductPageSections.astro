@@ -1,0 +1,16 @@
+---
+import type { ProductPageContent } from "../data/content-types";
+import CardGrid from "./CardGrid.astro";
+
+interface Props {
+  page: ProductPageContent;
+}
+
+const { page } = Astro.props;
+---
+
+<div class="audience-note">
+  <strong>Built for:</strong> {page.audience}
+</div>
+
+<CardGrid items={page.sections} />

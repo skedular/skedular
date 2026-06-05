@@ -1,0 +1,34 @@
+---
+interface Props {
+  type?: "Organization" | "Product" | "FAQPage" | "BreadcrumbList" | "Article";
+  name: string;
+  description?: string;
+  path?: string;
+  breadcrumbs?: Array<{ name: string; path: string }>;
+}
+
+const { type = "Organization", name, description, path = "/", breadcrumbs = [] } = Astro.props;
+
+const baseUrl = "https://www.getascheduler.com";
+const graph =
+  type === "BreadcrumbList"
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: breadcrumbs.map((crumb, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: crumb.name,
+          item: new URL(crumb.path, baseUrl).toString(),
+        })),
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": type,
+        name,
+        description,
+        url: new URL(path, baseUrl).toString(),
+      };
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(graph)} />

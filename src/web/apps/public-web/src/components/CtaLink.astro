@@ -1,0 +1,19 @@
+---
+import type { Cta } from "../data/content-types";
+import { getPublicDestinationUrl } from "../data/public-destination-urls";
+
+interface Props {
+  cta: Cta;
+  variant?: "button" | "text" | "inverse";
+}
+
+const { cta, variant = "button" } = Astro.props;
+const href =
+  cta.destinationType === "public-url"
+    ? getPublicDestinationUrl(cta.destinationRef as Parameters<typeof getPublicDestinationUrl>[0])
+    : cta.destinationRef;
+---
+
+<a class:list={[variant === "text" ? "text-link" : "button", variant === "inverse" && "button-inverse"]} href={href} data-cta-id={cta.id}>
+  {cta.label}
+</a>

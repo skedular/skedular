@@ -5,7 +5,10 @@ ARG BUILD_IMAGE=node:22-alpine
 FROM $BUILD_IMAGE AS build
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-ENV PUBLIC_SKEDULAR_SIGNUP_URL="https://app.example.test/sign-up"
+ENV PUBLIC_SKEDULAR_APP_URL="https://skedular.app"
+ENV PUBLIC_SKEDULAR_SIGNUP_URL="https://skedular.app"
+ENV PUBLIC_SKEDULAR_DEMO_URL="https://skedular.app"
+ENV PUBLIC_SKEDULAR_BECOME_HOST_URL="https://skedular.app"
 RUN corepack enable
 
 RUN mkdir -p /src/web

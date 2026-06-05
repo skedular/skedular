@@ -1,0 +1,20 @@
+---
+import type { ResourceArticle } from "../data/content-types";
+
+interface Props {
+  articles: ResourceArticle[];
+}
+
+const { articles } = Astro.props;
+---
+
+<div class="resource-list">
+  {articles.map((article) => (
+    <article class="resource-card">
+      <p class="eyebrow">{article.topicTags.join(" / ")}</p>
+      <h2><a href={article.destinationPath}>{article.title}</a></h2>
+      <p>{article.summary}</p>
+      <small>Migration: {article.migrationDecision} from {article.sourceUrl}</small>
+    </article>
+  ))}
+</div>

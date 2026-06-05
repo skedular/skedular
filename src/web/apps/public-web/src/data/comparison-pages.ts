@@ -1,0 +1,51 @@
+import type { ComparisonPage } from "./content-types";
+
+export const comparisonPages: ComparisonPage[] = [
+  {
+    id: "skedular-vs-skedda",
+    slug: "skedular-vs-skedda",
+    path: "/compare/skedular-vs-skedda",
+    competitorName: "Skedda",
+    title: "Skedular vs Skedda | Workspace booking and operations",
+    description: "Compare Skedular's workspace discovery, Teams, Spaces, payments, and operator workflows with Skedda alternatives.",
+    searchIntent: "Visitors comparing workspace booking software.",
+    skedularPositioning:
+      "Skedular is positioned for public workspace discovery, private workplace management, and operator commerce in one product family.",
+    claimList: [
+      "Use neutral language unless a competitor claim is verified.",
+      "Emphasize Skedular's Teams and Spaces distinction.",
+      "Do not copy competitor wording or layouts.",
+    ],
+    primaryCtaId: "book-demo",
+    metadataStatus: "published",
+    competitorReviewStatus: "pending",
+  },
+  {
+    id: "skedular-vs-robin",
+    slug: "skedular-vs-robin",
+    path: "/compare/skedular-vs-robin",
+    competitorName: "Robin",
+    title: "Skedular vs Robin | Hybrid workplace and workspace operations",
+    description: "Compare Skedular's hybrid workplace and operator workflow direction with Robin alternatives.",
+    searchIntent: "Organization buyers comparing hybrid workplace platforms.",
+    skedularPositioning: "Skedular speaks to organization teams and workspace operators without forcing every visitor into one buyer category.",
+    claimList: ["Keep booking language simple.", "Separate Teams from Spaces.", "Use reviewed product capability claims only."],
+    primaryCtaId: "book-demo",
+    metadataStatus: "published",
+    competitorReviewStatus: "pending",
+  },
+  {
+    id: "skedular-vs-envoy",
+    slug: "skedular-vs-envoy",
+    path: "/compare/skedular-vs-envoy",
+    competitorName: "Envoy",
+    title: "Skedular vs Envoy | Workplace booking and flexible space management",
+    description: "Compare Skedular's workspace booking, team coordination, and operator commerce model with Envoy alternatives.",
+    searchIntent: "Teams evaluating workplace experience platforms.",
+    skedularPositioning: "Skedular combines public-facing discovery, private workplace management, and operator-facing workspace commerce messaging.",
+    claimList: ["Avoid unsupported security comparisons.", "Use plain buyer-specific value.", "Route next steps through configured URLs."],
+    primaryCtaId: "book-demo",
+    metadataStatus: "published",
+    competitorReviewStatus: "pending",
+  },
+];

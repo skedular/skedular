@@ -1,0 +1,30 @@
+---
+import type { LegalPage } from "../data/legal-pages";
+
+interface Props {
+  page: LegalPage;
+}
+
+const { page } = Astro.props;
+---
+
+<section class="page-section">
+  <div class="container legal-layout">
+    <aside class="legal-summary" aria-label="Legal page summary">
+      <p class="eyebrow">Source</p>
+      <a href={page.sourceUrl}>{page.sourceUrl}</a>
+      <dl>
+        <div>
+          <dt>Review status</dt>
+          <dd>{page.reviewStatus}</dd>
+        </div>
+        <div>
+          <dt>Source reviewed</dt>
+          <dd>{page.lastSourceReview}</dd>
+        </div>
+      </dl>
+      <p>{page.notice}</p>
+    </aside>
+    <article class="legal-content legal-document" set:html={page.html} />
+  </div>
+</section>

@@ -1,0 +1,30 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import FeatureComparisonSections from "../../components/FeatureComparisonSections.astro";
+import CtaLink from "../../components/CtaLink.astro";
+import { getCta } from "../../data/ctas";
+import { comparisonPages } from "../../data/comparison-pages";
+
+export function getStaticPaths() {
+  return comparisonPages.map((page) => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+---
+
+<SiteLayout title={page.title} description={page.description} canonicalPath={page.path} structuredDataType="Product">
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="eyebrow">Comparison</p>
+      <h1>{page.title}</h1>
+      <p>{page.description}</p>
+      <CtaLink cta={getCta(page.primaryCtaId as Parameters<typeof getCta>[0])} />
+    </div>
+  </section>
+  <div class="container">
+    <FeatureComparisonSections title={`How to think about ${page.competitorName}`} summary={page.skedularPositioning} items={page.claimList} />
+  </div>
+</SiteLayout>

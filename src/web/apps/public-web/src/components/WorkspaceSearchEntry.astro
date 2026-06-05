@@ -1,0 +1,21 @@
+---
+import { getCta } from "../data/ctas";
+import { homePage } from "../data/home-page";
+import { getPublicDestinationUrl } from "../data/public-destination-urls";
+import CtaLink from "./CtaLink.astro";
+
+const searchCta = getCta("search-workspace");
+const searchUrl = getPublicDestinationUrl("PUBLIC_SKEDULAR_APP_URL");
+---
+
+<form class="search-panel" action={searchUrl} method="get" aria-label="Workspace search">
+  <div class="search-fields">
+    {homePage.searchFields.map((field) => (
+      <label>
+        <span>{field}</span>
+        <input type="text" name={field.toLowerCase().replaceAll(" ", "-")} placeholder={field === "Resource type" ? "Desk, room, office" : field} />
+      </label>
+    ))}
+  </div>
+  <CtaLink cta={searchCta} />
+</form>

@@ -1,0 +1,17 @@
+---
+interface Props {
+  title: string;
+  summary: string;
+  items: string[];
+}
+
+const { title, summary, items } = Astro.props;
+---
+
+<section class="feature-detail">
+  <h2>{title}</h2>
+  <p>{summary}</p>
+  <ul class="check-list">
+    {items.map((item) => <li>{item}</li>)}
+  </ul>
+</section>

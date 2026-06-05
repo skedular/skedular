@@ -1,0 +1,22 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+}
+
+const { title, description, canonicalPath } = Astro.props;
+const canonicalUrl = new URL(canonicalPath, "https://www.getascheduler.com").toString();
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<meta name="description" content={description} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalUrl} />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="/images/skedular-logo-primary.svg" type="image/svg+xml" />
+<link rel="canonical" href={canonicalUrl} />
+<title>{title}</title>

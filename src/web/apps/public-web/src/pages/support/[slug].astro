@@ -1,0 +1,27 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import CtaLink from "../../components/CtaLink.astro";
+import { getCta } from "../../data/ctas";
+import { supportArticles } from "../../data/current-public-content";
+
+export function getStaticPaths() {
+  return supportArticles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+---
+
+<SiteLayout title={article.title} description={article.summary} canonicalPath={article.destinationPath} structuredDataType="Article">
+  <article class="article-page">
+    <div class="container">
+      <p class="eyebrow">{article.topicTags.join(" / ")}</p>
+      <h1>{article.title}</h1>
+      <p class="article-summary">{article.summary}</p>
+      {article.body.map((paragraph) => <p>{paragraph}</p>)}
+      <CtaLink cta={getCta("book-demo")} />
+    </div>
+  </article>
+</SiteLayout>

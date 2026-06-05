@@ -1,0 +1,32 @@
+---
+interface Item {
+  title: string;
+  body?: string;
+  description?: string;
+  items?: string[];
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="card-grid">
+  {
+    items.map((item) => (
+      <article class="content-card">
+        <h3>{item.title}</h3>
+        {(item.body || item.description) && <p>{item.body ?? item.description}</p>}
+        {item.items && (
+          <ul>
+            {item.items.map((entry) => (
+              <li>{entry}</li>
+            ))}
+          </ul>
+        )}
+      </article>
+    ))
+  }
+</div>

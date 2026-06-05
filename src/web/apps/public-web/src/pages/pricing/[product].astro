@@ -1,0 +1,35 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import PricingSections from "../../components/PricingSections.astro";
+import { pricingPage } from "../../data/pricing";
+
+export function getStaticPaths() {
+  return pricingPage.models
+    .filter((model) => model.id === "teams" || model.id === "spaces")
+    .map((model) => ({
+      params: { product: model.id },
+      props: { model },
+    }));
+}
+
+const { model } = Astro.props;
+const title = `Skedular ${model.name} Pricing | ${model.basis}`;
+const description = `${model.name} pricing for ${model.audience.toLowerCase()}.`;
+---
+
+<SiteLayout title={title} description={description} canonicalPath={`/pricing/${model.id}`} structuredDataType="Product">
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="eyebrow">Pricing</p>
+      <h1>{model.name} pricing</h1>
+      <p>
+        {model.name} pricing is built around {model.basis.toLowerCase()}. This page only shows the options for this product, so you can compare the plan that matches your workspace needs.
+      </p>
+    </div>
+  </section>
+  <section class="page-section">
+    <div class="container section-inner">
+      <PricingSections productId={model.id} />
+    </div>
+  </section>
+</SiteLayout>
