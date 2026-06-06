@@ -346,8 +346,12 @@ jobs:
                       infra_validation_targets = []
 
                   cd_target_names = set(web_apps.keys()) | {"docs-event-catalog"}
-                  staging_cd = [target for target in infra_targets if target["environment"] == "staging" and target["name"] in cd_target_names]
-                  production_cd = [target for target in infra_targets if target["environment"] == "production" and target["name"] in cd_target_names]
+                  if manual_full_run:
+                      staging_cd = [target for target in infra_targets if target["environment"] == "staging" and target["enabled"] == "true"]
+                      production_cd = [target for target in infra_targets if target["environment"] == "production" and target["enabled"] == "true"]
+                  else:
+                      staging_cd = [target for target in infra_targets if target["environment"] == "staging" and target["name"] in cd_target_names]
+                      production_cd = [target for target in infra_targets if target["environment"] == "production" and target["name"] in cd_target_names]
                   builds_ci_matrix = all_in_one_images + web_ci_matrix + docs_ci_matrix + infra_validation_targets
 
                   def matrix(items):
@@ -409,7 +413,7 @@ jobs:
                       "- Pull request events validate only and never deploy.",
                       "- Pushes to `main` may run selected staging CD after matching CI succeeds.",
                       "- Production CD follows the `production` GitHub environment gate after staging succeeds.",
-                      "- Manual runs force the full CI validation path; CD jobs remain blocked unless the event is a `main` push.",
+                      "- Manual runs force the full CI validation path, then deploy every enabled target to staging and production.",
                       "- Secrets, token values, Terraform state, and provider payloads are not printed in this summary.",
                   ]
                   summary = "\n".join(summary_lines) + "\n"
