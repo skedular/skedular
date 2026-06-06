@@ -17,7 +17,7 @@ locals {
   public_skedular_env_vars = {
     PUBLIC_SKEDULAR_APP_URL           = local.public_skedular_url
     PUBLIC_SKEDULAR_SIGNUP_URL        = local.public_skedular_url
-    PUBLIC_SKEDULAR_DEMO_URL          = local.public_skedular_url
+    PUBLIC_SKEDULAR_DEMO_URL          = "https://calendly.com/morteza-alizadeh/skedular"
     PUBLIC_SKEDULAR_BECOME_HOST_URL   = local.public_skedular_url
     PUBLIC_SKEDULAR_SLACK_INSTALL_URL = local.slack_url
   }

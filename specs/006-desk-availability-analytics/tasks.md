@@ -150,7 +150,7 @@
 ## Phase 7: Polish & Cross-Cutting Concerns
 
 - [x] T034 [P] Run `scripts/generate-graphql.sh` final pass to verify schema is fully in sync with implementation; fix any drift
-- [ ] T035 [P] Run `quickstart.md` validation end-to-end: trigger snapshot, query GraphQL, verify results match expected shape
+- [X] T035 [P] Run `quickstart.md` validation end-to-end: trigger snapshot, query GraphQL, verify results match expected shape
 - [x] T036 [P] Review all new structured log statements against LOG-001–LOG-004: confirm no desk names are logged at ERROR/WARN level (only counts and IDs); confirm workflow run ID and location ID are present in all activity logs
 - [x] T037 Review and update `specs/006-desk-availability-analytics/quickstart.md` if any implementation details changed during development
 

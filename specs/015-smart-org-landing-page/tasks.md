@@ -112,7 +112,7 @@ three apps when no organization is selected.
 - [X] T013a [P] Add error handler to `noOrganizationLandingPage_rootQuery` in webapp-teams landing page: emit warning log with error context when the query fails per LOG-002 in `web/apps/webapp-teams/src/rootPages/page.tsx`
 - [X] T014a [P] Add error handler for query failure in webapp-spaces landing page per LOG-002 in `web/apps/webapp-spaces/src/rootPages/page.tsx`
 - [X] T015 Verify `<CircularProgress />` (or equivalent loading indicator) renders while `noOrganizationLandingPage_rootQuery` is in flight per FR-008 in both webapp-teams (`web/apps/webapp-teams/src/rootPages/page.tsx`) and webapp-spaces (`web/apps/webapp-spaces/src/rootPages/page.tsx`)
-- [ ] T016 Run quickstart.md smoke test checklist across all three apps — confirm all 10 items pass per `specs/015-smart-org-landing-page/quickstart.md`; fix any regressions before marking complete
+- [X] T016 Run quickstart.md smoke test checklist across all three apps — confirm all 10 items pass per `specs/015-smart-org-landing-page/quickstart.md`; fix any regressions before marking complete
 
 ---
 

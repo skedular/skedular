@@ -40,7 +40,7 @@
 - [x] T008 [P] Run `ANALYZE=true pnpm build` in `src/web/apps/webapp-teams/`, record parsed and gzip sizes → `specs/022-ssr-rendering-audit/audit/baseline-bundle-sizes.md` (webapp-teams section)
 - [x] T009 [P] Run `ANALYZE=true pnpm build` in `src/web/apps/webapp-spaces/`, record parsed and gzip sizes → `specs/022-ssr-rendering-audit/audit/baseline-bundle-sizes.md` (webapp-spaces section)
 - [x] T010 Consolidate bundle size measurements into a reference comparison table (parsed KB and gzip KB per library per app) in `specs/022-ssr-rendering-audit/audit/baseline-bundle-sizes.md`
-- [ ] T010b Run Lighthouse audits (mobile preset, 3 runs each, averaged) against a production-equivalent build of each app — record LCP, FCP, CLS, and TBT baselines per route → `specs/022-ssr-rendering-audit/audit/baseline-bundle-sizes.md` (Lighthouse baseline section). These measurements are required for FR-009 (image → LCP estimates) and FR-010 (font → FCP estimates).
+- [X] T010b Run Lighthouse audits (mobile preset, 3 runs each, averaged) against a production-equivalent build of each app — record LCP, FCP, CLS, and TBT baselines per route → `specs/022-ssr-rendering-audit/audit/baseline-bundle-sizes.md` (Lighthouse baseline section). These measurements are required for FR-009 (image → LCP estimates) and FR-010 (font → FCP estimates).
 
 **Checkpoint**: Baseline bundle sizes AND Lighthouse render-metric baselines recorded for all three apps. Numeric estimates can now be produced for both bundle-size and render-metric recommendations.
 

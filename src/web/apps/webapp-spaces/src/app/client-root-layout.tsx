@@ -29,6 +29,8 @@ type AppAuthenticatedRelayProviderProps = PropsWithChildren<{
   teamsToken: string | null;
 }>;
 
+const authKitInitialAuth = process.env.NEXT_PUBLIC_SKEDULAR_UI_TEST_BYPASS_AUTH === 'true' ? { user: null } : undefined;
+
 const AppAuthenticatedRelayProvider = ({ children, teamsToken }: AppAuthenticatedRelayProviderProps) => {
   const { loading: authLoading } = useAuth();
 
@@ -88,7 +90,7 @@ const InnerRootLayout = ({ children }: PropsWithChildren) => {
     <ThemeProvider mode={paletteMode}>
       <CssBaseline />
       <DatePickerLocalizationProvider>
-        <AuthKitProvider>
+        <AuthKitProvider initialAuth={authKitInitialAuth}>
           <AppAuthenticatedRelayProvider teamsToken={token}>{children}</AppAuthenticatedRelayProvider>
         </AuthKitProvider>
       </DatePickerLocalizationProvider>

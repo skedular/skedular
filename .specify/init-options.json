@@ -1,9 +1,10 @@
 {
-  "ai": "qwen",
+  "ai": "codex",
+  "ai_skills": true,
   "branch_numbering": "sequential",
-  "context_file": "QWEN.md",
+  "context_file": "AGENTS.md",
   "here": true,
-  "integration": "qwen",
+  "integration": "codex",
   "script": "sh",
   "speckit_version": "0.8.18.dev0"
 }

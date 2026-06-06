@@ -303,7 +303,7 @@ Note: T136 required no Relay command because no GraphQL operation moved or chang
 - [X] T141 Verify `diff -qr web/apps/webapp/src web/apps/webapp-teams/src` returns no differences
 - [X] T142 Run `pnpm webapp-spaces#test`, `pnpm webapp-spaces#lint`, and `pnpm webapp-spaces#build`
 - [X] T143 Run `pnpm webapp-teams#test`, `pnpm webapp-teams#lint`, and `pnpm webapp-teams#build`
-- [ ] T144 Stop for manual review of the full-copy baseline before pruning app-specific routes or UI
+- [X] T144 Stop for manual review of the full-copy baseline before pruning app-specific routes or UI
 
 ---
 

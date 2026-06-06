@@ -3,6 +3,7 @@ import { authkit, handleAuthkitHeaders } from '@workos-inc/authkit-nextjs';
 import { NextRequest, NextResponse } from 'next/server';
 
 const getSessionCookieName = () => process.env.WORKOS_COOKIE_NAME || 'wos-session';
+const shouldBypassAuthForUiTests = () => process.env.SKEDULAR_UI_TEST_BYPASS_AUTH === 'true';
 
 const isUnauthenticatedPath = (pathname: string) => {
   if (pathname === '/callback' || pathname === '/signin' || pathname === '/signup' || pathname.startsWith('/auth/')) {
@@ -24,6 +25,10 @@ const handlePublicPathWithoutSession = (request: NextRequest, redirectUri: strin
 export default async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const redirectUri = new URL('/callback', getPublicOrigin(request)).toString();
+
+  if (shouldBypassAuthForUiTests() && !request.cookies.has(getSessionCookieName())) {
+    return handlePublicPathWithoutSession(request, redirectUri);
+  }
 
   if (isUnauthenticatedPath(pathname) && !request.cookies.has(getSessionCookieName())) {
     return handlePublicPathWithoutSession(request, redirectUri);

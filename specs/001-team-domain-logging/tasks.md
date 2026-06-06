@@ -49,7 +49,7 @@
 - [x] T008 [P] [US1] Add/extend unit tests for `TeamService` mutation logging in `team/apis/Team.Api.UnitTests/Services/TeamServiceTests/AddShould.cs` and `team/apis/Team.Api.UnitTests/Services/TeamServiceTests/DeleteShould.cs`
 - [x] T009 [P] [US1] Add/extend unit tests for `TeamMemberService` mutation logging in `team/apis/Team.Api.UnitTests/Services/TeamMemberServiceTests/ChangeRoleShould.cs` and `team/apis/Team.Api.UnitTests/Services/TeamMemberServiceTests/ChangeStatusShould.cs`
 - [x] T010 [P] [US1] Add/extend unit tests for authorization decision log levels in `team/apis/Team.Api.UnitTests/Services/Authorization/TeamAuthorizationServiceTests/AuthorizeShould.cs` and `team/apis/Team.Api.UnitTests/Services/Authorization/OrganizationAuthorizationServiceTests/AuthorizeShould.cs`
-- [ ] T011 [US1] _Note: Domain-level integration tests are handled separately, not in individual projects_
+- [X] T011 [US1] _Note: Domain-level integration tests are handled separately, not in individual projects_
 
 ### Implementation for User Story 1
 
@@ -76,7 +76,7 @@
 
 - [x] T020 [P] [US2] Add/extend `InvitationService` lifecycle logging unit tests in `team/apis/Team.Api.UnitTests/Services/InvitationServiceTests/InviteMembersByEmailsShould.cs`, `team/apis/Team.Api.UnitTests/Services/InvitationServiceTests/AcceptInvitationShould.cs`, and `team/apis/Team.Api.UnitTests/Services/InvitationServiceTests/CancelInvitationShould.cs`
 - [x] T021 [P] [US2] Add/extend temporal outbox logging unit tests in `team/shared/Team.Shared.UnitTests/Services/TemporalOutboxServiceTests/StartWorkflowInviteToJoinShould.cs` and `team/shared/Team.Shared.UnitTests/Services/TemporalOutboxServiceTests/SignalWorkflowInviteToJoinInvitationStatusChangedShould.cs`
-- [ ] T022 [US2] _Note: Domain-level integration tests are handled separately, not in individual projects_
+- [X] T022 [US2] _Note: Domain-level integration tests are handled separately, not in individual projects_
 
 ### Implementation for User Story 2
 
@@ -99,7 +99,7 @@
 ### Tests for User Story 3
 
 - [x] T028 [P] [US3] Add unit tests for stale and successful customer event logging in `team/processors/Team.Processors.UnitTests/Subscribers/CustomerSubscriberTests/HandleAsyncShould.cs`
-- [ ] T029 [US3] _Note: Domain-level integration tests are handled separately, not in individual projects_
+- [X] T029 [US3] _Note: Domain-level integration tests are handled separately, not in individual projects_
 
 ### Implementation for User Story 3
 

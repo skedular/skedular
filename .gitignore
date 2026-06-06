@@ -855,3 +855,14 @@ pact
 # Ignore malformed Windows-style build output folder names on Unix
 **/[Bb]in\\[Dd]ebug/
 **/[Bb]in\\[Rr]elease/
+
+# UI Test Automation Artifacts
+.test-artifacts/
+*.test.tsbuildinfo
+tests/videos/
+tests/screenshots/
+test-artifacts/
+
+# Playwright specific
+playwright-report/
+playwright/.cache/

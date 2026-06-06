@@ -11,7 +11,7 @@
 Relay compiler will produce errors if removed fragment/mutation names still appear
 in the `__generated__` folder during incremental compilation.
 
-- [ ] T001 Delete stale Relay generated artefacts from `web/apps/webapp-teams/src/queries/__generated__/`: `multipleChoicesProductTags_query.graphql.ts`, `myBookingCard_deleteMarketplaceBookingMutation.graphql.ts`, `myBookingCard_deleteMarketplaceBookingSubscriptionMutation.graphql.ts`; also scan the same folder for any additional `productTag*` or `deleteProductTag*` artefact files and delete them if present (satisfies SC-006 for `deleteProductTags`)
+- [X] T001 Delete stale Relay generated artefacts from `web/apps/webapp-teams/src/queries/__generated__/`: `multipleChoicesProductTags_query.graphql.ts`, `myBookingCard_deleteMarketplaceBookingMutation.graphql.ts`, `myBookingCard_deleteMarketplaceBookingSubscriptionMutation.graphql.ts`; also scan the same folder for any additional `productTag*` or `deleteProductTag*` artefact files and delete them if present (satisfies SC-006 for `deleteProductTags`)
 
 ---
 
@@ -23,15 +23,15 @@ folder. All user story phases depend on these shared removals being complete fir
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 [P] Remove `/marketplace` and `/marketplace/:path*` proxy routes and the middleware redirect for `pathname === '/marketplace'` from `web/apps/webapp-teams/src/proxy.ts`
-- [ ] T003 [P] Remove `marketplaceCustomerRecordSynced` from the GraphQL query and from the `areCustomerRecordsSync` boolean expression in `web/apps/webapp-teams/src/components/rootShell/root-shell.tsx`
-- [ ] T004 [P] Remove `marketplaceCustomerRecordSynced` from the GraphQL query and from the `areCustomerRecordsSync` boolean expression in `web/apps/webapp-teams/src/components/rootShell/no-organization-root-shell.tsx`
-- [ ] T005 [P] Remove all marketplace link helper functions (`getOrganizationLocationAddMarketplaceLink`, `getOrganizationMarketplaceSetupBaseLink`, `getOrganizationMarketplaceSetupProductTagsBaseLink`, `getOrganizationMarketplaceSetupMarketplaceListingBaseLink`, `getOrganizationMarketplaceSetupBillingCycleBaseLink`, `getOrganizationMarketplaceSetupXeroBaseLink`, `getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink`, `getOrganizationMarketplaceSetupBankAccountsBaseLink`) from `web/apps/webapp-teams/src/components/links/index.ts`
-- [ ] T006 [P] Remove `MarketplaceIcon`, `SetupMarketplaceIcon`, and `ProductTagIcon` exports from `web/apps/webapp-teams/src/components/icons/index.tsx`
-- [ ] T007 [P] Remove `EditProductTag` and `DeleteProductTag` from `MoreActionsMenuOptionType` enum and from the `moreActionsMenuAllOptions` map in `web/apps/webapp-teams/src/components/moreActionsMenu/more-actions-menu.tsx`
-- [ ] T008 [P] Delete the entire `web/apps/webapp-teams/src/components/productTag/` folder (contains `index.ts`, `product-tag.tsx`, `product-tags.tsx`)
-- [ ] T009 [P] Delete `web/apps/webapp-teams/src/components/organization/multiple-choices-product-tags.tsx` and remove the `MultipleChoicesProductTags` export line from `web/apps/webapp-teams/src/components/organization/index.ts`
-- [ ] T010 Remove the marketplace location link branch (call to `getOrganizationLocationAddMarketplaceLink`) from `web/apps/webapp-teams/src/components/location/addLocation/new-location-button.tsx` (depends on T005)
+- [X] T002 [P] Remove `/marketplace` and `/marketplace/:path*` proxy routes and the middleware redirect for `pathname === '/marketplace'` from `web/apps/webapp-teams/src/proxy.ts`
+- [X] T003 [P] Remove `marketplaceCustomerRecordSynced` from the GraphQL query and from the `areCustomerRecordsSync` boolean expression in `web/apps/webapp-teams/src/components/rootShell/root-shell.tsx`
+- [X] T004 [P] Remove `marketplaceCustomerRecordSynced` from the GraphQL query and from the `areCustomerRecordsSync` boolean expression in `web/apps/webapp-teams/src/components/rootShell/no-organization-root-shell.tsx`
+- [X] T005 [P] Remove all marketplace link helper functions (`getOrganizationLocationAddMarketplaceLink`, `getOrganizationMarketplaceSetupBaseLink`, `getOrganizationMarketplaceSetupProductTagsBaseLink`, `getOrganizationMarketplaceSetupMarketplaceListingBaseLink`, `getOrganizationMarketplaceSetupBillingCycleBaseLink`, `getOrganizationMarketplaceSetupXeroBaseLink`, `getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink`, `getOrganizationMarketplaceSetupBankAccountsBaseLink`) from `web/apps/webapp-teams/src/components/links/index.ts`
+- [X] T006 [P] Remove `MarketplaceIcon`, `SetupMarketplaceIcon`, and `ProductTagIcon` exports from `web/apps/webapp-teams/src/components/icons/index.tsx`
+- [X] T007 [P] Remove `EditProductTag` and `DeleteProductTag` from `MoreActionsMenuOptionType` enum and from the `moreActionsMenuAllOptions` map in `web/apps/webapp-teams/src/components/moreActionsMenu/more-actions-menu.tsx`
+- [X] T008 [P] Delete the entire `web/apps/webapp-teams/src/components/productTag/` folder (contains `index.ts`, `product-tag.tsx`, `product-tags.tsx`)
+- [X] T009 [P] Delete `web/apps/webapp-teams/src/components/organization/multiple-choices-product-tags.tsx` and remove the `MultipleChoicesProductTags` export line from `web/apps/webapp-teams/src/components/organization/index.ts`
+- [X] T010 Remove the marketplace location link branch (call to `getOrganizationLocationAddMarketplaceLink`) from `web/apps/webapp-teams/src/components/location/addLocation/new-location-button.tsx` (depends on T005)
 
 **Checkpoint**: Shared marketplace infrastructure removed. All three user story phases can now begin.
 
@@ -50,12 +50,12 @@ loaded. Inspect the organisation page GraphQL query → verify no
 `marketplaceBookingSubscriptions` or `marketplaceBookingSubscriptionCancellationModes`
 fields are fetched.
 
-- [ ] T011 [P] [US1] Remove `marketplaceListingMetadata { title subTitle }` field from the `organizationAdminSetupSectionQuery` Relay fragment, remove `marketplaceListingMetadata` from the patch mutation variable construction and all related `submittedPatchValues` references in `web/apps/webapp-teams/src/components/organization/organizationAdmin/organization-admin-setup-section.tsx`
-- [ ] T012 [P] [US1] Remove the `marketplaceListingMetadata` title fallback (the `organization?.marketplaceListingMetadata?.title` reference) from the organisation admin header label in `web/apps/webapp-teams/src/components/organization/organizationAdmin/organization-admin.tsx`
-- [ ] T012a [P] [US1] Locate and remove the entire "Marketplace Setup" navigation entry (tab, section header, nav item, or route link — whatever renders the marketplace setup section) from `web/apps/webapp-teams/src/components/organization/organizationAdmin/organization-admin.tsx`; verify by inspection that no `marketplace` route or label remains visible in the admin panel navigation after this change (satisfies FR-002 and clarification Q5)
-- [ ] T013 [P] [US1] Remove `marketplaceBookingSubscriptions` and `marketplaceBookingSubscriptionCancellationModes` fields from the Relay fragment in `web/apps/webapp-teams/src/components/organization/organizationPage/organization.tsx`
-- [ ] T014 [P] [US1] Remove `marketplaceBookingSubscriptions` and `marketplaceBookingSubscriptionCancellationModes` fields from the Relay fragment in `web/apps/webapp-teams/src/components/organization/organizationPage/organization-bookings.tsx`
-- [ ] T015 [US1] Update `web/apps/webapp-teams/src/components/organization/organizationAdmin/organization-admin-setup-section.test.tsx` — remove any test assertions that reference `marketplaceListingMetadata` fields or marketplace-specific form values (depends on T011)
+- [X] T011 [P] [US1] Remove `marketplaceListingMetadata { title subTitle }` field from the `organizationAdminSetupSectionQuery` Relay fragment, remove `marketplaceListingMetadata` from the patch mutation variable construction and all related `submittedPatchValues` references in `web/apps/webapp-teams/src/components/organization/organizationAdmin/organization-admin-setup-section.tsx`
+- [X] T012 [P] [US1] Remove the `marketplaceListingMetadata` title fallback (the `organization?.marketplaceListingMetadata?.title` reference) from the organisation admin header label in `web/apps/webapp-teams/src/components/organization/organizationAdmin/organization-admin.tsx`
+- [X] T012a [P] [US1] Locate and remove the entire "Marketplace Setup" navigation entry (tab, section header, nav item, or route link — whatever renders the marketplace setup section) from `web/apps/webapp-teams/src/components/organization/organizationAdmin/organization-admin.tsx`; verify by inspection that no `marketplace` route or label remains visible in the admin panel navigation after this change (satisfies FR-002 and clarification Q5)
+- [X] T013 [P] [US1] Remove `marketplaceBookingSubscriptions` and `marketplaceBookingSubscriptionCancellationModes` fields from the Relay fragment in `web/apps/webapp-teams/src/components/organization/organizationPage/organization.tsx`
+- [X] T014 [P] [US1] Remove `marketplaceBookingSubscriptions` and `marketplaceBookingSubscriptionCancellationModes` fields from the Relay fragment in `web/apps/webapp-teams/src/components/organization/organizationPage/organization-bookings.tsx`
+- [X] T015 [US1] Update `web/apps/webapp-teams/src/components/organization/organizationAdmin/organization-admin-setup-section.test.tsx` — remove any test assertions that reference `marketplaceListingMetadata` fields or marketplace-specific form values (depends on T011)
 
 **Checkpoint**: Organisation admin and organisation page have no marketplace concepts. User Story 1 is independently testable.
 
@@ -72,17 +72,17 @@ resource import dialog — verify no product tag input field appears in any of t
 Open a floor plan in edit mode — verify no product tag chips on resource canvas
 items. Add and save a resource — verify it succeeds without errors.
 
-- [ ] T016 [P] [US2] Remove the `productTagIds` form field, `MultipleChoicesProductTags` import and usage, `productTagIds` from the Yup schema, and the `productTags` connection from the Relay fragment and mutation input in `web/apps/webapp-teams/src/components/resource/addResource/add-resource-dialog.tsx`
-- [ ] T017 [P] [US2] Remove the `productTagIds` form field, `MultipleChoicesProductTags` import and usage, `productTagIds` from the Yup schema, and all `productTags` connection references from the Relay fragment and mutation input in `web/apps/webapp-teams/src/components/resource/editResource/edit-resource.tsx`
-- [ ] T018 [P] [US2] Remove the `showProductTags` prop, the `MultipleChoicesProductTags` import, and the conditional `showProductTags &&` render block from `web/apps/webapp-teams/src/components/resource/bulkAddResources/bulk-add-resources-row.tsx`
-- [ ] T019 [P] [US2] Remove the `showProductTags` prop threading and any product tag column configuration from `web/apps/webapp-teams/src/components/resource/bulkAddResources/bulk-add-resources-dialog.tsx`
-- [ ] T020 [P] [US2] Remove the `productTags { id name color }` field from the Relay fragment in `web/apps/webapp-teams/src/components/resource/resource-card.tsx`
-- [ ] T021 [P] [US2] Remove the `ProductTags` import, the `productTags` array type from the list item type definition, the `productTags` field from the Relay fragment, the `item.productTags.length > 0` metadata check, and both `<ProductTags ...>` render usages from `web/apps/webapp-teams/src/components/organization/organizationLocation/organization-location-resource-management-list.tsx`
-- [ ] T022 [P] [US2] Remove `multipleChoicesProductTagsSortingValues` as a prop (and any other product tag variable references) from `web/apps/webapp-teams/src/components/organization/organizationLocation/organization-location-manage-resources-section.tsx`; this variable is threaded in from `page.tsx` (removed in T025) so both ends of the prop chain must be cleaned up together
-- [ ] T023 [P] [US2] Remove the `productTags { id name color }` field from the resource sub-fragment in the floor plan query in `web/apps/webapp-teams/src/components/floorPlan/addFloorPlan/add-floor-plan.tsx`
-- [ ] T024 [P] [US2] Remove the `productTags { id name color }` field from the resource sub-fragment in the floor plan query in `web/apps/webapp-teams/src/components/floorPlan/editFloorPlan/edit-floor-plan.tsx`
-- [ ] T025 [P] [US2] Remove the `$multipleChoicesProductTagsSortingValues` variable declaration and its value from the query and `loadQuery` call in `web/apps/webapp-teams/src/rootPages/organizations/organization/locations/location/resources/resource/page.tsx`
-- [ ] T026 [US2] Update `web/apps/webapp-teams/src/components/organization/organizationLocation/organization-location-resource-management-list.test.tsx` — remove test assertions that check for product tag chips or product tag display in the resource list (depends on T021)
+- [X] T016 [P] [US2] Remove the `productTagIds` form field, `MultipleChoicesProductTags` import and usage, `productTagIds` from the Yup schema, and the `productTags` connection from the Relay fragment and mutation input in `web/apps/webapp-teams/src/components/resource/addResource/add-resource-dialog.tsx`
+- [X] T017 [P] [US2] Remove the `productTagIds` form field, `MultipleChoicesProductTags` import and usage, `productTagIds` from the Yup schema, and all `productTags` connection references from the Relay fragment and mutation input in `web/apps/webapp-teams/src/components/resource/editResource/edit-resource.tsx`
+- [X] T018 [P] [US2] Remove the `showProductTags` prop, the `MultipleChoicesProductTags` import, and the conditional `showProductTags &&` render block from `web/apps/webapp-teams/src/components/resource/bulkAddResources/bulk-add-resources-row.tsx`
+- [X] T019 [P] [US2] Remove the `showProductTags` prop threading and any product tag column configuration from `web/apps/webapp-teams/src/components/resource/bulkAddResources/bulk-add-resources-dialog.tsx`
+- [X] T020 [P] [US2] Remove the `productTags { id name color }` field from the Relay fragment in `web/apps/webapp-teams/src/components/resource/resource-card.tsx`
+- [X] T021 [P] [US2] Remove the `ProductTags` import, the `productTags` array type from the list item type definition, the `productTags` field from the Relay fragment, the `item.productTags.length > 0` metadata check, and both `<ProductTags ...>` render usages from `web/apps/webapp-teams/src/components/organization/organizationLocation/organization-location-resource-management-list.tsx`
+- [X] T022 [P] [US2] Remove `multipleChoicesProductTagsSortingValues` as a prop (and any other product tag variable references) from `web/apps/webapp-teams/src/components/organization/organizationLocation/organization-location-manage-resources-section.tsx`; this variable is threaded in from `page.tsx` (removed in T025) so both ends of the prop chain must be cleaned up together
+- [X] T023 [P] [US2] Remove the `productTags { id name color }` field from the resource sub-fragment in the floor plan query in `web/apps/webapp-teams/src/components/floorPlan/addFloorPlan/add-floor-plan.tsx`
+- [X] T024 [P] [US2] Remove the `productTags { id name color }` field from the resource sub-fragment in the floor plan query in `web/apps/webapp-teams/src/components/floorPlan/editFloorPlan/edit-floor-plan.tsx`
+- [X] T025 [P] [US2] Remove the `$multipleChoicesProductTagsSortingValues` variable declaration and its value from the query and `loadQuery` call in `web/apps/webapp-teams/src/rootPages/organizations/organization/locations/location/resources/resource/page.tsx`
+- [X] T026 [US2] Update `web/apps/webapp-teams/src/components/organization/organizationLocation/organization-location-resource-management-list.test.tsx` — remove test assertions that check for product tag chips or product tag display in the resource list (depends on T021)
 
 **Checkpoint**: All resource management forms and displays are product-tag-free. Resource creation, editing, and bulk import are fully functional without product tags. User Story 2 is independently testable.
 

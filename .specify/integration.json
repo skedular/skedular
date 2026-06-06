@@ -2,14 +2,14 @@
   "version": "0.8.18.dev0",
   "integration_state_schema": 1,
   "installed_integrations": [
-    "qwen"
+    "codex"
   ],
   "integration_settings": {
-    "qwen": {
+    "codex": {
       "script": "sh",
-      "invoke_separator": "."
+      "invoke_separator": "-"
     }
   },
-  "integration": "qwen",
-  "default_integration": "qwen"
+  "integration": "codex",
+  "default_integration": "codex"
 }
