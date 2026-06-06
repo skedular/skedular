@@ -4,7 +4,7 @@ export const resourceArticles: ResourceArticle[] = [
   {
     id: "hybrid-workplace-planning",
     slug: "hybrid-workplace-planning",
-    sourceUrl: "https://getascheduler.com/blog/hybrid-workplace-planning",
+    sourceUrl: "https://getskedular.com/blog/hybrid-workplace-planning",
     destinationPath: "/resources/hybrid-workplace-planning",
     title: "Hybrid workplace planning that people can actually use",
     summary: "How to connect desk booking, room booking, team attendance, and real workspace demand.",
@@ -21,7 +21,7 @@ export const resourceArticles: ResourceArticle[] = [
   {
     id: "workspace-payments-invoicing",
     slug: "workspace-payments-invoicing",
-    sourceUrl: "https://getascheduler.com/blog/workspace-payments-invoicing",
+    sourceUrl: "https://getskedular.com/blog/workspace-payments-invoicing",
     destinationPath: "/resources/workspace-payments-invoicing",
     title: "Workspace payments, billing, and invoicing without extra admin",
     summary: "A practical guide to payment, tax, billing cadence, invoice, and Xero workflows for flexible workspace.",
@@ -38,7 +38,7 @@ export const resourceArticles: ResourceArticle[] = [
   {
     id: "slack-microsoft-teams-workplace",
     slug: "slack-microsoft-teams-workplace",
-    sourceUrl: "https://getascheduler.com/blog/slack-microsoft-teams-workplace",
+    sourceUrl: "https://getskedular.com/blog/slack-microsoft-teams-workplace",
     destinationPath: "/resources/slack-microsoft-teams-workplace",
     title: "Bring workplace coordination into Slack and Microsoft Teams",
     summary: "How collaboration tools can make desk booking, room booking, and office attendance easier to follow.",
@@ -58,7 +58,7 @@ export const supportArticles: ResourceArticle[] = [
   {
     id: "getting-started-with-skedular",
     slug: "getting-started-with-skedular",
-    sourceUrl: "https://getascheduler.com/support/getting-started",
+    sourceUrl: "https://getskedular.com/support/getting-started",
     destinationPath: "/support/getting-started-with-skedular",
     title: "Getting started with Skedular",
     summary: "A short orientation for public visitors, team buyers, and workspace operators.",
@@ -75,7 +75,7 @@ export const supportArticles: ResourceArticle[] = [
   {
     id: "booking-workspace-from-public-site",
     slug: "booking-workspace-from-public-site",
-    sourceUrl: "https://getascheduler.com/support/booking-workspace",
+    sourceUrl: "https://getskedular.com/support/booking-workspace",
     destinationPath: "/support/booking-workspace-from-public-site",
     title: "Booking workspace from the public website",
     summary: "What happens when a visitor starts a search or booking action on the public site.",

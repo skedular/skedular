@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { analyticsReadiness } from "../src/data/analytics-readiness";
 import { capabilityClaims, competitorClaimReview } from "../src/data/claim-review";
 import { comparisonPages } from "../src/data/comparison-pages";
-import { supportArticles, resourceArticles } from "../src/data/current-public-content";
+import { resourceArticles, supportArticles } from "../src/data/current-public-content";
 import { draftCoverageItems } from "../src/data/draft-coverage";
 import { futureFeatures } from "../src/data/future-features";
 import { launchReviewChecklist, manualReviewProtocol } from "../src/data/launch-review";
@@ -13,7 +13,7 @@ import { sourceAudit } from "../src/data/source-audit";
 describe("public website content inventories", () => {
   it("tracks all current public resource and support content with destinations or redirects", () => {
     for (const article of [...resourceArticles, ...supportArticles]) {
-      expect(article.sourceUrl).toMatch(/^https:\/\/getascheduler\.com/);
+      expect(article.sourceUrl).toMatch(/^https:\/\/getskedular\.com/);
       expect(article.destinationPath || article.redirectTargetPath).toBeTruthy();
       expect(Object.values(redirects)).toContain(article.destinationPath);
     }

@@ -9,14 +9,14 @@ export const sourceAudit = [
   {
     id: "current-public-blog",
     sourceType: "current-public-url",
-    urlOrPath: "https://getascheduler.com/blog/*",
+    urlOrPath: "https://getskedular.com/blog/*",
     reviewedAt: "2026-06-05",
     evidenceNotes: "Represented by current-public-content.ts migration inventory; exact live crawl should be refreshed before launch.",
   },
   {
     id: "current-public-support",
     sourceType: "current-public-url",
-    urlOrPath: "https://getascheduler.com/support/*",
+    urlOrPath: "https://getskedular.com/support/*",
     reviewedAt: "2026-06-05",
     evidenceNotes: "Represented by support article migration inventory; exact live crawl should be refreshed before launch.",
   },

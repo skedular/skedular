@@ -1,15 +1,14 @@
-import { readFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import { spawnSync } from "node:child_process";
 import { JSDOM } from "jsdom";
+import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
 import { comparisonPages } from "../src/data/comparison-pages";
-import { supportArticles, resourceArticles } from "../src/data/current-public-content";
-import { featurePages } from "../src/data/feature-pages";
 import { publicPages } from "../src/data/content-inventory";
+import { resourceArticles, supportArticles } from "../src/data/current-public-content";
+import { featurePages } from "../src/data/feature-pages";
 import { getRobotsForPath, sitemapPages } from "../src/data/seo";
-import { publicUrlFixtures } from "./public-url-fixtures";
-import { publicUrlEnvironment } from "./public-url-fixtures";
+import { publicUrlEnvironment, publicUrlFixtures } from "./public-url-fixtures";
 
 beforeAll(() => {
   const result = spawnSync("pnpm", ["build"], {
@@ -81,15 +80,15 @@ describe("expanded public site content", () => {
 
     expect(robots).toContain("User-agent: *");
     expect(robots).toContain("Allow: /");
-    expect(robots).toContain("Sitemap: https://www.getascheduler.com/sitemap.xml");
-    expect(robots).toContain("Host: www.getascheduler.com");
+    expect(robots).toContain("Sitemap: https://www.getskedular.com/sitemap.xml");
+    expect(robots).toContain("Host: www.getskedular.com");
     expect(sitemap).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
     expect(llms).toContain("# Skedular");
     expect(llms).toContain("## Core Public Pages");
-    expect(llms).toContain("[Skedular Teams | Private workplace management](https://www.getascheduler.com/teams)");
+    expect(llms).toContain("[Skedular Teams | Private workplace management](https://www.getskedular.com/teams)");
 
     for (const page of sitemapPages) {
-      expect(sitemap).toContain(`https://www.getascheduler.com${page.path === "/" ? "/" : page.path}`);
+      expect(sitemap).toContain(`https://www.getskedular.com${page.path === "/" ? "/" : page.path}`);
     }
 
     expect(sitemap).not.toContain("/terms-of-service");

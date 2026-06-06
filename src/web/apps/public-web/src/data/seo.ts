@@ -1,7 +1,7 @@
 import { publicPages } from "./content-inventory";
 import { resourceArticles, supportArticles } from "./current-public-content";
 
-export const siteUrl = process.env.PUBLIC_WEB_SITE_URL ?? "https://www.getascheduler.com";
+export const siteUrl = process.env.PUBLIC_WEB_SITE_URL ?? "https://www.getskedular.com";
 
 export const defaultRobots = "index, follow";
 
