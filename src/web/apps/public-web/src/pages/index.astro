@@ -68,6 +68,9 @@ const structuredData = [
       <div class="hero-copy">
         <h1>{homePage.hero.title}</h1>
         <p class="hero-summary">{homePage.hero.summary}</p>
+        {homePage.hero.trustMessage && (
+          <p class="hero-trust">{homePage.hero.trustMessage}</p>
+        )}
         <div class="button-row">
           <CtaLink cta={getCta(homePage.heroActions.primary)} />
           <CtaLink cta={getCta(homePage.heroActions.secondary)} variant="text" />

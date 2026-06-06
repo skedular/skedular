@@ -30,11 +30,9 @@ import { homePage } from "../data/home-page";
           ))}
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<section class="page-section page-section-quiet" aria-labelledby="audience-title">
+    <section class="page-section page-section-quiet" aria-labelledby="audience-title">
   <div class="container">
     <div class="section-heading">
       <h2 id="audience-title">{homePage.audience.title}</h2>
@@ -50,6 +48,19 @@ import { homePage } from "../data/home-page";
           </ul>
           <strong>{path.ctaLabel}</strong>
         </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section id="built-for" class="page-section page-section-quiet built-for-section" aria-labelledby="built-for-title">
+  <div class="container">
+    <div class="section-heading">
+      <h2 id="built-for-title">{homePage.builtFor.title}</h2>
+    </div>
+    <div class="built-for-grid">
+      {homePage.builtFor.items.map((item) => (
+        <span class="built-for-chip" aria-label={item.label}>{item.label}</span>
       ))}
     </div>
   </div>
@@ -72,11 +83,31 @@ import { homePage } from "../data/home-page";
   </div>
 </section>
 
+<section id="differentiation" class="page-section page-section-quiet differentiation-section" aria-labelledby="differentiation-title">
+  <div class="container">
+    <div class="section-heading">
+      <h2 id="differentiation-title">{homePage.differentiation.title}</h2>
+      <p>{homePage.differentiation.subtitle}</p>
+      {homePage.differentiation.supportingText && (
+        <p>{homePage.differentiation.supportingText}</p>
+      )}
+    </div>
+    <div class="feature-board-grid benefit-grid">
+      {homePage.differentiation.pillars.map((pillar) => (
+        <article class="feature-board-card">
+          <h3>{pillar.title}</h3>
+          <p>{pillar.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
 <section class="page-section page-section-quiet" aria-labelledby="product-showcase-title">
   <div class="container">
     <div class="section-heading">
-      <h2 id="product-showcase-title">Product workflows for teams and operators.</h2>
-      <p>Skedular Teams and Skedular Spaces stay visible, but the product story follows the jobs people need to complete.</p>
+      <h2 id="product-showcase-title">Solutions built around real workspace workflows.</h2>
+      <p>Choose the workflow that matches your business - whether you're booking space, managing a workplace, or running a workspace business.</p>
     </div>
     <div class="showcase-stack" aria-label="Skedular product details">
       {
@@ -108,6 +139,19 @@ import { homePage } from "../data/home-page";
           </article>
         ))
       }
+    </div>
+  </div>
+</section>
+
+<section id="become-a-host" class="page-section page-section-quiet become-host-section" aria-labelledby="become-host-title">
+  <div class="container">
+    <div class="section-heading">
+      <h2 id="become-host-title">{homePage.becomeAHost.title}</h2>
+      <p>{homePage.becomeAHost.subtitle}</p>
+      {homePage.becomeAHost.supportingText && (
+        <p>{homePage.becomeAHost.supportingText}</p>
+      )}
+      <a class="text-link" href={homePage.becomeAHost.href}>{homePage.becomeAHost.ctaLabel}</a>
     </div>
   </div>
 </section>
@@ -193,7 +237,7 @@ import { homePage } from "../data/home-page";
     <div class="integration-band">
       <div>
         <h2 id="integration-title">{homePage.integrations.title}</h2>
-        <p>{homePage.integrations.body}</p>
+        <p>{homePage.integrations.body} <a href="/pricing">View pricing</a> for integration availability.</p>
       </div>
       <div class="integration-grid">
         {homePage.integrations.items.map((integration) => <span>{integration}</span>)}
@@ -228,6 +272,7 @@ import { homePage } from "../data/home-page";
         <CtaLink cta={getCta("book-demo")} variant="inverse" />
         <a class="text-link" href="/teams">Explore Teams</a>
         <a class="text-link" href="/spaces">Explore Spaces</a>
+        <a class="text-link" href="/pricing">View Pricing</a>
       </div>
     </div>
   </div>

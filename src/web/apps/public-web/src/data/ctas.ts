@@ -50,6 +50,14 @@ export const ctas = [
     audience: "new visitors",
   },
   {
+    id: "explore-skedular",
+    label: "Explore Skedular",
+    purpose: "explore",
+    destinationType: "public-url",
+    destinationRef: "PUBLIC_SKEDULAR_APP_URL",
+    audience: "new visitors",
+  },
+  {
     id: "contact-sales",
     label: "Contact sales",
     purpose: "contact",

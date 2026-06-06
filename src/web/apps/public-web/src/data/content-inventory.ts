@@ -10,8 +10,8 @@ export const publicPages: PublicPage[] = [
   {
     id: "home",
     path: "/",
-    title: "Skedular | Find and book workspace",
-    description: "Find desks, meeting rooms, event spaces, private offices, and flexible workspace with Skedular.",
+    title: "Skedular | Find, book, manage, and monetize workspace",
+    description: "Find workspace, book desks and meeting rooms, manage hybrid workplaces, and run coworking operations with Skedular.",
     audience: "buyers and operators",
     pageType: "home",
     sourceRefs: ["draft:homepage", "draft:vision"],
