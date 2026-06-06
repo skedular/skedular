@@ -305,11 +305,8 @@ This file applies to the whole repository.
 - Feature docs and quickstart validation notes must match the current codebase/test reality before merge.
 
 <!-- SPECKIT START -->
-
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/025-public-website-content/plan.md
-
 <!-- SPECKIT END -->
 
 ## Active Technologies
