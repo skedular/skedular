@@ -3,6 +3,7 @@ export const requiredPublicDestinationUrlNames = [
   "PUBLIC_SKEDULAR_SIGNUP_URL",
   "PUBLIC_SKEDULAR_DEMO_URL",
   "PUBLIC_SKEDULAR_BECOME_HOST_URL",
+  "PUBLIC_SKEDULAR_SLACK_INSTALL_URL",
 ] as const;
 
 export type PublicDestinationUrlName = (typeof requiredPublicDestinationUrlNames)[number];
@@ -12,6 +13,7 @@ const publicDestinationUrlPurpose: Record<PublicDestinationUrlName, string> = {
   PUBLIC_SKEDULAR_SIGNUP_URL: "login/sign-up destination",
   PUBLIC_SKEDULAR_DEMO_URL: "demo/contact destination",
   PUBLIC_SKEDULAR_BECOME_HOST_URL: "become-a-host destination",
+  PUBLIC_SKEDULAR_SLACK_INSTALL_URL: "Slack install destination",
 };
 
 function readRequiredPublicUrl(name: PublicDestinationUrlName): string {
@@ -29,6 +31,7 @@ export const publicDestinationUrls = {
   signup: readRequiredPublicUrl("PUBLIC_SKEDULAR_SIGNUP_URL"),
   demo: readRequiredPublicUrl("PUBLIC_SKEDULAR_DEMO_URL"),
   becomeHost: readRequiredPublicUrl("PUBLIC_SKEDULAR_BECOME_HOST_URL"),
+  slackInstall: readRequiredPublicUrl("PUBLIC_SKEDULAR_SLACK_INSTALL_URL"),
 };
 
 export function getPublicDestinationUrl(name: PublicDestinationUrlName): string {
@@ -42,6 +45,10 @@ export function getPublicDestinationUrl(name: PublicDestinationUrlName): string 
 
   if (name === "PUBLIC_SKEDULAR_DEMO_URL") {
     return publicDestinationUrls.demo;
+  }
+
+  if (name === "PUBLIC_SKEDULAR_SLACK_INSTALL_URL") {
+    return publicDestinationUrls.slackInstall;
   }
 
   return publicDestinationUrls.signup;

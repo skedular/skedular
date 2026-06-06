@@ -37,17 +37,21 @@ describe("public website build diagnostics", () => {
     expect(output).not.toContain(publicUrlFixtures.signupUrl);
     expect(output).not.toContain(publicUrlFixtures.demoUrl);
     expect(output).not.toContain(publicUrlFixtures.becomeHostUrl);
+    expect(output).not.toContain(publicUrlFixtures.slackInstallUrl);
   });
 
-  it.each(["PUBLIC_SKEDULAR_APP_URL", "PUBLIC_SKEDULAR_SIGNUP_URL", "PUBLIC_SKEDULAR_DEMO_URL", "PUBLIC_SKEDULAR_BECOME_HOST_URL"] as const)(
-    "fails clearly when %s is missing",
-    async (name) => {
-      const environment = { ...process.env, ...publicUrlEnvironment, [name]: "" };
+  it.each([
+    "PUBLIC_SKEDULAR_APP_URL",
+    "PUBLIC_SKEDULAR_SIGNUP_URL",
+    "PUBLIC_SKEDULAR_DEMO_URL",
+    "PUBLIC_SKEDULAR_BECOME_HOST_URL",
+    "PUBLIC_SKEDULAR_SLACK_INSTALL_URL",
+  ] as const)("fails clearly when %s is missing", async (name) => {
+    const environment = { ...process.env, ...publicUrlEnvironment, [name]: "" };
 
-      const result = await runBuild(environment);
+    const result = await runBuild(environment);
 
-      expect(result.code).not.toBe(0);
-      expect(`${result.stdout}${result.stderr}`).toContain(`${name} is required`);
-    },
-  );
+    expect(result.code).not.toBe(0);
+    expect(`${result.stdout}${result.stderr}`).toContain(`${name} is required`);
+  });
 });

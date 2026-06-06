@@ -5,13 +5,15 @@ interface Props {
   description?: string;
   path?: string;
   breadcrumbs?: Array<{ name: string; path: string }>;
+  graph?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { type = "Organization", name, description, path = "/", breadcrumbs = [] } = Astro.props;
+const { type = "Organization", name, description, path = "/", breadcrumbs = [], graph: providedGraph } = Astro.props;
 
 const baseUrl = "https://www.getascheduler.com";
-const graph =
-  type === "BreadcrumbList"
+const graph = providedGraph
+  ? providedGraph
+  : type === "BreadcrumbList"
     ? {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",

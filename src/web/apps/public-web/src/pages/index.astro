@@ -1,26 +1,72 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
 import HomeSections from "../components/HomeSections.astro";
-import Sections from "../components/Sections.astro";
 import CtaLink from "../components/CtaLink.astro";
 import { getCta } from "../data/ctas";
 import { homePage } from "../data/home-page";
+
+const baseUrl = "https://www.getascheduler.com";
+const structuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Skedular",
+    url: baseUrl,
+    logo: new URL("/images/skedular-logo-primary.svg", baseUrl).toString(),
+    sameAs: ["https://www.linkedin.com/company/getskedular/"],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: "Skedular",
+    description: homePage.description,
+    brand: {
+      "@type": "Brand",
+      name: "Skedular",
+    },
+    category: "Workspace booking and workspace management software",
+    url: baseUrl,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: homePage.faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: baseUrl,
+      },
+    ],
+  },
+];
 ---
 
-<SiteLayout title={homePage.title} description={homePage.description} canonicalPath="/">
+<SiteLayout title={homePage.title} description={homePage.description} canonicalPath="/" structuredData={structuredData}>
   <section class="hero">
     <div class="container hero-stage">
       <div class="hero-copy">
-        <p class="eyebrow">{homePage.hero.eyebrow}</p>
         <h1>{homePage.hero.title}</h1>
         <p class="hero-summary">{homePage.hero.summary}</p>
         <div class="button-row">
-          <a class="button" href="#products">Explore products</a>
-          <CtaLink cta={getCta("book-demo")} variant="text" />
+          <CtaLink cta={getCta(homePage.heroActions.primary)} />
+          <CtaLink cta={getCta(homePage.heroActions.secondary)} variant="text" />
         </div>
       </div>
 
-      <div class="hero-product-frame" aria-label="Skedular product overview">
+      <div class="hero-product-frame" aria-label="Skedular workspace booking and management overview">
         <div class="hero-product-toolbar">
           <span></span>
           <span></span>
@@ -30,19 +76,23 @@ import { homePage } from "../data/home-page";
           <div class="product-console">
             <div class="visual-toolbar">
               <div>
-                <span class="visual-label">Workspace platform</span>
+                <span class="visual-label">Workspace discovery</span>
                 <strong>Skedular</strong>
               </div>
-              <span class="availability-dot">Live paths</span>
+              <span class="availability-dot">Live booking</span>
             </div>
             <div class="product-console-grid">
-              <a href="/teams" class="console-tile console-tile-active">
-                <span>Teams</span>
-                <strong>Manage offices</strong>
+              <a href="#workspace-discovery" class="console-tile console-tile-active">
+                <span>Find workspace</span>
+                <strong>Search desks and rooms</strong>
+              </a>
+              <a href="/teams" class="console-tile">
+                <span>Manage workplace</span>
+                <strong>Coordinate hybrid work</strong>
               </a>
               <a href="/spaces" class="console-tile">
-                <span>Spaces</span>
-                <strong>Run inventory</strong>
+                <span>Run business</span>
+                <strong>Sell space & subscriptions</strong>
               </a>
             </div>
           </div>
@@ -58,25 +108,24 @@ import { homePage } from "../data/home-page";
             </div>
           </div>
           <div class="hero-insight">
-            <span>Today</span>
-            <strong>42 bookings</strong>
-            <p>Rooms, desks, offices, parking</p>
+            <span>Platform coverage</span>
+            <strong>Booking to billing</strong>
+            <p>Maps, floor plans, payments, invoices, Xero, Slack, Microsoft Teams</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-
-  <Sections
-    eyebrow="Products"
-    title="Choose the Skedular product that matches your job"
-    body="Each product path explains one part of the platform so visitors can quickly find the version that fits their organization."
-    variant="quiet"
-  >
-    <div id="products">
-      <HomeSections />
+  <section class="trust-strip" aria-label="Who Skedular is for">
+    <div class="container trust-inner">
+      <p>{homePage.trustStatement}</p>
+      <div>
+        {homePage.trustSignals.map((signal) => <span>{signal}</span>)}
+      </div>
     </div>
-  </Sections>
+  </section>
+
+  <HomeSections />
 
 </SiteLayout>

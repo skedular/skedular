@@ -42,6 +42,7 @@ export interface ProductPageContent {
     body: string;
     items: string[];
   }>;
+  integrationActions?: Array<{ type: "slack" }>;
 }
 
 export interface ResourceArticle {

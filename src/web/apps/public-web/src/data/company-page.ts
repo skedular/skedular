@@ -1,6 +1,6 @@
 export const companyPage = {
   id: "company",
-  path: "/company",
+  path: "/about",
   title: "About Skedular | Workspace software from Auckland",
   description:
     "Learn about Skedular, the Auckland-built workspace platform helping teams and workspace operators make flexible work easier to manage.",

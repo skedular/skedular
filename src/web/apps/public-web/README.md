@@ -4,14 +4,15 @@
 
 ## Required Public URLs
 
-The build requires four public destination URL variables:
+The build requires five public destination URL variables:
 
-| Variable                          | Purpose                                          |
-| --------------------------------- | ------------------------------------------------ |
-| `PUBLIC_SKEDULAR_APP_URL`         | Search, booking, and app-forwarding actions      |
-| `PUBLIC_SKEDULAR_SIGNUP_URL`      | Login, sign-up, and get-started actions          |
-| `PUBLIC_SKEDULAR_DEMO_URL`        | Demo, contact sales, and contact support actions |
-| `PUBLIC_SKEDULAR_BECOME_HOST_URL` | Become-a-host actions                            |
+| Variable                            | Purpose                                          |
+| ----------------------------------- | ------------------------------------------------ |
+| `PUBLIC_SKEDULAR_APP_URL`           | Search, booking, and app-forwarding actions      |
+| `PUBLIC_SKEDULAR_SIGNUP_URL`        | Login, sign-up, and get-started actions          |
+| `PUBLIC_SKEDULAR_DEMO_URL`          | Demo, contact sales, and contact support actions |
+| `PUBLIC_SKEDULAR_BECOME_HOST_URL`   | Become-a-host actions                            |
+| `PUBLIC_SKEDULAR_SLACK_INSTALL_URL` | Slack install actions for Skedular Teams         |
 
 The build intentionally fails when any variable is missing or empty. Staging and production values must be supplied by environment-specific deployment configuration. Do not hardcode those destination domains in source content, tests, or deployment scripts.
 
@@ -32,6 +33,7 @@ PUBLIC_SKEDULAR_APP_URL=https://app.example.test \
 PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up \
 PUBLIC_SKEDULAR_DEMO_URL=https://demo.example.test/book \
 PUBLIC_SKEDULAR_BECOME_HOST_URL=https://host.example.test/start \
+PUBLIC_SKEDULAR_SLACK_INSTALL_URL=https://slack.example.test/install \
 pnpm --dir src/web/apps/public-web dev
 ```
 
@@ -46,6 +48,7 @@ PUBLIC_SKEDULAR_APP_URL=https://app.example.test \
 PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up \
 PUBLIC_SKEDULAR_DEMO_URL=https://demo.example.test/book \
 PUBLIC_SKEDULAR_BECOME_HOST_URL=https://host.example.test/start \
+PUBLIC_SKEDULAR_SLACK_INSTALL_URL=https://slack.example.test/install \
 pnpm --dir src/web/apps/public-web test
 ```
 
@@ -54,6 +57,7 @@ PUBLIC_SKEDULAR_APP_URL=https://app.example.test \
 PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up \
 PUBLIC_SKEDULAR_DEMO_URL=https://demo.example.test/book \
 PUBLIC_SKEDULAR_BECOME_HOST_URL=https://host.example.test/start \
+PUBLIC_SKEDULAR_SLACK_INSTALL_URL=https://slack.example.test/install \
 pnpm --dir src/web/apps/public-web check
 ```
 
@@ -66,6 +70,7 @@ PUBLIC_SKEDULAR_APP_URL=https://app.example.test \
 PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up \
 PUBLIC_SKEDULAR_DEMO_URL=https://demo.example.test/book \
 PUBLIC_SKEDULAR_BECOME_HOST_URL=https://host.example.test/start \
+PUBLIC_SKEDULAR_SLACK_INSTALL_URL=https://slack.example.test/install \
 pnpm --dir src/web/apps/public-web build
 ```
 
@@ -77,7 +82,8 @@ The production build writes static output to `dist/` and emits a JSON build summ
 - `/teams`
 - `/spaces`
 - `/pricing`
-- `/company`
+- `/about`
+- `/company` redirects to `/about`
 - `/terms-of-service`
 - `/privacy-policy`
 - `/resources`
@@ -113,6 +119,7 @@ PUBLIC_SKEDULAR_APP_URL=https://app.example.test \
 PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up \
 PUBLIC_SKEDULAR_DEMO_URL=https://demo.example.test/book \
 PUBLIC_SKEDULAR_BECOME_HOST_URL=https://host.example.test/start \
+PUBLIC_SKEDULAR_SLACK_INSTALL_URL=https://slack.example.test/install \
 pnpm build
 ```
 

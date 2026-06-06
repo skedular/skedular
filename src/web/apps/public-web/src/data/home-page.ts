@@ -1,127 +1,247 @@
+type CustomerTestimonial = {
+  quote: string;
+  name: string;
+  role: string;
+  company: string;
+  logo: string;
+  photo: string;
+};
+
+type CustomerMetric = {
+  label: string;
+  value: string;
+};
+
+type CustomerCaseStudy = {
+  logo: string;
+  industry: string;
+  locations: string;
+  users: string;
+  results: string[];
+  href: string;
+};
+
 export const homePage = {
-  title: "Skedular | Find and book workspace",
-  description: "Find desks, meeting rooms, event spaces, private offices, and flexible workspace with Skedular.",
+  title: "Skedular | Workspace booking and workspace management",
+  description: "Find workspace, book desks and meeting rooms, manage hybrid workplaces, and run coworking operations with Skedular.",
+  keywords: [
+    "Workspace booking",
+    "Desk booking",
+    "Meeting room booking",
+    "Workspace management",
+    "Hybrid workplace software",
+    "Coworking software",
+    "Workspace marketplace",
+    "Flexible workspace",
+  ],
   hero: {
-    eyebrow: "Let's plan flexible work",
-    title: "One workspace platform for teams and operators",
-    summary: "Connect people, spaces, and operations with focused products for private workplaces and workspace providers.",
+    title: "Find, book, manage, and monetize workspace.",
+    summary:
+      "Whether you're looking for a desk, managing a workplace, or running a coworking business, Skedular brings discovery, booking, operations, payments, billing, invoicing, and subscriptions together in one platform.",
   },
-  trustStatement: "Built for the teams that manage and operate modern workspace",
-  trustSignals: ["Hybrid teams", "Workspace operators", "Flexible offices", "Enterprise workplaces", "Local providers"],
+  heroActions: {
+    primary: "book-demo",
+    secondary: "get-started",
+  },
+  trustStatement: "Built for every side of modern workspace",
+  trustSignals: ["People booking space", "Hybrid teams", "Workplace managers", "Coworking operators", "Flexible workspace providers"],
   searchFields: ["Location", "Date", "Resource type"],
-  resourceCategories: ["Desks", "Meeting rooms", "Event spaces", "Private offices", "Parking", "Equipment"],
-  discoveryModules: [
-    {
-      title: "Search by place and time",
-      body: "Start with where you want to work, when you need space, and the kind of resource that fits the day.",
-    },
-    {
-      title: "Compare useful details",
-      body: "See practical space information such as amenities, availability cues, access notes, and booking options.",
-    },
-    {
-      title: "Book in the app",
-      body: "Search and booking actions currently forward to the separate Skedular application website.",
-    },
-  ],
-  productPaths: [
-    {
-      title: "Skedular Teams",
-      label: "For organizations",
-      body: "Private workplace management for companies, government teams, and hybrid offices.",
-      href: "/teams",
-      accent: "aqua",
-      features: ["Desk and room booking", "Attendance tracking", "Floor plans and maps", "Analytics and reporting", "Slack and Microsoft Teams"],
-    },
-    {
-      title: "Skedular Spaces",
-      label: "For workspace operators",
-      body: "Workspace operations, payments, billing, and publishing tools for flexible workspace providers.",
-      href: "/spaces",
-      accent: "violet",
-      features: [
-        "Resource and product management",
-        "Payments and invoicing",
-        "Customer subscriptions",
-        "Marketplace publishing",
-        "Branded workspace experiences",
-      ],
-    },
-  ],
+  resourceCategories: ["Desks", "Meeting rooms", "Event spaces", "Private offices", "Flexible workspaces"],
+  discovery: {
+    title: "Find workspace that fits the way you work.",
+    body: "Discover desks, meeting rooms, event spaces, private offices, and flexible workspaces from providers across the network.",
+    modules: [
+      {
+        title: "Search by location",
+        body: "Use map-based discovery to compare nearby workspaces, available resources, amenities, and host details.",
+      },
+      {
+        title: "Choose the right resource",
+        body: "Book desks, meeting rooms, event spaces, private offices, parking, and operator-defined flexible workspace.",
+      },
+      {
+        title: "Move from discovery to booking",
+        body: "Search and booking actions route visitors into the Skedular application when they are ready to reserve space.",
+      },
+    ],
+  },
+  audience: {
+    title: "How do you use workspace?",
+    body: "Start with the outcome you need, then follow the product path that supports it.",
+    paths: [
+      {
+        title: "I need a workspace",
+        body: "Find desks, meeting rooms, private offices, and event spaces.",
+        ctaLabel: "Find workspace",
+        href: "#workspace-discovery",
+        accent: "emerald",
+        features: ["Workspace marketplace", "Map discovery", "Desk and room booking"],
+      },
+      {
+        title: "I manage a workplace",
+        body: "Manage desks, rooms, parking, attendance, floor plans, and hybrid work.",
+        ctaLabel: "Explore Teams",
+        href: "/teams",
+        accent: "aqua",
+        features: ["Private workplace booking", "Attendance and utilization", "Slack, Microsoft Teams, and SSO"],
+      },
+      {
+        title: "I run a workspace business",
+        body: "Manage resources, products, subscriptions, invoices, payments, and customers.",
+        ctaLabel: "Explore Spaces",
+        href: "/spaces",
+        accent: "violet",
+        features: ["Resource commerce", "Billing and invoicing", "Marketplace publishing"],
+      },
+    ],
+  },
+  whySkedular: {
+    title: "Everything needed to run modern workspace.",
+    pillars: [
+      {
+        title: "Workspace discovery",
+        body: "Find the right space when and where you need it.",
+      },
+      {
+        title: "Flexible booking",
+        body: "Book by the hour, day, week, month, or subscription.",
+      },
+      {
+        title: "Workplace management",
+        body: "Manage attendance, resources, and workplace utilization.",
+      },
+      {
+        title: "Workspace commerce",
+        body: "Turn resources into products and generate revenue.",
+      },
+      {
+        title: "Integrated billing",
+        body: "Payments, subscriptions, invoicing, taxes, and accounting.",
+      },
+      {
+        title: "Enterprise ready",
+        body: "SSO, Slack, Microsoft Teams, permissions, and identity management.",
+      },
+    ],
+  },
   productShowcases: [
     {
-      kicker: "Skedular Teams",
-      title: "Run private workplace booking without making it feel heavy",
-      body: "Give employees a simple way to book desks and rooms while workplace teams manage attendance, floor plans, analytics, identity, and workplace rules.",
+      productName: "Skedular Teams",
+      title: "Give employees a simpler way to book the workplace.",
+      body: "Skedular Teams helps organizations coordinate desk booking, meeting room booking, attendance, floor plans, analytics, Slack, Microsoft Teams, and SSO in one private workplace experience.",
       href: "/teams",
       ctaLabel: "Explore Teams",
-      visualTitle: "Office management",
-      visualStats: ["Desk booking", "Attendance", "SSO"],
+      visualTitle: "Team workplace workflow",
+      visualStats: ["Desk booking", "Meeting rooms", "Floor plans", "Attendance", "Analytics", "SSO"],
       accent: "aqua",
     },
     {
-      kicker: "Skedular Spaces",
-      title: "Publish, sell, and manage workspace inventory",
-      body: "Support operators with products, pricing, payments, billing, invoicing, tax, customer subscriptions, and branded workspace experiences.",
+      productName: "Skedular Spaces",
+      title: "Run the commercial side of flexible workspace.",
+      body: "Skedular Spaces helps operators manage resources, products, marketplace publishing, subscriptions, payments, invoicing, billing, and customer relationships from one operational surface.",
       href: "/spaces",
       ctaLabel: "Explore Spaces",
-      visualTitle: "Operator tools",
-      visualStats: ["Products", "Payments", "Invoices"],
+      visualTitle: "Operator commerce workflow",
+      visualStats: ["Resources", "Products", "Marketplace", "Subscriptions", "Payments", "Invoices"],
       accent: "violet",
     },
   ],
-  whySkedular: [
+  featureHighlights: {
+    title: "Powerful features built for modern workspace.",
+    groups: [
+      {
+        title: "Interactive floor plans",
+        body: "Visual workspace selection for desks, rooms, zones, and bookable resources.",
+      },
+      {
+        title: "Workspace maps",
+        body: "Location discovery and navigation for people looking for the right place to work.",
+      },
+      {
+        title: "Payments",
+        body: "Stripe-powered payment flows for paid bookings and operator revenue.",
+      },
+      {
+        title: "Billing",
+        body: "Flexible billing cycles for one-time bookings, recurring purchases, and operator-led terms.",
+      },
+      {
+        title: "Invoicing",
+        body: "Automated invoice workflows for workspace bookings, subscriptions, and business customers.",
+      },
+      {
+        title: "Xero integration",
+        body: "Accounting workflows that keep billing, invoicing, and finance operations aligned.",
+      },
+      {
+        title: "Analytics",
+        body: "Utilization, attendance, booking, and revenue reporting for better workspace decisions.",
+      },
+      {
+        title: "Integrations",
+        body: "Slack, Microsoft Teams, calendar, identity, payments, accounting, and map workflows.",
+      },
+      {
+        title: "Security",
+        body: "WorkOS-backed enterprise SSO, identity, permissions, and access controls.",
+      },
+    ],
+  },
+  customerTrust: {
+    title: "Trusted by teams and workspace operators.",
+    body: "Skedular is built to support the visitor searching for space, the workplace team coordinating hybrid work, and the operator running the business behind the workspace.",
+    logoHeading: "Our clients",
+    customerLogos: [
+      {
+        name: "Seequent",
+        src: "/images/customer-seequent.png",
+        width: 5000,
+        height: 834,
+      },
+      {
+        name: "EMD",
+        src: "/images/customer-emd.svg",
+        width: 924,
+        height: 245,
+      },
+    ],
+    metrics: [] as CustomerMetric[],
+    testimonials: [] as CustomerTestimonial[],
+    caseStudies: [] as CustomerCaseStudy[],
+  },
+  integrations: {
+    title: "Works with the tools your teams already use.",
+    body: "Connect workspace activity to collaboration, identity, payments, accounting, maps, and calendars. Slack and Microsoft Teams support is available for private organizations using Skedular Teams.",
+    items: ["Slack", "Microsoft Teams", "Xero", "Stripe", "Google Maps", "Calendar integrations"],
+  },
+  finalCta: {
+    title: "Ready to simplify workspace management?",
+    body: "Whether you're looking for workspace, managing a workplace, or running a workspace business, Skedular has you covered.",
+    actions: [
+      { label: "Book demo", href: "book-demo", style: "inverse" },
+      { label: "Explore Teams", href: "/teams", style: "text" },
+      { label: "Explore Spaces", href: "/spaces", style: "text" },
+    ],
+  },
+  faq: [
     {
-      title: "One platform for many workspace jobs",
-      body: "Bring private workplace coordination, resource commerce, payments, billing, and invoicing into a clearer operating model.",
+      question: "What is Skedular?",
+      answer:
+        "Skedular is a workspace operating system for finding workspace, booking desks and meeting rooms, managing hybrid workplaces, and running coworking or flexible workspace operations.",
     },
     {
-      title: "Built for hybrid work",
-      body: "Support desk booking, room booking, attendance visibility, floor plans, analytics, Slack, Microsoft Teams, and enterprise identity.",
+      question: "Can people use Skedular to find and book workspace?",
+      answer:
+        "Yes. Skedular supports public workspace discovery and booking paths for desks, meeting rooms, event spaces, private offices, and flexible workspace.",
     },
     {
-      title: "Practical for operators",
-      body: "Manage resources, products, pricing, tax, invoices, visibility, host settings, and customer subscriptions from one place.",
+      question: "Who is Skedular for?",
+      answer: "Skedular is for people who need workspace, organizations that manage private workplaces, and operators that run workspace businesses.",
+    },
+    {
+      question: "How is Skedular different from workplace or coworking tools?",
+      answer:
+        "Skedular combines public workspace discovery, private workplace management, coworking operations, payments, billing, invoicing, subscriptions, resource management, and team collaboration in one platform.",
     },
   ],
-  featureHighlights: [
-    "Resource types and zones",
-    "Floor plans and maps",
-    "Opening hours and availability",
-    "Payments and invoicing",
-    "Xero-ready accounting workflows",
-    "Custom domains and branded spaces",
-  ],
-  platformFeatures: [
-    {
-      title: "Workplace analytics",
-      body: "Understand utilization, attendance, booking patterns, and resource demand so every workspace decision has better context.",
-    },
-    {
-      title: "Everyday integrations",
-      body: "Keep workplace workflows close to the tools teams already use, including Slack, Microsoft Teams, calendars, and identity providers.",
-    },
-    {
-      title: "Controls and permissions",
-      body: "Shape who can book, what they can access, and how workplace rules apply across teams, products, and locations.",
-    },
-    {
-      title: "Payments and invoicing",
-      body: "Give operators a practical path for paid bookings, tax, billing, invoices, Xero-ready workflows, and subscription-style products.",
-    },
-  ],
-  testimonials: [
-    {
-      quote:
-        "Skedular is designed for the real operational work behind flexible space: booking, visibility, payments, and the details that keep teams moving.",
-      name: "Skedular product team",
-      role: "Workspace platform",
-    },
-    {
-      quote: "The public website introduces the products clearly, then sends booking and account actions to the separate Skedular application.",
-      name: "Public website rollout",
-      role: "Launch note",
-    },
-  ],
-  integrations: ["Slack", "Microsoft Teams"],
 };

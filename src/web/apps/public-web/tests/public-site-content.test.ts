@@ -36,7 +36,7 @@ const primaryPaths = [
   "/blog",
   "/resources",
   "/support",
-  "/company",
+  "/about",
   "/terms-of-service",
   "/privacy-policy",
 ];
@@ -65,7 +65,7 @@ describe("expanded public site content", () => {
       expect(existsSync(new URL(`../dist${page.path}/index.html`, import.meta.url))).toBe(true);
     }
 
-    for (const path of ["/company", "/terms-of-service", "/privacy-policy"]) {
+    for (const path of ["/about", "/terms-of-service", "/privacy-policy"]) {
       expect(existsSync(new URL(`../dist${path}/index.html`, import.meta.url))).toBe(true);
     }
   });
@@ -78,6 +78,10 @@ describe("expanded public site content", () => {
     expect(html).toContain(publicUrlFixtures.demoUrl);
     expect(html).not.toContain("https://skedular.app");
     expect(html).not.toContain("https://staging.skedular.app");
+
+    const teamsHtml = await readFile(new URL("../dist/teams/index.html", import.meta.url), "utf8");
+    expect(teamsHtml).toContain(publicUrlFixtures.slackInstallUrl);
+    expect(teamsHtml).not.toContain("client_id=118234978193.5578039519830");
   });
 
   it("has unique public page metadata and complete comparison metadata", () => {

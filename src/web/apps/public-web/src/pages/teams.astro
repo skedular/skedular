@@ -1,6 +1,7 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
 import ProductPageSections from "../components/ProductPageSections.astro";
+import SlackInstallButton from "../components/SlackInstallButton.astro";
 import CtaLink from "../components/CtaLink.astro";
 import { getCta } from "../data/ctas";
 import { teamsPage } from "../data/teams-page";
@@ -28,4 +29,22 @@ import { teamsPage } from "../data/teams-page";
       <ProductPageSections page={teamsPage} />
     </div>
   </section>
+  {
+    teamsPage.integrationActions && (
+      <section class="page-section page-section-quiet" aria-labelledby="teams-integrations-title">
+        <div class="container integration-detail-panel">
+          <div>
+            <p class="eyebrow">Private workplace integrations</p>
+            <h2 id="teams-integrations-title">Onboard Skedular Teams through Slack or Microsoft Teams.</h2>
+            <p>
+              Slack and Microsoft Teams integrations are for private organizations using Skedular Teams to coordinate workplace bookings, notifications, and team-aware views.
+            </p>
+          </div>
+          <div class="integration-action-row">
+            {teamsPage.integrationActions.map((action) => action.type === "slack" && <SlackInstallButton />)}
+          </div>
+        </div>
+      </section>
+    )
+  }
 </SiteLayout>

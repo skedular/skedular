@@ -26,14 +26,18 @@ describe("public website home page", () => {
     const dom = await loadPage();
     const document = dom.window.document;
 
-    expect(getByRole(document, "heading", { level: 1, name: "One workspace platform for teams and operators" })).toBeTruthy();
+    expect(getByRole(document, "heading", { level: 1, name: "Find, book, manage, and monetize workspace." })).toBeTruthy();
     expect(document.body.textContent).not.toContain("Public Booking");
-    expect(getByRole(document, "heading", { level: 3, name: "Skedular Teams" })).toBeTruthy();
-    expect(getByRole(document, "heading", { level: 3, name: "Skedular Spaces" })).toBeTruthy();
+    expect(getByRole(document, "heading", { level: 2, name: "Find workspace that fits the way you work." })).toBeTruthy();
+    expect(getByRole(document, "heading", { level: 3, name: "I manage a workplace" })).toBeTruthy();
+    expect(getByRole(document, "heading", { level: 3, name: "I run a workspace business" })).toBeTruthy();
+    expect(document.querySelector('img[alt="Seequent"]')).toBeTruthy();
+    expect(document.querySelector('img[alt="EMD"]')).toBeTruthy();
     expect(getAllByText(document, "Resources").length).toBeGreaterThan(0);
     expect(getAllByRole(document, "link", { name: "Blog" }).some((link) => link.getAttribute("href") === "/blog")).toBe(true);
 
-    expect(getAllByRole(document, "link", { name: "Explore products" }).some((link) => link.getAttribute("href") === "#products")).toBe(true);
+    expect(document.querySelector('a[data-cta-id="search-workspace"]')).toBeNull();
+    expect(getAllByRole(document, "link", { name: "Book demo" }).some((link) => link.getAttribute("data-cta-id") === "book-demo")).toBe(true);
   });
 
   it("uses semantic landmarks, one page-level heading, descriptive links, metadata, and has no critical axe violations", async () => {
@@ -45,8 +49,9 @@ describe("public website home page", () => {
     expect(getByRole(document, "main")).toBeTruthy();
     expect(getByRole(document, "contentinfo")).toBeTruthy();
     expect(document.querySelectorAll("h1")).toHaveLength(1);
-    expect(document.querySelector("title")?.textContent).toContain("Find and book workspace");
+    expect(document.querySelector("title")?.textContent).toContain("Workspace booking");
     expect(document.querySelector('meta[name="description"]')?.getAttribute("content")).toMatch(/meeting rooms/i);
+    expect(document.querySelectorAll('script[type="application/ld+json"]').length).toBeGreaterThan(0);
     expect(getAllByRole(document, "link").every((link) => link.getAttribute("aria-label") || link.textContent?.trim())).toBe(true);
 
     const results = await axe.run(document.documentElement, {

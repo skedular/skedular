@@ -10,9 +10,10 @@ interface Props {
   description: string;
   canonicalPath: string;
   structuredDataType?: "Organization" | "Product" | "FAQPage" | "BreadcrumbList" | "Article";
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description, canonicalPath, structuredDataType = "Organization" } = Astro.props;
+const { title, description, canonicalPath, structuredDataType = "Organization", structuredData } = Astro.props;
 
 const demoCta = ctas.find((cta) => cta.id === "book-demo");
 const loginCta = ctas.find((cta) => cta.id === "login");
@@ -40,7 +41,7 @@ const resourceLinks = [
   },
 ];
 const mainLinks = [
-  { label: "About", path: "/company" },
+  { label: "About", path: "/about" },
   { label: "Pricing", path: "/pricing" },
 ];
 const legalLinks = [
@@ -84,7 +85,7 @@ const socialLinks = [
 <html lang="en">
   <head>
     <SeoHead title={title} description={description} canonicalPath={canonicalPath} />
-    <StructuredData type={structuredDataType} name={title} description={description} path={canonicalPath} />
+    <StructuredData type={structuredDataType} name={title} description={description} path={canonicalPath} graph={structuredData} />
   </head>
   <body>
     <header class="site-header">
@@ -188,7 +189,7 @@ const socialLinks = [
 
         <nav class="footer-column" aria-label="Company">
           <h2>Company</h2>
-          <a href="/company">About</a>
+          <a href="/about">About</a>
           {legalLinks.map((item) => <a href={item.path}>{item.label}</a>)}
         </nav>
 

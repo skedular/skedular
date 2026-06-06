@@ -3,7 +3,7 @@ import { defineConfig } from "astro/config";
 export default defineConfig({
   output: "static",
   redirects: {
-    "/about": "/company",
+    "/company": "/about",
     "/blog/hybrid-workplace-planning": "/resources/hybrid-workplace-planning",
     "/blog/workspace-payments-invoicing": "/resources/workspace-payments-invoicing",
     "/blog/slack-microsoft-teams-workplace": "/resources/slack-microsoft-teams-workplace",

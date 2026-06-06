@@ -12,11 +12,14 @@ module "shared_common" {
 
 locals {
   public_skedular_url = var.environment == "production" ? "https://skedular.app" : "https://staging.skedular.app"
+  slack_url           = var.environment == "production" ? "https://slack.com/oauth/v2/authorize?scope=app_mentions%3Aread%2Cchannels%3Ajoin%2Cchannels%3Amanage%2Cchannels%3Aread%2Cchat%3Awrite%2Cteam%3Aread%2Cusers%3Aread%2Cusers%3Aread.email%2Cusers.profile%3Aread&user_scope=users.profile%3Awrite%2Cusers.profile%3Aread&redirect_uri=https%3A%2F%2Fslackapi.skedular.app%2Fv1%2Fslack%2Fcallback&client_id=118234978193.5578039519830" : "https://slack.com/oauth/v2/authorize?scope=app_mentions%3Aread%2Cchannels%3Ajoin%2Cchannels%3Amanage%2Cchannels%3Aread%2Cchat%3Awrite%2Cteam%3Aread%2Cusers%3Aread%2Cusers%3Aread.email%2Cusers.profile%3Aread&user_scope=users.profile%3Awrite%2Cusers.profile%3Aread&redirect_uri=https%3A%2F%2Fslackapistaging.skedular.app%2Fv1%2Fslack%2Fcallback&client_id=118234978193.5578036232262"
+
   public_skedular_env_vars = {
-    PUBLIC_SKEDULAR_APP_URL         = local.public_skedular_url
-    PUBLIC_SKEDULAR_SIGNUP_URL      = local.public_skedular_url
-    PUBLIC_SKEDULAR_DEMO_URL        = local.public_skedular_url
-    PUBLIC_SKEDULAR_BECOME_HOST_URL = local.public_skedular_url
+    PUBLIC_SKEDULAR_APP_URL           = local.public_skedular_url
+    PUBLIC_SKEDULAR_SIGNUP_URL        = local.public_skedular_url
+    PUBLIC_SKEDULAR_DEMO_URL          = local.public_skedular_url
+    PUBLIC_SKEDULAR_BECOME_HOST_URL   = local.public_skedular_url
+    PUBLIC_SKEDULAR_SLACK_INSTALL_URL = local.slack_url
   }
   public_skedular_pages_env_vars = {
     for name, value in local.public_skedular_env_vars : name => {

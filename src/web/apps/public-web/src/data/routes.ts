@@ -3,7 +3,7 @@ export const routeFamilies = {
   teams: "/teams",
   spaces: "/spaces",
   pricing: "/pricing",
-  company: "/company",
+  company: "/about",
   blog: "/blog",
   resources: "/resources/",
   support: "/support",

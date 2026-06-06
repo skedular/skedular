@@ -26,7 +26,8 @@ export const teamsPage: ProductPageContent = {
     {
       title: "Administration and security",
       body: "Support organizations that need control, reporting, and identity-aware access.",
-      items: ["Analytics and reporting", "Enterprise identity", "WorkOS and SSO planning", "Private metadata controls"],
+      items: ["Analytics and reporting", "Enterprise identity", "SSO and identity planning", "Private metadata controls"],
     },
   ],
+  integrationActions: [{ type: "slack" }],
 };
