@@ -9,11 +9,12 @@ interface Props {
   title: string;
   description: string;
   canonicalPath: string;
+  robots?: string;
   structuredDataType?: "Organization" | "Product" | "FAQPage" | "BreadcrumbList" | "Article";
   structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description, canonicalPath, structuredDataType = "Organization", structuredData } = Astro.props;
+const { title, description, canonicalPath, robots, structuredDataType = "Organization", structuredData } = Astro.props;
 
 const demoCta = ctas.find((cta) => cta.id === "book-demo");
 const loginCta = ctas.find((cta) => cta.id === "login");
@@ -84,7 +85,7 @@ const socialLinks = [
 <!doctype html>
 <html lang="en">
   <head>
-    <SeoHead title={title} description={description} canonicalPath={canonicalPath} />
+    <SeoHead title={title} description={description} canonicalPath={canonicalPath} robots={robots} />
     <StructuredData type={structuredDataType} name={title} description={description} path={canonicalPath} graph={structuredData} />
   </head>
   <body>

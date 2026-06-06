@@ -7,6 +7,7 @@ import { comparisonPages } from "../src/data/comparison-pages";
 import { supportArticles, resourceArticles } from "../src/data/current-public-content";
 import { featurePages } from "../src/data/feature-pages";
 import { publicPages } from "../src/data/content-inventory";
+import { getRobotsForPath, sitemapPages } from "../src/data/seo";
 import { publicUrlFixtures } from "./public-url-fixtures";
 import { publicUrlEnvironment } from "./public-url-fixtures";
 
@@ -49,7 +50,10 @@ describe("expanded public site content", () => {
     expect(document.querySelectorAll("h1")).toHaveLength(1);
     expect(document.querySelector("title")?.textContent?.trim()).not.toEqual("");
     expect(document.querySelector('meta[name="description"]')?.getAttribute("content")).toBeTruthy();
+    expect(document.querySelector('meta[name="robots"]')?.getAttribute("content")).toBe(getRobotsForPath(path));
     expect(document.querySelector('link[rel="canonical"]')?.getAttribute("href")).toContain(path);
+    expect(document.querySelector('meta[property="og:image"]')?.getAttribute("content")).toContain("/images/skedular-logo-primary.svg");
+    expect(document.querySelector('meta[name="twitter:image"]')?.getAttribute("content")).toContain("/images/skedular-logo-primary.svg");
     expect(document.querySelector("header")).toBeTruthy();
     expect(document.querySelector("main")).toBeTruthy();
     expect(document.querySelector("footer")).toBeTruthy();
@@ -68,6 +72,36 @@ describe("expanded public site content", () => {
     for (const path of ["/about", "/terms-of-service", "/privacy-policy"]) {
       expect(existsSync(new URL(`../dist${path}/index.html`, import.meta.url))).toBe(true);
     }
+  });
+
+  it("publishes robots.txt and sitemap.xml from public SEO inventory", async () => {
+    const robots = await readFile(new URL("../dist/robots.txt", import.meta.url), "utf8");
+    const sitemap = await readFile(new URL("../dist/sitemap.xml", import.meta.url), "utf8");
+    const llms = await readFile(new URL("../dist/llms.txt", import.meta.url), "utf8");
+
+    expect(robots).toContain("User-agent: *");
+    expect(robots).toContain("Allow: /");
+    expect(robots).toContain("Sitemap: https://www.getascheduler.com/sitemap.xml");
+    expect(robots).toContain("Host: www.getascheduler.com");
+    expect(sitemap).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
+    expect(llms).toContain("# Skedular");
+    expect(llms).toContain("## Core Public Pages");
+    expect(llms).toContain("[Skedular Teams | Private workplace management](https://www.getascheduler.com/teams)");
+
+    for (const page of sitemapPages) {
+      expect(sitemap).toContain(`https://www.getascheduler.com${page.path === "/" ? "/" : page.path}`);
+    }
+
+    expect(sitemap).not.toContain("/terms-of-service");
+    expect(sitemap).not.toContain("/privacy-policy");
+  });
+
+  it("publishes article metadata for resource and support pages", async () => {
+    const dom = await loadDistPage("/resources/hybrid-workplace-planning");
+    const document = dom.window.document;
+
+    expect(document.querySelector('meta[property="article:published_time"]')?.getAttribute("content")).toBe("2026-06-05");
+    expect(document.querySelector('meta[property="article:modified_time"]')?.getAttribute("content")).toBe("2026-06-05");
   });
 
   it("keeps destination URLs environment-sourced and avoids hardcoded staging or production domains in source content", async () => {

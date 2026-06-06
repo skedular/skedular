@@ -4,28 +4,36 @@ import HomeSections from "../components/HomeSections.astro";
 import CtaLink from "../components/CtaLink.astro";
 import { getCta } from "../data/ctas";
 import { homePage } from "../data/home-page";
+import { getCanonicalUrl, siteUrl } from "../data/seo";
 
-const baseUrl = "https://www.getascheduler.com";
 const structuredData = [
   {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "Skedular",
-    url: baseUrl,
-    logo: new URL("/images/skedular-logo-primary.svg", baseUrl).toString(),
+    url: siteUrl,
+    logo: new URL("/images/skedular-logo-primary.svg", siteUrl).toString(),
     sameAs: ["https://www.linkedin.com/company/getskedular/"],
   },
   {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "WebSite",
+    name: "Skedular",
+    description: homePage.description,
+    url: siteUrl,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
     name: "Skedular",
     description: homePage.description,
     brand: {
       "@type": "Brand",
       name: "Skedular",
     },
-    category: "Workspace booking and workspace management software",
-    url: baseUrl,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    url: siteUrl,
   },
   {
     "@context": "https://schema.org",
@@ -47,7 +55,7 @@ const structuredData = [
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: baseUrl,
+        item: getCanonicalUrl("/"),
       },
     ],
   },

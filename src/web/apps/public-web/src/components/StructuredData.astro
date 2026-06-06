@@ -1,6 +1,6 @@
 ---
 interface Props {
-  type?: "Organization" | "Product" | "FAQPage" | "BreadcrumbList" | "Article";
+  type?: "Organization" | "Product" | "FAQPage" | "BreadcrumbList" | "Article" | "WebSite" | "SoftwareApplication";
   name: string;
   description?: string;
   path?: string;
@@ -10,7 +10,10 @@ interface Props {
 
 const { type = "Organization", name, description, path = "/", breadcrumbs = [], graph: providedGraph } = Astro.props;
 
-const baseUrl = "https://www.getascheduler.com";
+import { defaultSocialImageUrl, getArticleMetadataForPath, getCanonicalUrl, siteUrl } from "../data/seo";
+
+const article = getArticleMetadataForPath(path);
+const url = getCanonicalUrl(path);
 const graph = providedGraph
   ? providedGraph
   : type === "BreadcrumbList"
@@ -21,15 +24,47 @@ const graph = providedGraph
           "@type": "ListItem",
           position: index + 1,
           name: crumb.name,
-          item: new URL(crumb.path, baseUrl).toString(),
+          item: getCanonicalUrl(crumb.path),
         })),
       }
+    : type === "Article"
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: name,
+          description,
+          url,
+          image: defaultSocialImageUrl,
+          datePublished: article?.publishedDate,
+          dateModified: article?.publishedDate,
+          publisher: {
+            "@type": "Organization",
+            name: "Skedular",
+            url: siteUrl,
+            logo: new URL("/images/skedular-logo-primary.svg", siteUrl).toString(),
+          },
+        }
+      : type === "Product"
+        ? {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name,
+            description,
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web",
+            brand: {
+              "@type": "Brand",
+              name: "Skedular",
+            },
+            url,
+            image: defaultSocialImageUrl,
+          }
     : {
         "@context": "https://schema.org",
         "@type": type,
         name,
         description,
-        url: new URL(path, baseUrl).toString(),
+        url,
       };
 ---
 
