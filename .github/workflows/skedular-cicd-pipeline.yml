@@ -578,7 +578,7 @@ jobs:
             - lint
             - builds
             - required
-        if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.detect.result == 'success' && needs.required.result == 'success' && needs.detect.outputs.staging_cd_selected == 'true' && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+        if: ${{ always() && (github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && needs.detect.result == 'success' && needs.required.result == 'success' && needs.detect.outputs.staging_cd_selected == 'true' && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
         concurrency:
             group: skedular-deploy-${{ matrix.name }}-staging
             cancel-in-progress: false
@@ -655,7 +655,7 @@ jobs:
             - lint
             - builds
             - deploy-staging
-        if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.detect.result == 'success' && needs.detect.outputs.production_cd_selected == 'true' && needs.deploy-staging.result == 'success' && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+        if: ${{ always() && (github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && needs.detect.result == 'success' && needs.detect.outputs.production_cd_selected == 'true' && needs.deploy-staging.result == 'success' && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
         concurrency:
             group: skedular-deploy-${{ matrix.name }}-production
             cancel-in-progress: false
