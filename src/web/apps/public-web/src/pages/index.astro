@@ -49,6 +49,33 @@ const structuredData = [
   },
   {
     "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "Skedular",
+    url: siteUrl,
+    logo: new URL("/images/skedular-logo-primary.svg", siteUrl).toString(),
+    sameAs: ["https://www.linkedin.com/company/getskedular/"],
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "123 Custom Street",
+      addressLocality: "Auckland",
+      addressRegion: "Aukland Region",
+      postalCode: "1010",
+      addressCountry: "NZ"
+    },
+    telephone: "+64 9 123 4567",
+    email: "contact@getskedular.com",
+    priceRange: "$",
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "09:00",
+        closes: "17:00"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
       {

@@ -3,17 +3,39 @@ import type { ProductPageContent } from "./content-types";
 export const spacesPage: ProductPageContent = {
   id: "spaces",
   eyebrow: "Skedular Spaces",
-  title: "Run and grow your workspace business",
+  title: "Coworking Management Software for Workspace Operators",
   summary:
-    "Manage workspace inventory, sell memberships and bookings, automate billing, publish availability, and support customers from a single platform.",
+    "Coworking management software for selling workspace, managing memberships, automating billing, publishing availability, and supporting customers from a single platform.",
   audience:
     "Coworking spaces, shared offices, serviced offices, meeting room providers, event venues, innovation hubs, business centres, and flexible workspace networks.",
 
-  heroHeading: "Run and grow your workspace business",
+  heroHeading: "Coworking Management Software for Workspace Operators",
   heroDescription:
-    "Manage workspace inventory, sell memberships and bookings, automate billing, publish availability, and support customers from a single platform. Whether you operate a coworking space, serviced office, meeting room business, or flexible workspace network, Skedular Spaces helps you spend less time on administration and more time growing your business.",
+    "Coworking management software for selling workspace, managing memberships, automating billing, publishing availability, and supporting customers. Whether you operate a coworking space, serviced office, meeting room business, or flexible workspace network, Skedular Spaces helps you spend less time on administration and more time growing your business.",
   heroCTAPrimary: { label: "Book a demo", href: "/contact" },
   heroCTASecondary: { label: "View Spaces pricing", href: "/pricing/spaces" },
+
+  // Why Not Spreadsheets Section
+  whyNotSpreadsheets: {
+    heading: "Why operators outgrow spreadsheets",
+    subtitle: "Spreadsheets work until they don't.",
+    description:
+      "You can start managing workspace with spreadsheets, but as you add locations, members, and bookings, it becomes impossible to keep track. Coworking management software automates the things that scale while giving you visibility into what's happening in real time.",
+    features: [
+      {
+        title: "Real-time availability",
+        body: "Spreadsheets show static data. Your software should show live availability so customers can book instantly.",
+      },
+      {
+        title: "Automated billing",
+        body: "Manual invoicing breaks at scale. Coworking management software handles recurring billing, tax calculations, and payment reminders automatically.",
+      },
+      {
+        title: "Customer self-service",
+        body: "Spreadsheets require phone calls to check availability. Your software should let customers book, view, and manage their own bookings.",
+      },
+    ],
+  },
 
   whyOrganizationsNeedMore: {
     heading: "Running a workspace is more than booking desks",
@@ -282,6 +304,26 @@ export const spacesPage: ProductPageContent = {
       question: "What payment methods do you support?",
       answer:
         "We support credit card and debit card payments through Stripe, integrate with Xero for accounting, and support bank transfer with customer verification and confirmation through Skedular.",
+    },
+    {
+      question: "What is coworking management software?",
+      answer:
+        "Coworking management software helps workspace operators sell desk space, private offices, meeting rooms, and event venues. It includes inventory management, booking workflows, billing automation, and customer support from a single platform.",
+    },
+    {
+      question: "How does workspace membership management work?",
+      answer:
+        "Workspace memberships allow customers to have guaranteed access to your space. Coworking management software handles membership tiers, billing cycles, and automatic renewal with credit card or invoice payment options.",
+    },
+    {
+      question: "Can I use spreadsheets instead of coworking management software?",
+      answer:
+        "You can start with spreadsheets for a single location, but they become difficult to manage as you add locations, members, and bookings. Coworking management software automates billing, publishing availability, and customer communication at scale.",
+    },
+    {
+      question: "What billing cadences does Skedular Spaces support?",
+      answer:
+        "Skedular Spaces supports hourly, daily, weekly, monthly, and annual billing. You can set different rates for different resources and offer discounts for longer-term commitments.",
     },
   ],
   finalCTA: {

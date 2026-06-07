@@ -1,0 +1,72 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import CtaLink from "../../components/CtaLink.astro";
+import { getCta } from "../../data/ctas";
+import { industryPages } from "../../data/industry-pages";
+
+export function getStaticPaths() {
+  return industryPages.map((page) => ({
+    params: { slug: page.path.replace('/workspace-software-for-', '') },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+---
+
+<SiteLayout title={page.title} description={page.description} canonicalPath={page.path}>
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="eyebrow">Industry</p>
+      <h1>{page.title}</h1>
+      <p>{page.description}</p>
+      {page.industryType === 'workspace operators' ? (
+        <CtaLink cta={getCta("contact-sales")} />
+      ) : (
+        <CtaLink cta={getCta("book-demo")} />
+      )}
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="overview-title">
+    <div class="container">
+      <h2 id="overview-title">{page.title}</h2>
+      <p>
+        Skedular provides {page.industryType} with the tools they need to succeed.
+        {page.description}
+      </p>
+    </div>
+  </section>
+
+  <section class="page-section page-section-quiet" aria-labelledby="features-title">
+    <div class="container">
+      <h2 id="features-title">How {page.industryType} use Skedular</h2>
+      <p>Common workflows for {page.industryType}.</p>
+      <div class="feature-board-grid benefit-grid">
+        <article class="feature-board-card">
+          <h3>Resource Management</h3>
+          <p>Model your workspace inventory and configure availability settings.</p>
+        </article>
+        <article class="feature-board-card">
+          <h3>Billing & Invoicing</h3>
+          <p>Automate billing, generate invoices, and manage subscriptions.</p>
+        </article>
+        <article class="feature-board-card">
+          <h3>Customer Support</h3>
+          <p>Handle inquiries, process refunds, and track business performance.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="cta-title">
+    <div class="container">
+      <h2 id="cta-title">Ready to get started?</h2>
+      {page.industryType === 'workspace operators' ? (
+        <CtaLink cta={getCta("contact-sales")} variant="inverse" />
+      ) : (
+        <CtaLink cta={getCta("book-demo")} variant="inverse" />
+      )}
+    </div>
+  </section>
+</SiteLayout>

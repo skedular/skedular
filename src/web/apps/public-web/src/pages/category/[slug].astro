@@ -1,0 +1,64 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import CtaLink from "../../components/CtaLink.astro";
+import { getCta } from "../../data/ctas";
+import { categoryPages } from "../../data/category-pages";
+
+export function getStaticPaths() {
+  return categoryPages.map((page) => ({
+    params: { slug: page.path.replace('/', '') },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+---
+
+<SiteLayout title={page.title} description={page.description} canonicalPath={page.path}>
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="eyebrow">Category</p>
+      <h1>{page.title}</h1>
+      <p>{page.description}</p>
+      <CtaLink cta={getCta("book-demo")} />
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="overview-title">
+    <div class="container">
+      <h2 id="overview-title">What is {page.primaryCategory}?</h2>
+      <p>
+        {page.description}
+        Skedular helps you find, book, and manage workspace with confidence.
+      </p>
+    </div>
+  </section>
+
+  <section class="page-section page-section-quiet" aria-labelledby="features-title">
+    <div class="container">
+      <h2 id="features-title">How {page.primaryCategory} works with Skedular</h2>
+      <p>Skedular provides a complete solution for your workspace needs.</p>
+      <div class="feature-board-grid benefit-grid">
+        <article class="feature-board-card">
+          <h3>Workspace Discovery</h3>
+          <p>Search and browse available workspaces from multiple providers in your area.</p>
+        </article>
+        <article class="feature-board-card">
+          <h3>Flexible Booking</h3>
+          <p>Book by the hour, day, week, month, or subscription based on your needs.</p>
+        </article>
+        <article class="feature-board-card">
+          <h3>Hybrid Coordination</h3>
+          <p>Coordinate who comes to the office when with attendance visibility tools.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="cta-title">
+    <div class="container">
+      <h2 id="cta-title">Ready to get started?</h2>
+      <CtaLink cta={getCta("book-demo")} variant="inverse" />
+    </div>
+  </section>
+</SiteLayout>

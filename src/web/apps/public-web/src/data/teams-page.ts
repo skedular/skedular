@@ -3,17 +3,39 @@ import type { ProductPageContent } from "./content-types";
 export const teamsPage: ProductPageContent = {
   id: "teams",
   eyebrow: "Skedular Teams",
-  title: "Help employees find workspace while giving workplace teams the visibility they need",
+  title: "Workplace Management Software for Hybrid Teams & Enterprises",
   summary:
-    "Give employees a simple way to reserve desks, rooms, parking, and equipment while workplace teams keep attendance, space use, and collaboration visible.",
+    "Desk booking software with hybrid team coordination. Manage workplace attendance, desk usage, and team presence for enterprises, government teams, and corporate offices.",
   audience: "Enterprises, government teams, hybrid workplaces, facilities teams, executive assistants, and corporate offices.",
 
   // Hero section content
-  heroHeading: "Help employees find the right place to work",
+  heroHeading: "Workplace Management Software for Hybrid Teams",
   heroDescription:
     "Help employees find the right place to work while giving workplace teams the visibility they need to coordinate attendance, manage space, and support hybrid work.",
   heroCTAPrimary: { label: "Book a demo", href: "/contact" },
   heroCTASecondary: { label: "View Teams pricing", href: "/pricing/teams" },
+
+  // What Is Workplace Management Software Section
+  workplaceManagementDefinition: {
+    heading: "What is workplace management software?",
+    subtitle: "Workplace management helps teams coordinate who works where and when.",
+    description:
+      "Workplace management software helps teams coordinate hybrid work by showing who will be in the office, which desks and rooms are available, and how space is being used. It replaces spreadsheets and manual coordination with a central system for attendance tracking and resource booking.",
+    features: [
+      {
+        title: "Attendance Visibility",
+        body: "See who is coming to the office each day to plan meetings and collaboration.",
+      },
+      {
+        title: "Desk & Room Booking",
+        body: "Book specific desks, meeting rooms, or workspaces for when you're onsite.",
+      },
+      {
+        title: "Workplace Analytics",
+        body: "Track which spaces are used most to optimize office layout and size.",
+      },
+    ],
+  },
 
   // Why Organizations Need More Than Desk Booking section
   whyOrganizationsNeedMore: {
@@ -149,7 +171,7 @@ export const teamsPage: ProductPageContent = {
     {
       id: "desk-room-booking",
       heading: "Desk and room booking",
-      subheading: "Give employees a fast and simple way to reserve workplace resources.",
+      subheading: "Book desks, rooms, parking, and equipment in seconds.",
       placeholderText: "Booking Interface Screenshot",
     },
     {
@@ -246,6 +268,31 @@ export const teamsPage: ProductPageContent = {
       question: "Can employees see who is coming to the office?",
       answer:
         "Yes. Team attendance visibility is a core feature of Skedular Teams. Employees can see which colleagues are scheduled to be in the office, helping them coordinate meetings and collaboration in person.",
+    },
+    {
+      question: "What is workplace management software?",
+      answer:
+        "Workplace management software helps teams coordinate hybrid work by showing who will be in the office, which desks and rooms are available, and how space is being used. It replaces spreadsheets and manual coordination with a central system for attendance tracking and resource booking.",
+    },
+    {
+      question: "How does desk booking software work?",
+      answer:
+        "Desk booking software allows employees to reserve specific desks or workspaces for specific dates. It shows real-time availability so teams can plan office visits based on when colleagues will be onsite.",
+    },
+    {
+      question: "Can I use Skedular Teams for hybrid work coordination?",
+      answer:
+        "Yes. Skedular Teams was built specifically for hybrid work. It helps teams see who is in the office, book desks and rooms, and coordinate meetings with full attendance visibility.",
+    },
+    {
+      question: "Does Skedular Teams integrate with Outlook?",
+      answer:
+        "Skedular Teams supports Microsoft Teams integration, which includes calendar sync and meeting room booking through the Microsoft ecosystem.",
+    },
+    {
+      question: "Can employees see who is in the office today?",
+      answer:
+        "Yes. Skedular Teams shows real-time attendance visibility so employees can see which colleagues are scheduled to be in the office each day.",
     },
   ],
 

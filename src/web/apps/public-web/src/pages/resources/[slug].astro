@@ -2,27 +2,116 @@
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import CtaLink from "../../components/CtaLink.astro";
 import { getCta } from "../../data/ctas";
+import { categoryPages } from "../../data/category-pages";
 import { resourceArticles } from "../../data/current-public-content";
 
 export function getStaticPaths() {
-  return resourceArticles.map((article) => ({
-    params: { slug: article.slug },
-    props: { article },
-  }));
+  // Include both category pages and AI knowledge hub content
+  const paths = [
+    ...categoryPages.map((page) => ({
+      params: { slug: page.path.replace('/', '') },
+      props: { page, isCategory: true },
+    })),
+    ...resourceArticles.map((article) => ({
+      params: { slug: article.slug },
+      props: { article, isArticle: true },
+    })),
+    // Add AI educational content paths
+    { params: { slug: 'what-is-workspace-management-software' }, props: { 
+      page: {
+        title: "What Is Workspace Management Software?",
+        description: "Workspace management software helps teams coordinate who works where, when.",
+        path: "/resources/what-is-workspace-management-software"
+      },
+      isCategory: false,
+      educationalType: 'definition'
+    }},
+    { params: { slug: 'what-is-coworking-management-software' }, props: { 
+      page: {
+        title: "What Is Coworking Management Software?",
+        description: "Coworking management software helps workspace operators sell space and manage memberships.",
+        path: "/resources/what-is-coworking-management-software"
+      },
+      isCategory: false,
+      educationalType: 'definition'
+    }},
+  ];
+  
+  return paths;
 }
 
-const { article } = Astro.props;
+const { page, article, isCategory, isArticle, educationalType } = Astro.props;
+const pageTitle = isArticle ? article.title : page!.title;
+const pageDescription = isArticle ? article.summary : page!.description;
+const pagePath = isArticle ? article.destinationPath : page!.path;
 ---
 
-<SiteLayout title={article.title} description={article.summary} canonicalPath={article.destinationPath} structuredDataType="Article">
-  <article class="article-page">
-    <div class="container">
-      <p class="eyebrow">{article.topicTags.join(" / ")}</p>
-      <h1>{article.title}</h1>
-      <p class="article-summary">{article.summary}</p>
-      <p class="article-meta">Published {article.publishedDate}. Migrated from {article.sourceUrl}.</p>
-      {article.body.map((paragraph) => <p>{paragraph}</p>)}
-      <CtaLink cta={getCta("book-demo")} />
-    </div>
-  </article>
+<SiteLayout 
+  title={pageTitle} 
+  description={pageDescription} 
+  canonicalPath={pagePath} 
+  structuredDataType={isArticle ? "Article" : undefined}
+>
+  {isArticle ? (
+    <article class="article-page">
+      <div class="container">
+        <p class="eyebrow">{article.topicTags.join(" / ")}</p>
+        <h1>{article.title}</h1>
+        <p class="article-summary">{article.summary}</p>
+        {article.body.map((paragraph: string) => <p>{paragraph}</p>)}
+        <CtaLink cta={getCta("book-demo")} />
+      </div>
+    </article>
+  ) : (
+    <>
+      <section class="subpage-hero">
+        <div class="container">
+          <p class="eyebrow">{isCategory ? 'Category' : 'Educational Content'}</p>
+          <h1>{pageTitle}</h1>
+          <p>{pageDescription}</p>
+          <CtaLink cta={getCta(isCategory ? "book-demo" : "book-demo")} />
+        </div>
+      </section>
+
+      <section class="page-section" aria-labelledby="overview-title">
+        <div class="container">
+          {educationalType === 'definition' && (
+            <>
+              <h2 id="overview-title">What is this?</h2>
+              <p>{pageDescription}</p>
+              
+              <h3>Key Features</h3>
+              <ul>
+                <li>Real-time availability and booking</li>
+                <li>Multiple workspace types supported</li>
+                <li>Hybrid team coordination tools</li>
+              </ul>
+            </>
+          )}
+          
+          {isCategory && (
+            <>
+              <h2 id="overview-title">{pageTitle}</h2>
+              <p>{pageDescription}</p>
+              
+              <h3>Who Should Use This?</h3>
+              <ul>
+                <li>Teams coordinating hybrid work</li>
+                <li>Workspace operators managing inventory</li>
+                <li>Organizations seeking flexible workspace</li>
+              </ul>
+            </>
+          )}
+        </div>
+      </section>
+
+      <section class="page-section page-section-quiet" aria-labelledby="next-steps-title">
+        <div class="container">
+          <h2 id="next-steps-title">Next Steps</h2>
+          <p>Ready to try {educationalType === 'definition' ? 'workspace management software' : 'this feature'}?</p>
+          <CtaLink cta={getCta("book-demo")} variant="inverse" />
+        </div>
+      </section>
+    </>
+  )}
 </SiteLayout>
