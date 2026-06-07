@@ -444,14 +444,15 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
                   xl: 'repeat(4, minmax(0, 1fr))',
                 },
                 gap: 1,
+                gridAutoRows: '1fr',
                 '@media (min-width: 2560px)': {
                   gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
                 },
               }}
             >
               {paginatedLocations.map((item) => (
-                <Box key={item.id} sx={{ minWidth: 0 }}>
-                  <MarketplaceLocationCard rootDataRelay={rootData} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
+                <Box key={item.id} sx={{ minWidth: 0, height: '100%' }}>
+                  <MarketplaceLocationCard rootDataRelay={rootData} locationDetailsRelay={item} onReloadRequired={onReloadRequired} equalHeight />
                 </Box>
               ))}
             </Box>

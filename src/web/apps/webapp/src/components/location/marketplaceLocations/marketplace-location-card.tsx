@@ -34,6 +34,7 @@ type Props = {
   onReloadRequired: () => void;
   onClose?: () => void;
   fullWidthPopup?: boolean;
+  equalHeight?: boolean;
 };
 
 const cardSx: SxProps<Theme> = {
@@ -112,7 +113,7 @@ const closeOverlayIconButtonSx: SxProps<Theme> = {
   },
 };
 
-const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose, fullWidthPopup }: Props) => {
+const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose, fullWidthPopup, equalHeight }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment marketplaceLocationCard_query on Query {
@@ -330,6 +331,12 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose,
       <Card
         sx={{
           ...cardSx,
+          ...(equalHeight
+            ? {
+                height: '100%',
+                minHeight: 288,
+              }
+            : null),
           ...(isPopupCard
             ? fullWidthPopup
               ? {
