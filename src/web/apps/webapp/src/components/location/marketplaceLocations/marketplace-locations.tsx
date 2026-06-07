@@ -49,8 +49,6 @@ type Props = {
   onReloadRequired: () => void;
 };
 
-const pageSize = 24;
-
 const areBoundsEqual = (currentBounds: LatLngBounds | null, nextBounds: LatLngBounds) => {
   if (!currentBounds) {
     return false;
@@ -171,6 +169,9 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
 
   const theme = useTheme();
   const isMobileOrTablet = useMediaQuery(theme.breakpoints.down('md'));
+  const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
+  const isXlUp = useMediaQuery(theme.breakpoints.up('xl'));
+  const desktopPageSize = isXlUp ? 12 : isLgUp ? 9 : 6;
   const toolbarHeight = getToolbarHeight(theme);
   const mapHeight = isMobileOrTablet ? `calc(100dvh - ${toolbarHeight}px)` : '90vh';
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
@@ -261,7 +262,7 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setPageIndex(0);
-  }, [isMobileOrTablet, locations.length]);
+  }, [desktopPageSize, isMobileOrTablet, locations.length]);
 
   useEffect(() => {
     logAggregateMarketplaceDiscoveryCompleted({ logger, eligibleLocationCount: locations.length, isEmptyState: locations.length === 0 });
@@ -272,11 +273,11 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
       return locations;
     }
 
-    const start = pageIndex * pageSize;
-    return locations.slice(start, start + pageSize);
-  }, [isMobileOrTablet, locations, pageIndex]);
+    const start = pageIndex * desktopPageSize;
+    return locations.slice(start, start + desktopPageSize);
+  }, [desktopPageSize, isMobileOrTablet, locations, pageIndex]);
 
-  const pageCount = useMemo(() => (isMobileOrTablet ? 1 : Math.max(1, Math.ceil(locations.length / pageSize))), [isMobileOrTablet, locations.length]);
+  const pageCount = useMemo(() => (isMobileOrTablet ? 1 : Math.max(1, Math.ceil(locations.length / desktopPageSize))), [desktopPageSize, isMobileOrTablet, locations.length]);
 
   const handleRefetch = useCallback(
     (nextSearchBoundaries: LatLngBounds | null, resourceType: string | null | undefined) => {

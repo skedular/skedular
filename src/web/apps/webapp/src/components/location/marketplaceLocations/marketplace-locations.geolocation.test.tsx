@@ -41,8 +41,42 @@ vi.mock('@skedular/ui', () => ({
 }));
 
 vi.mock('@mui/material', () => ({
-  useMediaQuery: vi.fn(() => false),
-  useTheme: vi.fn(() => ({ mixins: { toolbar: { minHeight: 56 } }, breakpoints: { down: vi.fn() } })),
+  useMediaQuery: vi.fn((query) => {
+    // MUI's breakpoints generate media query strings like '(max-width: 960px)' or '(min-width: 1200px)'
+    if (typeof query !== 'string') return false;
+
+    // Parse the query string to determine the result
+    if (query.includes('max-width')) {
+      // down() breakpoints - returns true if screen width is <= breakpoint value
+      if (query.includes('960px')) return true; // md
+      if (query.includes('1200px')) return false; // lg
+      if (query.includes('1536px')) return false; // xl
+      return false;
+    }
+
+    if (query.includes('min-width')) {
+      // up() breakpoints - returns true if screen width is >= breakpoint value
+      if (query.includes('960px')) return false; // md
+      if (query.includes('1200px')) return true; // lg
+      if (query.includes('1536px')) return true; // xl
+      return false;
+    }
+
+    return false;
+  }),
+  useTheme: vi.fn(() => ({
+    mixins: { toolbar: { minHeight: 56 } },
+    breakpoints: {
+      down: (size: string) => {
+        const widths: Record<string, string> = { xs: '0px', sm: '600px', md: '960px', lg: '1200px', xl: '1536px' };
+        return `(max-width: ${widths[size]})`;
+      },
+      up: (size: string) => {
+        const widths: Record<string, string> = { xs: '0px', sm: '600px', md: '960px', lg: '1200px', xl: '1536px' };
+        return `(min-width: ${widths[size]})`;
+      },
+    },
+  })),
 }));
 vi.mock('@mui/material/Box', () => ({ default: ({ children }: { children: React.ReactNode }) => <div>{children}</div> }));
 vi.mock('@mui/material/Grid', () => ({ default: ({ children }: { children: React.ReactNode }) => <div>{children}</div> }));
