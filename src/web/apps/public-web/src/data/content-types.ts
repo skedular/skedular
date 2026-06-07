@@ -75,6 +75,20 @@ export interface ProductPageContent {
     cards: Array<{ title: string; description: string }>;
   };
 
+  // Differentiation Section
+  differentiation?: {
+    heading: string;
+    description: string;
+    withoutSkedular: string[];
+    withSkedular: string[];
+  };
+
+  // Operator Context Section
+  operatorContext?: {
+    heading: string;
+    content: string;
+  };
+
   // Screenshot sections
   screenshotSections?: Array<{
     id: string;
@@ -117,6 +131,22 @@ export interface ProductPageContent {
 
   // FAQ section
   faq: Array<{ question: string; answer: string }>;
+
+  // AI Summary Section
+  aiSummary?: {
+    heading: string;
+    description: string;
+    operatorsUse: string[];
+    keyCapabilities: string[];
+  };
+
+  // Final CTA section
+  finalCTA?: {
+    heading: string;
+    description: string;
+    primaryCTA?: { label: string; href: string };
+    secondaryCTA?: { label: string; href: string };
+  };
 
   integrationActions?: Array<{ type: "slack" }>;
 }

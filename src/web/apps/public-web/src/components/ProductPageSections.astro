@@ -64,6 +64,18 @@ const SecurityIcon =
   () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
   </svg>`;
+
+const GrowthIcon =
+  () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+    <polyline points="16 7 22 7 22 13"/>
+  </svg>`;
+
+const BrandIcon =
+  () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M12 6v6l4 2"/>
+  </svg>`;
 ---
 
 {
@@ -200,14 +212,72 @@ const SecurityIcon =
         <div class="why-choose-grid">
           {page.whyChooseUs.cards.map((card, index) => (
             <article class="why-choose-card">
-              {index === 0 && <div set:html={PlatformIcon()} />}
-              {index === 1 && <div set:html={CollaborationIcon()} />}
-              {index === 2 && <div set:html={HybridIcon()} />}
-              {index === 3 && <div set:html={SecurityIcon()} />}
+              {page.id === "spaces" ? (
+                <>
+                  {index === 0 && <div set:html={GrowthIcon()} />}
+                  {index === 1 && <div set:html={SecurityIcon()} />}
+                  {index === 2 && <div set:html={PlatformIcon()} />}
+                  {index === 3 && <div set:html={BrandIcon()} />}
+                </>
+              ) : (
+                <>
+                  {index === 0 && <div set:html={PlatformIcon()} />}
+                  {index === 1 && <div set:html={CollaborationIcon()} />}
+                  {index === 2 && <div set:html={HybridIcon()} />}
+                  {index === 3 && <div set:html={SecurityIcon()} />}
+                </>
+              )}
               <h3>{card.title}</h3>
               <p>{card.description}</p>
             </article>
           ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  page.differentiation && (
+    <section class="differentiation-section" aria-labelledby="differentiation-title">
+      <div class="container">
+        <div class="differentiation-content">
+          <h2 id="differentiation-title">{page.differentiation.heading}</h2>
+          <p>{page.differentiation.description}</p>
+        </div>
+        <div class="differentiation-comparison">
+          <div class="differentiation-column">
+            <span class="differentiation-label">Without Skedular</span>
+            <h3>Multiple disconnected tools</h3>
+            <ul>
+              {page.differentiation.withoutSkedular.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div class="differentiation-column differentiation-column-highlight">
+            <span class="differentiation-label">With Skedular Spaces</span>
+            <h3>Single unified platform</h3>
+            <ul>
+              {page.differentiation.withSkedular.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+            <p class="differentiation-footer">All from one platform.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  page.operatorContext && (
+    <section class="operator-context-section" aria-labelledby="operator-context-title">
+      <div class="container">
+        <div class="operator-context-content">
+          <h2 id="operator-context-title">{page.operatorContext.heading}</h2>
+          <p>{page.operatorContext.content}</p>
         </div>
       </div>
     </section>
@@ -294,6 +364,33 @@ const SecurityIcon =
 }
 
 {
+  page.aiSummary && (
+    <section class="ai-summary-section" aria-labelledby="ai-summary-title">
+      <div class="container">
+        <div class="ai-summary-content">
+          <h2 id="ai-summary-title">{page.aiSummary.heading}</h2>
+          <p>{page.aiSummary.description}</p>
+          <div class="ai-summary-grid">
+            {page.aiSummary.operatorsUse.map((item) => (
+              <div class="ai-summary-card">
+                <div class="ai-summary-card-icon">✓</div>
+                <span>{item}</span>
+              </div>
+            ))}
+            {page.aiSummary.keyCapabilities.map((item) => (
+              <div class="ai-summary-card">
+                <div class="ai-summary-card-icon">✓</div>
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
   page.trust && (
     <section class="trust-section" aria-labelledby="trust-title">
       <div class="container trust-content">
@@ -316,7 +413,7 @@ const SecurityIcon =
 <section class="faq-section" aria-labelledby="faq-title">
   <div class="container faq-content">
     <h2 id="faq-title">Frequently asked questions</h2>
-    <p>Short answers to common questions about Skedular Teams.</p>
+    <p>Short answers to common questions about Skedular Spaces.</p>
     <div class="faq-list">
       {
         page.faq.map((item) => (
@@ -333,18 +430,45 @@ const SecurityIcon =
   </div>
 </section>
 
-<section class="page-section page-section-quiet final-cta-section" aria-labelledby="final-cta-title">
-  <div class="container">
-    <div class="final-cta-panel">
-      <h2 id="final-cta-title">Ready to simplify workplace coordination?</h2>
-      <p>
-        See how Skedular Teams helps organizations manage attendance, workplace visibility, desk booking, room booking, and hybrid work from a single
-        platform.
-      </p>
-      <div class="button-row" style="justify-content: center; flex-wrap: wrap;">
-        <CtaLink cta={getCta("book-demo")} variant="inverse" />
-        <a href="/pricing/teams" class="text-link">View Teams pricing</a>
+{
+  page.finalCTA ? (
+    <section class="page-section page-section-quiet final-cta-section" aria-labelledby="final-cta-title">
+      <div class="container">
+        <div class="final-cta-panel">
+          <h2 id="final-cta-title">{page.finalCTA.heading}</h2>
+          <p>{page.finalCTA.description}</p>
+          <div class="button-row" style="justify-content: center; flex-wrap: wrap;">
+            {page.finalCTA.primaryCTA && (
+              <a href={page.finalCTA.primaryCTA.href} class="button">
+                {page.finalCTA.primaryCTA.label}
+              </a>
+            )}
+            {page.finalCTA.secondaryCTA && (
+              <a href={page.finalCTA.secondaryCTA.href} class="text-link">
+                {page.finalCTA.secondaryCTA.label}
+              </a>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
+  ) : (
+    <section class="page-section page-section-quiet final-cta-section" aria-labelledby="final-cta-title">
+      <div class="container">
+        <div class="final-cta-panel">
+          <h2 id="final-cta-title">Ready to simplify workplace coordination?</h2>
+          <p>
+            See how Skedular Teams helps organizations manage attendance, workplace visibility, desk booking, room booking, and hybrid work from a
+            single platform.
+          </p>
+          <div class="button-row" style="justify-content: center; flex-wrap: wrap;">
+            <CtaLink cta={getCta("book-demo")} variant="inverse" />
+            <a href="/pricing/teams" class="text-link">
+              View Teams pricing
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

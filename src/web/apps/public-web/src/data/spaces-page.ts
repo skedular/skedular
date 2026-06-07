@@ -3,14 +3,87 @@ import type { ProductPageContent } from "./content-types";
 export const spacesPage: ProductPageContent = {
   id: "spaces",
   eyebrow: "Skedular Spaces",
-  title: "Run, sell, and manage flexible workspace",
+  title: "Run and grow your workspace business",
   summary:
-    "Skedular Spaces helps co-working operators and shared-office providers manage inventory, package products, accept bookings, bill customers, issue invoices, and publish spaces.",
-  audience: "Co-working operators, flexible workspace providers, shared-office teams, venue owners, and hosts.",
+    "Manage workspace inventory, sell memberships and bookings, automate billing, publish availability, and support customers from a single platform.",
+  audience:
+    "Coworking spaces, shared offices, serviced offices, meeting room providers, event venues, innovation hubs, business centres, and flexible workspace networks.",
+
+  heroHeading: "Run and grow your workspace business",
+  heroDescription:
+    "Manage workspace inventory, sell memberships and bookings, automate billing, publish availability, and support customers from a single platform. Whether you operate a coworking space, serviced office, meeting room business, or flexible workspace network, Skedular Spaces helps you spend less time on administration and more time growing your business.",
+  heroCTAPrimary: { label: "Book a demo", href: "/contact" },
+  heroCTASecondary: { label: "View Spaces pricing", href: "/pricing/spaces" },
+
+  whyOrganizationsNeedMore: {
+    heading: "Running a workspace is more than booking desks",
+    description:
+      "Workspace operators manage much more than availability. They need to package products, publish inventory, process payments, issue invoices, manage subscriptions, support customers, and keep occupancy high. Most operators end up stitching together multiple tools to make this work. Skedular Spaces brings those workflows together into a single platform.",
+    cards: [
+      {
+        title: "Sell workspace",
+        description: "Turn resources into products customers can actually buy.",
+      },
+      {
+        title: "Reduce administration",
+        description: "Automate billing, invoicing, payments, and recurring subscriptions.",
+      },
+      {
+        title: "Increase visibility",
+        description: "Publish inventory through marketplaces, branded listings, and custom domains.",
+      },
+      {
+        title: "Support growth",
+        description: "Manage one location or many without changing platforms.",
+      },
+    ],
+  },
+  typicalJourney: {
+    heading: "How workspace operators use Skedular Spaces",
+    steps: [
+      {
+        title: "Create locations and resources",
+        description: "Model desks, rooms, offices, and workspace inventory.",
+      },
+      {
+        title: "Configure products and pricing",
+        description: "Create hourly bookings, day passes, memberships, and subscriptions.",
+      },
+      {
+        title: "Publish inventory",
+        description: "Make workspace discoverable through marketplaces and custom domains.",
+      },
+      {
+        title: "Accept bookings",
+        description: "Receive and manage customer bookings automatically.",
+      },
+      {
+        title: "Collect payments",
+        description: "Process payments and handle billing cycles.",
+      },
+      {
+        title: "Issue invoices",
+        description: "Generate and send invoices for commercial customers.",
+      },
+      {
+        title: "Manage memberships and subscriptions",
+        description: "Support recurring access and subscription workflows.",
+      },
+      {
+        title: "Support customers",
+        description: "Handle customer inquiries and support requests.",
+      },
+      {
+        title: "Track business performance",
+        description: "Monitor occupancy, revenue, and utilization trends.",
+      },
+    ],
+  },
+
   features: [
     {
-      title: "Core workspace management",
-      body: "Everything you need to run your flexible workspace operation.",
+      title: "Manage every resource your customers can book from a single platform",
+      body: "Model desks, meeting rooms, private offices, event spaces, parking, equipment, and shared resources in a way that reflects how your business operates.",
       featureBlocks: [
         {
           title: "Resource management",
@@ -20,25 +93,175 @@ export const spacesPage: ProductPageContent = {
         },
         {
           title: "Product management",
-          description: "Package resources into products that fit how customers actually buy workspace.",
+          description:
+            "Create products that match real customer demand including hourly bookings, day passes, memberships, subscriptions, and recurring access.",
           items: ["Product catalog", "Dynamic product matching", "Images", "Amenities", "Visibility controls"],
-          accent: "emerald",
+          accent: "aqua",
         },
         {
           title: "Payments and billing",
-          description: "Support commercial workflows without forcing operators into a single billing model.",
+          description:
+            "Handle billing, invoicing, payments, and subscriptions without manual work. Manage billing cycles, invoices, tax, and cancellation policies from one place.",
           items: ["Card payments", "Tax handling", "Billing cadence", "Invoicing", "Subscriptions", "Cancellation policies"],
-          accent: "emerald",
+          accent: "violet",
         },
         {
           title: "Publishing and brand",
-          description: "Help the right audience discover the right space while keeping operator context intact.",
+          description:
+            "Publish inventory through marketplaces, custom domains, branded listings, maps, and discovery experiences while maintaining ownership of your customer relationships.",
           items: ["Marketplace publishing", "Host model", "Custom domains", "Branded listings", "Opening hours", "Maps"],
-          accent: "emerald",
+          accent: "sunbeam",
         },
       ],
     },
   ],
+  whyChooseUs: {
+    heading: "Why operators choose Skedular Spaces",
+    cards: [
+      {
+        title: "Sell more workspace",
+        description: "Make inventory easier to discover and book.",
+      },
+      {
+        title: "Reduce administration",
+        description: "Automate billing, invoicing, subscriptions, and payments.",
+      },
+      {
+        title: "Support multiple business models",
+        description: "Hourly bookings, day passes, memberships, subscriptions, and recurring bookings.",
+      },
+      {
+        title: "Keep your brand",
+        description: "Use custom domains and branded experiences while benefiting from marketplace visibility.",
+      },
+    ],
+  },
+
+  differentiation: {
+    heading: "One platform instead of multiple tools",
+    description:
+      "Many workspace operators rely on separate systems for bookings, invoicing, payments, subscriptions, marketplace publishing, customer management, and reporting. As the business grows, those systems become increasingly difficult to manage. Skedular Spaces brings those workflows together into a single platform so operators can spend less time managing software and more time growing their business.",
+    withoutSkedular: ["Booking software", "Payment software", "Invoicing software", "Marketplace software", "Spreadsheets", "Manual administration"],
+    withSkedular: [
+      "Inventory management",
+      "Product management",
+      "Marketplace publishing",
+      "Billing and invoicing",
+      "Subscriptions",
+      "Customer management",
+      "Reporting",
+    ],
+  },
+
+  operatorContext: {
+    heading: "Most operators start with spreadsheets",
+    content:
+      "Many workspace businesses begin with spreadsheets, shared calendars, accounting software, and manual invoicing. That approach works for a while. As occupancy grows, memberships increase, and customers expect online booking, administration becomes harder to manage. Skedular Spaces helps operators move from manual processes to a single operational platform.",
+  },
+
+  screenshotSections: [
+    {
+      id: "resource-management",
+      heading: "Resource management",
+      subheading: "Show locations, desks, rooms, offices, and workspace inventory.",
+      placeholderText: "Resource Management Screenshot",
+    },
+    {
+      id: "product-configuration",
+      heading: "Product configuration",
+      subheading: "Show products, memberships, pricing, and subscriptions.",
+      placeholderText: "Product Configuration Screenshot",
+    },
+    {
+      id: "billing-invoicing",
+      heading: "Billing and invoicing",
+      subheading: "Show invoices, billing schedules, subscriptions, and payment activity.",
+      placeholderText: "Billing and Invoicing Screenshot",
+    },
+    {
+      id: "marketplace-publishing",
+      heading: "Marketplace publishing",
+      subheading: "Show listings, custom domains, and branded workspace experiences.",
+      placeholderText: "Marketplace Publishing Screenshot",
+    },
+    {
+      id: "operator-analytics",
+      heading: "Operator analytics",
+      subheading: "Show occupancy, utilization, bookings, revenue, and subscription trends.",
+      placeholderText: "Operator Analytics Screenshot",
+    },
+  ],
+
+  integrations: {
+    heading: "Benefit from marketplace discovery without giving up your brand",
+    body: "List workspace on the Skedular marketplace, publish through a custom domain, or support both approaches at the same time. You maintain ownership of your brand while making inventory discoverable.",
+    integrations: ["Marketplace publishing", "Custom domains", "Branded listings", "Search visibility", "Maps and discovery"],
+  },
+
+  commsIntegration: {
+    heading: "Built for workspace commerce",
+    description:
+      "Support one-time bookings, recurring subscriptions, memberships, invoicing, tax handling, billing cadences, and payment workflows. Skedular Spaces handles commercial operations so you can focus on running your workspace.",
+  },
+
+  builtFor: {
+    heading: "Built for workspace operators",
+    body: "Whether you operate a coworking space, shared office, serviced office, meeting room business, or flexible workspace network, Skedular Spaces helps you manage inventory, automate billing, publish availability, and grow occupancy.",
+    audiences: [
+      "Coworking spaces",
+      "Shared offices",
+      "Serviced offices",
+      "Meeting room providers",
+      "Event venues",
+      "Innovation hubs",
+      "Business centres",
+      "Flexible workspace networks",
+    ],
+  },
+
+  trust: {
+    heading: "Trusted by workspace operators",
+    body: "Workspace operators use Skedular Spaces to manage inventory, automate billing, publish availability, and support customers from a single platform.",
+    logos: [
+      {
+        name: "Seequent",
+        src: "/images/customer-seequent.png",
+        width: 5000,
+        height: 834,
+      },
+      {
+        name: "EMD",
+        src: "/images/customer-emd.svg",
+        width: 924,
+        height: 245,
+      },
+    ],
+  },
+  aiSummary: {
+    heading: "Skedular Spaces at a glance",
+    description:
+      "Skedular Spaces is workspace management software designed for coworking operators, serviced office providers, meeting room businesses, event venues, and flexible workspace networks.",
+    operatorsUse: [
+      "Manage inventory",
+      "Create products",
+      "Publish workspace",
+      "Accept bookings",
+      "Manage memberships",
+      "Process payments",
+      "Generate invoices",
+      "Manage subscriptions",
+      "Support customers",
+    ],
+    keyCapabilities: [
+      "Resource management",
+      "Product management",
+      "Marketplace publishing",
+      "Custom domains",
+      "Billing and invoicing",
+      "Subscription management",
+      "Workspace analytics",
+    ],
+  },
   faq: [
     {
       question: "What types of spaces can I manage with Skedular Spaces?",
@@ -58,7 +281,14 @@ export const spacesPage: ProductPageContent = {
     {
       question: "What payment methods do you support?",
       answer:
-        "We support major credit and debit cards through our payment processing integration. The platform handles payment collection, refunds, and reconciliation automatically.",
+        "We support credit card and debit card payments through Stripe, integrate with Xero for accounting, and support bank transfer with customer verification and confirmation through Skedular.",
     },
   ],
+  finalCTA: {
+    heading: "Reduce administration. Automate billing. Sell workspace more easily.",
+    description:
+      "Support customers from one platform. See how Skedular Spaces helps operators manage inventory, publish workspace, automate billing, and grow occupancy.",
+    primaryCTA: { label: "Book a demo", href: "/contact" },
+    secondaryCTA: { label: "View Spaces pricing", href: "/pricing/spaces" },
+  },
 };

@@ -206,7 +206,7 @@ export const homePage = {
       },
       {
         title: "Payments",
-        body: "Collect payments and automate billing without manual administration.",
+        body: "Support credit card and debit card payments through Stripe, integrate with Xero for accounting, and support bank transfer with customer verification.",
       },
       {
         title: "Billing",
@@ -322,7 +322,8 @@ export const homePage = {
     },
     {
       question: "Does Skedular support Xero integration?",
-      answer: "Yes. Skedular integrates with Xero to help operators manage invoicing, billing, subscriptions, and accounting workflows.",
+      answer:
+        "Yes. Skedular integrates with Xero for accounting, supports credit card and debit card payments through Stripe, and supports bank transfer with customer verification through Skedular.",
     },
     {
       question: "Can I use my own domain with Skedular?",

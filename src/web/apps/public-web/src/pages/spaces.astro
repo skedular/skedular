@@ -1,9 +1,7 @@
 ---
-import SiteLayout from "../layouts/SiteLayout.astro";
 import ProductPageSections from "../components/ProductPageSections.astro";
-import CtaLink from "../components/CtaLink.astro";
-import { getCta } from "../data/ctas";
 import { spacesPage } from "../data/spaces-page";
+import SiteLayout from "../layouts/SiteLayout.astro";
 ---
 
 <SiteLayout
@@ -14,18 +12,25 @@ import { spacesPage } from "../data/spaces-page";
 >
   <section class="subpage-hero">
     <div class="container">
-      <p class="eyebrow">{spacesPage.eyebrow}</p>
-      <h1>{spacesPage.title}</h1>
-      <p>{spacesPage.summary}</p>
+      {spacesPage.eyebrow && <p class="eyebrow">{spacesPage.eyebrow}</p>}
+      {
+        spacesPage.heroHeading ? (
+          <>
+            <h1>{spacesPage.heroHeading}</h1>
+            <p>{spacesPage.heroDescription || spacesPage.summary}</p>
+          </>
+        ) : (
+          <>
+            <h1>{spacesPage.title}</h1>
+            <p>{spacesPage.summary}</p>
+          </>
+        )
+      }
       <div class="button-row">
-        <CtaLink cta={getCta("contact-sales")} />
-        <a class="text-link" href="/pricing/spaces">View Spaces pricing</a>
+        <a href="/contact" class="button">Book a demo</a>
+        <a href="/pricing/spaces" class="text-link">View Spaces pricing</a>
       </div>
     </div>
   </section>
-  <section class="page-section">
-    <div class="container section-inner">
-      <ProductPageSections page={spacesPage} />
-    </div>
-  </section>
+  <ProductPageSections page={spacesPage} />
 </SiteLayout>

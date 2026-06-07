@@ -250,4 +250,11 @@ export const teamsPage: ProductPageContent = {
   ],
 
   integrationActions: [{ type: "slack" }],
+  finalCTA: {
+    heading: "Ready to simplify workplace coordination?",
+    description:
+      "See how Skedular Teams helps organizations manage attendance, workplace visibility, desk booking, room booking, and hybrid work from a single platform.",
+    primaryCTA: { label: "Book a demo", href: "/contact" },
+    secondaryCTA: { label: "View Teams pricing", href: "/pricing/teams" },
+  },
 };
