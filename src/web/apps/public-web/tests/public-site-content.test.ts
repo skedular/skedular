@@ -130,11 +130,11 @@ describe("expanded public site content", () => {
     const dom = await loadDistPage("/");
     const document = dom.window.document;
 
-    expect(document.querySelectorAll(".footer-social-button")).toHaveLength(4);
+    expect(document.querySelectorAll(".footer-social-button")).toHaveLength(3);
     expect(document.querySelector('a[href="https://www.linkedin.com/company/getskedular/"]')).toBeTruthy();
     expect(document.querySelector('a[href="https://www.facebook.com/profile.php?id=61571588471440"]')).toBeTruthy();
     expect(document.querySelector('a[href="https://discord.gg/kBczX24y"]')).toBeTruthy();
-    expect(document.querySelector('a[href^="https://betalist.com/startups/skedular"]')).toBeTruthy();
+    expect(document.querySelector('a[href^="https://betalist.com/startups/skedular"] img[alt="Skedular on BetaList"]')).toBeTruthy();
   });
 
   it("publishes legal pages as source-preserving legal documents", async () => {

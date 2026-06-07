@@ -52,7 +52,11 @@ describe("public website home page", () => {
     expect(document.querySelector("title")?.textContent).toContain("Workspace booking");
     expect(document.querySelector('meta[name="description"]')?.getAttribute("content")).toMatch(/meeting rooms/i);
     expect(document.querySelectorAll('script[type="application/ld+json"]').length).toBeGreaterThan(0);
-    expect(getAllByRole(document, "link").every((link) => link.getAttribute("aria-label") || link.textContent?.trim())).toBe(true);
+    expect(
+      getAllByRole(document, "link").every(
+        (link) => link.getAttribute("aria-label") || link.textContent?.trim() || link.querySelector("img")?.getAttribute("alt")?.trim(),
+      ),
+    ).toBe(true);
 
     const results = await axe.run(document.documentElement, {
       rules: {
