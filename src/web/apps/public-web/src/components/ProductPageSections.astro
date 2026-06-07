@@ -1,16 +1,350 @@
 ---
 import type { ProductPageContent } from "../data/content-types";
-import CardGrid from "./CardGrid.astro";
+import { getCta } from "../data/ctas";
+import CtaLink from "./CtaLink.astro";
+import SlackInstallButton from "./SlackInstallButton.astro";
 
 interface Props {
   page: ProductPageContent;
 }
 
 const { page } = Astro.props;
+
+// Hero Icons - SVG components
+const CheckIcon =
+  () => `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="13.78 4.22 9.25 8.75 6.22 5.78"></polyline>
+  </svg>`;
+
+const ChevronDownIcon =
+  () => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="6 9 12 15 18 9"></polyline>
+  </svg>`;
+
+const SlackIcon = () => `<svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+<path d="M26.5002 14.9996C27.8808 14.9996 29 13.8804 29 12.4998C29 11.1192 27.8807 10 26.5001 10C25.1194 10 24 11.1193 24 12.5V14.9996H26.5002ZM19.5 14.9996C20.8807 14.9996 22 13.8803 22 12.4996V5.5C22 4.11929 20.8807 3 19.5 3C18.1193 3 17 4.11929 17 5.5V12.4996C17 13.8803 18.1193 14.9996 19.5 14.9996Z" fill="#2EB67D"/>
+<path d="M5.49979 17.0004C4.11919 17.0004 3 18.1196 3 19.5002C3 20.8808 4.1193 22 5.49989 22C6.8806 22 8 20.8807 8 19.5V17.0004H5.49979ZM12.5 17.0004C11.1193 17.0004 10 18.1197 10 19.5004V26.5C10 27.8807 11.1193 29 12.5 29C13.8807 29 15 27.8807 15 26.5V19.5004C15 18.1197 13.8807 17.0004 12.5 17.0004Z" fill="#E01E5A"/>
+<path d="M17.0004 26.5002C17.0004 27.8808 18.1196 29 19.5002 29C20.8808 29 22 27.8807 22 26.5001C22 25.1194 20.8807 24 19.5 24L17.0004 24L17.0004 26.5002ZM17.0004 19.5C17.0004 20.8807 18.1197 22 19.5004 22L26.5 22C27.8807 22 29 20.8807 29 19.5C29 18.1193 27.8807 17 26.5 17L19.5004 17C18.1197 17 17.0004 18.1193 17.0004 19.5Z" fill="#ECB22E"/>
+<path d="M14.9996 5.49979C14.9996 4.11919 13.8804 3 12.4998 3C11.1192 3 10 4.1193 10 5.49989C10 6.88061 11.1193 8 12.5 8L14.9996 8L14.9996 5.49979ZM14.9996 12.5C14.9996 11.1193 13.8803 10 12.4996 10L5.5 10C4.11929 10 3 11.1193 3 12.5C3 13.8807 4.11929 15 5.5 15L12.4996 15C13.8803 15 14.9996 13.8807 14.9996 12.5Z" fill="#36C5F0"/>
+</svg>`;
+
+const MicrosoftTeamsIcon = () =>
+  `<svg width="800px" height="800px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none"><path fill="#5059C9" d="M10.765 6.875h3.616c.342 0 .619.276.619.617v3.288a2.272 2.272 0 01-2.274 2.27h-.01a2.272 2.272 0 01-2.274-2.27V7.199c0-.179.145-.323.323-.323zM13.21 6.225c.808 0 1.464-.655 1.464-1.462 0-.808-.656-1.463-1.465-1.463s-1.465.655-1.465 1.463c0 .807.656 1.462 1.465 1.462z"/><path fill="#7B83EB" d="M8.651 6.225a2.114 2.114 0 002.117-2.112A2.114 2.114 0 008.65 2a2.114 2.114 0 00-2.116 2.112c0 1.167.947 2.113 2.116 2.113zM11.473 6.875h-5.97a.611.611 0 00-.596.625v3.75A3.669 3.669 0 008.488 15a3.669 3.669 0 003.582-3.75V7.5a.611.611 0 00-.597-.625z"/><path fill="#000000" d="M8.814 6.875v5.255a.598.598 0 01-.596.595H5.193a3.951 3.951 0 01-.287-1.476V7.5a.61.61 0 01.597-.624h3.31z" opacity=".1"/><path fill="#000000" d="M8.488 6.875v5.58a.6.6 0 01-.596.595H5.347a3.22 3.22 0 01-.267-.65 3.951 3.951 0 01-.172-1.15V7.498a.61.61 0 01.596-.624h2.985z" opacity=".2"/><path fill="#000000" d="M8.488 6.875v4.93a.6.6 0 01-.596.595H5.08a3.951 3.951 0 01-.172-1.15V7.498a.61.61 0 01.596-.624h2.985z" opacity=".2"/><path fill="#000000" d="M8.163 6.875v4.93a.6.6 0 01-.596.595H5.079a3.951 3.951 0 01-.172-1.15V7.498a.61.61 0 01.596-.624h2.66z" opacity=".2"/><path fill="#000000" d="M8.814 5.195v1.024c-.055.003-.107.006-.163.006-.055 0-.107-.003-.163-.006A2.115 2.115 0 016.593 4.6h1.625a.598.598 0 01.596.594z" opacity=".1"/><path fill="#000000" d="M8.488 5.52v.699a2.115 2.115 0 01-1.79-1.293h1.195a.598.598 0 01.595.594z" opacity=".2"/><path fill="#000000" d="M8.488 5.52v.699a2.115 2.115 0 01-1.79-1.293h1.195a.598.598 0 01.595.594z" opacity=".2"/><path fill="#000000" d="M8.163 5.52v.647a2.115 2.115 0 01-1.465-1.242h.87a.598.598 0 01.595.595z" opacity=".2"/><path fill="url(#microsoft-teams-color-16__paint0_linear_2372_494)" d="M1.597 4.925h5.969c.33 0 .597.267.597.596v5.958a.596.596 0 01-.597.596h-5.97A.596.596 0 011 11.479V5.521c0-.33.267-.596.597-.596z"/><path fill="#ffffff" d="M6.152 7.193H4.959v3.243h-.76V7.193H3.01v-.63h3.141v.63z"/><defs><linearGradient id="microsoft-teams-color-16__paint0_linear_2372_494" x1="2.244" x2="6.906" y1="4.46" y2="12.548" gradientUnits="userSpaceOnUse"><stop stop-color="#5A62C3"/><stop offset=".5" stop-color="#4D55BD"/><stop offset="1" stop-color="#3940AB"/></linearGradient></defs></svg>`;
+
+const SSOIcon =
+  () => `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    <circle cx="12" cy="16" r="2" fill="currentColor"/>
+  </svg>`;
+
+const PlatformIcon =
+  () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="3" width="7" height="7"/>
+    <rect x="14" y="3" width="7" height="7"/>
+    <rect x="14" y="14" width="7" height="7"/>
+    <rect x="3" y="14" width="7" height="7"/>
+  </svg>`;
+
+const CollaborationIcon =
+  () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>`;
+
+const HybridIcon =
+  () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+    <polyline points="9 22 9 12 15 12 15 22"/>
+  </svg>`;
+
+const SecurityIcon =
+  () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+  </svg>`;
 ---
 
-<div class="audience-note">
-  <strong>Built for:</strong> {page.audience}
-</div>
+{
+  page.whyOrganizationsNeedMore && (
+    <section class="benefits-grid-section" aria-labelledby="benefits-title">
+      <div class="container">
+        <div class="benefits-section-heading">
+          <h2 id="benefits-title">{page.whyOrganizationsNeedMore.heading}</h2>
+          <p>{page.whyOrganizationsNeedMore.description}</p>
+        </div>
+        <div class="benefits-grid">
+          {page.whyOrganizationsNeedMore.cards.map((card) => (
+            <article class="benefit-card">
+              <div class="benefit-card-icon" set:html={CheckIcon()} />
+              <h3>{card.title}</h3>
+              <p>{card.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
 
-<CardGrid items={page.sections} />
+{
+  page.typicalJourney && (
+    <section class="stepper-section" aria-labelledby="journey-title">
+      <div class="container">
+        <div class="timeline-section-heading">
+          <h2 id="journey-title">{page.typicalJourney.heading}</h2>
+        </div>
+        <div class="stepper">
+          {page.typicalJourney.steps.map((step, index) => (
+            <div class="stepper-step">
+              <div class="stepper-number">{index + 1}</div>
+              <div class="stepper-connector" />
+              <div class="stepper-content">
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  page.features && page.features.length > 0 && (
+    <>
+      {page.features.map((featureGroup) => (
+        <section class="feature-blocks-section" aria-labelledby={`features-title`}>
+          <div class="container">
+            <div class="feature-blocks-intro">
+              <h2 id="features-title">{featureGroup.title}</h2>
+              <p>{featureGroup.body}</p>
+            </div>
+            <div class="feature-blocks-grid">
+              {featureGroup.featureBlocks.map((block) => (
+                <article
+                  class={`
+                  feature-block-card
+                  ${block.accent === "aqua" ? "feature-block-card-secondary" : ""}
+                  ${block.accent === "violet" ? "feature-block-card-accent" : ""}
+                  ${block.accent === "sunbeam" ? "feature-block-card-fade" : ""}
+                  ${!block.accent || block.accent === "emerald" ? "feature-block-card-primary" : ""}
+                `}
+                >
+                  <div class="feature-block-icon">
+                    {block.accent === "aqua" && (
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M8 15h.01" />
+                        <path d="M16 15h.01" />
+                        <path d="M12 19h.01" />
+                      </svg>
+                    )}
+                    {block.accent === "violet" && (
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06-.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                      </svg>
+                    )}
+                    {block.accent === "sunbeam" && (
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5" />
+                        <line x1="12" y1="1" x2="12" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="23" />
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                        <line x1="1" y1="12" x2="3" y2="12" />
+                        <line x1="21" y1="12" x2="23" y2="12" />
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                      </svg>
+                    )}
+                    {!block.accent || block.accent === "emerald" ? (
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                        <polyline points="10 9 9 9 8 9" />
+                      </svg>
+                    ) : null}
+                  </div>
+                  <h3>{block.title}</h3>
+                  <p>{block.description}</p>
+                  {block.items && (
+                    <ul class="feature-block-list">
+                      {block.items.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  )}
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      ))}
+    </>
+  )
+}
+
+{
+  page.whyChooseUs && (
+    <section class="why-choose-section" aria-labelledby="why-choose-title">
+      <div class="container">
+        <div class="section-heading why-choose-content">
+          <h2 id="why-choose-title">{page.whyChooseUs.heading}</h2>
+        </div>
+        <div class="why-choose-grid">
+          {page.whyChooseUs.cards.map((card, index) => (
+            <article class="why-choose-card">
+              {index === 0 && <div set:html={PlatformIcon()} />}
+              {index === 1 && <div set:html={CollaborationIcon()} />}
+              {index === 2 && <div set:html={HybridIcon()} />}
+              {index === 3 && <div set:html={SecurityIcon()} />}
+              <h3>{card.title}</h3>
+              <p>{card.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  page.screenshotSections && page.screenshotSections.length > 0 && (
+    <div class="screenshot-sections-container">
+      {page.screenshotSections.map((section) => (
+        <section class={`screenshot-section ${Math.random() % 2 === 1 ? "alternate" : ""}`} aria-labelledby={`${section.id}-title`}>
+          <div class="container">
+            <div class="screenshot-layout">
+              <div class="screenshot-content">
+                <h2>{section.heading}</h2>
+                <p>{section.subheading}</p>
+              </div>
+              <div class="screenshot-placeholder" aria-label={`${section.placeholderText} preview`}>
+                <span class="screenshot-placeholder-text">{section.placeholderText}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      ))}
+    </div>
+  )
+}
+
+{
+  page.integrations && (
+    <section class="integrations-section" aria-labelledby="integrations-title">
+      <div class="container">
+        <div class="integrations-content">
+          <h2 id="integrations-title">{page.integrations.heading}</h2>
+          <p>{page.integrations.body}</p>
+          <div class="integration-cards">
+            {page.integrations.integrations.map((integration) => (
+              <div class="integration-card">
+                {integration === "Slack" && <div class="integration-icon" set:html={SlackIcon()} />}
+                {integration === "Microsoft Teams" && <div class="integration-icon" set:html={MicrosoftTeamsIcon()} />}
+                {integration === "Enterprise SSO" && <div class="integration-icon" set:html={SSOIcon()} />}
+                <span>{integration}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  page.builtFor && (
+    <section class="built-for-section" aria-labelledby="built-for-title">
+      <div class="container built-for-content">
+        <h2 id="built-for-title">{page.builtFor.heading}</h2>
+        {page.builtFor.body && <p>{page.builtFor.body}</p>}
+        <div class="audience-chips">
+          {page.builtFor.audiences.map((audience) => (
+            <span class="audience-chip" aria-label={`Built for ${audience}`}>
+              {audience}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  page.commsIntegration && (
+    <section class="comms-integration-section" aria-labelledby="comms-title">
+      <div class="container">
+        <div class="comms-integration-content">
+          <h2 id="comms-title">{page.commsIntegration.heading}</h2>
+          <p>{page.commsIntegration.description}</p>
+        </div>
+        <div class="comms-integration-button-wrapper">
+          {page.integrationActions?.map((action) => action.type === "slack" && <SlackInstallButton />)}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  page.trust && (
+    <section class="trust-section" aria-labelledby="trust-title">
+      <div class="container trust-content">
+        <h2 id="trust-title">{page.trust.heading}</h2>
+        {page.trust.body && <p>{page.trust.body}</p>}
+        {page.trust.logos && page.trust.logos.length > 0 && (
+          <div class="trust-logos">
+            {page.trust.logos.map((logo) => (
+              <div class="trust-logo">
+                <img src={logo.src} alt={logo.name} width={logo.width} height={logo.height} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+<section class="faq-section" aria-labelledby="faq-title">
+  <div class="container faq-content">
+    <h2 id="faq-title">Frequently asked questions</h2>
+    <p>Short answers to common questions about Skedular Teams.</p>
+    <div class="faq-list">
+      {
+        page.faq.map((item) => (
+          <details class="faq-item">
+            <summary class="faq-summary">
+              {item.question}
+              <span set:html={ChevronDownIcon()} />
+            </summary>
+            <div class="faq-content">{item.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<section class="page-section page-section-quiet final-cta-section" aria-labelledby="final-cta-title">
+  <div class="container">
+    <div class="final-cta-panel">
+      <h2 id="final-cta-title">Ready to simplify workplace coordination?</h2>
+      <p>
+        See how Skedular Teams helps organizations manage attendance, workplace visibility, desk booking, room booking, and hybrid work from a single
+        platform.
+      </p>
+      <div class="button-row" style="justify-content: center; flex-wrap: wrap;">
+        <CtaLink cta={getCta("book-demo")} variant="inverse" />
+        <a href="/pricing/teams" class="text-link">View Teams pricing</a>
+      </div>
+    </div>
+  </div>
+</section>

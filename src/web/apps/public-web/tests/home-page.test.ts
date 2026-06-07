@@ -1,8 +1,8 @@
-import { readFile } from "node:fs/promises";
-import { spawnSync } from "node:child_process";
-import { JSDOM } from "jsdom";
 import { getAllByRole, getAllByText, getByRole } from "@testing-library/dom";
 import axe from "axe-core";
+import { JSDOM } from "jsdom";
+import { spawnSync } from "node:child_process";
+import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
 import { publicUrlEnvironment } from "./public-url-fixtures";
 
@@ -26,9 +26,9 @@ describe("public website home page", () => {
     const dom = await loadPage();
     const document = dom.window.document;
 
-    expect(getByRole(document, "heading", { level: 1, name: "Find, book, manage, and monetize workspace." })).toBeTruthy();
+    expect(getByRole(document, "heading", { level: 1, name: "Find, book, manage, and monetize workspace" })).toBeTruthy();
     expect(document.body.textContent).not.toContain("Public Booking");
-    expect(getByRole(document, "heading", { level: 2, name: "Find workspace that fits the way you work." })).toBeTruthy();
+    expect(getByRole(document, "heading", { level: 2, name: "Find workspace that fits the way you work" })).toBeTruthy();
     expect(getByRole(document, "heading", { level: 3, name: "I manage a workplace" })).toBeTruthy();
     expect(getByRole(document, "heading", { level: 3, name: "I run a workspace business" })).toBeTruthy();
     expect(document.querySelector('img[alt="Seequent"]')).toBeTruthy();

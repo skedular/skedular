@@ -35,7 +35,7 @@ export const homePage = {
     "Flexible workspace",
   ],
   hero: {
-    title: "Find, book, manage, and monetize workspace.",
+    title: "Find, book, manage, and monetize workspace",
     summary:
       "Whether you're looking for a desk, managing a workplace, or running a coworking business, Skedular brings discovery, booking, operations, payments, billing, invoicing, and subscriptions together in one platform.",
     trustMessage: "Get started for free. Upgrade when you're ready.",
@@ -49,7 +49,7 @@ export const homePage = {
   searchFields: ["Location", "Date", "Resource type"],
   resourceCategories: ["Desks", "Meeting rooms", "Event spaces", "Private offices", "Flexible workspaces"],
   discovery: {
-    title: "Find workspace that fits the way you work.",
+    title: "Find workspace that fits the way you work",
     body: "Discover desks, meeting rooms, event spaces, private offices, and flexible workspaces from providers across the network.",
     modules: [
       {
@@ -109,7 +109,7 @@ export const homePage = {
     ],
   },
   whySkedular: {
-    title: "Everything needed to run modern workspace.",
+    title: "Everything needed to run modern workspace",
     pillars: [
       {
         title: "Workspace discovery",
@@ -163,7 +163,7 @@ export const homePage = {
     ],
   },
   becomeAHost: {
-    title: "Turn your workspace into revenue.",
+    title: "Turn your workspace into revenue",
     subtitle:
       "List desks, meeting rooms, private offices, event spaces, and flexible workspace products. Manage bookings, subscriptions, invoicing, billing, and payments from one platform.",
     supportingText:
@@ -174,7 +174,7 @@ export const homePage = {
   productShowcases: [
     {
       productName: "Skedular Teams",
-      title: "Give employees a simpler way to book the workplace.",
+      title: "Give employees a simpler way to book the workplace",
       body: "Skedular Teams helps organizations coordinate desk booking, meeting room booking, attendance, floor plans, analytics, Slack, Microsoft Teams, and SSO in one private workplace experience.",
       href: "/teams",
       ctaLabel: "Explore Teams",
@@ -184,7 +184,7 @@ export const homePage = {
     },
     {
       productName: "Skedular Spaces",
-      title: "Run the commercial side of flexible workspace.",
+      title: "Run the commercial side of flexible workspace",
       body: "Skedular Spaces helps operators manage resources, products, marketplace publishing, subscriptions, payments, invoicing, billing, and customer relationships from one operational surface.",
       href: "/spaces",
       ctaLabel: "Explore Spaces",
@@ -194,7 +194,7 @@ export const homePage = {
     },
   ],
   featureHighlights: {
-    title: "Powerful features built for modern workspace.",
+    title: "Powerful features built for modern workspace",
     groups: [
       {
         title: "Interactive floor plans",
@@ -235,7 +235,7 @@ export const homePage = {
     ],
   },
   customerTrust: {
-    title: "Trusted by organizations and workspace operators.",
+    title: "Trusted by organizations and workspace operators",
     body: "Skedular is built to support the visitor searching for space, the workplace team coordinating hybrid work, and the operator running the business behind the workspace.",
     logoHeading: "Our customers",
     customerLogos: [
@@ -257,7 +257,7 @@ export const homePage = {
     caseStudies: [] as CustomerCaseStudy[],
   },
   integrations: {
-    title: "Works with the tools your teams already use.",
+    title: "Works with the tools your teams already use",
     body: "Connect Skedular to the tools your teams already use. Bring booking, workplace management, payments, accounting, maps, and calendars together through the integrations your business already relies on. Slack and Microsoft Teams support is available for private organizations using Skedular Teams.",
     items: ["Slack", "Microsoft Teams", "Xero", "Stripe", "Google Maps", "Calendar integrations"],
   },

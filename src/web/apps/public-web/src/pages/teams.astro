@@ -1,10 +1,7 @@
 ---
-import SiteLayout from "../layouts/SiteLayout.astro";
 import ProductPageSections from "../components/ProductPageSections.astro";
-import SlackInstallButton from "../components/SlackInstallButton.astro";
-import CtaLink from "../components/CtaLink.astro";
-import { getCta } from "../data/ctas";
 import { teamsPage } from "../data/teams-page";
+import SiteLayout from "../layouts/SiteLayout.astro";
 ---
 
 <SiteLayout
@@ -14,37 +11,26 @@ import { teamsPage } from "../data/teams-page";
   structuredDataType="Product"
 >
   <section class="subpage-hero">
-    <div class="container">
-      <p class="eyebrow">{teamsPage.eyebrow}</p>
-      <h1>{teamsPage.title}</h1>
-      <p>{teamsPage.summary}</p>
+    <div class="container teams-page-hero">
+      {teamsPage.eyebrow && <p class="eyebrow">{teamsPage.eyebrow}</p>}
+      {
+        teamsPage.heroHeading ? (
+          <>
+            <h1>{teamsPage.heroHeading}</h1>
+            <p>{teamsPage.heroDescription || teamsPage.summary}</p>
+          </>
+        ) : (
+          <>
+            <h1>{teamsPage.title}</h1>
+            <p>{teamsPage.summary}</p>
+          </>
+        )
+      }
       <div class="button-row">
-        <CtaLink cta={getCta("book-demo")} />
-        <a class="text-link" href="/pricing/teams">View Teams pricing</a>
+        <a href="/contact" class="button">Book a demo</a>
+        <a href="/pricing/teams" class="text-link">View Teams pricing</a>
       </div>
     </div>
   </section>
-  <section class="page-section">
-    <div class="container section-inner">
-      <ProductPageSections page={teamsPage} />
-    </div>
-  </section>
-  {
-    teamsPage.integrationActions && (
-      <section class="page-section page-section-quiet" aria-labelledby="teams-integrations-title">
-        <div class="container integration-detail-panel">
-          <div>
-            <p class="eyebrow">Private workplace integrations</p>
-            <h2 id="teams-integrations-title">Onboard Skedular Teams through Slack or Microsoft Teams.</h2>
-            <p>
-              Slack and Microsoft Teams integrations are for private organizations using Skedular Teams to coordinate workplace bookings, notifications, and team-aware views.
-            </p>
-          </div>
-          <div class="integration-action-row">
-            {teamsPage.integrationActions.map((action) => action.type === "slack" && <SlackInstallButton />)}
-          </div>
-        </div>
-      </section>
-    )
-  }
+  <ProductPageSections page={teamsPage} />
 </SiteLayout>

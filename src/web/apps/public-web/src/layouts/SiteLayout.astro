@@ -122,9 +122,27 @@ const betalistBadge = "https://betalist.com/badges/featured?id=119542&theme=gray
           </nav>
         </div>
         <div class="header-actions">
-          {becomeHostCta && <a class="text-link" href={becomeHostUrl} data-cta-id={becomeHostCta.id}>{becomeHostCta.label}</a>}
-          {loginCta && <a class="text-link" href={loginUrl} data-cta-id={loginCta.id}>{loginCta.label}</a>}
-          {demoCta && <a class="button button-small" href={demoUrl} data-cta-id={demoCta.id}>{demoCta.label}</a>}
+          {
+            becomeHostCta && (
+              <a class="text-link" href={becomeHostUrl} data-cta-id={becomeHostCta.id}>
+                {becomeHostCta.label}
+              </a>
+            )
+          }
+          {
+            loginCta && (
+              <a class="text-link" href={loginUrl} data-cta-id={loginCta.id}>
+                {loginCta.label}
+              </a>
+            )
+          }
+          {
+            demoCta && (
+              <a class="button button-small" href={demoUrl} data-cta-id={demoCta.id}>
+                {demoCta.label}
+              </a>
+            )
+          }
         </div>
         <details class="mobile-nav">
           <summary aria-label="Open navigation">
@@ -145,9 +163,27 @@ const betalistBadge = "https://betalist.com/badges/featured?id=119542&theme=gray
               {mainLinks.map((item) => <a href={item.path}>{item.label}</a>)}
             </div>
             <div class="mobile-nav-actions">
-              {becomeHostCta && <a class="text-link" href={becomeHostUrl} data-cta-id={becomeHostCta.id}>{becomeHostCta.label}</a>}
-              {loginCta && <a class="text-link" href={loginUrl} data-cta-id={loginCta.id}>{loginCta.label}</a>}
-              {demoCta && <a class="button" href={demoUrl} data-cta-id={demoCta.id}>{demoCta.label}</a>}
+              {
+                becomeHostCta && (
+                  <a class="text-link" href={becomeHostUrl} data-cta-id={becomeHostCta.id}>
+                    {becomeHostCta.label}
+                  </a>
+                )
+              }
+              {
+                loginCta && (
+                  <a class="text-link" href={loginUrl} data-cta-id={loginCta.id}>
+                    {loginCta.label}
+                  </a>
+                )
+              }
+              {
+                demoCta && (
+                  <a class="button" href={demoUrl} data-cta-id={demoCta.id}>
+                    {demoCta.label}
+                  </a>
+                )
+              }
             </div>
           </div>
         </details>
@@ -162,7 +198,7 @@ const betalistBadge = "https://betalist.com/badges/featured?id=119542&theme=gray
       <div class="container footer-grid">
         <div class="footer-brand">
           <img src="/images/skedular-logo-inverse.svg" alt="Skedular" width="132" height="28" />
-          <p>Find, book, manage, and monetize workspace.</p>
+          <p>Find, book, manage, and monetize workspace</p>
           <a href="mailto:support@getskedular.com">support@getskedular.com</a>
         </div>
 
@@ -198,10 +234,18 @@ const betalistBadge = "https://betalist.com/badges/featured?id=119542&theme=gray
       <div class="container footer-bottom">
         <p>© 2026 Skedular. All rights reserved.</p>
         <nav class="footer-social" aria-label="Social and community links">
-          {socialLinks.map((item) => <a class="footer-social-button" href={item.path} aria-label={item.label} title={item.label} set:html={item.icon} />)}
+          {
+            socialLinks.map((item) => (
+              <a class="footer-social-button" href={item.path} aria-label={item.label} title={item.label} set:html={item.icon} />
+            ))
+          }
         </nav>
         <div class="betalist-badge">
-          <a href="https://betalist.com/startups/skedular?utm_campaign=badge-skedular&utm_medium=badge&utm_source=badge-featured" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://betalist.com/startups/skedular?utm_campaign=badge-skedular&utm_medium=badge&utm_source=badge-featured"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src={betalistBadge} alt="Skedular on BetaList" width="156" height="54" />
           </a>
         </div>
@@ -214,14 +258,18 @@ const betalistBadge = "https://betalist.com/badges/featured?id=119542&theme=gray
       navMenus.forEach((menu) => {
         menu.addEventListener("toggle", () => {
           if (menu.open) {
-            navMenus.forEach((other) => { if (other !== menu) other.open = false; });
+            navMenus.forEach((other) => {
+              if (other !== menu) other.open = false;
+            });
           }
         });
       });
 
       document.addEventListener("click", (e) => {
         if (!navMenus.some((m) => m.contains(e.target as Node))) {
-          navMenus.forEach((m) => { m.open = false; });
+          navMenus.forEach((m) => {
+            m.open = false;
+          });
         }
       });
     </script>

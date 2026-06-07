@@ -37,11 +37,87 @@ export interface ProductPageContent {
   title: string;
   summary: string;
   audience: string;
-  sections: Array<{
+
+  // Hero section
+  heroHeading?: string;
+  heroDescription?: string;
+  heroCTAPrimary?: { label: string; href: string };
+  heroCTASecondary?: { label: string; href: string };
+
+  // Why Organizations Need More Than Desk Booking
+  whyOrganizationsNeedMore?: {
+    heading: string;
+    description: string;
+    cards: Array<{ title: string; description: string }>;
+  };
+
+  // Typical Workplace Journey
+  typicalJourney?: {
+    heading: string;
+    steps: Array<{ title: string; description: string }>;
+  };
+
+  // Features sections
+  features: Array<{
     title: string;
     body: string;
-    items: string[];
+    featureBlocks: Array<{
+      title: string;
+      description: string;
+      items: string[];
+      accent?: "emerald" | "aqua" | "violet" | "sunbeam";
+    }>;
   }>;
+
+  // Why Organizations Choose Us
+  whyChooseUs?: {
+    heading: string;
+    cards: Array<{ title: string; description: string }>;
+  };
+
+  // Screenshot sections
+  screenshotSections?: Array<{
+    id: string;
+    heading: string;
+    subheading: string;
+    placeholderText: string;
+  }>;
+
+  // Integrations section
+  integrations?: {
+    heading: string;
+    body: string;
+    integrations: string[];
+  };
+
+  // Comms Integration (Slack/Teams)
+  commsIntegration?: {
+    heading: string;
+    description: string;
+  };
+
+  // Built for section
+  builtFor?: {
+    heading: string;
+    body?: string;
+    audiences: string[];
+  };
+
+  // Trust section
+  trust?: {
+    heading: string;
+    body?: string;
+    logos?: Array<{ name: string; src: string; width: number; height: number }>;
+    testimonials?: Array<{
+      quote: string;
+      author: string;
+      company: string;
+    }>;
+  };
+
+  // FAQ section
+  faq: Array<{ question: string; answer: string }>;
+
   integrationActions?: Array<{ type: "slack" }>;
 }
 
