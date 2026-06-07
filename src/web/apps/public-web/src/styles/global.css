@@ -310,7 +310,7 @@ input:focus-visible {
 .hero-copy {
   display: grid;
   justify-items: center;
-  max-width: 960px;
+  max-width: 1200px;
 }
 
 .eyebrow {
@@ -343,7 +343,7 @@ p {
 }
 
 .hero-copy h1 {
-  max-width: 980px;
+  max-width: 1400px;
   font-size: clamp(3rem, 7vw, 6.6rem);
 }
 
