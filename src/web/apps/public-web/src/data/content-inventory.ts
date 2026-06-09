@@ -1,10 +1,10 @@
+import { aboutPage } from "./about-page";
 import { comparisonPages } from "./comparison-pages";
-import { companyPage } from "./company-page";
-import { supportArticles, resourceArticles } from "./current-public-content";
+import type { PublicPage } from "./content-types";
+import { resourceArticles, supportArticles } from "./current-public-content";
 import { featurePages } from "./feature-pages";
 import { legalPages } from "./legal-pages";
 import { pricingPage } from "./pricing";
-import type { PublicPage } from "./content-types";
 
 export const publicPages: PublicPage[] = [
   {
@@ -88,16 +88,16 @@ export const publicPages: PublicPage[] = [
       }),
     ),
   {
-    id: companyPage.id,
-    path: companyPage.path,
-    title: companyPage.title,
-    description: companyPage.description,
+    id: aboutPage.id,
+    path: aboutPage.path,
+    title: aboutPage.title,
+    description: aboutPage.description,
     audience: "company researchers and prospects",
     pageType: "utility",
-    sourceRefs: [companyPage.sourceUrl],
+    sourceRefs: [aboutPage.sourceUrl],
     primaryCtaId: "book-demo",
     secondaryCtaIds: ["contact-sales"],
-    canonicalPath: companyPage.path,
+    canonicalPath: aboutPage.path,
     metadataStatus: "published",
     contentStatus: "published",
     structuredDataTypes: ["Organization", "BreadcrumbList"],

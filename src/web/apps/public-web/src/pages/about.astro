@@ -1,14 +1,39 @@
 ---
+import { aboutPage } from "../data/about-page";
 import SiteLayout from "../layouts/SiteLayout.astro";
-import { companyPage } from "../data/company-page";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Skedular",
+  "url": "https://getskedular.com",
+  "logo": "https://getskedular.com/logo.png",
+  "description": aboutPage.description,
+  "founder": [
+    {
+      "@type": "Person",
+      "name": "Leila Alavi"
+    },
+    {
+      "@type": "Person",
+      "name": "Morteza Alizadeh"
+    }
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Auckland",
+    "addressCountry": "NZ"
+  }
+};
 ---
 
-<SiteLayout title={companyPage.title} description={companyPage.description} canonicalPath={companyPage.path} structuredDataType="Organization">
+<SiteLayout title={aboutPage.title} description={aboutPage.description} canonicalPath={aboutPage.path} structuredDataType="Organization">
+  <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
   <section class="subpage-hero">
     <div class="container">
-      <p class="eyebrow">{companyPage.hero.eyebrow}</p>
-      <h1>{companyPage.hero.title}</h1>
-      <p>{companyPage.hero.summary}</p>
+      <p class="eyebrow">{aboutPage.hero.eyebrow}</p>
+      <h1>{aboutPage.hero.title}</h1>
+      <p>{aboutPage.hero.summary}</p>
     </div>
   </section>
 
@@ -18,20 +43,40 @@ import { companyPage } from "../data/company-page";
         <p class="eyebrow">Our story</p>
         <h2>The Skedular journey so far</h2>
         <p>
-          Skedular started with a simple product question: how can modern teams keep the flexibility people value while making shared workspace easier to plan, book, and operate?
+          Before we started building software for workspaces, we spent years working in them. We saw the same problems everywhere: desks booked but not used, meeting rooms double-booked, operators spending hours on email coordination.
         </p>
         <p>
-          The answer has grown from an early workplace scheduling product into a broader platform for private team workspaces and workspace operators.
+          The tools available either did too little or made things more complicated than they needed to be. So we started with a simple question: how do people actually work in shared spaces? and built from there.
         </p>
-        <a class="button" href={`mailto:${companyPage.contactEmail}`}>Contact Skedular</a>
+        <a class="button" href={`mailto:${aboutPage.contactEmail}`}>Contact Skedular</a>
       </div>
       <div class="company-facts">
         {
-          companyPage.facts.map((fact) => (
+          aboutPage.facts.map((fact) => (
             <article class="fact-card">
               <span>{fact.label}</span>
               <strong>{fact.value}</strong>
               <p>{fact.detail}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section page-section-quiet">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow">Who we are</p>
+        <h2>Founders who learned by doing</h2>
+      </div>
+      <div class="founders-grid">
+        {
+          aboutPage.founders.map((founder) => (
+            <article class="content-card founder-card">
+              <span>{founder.title}</span>
+              <strong>{founder.name}</strong>
+              <p>{founder.insight}</p>
             </article>
           ))
         }
@@ -47,7 +92,7 @@ import { companyPage } from "../data/company-page";
       </div>
       <div class="company-timeline">
         {
-          companyPage.timeline.map((item) => (
+          aboutPage.timeline.map((item) => (
             <article class="timeline-item">
               <span>{item.year}</span>
               <h3>{item.title}</h3>
@@ -63,13 +108,14 @@ import { companyPage } from "../data/company-page";
     <div class="container section-inner">
       <div class="section-heading">
         <p class="eyebrow">How we build</p>
-        <h2>Friendly software for real workspace work</h2>
+        <h2>Software for how people actually work</h2>
       </div>
       <div class="card-grid">
         {
-          companyPage.principles.map((principle) => (
+          aboutPage.principles.map((principle) => (
             <article class="content-card">
-              <h3>{principle}</h3>
+              <h3>{principle.title}</h3>
+              <p>{principle.body}</p>
             </article>
           ))
         }
