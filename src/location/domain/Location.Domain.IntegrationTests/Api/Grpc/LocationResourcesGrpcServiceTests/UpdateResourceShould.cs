@@ -30,10 +30,20 @@ public class UpdateResourceShould(
         string originalName,
         string updatedName,
         string originalColor,
+        string tagId,
         CancellationToken cancellationToken)
     {
         await SeedResourceAsync(
-            resourceId, locationId, organizationId, customerId, identityId, memberId, originalName, originalColor, cancellationToken);
+            resourceId,
+            locationId,
+            organizationId,
+            customerId,
+            identityId,
+            memberId,
+            originalName,
+            originalColor,
+            tagId,
+            cancellationToken);
 
         var result = await locationResourcesServiceClient.UpdateResourceAsync(
             new UpdateResourceInput { Id = resourceId, Name = updatedName, FieldsToUpdate = { ResourcePatchField.Name } },
@@ -58,6 +68,7 @@ public class UpdateResourceShould(
         string memberId,
         string name,
         string color,
+        string tagId,
         CancellationToken cancellationToken)
     {
         var now = timeProvider.GetUtcNow();
@@ -87,7 +98,7 @@ public class UpdateResourceShould(
 
         var resourceTypeTag = repositoryFactory.OrganizationTagRepository.Add(new OrganizationTag
         {
-            Id = Guid.NewGuid().ToString(), Organization = organization, Type = OrganizationTagTypeConstants.ResourceDesk, Name = "Desk"
+            Id = tagId, Organization = organization, Type = OrganizationTagTypeConstants.ResourceDesk, Name = "Desk"
         });
 
         repositoryFactory.ResourceRepository.Add(new Resource

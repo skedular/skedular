@@ -77,7 +77,7 @@ public class WorkaroundService(
     }
 
     public async Task RegenerateResourceAvailabilitySnapshotsAsync(
-        string locationId, 
+        string locationId,
         RegenerateResourceAvailabilitySnapshotsInput input,
         CancellationToken cancellationToken)
     {

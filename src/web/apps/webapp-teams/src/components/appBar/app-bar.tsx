@@ -1,4 +1,5 @@
 import { createTeamsAppSwitcherModel } from '@/app/app-switcher-config';
+import AppSwitcher from '@skedular/ui/app-shell/app-switcher';
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
 import { AddIcon, FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
@@ -28,7 +29,7 @@ import {
   useIntegratedPlatform,
   useKnownParams,
 } from '@skedular/shared';
-import { AppSwitcher, BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';

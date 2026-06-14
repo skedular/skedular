@@ -630,7 +630,7 @@ jobs:
               if: ${{ matrix.name == 'public-web' }}
               run: |
                   corepack enable
-                  corepack prepare pnpm@11.5.2 --activate
+                  corepack prepare pnpm@11.6.0 --activate
             - name: Install public static web dependencies
               if: ${{ matrix.name == 'public-web' }}
               run: pnpm --dir src/web install --frozen-lockfile
@@ -707,7 +707,7 @@ jobs:
               if: ${{ matrix.name == 'public-web' }}
               run: |
                   corepack enable
-                  corepack prepare pnpm@11.5.2 --activate
+                  corepack prepare pnpm@11.6.0 --activate
             - name: Install public static web dependencies
               if: ${{ matrix.name == 'public-web' }}
               run: pnpm --dir src/web install --frozen-lockfile

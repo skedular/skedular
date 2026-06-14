@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4a71316b6a2c547fb373f83ce635948f>>
+ * @generated SignedSource<<aed5c0d789bbeefe15e9fb0c6a33cf39>>
  * @lightSyntaxTransform
  */
 
@@ -16,22 +16,24 @@ export type organizationAdminSubscriptionsSectionQuery$data = {
     readonly activeOffering: {
       readonly end: any;
       readonly featureSet: ReadonlyArray<string>;
+      readonly fixedPrice: number | null | undefined;
       readonly free: boolean;
       readonly id: string;
       readonly isEnterprise: boolean;
       readonly name: string;
       readonly start: any;
       readonly underPriceLines: ReadonlyArray<string>;
-      readonly unitPrice: number;
+      readonly unitPrice: number | null | undefined;
     };
     readonly availableOfferings: ReadonlyArray<{
       readonly code: string;
       readonly featureSet: ReadonlyArray<string>;
+      readonly fixedPrice: number | null | undefined;
       readonly free: boolean;
       readonly isEnterprise: boolean;
       readonly name: string;
       readonly underPriceLines: ReadonlyArray<string>;
-      readonly unitPrice: number;
+      readonly unitPrice: number | null | undefined;
     }>;
     readonly hasAttachedPaymentMethod: boolean;
     readonly id: string;
@@ -90,24 +92,31 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "featureSet",
+  "name": "fixedPrice",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "underPriceLines",
+  "name": "featureSet",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "underPriceLines",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "free",
   "storageKey": null
 },
-v8 = [
+v9 = [
   {
     "alias": null,
     "args": [
@@ -199,7 +208,8 @@ v8 = [
           (v4/*:: as any*/),
           (v5/*:: as any*/),
           (v6/*:: as any*/),
-          (v7/*:: as any*/)
+          (v7/*:: as any*/),
+          (v8/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -223,7 +233,8 @@ v8 = [
           (v4/*:: as any*/),
           (v5/*:: as any*/),
           (v6/*:: as any*/),
-          (v7/*:: as any*/)
+          (v7/*:: as any*/),
+          (v8/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -237,7 +248,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminSubscriptionsSectionQuery",
-    "selections": (v8/*:: as any*/),
+    "selections": (v9/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -246,19 +257,19 @@ return {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminSubscriptionsSectionQuery",
-    "selections": (v8/*:: as any*/)
+    "selections": (v9/*:: as any*/)
   },
   "params": {
-    "cacheID": "0e9757e4004d7c6254bf3c000e80ca67",
+    "cacheID": "b9b702bde1bf0f03d5dfd065dda68f2f",
     "id": null,
     "metadata": {},
     "name": "organizationAdminSubscriptionsSectionQuery",
     "operationKind": "query",
-    "text": "query organizationAdminSubscriptionsSectionQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n  }\n}\n"
+    "text": "query organizationAdminSubscriptionsSectionQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      fixedPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      fixedPrice\n      featureSet\n      underPriceLines\n      free\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ad5ed505bd36852599248992371d838f";
+(node as any).hash = "1c78cdb67444bcef3e3bca6904d93dfa";
 
 export default node;

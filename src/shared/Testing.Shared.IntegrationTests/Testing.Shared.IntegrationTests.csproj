@@ -21,7 +21,7 @@
 
     <ItemGroup>
         <!-- Aspire / Test Hosting -->
-        <PackageReference Include="Aspire.Hosting.Testing" Version="13.4.2"/>
+        <PackageReference Include="Aspire.Hosting.Testing" Version="13.4.3"/>
 
         <!-- gRPC -->
         <PackageReference Include="Grpc.Net.Client" Version="2.80.0"/>
@@ -31,13 +31,13 @@
 
         <!-- Test Framework -->
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.6.0"/>
-        <PackageReference Include="Xunit.DependencyInjection" Version="11.2.1"/>
+        <PackageReference Include="Xunit.DependencyInjection" Version="11.3.0"/>
         <PackageReference Include="Xunit.DependencyInjection.Logging" Version="11.0.0"/>
 
         <!-- Test Containers -->
         <PackageReference Include="Testcontainers" Version="4.12.0"/>
 
-        <PackageReference Include="Polly" Version="8.6.6"/>
+        <PackageReference Include="Polly" Version="8.7.0"/>
 
         <!-- Analyzers -->
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">

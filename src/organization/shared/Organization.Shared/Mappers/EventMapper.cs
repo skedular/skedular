@@ -1,3 +1,4 @@
+using System.Globalization;
 using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
@@ -10,13 +11,16 @@ using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettin
 using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
 using OrganizationType = Api.Shared.Services.Models.OrganizationType;
 using PhysicalAddress = Api.Shared.Clients.Events.Skedular.Organization.V1.PhysicalAddress;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
-using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
-using OrganizationBillingCycle = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationBillingCycle;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Tag;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Organization.V1.CdnFile;
 using CdnImageFile = Api.Shared.Clients.Events.Skedular.Organization.V1.CdnImageFile;
+using Currency = Api.Shared.Services.Models.Currency;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
+using Models_CdnFile = Api.Shared.Services.Models.CdnFile;
+using Models_CdnImageFile = Api.Shared.Services.Models.CdnImageFile;
+using OrganizationBillingCycle = Api.Shared.Services.Models.OrganizationBillingCycle;
+using OrganizationMemberRole = Api.Shared.Services.Models.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Services.Models.OrganizationMemberStatus;
 
 namespace Organization.Shared.Mappers;
 
@@ -30,6 +34,66 @@ public class EventMapper : IEventMapper
     public Api.Shared.Clients.Events.Skedular.Organization.V1.Organization MapTo(Models.Organization src)
     {
         var organizationOffering = src.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue).OrderByDescending(item => item.End).First();
+        var activeCustomerIds = organizationOffering.OrganizationOfferingActiveMembers
+            .Select(item => item.OrganizationMember.Customer.Id)
+            .ToArray();
+        var entitlementDecision = new PricingEntitlementEvaluator().EvaluateActiveUserCount(
+            new Api.Shared.Services.Models.Offering
+            {
+                Id = organizationOffering.Id,
+                Code = organizationOffering.Code,
+                Start = organizationOffering.Start,
+                End = organizationOffering.End,
+                PurchasedUserCapacity = organizationOffering.PurchasedUserCapacity,
+                PurchasedLocationCapacity = organizationOffering.PurchasedLocationCapacity,
+                PurchasedTeamCapacity = organizationOffering.PurchasedTeamCapacity,
+                ActiveCustomerIds = activeCustomerIds
+            },
+            activeCustomerIds.Length);
+
+        var eventOffering = new Offering
+        {
+            Id = organizationOffering.Id,
+            OrganizationId = src.Id,
+            Code = organizationOffering.Code.ToOfferingCode(),
+            Start = organizationOffering.Start.ToTimestamp(),
+            End = organizationOffering.End.ToTimestamp(),
+            AutoRenew = organizationOffering.AutoRenew,
+            CurrentActiveUserCount = activeCustomerIds.Length.ToString(CultureInfo.InvariantCulture),
+            IsInteractionAllowed = entitlementDecision.IsAllowed,
+            EntitlementReasonCode = entitlementDecision.ReasonCode.ToString(),
+            Currency = organizationOffering.Currency switch
+            {
+                Currency.Nzd => Api.Shared.Clients.Events.Skedular.Organization.V1.Currency.Nzd,
+                Currency.Usd => Api.Shared.Clients.Events.Skedular.Organization.V1.Currency.Usd,
+                _ => throw new ArgumentOutOfRangeException()
+            }
+        };
+        if (organizationOffering.UnitPrice.HasValue)
+        {
+            eventOffering.UnitPrice = organizationOffering.UnitPrice.Value;
+        }
+
+        if (organizationOffering.FixedPrice.HasValue)
+        {
+            eventOffering.FixedPrice = organizationOffering.FixedPrice.Value;
+        }
+
+        if (organizationOffering.PurchasedUserCapacity.HasValue)
+        {
+            eventOffering.PurchasedUserCapacity = organizationOffering.PurchasedUserCapacity.Value;
+        }
+
+        if (organizationOffering.PurchasedLocationCapacity.HasValue)
+        {
+            eventOffering.PurchasedLocationCapacity = organizationOffering.PurchasedLocationCapacity.Value;
+        }
+
+        if (organizationOffering.PurchasedTeamCapacity.HasValue)
+        {
+            eventOffering.PurchasedTeamCapacity = organizationOffering.PurchasedTeamCapacity.Value;
+        }
+
         var organization = new Api.Shared.Clients.Events.Skedular.Organization.V1.Organization
         {
             Id = src.Id,
@@ -49,24 +113,15 @@ public class EventMapper : IEventMapper
             },
             BillingCycle = src.BillingCycle switch
             {
-                Api.Shared.Services.Models.OrganizationBillingCycle.Weekly => OrganizationBillingCycle.Weekly,
-                Api.Shared.Services.Models.OrganizationBillingCycle.Fortnightly => OrganizationBillingCycle.Fortnightly,
-                Api.Shared.Services.Models.OrganizationBillingCycle.Monthly => OrganizationBillingCycle.Monthly,
+                OrganizationBillingCycle.Weekly => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationBillingCycle.Weekly,
+                OrganizationBillingCycle.Fortnightly => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationBillingCycle.Fortnightly,
+                OrganizationBillingCycle.Monthly => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationBillingCycle.Monthly,
                 _ => throw new ArgumentOutOfRangeException()
             },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
             RefundNotificationEmails = { src.RefundNotificationEmails },
-            Offering = new Offering
-            {
-                Id = organizationOffering.Id,
-                OrganizationId = src.Id,
-                Code = organizationOffering.Code.ToOfferingCode(),
-                Start = organizationOffering.Start.ToTimestamp(),
-                End = organizationOffering.End.ToTimestamp(),
-                AutoRenew = organizationOffering.AutoRenew,
-                UnitPrice = organizationOffering.UnitPrice
-            },
+            Offering = eventOffering,
             SsoSettings = MapTo(src.OrganizationSsoSettings),
             TaxDetails = MapTo(src.OrganizationTaxDetails),
             PhysicalAddress = MapTo(src.PhysicalAddress),
@@ -85,8 +140,7 @@ public class EventMapper : IEventMapper
             Color = item.Color.ToSafeString()
         }));
 
-        organization.Offering.ActiveCustomerIds.AddRange(
-            organizationOffering.OrganizationOfferingActiveMembers.Select(item => item.OrganizationMember.Customer.Id));
+        organization.Offering.ActiveCustomerIds.AddRange(activeCustomerIds);
 
         organization.Members.AddRange(src.OrganizationMembers.Select(item => new OrganizationMember
         {
@@ -94,20 +148,20 @@ public class EventMapper : IEventMapper
             CustomerId = item.Customer.Id,
             Role = item.Role switch
             {
-                Api.Shared.Services.Models.OrganizationMemberRole.Owner => OrganizationMemberRole.Owner,
-                Api.Shared.Services.Models.OrganizationMemberRole.Administrator => OrganizationMemberRole.Administrator,
-                Api.Shared.Services.Models.OrganizationMemberRole.Member => OrganizationMemberRole.Member,
+                OrganizationMemberRole.Owner => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole.Owner,
+                OrganizationMemberRole.Administrator => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole.Administrator,
+                OrganizationMemberRole.Member => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = item.Status switch
             {
-                Api.Shared.Services.Models.OrganizationMemberStatus.Active => OrganizationMemberStatus.Active,
-                Api.Shared.Services.Models.OrganizationMemberStatus.Inactive => OrganizationMemberStatus.Inactive,
+                OrganizationMemberStatus.Active => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus.Active,
+                OrganizationMemberStatus.Inactive => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             }
         }));
 
-        organization.FeatureImages.AddRange(MapTo(src.FeatureImages));
+        organization.FeatureImages.AddRange(MapTo(src.FeatureImages.ToArray()));
 
         return organization;
     }
@@ -150,17 +204,10 @@ public class EventMapper : IEventMapper
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),
                 PlaceId = src.PlaceId.ToSafeString(),
-                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
+                Coordinates = src.Coordinates is null
+                    ? null
+                    : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
             };
-
-    private static IEnumerable<CdnImageFile> MapTo(IEnumerable<Api.Shared.Services.Models.CdnImageFile> src) =>
-        src.Select(MapTo);
-
-    private static CdnImageFile MapTo(Api.Shared.Services.Models.CdnImageFile src) =>
-        new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
-
-    private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
-        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
 
     private static Api.Shared.Clients.Events.Skedular.Organization.V1.ListingMetadata MapTo(ListingMetadata src)
     {
@@ -173,4 +220,13 @@ public class EventMapper : IEventMapper
 
         return listingMetadata;
     }
+
+    private static CdnImageFile[] MapTo(Models_CdnImageFile[] src) =>
+        src.Select(MapTo).ToArray();
+
+    private static CdnImageFile MapTo(Models_CdnImageFile src) =>
+        new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+
+    private static CdnFile? MapTo(Models_CdnFile? src) =>
+        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
 }

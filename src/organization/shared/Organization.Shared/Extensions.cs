@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
 using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
+using Api.Shared.Services.Offering;
 using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
+using Organization.Shared.Services.Pricing;
 using BookingService = Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingService;
 using CustomerService = Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerService;
 using LocationService = Api.Shared.Grpc.Skedular.Location.Core.V1.LocationService;
@@ -30,7 +32,8 @@ public static class Extensions
         public IServiceCollection AddDomainSharedMappers() =>
             services
                 .AddSingleton<IEntityMapper, EntityMapper>()
-                .AddSingleton<IEventMapper, EventMapper>();
+                .AddSingleton<IEventMapper, EventMapper>()
+                .AddSingleton<ILegacyOfferingCompatibilityMapper, LegacyOfferingCompatibilityMapper>();
 
         public IServiceCollection AddDomainSharedServices() =>
             services
@@ -42,9 +45,12 @@ public static class Extensions
                 .AddSingleton<IXeroTokenRefreshClient, XeroTokenRefreshClient>()
                 .AddSingleton<IGraphService, GraphService>()
                 .AddSingleton<IOrganizationDefaultValuesProvider, OrganizationDefaultValuesProvider>()
+                .AddSingleton<IPricingCatalogVersionService, PricingCatalogVersionService>()
+                .AddSingleton<IPricingEntitlementEvaluator, PricingEntitlementEvaluator>()
                 .AddScoped<IXeroTokenRefreshService, XeroTokenRefreshService>()
                 .AddScoped<IOrganizationStripeConnectAccountLinkService, OrganizationStripeConnectAccountLinkService>()
                 .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
+                .AddScoped<IOrganizationOfferingCompatibilityService, OrganizationOfferingCompatibilityService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>()
                 .AddScoped<ICachedTagService, CachedTagService>();

@@ -20,7 +20,7 @@
 
     <ItemGroup>
         <!-- Build Tools / gRPC (Server) -->
-        <PackageReference Include="Grpc.Tools" Version="2.81.0">
+        <PackageReference Include="Grpc.Tools" Version="2.81.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

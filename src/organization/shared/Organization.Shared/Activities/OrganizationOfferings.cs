@@ -4,6 +4,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Mappers;
+using Organization.Shared.Models.PricingCatalog;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
@@ -32,14 +33,18 @@ public class OrganizationOfferings(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
 
-        var organizationOffering =
-            await repositoryFactory.OrganizationOfferingRepository.GetByIdAsync(args.OrganizationOfferingId, cancellationToken);
+        var organizationOffering = await repositoryFactory.OrganizationOfferingRepository.GetByIdAsync(
+            args.OrganizationOfferingId,
+            cancellationToken);
         if (organizationOffering is null || organizationOffering.IsDeleted())
         {
             return;
         }
 
-        var totalCost = organizationOffering.OrganizationOfferingActiveMembers.Count * organizationOffering.UnitPrice;
+        var totalCost = organizationOffering.FixedPrice ??
+                        organizationOffering.OrganizationOfferingActiveMembers.Count *
+                        (organizationOffering.UnitPrice ??
+                         throw new InvalidOperationException("Organization offering requires either a fixed price or unit price before billing."));
         if (totalCost == 0)
         {
             // The total cost is Zero, no need to try charge customer 
@@ -64,8 +69,7 @@ public class OrganizationOfferings(
                 Customer = organizationOffering.Organization.OrganizationStripeCustomer.StripeCustomerId,
                 PaymentMethod = organizationStripePaymentMethod.PaymentMethodId,
                 Amount = totalCost,
-                // TODO: 20240601 : Morteza: Currency should not be probably hard-coded
-                Currency = "usd",
+                Currency = organizationOffering.Currency,
                 Confirm = true,
                 OffSession = true
             },
@@ -114,7 +118,6 @@ public class OrganizationOfferings(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var offering = organizationOffering.Code.GetOffering();
         var start = organizationOffering.End.GetNextOfferingPeriodStart();
         var newOrganizationOffering = new OrganizationOffering
         {
@@ -123,7 +126,13 @@ public class OrganizationOfferings(
             Start = start,
             End = start.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
             AutoRenew = organizationOffering.AutoRenew,
-            UnitPrice = offering.UnitPrice,
+            UnitPrice = organizationOffering.UnitPrice,
+            FixedPrice = organizationOffering.FixedPrice,
+            Currency = organizationOffering.Currency,
+            PurchasedUserCapacity = organizationOffering.PurchasedUserCapacity,
+            PurchasedLocationCapacity = organizationOffering.PurchasedLocationCapacity,
+            PurchasedTeamCapacity = organizationOffering.PurchasedTeamCapacity,
+            CatalogVersion = organizationOffering.CatalogVersion ?? PricingCatalogConstants.CurrentTeamsCatalogVersion,
             Organization = organization
         };
         repositoryFactory.OrganizationOfferingRepository.Add(newOrganizationOffering);

@@ -1,5 +1,5 @@
 import { NameDetails, getCustomerAvatarLetters, getCustomerFullName, stringToColor } from '@skedular/shared';
-import { SxProps } from '@mui/material';
+import type { SxProps } from '@mui/system';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import { memo } from 'react';

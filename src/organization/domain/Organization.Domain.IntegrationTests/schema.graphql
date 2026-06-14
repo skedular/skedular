@@ -58,6 +58,14 @@ type Query {
   ): ConnectionOfOrganizationEdge! @cost(weight: "10")
   myOrganizations(types: [OrganizationType!]): [MyOrganizationDetails!]!
     @cost(weight: "10")
+  pricingCatalog(productOfferingCode: PricingCatalogProductOfferingCode): PricingCatalogDetails!
+  organizationTeamsSubscription(organizationId: String!): OrganizationTeamsSubscriptionDetails
+    @cost(weight: "10")
+  pricingCatalogProductOfferings: [PricingCatalogProductOfferingDetails!]!
+  pricingCatalogSubscriptionPlans: [PricingCatalogSubscriptionPlanDetails!]!
+  pricingCatalogPlanAvailabilities: [PricingCatalogPlanAvailabilityDetails!]!
+  organizationOfferingPlanStatuses: [OrganizationOfferingPlanStatusDetails!]!
+  pricingEntitlementReasonCodes: [PricingEntitlementReasonCodeDetails!]!
   organizationVersion: Version!
   bookingSlotSizeInMinutes: Int!
   resourceTypes: [OrganizationTagTypeDetails!]!
@@ -150,6 +158,9 @@ type Mutation {
   ): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload!
     @cost(weight: "10")
+  updateOrganizationTeamsSubscription(
+    input: UpdateOrganizationTeamsSubscriptionInput!
+  ): UpdateOrganizationTeamsSubscriptionPayload! @cost(weight: "10")
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload!
     @cost(weight: "10")
   removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationPayload!
@@ -214,6 +225,11 @@ type CancelOrganizationOfferingPayload {
   clientMutationId: String
 }
 
+type CatalogVersionDetails @shareable {
+  type: CatalogVersion!
+  name: String!
+}
+
 type CdnFile @shareable {
   url: String!
   height: Int
@@ -259,6 +275,11 @@ type ConnectionOfOrganizationTagEdge {
   pageInfo: PageInfo!
   edges: [OrganizationTagEdge!]!
   totalCount: Int!
+}
+
+type CurrencyDetails @shareable {
+  type: Currency!
+  name: String!
 }
 
 type CustomerDetails @key(fields: "id") {
@@ -312,7 +333,13 @@ type OrganizationActiveOfferingDetails {
   name: String!
   start: DateTime!
   end: DateTime!
-  unitPrice: Int!
+  unitPrice: Int
+  fixedPrice: Int
+  currency: CurrencyDetails!
+  catalogVersion: CatalogVersionDetails
+  purchasedUserCapacity: Int
+  purchasedLocationCapacity: Int
+  purchasedTeamCapacity: Int
   underPriceLines: [String!]!
   featureSet: [String!]!
   free: Boolean!
@@ -531,11 +558,21 @@ type OrganizationOfferingDetails {
   code: String!
   isEnterprise: Boolean!
   name: String!
-  unitPrice: Int!
+  unitPrice: Int
+  fixedPrice: Int
+  currency: Currency!
+  purchasedUserCapacity: Int
+  purchasedLocationCapacity: Int
+  purchasedTeamCapacity: Int
   underPriceLines: [String!]!
   featureSet: [String!]!
   free: Boolean!
   earlyBird: Boolean!
+}
+
+type OrganizationOfferingPlanStatusDetails {
+  type: OrganizationOfferingPlanStatus!
+  name: String!
 }
 
 type OrganizationPayload {
@@ -692,6 +729,24 @@ type OrganizationTaxDetails {
   id: ID!
 }
 
+type OrganizationTeamsSubscriptionDetails {
+  id: String!
+  organizationId: String!
+  productOfferingCode: PricingCatalogProductOfferingCode!
+  planCode: PricingCatalogSubscriptionPlanCode!
+  unitPrice: Int
+  fixedPrice: Int
+  currency: Currency!
+  purchasedUserCapacity: Int
+  purchasedLocationCapacity: Int
+  purchasedTeamCapacity: Int
+  catalogVersionCode: String!
+  status: OrganizationOfferingPlanStatus!
+  effectiveFrom: DateTime!
+  effectiveUntil: DateTime
+  autoRenew: Boolean!
+}
+
 type OrganizationTermsOfUse {
   terms: String!
   id: ID!
@@ -737,12 +792,103 @@ type PageInfo @shareable {
   endCursor: String
 }
 
+type PricingCapacityOptionDetails {
+  code: String!
+  userCapacity: Int
+  label: String!
+  price: PricingPlanPriceDetails
+  availability: PricingCatalogPlanAvailability!
+  displayOrder: Int!
+}
+
+type PricingCatalogDetails {
+  id: String!
+  activeVersion: PricingCatalogVersionDetails!
+  productOfferings: [PricingProductOfferingDetails!]!
+  generatedAt: DateTime!
+}
+
+type PricingCatalogPlanAvailabilityDetails {
+  type: PricingCatalogPlanAvailability!
+  name: String!
+}
+
+type PricingCatalogProductOfferingDetails {
+  type: PricingCatalogProductOfferingCode!
+  name: String!
+}
+
+type PricingCatalogSubscriptionPlanDetails {
+  type: PricingCatalogSubscriptionPlanCode!
+  name: String!
+}
+
+type PricingCatalogVersionDetails {
+  code: String!
+  status: PricingCatalogVersionStatus!
+  effectiveFrom: DateTime!
+  effectiveUntil: DateTime
+  compatibilityNotes: String
+}
+
+type PricingEntitlementReasonCodeDetails {
+  type: EntitlementReasonCode!
+  name: String!
+}
+
+type PricingPlanFeatureDetails {
+  code: String!
+  name: String!
+  displayOrder: Int!
+}
+
+type PricingPlanLimitDetails {
+  code: String!
+  name: String!
+  limit: Int
+  unlimited: Boolean!
+}
+
+type PricingPlanPriceDetails {
+  currency: Currency!
+  amount: Decimal!
+  cadence: String!
+  taxInclusive: Boolean!
+}
+
+type PricingProductOfferingDetails {
+  code: PricingCatalogProductOfferingCode!
+  name: String!
+  description: String!
+  visibility: PricingCatalogVisibility!
+  plans: [PricingSubscriptionPlanDetails!]!
+}
+
+type PricingSubscriptionPlanDetails {
+  code: PricingCatalogSubscriptionPlanCode!
+  name: String!
+  description: String!
+  commercialModel: PricingCatalogCommercialModel!
+  features: [PricingPlanFeatureDetails!]!
+  limits: [PricingPlanLimitDetails!]!
+  prices: [PricingPlanPriceDetails!]!
+  capacityOptions: [PricingCapacityOptionDetails!]!
+  availability: PricingCatalogPlanAvailability!
+  recommended: Boolean!
+  displayOrder: Int!
+}
+
 type RemoveOrganizationPaymentMethodPayload {
   clientMutationId: String
 }
 
 type UpdateOrganizationOfferingPayload {
   clientMutationId: String
+}
+
+type UpdateOrganizationTeamsSubscriptionPayload {
+  clientMutationId: String
+  organizationTeamsSubscription: OrganizationTeamsSubscriptionDetails!
 }
 
 type Version @shareable {
@@ -1170,6 +1316,15 @@ input UpdateOrganizationTaxDetailsInput {
   taxRatePercentage: Decimal
 }
 
+input UpdateOrganizationTeamsSubscriptionInput {
+  clientMutationId: String
+  organizationId: String!
+  planCode: PricingCatalogSubscriptionPlanCode!
+  purchasedUserCapacity: Int
+  purchasedLocationCapacity: Int
+  purchasedTeamCapacity: Int
+}
+
 input UpdateOrganizationXeroConnectionInput {
   clientMutationId: String
   organizationId: String
@@ -1192,6 +1347,28 @@ input UpdateOrganizationXeroConnectionInput {
 
 input ZoneOrganizationTagWhereInput {
   nameContains: String
+}
+
+enum CatalogVersion {
+  TEAMS_V1
+}
+
+enum Currency {
+  NZD
+  USD
+}
+
+enum EntitlementReasonCode {
+  NOT_SET
+  ALLOWED
+  FREE_ACTIVE_USER_LIMIT_REACHED
+  FREE_TEAM_LIMIT_REACHED
+  FREE_LOCATION_LIMIT_REACHED
+  ENTERPRISE_CAPACITY_REACHED
+  OFFERING_NOT_FOUND
+  OFFERING_NOT_EFFECTIVE
+  CONTACT_US_REQUIRED
+  LEGACY_OFFERING_UNCHANGED
 }
 
 enum InvitationStatus {
@@ -1259,6 +1436,16 @@ enum OrganizationMemberStatus {
 
 enum OrganizationOfferingPatchField {
   OFFERING_CODE
+}
+
+enum OrganizationOfferingPlanStatus {
+  NOT_SET
+  PENDING
+  ACTIVE
+  SCHEDULED_CHANGE
+  CANCELED
+  EXPIRED
+  LEGACY
 }
 
 enum OrganizationOrderField {
@@ -1510,6 +1697,44 @@ enum OrganizationXeroConnectionPatchField {
   DEFAULT_TRACKING_CATEGORY2
   DEFAULT_BRANDING_THEME_ID
   DEFAULT_REFERENCE_PREFIX
+}
+
+enum PricingCatalogCommercialModel {
+  FREE
+  USAGE_BASED
+  CAPACITY_BASED
+}
+
+enum PricingCatalogPlanAvailability {
+  NOT_SET
+  SELF_SERVICE
+  CONTACT_US
+  HIDDEN
+  DEPRECATED
+  UNAVAILABLE
+  EXISTING_CUSTOMERS_ONLY
+}
+
+enum PricingCatalogProductOfferingCode {
+  NOT_SET
+  TEAMS
+  SPACES
+}
+
+enum PricingCatalogSubscriptionPlanCode {
+  NOT_SET
+  FREE
+  PAY_AS_YOU_GO
+  ENTERPRISE_CAPACITY
+  LEGACY_EARLY_BIRD
+}
+
+enum PricingCatalogVersionStatus {
+  ACTIVE
+}
+
+enum PricingCatalogVisibility {
+  PUBLIC
 }
 
 enum ScalarSerializationType {

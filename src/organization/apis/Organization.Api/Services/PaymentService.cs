@@ -9,6 +9,7 @@ using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
+using Organization.Shared.Services.Pricing;
 using Organization.Shared.Workflows;
 using Stripe;
 
@@ -16,7 +17,10 @@ namespace Organization.Api.Services;
 
 public interface IPaymentService
 {
-    Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, string? redirectTo,
+    Task<string> HandleStripePaymentMethodEventAsync(
+        string clientSecret,
+        string redirectStatus,
+        string? redirectTo,
         CancellationToken cancellationToken);
 
     Task<string> AddPaymentMethodIntentAsync(
@@ -44,7 +48,10 @@ public class PaymentService(
     ITemporalOutboxService temporalOutboxService,
     ITemporalService temporalService) : IPaymentService
 {
-    public async Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, string? redirectTo,
+    public async Task<string> HandleStripePaymentMethodEventAsync(
+        string clientSecret,
+        string redirectStatus,
+        string? redirectTo,
         CancellationToken cancellationToken) =>
         await temporalService.SignalAddOrganizationStripePaymentMethodAndGetResultAsync(
             clientSecret,
@@ -58,10 +65,9 @@ public class PaymentService(
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                               organizationId,
-                               organizationCustomDomain,
-                               cancellationToken) ??
-                           throw new OrganizationNotFound();
+            organizationId,
+            organizationCustomDomain,
+            cancellationToken) ?? throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanManagePaymentMethodAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
@@ -84,9 +90,9 @@ public class PaymentService(
     public async Task RemovePaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organizationStripePaymentMethod =
-            await repositoryFactory.OrganizationStripePaymentMethodRepository.GetByIdAsync(paymentMethodId, cancellationToken) ??
-            throw new OrganizationPaymentMethodNotFound();
+        var organizationStripePaymentMethod = await repositoryFactory.OrganizationStripePaymentMethodRepository.GetByIdAsync(
+            paymentMethodId,
+            cancellationToken) ?? throw new OrganizationPaymentMethodNotFound();
         var organization = organizationStripePaymentMethod.Organization;
         organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                            organization.Id,
@@ -106,8 +112,10 @@ public class PaymentService(
         if (organization.OrganizationStripePaymentMethods.All(item => item.IsDeleted()))
         {
             var now = timeProvider.GetUtcNow();
-            var organizationOffering = await repositoryFactory.OrganizationOfferingRepository
-                .GetCurrentActiveByOrganizationIdAsync(organization.Id, now, cancellationToken);
+            var organizationOffering = await repositoryFactory.OrganizationOfferingRepository.GetCurrentActiveByOrganizationIdAsync(
+                organization.Id,
+                now,
+                cancellationToken);
             if (organizationOffering is not null)
             {
                 if (organizationOffering.Code.IsFreeOffering())
@@ -139,13 +147,12 @@ public class PaymentService(
                 var newOrganizationOffering = new OrganizationOffering
                 {
                     Id = randomHelper.Generate(),
-                    Code = OfferingCode.FreeTierV1,
                     Organization = organization,
                     Start = now,
                     End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
-                    AutoRenew = true,
-                    UnitPrice = OfferingCode.FreeTierV1.GetOffering().UnitPrice
+                    AutoRenew = true
                 };
+                newOrganizationOffering.ApplyOfferingTemplate(OfferingCode.FreeTierV1);
 
                 repositoryFactory.OrganizationOfferingRepository.Add(newOrganizationOffering);
 
@@ -171,8 +178,9 @@ public class PaymentService(
 
         PublishOrganization(organization);
 
-        var paymentMethod =
-            await paymentMethodRetrievableService.GetAsync(organizationStripePaymentMethod.PaymentMethodId, cancellationToken: cancellationToken);
+        var paymentMethod = await paymentMethodRetrievableService.GetAsync(
+            organizationStripePaymentMethod.PaymentMethodId,
+            cancellationToken: cancellationToken);
         if (paymentMethod is not null)
         {
             await paymentMethodService.DetachAsync(

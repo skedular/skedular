@@ -17,7 +17,7 @@
 
     <ItemGroup>
         <!-- Build Tools / gRPC (Client) -->
-        <PackageReference Include="Grpc.Tools" Version="2.81.0">
+        <PackageReference Include="Grpc.Tools" Version="2.81.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -25,7 +25,7 @@
 
     <ItemGroup>
         <!-- Entity Framework Core (Design / Migration) -->
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

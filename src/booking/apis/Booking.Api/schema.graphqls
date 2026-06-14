@@ -414,7 +414,7 @@ type OrganizationArrearsInvoiceDetails {
   invoiceUrl: String!
   billingPeriodStartInclusive: DateTime!
   billingPeriodEndExclusive: DateTime!
-  currency: String!
+  currency: CurrencyDetails!
   totalAmount: Decimal!
   totalAmountToDisplay: String!
   createdAt: DateTime!

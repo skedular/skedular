@@ -1,7 +1,9 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Organization.Shared.Models.PricingCatalog;
 
 namespace Organization.Shared.Database.Entities;
 
@@ -13,7 +15,13 @@ public class OrganizationOffering : EntityBaseWithDeleted
     public DateTimeOffset Start { get; set; }
     public DateTimeOffset End { get; set; }
     public bool AutoRenew { get; set; }
-    public int UnitPrice { get; set; }
+    public int? UnitPrice { get; set; }
+    public int? FixedPrice { get; set; }
+    public string Currency { get; set; }
+    public int? PurchasedUserCapacity { get; set; }
+    public int? PurchasedLocationCapacity { get; set; }
+    public int? PurchasedTeamCapacity { get; set; }
+    public string? CatalogVersion { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? OrganizationStripePaymentIntentId { get; set; }
@@ -30,6 +38,11 @@ public class OrganizationOfferingConfiguration : IEntityTypeConfiguration<Organi
     {
         builder.ConfigureEntityBaseWithDeleted();
 
+        builder.Property(item => item.Currency)
+            .HasMaxLength(Constants.MaxCurrencyLength)
+            .HasDefaultValue(PricingCatalogConstants.SkedularPricingCurrency);
+        builder.Property(item => item.CatalogVersion).HasMaxLength(Constants.MaxCatalogVersionLength);
+
         builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationOfferings);
         builder
             .HasOne(item => item.OrganizationStripePaymentIntent)
@@ -42,5 +55,11 @@ public class OrganizationOfferingConfiguration : IEntityTypeConfiguration<Organi
         builder.HasIndex(item => new { item.Start, item.End });
         builder.HasIndex(item => item.AutoRenew);
         builder.HasIndex(item => item.UnitPrice);
+        builder.HasIndex(item => item.FixedPrice);
+        builder.HasIndex(item => item.Currency);
+        builder.HasIndex(item => item.PurchasedUserCapacity);
+        builder.HasIndex(item => item.PurchasedLocationCapacity);
+        builder.HasIndex(item => item.PurchasedTeamCapacity);
+        builder.HasIndex(item => item.CatalogVersion);
     }
 }

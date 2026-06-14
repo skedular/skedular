@@ -14,7 +14,7 @@ public class OrganizationArrearsInvoiceDetails
     [GraphQLName("billingPeriodEndExclusive")]
     public DateTimeOffset BillingPeriodEndExclusive { get; set; }
 
-    [GraphQLName("currency")] public string Currency { get; set; } = string.Empty;
+    [GraphQLName("currency")] public CurrencyDetails Currency { get; set; } = new();
     [GraphQLName("totalAmount")] public decimal TotalAmount { get; set; }
     [GraphQLName("totalAmountToDisplay")] public string TotalAmountToDisplay { get; set; } = string.Empty;
     [GraphQLName("createdAt")] public DateTimeOffset CreatedAt { get; set; }

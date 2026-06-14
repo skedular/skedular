@@ -34,6 +34,7 @@ public class CanCreateTeamShould
     [AutoFakeItEasyData]
     public async Task Return_True_When_Private_Organization_Is_Within_Offering_Limit(
         [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen] IPricingEntitlementEvaluator pricingEntitlementEvaluator,
         [Frozen] ILogger<OrganizationOfferingService> logger,
         OrganizationOfferingService sut,
         CancellationToken cancellationToken)
@@ -45,6 +46,8 @@ public class CanCreateTeamShould
 
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync("org-1", null, cancellationToken))
             .Returns(organization);
+        A.CallTo(() => pricingEntitlementEvaluator.EvaluateTeamCreation(organization.Offering, organization.Teams.Count))
+            .Returns(new EntitlementDecision(true, EntitlementReasonCode.Allowed));
 
         var result = await sut.CanCreateTeamAsync("org-1", cancellationToken);
 

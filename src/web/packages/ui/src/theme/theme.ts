@@ -1,7 +1,7 @@
-import type { CSSProperties } from '@mui/material/styles';
 import { createTheme as createMuiTheme, PaletteMode, Theme } from '@mui/material/styles';
-import type { ResponsiveStyleValue, SxProps } from '@mui/system';
+import type { SxProps } from '@mui/system';
 import { gridClasses } from '@mui/x-data-grid';
+export { defaultGridActionPadding, defaultPadding, maxScreenWidth } from './layout';
 import getDesignTokens, { coal } from './theme-primitives';
 
 export const defaultButtonStyle: SxProps<Theme> = {
@@ -75,10 +75,6 @@ export const compactManagementWarningChipSx: SxProps<Theme> = {
   color: 'error.main',
   fontWeight: 600,
 };
-
-export const defaultPadding: ResponsiveStyleValue<CSSProperties['paddingTop']> = { xs: 1, sm: 1, md: 3 };
-export const defaultGridActionPadding: ResponsiveStyleValue<CSSProperties['paddingTop']> = { xs: 1, sm: 1, md: 2 };
-export const maxScreenWidth = 1700;
 
 export const defaultGridStyle: SxProps<Theme> = {
   border: 'none',

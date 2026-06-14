@@ -10,9 +10,13 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export { Currency } from './models/Currency';
 export type { ProblemDetails } from './models/ProblemDetails';
+export type { SetEnterpriseOfferingRequest } from './models/SetEnterpriseOfferingRequest';
 
+export { $Currency } from './schemas/$Currency';
 export { $ProblemDetails } from './schemas/$ProblemDetails';
+export { $SetEnterpriseOfferingRequest } from './schemas/$SetEnterpriseOfferingRequest';
 
 export { AnalyticsService } from './services/AnalyticsService';
 export { AzureTenantService } from './services/AzureTenantService';

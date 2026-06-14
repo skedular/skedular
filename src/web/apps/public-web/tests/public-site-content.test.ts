@@ -180,6 +180,10 @@ describe("expanded public site content", () => {
     const teamsDom = await loadDistPage("/pricing/teams");
     expect(teamsDom.window.document.querySelector(".pricing-card-header h2")?.textContent).toBe("Teams");
     expect(teamsDom.window.document.querySelectorAll(".tier")).toHaveLength(3);
+    expect(teamsDom.window.document.body.textContent).toContain("Free");
+    expect(teamsDom.window.document.body.textContent).toContain("Pay As You Go");
+    expect(teamsDom.window.document.body.textContent).toContain("Enterprise");
+    expect(teamsDom.window.document.body.textContent).toContain("Contact Us");
     expect(teamsDom.window.document.querySelector(".pricing-marketplace-note")).toBeNull();
 
     const spacesDom = await loadDistPage("/pricing/spaces");

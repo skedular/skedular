@@ -3,7 +3,7 @@
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 import type { ReactNode } from 'react';
-import { defaultPadding } from '../theme';
+import { defaultPadding } from '../theme/layout';
 import CollectionToolbar from '../commons/collection-toolbar';
 import PageHeaderPanel from '../page-header-panel';
 import StackColumn from '../stack-column';

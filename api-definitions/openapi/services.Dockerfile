@@ -10,7 +10,6 @@ RUN apt-get update -y && \
   apt-get clean
 RUN npm install -y -g "nswag@${NSWAG_VERSION}"
 
-COPY [".git", "shared/.git"]
 COPY ["src/shared/Api.Shared", "shared/Api.Shared"]
 COPY ["src/shared/Enterprise.Shared", "shared/Enterprise.Shared"]
 COPY ["src/shared/Skedularctl", "shared/Skedularctl"]

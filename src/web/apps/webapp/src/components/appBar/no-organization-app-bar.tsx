@@ -1,4 +1,5 @@
 import { createWebAppSwitcherModel } from '@/app/app-switcher-config';
+import AppSwitcher from '@skedular/ui/app-shell/app-switcher';
 import { CustomerAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
 import { BookingIcon, FeedbackIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
@@ -17,7 +18,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
 import { getCustomerFullName, localNow, PaletteModeContext, SelectedPaletteModeContext, toLongDateTime, UpdatePaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
-import { AppSwitcher, BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn } from '@skedular/ui';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import Image from 'next/image';
 import NextLink from 'next/link';

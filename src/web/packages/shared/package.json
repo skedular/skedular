@@ -14,8 +14,8 @@
     "format": "prettier --write --single-quote true --trailing-comma all --print-width 180 ./src && pnpm lint-fix"
   },
   "dependencies": {
-    "@mui/icons-material": "^9.0.1",
-    "@next/third-parties": "^16.2.7",
+    "@mui/icons-material": "^9.1.1",
+    "@next/third-parties": "^16.2.9",
     "@skedular/ui": "workspace:*",
     "cookies-next": "^6.1.1",
     "dayjs": "^1.11.21",
@@ -29,13 +29,13 @@
     "uuid": "^14.0.0"
   },
   "peerDependencies": {
-    "@mui/material": "^9.0.1",
-    "@mui/system": "^9.0.1",
-    "@mui/x-data-grid": "^9.4.0",
-    "@mui/x-date-pickers": "^9.4.0",
+    "@mui/material": "^9.1.1",
+    "@mui/system": "^9.1.1",
+    "@mui/x-data-grid": "^9.5.0",
+    "@mui/x-date-pickers": "^9.5.0",
     "@mui/x-license": "^9.4.0",
     "babel-plugin-react-compiler": "^1.0.0",
-    "next": "^16.2.7",
+    "next": "^16.2.9",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "react-relay": "^21.0.1",
@@ -54,9 +54,9 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.2.7",
+    "eslint-config-next": "^16.2.9",
     "jsdom": "^29.1.1",
-    "prettier": "^3.8.3",
+    "prettier": "^3.8.4",
     "typescript": "^6.0.3",
     "vitest": "^4.1.8"
   }

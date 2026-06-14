@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import { createElement } from 'react';
 import type { ReactNode } from 'react';
 import { toast } from 'react-toastify';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -45,6 +46,10 @@ vi.mock('@/libs/image-file-uploader', () => ({
 
 vi.mock('@/components/loading', () => ({
   Loading: () => <div>Loading</div>,
+}));
+
+vi.mock('next/image', () => ({
+  default: ({ alt, src }: { alt: string; src: string }) => createElement('img', { alt, src }),
 }));
 
 vi.mock('@/components/notification', () => ({

@@ -64,6 +64,15 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
+        /// set enterprise offering
+        /// </summary>
+        /// <param name="x_API_Key">API Key</param>
+        /// <returns>the status of setting the enterprise offering</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task SetEnterpriseOfferingAsync(string organizationId, string x_API_Key, SetEnterpriseOfferingRequest body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
         /// resync all azure tenants
         /// </summary>
         /// <returns>the status of resyncing all azure tenants</returns>
@@ -373,6 +382,95 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
                 
                     // Operation Path: "v1/organization/rerun-all-offerings-workflows"
                     urlBuilder_.Append("v1/organization/rerun-all-offerings-workflows");
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<ProblemDetails>("unexpected error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// set enterprise offering
+        /// </summary>
+        /// <param name="x_API_Key">API Key</param>
+        /// <returns>the status of setting the enterprise offering</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task SetEnterpriseOfferingAsync(string organizationId, string x_API_Key, SetEnterpriseOfferingRequest body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {
+            if (organizationId == null)
+                throw new System.ArgumentNullException("organizationId");
+
+            if (body == null)
+                throw new System.ArgumentNullException("body");
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+
+                    if (x_API_Key == null)
+                        throw new System.ArgumentNullException("x_API_Key");
+                    request_.Headers.TryAddWithoutValidation("X-API-Key", ConvertToString(x_API_Key, System.Globalization.CultureInfo.InvariantCulture));
+                    var json_ = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(body, JsonSerializerSettings);
+                    var content_ = new System.Net.Http.ByteArrayContent(json_);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    request_.Content = content_;
+                    request_.Method = new System.Net.Http.HttpMethod("PUT");
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                
+                    // Operation Path: "v1/organization/{organizationId}/enterprise-offering"
+                    urlBuilder_.Append("v1/organization/");
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(organizationId, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append("/enterprise-offering");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -862,6 +960,57 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
             var result = System.Convert.ToString(value, cultureInfo);
             return result == null ? "" : result;
         }
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SetEnterpriseOfferingRequest
+    {
+
+        /// <summary>
+        /// Fixed monthly price for the negotiated enterprise offering in minor currency units.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("fixedPrice")]
+        [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
+        public int FixedPrice { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("currency")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<Currency>))]
+        public Currency Currency { get; set; } = default!;
+
+        /// <summary>
+        /// Maximum monthly users allowed for the negotiated enterprise offering.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("purchasedUserCapacity")]
+        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+        public int PurchasedUserCapacity { get; set; } = default!;
+
+        /// <summary>
+        /// Maximum monthly locations allowed for the negotiated enterprise offering.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("purchasedLocationCapacity")]
+        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+        public int PurchasedLocationCapacity { get; set; } = default!;
+
+        /// <summary>
+        /// Maximum monthly teams allowed for the negotiated enterprise offering.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("purchasedTeamCapacity")]
+        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+        public int PurchasedTeamCapacity { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum Currency
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"nzd")]
+        Nzd = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"usd")]
+        Usd = 1,
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]

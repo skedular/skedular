@@ -2,6 +2,7 @@ using Api.Shared.Services.Configurations.Grpc;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Api.Services.Authorization;
+using Organization.Api.Services.Pricing;
 using IOrganizationMemberService = Organization.Api.Services.IOrganizationMemberService;
 using OrganizationMemberService = Organization.Api.Services.OrganizationMemberService;
 
@@ -41,7 +42,9 @@ public static class Extensions
                 .AddScoped<IOrganizationBankAccountService, OrganizationBankAccountService>()
                 .AddScoped<IOrganizationTaxDetailsService, OrganizationTaxDetailsService>()
                 .AddScoped<IOrganizationXeroConnectionService, OrganizationXeroConnectionService>()
-                .AddScoped<IOrganizationOwnershipService, OrganizationOwnershipService>();
+                .AddScoped<IOrganizationOwnershipService, OrganizationOwnershipService>()
+                .AddScoped<IPricingCatalogService, PricingCatalogService>()
+                .AddScoped<IOrganizationTeamsSubscriptionService, OrganizationTeamsSubscriptionService>();
 
         public IServiceCollection AddJobs() =>
             services;

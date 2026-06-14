@@ -14,6 +14,7 @@ using BankAccount = Api.Shared.Grpc.Skedular.Organization.Billing.V1.BankAccount
 using CdnFile = Api.Shared.Services.Models.CdnFile;
 using CdnImageFile = Api.Shared.Services.Models.CdnImageFile;
 using Coordinates = Api.Shared.Grpc.Skedular.Organization.Core.V1.Coordinates;
+using Currency = Api.Shared.Services.Models.Currency;
 using Customer = Organization.Shared.Models.Customer;
 using IndustrySubCategory = Organization.Shared.Models.IndustrySubCategory;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
@@ -103,6 +104,46 @@ public class GrpcMapper : IGrpcMapper
     {
         var organizationOffering = src.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue)
             .OrderByDescending(item => item.End).First();
+        var offering = new Offering
+        {
+            Id = organizationOffering.Id,
+            OrganizationId = src.Id,
+            Code = organizationOffering.Code.ToOfferingCode(),
+            Start = organizationOffering.Start.ToTimestamp(),
+            End = organizationOffering.End.ToTimestamp(),
+            AutoRenew = organizationOffering.AutoRenew,
+            Currency = organizationOffering.Currency switch
+            {
+                Currency.Nzd => global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Currency.Nzd,
+                Currency.Usd => global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Currency.Usd,
+                _ => throw new ArgumentOutOfRangeException()
+            }
+        };
+        if (organizationOffering.UnitPrice.HasValue)
+        {
+            offering.UnitPrice = organizationOffering.UnitPrice.Value;
+        }
+
+        if (organizationOffering.FixedPrice.HasValue)
+        {
+            offering.FixedPrice = organizationOffering.FixedPrice.Value;
+        }
+
+        if (organizationOffering.PurchasedUserCapacity.HasValue)
+        {
+            offering.PurchasedUserCapacity = organizationOffering.PurchasedUserCapacity.Value;
+        }
+
+        if (organizationOffering.PurchasedLocationCapacity.HasValue)
+        {
+            offering.PurchasedLocationCapacity = organizationOffering.PurchasedLocationCapacity.Value;
+        }
+
+        if (organizationOffering.PurchasedTeamCapacity.HasValue)
+        {
+            offering.PurchasedTeamCapacity = organizationOffering.PurchasedTeamCapacity.Value;
+        }
+
         var organization = new global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization
         {
             Id = src.Id,
@@ -123,16 +164,7 @@ public class GrpcMapper : IGrpcMapper
             IsOwnershipVerified = src.IsOwnershipVerified ?? false,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl.ToSafeString(),
-            Offering = new Offering
-            {
-                Id = organizationOffering.Id,
-                OrganizationId = src.Id,
-                Code = organizationOffering.Code.ToOfferingCode(),
-                Start = organizationOffering.Start.ToTimestamp(),
-                End = organizationOffering.End.ToTimestamp(),
-                AutoRenew = organizationOffering.AutoRenew,
-                UnitPrice = organizationOffering.UnitPrice
-            },
+            Offering = offering,
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             TaxDetails = MapToGrpcResponse(src.OrganizationTaxDetails),
             PhysicalAddress = MapToGrpcResponse(src.PhysicalAddress)

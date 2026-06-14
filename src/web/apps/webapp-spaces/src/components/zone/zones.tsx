@@ -1,6 +1,7 @@
 import { GridContainer, SmallIconTypography, StackRow } from '@skedular/ui';
 import { ZoneIcon } from '@/components/icons';
-import { Chip, Tooltip } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid';
 import type { SxProps, Theme } from '@mui/system';
 import { memo } from 'react';

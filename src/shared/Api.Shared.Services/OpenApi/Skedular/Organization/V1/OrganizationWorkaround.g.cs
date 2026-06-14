@@ -73,6 +73,17 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RerunAllOfferingsWorkflows(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
+        /// set enterprise offering
+        /// </summary>
+        /// <param name="x_API_Key">API Key</param>
+        /// <returns>the status of setting the enterprise offering</returns>
+
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/enterprise-offering")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("set enterprise offering")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> SetEnterpriseOffering(string organizationId, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, [Microsoft.AspNetCore.Mvc.FromBody] SetEnterpriseOfferingRequest body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
         /// resync all azure tenants
         /// </summary>
         /// <returns>the status of resyncing all azure tenants</returns>
@@ -111,6 +122,61 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("regenerate organization daily analytics")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateDailyAnalytics(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SetEnterpriseOfferingRequest
+    {
+
+        /// <summary>
+        /// Fixed monthly price for the negotiated enterprise offering in minor currency units.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("fixedPrice")]
+        [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
+        [System.ComponentModel.Description("Fixed monthly price for the negotiated enterprise offering in minor currency units.")]
+        public int FixedPrice { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("currency")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<Currency>))]
+        public Currency Currency { get; set; } = default!;
+
+        /// <summary>
+        /// Maximum monthly users allowed for the negotiated enterprise offering.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("purchasedUserCapacity")]
+        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+        [System.ComponentModel.Description("Maximum monthly users allowed for the negotiated enterprise offering.")]
+        public int PurchasedUserCapacity { get; set; } = default!;
+
+        /// <summary>
+        /// Maximum monthly locations allowed for the negotiated enterprise offering.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("purchasedLocationCapacity")]
+        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+        [System.ComponentModel.Description("Maximum monthly locations allowed for the negotiated enterprise offering.")]
+        public int PurchasedLocationCapacity { get; set; } = default!;
+
+        /// <summary>
+        /// Maximum monthly teams allowed for the negotiated enterprise offering.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("purchasedTeamCapacity")]
+        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+        [System.ComponentModel.Description("Maximum monthly teams allowed for the negotiated enterprise offering.")]
+        public int PurchasedTeamCapacity { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum Currency
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"nzd")]
+        Nzd = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"usd")]
+        Usd = 1,
 
     }
 

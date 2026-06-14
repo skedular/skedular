@@ -44,7 +44,7 @@ public class UpdateOfferingShould
             Start = now.AddDays(-1),
             End = now.AddDays(1),
             AutoRenew = true,
-            UnitPrice = 0
+            UnitPrice = null
         };
         var mappedOrganization = new Shared.Models.Organization { Id = organization.Id, Name = organization.Name };
         var stripeUrl = new Uri("https://example.test/authorize");

@@ -9,6 +9,7 @@ using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
+using Organization.Shared.Services.Pricing;
 using Organization.Shared.Workflows;
 using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 
@@ -43,12 +44,11 @@ public class AzureTenantOnboardingService(
         {
             Id = randomHelper.Generate(),
             CreatedAt = start,
-            Code = OfferingCode.FreeTierV1,
             Start = start,
             End = start.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
-            AutoRenew = true,
-            UnitPrice = OfferingCode.FreeTierV1.GetOffering().UnitPrice
+            AutoRenew = true
         };
+        organizationOffering.ApplyOfferingTemplate(OfferingCode.FreeTierV1);
         var organization = new Shared.Database.Entities.Organization
         {
             Id = randomHelper.Generate(),

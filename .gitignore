@@ -14,6 +14,7 @@ packages/
 platform/**/.kubeconfig
 
 diagrams/out/
+**/graphify-out/cache/
 
 index-env.html
 globalEnvConfig.json

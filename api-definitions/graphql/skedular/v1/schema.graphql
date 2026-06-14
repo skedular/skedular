@@ -326,6 +326,8 @@ type Query
   organizationOffering(
     code: String! @fusion__inputField(schema: ORGANIZATION_API)
   ): OrganizationOfferingDetails! @fusion__field(schema: ORGANIZATION_API)
+  organizationOfferingPlanStatuses: [OrganizationOfferingPlanStatusDetails!]!
+    @fusion__field(schema: ORGANIZATION_API)
   organizationPublic(
     customDomain: String @fusion__inputField(schema: ORGANIZATION_API)
     id: String @fusion__inputField(schema: ORGANIZATION_API)
@@ -367,6 +369,12 @@ type Query
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
+  organizationTeamsSubscription(
+    organizationId: String! @fusion__inputField(schema: ORGANIZATION_API)
+  ): OrganizationTeamsSubscriptionDetails
+    @cost(weight: "10")
+    @fusion__cost(schema: ORGANIZATION_API, weight: "10")
+    @fusion__field(schema: ORGANIZATION_API)
   organizationTypes: [OrganizationTypeDetails!]!
     @fusion__field(schema: ORGANIZATION_API)
   organizationVersion: Version! @fusion__field(schema: ORGANIZATION_API)
@@ -391,6 +399,17 @@ type Query
     @fusion__field(schema: TEAM_API)
   personalInformationVisibilityTypes: [PersonalInformationVisibilityDetails!]!
     @fusion__field(schema: CUSTOMER_API)
+  pricingCatalog(
+    productOfferingCode: PricingCatalogProductOfferingCode @fusion__inputField(schema: ORGANIZATION_API)
+  ): PricingCatalogDetails! @fusion__field(schema: ORGANIZATION_API)
+  pricingCatalogPlanAvailabilities: [PricingCatalogPlanAvailabilityDetails!]!
+    @fusion__field(schema: ORGANIZATION_API)
+  pricingCatalogProductOfferings: [PricingCatalogProductOfferingDetails!]!
+    @fusion__field(schema: ORGANIZATION_API)
+  pricingCatalogSubscriptionPlans: [PricingCatalogSubscriptionPlanDetails!]!
+    @fusion__field(schema: ORGANIZATION_API)
+  pricingEntitlementReasonCodes: [PricingEntitlementReasonCodeDetails!]!
+    @fusion__field(schema: ORGANIZATION_API)
   product(id: String! @fusion__inputField(schema: MARKETPLACE_API)): ProductDetails
     @cost(weight: "10")
     @fusion__cost(schema: MARKETPLACE_API, weight: "10")
@@ -1202,6 +1221,12 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
+  updateOrganizationTeamsSubscription(
+    input: UpdateOrganizationTeamsSubscriptionInput! @fusion__inputField(schema: ORGANIZATION_API)
+  ): UpdateOrganizationTeamsSubscriptionPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: ORGANIZATION_API, weight: "10")
+    @fusion__field(schema: ORGANIZATION_API)
   updateOrganizationXeroConnection(
     input: UpdateOrganizationXeroConnectionInput! @fusion__inputField(schema: ORGANIZATION_API)
   ): OrganizationPayload!
@@ -1407,6 +1432,11 @@ type CancelOrganizationOfferingPayload @fusion__type(schema: ORGANIZATION_API) {
   clientMutationId: String @fusion__field(schema: ORGANIZATION_API)
 }
 
+type CatalogVersionDetails @fusion__type(schema: ORGANIZATION_API) {
+  name: String! @fusion__field(schema: ORGANIZATION_API)
+  type: CatalogVersion! @fusion__field(schema: ORGANIZATION_API)
+}
+
 type CdnFile
   @fusion__type(schema: LOCATION_API)
   @fusion__type(schema: MARKETPLACE_API)
@@ -1564,13 +1594,16 @@ type ContactDetails @fusion__type(schema: LOCATION_API) {
 
 type CurrencyDetails
   @fusion__type(schema: BOOKING_API)
-  @fusion__type(schema: MARKETPLACE_API) {
+  @fusion__type(schema: MARKETPLACE_API)
+  @fusion__type(schema: ORGANIZATION_API) {
   name: String!
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
+    @fusion__field(schema: ORGANIZATION_API)
   type: Currency!
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
+    @fusion__field(schema: ORGANIZATION_API)
 }
 
 type CustomerBillingDetails @fusion__type(schema: CUSTOMER_API) {
@@ -2159,17 +2192,23 @@ type OpeningHoursDetails @fusion__type(schema: LOCATION_API) {
 }
 
 type OrganizationActiveOfferingDetails @fusion__type(schema: ORGANIZATION_API) {
+  catalogVersion: CatalogVersionDetails @fusion__field(schema: ORGANIZATION_API)
   code: String! @fusion__field(schema: ORGANIZATION_API)
+  currency: CurrencyDetails! @fusion__field(schema: ORGANIZATION_API)
   earlyBird: Boolean! @fusion__field(schema: ORGANIZATION_API)
   end: DateTime! @fusion__field(schema: ORGANIZATION_API)
   featureSet: [String!]! @fusion__field(schema: ORGANIZATION_API)
+  fixedPrice: Int @fusion__field(schema: ORGANIZATION_API)
   free: Boolean! @fusion__field(schema: ORGANIZATION_API)
   id: ID! @fusion__field(schema: ORGANIZATION_API)
   isEnterprise: Boolean! @fusion__field(schema: ORGANIZATION_API)
   name: String! @fusion__field(schema: ORGANIZATION_API)
+  purchasedLocationCapacity: Int @fusion__field(schema: ORGANIZATION_API)
+  purchasedTeamCapacity: Int @fusion__field(schema: ORGANIZATION_API)
+  purchasedUserCapacity: Int @fusion__field(schema: ORGANIZATION_API)
   start: DateTime! @fusion__field(schema: ORGANIZATION_API)
   underPriceLines: [String!]! @fusion__field(schema: ORGANIZATION_API)
-  unitPrice: Int! @fusion__field(schema: ORGANIZATION_API)
+  unitPrice: Int @fusion__field(schema: ORGANIZATION_API)
 }
 
 type OrganizationAnalytics @fusion__type(schema: ORGANIZATION_API) {
@@ -2183,7 +2222,7 @@ type OrganizationArrearsInvoiceDetails @fusion__type(schema: BOOKING_API) {
   billingPeriodEndExclusive: DateTime! @fusion__field(schema: BOOKING_API)
   billingPeriodStartInclusive: DateTime! @fusion__field(schema: BOOKING_API)
   createdAt: DateTime! @fusion__field(schema: BOOKING_API)
-  currency: String! @fusion__field(schema: BOOKING_API)
+  currency: CurrencyDetails! @fusion__field(schema: BOOKING_API)
   invoiceNumber: String! @fusion__field(schema: BOOKING_API)
   invoiceUrl: String! @fusion__field(schema: BOOKING_API)
   totalAmount: Decimal! @fusion__field(schema: BOOKING_API)
@@ -2488,13 +2527,24 @@ type OrganizationMemberStatusDetails @fusion__type(schema: ORGANIZATION_API) {
 
 type OrganizationOfferingDetails @fusion__type(schema: ORGANIZATION_API) {
   code: String! @fusion__field(schema: ORGANIZATION_API)
+  currency: Currency! @fusion__field(schema: ORGANIZATION_API)
   earlyBird: Boolean! @fusion__field(schema: ORGANIZATION_API)
   featureSet: [String!]! @fusion__field(schema: ORGANIZATION_API)
+  fixedPrice: Int @fusion__field(schema: ORGANIZATION_API)
   free: Boolean! @fusion__field(schema: ORGANIZATION_API)
   isEnterprise: Boolean! @fusion__field(schema: ORGANIZATION_API)
   name: String! @fusion__field(schema: ORGANIZATION_API)
+  purchasedLocationCapacity: Int @fusion__field(schema: ORGANIZATION_API)
+  purchasedTeamCapacity: Int @fusion__field(schema: ORGANIZATION_API)
+  purchasedUserCapacity: Int @fusion__field(schema: ORGANIZATION_API)
   underPriceLines: [String!]! @fusion__field(schema: ORGANIZATION_API)
-  unitPrice: Int! @fusion__field(schema: ORGANIZATION_API)
+  unitPrice: Int @fusion__field(schema: ORGANIZATION_API)
+}
+
+type OrganizationOfferingPlanStatusDetails
+  @fusion__type(schema: ORGANIZATION_API) {
+  name: String! @fusion__field(schema: ORGANIZATION_API)
+  type: OrganizationOfferingPlanStatus! @fusion__field(schema: ORGANIZATION_API)
 }
 
 type OrganizationPayload @fusion__type(schema: ORGANIZATION_API) {
@@ -2729,6 +2779,28 @@ type OrganizationTaxDetails @fusion__type(schema: ORGANIZATION_API) {
   taxRatePercentage: Decimal! @fusion__field(schema: ORGANIZATION_API)
 }
 
+type OrganizationTeamsSubscriptionDetails
+  @fusion__type(schema: ORGANIZATION_API) {
+  autoRenew: Boolean! @fusion__field(schema: ORGANIZATION_API)
+  catalogVersionCode: String! @fusion__field(schema: ORGANIZATION_API)
+  currency: Currency! @fusion__field(schema: ORGANIZATION_API)
+  effectiveFrom: DateTime! @fusion__field(schema: ORGANIZATION_API)
+  effectiveUntil: DateTime @fusion__field(schema: ORGANIZATION_API)
+  fixedPrice: Int @fusion__field(schema: ORGANIZATION_API)
+  id: String! @fusion__field(schema: ORGANIZATION_API)
+  organizationId: String! @fusion__field(schema: ORGANIZATION_API)
+  planCode: PricingCatalogSubscriptionPlanCode!
+    @fusion__field(schema: ORGANIZATION_API)
+  productOfferingCode: PricingCatalogProductOfferingCode!
+    @fusion__field(schema: ORGANIZATION_API)
+  purchasedLocationCapacity: Int @fusion__field(schema: ORGANIZATION_API)
+  purchasedTeamCapacity: Int @fusion__field(schema: ORGANIZATION_API)
+  purchasedUserCapacity: Int @fusion__field(schema: ORGANIZATION_API)
+  status: OrganizationOfferingPlanStatus!
+    @fusion__field(schema: ORGANIZATION_API)
+  unitPrice: Int @fusion__field(schema: ORGANIZATION_API)
+}
+
 type OrganizationTermsOfUse @fusion__type(schema: ORGANIZATION_API) {
   id: ID! @fusion__field(schema: ORGANIZATION_API)
   terms: String! @fusion__field(schema: ORGANIZATION_API)
@@ -2829,6 +2901,107 @@ type PeopleCapacity @fusion__type(schema: LOCATION_API) {
 type PersonalInformationVisibilityDetails @fusion__type(schema: CUSTOMER_API) {
   name: String! @fusion__field(schema: CUSTOMER_API)
   type: PersonalInformationVisibility! @fusion__field(schema: CUSTOMER_API)
+}
+
+type PricingCapacityOptionDetails @fusion__type(schema: ORGANIZATION_API) {
+  availability: PricingCatalogPlanAvailability!
+    @fusion__field(schema: ORGANIZATION_API)
+  code: String! @fusion__field(schema: ORGANIZATION_API)
+  displayOrder: Int! @fusion__field(schema: ORGANIZATION_API)
+  label: String! @fusion__field(schema: ORGANIZATION_API)
+  price: PricingPlanPriceDetails @fusion__field(schema: ORGANIZATION_API)
+  userCapacity: Int @fusion__field(schema: ORGANIZATION_API)
+}
+
+type PricingCatalogDetails @fusion__type(schema: ORGANIZATION_API) {
+  activeVersion: PricingCatalogVersionDetails!
+    @fusion__field(schema: ORGANIZATION_API)
+  generatedAt: DateTime! @fusion__field(schema: ORGANIZATION_API)
+  id: String! @fusion__field(schema: ORGANIZATION_API)
+  productOfferings: [PricingProductOfferingDetails!]!
+    @fusion__field(schema: ORGANIZATION_API)
+}
+
+type PricingCatalogPlanAvailabilityDetails
+  @fusion__type(schema: ORGANIZATION_API) {
+  name: String! @fusion__field(schema: ORGANIZATION_API)
+  type: PricingCatalogPlanAvailability! @fusion__field(schema: ORGANIZATION_API)
+}
+
+type PricingCatalogProductOfferingDetails
+  @fusion__type(schema: ORGANIZATION_API) {
+  name: String! @fusion__field(schema: ORGANIZATION_API)
+  type: PricingCatalogProductOfferingCode!
+    @fusion__field(schema: ORGANIZATION_API)
+}
+
+type PricingCatalogSubscriptionPlanDetails
+  @fusion__type(schema: ORGANIZATION_API) {
+  name: String! @fusion__field(schema: ORGANIZATION_API)
+  type: PricingCatalogSubscriptionPlanCode!
+    @fusion__field(schema: ORGANIZATION_API)
+}
+
+type PricingCatalogVersionDetails @fusion__type(schema: ORGANIZATION_API) {
+  code: String! @fusion__field(schema: ORGANIZATION_API)
+  compatibilityNotes: String @fusion__field(schema: ORGANIZATION_API)
+  effectiveFrom: DateTime! @fusion__field(schema: ORGANIZATION_API)
+  effectiveUntil: DateTime @fusion__field(schema: ORGANIZATION_API)
+  status: PricingCatalogVersionStatus! @fusion__field(schema: ORGANIZATION_API)
+}
+
+type PricingEntitlementReasonCodeDetails @fusion__type(schema: ORGANIZATION_API) {
+  name: String! @fusion__field(schema: ORGANIZATION_API)
+  type: EntitlementReasonCode! @fusion__field(schema: ORGANIZATION_API)
+}
+
+type PricingPlanFeatureDetails @fusion__type(schema: ORGANIZATION_API) {
+  code: String! @fusion__field(schema: ORGANIZATION_API)
+  displayOrder: Int! @fusion__field(schema: ORGANIZATION_API)
+  name: String! @fusion__field(schema: ORGANIZATION_API)
+}
+
+type PricingPlanLimitDetails @fusion__type(schema: ORGANIZATION_API) {
+  code: String! @fusion__field(schema: ORGANIZATION_API)
+  limit: Int @fusion__field(schema: ORGANIZATION_API)
+  name: String! @fusion__field(schema: ORGANIZATION_API)
+  unlimited: Boolean! @fusion__field(schema: ORGANIZATION_API)
+}
+
+type PricingPlanPriceDetails @fusion__type(schema: ORGANIZATION_API) {
+  amount: Decimal! @fusion__field(schema: ORGANIZATION_API)
+  cadence: String! @fusion__field(schema: ORGANIZATION_API)
+  currency: Currency! @fusion__field(schema: ORGANIZATION_API)
+  taxInclusive: Boolean! @fusion__field(schema: ORGANIZATION_API)
+}
+
+type PricingProductOfferingDetails @fusion__type(schema: ORGANIZATION_API) {
+  code: PricingCatalogProductOfferingCode!
+    @fusion__field(schema: ORGANIZATION_API)
+  description: String! @fusion__field(schema: ORGANIZATION_API)
+  name: String! @fusion__field(schema: ORGANIZATION_API)
+  plans: [PricingSubscriptionPlanDetails!]!
+    @fusion__field(schema: ORGANIZATION_API)
+  visibility: PricingCatalogVisibility! @fusion__field(schema: ORGANIZATION_API)
+}
+
+type PricingSubscriptionPlanDetails @fusion__type(schema: ORGANIZATION_API) {
+  availability: PricingCatalogPlanAvailability!
+    @fusion__field(schema: ORGANIZATION_API)
+  capacityOptions: [PricingCapacityOptionDetails!]!
+    @fusion__field(schema: ORGANIZATION_API)
+  code: PricingCatalogSubscriptionPlanCode!
+    @fusion__field(schema: ORGANIZATION_API)
+  commercialModel: PricingCatalogCommercialModel!
+    @fusion__field(schema: ORGANIZATION_API)
+  description: String! @fusion__field(schema: ORGANIZATION_API)
+  displayOrder: Int! @fusion__field(schema: ORGANIZATION_API)
+  features: [PricingPlanFeatureDetails!]!
+    @fusion__field(schema: ORGANIZATION_API)
+  limits: [PricingPlanLimitDetails!]! @fusion__field(schema: ORGANIZATION_API)
+  name: String! @fusion__field(schema: ORGANIZATION_API)
+  prices: [PricingPlanPriceDetails!]! @fusion__field(schema: ORGANIZATION_API)
+  recommended: Boolean! @fusion__field(schema: ORGANIZATION_API)
 }
 
 type ProductDetails
@@ -3274,6 +3447,13 @@ type TeamPayload @fusion__type(schema: TEAM_API) {
 
 type UpdateOrganizationOfferingPayload @fusion__type(schema: ORGANIZATION_API) {
   clientMutationId: String @fusion__field(schema: ORGANIZATION_API)
+}
+
+type UpdateOrganizationTeamsSubscriptionPayload
+  @fusion__type(schema: ORGANIZATION_API) {
+  clientMutationId: String @fusion__field(schema: ORGANIZATION_API)
+  organizationTeamsSubscription: OrganizationTeamsSubscriptionDetails!
+    @fusion__field(schema: ORGANIZATION_API)
 }
 
 type VariedDateOpeningHours @fusion__type(schema: LOCATION_API) {
@@ -4773,6 +4953,16 @@ input UpdateOrganizationTaxDetailsInput @fusion__type(schema: ORGANIZATION_API) 
   taxRatePercentage: Decimal @fusion__inputField(schema: ORGANIZATION_API)
 }
 
+input UpdateOrganizationTeamsSubscriptionInput
+  @fusion__type(schema: ORGANIZATION_API) {
+  clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
+  organizationId: String! @fusion__inputField(schema: ORGANIZATION_API)
+  planCode: PricingCatalogSubscriptionPlanCode! @fusion__inputField(schema: ORGANIZATION_API)
+  purchasedLocationCapacity: Int @fusion__inputField(schema: ORGANIZATION_API)
+  purchasedTeamCapacity: Int @fusion__inputField(schema: ORGANIZATION_API)
+  purchasedUserCapacity: Int @fusion__inputField(schema: ORGANIZATION_API)
+}
+
 input UpdateOrganizationXeroConnectionInput
   @fusion__type(schema: ORGANIZATION_API) {
   autoReconcilePayments: Boolean @fusion__inputField(schema: ORGANIZATION_API)
@@ -4947,15 +5137,22 @@ enum BookingOrderField @fusion__type(schema: BOOKING_API) {
   CHANNEL @fusion__enumValue(schema: BOOKING_API)
 }
 
+enum CatalogVersion @fusion__type(schema: ORGANIZATION_API) {
+  TEAMS_V1 @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
 enum Currency
   @fusion__type(schema: BOOKING_API)
-  @fusion__type(schema: MARKETPLACE_API) {
+  @fusion__type(schema: MARKETPLACE_API)
+  @fusion__type(schema: ORGANIZATION_API) {
   NZD
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
   USD
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum CustomerBillingDetailsPatchField @fusion__type(schema: CUSTOMER_API) {
@@ -5001,6 +5198,19 @@ enum DayOfWeek @fusion__type(schema: BOOKING_API) {
   THURSDAY @fusion__enumValue(schema: BOOKING_API)
   FRIDAY @fusion__enumValue(schema: BOOKING_API)
   SATURDAY @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum EntitlementReasonCode @fusion__type(schema: ORGANIZATION_API) {
+  NOT_SET @fusion__enumValue(schema: ORGANIZATION_API)
+  ALLOWED @fusion__enumValue(schema: ORGANIZATION_API)
+  FREE_ACTIVE_USER_LIMIT_REACHED @fusion__enumValue(schema: ORGANIZATION_API)
+  FREE_TEAM_LIMIT_REACHED @fusion__enumValue(schema: ORGANIZATION_API)
+  FREE_LOCATION_LIMIT_REACHED @fusion__enumValue(schema: ORGANIZATION_API)
+  ENTERPRISE_CAPACITY_REACHED @fusion__enumValue(schema: ORGANIZATION_API)
+  OFFERING_NOT_FOUND @fusion__enumValue(schema: ORGANIZATION_API)
+  OFFERING_NOT_EFFECTIVE @fusion__enumValue(schema: ORGANIZATION_API)
+  CONTACT_US_REQUIRED @fusion__enumValue(schema: ORGANIZATION_API)
+  LEGACY_OFFERING_UNCHANGED @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum FeedbackChannelType @fusion__type(schema: CUSTOMER_API) {
@@ -5231,6 +5441,16 @@ enum OrganizationMemberStatus @fusion__type(schema: ORGANIZATION_API) {
 
 enum OrganizationOfferingPatchField @fusion__type(schema: ORGANIZATION_API) {
   OFFERING_CODE @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
+enum OrganizationOfferingPlanStatus @fusion__type(schema: ORGANIZATION_API) {
+  NOT_SET @fusion__enumValue(schema: ORGANIZATION_API)
+  PENDING @fusion__enumValue(schema: ORGANIZATION_API)
+  ACTIVE @fusion__enumValue(schema: ORGANIZATION_API)
+  SCHEDULED_CHANGE @fusion__enumValue(schema: ORGANIZATION_API)
+  CANCELED @fusion__enumValue(schema: ORGANIZATION_API)
+  EXPIRED @fusion__enumValue(schema: ORGANIZATION_API)
+  LEGACY @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum OrganizationOrderField @fusion__type(schema: ORGANIZATION_API) {
@@ -6362,6 +6582,44 @@ enum PaymentStatus @fusion__type(schema: BOOKING_API) {
 enum PersonalInformationVisibility @fusion__type(schema: CUSTOMER_API) {
   VISIBLE @fusion__enumValue(schema: CUSTOMER_API)
   REDACTED @fusion__enumValue(schema: CUSTOMER_API)
+}
+
+enum PricingCatalogCommercialModel @fusion__type(schema: ORGANIZATION_API) {
+  FREE @fusion__enumValue(schema: ORGANIZATION_API)
+  USAGE_BASED @fusion__enumValue(schema: ORGANIZATION_API)
+  CAPACITY_BASED @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
+enum PricingCatalogPlanAvailability @fusion__type(schema: ORGANIZATION_API) {
+  NOT_SET @fusion__enumValue(schema: ORGANIZATION_API)
+  SELF_SERVICE @fusion__enumValue(schema: ORGANIZATION_API)
+  CONTACT_US @fusion__enumValue(schema: ORGANIZATION_API)
+  HIDDEN @fusion__enumValue(schema: ORGANIZATION_API)
+  DEPRECATED @fusion__enumValue(schema: ORGANIZATION_API)
+  UNAVAILABLE @fusion__enumValue(schema: ORGANIZATION_API)
+  EXISTING_CUSTOMERS_ONLY @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
+enum PricingCatalogProductOfferingCode @fusion__type(schema: ORGANIZATION_API) {
+  NOT_SET @fusion__enumValue(schema: ORGANIZATION_API)
+  TEAMS @fusion__enumValue(schema: ORGANIZATION_API)
+  SPACES @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
+enum PricingCatalogSubscriptionPlanCode @fusion__type(schema: ORGANIZATION_API) {
+  NOT_SET @fusion__enumValue(schema: ORGANIZATION_API)
+  FREE @fusion__enumValue(schema: ORGANIZATION_API)
+  PAY_AS_YOU_GO @fusion__enumValue(schema: ORGANIZATION_API)
+  ENTERPRISE_CAPACITY @fusion__enumValue(schema: ORGANIZATION_API)
+  LEGACY_EARLY_BIRD @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
+enum PricingCatalogVersionStatus @fusion__type(schema: ORGANIZATION_API) {
+  ACTIVE @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
+enum PricingCatalogVisibility @fusion__type(schema: ORGANIZATION_API) {
+  PUBLIC @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum PrivateBookingPatchField @fusion__type(schema: BOOKING_API) {

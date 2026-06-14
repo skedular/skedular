@@ -1,4 +1,5 @@
 using Api.Shared.Services.Configurations.Grpc;
+using Api.Shared.Services.Offering;
 using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Api.Services.Authorization;
@@ -18,6 +19,7 @@ public static class Extensions
             services
                 .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
                 .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
+                .AddScoped<IPricingEntitlementEvaluator, PricingEntitlementEvaluator>()
                 .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
                 .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
                 .AddScoped<ITeamService, TeamService>()

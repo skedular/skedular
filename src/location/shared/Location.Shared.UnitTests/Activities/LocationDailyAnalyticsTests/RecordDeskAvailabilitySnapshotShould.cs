@@ -156,8 +156,13 @@ public class RecordDeskAvailabilitySnapshotShould
         [Frozen] ILogger<LocationDailyAnalytics> logger,
         [Frozen] DailyResourceAvailabilitySnapshot snapshotResult)
     {
-        var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
-            new BookingService.BookingServiceClient(callInvoker), logger);
+        var sut = new LocationDailyAnalytics(
+            repositoryFactory,
+            randomHelper,
+            timeProvider,
+            bookingConfiguration,
+            new BookingService.BookingServiceClient(callInvoker),
+            logger);
         var environment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 1, 15, 10, 0, 0, TimeSpan.Zero);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);

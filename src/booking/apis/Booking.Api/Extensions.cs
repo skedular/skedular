@@ -1,4 +1,5 @@
 using Api.Shared.Services.Configurations.Grpc;
+using Api.Shared.Services.Offering;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
@@ -19,6 +20,7 @@ public static class Extensions
             services
                 .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
                 .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
+                .AddScoped<IPricingEntitlementEvaluator, PricingEntitlementEvaluator>()
                 .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
                 .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
                 .AddScoped<IBookingPaymentService, BookingPaymentService>()

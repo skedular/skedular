@@ -9,16 +9,16 @@ public interface IOrganizationOfferingService
     ValueTask<bool> IsMoreInteractionAllowedAsync(string organizationId, string customerId, CancellationToken cancellationToken);
 }
 
-public class OrganizationOfferingService(ICachedOrganizationService cachedOrganizationService) : IOrganizationOfferingService
+public class OrganizationOfferingService(
+    ICachedOrganizationService cachedOrganizationService,
+    IPricingEntitlementEvaluator pricingEntitlementEvaluator)
+    : IOrganizationOfferingService
 {
     public async ValueTask<bool> IsMoreInteractionAllowedAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        var offering = organization.Offering;
-        return offering is not null && (offering.Code.GetOffering().MaxUserCount == -1 ||
-                                        offering.ActiveCustomerIds.Count <= offering.Code.GetOffering().MaxUserCount ||
-                                        offering.ActiveCustomerIds.Contains(customerId));
+        return pricingEntitlementEvaluator.EvaluateActiveUser(organization.Offering, customerId).IsAllowed;
     }
 }

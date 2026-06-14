@@ -1,4 +1,5 @@
 import { createSpacesAppSwitcherModel } from '@/app/app-switcher-config';
+import AppSwitcher from '@skedular/ui/app-shell/app-switcher';
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
 import { AddIcon, FeedbackIcon, HamburgerMenuIcon, OrganizationIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
@@ -17,7 +18,7 @@ import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
 import { getCustomerFullName, localNow, PaletteModeContext, SelectedPaletteModeContext, toLongDateTime, UpdatePaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
-import { AppSwitcher, BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';

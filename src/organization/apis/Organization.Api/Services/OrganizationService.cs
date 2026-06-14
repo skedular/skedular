@@ -11,10 +11,12 @@ using Organization.Api.Mappers;
 using Organization.Api.Models;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
+using Organization.Shared.Models.PricingCatalog;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
+using Organization.Shared.Services.Pricing;
 using Organization.Shared.Workflows;
 using Polly;
 using Constants = Enterprise.Shared.Constants;
@@ -154,12 +156,12 @@ public class OrganizationService(
             Id = randomHelper.Generate(),
             CreatedAt = now,
             Organization = organizationEntity,
-            Code = finalOfferingCode,
             Start = now,
             End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
             AutoRenew = true,
-            UnitPrice = finalOfferingCode.GetOffering().UnitPrice
+            Currency = PricingCatalogConstants.SkedularPricingCurrency
         };
+        organizationOffering.ApplyOfferingTemplate(finalOfferingCode);
 
         organizationEntity.OrganizationMembers = organizationMembers;
         organizationEntity.OrganizationOfferings = [organizationOffering];

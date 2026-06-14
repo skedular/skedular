@@ -8,7 +8,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { SxProps, Theme } from '@mui/system';
 import type { PropsWithChildren, ReactNode } from 'react';
-import { StackColumn, StackRow } from './index';
+import StackColumn from './stack-column';
+import StackRow from './stack-row';
 
 type Props = {
   title: ReactNode;

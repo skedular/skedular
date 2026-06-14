@@ -10,7 +10,6 @@ namespace Organization.Shared.Repositories;
 public interface IOrganizationOfferingRepository : IRepository<OrganizationOffering>
 {
     Task<OrganizationOffering?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<IReadOnlyList<OrganizationOffering>> GetActiveOfferingsAsync(CancellationToken cancellationToken);
 
     Task<OrganizationOffering?> GetCurrentActiveByOrganizationIdAsync(
         string organizationId,
@@ -49,12 +48,6 @@ public class OrganizationOfferingRepository(OrganizationDbContext dbContext, Tim
                 query.OrganizationStripePaymentMethods.Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue))
             .Include(query => query.OrganizationOfferingActiveMembers)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
-
-    public async Task<IReadOnlyList<OrganizationOffering>> GetActiveOfferingsAsync(CancellationToken cancellationToken) =>
-        await DbContext.OrganizationOffering
-            .Where(query => !query.DeletedAt.HasValue)
-            .Include(query => query.Organization)
-            .ToListAsync(cancellationToken);
 
     /// <summary>
     ///     Returns the current active offering for the supplied organization at the specified point in time.

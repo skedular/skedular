@@ -1,4 +1,5 @@
 using Api.Shared.Services.Configurations.Grpc;
+using Api.Shared.Services.Offering;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
@@ -16,6 +17,7 @@ public static class Extensions
 
         public IServiceCollection AddServices() =>
             services
+                .AddScoped<IPricingEntitlementEvaluator, PricingEntitlementEvaluator>()
                 .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
                 .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
                 .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()

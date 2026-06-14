@@ -257,6 +257,11 @@ public class EventMapper : IEventMapper
             End = src.End,
             AutoRenew = src.AutoRenew,
             UnitPrice = src.UnitPrice,
+            FixedPrice = src.FixedPrice,
+            Currency = src.Currency.ToCurrency(),
+            PurchasedUserCapacity = src.PurchasedUserCapacity,
+            PurchasedLocationCapacity = src.PurchasedLocationCapacity,
+            PurchasedTeamCapacity = src.PurchasedTeamCapacity,
             Organization = organization
         };
 

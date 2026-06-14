@@ -1,6 +1,6 @@
 'use client';
 
-import { ThemeProvider as MuiThemeProvider } from '@mui/material';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { PaletteMode } from '@mui/material/styles';
 import { createTheme } from '@skedular/ui';
 import type { PropsWithChildren } from 'react';

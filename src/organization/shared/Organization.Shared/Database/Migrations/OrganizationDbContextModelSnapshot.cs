@@ -20,7 +20,7 @@ namespace Organization.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.8")
+                .HasAnnotation("ProductVersion", "10.0.9")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -2432,17 +2432,31 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<bool>("AutoRenew")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("CatalogVersion")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<int>("Code")
                         .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("usd");
+
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset>("End")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("FixedPrice")
+                        .HasColumnType("integer");
 
                     b.Property<uint>("EntityFrameworkVersion")
                         .IsConcurrencyToken()
@@ -2460,23 +2474,38 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("OrganizationStripePaymentIntentId")
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int?>("PurchasedLocationCapacity")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PurchasedTeamCapacity")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PurchasedUserCapacity")
+                        .HasColumnType("integer");
+
                     b.Property<DateTimeOffset>("Start")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("UnitPrice")
+                    b.Property<int?>("UnitPrice")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AutoRenew");
 
+                    b.HasIndex("CatalogVersion");
+
                     b.HasIndex("Code");
 
                     b.HasIndex("CreatedAt");
 
+                    b.HasIndex("Currency");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("End");
+
+                    b.HasIndex("FixedPrice");
 
                     b.HasIndex("ModifiedAt");
 
@@ -2484,6 +2513,12 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("OrganizationStripePaymentIntentId")
                         .IsUnique();
+
+                    b.HasIndex("PurchasedLocationCapacity");
+
+                    b.HasIndex("PurchasedTeamCapacity");
+
+                    b.HasIndex("PurchasedUserCapacity");
 
                     b.HasIndex("Start");
 

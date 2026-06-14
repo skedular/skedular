@@ -7,19 +7,51 @@ namespace Location.Api.Services.Authorization;
 public interface IOrganizationOfferingService
 {
     ValueTask<bool> CanCreateLocationAsync(string organizationId, CancellationToken cancellationToken);
+
+    ValueTask<EntitlementDecision> GetLocationCreationEntitlementAsync(
+        string organizationId,
+        int currentActiveUserCount,
+        CancellationToken cancellationToken);
+
     ValueTask<bool> IsMoreInteractionAllowedAsync(string organizationId, string customerId, CancellationToken cancellationToken);
 }
 
-public class OrganizationOfferingService(ICachedOrganizationService cachedOrganizationService) : IOrganizationOfferingService
+public class OrganizationOfferingService(
+    ICachedOrganizationService cachedOrganizationService,
+    ILogger<OrganizationOfferingService> logger,
+    IPricingEntitlementEvaluator pricingEntitlementEvaluator)
+    : IOrganizationOfferingService
 {
     public async ValueTask<bool> CanCreateLocationAsync(string organizationId, CancellationToken cancellationToken)
     {
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        var offering = organization.Offering;
-        return offering is not null && (offering.Code.GetOffering().MaxLocationCount == -1 ||
-                                        organization.Locations.Count < offering.Code.GetOffering().MaxLocationCount);
+        var decision = pricingEntitlementEvaluator.EvaluateLocationCreation(organization.Offering, organization.Locations.Count);
+        if (decision.IsAllowed)
+        {
+            logger.LogInformation("Create-location offering check granted for organization {OrganizationId}", organizationId);
+        }
+        else
+        {
+            logger.LogWarning(
+                "Create-location offering check denied for organization {OrganizationId}: {ReasonCode}",
+                organizationId,
+                decision.ReasonCode);
+        }
+
+        return decision.IsAllowed;
+    }
+
+    public async ValueTask<EntitlementDecision> GetLocationCreationEntitlementAsync(
+        string organizationId,
+        int currentActiveUserCount,
+        CancellationToken cancellationToken)
+    {
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
+                           throw new OrganizationNotFound();
+
+        return pricingEntitlementEvaluator.EvaluateActiveUserCount(organization.Offering, currentActiveUserCount);
     }
 
     public async ValueTask<bool> IsMoreInteractionAllowedAsync(string organizationId, string customerId, CancellationToken cancellationToken)
@@ -27,9 +59,6 @@ public class OrganizationOfferingService(ICachedOrganizationService cachedOrgani
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        var offering = organization.Offering;
-        return offering is not null && (offering.Code.GetOffering().MaxUserCount == -1 ||
-                                        offering.ActiveCustomerIds.Count <= offering.Code.GetOffering().MaxUserCount ||
-                                        offering.ActiveCustomerIds.Contains(customerId));
+        return pricingEntitlementEvaluator.EvaluateActiveUser(organization.Offering, customerId).IsAllowed;
     }
 }

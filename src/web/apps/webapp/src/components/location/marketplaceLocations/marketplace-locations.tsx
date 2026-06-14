@@ -4,7 +4,8 @@ import type { marketplaceLocations_locations_query$key } from '@/queries/__gener
 import type { marketplaceLocations_locations_refetchableFragment, OrganizationTagType } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
 import type { marketplaceLocations_query$key } from '@/queries/__generated__/marketplaceLocations_query.graphql';
 import '@/styles/leaflet/leaflet.css';
-import { useMediaQuery, useTheme } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Pagination from '@mui/material/Pagination';

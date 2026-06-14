@@ -1,6 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { createElement } from 'react';
+import { describe, expect, it, vi } from 'vitest';
 import CustomOrganizationAuthPage from './custom-organization-auth-page';
+
+vi.mock('next/image', () => ({
+  default: ({ alt, src }: { alt: string; src: string }) => createElement('img', { alt, src }),
+}));
 
 describe('CustomOrganizationAuthPage', () => {
   it('renders organization branding and posts sign in through custom WorkOS password auth', () => {

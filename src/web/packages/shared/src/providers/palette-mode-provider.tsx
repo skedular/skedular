@@ -1,6 +1,6 @@
 'use client';
 
-import { useMediaQuery } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { PaletteMode } from '@mui/material/styles';
 import type { ExtendedPaletteMode } from '@skedular/ui';
 import { PaletteModeContext, SelectedPaletteModeContext, UpdatePaletteModeContext } from '@skedular/ui';

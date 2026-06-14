@@ -21,6 +21,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
             IsEnterprise = matchedOffering.IsEnterpriseOffering(),
             Name = offering.Name,
             UnitPrice = offering.UnitPrice,
+            FixedPrice = matchedOffering.IsPayAsYouGoOffering() ? null : 0,
             FeatureSet = graphQlMapper.MapTo(offering).ToArray(),
             UnderPriceLines = offering.UnderPriceLines.ToArray(),
             Free = matchedOffering.IsFreeOffering(),

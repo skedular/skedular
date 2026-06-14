@@ -124,14 +124,19 @@ message IndustrySubCategory {
 }
 
 message Offering {
-  string                    id                = 1;
-  string                    code              = 2;
-  google.protobuf.Timestamp start             = 3;
-  google.protobuf.Timestamp end               = 4;
-  bool                      autoRenew         = 5;
-  int32                     unitPrice         = 6;
-  repeated string           activeCustomerIds = 7;
-  string                    organizationId    = 8;
+  string                    id                        = 1;
+  string                    code                      = 2;
+  google.protobuf.Timestamp start                     = 3;
+  google.protobuf.Timestamp end                       = 4;
+  bool                      autoRenew                 = 5;
+  optional int32            unitPrice                 = 6;
+  repeated string           activeCustomerIds         = 7;
+  string                    organizationId            = 8;
+  Currency                  currency                  = 9;
+  optional int32            purchasedUserCapacity     = 10;
+  optional int32            purchasedLocationCapacity = 11;
+  optional int32            purchasedTeamCapacity     = 12;
+  optional int32            fixedPrice                = 13;
 }
 
 message Admin_GetInput {
@@ -351,4 +356,9 @@ message ListingMetadata {
   string          title            = 2;
   string          subTitle         = 3;
   repeated string includedFeatures = 4;
+}
+
+enum Currency {
+  Currency_Nzd = 0;
+  Currency_Usd = 1;
 }

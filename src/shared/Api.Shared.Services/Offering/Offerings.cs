@@ -5,7 +5,7 @@ public class Offering
     public string Name { get; set; } = string.Empty;
     public IReadOnlyCollection<FeatureSetCode> FeatureSets { get; set; } = [];
     public IReadOnlyCollection<string> UnderPriceLines { get; set; } = [];
-    public int UnitPrice { get; set; }
+    public int? UnitPrice { get; set; }
     public int MaxUserCount { get; set; }
     public int MaxLocationCount { get; set; }
     public int MaxTeamCount { get; set; }
@@ -16,7 +16,7 @@ public enum OfferingCode
     EarlyBirdV1 = 0,
     FreeTierV1 = 10000,
     PayAsYouGoV1 = 20000,
-    EnterpriseCustomV1 = 1000000
+    EnterpriseCustomV1 = 30000
 }
 
 public static class Offerings
@@ -39,7 +39,7 @@ public static class Offerings
                     FeatureSetCode.OrganizationUnlimitedTeams,
                     FeatureSetCode.OrganizationUnlimitedBookings
                 ],
-                UnitPrice = 0,
+                UnitPrice = null,
                 MaxUserCount = -1,
                 MaxLocationCount = -1,
                 MaxTeamCount = -1,
@@ -56,7 +56,7 @@ public static class Offerings
                     FeatureSetCode.OrganizationUpToOneTeam,
                     FeatureSetCode.OrganizationUnlimitedBookings
                 ],
-                UnitPrice = 0,
+                UnitPrice = null,
                 MaxUserCount = 10,
                 MaxLocationCount = 1,
                 MaxTeamCount = 1,
@@ -90,7 +90,7 @@ public static class Offerings
                     FeatureSetCode.OrganizationAnalytics,
                     FeatureSetCode.OrganizationPremiumSupport
                 ],
-                UnitPrice = -1,
+                UnitPrice = null,
                 MaxUserCount = -1,
                 MaxLocationCount = -1,
                 MaxTeamCount = -1,
@@ -101,10 +101,9 @@ public static class Offerings
 
     extension(OfferingCode offeringCode)
     {
-        public bool IsFreeOffering() =>
-            offeringCode is OfferingCode.FreeTierV1 or OfferingCode.EarlyBirdV1;
-
+        public bool IsFreeOffering() => offeringCode is OfferingCode.FreeTierV1 or OfferingCode.EarlyBirdV1;
         public bool IsEarlyBirdOffering() => offeringCode == OfferingCode.EarlyBirdV1;
+        public bool IsPayAsYouGoOffering() => offeringCode == OfferingCode.PayAsYouGoV1;
         public bool IsEnterpriseOffering() => offeringCode == OfferingCode.EnterpriseCustomV1;
         public Offering GetOffering() => OfferingSet[offeringCode];
     }

@@ -10,12 +10,14 @@ using Organization.Api.GraphQL.Member;
 using Organization.Api.GraphQL.Offering;
 using Organization.Api.GraphQL.Organization;
 using Organization.Api.GraphQL.PhysicalAddress;
+using Organization.Api.GraphQL.Pricing;
 using Organization.Api.GraphQL.Sso;
 using Organization.Api.GraphQL.Stripe;
 using Organization.Api.GraphQL.Tag;
 using Organization.Api.GraphQL.TaxDetails;
 using Organization.Api.GraphQL.Xero;
 using Organization.Shared.Models;
+using Organization.Shared.Models.PricingCatalog;
 using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.Tag.AddCustomTagInput;
 using AddProductTagInput = Organization.Api.GraphQL.Tag.AddProductTagInput;
@@ -179,6 +181,7 @@ public interface IGraphQlMapper
     Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src);
     OrganizationJoinInvitationEdge MapTo(Edge<JoinInvitation> src);
     OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest);
+    PricingCatalogDetails MapTo(PricingCatalog src);
 }
 
 public class GraphQlMapper : IGraphQlMapper
@@ -380,6 +383,11 @@ public class GraphQlMapper : IGraphQlMapper
                         Code = item.ToOfferingCode(),
                         Name = offering.Name,
                         UnitPrice = offering.UnitPrice,
+                        FixedPrice = item.IsPayAsYouGoOffering() ? null : 0,
+                        Currency = PricingCatalogConstants.SkedularPricingCurrency.ToCurrency(),
+                        PurchasedUserCapacity = offering.MaxUserCount,
+                        PurchasedLocationCapacity = offering.MaxLocationCount,
+                        PurchasedTeamCapacity = offering.MaxTeamCount,
                         FeatureSet = MapTo(offering),
                         UnderPriceLines = offering.UnderPriceLines,
                         Free = item.IsFreeOffering(),
@@ -1100,6 +1108,68 @@ public class GraphQlMapper : IGraphQlMapper
         return dest;
     }
 
+    public PricingCatalogDetails MapTo(PricingCatalog src) =>
+        new()
+        {
+            Id = src.Id,
+            ActiveVersion = new PricingCatalogVersionDetails
+            {
+                Code = src.ActiveVersion.Code,
+                Status = src.ActiveVersion.Status,
+                EffectiveFrom = src.ActiveVersion.EffectiveFrom,
+                EffectiveUntil = src.ActiveVersion.EffectiveUntil,
+                CompatibilityNotes = src.ActiveVersion.CompatibilityNotes
+            },
+            ProductOfferings = src.ProductOfferings.Select(MapToPricingProductOffering),
+            GeneratedAt = src.GeneratedAt
+        };
+
+    private static PricingProductOfferingDetails MapToPricingProductOffering(ProductOffering offering) =>
+        new()
+        {
+            Code = offering.Code,
+            Name = offering.Name,
+            Description = offering.Description,
+            Visibility = offering.Visibility,
+            Plans = offering.Plans.OrderBy(plan => plan.DisplayOrder).Select(MapToPricingSubscriptionPlan)
+        };
+
+    private static PricingSubscriptionPlanDetails MapToPricingSubscriptionPlan(SubscriptionPlan plan) =>
+        new()
+        {
+            Code = plan.Code,
+            Name = plan.Name,
+            Description = plan.Description,
+            CommercialModel = plan.CommercialModel,
+            Features = plan.Features.OrderBy(feature => feature.DisplayOrder).Select(MapToPricingPlanFeature),
+            Limits = plan.Limits.Select(MapToPricingPlanLimit),
+            Prices = plan.Prices.Select(MapToPricingPlanPrice),
+            CapacityOptions = plan.CapacityOptions.OrderBy(option => option.DisplayOrder).Select(MapToPricingCapacityOption),
+            Availability = plan.Availability,
+            Recommended = plan.Recommended,
+            DisplayOrder = plan.DisplayOrder
+        };
+
+    private static PricingCapacityOptionDetails MapToPricingCapacityOption(CapacityOption option) =>
+        new()
+        {
+            Code = option.Code,
+            UserCapacity = option.UserCapacity,
+            Label = option.Label,
+            Price = option.Price is null ? null : MapToPricingPlanPrice(option.Price),
+            Availability = option.Availability,
+            DisplayOrder = option.DisplayOrder
+        };
+
+    private static PricingPlanFeatureDetails MapToPricingPlanFeature(PlanFeature feature) =>
+        new() { Code = feature.Code, Name = feature.Name, DisplayOrder = feature.DisplayOrder };
+
+    private static PricingPlanLimitDetails MapToPricingPlanLimit(PlanLimit limit) =>
+        new() { Code = limit.Code, Name = limit.Name, Limit = limit.Limit, Unlimited = limit.Unlimited };
+
+    private static PricingPlanPriceDetails MapToPricingPlanPrice(PlanPrice price) =>
+        new() { Currency = price.Currency, Amount = price.Amount, Cadence = price.Cadence, TaxInclusive = price.TaxInclusive };
+
     private static Shared.Models.OrganizationPhysicalAddress? MapTo(OrganizationPhysicalAddressPatchInput? src) =>
         src is null
             ? null
@@ -1143,6 +1213,15 @@ public class GraphQlMapper : IGraphQlMapper
             Start = src.Start,
             End = src.End,
             UnitPrice = src.UnitPrice,
+            FixedPrice = src.FixedPrice,
+            Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
+            PurchasedUserCapacity = src.PurchasedUserCapacity,
+            PurchasedLocationCapacity = src.PurchasedLocationCapacity,
+            PurchasedTeamCapacity = src.PurchasedTeamCapacity,
+            CatalogVersion =
+                src.CatalogVersion is null
+                    ? null
+                    : new CatalogVersionDetails { Type = src.CatalogVersion.Value, Name = src.CatalogVersion.Value.ToCatalogVersionName() },
             FeatureSet = MapTo(offering),
             UnderPriceLines = offering.UnderPriceLines,
             Free = src.Code.IsFreeOffering(),
@@ -1238,8 +1317,7 @@ public class GraphQlMapper : IGraphQlMapper
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static OrganizationOffering MapTo(Shared.Database.Entities.OrganizationOffering src,
-        Shared.Models.Organization organization) =>
+    private static OrganizationOffering MapTo(Shared.Database.Entities.OrganizationOffering src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -1251,6 +1329,12 @@ public class GraphQlMapper : IGraphQlMapper
             End = src.End,
             AutoRenew = src.AutoRenew,
             UnitPrice = src.UnitPrice,
+            FixedPrice = src.FixedPrice,
+            Currency = src.Currency.ToCurrency(),
+            PurchasedUserCapacity = src.PurchasedUserCapacity,
+            PurchasedLocationCapacity = src.PurchasedLocationCapacity,
+            PurchasedTeamCapacity = src.PurchasedTeamCapacity,
+            CatalogVersion = src.CatalogVersion.ToNullableCatalogVersion(),
             Organization = organization
         };
 

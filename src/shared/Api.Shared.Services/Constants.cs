@@ -61,6 +61,7 @@ public static class Constants
     public const int MaxCountryCodeLength = 20;
     public const int MaxCurrencyLength = 20;
     public const int MaxTermsOfUseLength = 10000;
+    public const int MaxCatalogVersionLength = 64;
 
     public const int StripeCustomerIdLength = 200;
 

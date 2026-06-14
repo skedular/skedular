@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ProblemDetails } from '../models/ProblemDetails';
+import type { SetEnterpriseOfferingRequest } from '../models/SetEnterpriseOfferingRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 export class WorkaroundService {
@@ -59,6 +60,33 @@ export class WorkaroundService {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/v1/organization/rerun-all-offerings-workflows',
+        });
+    }
+    /**
+     * set enterprise offering
+     * @param organizationId
+     * @param xApiKey API Key
+     * @param requestBody
+     * @returns any the status of setting the enterprise offering
+     * @returns ProblemDetails unexpected error
+     * @throws ApiError
+     */
+    public setEnterpriseOffering(
+        organizationId: string,
+        xApiKey: string,
+        requestBody: SetEnterpriseOfferingRequest,
+    ): CancelablePromise<any | ProblemDetails> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/v1/organization/{organizationId}/enterprise-offering',
+            path: {
+                'organizationId': organizationId,
+            },
+            headers: {
+                'X-API-Key': xApiKey,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
     /**

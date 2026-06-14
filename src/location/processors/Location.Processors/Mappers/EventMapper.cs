@@ -109,6 +109,22 @@ public class EventMapper : IEventMapper
                 Code = organizationAfterState.Offering.Code.ToOfferingCode(),
                 Start = organizationAfterState.Offering.Start.ToDateTimeOffset(),
                 End = organizationAfterState.Offering.End.ToDateTimeOffset(),
+                PurchasedUserCapacity = organizationAfterState.Offering.HasPurchasedUserCapacity
+                    ? organizationAfterState.Offering.PurchasedUserCapacity
+                    : null,
+                PurchasedLocationCapacity = organizationAfterState.Offering.HasPurchasedLocationCapacity
+                    ? organizationAfterState.Offering.PurchasedLocationCapacity
+                    : null,
+                PurchasedTeamCapacity = organizationAfterState.Offering.HasPurchasedTeamCapacity
+                    ? organizationAfterState.Offering.PurchasedTeamCapacity
+                    : null,
+                CurrentActiveUserCount = int.TryParse(organizationAfterState.Offering.CurrentActiveUserCount, out var currentActiveUserCount)
+                    ? currentActiveUserCount
+                    : null,
+                IsInteractionAllowed = organizationAfterState.Offering.IsInteractionAllowed,
+                EntitlementReasonCode = string.IsNullOrWhiteSpace(organizationAfterState.Offering.EntitlementReasonCode)
+                    ? null
+                    : organizationAfterState.Offering.EntitlementReasonCode,
                 ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray()
             },
             Type = organizationAfterState.Type switch

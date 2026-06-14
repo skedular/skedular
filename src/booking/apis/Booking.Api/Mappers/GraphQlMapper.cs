@@ -84,7 +84,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             InvoiceUrl = src.InvoiceUrl,
             BillingPeriodStartInclusive = src.BillingPeriodStartInclusive,
             BillingPeriodEndExclusive = src.BillingPeriodEndExclusive,
-            Currency = src.Currency.ToCurrency(),
+            Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
             TotalAmount = src.TotalAmount,
             TotalAmountToDisplay = src.TotalAmount.ToRoundedPrice().ToPriceToDisplay(src.Currency),
             CreatedAt = src.CreatedAt
@@ -422,7 +422,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
 
     private static ResourceDetails MapToResourceDetails(Resource src)
     {
-        var result =  new ResourceDetails
+        var result = new ResourceDetails
         {
             Id = src.Id,
             Name = src.Name,
@@ -436,7 +436,8 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             ProductTags = src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Product).Select(MapTo).ToList()
         };
 
-        var organizationTag = src.OrganizationTags.FirstOrDefault(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type));
+        var organizationTag =
+            src.OrganizationTags.FirstOrDefault(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type));
         if (organizationTag is not null)
         {
             result.ResourceType = MapTo(organizationTag);

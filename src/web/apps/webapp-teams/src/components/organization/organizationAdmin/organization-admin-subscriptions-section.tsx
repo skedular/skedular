@@ -64,6 +64,7 @@ const RootQuery = graphql`
         start
         end
         unitPrice
+        fixedPrice
         featureSet
         underPriceLines
         free
@@ -73,6 +74,7 @@ const RootQuery = graphql`
         code
         name
         unitPrice
+        fixedPrice
         featureSet
         underPriceLines
         free
@@ -214,7 +216,10 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
                   <CardContent sx={{ marginLeft: 1 }}>
                     <BodyIconTypography label={activeOffering.name} sx={{ color: coal }} />
                     <StackRow spacing={0.5} sx={{ marginTop: -2 }}>
-                      <ExtraLargeHeadingIconTypography label={(activeOffering.unitPrice / 100).toFixed(0)} sx={{ paddingTop: 4, color: coal }} />
+                      <ExtraLargeHeadingIconTypography
+                        label={((activeOffering.fixedPrice ?? activeOffering.unitPrice ?? 0) / 100).toFixed(0)}
+                        sx={{ paddingTop: 4, color: coal }}
+                      />
                       <BodyIconTypography label="$" sx={{ color: coal }} />
                     </StackRow>
 
@@ -259,8 +264,8 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
                   <CardContent sx={{ marginLeft: 1 }}>
                     <BodyIconTypography label={availableOffering.name} sx={{ color: coal }} />
                     <StackRow spacing={0.5} sx={{ marginTop: -2 }}>
-                      {availableOffering.unitPrice > 0 && (
-                        <ExtraLargeHeadingIconTypography label={(availableOffering.unitPrice / 100).toFixed(0)} sx={{ paddingTop: 4, color: coal }} />
+                      {(availableOffering.unitPrice ?? 0) > 0 && (
+                        <ExtraLargeHeadingIconTypography label={((availableOffering.unitPrice ?? 0) / 100).toFixed(0)} sx={{ paddingTop: 4, color: coal }} />
                       )}
                       {availableOffering.isEnterprise && <ExtraLargeHeadingIconTypography label="TBC" sx={{ paddingTop: 4, color: coal }} />}
                       <BodyIconTypography label="$" sx={{ color: coal }} />

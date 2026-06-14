@@ -13,6 +13,7 @@ public class IsMoreInteractionAllowedAsyncShould
     [AutoFakeItEasyData]
     public async Task Return_True_When_Organization_Offering_Is_Unlimited(
         [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen] IPricingEntitlementEvaluator pricingEntitlementEvaluator,
         OrganizationOfferingService sut,
         string organizationId,
         string customerId,
@@ -24,6 +25,8 @@ public class IsMoreInteractionAllowedAsyncShould
         };
 
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken)).Returns(organization);
+        A.CallTo(() => pricingEntitlementEvaluator.EvaluateActiveUser(organization.Offering, customerId))
+            .Returns(new EntitlementDecision(true, EntitlementReasonCode.Allowed));
 
         var result = await sut.IsMoreInteractionAllowedAsync(organizationId, customerId, cancellationToken);
 
@@ -34,6 +37,7 @@ public class IsMoreInteractionAllowedAsyncShould
     [AutoFakeItEasyData]
     public async Task Return_True_When_Customer_Is_Already_Active_In_A_Full_Offering(
         [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen] IPricingEntitlementEvaluator pricingEntitlementEvaluator,
         OrganizationOfferingService sut,
         string organizationId,
         string customerId,
@@ -45,6 +49,8 @@ public class IsMoreInteractionAllowedAsyncShould
         };
 
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken)).Returns(organization);
+        A.CallTo(() => pricingEntitlementEvaluator.EvaluateActiveUser(organization.Offering, customerId))
+            .Returns(new EntitlementDecision(true, EntitlementReasonCode.Allowed));
 
         var result = await sut.IsMoreInteractionAllowedAsync(organizationId, customerId, cancellationToken);
 
@@ -55,6 +61,7 @@ public class IsMoreInteractionAllowedAsyncShould
     [AutoFakeItEasyData]
     public async Task Return_False_When_Max_User_Count_Is_Reached_For_Another_Customer(
         [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen] IPricingEntitlementEvaluator pricingEntitlementEvaluator,
         OrganizationOfferingService sut,
         string organizationId,
         string customerId,
@@ -70,6 +77,8 @@ public class IsMoreInteractionAllowedAsyncShould
         };
 
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken)).Returns(organization);
+        A.CallTo(() => pricingEntitlementEvaluator.EvaluateActiveUser(organization.Offering, customerId))
+            .Returns(new EntitlementDecision(false, EntitlementReasonCode.FreeActiveUserLimitReached));
 
         var result = await sut.IsMoreInteractionAllowedAsync(organizationId, customerId, cancellationToken);
 

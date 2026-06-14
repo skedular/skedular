@@ -8,10 +8,19 @@ namespace Team.Api.Services.Authorization;
 public interface IOrganizationOfferingService
 {
     ValueTask<bool> CanCreateTeamAsync(string organizationId, CancellationToken cancellationToken);
+
+    ValueTask<EntitlementDecision> GetTeamCreationEntitlementAsync(
+        string organizationId,
+        int currentActiveUserCount,
+        CancellationToken cancellationToken);
+
     ValueTask<bool> IsMoreInteractionAllowedAsync(string organizationId, string customerId, CancellationToken cancellationToken);
 }
 
-public class OrganizationOfferingService(ICachedOrganizationService cachedOrganizationService, ILogger<OrganizationOfferingService> logger)
+public class OrganizationOfferingService(
+    ICachedOrganizationService cachedOrganizationService,
+    ILogger<OrganizationOfferingService> logger,
+    IPricingEntitlementEvaluator pricingEntitlementEvaluator)
     : IOrganizationOfferingService
 {
     public async ValueTask<bool> CanCreateTeamAsync(string organizationId, CancellationToken cancellationToken)
@@ -28,9 +37,8 @@ public class OrganizationOfferingService(ICachedOrganizationService cachedOrgani
             throw new TeamNotAllowedForOrganizationType();
         }
 
-        var offering = organization.Offering;
-        var allowed = offering is not null && (offering.Code.GetOffering().MaxTeamCount == -1 ||
-                                               organization.Teams.Count < offering.Code.GetOffering().MaxTeamCount);
+        var decision = pricingEntitlementEvaluator.EvaluateTeamCreation(organization.Offering, organization.Teams.Count);
+        var allowed = decision.IsAllowed;
 
         if (allowed)
         {
@@ -44,30 +52,22 @@ public class OrganizationOfferingService(ICachedOrganizationService cachedOrgani
         return allowed;
     }
 
+    public async ValueTask<EntitlementDecision> GetTeamCreationEntitlementAsync(
+        string organizationId,
+        int currentActiveUserCount,
+        CancellationToken cancellationToken)
+    {
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
+                           throw new OrganizationNotFound();
+
+        return pricingEntitlementEvaluator.EvaluateActiveUserCount(organization.Offering, currentActiveUserCount);
+    }
+
     public async ValueTask<bool> IsMoreInteractionAllowedAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
-        var offering = organization.Offering;
-        var allowed = offering is not null && (offering.Code.GetOffering().MaxUserCount == -1 ||
-                                               offering.ActiveCustomerIds.Count <= offering.Code.GetOffering().MaxUserCount ||
-                                               offering.ActiveCustomerIds.Contains(customerId));
 
-        if (allowed)
-        {
-            logger.LogInformation(
-                "Interaction allowance granted for customer {CustomerId} in organization {OrganizationId}",
-                customerId,
-                organizationId);
-        }
-        else
-        {
-            logger.LogWarning(
-                "Interaction allowance denied for customer {CustomerId} in organization {OrganizationId}",
-                customerId,
-                organizationId);
-        }
-
-        return allowed;
+        return pricingEntitlementEvaluator.EvaluateActiveUser(organization.Offering, customerId).IsAllowed;
     }
 }
